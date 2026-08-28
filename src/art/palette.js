@@ -32,7 +32,7 @@ const hex = {
   rim: '#ffd39b',
 
   // shading tints used by the vertex-mask ramps (§4.3)
-  shadowTint: '#4a3c55', // cool, for cavity
+  shadowTint: '#3c3a4c', // cool, for cavity
   edgeLightTint: '#ffdcae', // warm, for convex edges
   dustTint: '#e8dcc4',
 

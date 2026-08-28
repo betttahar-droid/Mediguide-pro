@@ -1,16 +1,17 @@
 import {
-  Scene, PerspectiveCamera, WebGLRenderer, Vector3, Mesh, GridHelper, Color,
-  SRGBColorSpace, NoToneMapping, Fog,
+  Scene, PerspectiveCamera, WebGLRenderer, Vector3, Mesh, Color,
+  SRGBColorSpace, NoToneMapping,
 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import Stats from 'stats.js';
 
 import { PALETTE, PALETTE_HEX } from './art/palette.js';
-import { createAdaptiveMaterial } from './shaders/index.js';
+import { createAdaptiveMaterial, createOutlinePass } from './shaders/index.js';
 import { bevelBox } from './modules/geometry.js';
 import { bakeMasks } from './art/bakeMasks.js';
 import { REGISTRY, validateRegistry } from './modules/registry.js';
 import { ModuleInstance, warmGeometryCache } from './modules/ModuleInstance.js';
+import { createInstancedBatch, disposeBatch } from './modules/InstancedBatch.js';
 import { Placement } from './build/placement.js';
 import { findSocketSnap } from './build/snapping.js';
 import { saveLocal, loadLocal, clearLocal } from './build/serialize.js';
@@ -28,16 +29,15 @@ renderer.toneMapping = NoToneMapping;
 
 const scene = new Scene();
 scene.background = new Color(PALETTE_HEX.backdrop);
-scene.fog = new Fog(new Color(PALETTE_HEX.backdrop).getHex(), 18, 55);
 
-const camera = new PerspectiveCamera(42, 1, 0.1, 200);
-camera.position.set(5.5, 4.2, 6.5);
+const camera = new PerspectiveCamera(38, 1, 0.1, 200);
+camera.position.set(4.6, 2.9, 5.4);
 
 const controls = new OrbitControls(camera, canvas);
-controls.target.set(0, 0.9, 0);
+controls.target.set(0, 0.85, 0);
 controls.enableDamping = true;
-controls.maxPolarAngle = Math.PI * 0.49;
-controls.minDistance = 1.5;
+controls.maxPolarAngle = Math.PI * 0.495;
+controls.minDistance = 1.2;
 controls.maxDistance = 40;
 
 const stats = new Stats();
@@ -45,41 +45,52 @@ stats.dom.style.left = 'auto';
 stats.dom.style.right = '0';
 document.body.appendChild(stats.dom);
 
-// ------------------------------------------------------------------ floor
-// Tier C (triplanar) is not built — the floor uses the same adaptive material
-// with a flat palette colour so nothing outside src/shaders/ touches GLSL.
-{
-  const slab = bakeMasks(bevelBox(30, 0.2, 30, 0.06), { rays: 6, radius: 0.2 });
-  const material = createAdaptiveMaterial({
-    baseColor: PALETTE.floorTile,
-    middleColor: PALETTE.floorTile,
-    sourceHalfExtents: new Vector3(15, 0.1, 15),
-    margins: new Vector3(0.1, 0.05, 0.1),
-  });
-  const floor = new Mesh(slab, material);
-  floor.position.y = -0.1;
-  scene.add(floor);
+const outline = createOutlinePass({ renderer });
 
-  const grid = new GridHelper(30, 30, PALETTE_HEX.ghost, PALETTE_HEX.ghost);
-  grid.material.opacity = 0.16;
-  grid.material.transparent = true;
-  grid.position.y = 0.002;
-  scene.add(grid);
+// -------------------------------------------------------------- the room
+// §9 "Floor / wall panel — Tier C triplanar". Object space and post-deform, so
+// the texture does not swim when a panel is moved or stretched.
+function panel(w, h, d, position, color, textureScale) {
+  const geo = bakeMasks(bevelBox(w, h, d, 0.05), { rays: 6, radius: 0.2 });
+  const material = createAdaptiveMaterial({
+    baseColor: color,
+    middleColor: color,
+    sourceHalfExtents: new Vector3(w / 2, h / 2, d / 2),
+    margins: new Vector3(0, 0, 0),
+    tier: 'C',
+    textureScale,
+  });
+  const mesh = new Mesh(geo, material);
+  mesh.position.set(...position);
+  scene.add(mesh);
+  return mesh;
 }
+
+const room = {
+  floor: panel(24, 0.2, 24, [0, -0.1, 0], PALETTE.floorTile, 0.75),
+  backWall: panel(24, 4.4, 0.24, [0, 2.2, -7], PALETTE.paper, 0.32),
+  sideWall: panel(0.24, 4.4, 24, [-9, 2.2, 0], PALETTE.paper, 0.32),
+};
 
 warmGeometryCache();
 
 // -------------------------------------------------------------------- app
 const placement = new Placement(camera, canvas);
 const placed = [];
+let batch = null;
 
 const app = {
   placed,
-  state: { moduleId: 'gondola_shelf', mode: 'place' },
-  stats: { modules: 0, cost: 0 },
+  room,
+  scene,
+  camera,
+  controls,
+  state: { moduleId: 'serving_counter', mode: 'place' },
+  stats: { modules: 0, cost: 0, drawCalls: 0 },
   ghost: null,
   selected: null,
   onActiveChanged: () => {},
+  outline,
 
   activeModule() {
     return this.state.mode === 'place' ? this.ghost : this.selected;
@@ -176,6 +187,29 @@ const app = {
     this.refreshStats();
   },
 
+  /** Phase 6 acceptance: many modules, one draw call per module type. */
+  stressTest(count = 200) {
+    this.clearBatch();
+    const entries = [];
+    for (let i = 0; i < count; i++) {
+      const row = Math.floor(i / 20);
+      entries.push({
+        position: [-4.5 + (i % 20) * 0.48, 0, 2.6 + row * 0.55],
+        rotY: ((i * 37) % 90) * (Math.PI / 180),
+        params: { x: 1 + (i % 3) },
+      });
+    }
+    batch = createInstancedBatch('medicine_box', entries);
+    scene.add(batch);
+    console.log(`instanced ${entries.length} modules → ${batch.count} instances in 1 draw call`);
+    return batch;
+  },
+
+  clearBatch() {
+    if (batch) disposeBatch(batch);
+    batch = null;
+  },
+
   refreshStats() {
     this.stats.modules = placed.length;
     this.stats.cost = placed.reduce((sum, m) => {
@@ -219,6 +253,7 @@ function resize() {
   renderer.setSize(w, h, false);
   camera.aspect = w / h;
   camera.updateProjectionMatrix();
+  outline.setSize(w, h, renderer.getPixelRatio());
 }
 addEventListener('resize', resize);
 resize();
@@ -231,7 +266,7 @@ function frame() {
   if (app.state.mode === 'place' && app.ghost && placement.hasPointer) {
     app.ghost.group.visible = true;
     const { snapped } = placement.place(app.ghost, placed);
-    // the active snap reads as a ghost in the ink/accent colour (§8.3)
+    // the active snap reads as a ghost in the accent colour (§8.3)
     app.ghost.setHighlight(snapped ? 0.55 : 0.0);
   } else if (app.state.mode === 'select' && placement.hasPointer) {
     const next = placement.pick(placed);
@@ -242,7 +277,12 @@ function frame() {
     }
   }
 
+  if (outline.enabled) outline.prepass(scene, camera);
   renderer.render(scene, camera);
+  // read before the composite: renderer.info resets on every render() call
+  app.stats.drawCalls = renderer.info.render.calls;
+  if (outline.enabled) outline.composite();
+
   stats.end();
   requestAnimationFrame(frame);
 }
@@ -251,10 +291,13 @@ frame();
 // a small starting scene so the first frame is not an empty room
 seed();
 function seed() {
-  const run = new ModuleInstance('gondola_shelf', { params: { x: 3, y: 4, z: 1.0 }, position: [-2.2, 0, -2] });
-  const counter = new ModuleInstance('serving_counter', { params: { x: 2.4, z: 1.0 }, position: [1.8, 0, 1.2] });
-  const till = new ModuleInstance('till_block', { position: [1.8, 0.955, 1.2] });
-  for (const m of [run, counter, till]) {
+  const desk = new ModuleInstance('serving_counter', { params: { x: 1.9, z: 1.0 }, position: [0.4, 0, 1.0] });
+  const run = new ModuleInstance('gondola_shelf', { params: { x: 3, y: 4, z: 1.0 }, position: [-2.6, 0, -2.6] });
+  const fridge = new ModuleInstance('fridge_cabinet', { params: { x: 1 }, position: [2.8, 0, -2.6] });
+  const till = new ModuleInstance('till_block', { position: [0.4, 0.955, 1.0] });
+  const boxes = new ModuleInstance('medicine_box', { params: { x: 5 }, position: [-2.6, 0.775, -2.6] });
+  const queue = new ModuleInstance('queue_barrier', { params: { x: 2 }, position: [0.4, 0, 3.4] });
+  for (const m of [desk, run, fridge, till, boxes, queue]) {
     scene.add(m.group);
     placed.push(m);
   }

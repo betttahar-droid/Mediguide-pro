@@ -39,11 +39,17 @@ export function buildGui(app) {
   const scene = gui.addFolder('Scene');
   scene.add(app.stats, 'modules').name('modules').listen().disable();
   scene.add(app.stats, 'cost').name('cost (£)').listen().disable();
+  scene.add(app.stats, 'drawCalls').name('draw calls').listen().disable();
   scene.add({ save: () => app.save() }, 'save').name('save');
   scene.add({ load: () => app.load() }, 'load').name('load');
   scene.add({ clear: () => app.clear() }, 'clear').name('clear');
 
-  // ---- look development (§4.3, §4.4) -----------------------------------
+  // ---- Phase 6 ---------------------------------------------------------
+  const inst = gui.addFolder('Instancing').close();
+  inst.add({ spawn: () => app.stressTest(200) }, 'spawn').name('spawn 200 instanced');
+  inst.add({ drop: () => app.clearBatch() }, 'drop').name('remove batch');
+
+  // ---- look development (§4.3, §4.4, §4.5, §7) -------------------------
   const look = gui.addFolder('Look dev').close();
 
   const light = look.addFolder('Lighting');
@@ -64,7 +70,7 @@ export function buildGui(app) {
   // The six ramp parameters of §4.3. These are tuned by eye, not by formula.
   const masks = look.addFolder('Vertex masks');
   const maskState = {
-    cavityLo: 0.12, cavityHi: 0.62, cavityStrength: 0.75,
+    cavityLo: 0.12, cavityHi: 0.62, cavityStrength: 0.5,
     edgeLo: 0.55, edgeHi: 0.95, edgeStrength: 0.45, dust: 0.05,
   };
   masks.add(maskState, 'cavityLo', 0, 1).onChange((v) => setSharedUniform('uCavityLo', v));
@@ -75,10 +81,33 @@ export function buildGui(app) {
   masks.add(maskState, 'edgeStrength', 0, 1).onChange((v) => setSharedUniform('uEdgeStrength', v));
   masks.add(maskState, 'dust', 0, 0.3).onChange((v) => setSharedUniform('uDustStrength', v));
 
-  const trim = look.addFolder('Trim (Tier B stand-in)');
-  const trimState = { frequency: 2.0, strength: 0.9 };
-  trim.add(trimState, 'frequency', 0.25, 8).onChange((v) => setSharedUniform('uTrimFrequency', v));
-  trim.add(trimState, 'strength', 0, 1).onChange((v) => setSharedUniform('uTrimStrength', v));
+  const tex = look.addFolder('Texturing');
+  const texState = { detailGain: 1.85, trimDensity: 0.85, triplanarScale: 0.75, triplanarSharpness: 8 };
+  tex.add(texState, 'detailGain', 1, 3).name('detail gain').onChange((v) => setSharedUniform('uDetailGain', v));
+  tex.add(texState, 'trimDensity', 0.2, 4).name('trim per metre').onChange((v) => setSharedUniform('uTrimDensity', v));
+  tex.add(texState, 'triplanarScale', 0.1, 3).name('triplanar per metre').onChange((v) => setSharedUniform('uTextureScale', v));
+  tex.add(texState, 'triplanarSharpness', 1, 16).name('triplanar blend').onChange((v) => setSharedUniform('uTriplanarSharpness', v));
+
+  const hatch = look.addFolder('Hatching');
+  const hatchState = { scale: 4.5, strength: 0.22 };
+  hatch.add(hatchState, 'scale', 0.5, 12).onChange((v) => setSharedUniform('uHatchScale', v));
+  hatch.add(hatchState, 'strength', 0, 1).onChange((v) => setSharedUniform('uHatchStrength', v));
+
+  // §7 — outlines
+  const ink = look.addFolder('Outlines');
+  const u = app.outline.material.uniforms;
+  const inkState = {
+    enabled: true,
+    thickness: u.uThickness.value,
+    normalThreshold: u.uNormalThreshold.value,
+    depthThreshold: u.uDepthThreshold.value,
+    strength: u.uStrength.value,
+  };
+  ink.add(inkState, 'enabled').onChange((v) => { app.outline.enabled = v; });
+  ink.add(inkState, 'thickness', 0.5, 3).onChange((v) => { u.uThickness.value = v; });
+  ink.add(inkState, 'normalThreshold', 0.02, 1).onChange((v) => { u.uNormalThreshold.value = v; });
+  ink.add(inkState, 'depthThreshold', 0.001, 0.08).onChange((v) => { u.uDepthThreshold.value = v; });
+  ink.add(inkState, 'strength', 0, 1).onChange((v) => { u.uStrength.value = v; });
 
   look.add({ palette: () => console.table(PALETTE_HEX) }, 'palette').name('log palette hexes');
 

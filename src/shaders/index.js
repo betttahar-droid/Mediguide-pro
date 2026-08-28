@@ -1,9 +1,11 @@
 // The sole public entry point to the shader layer (§2).
 //
 // No other file in the project may import GLSL, construct a ShaderMaterial, or
-// touch EffectComposer. When this is ported to TSL/NodeMaterial, this folder is
+// touch a render target. When this is ported to TSL/NodeMaterial, this folder is
 // rewritten and nothing outside it changes. This boundary is a hard requirement.
-import { createAdaptiveMaterial as build } from './AdaptiveMaterial.js';
+import { createAdaptiveMaterial as build, makeDeformUniforms } from './AdaptiveMaterial.js';
+import { createNormalDepthMaterial as buildNormalDepth } from './NormalDepthMaterial.js';
+import { createOutlinePass as buildOutline } from './OutlinePass.js';
 import { makeToonRamp } from '../art/ramps.js';
 
 /** Every live material, so shared look-dev uniforms can be driven from the UI. */
@@ -18,17 +20,23 @@ export function createAdaptiveMaterial(opts = {}) {
   const dispose = material.dispose.bind(material);
   material.dispose = () => {
     live.delete(material);
+    material.userData.normalDepth?.dispose();
     dispose();
   };
   return material;
 }
+
+export const createNormalDepthMaterial = buildNormalDepth;
+export const createOutlinePass = buildOutline;
+export { makeDeformUniforms };
 
 /** Uniforms the look-dev UI is allowed to drive across every material at once. */
 export const SHARED_UNIFORMS = [
   'uKeyIntensity', 'uFillIntensity', 'uRimStrength', 'uRimPower',
   'uCavityLo', 'uCavityHi', 'uCavityStrength',
   'uEdgeLo', 'uEdgeHi', 'uEdgeStrength', 'uDustStrength',
-  'uTrimFrequency', 'uTrimStrength',
+  'uTrimDensity', 'uDetailGain', 'uTextureScale', 'uTriplanarSharpness',
+  'uHatchScale', 'uHatchStrength',
 ];
 
 export function setSharedUniform(name, value) {
@@ -48,14 +56,3 @@ export function setToonRampSteps(steps) {
   sharedRamp = next;
   for (const m of live) m.uniforms.uToonRamp.value = next;
 }
-
-/** Read a starting value for the UI without reaching into a material. */
-export function defaultUniform(name) {
-  const probe = build({ ramp: sharedRamp });
-  const v = probe.uniforms[name]?.value;
-  probe.dispose();
-  return typeof v === 'number' ? v : v?.clone?.() ?? v;
-}
-
-// Phase 4 (not built): createNormalDepthMaterial(), createOutlinePass(). Both
-// will consume chunks/deform.glsl.js unchanged — see README.

@@ -20,9 +20,10 @@ float rampStep(float ndl) {
   return texture2D(uToonRamp, vec2(clamp(ndl, 0.0, 1.0), 0.5)).r;
 }
 
-vec3 toonLight(vec3 albedo, vec3 n, vec3 viewDir, float upMask) {
+vec3 toonLight(vec3 albedo, vec3 n, vec3 viewDir, float upMask, out float keyTerm) {
   // wrap the terminator past the halfway point so the ramp steps read
   float key = rampStep(dot(n, normalize(uKeyDir)) * 0.62 + 0.38);
+  keyTerm = key;
   float fill = clamp(dot(n, normalize(uFillDir)) * 0.5 + 0.5, 0.0, 1.0);
 
   vec3 lit = albedo * uAmbient;

@@ -1,16 +1,16 @@
 import { Group, Mesh, Vector3, Quaternion } from 'three';
 import { createAdaptiveMaterial } from '../shaders/index.js';
 import { bakeMasks } from '../art/bakeMasks.js';
-import { REGISTRY, defaultParams } from './registry.js';
+import { REGISTRY, defaultParams, buildGeometry, trimAxisVector } from './registry.js';
 import { clampParams, layout, footprint } from './resize.js';
+import { contactShadowMaterial, contactShadowGeometry } from '../art/shadow.js';
 
 /** One baked geometry per module type — the masks are baked on the undeformed mesh. */
 const geometryCache = new Map();
 
 export function unitGeometry(def) {
   if (!geometryCache.has(def.id)) {
-    const geo = bakeMasks(def.build());
-    geometryCache.set(def.id, geo);
+    geometryCache.set(def.id, bakeMasks(buildGeometry(def)));
   }
   return geometryCache.get(def.id);
 }
@@ -18,6 +18,22 @@ export function unitGeometry(def) {
 /** Pre-bake everything up front so placement never stalls mid-drag. */
 export function warmGeometryCache() {
   for (const def of Object.values(REGISTRY)) unitGeometry(def);
+}
+
+/** The material a module type wants, shared by ModuleInstance and the batches. */
+export function materialOptionsFor(def, extra = {}) {
+  return {
+    baseColor: def.colors.base,
+    middleColor: def.colors.middle,
+    accent1: def.colors.accent1 ?? null,
+    accent2: def.colors.accent2 ?? null,
+    sourceHalfExtents: new Vector3(...def.unit),
+    margins: new Vector3(...def.margins),
+    trimAxis: trimAxisVector(def),
+    trimDensity: def.trimDensity,
+    atlasCell: def.atlasCell,
+    ...extra,
+  };
 }
 
 let nextId = 1;
@@ -37,17 +53,23 @@ export class ModuleInstance {
     if (position) this.group.position.set(...position);
     this.group.rotation.y = rotY;
 
-    this.material = createAdaptiveMaterial({
-      baseColor: this.def.colors.base,
-      middleColor: this.def.colors.middle,
-      sourceHalfExtents: new Vector3(...this.def.unit),
-      margins: new Vector3(...this.def.margins),
-      trimAxis: new Vector3(...this.def.trimAxis),
-      transparent: ghost,
-      opacity: ghost ? 0.45 : 1,
-    });
+    this.material = createAdaptiveMaterial(
+      materialOptionsFor(this.def, {
+        transparent: ghost,
+        opacity: ghost ? 0.45 : 1,
+      })
+    );
 
     this.meshes = [];
+
+    // grounds the module; excluded from this.meshes so it is never picked or
+    // outlined, and skipped for ghosts
+    if (!ghost && this.def.mounts.some((m) => m.tag === 'floor')) {
+      this.shadow = new Mesh(contactShadowGeometry(), contactShadowMaterial());
+      this.shadow.renderOrder = -1;
+      this.group.add(this.shadow);
+    }
+
     this.rebuild();
   }
 
@@ -79,6 +101,11 @@ export class ModuleInstance {
     const s = cells[0]?.targetScale ?? [1, 1, 1];
     this.material.uniforms.uTargetScale.value.set(s[0], s[1], s[2]);
     this.footprint = footprint(this.def, this.params);
+
+    if (this.shadow) {
+      this.shadow.scale.set(this.footprint[0] * 2.9, 1, this.footprint[2] * 3.0);
+      this.shadow.position.y = 0.008;
+    }
   }
 
   setHighlight(amount) {
