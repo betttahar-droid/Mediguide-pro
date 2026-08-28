@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="data:," />
+    <title>Pharmacy Modular Builder — test build</title>
+    <style>
+      :root { color-scheme: light; }
+      html, body { margin: 0; height: 100%; overflow: hidden; background: #c4b294; }
+      #app { display: block; width: 100vw; height: 100vh; }
+      #help {
+        position: fixed; left: 12px; bottom: 12px; max-width: 30ch;
+        font: 12px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
+        color: #2b1f33; background: rgba(242, 230, 210, 0.82);
+        padding: 10px 12px; border-radius: 8px; pointer-events: none;
+      }
+      #help b { font-weight: 600; }
+    </style>
+  </head>
+  <body>
+    <canvas id="app"></canvas>
+    <div id="help">
+      <b>click</b> place · <b>drag</b> orbit · <b>R</b> rotate 45°<br />
+      <b>Esc</b> place/select mode · <b>X</b> delete selected<br />
+      size sliders are in the panel, top right
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,30 @@
+{
+  "name": "pharmacy-builder",
+  "version": "0.1.0",
+  "description": "Pharmacy modular builder — test build (Phase 0/1 look-dev + a Phase 5 vertical slice)",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "node test/smoke.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/betttahar-droid/Mediguide-pro.git"
+  },
+  "bugs": {
+    "url": "https://github.com/betttahar-droid/Mediguide-pro/issues"
+  },
+  "homepage": "https://github.com/betttahar-droid/Mediguide-pro#readme",
+  "dependencies": {
+    "lil-gui": "^0.21.0",
+    "stats.js": "^0.17.0",
+    "three": "^0.185.1",
+    "vite": "^8.2.2"
+  },
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "playwright": "^1.62.1"
+  }
+}
