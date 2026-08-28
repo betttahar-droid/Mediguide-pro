@@ -30,6 +30,7 @@ page.on('pageerror', (e) => problems.push(`[pageerror] ${e.message}`));
 
 await page.goto(url, { waitUntil: 'load' });
 await page.waitForFunction(() => !!globalThis.__app, null, { timeout: 15000 });
+await page.evaluate(() => __app.texturesReady); // the sheets must be decoded before any pixel check
 await page.waitForTimeout(1500);
 
 const results = [];
@@ -39,6 +40,20 @@ const check = (name, ok, detail = '') => {
 };
 
 check('no page or shader errors', problems.length === 0, problems.slice(0, 3).join(' | '));
+
+// --- the authored sheets actually loaded ----------------------------------
+const sheets = await page.evaluate(() => {
+  const m = __app.placed[0].material.uniforms;
+  return ['uTrimMap', 'uAtlasMap', 'uTilingMap', 'uHatchMap'].map((k) => {
+    const img = m[k].value?.image;
+    return { k, w: img?.width ?? 0, h: img?.height ?? 0 };
+  });
+});
+check(
+  'the authored texture sheets are loaded from public/textures',
+  sheets.every((s) => s.w > 0 && s.h > 0),
+  sheets.map((s) => `${s.k.replace('u', '').replace('Map', '')} ${s.w}x${s.h}`).join(', ')
+);
 
 // --- repeat axis: more shelves, not taller shelves (§8.2 / Phase 5 test) ----
 const repeatTest = await page.evaluate(() => {
@@ -295,8 +310,8 @@ await page.waitForTimeout(500);
 await page.screenshot({ path: `${shotDir}/01-scene.png` });
 
 await page.evaluate(() => {
-  __app.camera.position.set(3.0, 1.45, 4.1);
-  __app.controls.target.set(0.35, 0.62, 0.6);
+  __app.camera.position.set(2.6, 1.35, 4.3);
+  __app.controls.target.set(0.2, 0.58, 1.1);
   __app.controls.update();
 });
 await page.waitForTimeout(500);

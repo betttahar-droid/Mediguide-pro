@@ -34,7 +34,7 @@ export const REGISTRY = {
     margins: [0, 0, 0.06],
     trimAxis: AXIS.z,
     trimDensity: 1.6,
-    atlasCell: [0, 0],
+    atlasCell: [0, 0], // wood
     colors: { base: PALETTE.paper, middle: PALETTE.bone, accent1: PALETTE.oak, accent2: PALETTE.steelDark },
     axes: {
       x: { mode: 'repeat', unit: 1.0, min: 1, max: 8, default: 3, label: 'bays' },
@@ -67,12 +67,84 @@ export const REGISTRY = {
     },
   },
 
-  // The hero. Proportions are deliberately squat and chunky: a 0.95 worktop on
-  // a 0.72 carcass, a recessed kick, a fat 0.06 worktop overhang, and a drawer
-  // band on the trim sheet's detail strip so screws and a label rail land on it.
+  // The hero, and the project's §1 argument made visible. Real dispensing
+  // furniture is built from carcasses, so the length axis is `repeat`: one
+  // fully detailed 0.90m bay, instanced. Its UVs are never touched, so every
+  // bolt, label holder and painted lip survives at full resolution however long
+  // the run gets. Only the depth is genuinely continuous, and that one axis is
+  // 9-sliced — which keeps the bullnose and the pull rigid while the middle
+  // stretches.
+  //
+  // Numbers read off the concept sheet (§11.1 step 3), in metres:
+  //   bay width 0.90 · worktop top 0.95 · worktop 0.055 thick, 0.06 overhang
+  //   carcass 0.805 · kick recess 0.05 deep × 0.09 tall · stiles 0.055
+  //   drawers 0.30 and 0.22 · rails 0.05 · upstand 0.10 · depth 0.66
+  dispensing_desk: {
+    id: 'dispensing_desk',
+    label: 'Dispensing desk',
+    category: 'counters',
+    cost: 690,
+    unit: [0.45, 0.525, 0.33],
+    margins: [0, 0, 0.1],
+    trimAxis: AXIS.x,
+    trimDensity: 0.85,
+    atlasCell: [0, 0], // wood
+    colors: {
+      base: PALETTE.oak, // carcass and drawer fronts
+      middle: PALETTE.oakDark,
+      accent1: PALETTE.bone, // worktop, upstand
+      accent2: PALETTE.walnut, // pulls, kick, fittings
+    },
+    axes: {
+      x: { mode: 'repeat', unit: 0.9, min: 1, max: 6, default: 2, label: 'bays' },
+      y: { mode: 'fixed' },
+      z: { mode: 'stretch', min: 0.85, max: 1.4, default: 1.0, label: 'depth' },
+    },
+    // One bay. Local origin is the bay centre; the floor is at local -0.525.
+    build: () => [
+      { size: [0.86, 0.09, 0.50], at: [0, -0.480, 0], bevel: 0.02, accent: 2 }, // recessed kick
+      { size: [0.90, 0.805, 0.62], at: [0, -0.0325, 0], bevel: 0.04 }, // carcass
+      { size: [0.055, 0.805, 0.635], at: [-0.4225, -0.0325, 0.005], bevel: 0.016 }, // stile
+      { size: [0.055, 0.805, 0.635], at: [0.4225, -0.0325, 0.005], bevel: 0.016 }, // stile
+      { size: [0.79, 0.050, 0.632], at: [0, -0.395, 0.006], bevel: 0.014 }, // bottom rail
+      { size: [0.79, 0.045, 0.632], at: [0, -0.0175, 0.006], bevel: 0.014 }, // mid rail
+      { size: [0.79, 0.050, 0.632], at: [0, 0.270, 0.006], bevel: 0.014 }, // top rail
+      { size: [0.76, 0.300, 0.626], at: [0, -0.210, 0.008], bevel: 0.018 }, // deep drawer
+      { size: [0.76, 0.220, 0.626], at: [0, 0.115, 0.008], bevel: 0.018 }, // shallow drawer
+      { size: [0.30, 0.030, 0.050], at: [0, -0.210, 0.340], bevel: 0.012, accent: 2 }, // pull
+      { size: [0.30, 0.030, 0.050], at: [0, 0.115, 0.340], bevel: 0.012, accent: 2 }, // pull
+      { size: [0.15, 0.038, 0.014], at: [-0.245, -0.290, 0.334], bevel: 0.006, strip: 'detail', accent: 1 }, // label holder
+      { size: [0.15, 0.038, 0.014], at: [-0.245, 0.045, 0.334], bevel: 0.006, strip: 'detail', accent: 1 }, // label holder
+      { size: [0.94, 0.055, 0.700], at: [0, 0.3975, 0.02], bevel: 0.022, accent: 1 }, // worktop
+      { size: [0.94, 0.032, 0.075], at: [0, 0.356, 0.352], bevel: 0.014, accent: 1 }, // bullnose lip
+      { size: [0.94, 0.100, 0.045], at: [0, 0.475, -0.3275], bevel: 0.016, accent: 1 }, // rear upstand
+      { size: [0.10, 0.050, 0.020], at: [0.28, 0.475, -0.300], bevel: 0.008, strip: 'detail', accent: 2 }, // socket block
+    ],
+    mounts: [{ tag: 'floor', normal: [0, -1, 0] }],
+    provides: (p, unit) => {
+      const out = [
+        { tag: 'counter_side', pos: [unit[0] * p.x, 0.5, 0], normal: [1, 0, 0] },
+        { tag: 'counter_side', pos: [-unit[0] * p.x, 0.5, 0], normal: [-1, 0, 0] },
+      ];
+      for (let i = 0; i < p.x; i++) {
+        out.push({
+          tag: 'counter_surface',
+          pos: [(i - (p.x - 1) / 2) * unit[0] * 2, 0.955, 0.02],
+          normal: [0, 1, 0],
+        });
+      }
+      return out;
+    },
+  },
+
+  // The brief's catalogue entry, kept as the continuous alternative: the same
+  // piece of furniture with a stretched length instead of repeated bays. Side
+  // by side with the desk above, it is the whole §1 argument in one scene —
+  // this one needs the trim sheet to survive an arbitrary scale, the other
+  // never distorts a texel.
   serving_counter: {
     id: 'serving_counter',
-    label: 'Dispensing desk',
+    label: 'Serving counter (stretch)',
     category: 'counters',
     cost: 780,
     unit: [0.6, 0.475, 0.33],

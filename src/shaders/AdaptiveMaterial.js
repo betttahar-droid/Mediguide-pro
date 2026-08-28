@@ -188,7 +188,7 @@ export function createAdaptiveMaterial(opts = {}) {
       uAtlasOffset: { value: new Vector2(atlasCell[0] * 0.5, atlasCell[1] * 0.5) },
       uTextureScale: { value: textureScale },
       uTriplanarSharpness: { value: 8.0 },
-      uDetailGain: { value: 1.85 },
+      uDetailGain: { value: 2.0 },
       uOpacity: { value: opacity },
       uHighlight: { value: PALETTE.mint.clone() },
       uHighlightAmount: { value: 0 },

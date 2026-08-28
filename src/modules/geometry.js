@@ -12,7 +12,7 @@
 // kind of per-vertex quantity that survives the 9-slice deform for free.
 import { BufferGeometry, BufferAttribute, Vector3 } from 'three';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
-import { stripV } from '../art/textures.js';
+import { stripV } from '../art/trimLayout.js';
 
 const EDGE = stripV('edge');
 

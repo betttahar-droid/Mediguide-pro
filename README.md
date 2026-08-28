@@ -23,12 +23,12 @@ test and every look-dev knob are in the lil-gui panel.
 | 0 — Scaffold | Vite, three r185, lil-gui, stats, orbit controls |
 | 1 — Look development | toon ramp, warm key + cool fill, rim, palette module, faceted normals, all three vertex mask channels with their six ramps in the UI |
 | 2 — Nine-slice | margins as uniforms, normals corrected by the inverse-transpose, `capMask` varying, both §5.2 guards asserted at load |
-| 3 — Hybrid material | 1024² trim sheet, 512² atlas, Tier A/B blend on `capMask`, Tier C triplanar for floor and walls |
+| 3 — Hybrid material | 1024² trim sheet, 1024² atlas, Tier A/B blend on `capMask`, Tier C triplanar for floor and walls |
 | 4 — Outlines and hatching | normal-depth prepass sharing the vertex stage, Roberts cross on linearised depth, tinted ink, surface-locked cross-hatching in the beauty pass |
 | 5 — Module system | registry, sockets, both resize modes, socket + surface snapping, raycast placement, detail props, save/load |
 | 6 — Instancing | `InstancedMesh` with `aTargetScale` / `aMargins` instanced attributes |
 
-`npm test` drives the built app in headless Chromium and checks eleven things,
+`npm test` drives the built app in headless Chromium and checks twelve things,
 including the acceptance tests that can be made objective:
 
 - **Phase 2** — the cap crop is *pixel-identical* from 1.0× to 4.0× (mean
@@ -42,6 +42,9 @@ including the acceptance tests that can be made objective:
   not four taller ones; a gondola snaps into a flush run; save → clear → load
   round-trips identically.
 - **Phase 6** — 200 modules (399 unit instances) cost one extra draw call.
+
+It also asserts the authored sheets actually loaded, so a missing PNG fails
+loudly instead of quietly rendering flat colour.
 
 Chromium here is software-rendered, so the suite proves the shaders compile and
 the systems behave — not the frame rate. Set `CHROMIUM_PATH` if Playwright's own
@@ -63,10 +66,13 @@ src/
 │   ├── AdaptiveMaterial.js       all three tiers + hatching
 │   ├── NormalDepthMaterial.js    the prepass twin
 │   └── OutlinePass.js            prepass target + Roberts composite
-├── art/                 palette · ramps · bakeMasks · textures · shadow
+├── art/                 palette · ramps · bakeMasks · trimLayout · textures · shadow
 ├── modules/             registry · geometry · ModuleInstance · resize · InstancedBatch
 ├── build/               snapping · placement · serialize
 └── ui/                  gui
+public/textures/         the authored sheets: trim · atlas · tiling · hatch
+tools/authoring/         one-off asset authoring, run by hand (§11)
+docs/style-bible.md      palette, fixed light, fixed camera, the reference rules
 test/smoke.mjs           headless acceptance checks
 ```
 
@@ -76,9 +82,11 @@ Nothing outside `src/shaders/` contains a line of GLSL, constructs a
 
 ### The decisions the brief flags as load-bearing
 
-- **Repeat beats stretch.** Five axes across the catalogue are `repeat`, three
-  are `stretch`, the rest fixed. The gondola is the canonical repeat × repeat ×
-  stretch case.
+- **Repeat beats stretch.** The dispensing desk makes the argument literally:
+  its length is a `repeat` axis of fully detailed 0.90 m bays, so no texel is
+  ever distorted, and only its depth is 9-sliced. The `serving_counter` is kept
+  beside it as the brief's continuous version of the same furniture — the two
+  standing next to each other are §1 in one screenshot.
 - **One vertex stage, not two.** `chunks/vertexStage.glsl.js` is the whole
   vertex shader for both the beauty pass and the prepass, and
   `createNormalDepthMaterial({ share })` reuses the beauty material's *uniform
@@ -96,14 +104,14 @@ Nothing outside `src/shaders/` contains a line of GLSL, constructs a
 
 ## What is not the brief's, and why
 
-- **The textures are procedural, not hand-painted.** `src/art/textures.js`
-  generates the trim sheet, the atlas, the tiling surface and the hatch on a
-  canvas at load. They carry the brief's strip layout and the right tiling
-  behaviour, so the material system is exercised for real, but they are
-  placeholders for `public/textures/`. They are authored as luminance detail
-  around mid-grey and tinted by `palette.js` at sample time, which is what keeps
-  the palette consistent across the catalogue; painted albedo sheets would
-  replace that multiply.
+- **The textures are authored by script, not by a painter.** They are real
+  committed files in `public/textures/` — the app only loads them — and they
+  follow the reference rules in `docs/style-bible.md`: bright lip on every
+  groove, long confident grain, deliberate knots, staggered joints. But a person
+  did not paint them, and taste in mark-making is exactly what §11.3 says the
+  pipeline cannot supply. `tools/authoring/make_textures.py` regenerates them;
+  it is an authoring tool, never a build, CI or runtime dependency, and deleting
+  it does not affect the game.
 - **No normal maps, so no UDN blending.** §6.2's UDN blend exists to fix
   triplanar normal maps. This project authors albedo only and puts AO in vertex
   colours (§6.3), so there is nothing to blend yet. The note is in
@@ -122,13 +130,13 @@ Nothing outside `src/shaders/` contains a line of GLSL, constructs a
 
 ## The part that is still yours
 
-**The look is not signed off, and cannot be from here.** §11.1 is explicit that
-proportions come off an orthographic concept sheet, read as numbers, before any
-modelling — and Phase 1 is explicit that landing the style takes several rounds
-with your eye on it. The numbers in `src/modules/registry.js` are placeholders I
-chose: the dispensing desk is a 0.95 worktop on a 0.72 carcass with a 0.06
-overhang, a 0.10 recessed kick, and a drawer band on the trim sheet's detail
-strip. Replace them from a real concept sheet and the engine does not change.
+**The look still needs your eye.** `docs/style-bible.md` now holds the palette,
+one fixed light, one fixed review camera, the nine rules read off the reference
+boards, and the desk's proportions as a table of numbers. That is the §11.1
+artefact the brief wants — but it was assembled from reference by me, not
+judged by a pharmacist looking at their own dispensary. Phase 1 says landing the
+style takes several rounds; this is round one. Change the numbers in that table
+and in `src/modules/registry.js` and the engine does not care.
 
 Everything the brief says to tune by eye is in the **Look dev** folder:
 lighting, the six mask ramps, texturing density, hatching, and the outline

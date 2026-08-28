@@ -102,7 +102,7 @@ export function createOutlinePass({ renderer }) {
       uThickness: { value: 1.0 },
       uNormalThreshold: { value: 0.42 },
       uDepthThreshold: { value: 0.02 },
-      uStrength: { value: 0.8 },
+      uStrength: { value: 0.72 },
       uCameraNear: { value: 0.1 },
       uCameraFar: { value: 200 },
       uInk: { value: PALETTE.ink.clone() },

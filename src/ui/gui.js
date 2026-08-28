@@ -82,7 +82,7 @@ export function buildGui(app) {
   masks.add(maskState, 'dust', 0, 0.3).onChange((v) => setSharedUniform('uDustStrength', v));
 
   const tex = look.addFolder('Texturing');
-  const texState = { detailGain: 1.85, trimDensity: 0.85, triplanarScale: 0.75, triplanarSharpness: 8 };
+  const texState = { detailGain: 2.0, trimDensity: 0.85, triplanarScale: 0.75, triplanarSharpness: 8 };
   tex.add(texState, 'detailGain', 1, 3).name('detail gain').onChange((v) => setSharedUniform('uDetailGain', v));
   tex.add(texState, 'trimDensity', 0.2, 4).name('trim per metre').onChange((v) => setSharedUniform('uTrimDensity', v));
   tex.add(texState, 'triplanarScale', 0.1, 3).name('triplanar per metre').onChange((v) => setSharedUniform('uTextureScale', v));

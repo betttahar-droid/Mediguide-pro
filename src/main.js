@@ -16,6 +16,7 @@ import { Placement } from './build/placement.js';
 import { findSocketSnap } from './build/snapping.js';
 import { saveLocal, loadLocal, clearLocal } from './build/serialize.js';
 import { buildGui } from './ui/gui.js';
+import { texturesReady } from './art/textures.js';
 
 validateRegistry();
 
@@ -81,11 +82,12 @@ let batch = null;
 
 const app = {
   placed,
+  texturesReady: texturesReady(),
   room,
   scene,
   camera,
   controls,
-  state: { moduleId: 'serving_counter', mode: 'place' },
+  state: { moduleId: 'dispensing_desk', mode: 'place' },
   stats: { modules: 0, cost: 0, drawCalls: 0 },
   ghost: null,
   selected: null,
@@ -291,13 +293,14 @@ frame();
 // a small starting scene so the first frame is not an empty room
 seed();
 function seed() {
-  const desk = new ModuleInstance('serving_counter', { params: { x: 1.9, z: 1.0 }, position: [0.4, 0, 1.0] });
+  const desk = new ModuleInstance('dispensing_desk', { params: { x: 3, z: 1.0 }, position: [0.2, 0, 1.2] });
+  const counter = new ModuleInstance('serving_counter', { params: { x: 1.4, z: 1.0 }, position: [4.0, 0, 1.2] });
   const run = new ModuleInstance('gondola_shelf', { params: { x: 3, y: 4, z: 1.0 }, position: [-2.6, 0, -2.6] });
   const fridge = new ModuleInstance('fridge_cabinet', { params: { x: 1 }, position: [2.8, 0, -2.6] });
-  const till = new ModuleInstance('till_block', { position: [0.4, 0.955, 1.0] });
+  const till = new ModuleInstance('till_block', { position: [1.1, 0.955, 1.22] });
   const boxes = new ModuleInstance('medicine_box', { params: { x: 5 }, position: [-2.6, 0.775, -2.6] });
-  const queue = new ModuleInstance('queue_barrier', { params: { x: 2 }, position: [0.4, 0, 3.4] });
-  for (const m of [desk, run, fridge, till, boxes, queue]) {
+  const queue = new ModuleInstance('queue_barrier', { params: { x: 2 }, position: [0.2, 0, 3.6] });
+  for (const m of [desk, counter, run, fridge, till, boxes, queue]) {
     scene.add(m.group);
     placed.push(m);
   }
