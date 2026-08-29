@@ -251,6 +251,33 @@ app.catalogue = buildCatalogue(app);
 // generated factory that has no registry entry. Nothing is spawned until
 // something asks for one — a scene full of modules does not need this path.
 app.nanoAtlasReady = nanoAtlasReady();
+
+// The img2threejs reconstruction, driven through THIS renderer. The spec is the
+// artefact the skill produced; src/modules/fromSculptSpec.js turns its component
+// tree into a part list so it is built faceted, with the trim strips and the
+// 9-slice attributes, instead of by the generated factory's photoreal stack.
+// See the long note at the top of fromSculptSpec.js for why.
+app.spawnFromSpec = async (url = 'spec/counter-run.json', at = [0, 0, 0], scaleX = 1) => {
+  const spec = await (await fetch(url)).json();
+  const { partsFromSpec } = await import('./modules/fromSculptSpec.js');
+  const built = partsFromSpec(spec);
+  const prop = app.makeAdaptiveProp({
+    parts: built.parts,
+    halfExtents: built.unit,
+    margins: built.margins,
+    colors: built.colors,
+    propSpacing: 0.45,
+    socketY: built.unit[1],
+    socketZ: 0.02,
+    seed: 4242,
+  });
+  // The spec's origin is the bay CENTRE, so lift by a half-height to stand it
+  // on the floor rather than burying half of it.
+  prop.group.position.set(at[0], at[1] + built.unit[1], at[2]);
+  prop.updateSize(scaleX, 1, 1);
+  prop.spec = spec;
+  return prop;
+};
 app.makeAdaptiveProp = (opts) => {
   const prop = new AdaptivePropBase(opts);
   scene.add(prop.group);

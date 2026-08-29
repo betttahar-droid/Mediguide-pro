@@ -108,6 +108,8 @@ src/
 ├── build/               snapping · placement · serialize
 public/textures/         the authored sheets: trim · atlas · tiling · hatch
 tools/authoring/         one-off asset authoring, run by hand (§11)
+src/generated/           the img2threejs factory — reconstruction, not renderer
+docs/img2threejs/        its spec, intake analysis and blockout review
 docs/style-bible.md      palette, fixed light, fixed camera, the reference rules
 docs/concept-prompts.md  the concept-sheet prompt and how to run it
 docs/concept/            the generated sheets — reference only, never loaded
@@ -158,6 +160,12 @@ Nothing outside `src/shaders/` contains a line of GLSL, constructs a
   `bakeMasks` now buckets triangles into a grid the size of one ray and tests
   only the 3×3×3 block around each vertex — provably every triangle a ray could
   reach, and nothing else.
+- **A seeded hash must avalanche, and FNV-1a alone does not.** Slot keys differ
+  by one character (`s0`, `s1`, `s2`), and raw FNV values for eight sequential
+  keys landed inside a band 0.027 wide — so every slot in a module cleared or
+  failed its chance roll *together*, decided only by the seed. A 0.85 chance
+  fired 80.7% of the time and prop counts swung between runs. A murmur3
+  finalizer takes the spread to 0.5–0.9 and the rate to 85.4%.
 - **A part says what it is MADE OF.** The trim sheet carries twelve material
   strips — paint, panel, wood, steel, grille, screen, glass, paper, fabric —
   and a part declares one. It used to carry a single generic "surface" strip

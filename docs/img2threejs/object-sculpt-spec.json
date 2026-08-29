@@ -1,0 +1,3090 @@
+{
+  "targetName": "Pharmacy dispensing counter run",
+  "targetId": "pharmacy-dispensing-counter-run",
+  "schemaVersion": "2.1",
+  "terminologyProfile": {
+    "domain": "real-time procedural Three.js asset",
+    "geometryTerms": [
+      "silhouette",
+      "topology",
+      "primitive",
+      "bevel",
+      "chamfer",
+      "taper",
+      "bend",
+      "boolean cut",
+      "edge loop",
+      "surface normal",
+      "displacement"
+    ],
+    "materialTerms": [
+      "albedo",
+      "baseColor",
+      "roughness",
+      "metalness",
+      "normal map",
+      "bump map",
+      "ambient occlusion",
+      "cavity dirt",
+      "edge wear",
+      "clearcoat"
+    ],
+    "lightingTerms": [
+      "key light",
+      "fill light",
+      "rim light",
+      "HDRI/environment reflection",
+      "contact shadow"
+    ],
+    "descriptionRule": "Use measurable 3D graphics terms. Avoid vague words unless they are paired with concrete geometry/material/shader parameters."
+  },
+  "sourceImage": "/home/user/Mediguide-pro/docs/concept/shape-reference.png",
+  "referenceCamera": {
+    "solved": false,
+    "fovDegrees": 40.0,
+    "aspect": 1.0,
+    "orientation": {
+      "yaw": 0.0,
+      "pitch": 0.0,
+      "roll": 0.0
+    },
+    "positionHint": [
+      0.0,
+      0.0,
+      3.0
+    ],
+    "note": "For likeness work, solve the reference camera (forge/stage1_intake/solve_camera_pose.py) so the review render aligns with the photo and the reference can be projected. Confirm by overlay review."
+  },
+  "suitability": "conditional",
+  "scores": {
+    "object_isolation": 2,
+    "silhouette_readability": 3,
+    "depth_inference": 2,
+    "primitive_decomposition": 3,
+    "material_procedurality": 3,
+    "occlusion_risk": 1,
+    "interaction_fit": 3
+  },
+  "preSpecAssessment": {
+    "objectClass": {
+      "primaryType": "pharmacy dispensing counter run",
+      "primaryDomain": "object",
+      "formLanguage": [
+        "geometric",
+        "axis-aligned",
+        "boxy",
+        "low-poly"
+      ],
+      "structureKind": [
+        "frame-and-panel casework",
+        "modular repeatable bay"
+      ],
+      "motionPotential": [
+        "drawers slide",
+        "doors hinge"
+      ],
+      "materialFamilies": [
+        "painted metal",
+        "timber",
+        "brass fittings"
+      ],
+      "notes": "Reconstructing ONE COUNTER RUN, not the whole assembly in the frame. The reference shows a U of three runs plus back shelving plus loose props; the shelving and props already exist in this project as the dispensary_shelving module and the mortar/terminal/desk_lamp/paper_stack decor props. Rebuilding them into one rigid factory would duplicate three modules and produce an object that cannot be resized."
+    },
+    "complexity": {
+      "tier": "moderate",
+      "scores": {
+        "silhouetteComplexity": 1,
+        "componentCount": 2,
+        "hierarchyDepth": 2,
+        "repetitionDensity": 3,
+        "materialLayerCount": 2,
+        "localDetailDensity": 2,
+        "occlusionRisk": 1,
+        "actionReadinessNeed": 3
+      },
+      "estimatedCounts": {
+        "macroComponents": 3,
+        "mesoComponents": 6,
+        "microFeatureGroups": 4,
+        "materialLayers": 3,
+        "repetitionSystems": 1
+      },
+      "reasoning": [
+        "Every form is an axis-aligned box; nothing needs a lathe, loft or curve.",
+        "The complexity is REPETITION, not silhouette: the run is one bay repeated, which is why the length axis must be a repeat and not a stretch.",
+        "Occlusion is high but harmless — every hidden face is the back of a box."
+      ]
+    },
+    "specDepthDecision": {
+      "requiredDepth": "moderate",
+      "minimumComponentLevels": [
+        "macro",
+        "meso",
+        "micro"
+      ],
+      "needsRepetitionSystems": true,
+      "needsMaterialLocalOverrides": true,
+      "needsMultipleReviewViews": true,
+      "needsActionReadyHierarchy": true,
+      "rationale": "Repetition systems are required because the run is a repeated bay. Material local overrides are required because a single bay carries three materials — painted carcass, timber worktop and drawer fronts, brass pulls — and this project's shader selects them per part."
+    },
+    "unknownsToResolveBeforeImplementation": [],
+    "detailInventory": {
+      "scanMethod": "component-zones",
+      "targetMinDetails": 6,
+      "note": "Enumerate every identity-defining small detail before authoring the spec. Each detail must map to a component.localFeatures entry or material.localOverrides entry, never prose only. Use forge/stage1_intake/build_detail_inventory.py to scan zones.",
+      "details": [
+        {
+          "id": "green-cross-plaque",
+          "zone": "front fascia",
+          "kind": "decal",
+          "identityDefining": true,
+          "mapsTo": {
+            "type": "component.localFeatures",
+            "ref": "green-cross-plaque",
+            "owner": "cross-plaque"
+          },
+          "realization": "unreported"
+        },
+        {
+          "id": "fascia-lettering",
+          "zone": "front fascia",
+          "kind": "decal",
+          "identityDefining": true,
+          "mapsTo": {
+            "type": "component.localFeatures",
+            "ref": "fascia-lettering",
+            "owner": "fascia-band"
+          },
+          "realization": "unreported"
+        },
+        {
+          "id": "drawer-pulls",
+          "zone": "drawer bank",
+          "kind": "fastener",
+          "identityDefining": false,
+          "mapsTo": {
+            "type": "component.localFeatures",
+            "ref": "drawer-pulls",
+            "owner": "drawer-bank"
+          },
+          "realization": "unreported"
+        },
+        {
+          "id": "door-pulls",
+          "zone": "door bank",
+          "kind": "fastener",
+          "identityDefining": false,
+          "mapsTo": {
+            "type": "component.localFeatures",
+            "ref": "door-pulls",
+            "owner": "door-bank"
+          },
+          "realization": "unreported"
+        },
+        {
+          "id": "kick-recess",
+          "zone": "plinth",
+          "kind": "groove",
+          "identityDefining": true,
+          "mapsTo": {
+            "type": "component.localFeatures",
+            "ref": "kick-recess",
+            "owner": "plinth"
+          },
+          "realization": "unreported"
+        },
+        {
+          "id": "worktop-overhang",
+          "zone": "worktop",
+          "kind": "ridge",
+          "identityDefining": true,
+          "mapsTo": {
+            "type": "component.localFeatures",
+            "ref": "worktop-overhang",
+            "owner": "worktop"
+          },
+          "realization": "unreported"
+        },
+        {
+          "id": "panel-seams",
+          "zone": "carcass",
+          "kind": "seam",
+          "identityDefining": false,
+          "mapsTo": {
+            "type": "component.localFeatures",
+            "ref": "panel-seams",
+            "owner": "carcass"
+          },
+          "realization": "unreported"
+        }
+      ]
+    },
+    "anatomy": {
+      "applies": false,
+      "styleHeads": 0.0,
+      "proportions": {
+        "headUnit": 0.0,
+        "torso": 0.0,
+        "legs": 0.0,
+        "shoulderWidth": 0.0,
+        "hipWidth": 0.0
+      },
+      "pose": {
+        "type": "unassessed",
+        "jointAngles": {}
+      },
+      "faceLandmarks": {
+        "eyeLine": 0.0,
+        "eyeSpacing": 0.0,
+        "noseBase": 0.0,
+        "mouthLine": 0.0,
+        "hairline": 0.0
+      },
+      "features": [],
+      "confidence": 0.0,
+      "note": "Only meaningful when objectClass.primaryDomain is character or hybrid. Set applies=true and fill from forge/stage1_intake/extract_landmarks.py. See grimoire/character/reconstruction.md and grimoire/character/likeness_maximization.md."
+    },
+    "sourceImage": "/home/user/Mediguide-pro/docs/concept/shape-reference.png"
+  },
+  "qualityContract": {
+    "qualityBar": "moderate",
+    "definitionOfDone": [
+      "The rendered model matches the reference silhouette, primary proportions, visible component hierarchy, material response, and most recognizable local features for the selected fidelity tier."
+    ],
+    "minimumSpecDepth": {
+      "macroComponents": 2,
+      "mesoComponents": 3,
+      "microFeatureGroups": 2,
+      "materialLayers": 2,
+      "repetitionSystems": 0,
+      "reviewViewpoints": 3
+    },
+    "featureGroups": [
+      {
+        "id": "overall-silhouette",
+        "name": "Overall silhouette and proportions",
+        "required": true,
+        "qualityCriteria": [
+          "Bounding shape, dominant curves, negative spaces, and scale relationships are explicitly described."
+        ],
+        "evidenceRefs": [
+          "full-object"
+        ],
+        "failureModes": [
+          "model reads as a generic placeholder instead of the reference object",
+          "major proportions are guessed without evidence"
+        ]
+      },
+      {
+        "id": "primary-structure",
+        "name": "Primary structure and hierarchy",
+        "required": true,
+        "qualityCriteria": [
+          "Major parts, joints, seams, contact points, and parent-child relationships are named before code generation."
+        ],
+        "evidenceRefs": [
+          "full-object"
+        ],
+        "failureModes": [
+          "large visible parts are merged into one mesh",
+          "component hierarchy is too shallow for the observed complexity"
+        ]
+      },
+      {
+        "id": "attachment-joint-correctness",
+        "name": "Attachment and joint correctness",
+        "required": true,
+        "qualityCriteria": [
+          "Every visible child appendage, branch, limb, handle, connector, tube, cable, horn, wing, leg, or hinged part has an attachment contract with parent socket, localStart/localEnd, contact type, embed/overlap, and gap tolerance."
+        ],
+        "evidenceRefs": [
+          "full-object"
+        ],
+        "failureModes": [
+          "child part root floats away from the parent",
+          "branch/limb/tube is centered in space instead of pivoting from its root",
+          "parent-child transform mixes world and local coordinates"
+        ]
+      },
+      {
+        "id": "surface-material-response",
+        "name": "Surface material response",
+        "required": true,
+        "qualityCriteria": [
+          "Albedo zones, roughness, normal/bump/displacement intent, cavity dirt, edge wear, and local overrides are specified where visible.",
+          "Important materials define independent albedo, roughness, height/normal, and AO responses instead of reusing one texture for unrelated PBR channels.",
+          "Surface response is decomposed into macro, meso, and micro frequency bands with scale and amplitude tied to object scale."
+        ],
+        "evidenceRefs": [
+          "full-object"
+        ],
+        "failureModes": [
+          "surface looks like flat plastic",
+          "local material variation is missing or not tied to image evidence"
+        ]
+      },
+      {
+        "id": "reference-lookdev",
+        "name": "Reference color, material, and lighting response",
+        "required": true,
+        "qualityCriteria": [
+          "Material-pass names the reference-derived albedo palette, roughness variation, tactile normal/bump/displacement response, and local masks.",
+          "When a source image is available, run reference PBR extraction and require confidence >= 0.7 before treating maps as implementation-ready.",
+          "Lighting-pass names key/fill/rim or environment light, exposure, tone mapping, background, and contact shadow behavior.",
+          "Neutral, grazing-angle, and reference-matched renders prove that surface relief survives relighting and is not painted into albedo."
+        ],
+        "evidenceRefs": [
+          "full-object"
+        ],
+        "failureModes": [
+          "model has acceptable shape but reads as flat shaded or plastic",
+          "colors are a generic average instead of reference-observed local color zones",
+          "lighting is evenly ambient and cannot reproduce the source value range"
+        ]
+      }
+    ],
+    "visualDeltaChecks": [
+      "silhouette and negative-space delta",
+      "component hierarchy depth delta",
+      "repetition density and distribution delta",
+      "material albedo/roughness/normal response delta",
+      "local feature placement and scale delta"
+    ],
+    "antiShallowSpecRules": [
+      "Do not proceed to code if qualityContract.qualityBar is unassessed.",
+      "Do not proceed to code if the spec only contains a root component for a moderate or complex object.",
+      "Do not proceed to code if required featureGroups are not represented by componentTree, materials, or repetitionSystems.",
+      "Do not proceed to code if visible local features are described only in prose and not attached to components/materials/evidenceRefs.",
+      "Do not proceed past structural-pass if attached child parts lack attachment.parentSocket, localStart, localEnd, embedDepth/overlap, and gapTolerance.",
+      "Do not pass material look-dev when albedo is reused as roughness, height, normal, or AO.",
+      "Do not pass material look-dev without macro, meso, and micro surface frequency bands for close-up materials.",
+      "Do not pass reference-fidelity material look-dev from a source image without usable referencePbr maps or an explicit documented limitation.",
+      "Do not patch a spec with extracted PBR maps when extraction confidence is below the target threshold unless the user explicitly accepts lower fidelity.",
+      "Do not place adjacent separate-geometry parts below 0.02 world-unit seam overlap (source: grimoire/build/geometry_patterns.md).",
+      "Do not satisfy raised or recessed relief, fasteners, or grip structure with a map alone when the feature affects form; use geometry or displacement (source: grimoire/build/geometry_patterns.md).",
+      "Adjacent components must overlap by at least 0.02 world units at shared seams (source: grimoire/build/geometry_patterns.md).",
+      "Raised or recessed relief and fasteners must be geometry, instanced micro-parts, or displacement; a map alone is an approximation (source: grimoire/build/geometry_patterns.md)."
+    ],
+    "mustNotDo": [
+      "Do not proceed to code if qualityContract.qualityBar is unassessed.",
+      "Do not proceed to code if the spec only contains a root component for a moderate or complex object.",
+      "Do not proceed to code if required featureGroups are not represented by componentTree, materials, or repetitionSystems.",
+      "Do not proceed to code if visible local features are described only in prose and not attached to components/materials/evidenceRefs.",
+      "Do not proceed past structural-pass if attached child parts lack attachment.parentSocket, localStart, localEnd, embedDepth/overlap, and gapTolerance.",
+      "Do not pass material look-dev when albedo is reused as roughness, height, normal, or AO.",
+      "Do not pass material look-dev without macro, meso, and micro surface frequency bands for close-up materials.",
+      "Do not pass reference-fidelity material look-dev from a source image without usable referencePbr maps or an explicit documented limitation.",
+      "Do not patch a spec with extracted PBR maps when extraction confidence is below the target threshold unless the user explicitly accepts lower fidelity.",
+      "Do not place adjacent separate-geometry parts below 0.02 world-unit seam overlap (source: grimoire/build/geometry_patterns.md).",
+      "Do not satisfy raised or recessed relief, fasteners, or grip structure with a map alone when the feature affects form; use geometry or displacement (source: grimoire/build/geometry_patterns.md).",
+      "Adjacent components must overlap by at least 0.02 world units at shared seams (source: grimoire/build/geometry_patterns.md).",
+      "Raised or recessed relief and fasteners must be geometry, instanced micro-parts, or displacement; a map alone is an approximation (source: grimoire/build/geometry_patterns.md)."
+    ]
+  },
+  "qualityTargets": {
+    "targetFidelity": 0.7,
+    "mustMatch": [
+      "macro silhouette and proportions",
+      "primary material albedo/roughness response",
+      "reference-derived PBR material response at or above 0.7 confidence when source pixels are usable",
+      "most recognizable local features"
+    ],
+    "niceToHave": [
+      "micro scratches, stains, chips, and dirt masks",
+      "secondary lighting match"
+    ],
+    "fpsTarget": 60,
+    "reviewViewpoints": [
+      "front",
+      "three-quarter",
+      "side",
+      "thickness-axis",
+      "long-axis"
+    ]
+  },
+  "selfCorrectLoop": {
+    "enabled": true,
+    "visualAcceptance": {
+      "reviewer": "ai-vision",
+      "threshold": 0.7,
+      "comparisonArtifactRequired": true,
+      "layerScoresRequired": true,
+      "codePixelDiffIsAcceptanceAuthority": false,
+      "scoringRule": "AI vision must inspect a side-by-side reference/render sheet and score the current pass from 0 to 1. Pixel-diff code may assist diagnostics but cannot approve a pass.",
+      "requiredLayerScores": [
+        "silhouetteProportion",
+        "componentStructure",
+        "formDetail",
+        "materialSurface",
+        "lightingCamera"
+      ],
+      "featureReviewPolicy": {
+        "enabled": true,
+        "reviewUnit": "semantic-subsystem",
+        "maxCriticalFeaturesPerPass": 5,
+        "maxImportantFeaturesPerPass": 3,
+        "criticalDefaultThreshold": 0.8,
+        "importantAverageThreshold": 0.65,
+        "adaptiveEscalation": true,
+        "singleImagePairOnly": true,
+        "selectionRule": "Choose only the most visually salient, identity-defining, user-prioritized, or high-risk semantic systems. Group repeated parts instead of reviewing every mesh. AI vision scores every selected feature from the same full reference/render pair."
+      }
+    },
+    "reviewAfterPasses": [
+      "blockout",
+      "structural-pass",
+      "form-refinement",
+      "material-pass",
+      "surface-pass",
+      "lighting-pass",
+      "interaction-pass",
+      "optimization-pass"
+    ],
+    "allowedActions": [
+      "continue",
+      "refine-spec",
+      "refine-code",
+      "request-input",
+      "stop"
+    ],
+    "specRefineTriggers": [
+      "missing component",
+      "wrong primitive family",
+      "wrong proportions",
+      "material layer under-specified",
+      "local feature not traceable to viewEvidence",
+      "reference ambiguity discovered during implementation"
+    ],
+    "codeRefineTriggers": [
+      "spec is adequate but generated geometry/material does not match",
+      "browser render differs from reference",
+      "performance budget exceeded",
+      "lighting hides geometry or material response"
+    ],
+    "stopCriteria": [
+      "target fidelity reached or user accepts current approximation",
+      "remaining gaps require new reference images or manual art"
+    ],
+    "screenshotPolicy": {
+      "requiredForPasses": [
+        "blockout",
+        "structural-pass",
+        "form-refinement",
+        "material-pass",
+        "surface-pass",
+        "lighting-pass",
+        "interaction-pass"
+      ],
+      "preferredCapture": "in-app-browser-screenshot",
+      "fallbackCapture": "user-supplied-screenshot-path",
+      "minimumEvidence": "Each visual pass needs a reference image, rendered screenshot, side-by-side comparison sheet, AI vision score, layer scores, and critique before choosing continue.",
+      "reviewPairRule": "Compare the same camera/viewpoint whenever possible; do not judge a front reference against a random render angle.",
+      "acceptanceAuthority": "AI vision review of the comparison sheet. Code-generated pixel similarity is not sufficient evidence."
+    }
+  },
+  "featureReviewTargets": [
+    {
+      "id": "green-cross-plaque",
+      "name": "Green cross plaque on the fascia",
+      "why": "The single mark that says pharmacy from across a room. If it is missing, misplaced or the wrong green, the object reads as generic casework.",
+      "failureModes": [
+        "flattened into a texture decal with no edge",
+        "wrong hue — a blue or grey cross reads as a hospital, not a pharmacy",
+        "placed on the operator side where a customer never sees it"
+      ],
+      "evidenceRefs": [
+        "full-object"
+      ],
+      "required": true,
+      "tier": "critical"
+    },
+    {
+      "id": "bay-repetition",
+      "name": "The run is a repeated bay",
+      "why": "This is the load-bearing structural decision. A stretched run smears every pull, seam and plaque; a repeated one never distorts a texel.",
+      "failureModes": [
+        "length authored as a stretch axis",
+        "bay seam invisible, so a long run reads as one extruded slab"
+      ],
+      "evidenceRefs": [
+        "full-object"
+      ],
+      "required": true,
+      "tier": "critical"
+    },
+    {
+      "id": "worktop-oversail",
+      "name": "Worktop oversails the carcass",
+      "why": "The proud top edge and the shadow under it are what separate the top plane from the carcass front by value — the job an outline pass would otherwise do.",
+      "failureModes": [
+        "worktop flush with the carcass, losing the shadow line",
+        "overhang on the customer side only"
+      ],
+      "evidenceRefs": [
+        "full-object"
+      ],
+      "required": true,
+      "tier": "important"
+    }
+  ],
+  "sculptPipeline": {
+    "passGateMode": "locked-sequential",
+    "passOrder": [
+      "blockout",
+      "structural-pass",
+      "form-refinement",
+      "material-pass",
+      "surface-pass",
+      "lighting-pass",
+      "interaction-pass",
+      "optimization-pass"
+    ],
+    "currentPass": "blockout",
+    "completedPasses": [],
+    "lastCompletedPass": "",
+    "blockedReason": "blockout requires a browser screenshot and self-correction review before structural-pass unlocks",
+    "nextRequiredEvidence": [
+      "blockout browser render screenshot from your agent's browser/screenshot tool",
+      "side-by-side reference/render comparison sheet",
+      "AI vision score >= 0.7 with layer scores and mismatch critique",
+      "critical semantic feature scores from the same image pair meeting their individual thresholds",
+      "reviewHistory entry for blockout with action=continue"
+    ]
+  },
+  "lookDevTargets": {
+    "qualityPriority": "reference-fidelity",
+    "materialPass": {
+      "albedoPaletteRequired": true,
+      "roughnessVariationRequired": true,
+      "normalOrBumpRequired": true,
+      "localOverridesRequired": true,
+      "minimumTextureResolution": 1024,
+      "preferredTextureResolution": 2048,
+      "independentMapChannels": [
+        "albedo",
+        "roughness",
+        "height",
+        "normal",
+        "ambient-occlusion"
+      ],
+      "requiredSurfaceFrequencyBands": [
+        "macro",
+        "meso",
+        "micro"
+      ],
+      "geometryReliefRequiredWhenSilhouetteAffected": true,
+      "referencePbrExtraction": {
+        "requiredWhenSourceImagePresent": true,
+        "targetThreshold": 0.7,
+        "stopOnLowConfidence": true,
+        "script": "forge/stage1_intake/extract_pbr_evidence.py",
+        "acceptedLimitation": "single-image extraction is reference-derived inference, not exact photogrammetry"
+      },
+      "mustAvoid": [
+        "single flat albedo per material",
+        "uniform roughness",
+        "albedo texture reused as roughness/height/normal/AO",
+        "single-frequency random noise",
+        "plastic-looking smooth bark, stone, cloth, foliage, or aged material",
+        "local color/detail described only in prose without material masks",
+        "claiming exact PBR recovery when confidence is below the target threshold"
+      ]
+    },
+    "lightingPass": {
+      "requiredTerms": [
+        "key light",
+        "fill light",
+        "rim or environment light",
+        "exposure",
+        "tone mapping",
+        "background",
+        "contact shadow"
+      ],
+      "mustAvoid": [
+        "ambient-only lighting",
+        "flat value range",
+        "missing contact shadow",
+        "reference lighting copied without separating material readability"
+      ]
+    },
+    "screenshotReview": [
+      "Compare albedo palette and local color zones.",
+      "Compare roughness/normal/bump response under light.",
+      "Compare cavity dirt, edge wear, stains, moss, scratches, or other local masks.",
+      "Compare key/fill/rim structure, exposure, tone mapping, background, and contact shadows.",
+      "Capture a neutral-light render to verify material readability without reference lighting.",
+      "Capture a grazing-light close-up to expose flat normals, uniform roughness, tiling, and plastic highlights.",
+      "Capture a reference-matched render from the same camera framing as the source."
+    ]
+  },
+  "actionReadiness": {
+    "contract": "Every macro/meso component should be generated as a stable named Object3D pivot node with a mesh child, action metadata, optional sockets, collider proxy, and destruction metadata.",
+    "defaultRigType": "action-ready-static-rig",
+    "rootMotionNode": "root",
+    "requiredComponentFields": [
+      "id",
+      "parent",
+      "transform",
+      "attachment for child appendages, connectors, limbs, tubes, handles, legs, horns, wings, branches, or cables",
+      "actionProfile.animationRole",
+      "actionProfile.pivot",
+      "actionProfile.collider",
+      "actionProfile.destruction"
+    ],
+    "transformChannels": [
+      "translate",
+      "rotate",
+      "scale",
+      "bend",
+      "twist",
+      "detach",
+      "visibility",
+      "material-state"
+    ],
+    "authoringRules": [
+      "Do not collapse independently movable parts into one mesh.",
+      "Put transforms on component pivot groups, not only on raw meshes.",
+      "For attached child parts, put the pivot at the semantic root/socket and build visible geometry from localStart to localEnd.",
+      "Represent hinge, socket, detachable, and breakable intent even when no animation is implemented yet.",
+      "Use simplified collider proxies for runtime physics instead of visual mesh colliders by default."
+    ],
+    "destructionPolicy": {
+      "defaultBreakable": false,
+      "fractureGroupNaming": "Use stable semantic names such as body-shell, left-hinge, glass-panel, branch-segment.",
+      "debrisStrategy": "Prefer detachable component groups and a small number of procedural fragments over random mesh explosion."
+    }
+  },
+  "assumptions": [
+    "RESOLVED — right-hand return leaves frame: modelled as a plain end panel mirroring the left return.",
+    "RESOLVED — fascia lettering painted vs plate: modelled as a proud plate, which reads either way and catches an edge.",
+    "RESOLVED — hidden operator-side worktop overhang: mirrors the visible customer side.",
+    "Counter height 0.95 m, read off the stool beside it and matching this project's existing benches.",
+    "DELIBERATE DEVIATION — textureResolution is 344, not the validator's 1024 minimum. The atlas is 344x192 with 32 colours because this is 16-bit pixel art: a texel is meant to land at roughly 2 cm in world space and read AS a texel. A 1024 sheet would be four times the resolution the style wants and would defeat NearestFilter. The warning is correct for a photoreal target and wrong for this one."
+  ],
+  "coordinateFrame": {
+    "front": "camera-facing side in the reference image",
+    "up": "image up direction",
+    "scaleReference": "unit scale; adjust after first browser render"
+  },
+  "silhouette": {
+    "boundingShape": "wide shallow cuboid with a proud top slab and a recessed base band",
+    "aspectRatios": [
+      {
+        "axis": "width:height",
+        "value": 0.95
+      },
+      {
+        "axis": "depth:height",
+        "value": 0.69
+      }
+    ],
+    "symmetry": "bilateral about the bay centre, broken only by the fascia ornament",
+    "dominantCurves": [],
+    "negativeSpaces": [
+      "the kick recess under the plinth — the only place the silhouette bites in"
+    ],
+    "landmarks": [
+      "worktop front edge at 0.95 m",
+      "kick recess top at 0.13 m",
+      "drawer/door split at 0.63 m"
+    ]
+  },
+  "viewEvidence": [
+    {
+      "id": "full-object",
+      "view": "primary",
+      "imageRegion": {
+        "x": 0.0,
+        "y": 0.0,
+        "width": 1.0,
+        "height": 1.0,
+        "units": "normalized"
+      },
+      "observations": [],
+      "confidence": 0.5
+    }
+  ],
+  "componentTree": [
+    {
+      "id": "root",
+      "name": "Counter bay",
+      "level": "macro",
+      "role": "body",
+      "importance": 1.0,
+      "confidence": 0.9,
+      "primitive": "box",
+      "topologyClass": "assembled-solid",
+      "topologyRationale": "An axis-aligned box. Every form in the reference is one; nothing here needs a lathe, loft or curve.",
+      "geometryDescriptor": {
+        "topologyIntent": "Faceted low-poly. Non-indexed geometry with computeVertexNormals so every face keeps its own normal — smooth normals would round the silhouette and lose the 16-bit read.",
+        "edgeTreatment": {
+          "type": "chamfer",
+          "bevelRadius": 0.008,
+          "segments": 1
+        },
+        "deformationStack": [],
+        "uvStrategy": "generated procedural coordinates",
+        "normalStrategy": "vertex normals from generated geometry"
+      },
+      "parent": null,
+      "attachment": null,
+      "dimensions": {
+        "width": 0.9,
+        "height": 0.95,
+        "depth": 0.66,
+        "units": "metres",
+        "confidence": 0.8
+      },
+      "transform": {
+        "position": [
+          0,
+          0,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "actionProfile": {
+        "animationRole": "root",
+        "pivot": {
+          "mode": "center",
+          "localPosition": [
+            0,
+            0,
+            0
+          ],
+          "axis": [
+            0,
+            1,
+            0
+          ],
+          "confidence": 0.9
+        },
+        "transformChannels": {
+          "translate": true,
+          "rotate": true,
+          "scale": true,
+          "bend": false,
+          "twist": false,
+          "detach": false,
+          "visibility": true,
+          "materialState": true
+        },
+        "sockets": [
+          {
+            "id": "root.top",
+            "localPosition": [
+              0,
+              0.475,
+              0
+            ],
+            "normal": [
+              0,
+              1,
+              0
+            ],
+            "purpose": "clutter spawn surface — AdaptivePropBase snaps props here"
+          },
+          {
+            "id": "root.left",
+            "localPosition": [
+              -0.45,
+              0,
+              0
+            ],
+            "normal": [
+              -1,
+              0,
+              0
+            ],
+            "purpose": "butt against the next bay in the run"
+          },
+          {
+            "id": "root.right",
+            "localPosition": [
+              0.45,
+              0,
+              0
+            ],
+            "normal": [
+              1,
+              0,
+              0
+            ],
+            "purpose": "butt against the next bay in the run"
+          }
+        ],
+        "collider": {
+          "type": "box",
+          "offset": [
+            0,
+            0,
+            0
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ],
+          "isTrigger": false,
+          "notes": "Replace with sphere/capsule/compound proxy when the object shape demands it."
+        },
+        "constraints": [],
+        "destruction": {
+          "breakable": false,
+          "fractureGroup": "root",
+          "seamRefs": [],
+          "detachableFragments": [],
+          "breakImpulse": 0.0,
+          "debrisMaterial": "base"
+        }
+      },
+      "material": "painted-metal-green",
+      "materialLayers": [
+        "painted-metal-green"
+      ],
+      "deformations": [],
+      "joints": [],
+      "seams": [],
+      "localFeatures": [],
+      "surfaceDetail": {
+        "macroRoughness": 0.0,
+        "microRoughness": 0.0,
+        "bumpAmplitude": 0.0,
+        "normalPattern": "",
+        "displacementPattern": "",
+        "occlusionPattern": "",
+        "edgeWearPattern": "",
+        "notes": ""
+      },
+      "evidenceRefs": [
+        "full-object"
+      ],
+      "details": [],
+      "fidelityTier": "structure",
+      "colorMaterialRecipe": {
+        "material": "painted-metal-green",
+        "baseColorHex": "#7d9478",
+        "trimStrip": "panel",
+        "accentSlot": 0,
+        "source": "palette.js supplies the hue; the greyscale trim strip supplies the luminance detail. No hex literals live outside palette.js.",
+        "finish": "matte",
+        "metalness": 0.0,
+        "dominantAlbedo": "rgba(125, 148, 120, 1.0)",
+        "secondaryAlbedo": "rgba(95, 115, 96, 1.0)",
+        "materialClass": "metal",
+        "materialClassConfidence": 0.9
+      }
+    },
+    {
+      "id": "carcass",
+      "name": "Painted carcass",
+      "level": "meso",
+      "role": "body",
+      "importance": 0.7,
+      "confidence": 0.85,
+      "primitive": "box",
+      "topologyClass": "assembled-solid",
+      "topologyRationale": "An axis-aligned box. Every form in the reference is one; nothing here needs a lathe, loft or curve.",
+      "geometryDescriptor": {
+        "topologyIntent": "Faceted low-poly. Non-indexed geometry with computeVertexNormals so every face keeps its own normal — smooth normals would round the silhouette and lose the 16-bit read.",
+        "edgeTreatment": {
+          "type": "chamfer",
+          "bevelRadius": 0.008,
+          "segments": 1
+        },
+        "deformationStack": [],
+        "uvStrategy": "generated procedural coordinates",
+        "normalStrategy": "vertex normals from generated geometry"
+      },
+      "parent": "root",
+      "attachment": {
+        "parentSocket": "root.body",
+        "contactType": "overlap",
+        "localStart": [
+          0,
+          -0.0325,
+          0
+        ],
+        "localEnd": [
+          0,
+          -0.0325,
+          0
+        ],
+        "embedDepth": 0.004,
+        "gapTolerance": 0.002
+      },
+      "dimensions": {
+        "width": 0.9,
+        "height": 0.805,
+        "depth": 0.62,
+        "units": "metres",
+        "confidence": 0.8
+      },
+      "transform": {
+        "position": [
+          0,
+          -0.0325,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "actionProfile": {
+        "animationRole": "root",
+        "pivot": {
+          "mode": "center",
+          "localPosition": [
+            0,
+            0,
+            0
+          ],
+          "axis": [
+            0,
+            1,
+            0
+          ],
+          "confidence": 0.9
+        },
+        "transformChannels": {
+          "translate": true,
+          "rotate": true,
+          "scale": true,
+          "bend": false,
+          "twist": false,
+          "detach": false,
+          "visibility": true,
+          "materialState": true
+        },
+        "sockets": [],
+        "collider": {
+          "type": "box",
+          "offset": [
+            0,
+            0,
+            0
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ],
+          "isTrigger": false,
+          "notes": "Replace with sphere/capsule/compound proxy when the object shape demands it."
+        },
+        "constraints": [],
+        "destruction": {
+          "breakable": false,
+          "fractureGroup": "root",
+          "seamRefs": [],
+          "detachableFragments": [],
+          "breakImpulse": 0.0,
+          "debrisMaterial": "base"
+        }
+      },
+      "material": "painted-metal-green",
+      "materialLayers": [
+        "painted-metal-green"
+      ],
+      "deformations": [],
+      "joints": [],
+      "seams": [],
+      "localFeatures": [
+        {
+          "id": "panel-seams",
+          "kind": "drawn seam"
+        }
+      ],
+      "surfaceDetail": {
+        "macroRoughness": 0.0,
+        "microRoughness": 0.0,
+        "bumpAmplitude": 0.0,
+        "normalPattern": "",
+        "displacementPattern": "",
+        "occlusionPattern": "",
+        "edgeWearPattern": "",
+        "notes": ""
+      },
+      "evidenceRefs": [
+        "full-object"
+      ],
+      "details": [],
+      "fidelityTier": "structure",
+      "colorMaterialRecipe": {
+        "material": "painted-metal-green",
+        "baseColorHex": "#7d9478",
+        "trimStrip": "panel",
+        "accentSlot": 0,
+        "source": "palette.js supplies the hue; the greyscale trim strip supplies the luminance detail. No hex literals live outside palette.js.",
+        "finish": "matte",
+        "metalness": 0.0,
+        "dominantAlbedo": "rgba(125, 148, 120, 1.0)",
+        "secondaryAlbedo": "rgba(95, 115, 96, 1.0)",
+        "materialClass": "metal",
+        "materialClassConfidence": 0.9
+      }
+    },
+    {
+      "id": "worktop",
+      "name": "Timber worktop",
+      "level": "macro",
+      "role": "surface",
+      "importance": 0.95,
+      "confidence": 0.85,
+      "primitive": "box",
+      "topologyClass": "assembled-solid",
+      "topologyRationale": "An axis-aligned box. Every form in the reference is one; nothing here needs a lathe, loft or curve.",
+      "geometryDescriptor": {
+        "topologyIntent": "Faceted low-poly. Non-indexed geometry with computeVertexNormals so every face keeps its own normal — smooth normals would round the silhouette and lose the 16-bit read.",
+        "edgeTreatment": {
+          "type": "chamfer",
+          "bevelRadius": 0.008,
+          "segments": 1
+        },
+        "deformationStack": [],
+        "uvStrategy": "generated procedural coordinates",
+        "normalStrategy": "vertex normals from generated geometry"
+      },
+      "parent": "root",
+      "attachment": {
+        "parentSocket": "root.body",
+        "contactType": "overlap",
+        "localStart": [
+          0,
+          0.4475,
+          0.02
+        ],
+        "localEnd": [
+          0,
+          0.4475,
+          0.02
+        ],
+        "embedDepth": 0.004,
+        "gapTolerance": 0.002
+      },
+      "dimensions": {
+        "width": 0.94,
+        "height": 0.055,
+        "depth": 0.7,
+        "units": "metres",
+        "confidence": 0.8
+      },
+      "transform": {
+        "position": [
+          0,
+          0.4475,
+          0.02
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "actionProfile": {
+        "animationRole": "root",
+        "pivot": {
+          "mode": "base",
+          "localPosition": [
+            0,
+            0,
+            0
+          ],
+          "axis": [
+            0,
+            1,
+            0
+          ],
+          "confidence": 0.9
+        },
+        "transformChannels": {
+          "translate": true,
+          "rotate": true,
+          "scale": true,
+          "bend": false,
+          "twist": false,
+          "detach": false,
+          "visibility": true,
+          "materialState": true
+        },
+        "sockets": [],
+        "collider": {
+          "type": "box",
+          "offset": [
+            0,
+            0,
+            0
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ],
+          "isTrigger": false,
+          "notes": "Replace with sphere/capsule/compound proxy when the object shape demands it."
+        },
+        "constraints": [],
+        "destruction": {
+          "breakable": false,
+          "fractureGroup": "root",
+          "seamRefs": [],
+          "detachableFragments": [],
+          "breakImpulse": 0.0,
+          "debrisMaterial": "base"
+        }
+      },
+      "material": "timber-warm",
+      "materialLayers": [
+        "timber-warm"
+      ],
+      "deformations": [],
+      "joints": [],
+      "seams": [],
+      "localFeatures": [
+        {
+          "id": "worktop-overhang",
+          "kind": "proud oversailing edge, 0.06 front"
+        }
+      ],
+      "surfaceDetail": {
+        "macroRoughness": 0.0,
+        "microRoughness": 0.0,
+        "bumpAmplitude": 0.0,
+        "normalPattern": "",
+        "displacementPattern": "",
+        "occlusionPattern": "",
+        "edgeWearPattern": "",
+        "notes": ""
+      },
+      "evidenceRefs": [
+        "full-object"
+      ],
+      "details": [],
+      "fidelityTier": "structure",
+      "colorMaterialRecipe": {
+        "material": "timber-warm",
+        "baseColorHex": "#a9713f",
+        "trimStrip": "wood",
+        "accentSlot": 1,
+        "source": "palette.js supplies the hue; the greyscale trim strip supplies the luminance detail. No hex literals live outside palette.js.",
+        "finish": "matte",
+        "metalness": 0.0,
+        "dominantAlbedo": "rgba(169, 113, 63, 1.0)",
+        "secondaryAlbedo": "rgba(138, 87, 48, 1.0)",
+        "materialClass": "wood",
+        "materialClassConfidence": 0.9
+      }
+    },
+    {
+      "id": "drawer-bank",
+      "name": "Drawer bank",
+      "level": "meso",
+      "role": "mechanism",
+      "importance": 0.7,
+      "confidence": 0.85,
+      "primitive": "box",
+      "topologyClass": "assembled-solid",
+      "topologyRationale": "An axis-aligned box. Every form in the reference is one; nothing here needs a lathe, loft or curve.",
+      "geometryDescriptor": {
+        "topologyIntent": "Faceted low-poly. Non-indexed geometry with computeVertexNormals so every face keeps its own normal — smooth normals would round the silhouette and lose the 16-bit read.",
+        "edgeTreatment": {
+          "type": "chamfer",
+          "bevelRadius": 0.008,
+          "segments": 1
+        },
+        "deformationStack": [],
+        "uvStrategy": "generated procedural coordinates",
+        "normalStrategy": "vertex normals from generated geometry"
+      },
+      "parent": "carcass",
+      "attachment": {
+        "parentSocket": "carcass.body",
+        "contactType": "embed",
+        "localStart": [
+          0,
+          -0.21,
+          0.31
+        ],
+        "localEnd": [
+          0,
+          -0.21,
+          0.31
+        ],
+        "embedDepth": 0.004,
+        "gapTolerance": 0.002
+      },
+      "dimensions": {
+        "width": 0.76,
+        "height": 0.3,
+        "depth": 0.03,
+        "units": "metres",
+        "confidence": 0.8
+      },
+      "transform": {
+        "position": [
+          0,
+          -0.21,
+          0.31
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "actionProfile": {
+        "animationRole": "root",
+        "pivot": {
+          "mode": "edge",
+          "localPosition": [
+            0,
+            -0.21,
+            0.31
+          ],
+          "axis": [
+            0,
+            1,
+            0
+          ],
+          "confidence": 0.9
+        },
+        "transformChannels": {
+          "translate": true,
+          "rotate": true,
+          "scale": true,
+          "bend": false,
+          "twist": false,
+          "detach": false,
+          "visibility": true,
+          "materialState": true
+        },
+        "sockets": [],
+        "collider": {
+          "type": "box",
+          "offset": [
+            0,
+            0,
+            0
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ],
+          "isTrigger": false,
+          "notes": "Replace with sphere/capsule/compound proxy when the object shape demands it."
+        },
+        "constraints": [],
+        "destruction": {
+          "breakable": false,
+          "fractureGroup": "root",
+          "seamRefs": [],
+          "detachableFragments": [],
+          "breakImpulse": 0.0,
+          "debrisMaterial": "base"
+        }
+      },
+      "material": "timber-warm",
+      "materialLayers": [
+        "timber-warm"
+      ],
+      "deformations": [],
+      "joints": [],
+      "seams": [],
+      "localFeatures": [
+        {
+          "id": "drawer-pulls",
+          "kind": "brass bar pull"
+        }
+      ],
+      "surfaceDetail": {
+        "macroRoughness": 0.0,
+        "microRoughness": 0.0,
+        "bumpAmplitude": 0.0,
+        "normalPattern": "",
+        "displacementPattern": "",
+        "occlusionPattern": "",
+        "edgeWearPattern": "",
+        "notes": ""
+      },
+      "evidenceRefs": [
+        "full-object"
+      ],
+      "details": [],
+      "fidelityTier": "structure",
+      "colorMaterialRecipe": {
+        "material": "timber-warm",
+        "baseColorHex": "#a9713f",
+        "trimStrip": "wood",
+        "accentSlot": 0,
+        "source": "palette.js supplies the hue; the greyscale trim strip supplies the luminance detail. No hex literals live outside palette.js.",
+        "finish": "matte",
+        "metalness": 0.0,
+        "dominantAlbedo": "rgba(169, 113, 63, 1.0)",
+        "secondaryAlbedo": "rgba(138, 87, 48, 1.0)",
+        "materialClass": "wood",
+        "materialClassConfidence": 0.9
+      }
+    },
+    {
+      "id": "door-bank",
+      "name": "Door bank",
+      "level": "meso",
+      "role": "mechanism",
+      "importance": 0.7,
+      "confidence": 0.85,
+      "primitive": "box",
+      "topologyClass": "assembled-solid",
+      "topologyRationale": "An axis-aligned box. Every form in the reference is one; nothing here needs a lathe, loft or curve.",
+      "geometryDescriptor": {
+        "topologyIntent": "Faceted low-poly. Non-indexed geometry with computeVertexNormals so every face keeps its own normal — smooth normals would round the silhouette and lose the 16-bit read.",
+        "edgeTreatment": {
+          "type": "chamfer",
+          "bevelRadius": 0.008,
+          "segments": 1
+        },
+        "deformationStack": [],
+        "uvStrategy": "generated procedural coordinates",
+        "normalStrategy": "vertex normals from generated geometry"
+      },
+      "parent": "carcass",
+      "attachment": {
+        "parentSocket": "carcass.body",
+        "contactType": "embed",
+        "localStart": [
+          0,
+          0.115,
+          0.31
+        ],
+        "localEnd": [
+          0,
+          0.115,
+          0.31
+        ],
+        "embedDepth": 0.004,
+        "gapTolerance": 0.002
+      },
+      "dimensions": {
+        "width": 0.76,
+        "height": 0.22,
+        "depth": 0.03,
+        "units": "metres",
+        "confidence": 0.8
+      },
+      "transform": {
+        "position": [
+          0,
+          0.115,
+          0.31
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "actionProfile": {
+        "animationRole": "root",
+        "pivot": {
+          "mode": "edge",
+          "localPosition": [
+            -0.38,
+            0.115,
+            0.31
+          ],
+          "axis": [
+            0,
+            1,
+            0
+          ],
+          "confidence": 0.9
+        },
+        "transformChannels": {
+          "translate": true,
+          "rotate": true,
+          "scale": true,
+          "bend": false,
+          "twist": false,
+          "detach": false,
+          "visibility": true,
+          "materialState": true
+        },
+        "sockets": [],
+        "collider": {
+          "type": "box",
+          "offset": [
+            0,
+            0,
+            0
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ],
+          "isTrigger": false,
+          "notes": "Replace with sphere/capsule/compound proxy when the object shape demands it."
+        },
+        "constraints": [],
+        "destruction": {
+          "breakable": false,
+          "fractureGroup": "root",
+          "seamRefs": [],
+          "detachableFragments": [],
+          "breakImpulse": 0.0,
+          "debrisMaterial": "base"
+        }
+      },
+      "material": "timber-warm",
+      "materialLayers": [
+        "timber-warm"
+      ],
+      "deformations": [],
+      "joints": [],
+      "seams": [],
+      "localFeatures": [
+        {
+          "id": "door-pulls",
+          "kind": "brass bar pull"
+        }
+      ],
+      "surfaceDetail": {
+        "macroRoughness": 0.0,
+        "microRoughness": 0.0,
+        "bumpAmplitude": 0.0,
+        "normalPattern": "",
+        "displacementPattern": "",
+        "occlusionPattern": "",
+        "edgeWearPattern": "",
+        "notes": ""
+      },
+      "evidenceRefs": [
+        "full-object"
+      ],
+      "details": [],
+      "fidelityTier": "structure",
+      "colorMaterialRecipe": {
+        "material": "timber-warm",
+        "baseColorHex": "#a9713f",
+        "trimStrip": "wood",
+        "accentSlot": 0,
+        "source": "palette.js supplies the hue; the greyscale trim strip supplies the luminance detail. No hex literals live outside palette.js.",
+        "finish": "matte",
+        "metalness": 0.0,
+        "dominantAlbedo": "rgba(169, 113, 63, 1.0)",
+        "secondaryAlbedo": "rgba(138, 87, 48, 1.0)",
+        "materialClass": "wood",
+        "materialClassConfidence": 0.9
+      }
+    },
+    {
+      "id": "plinth",
+      "name": "Set-back plinth",
+      "level": "meso",
+      "role": "base",
+      "importance": 0.7,
+      "confidence": 0.85,
+      "primitive": "box",
+      "topologyClass": "assembled-solid",
+      "topologyRationale": "A solid box, deliberately narrower and shallower than the carcass above it. The kick \"recess\" is the negative space this leaves in front of the plinth, not a cavity carved into anything — which is how the joinery actually works and why a convex primitive is the correct classification.",
+      "geometryDescriptor": {
+        "topologyIntent": "Faceted low-poly. Non-indexed geometry with computeVertexNormals so every face keeps its own normal — smooth normals would round the silhouette and lose the 16-bit read.",
+        "edgeTreatment": {
+          "type": "chamfer",
+          "bevelRadius": 0.008,
+          "segments": 1
+        },
+        "deformationStack": [],
+        "uvStrategy": "generated procedural coordinates",
+        "normalStrategy": "vertex normals from generated geometry"
+      },
+      "parent": "carcass",
+      "attachment": {
+        "parentSocket": "carcass.body",
+        "contactType": "butt",
+        "localStart": [
+          0,
+          -0.4875,
+          0
+        ],
+        "localEnd": [
+          0,
+          -0.4875,
+          0
+        ],
+        "embedDepth": 0.004,
+        "gapTolerance": 0.002
+      },
+      "dimensions": {
+        "width": 0.86,
+        "height": 0.075,
+        "depth": 0.5,
+        "units": "metres",
+        "confidence": 0.8
+      },
+      "transform": {
+        "position": [
+          0,
+          -0.4875,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "actionProfile": {
+        "animationRole": "root",
+        "pivot": {
+          "mode": "center",
+          "localPosition": [
+            0,
+            0,
+            0
+          ],
+          "axis": [
+            0,
+            1,
+            0
+          ],
+          "confidence": 0.9
+        },
+        "transformChannels": {
+          "translate": true,
+          "rotate": true,
+          "scale": true,
+          "bend": false,
+          "twist": false,
+          "detach": false,
+          "visibility": true,
+          "materialState": true
+        },
+        "sockets": [],
+        "collider": {
+          "type": "box",
+          "offset": [
+            0,
+            0,
+            0
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ],
+          "isTrigger": false,
+          "notes": "Replace with sphere/capsule/compound proxy when the object shape demands it."
+        },
+        "constraints": [],
+        "destruction": {
+          "breakable": false,
+          "fractureGroup": "root",
+          "seamRefs": [],
+          "detachableFragments": [],
+          "breakImpulse": 0.0,
+          "debrisMaterial": "base"
+        }
+      },
+      "material": "painted-metal-green",
+      "materialLayers": [
+        "painted-metal-green"
+      ],
+      "deformations": [],
+      "joints": [],
+      "seams": [],
+      "localFeatures": [
+        {
+          "id": "kick-recess",
+          "kind": "groove",
+          "note": "negative space in front of the set-back plinth, 0.05 deep"
+        }
+      ],
+      "surfaceDetail": {
+        "macroRoughness": 0.0,
+        "microRoughness": 0.0,
+        "bumpAmplitude": 0.0,
+        "normalPattern": "",
+        "displacementPattern": "",
+        "occlusionPattern": "",
+        "edgeWearPattern": "",
+        "notes": ""
+      },
+      "evidenceRefs": [
+        "full-object"
+      ],
+      "details": [],
+      "fidelityTier": "structure",
+      "colorMaterialRecipe": {
+        "material": "painted-metal-green",
+        "baseColorHex": "#5f7360",
+        "trimStrip": "paint",
+        "accentSlot": 3,
+        "source": "palette.js supplies the hue; the greyscale trim strip supplies the luminance detail. No hex literals live outside palette.js.",
+        "finish": "matte",
+        "metalness": 0.0,
+        "dominantAlbedo": "rgba(95, 115, 96, 1.0)",
+        "secondaryAlbedo": "rgba(95, 115, 96, 1.0)",
+        "materialClass": "metal",
+        "materialClassConfidence": 0.9
+      }
+    },
+    {
+      "id": "cross-plaque",
+      "name": "Green cross plaque",
+      "level": "micro",
+      "role": "ornament",
+      "importance": 0.95,
+      "confidence": 0.85,
+      "primitive": "box",
+      "topologyClass": "surface-relief",
+      "topologyRationale": "A thin plate standing proud of the carcass face. surface-relief rather than a solid, because it is applied ornament with no independent volume — and it must NOT be flattened into a texture decal, since the reference shows it catching an edge.",
+      "geometryDescriptor": {
+        "topologyIntent": "Faceted low-poly. Non-indexed geometry with computeVertexNormals so every face keeps its own normal — smooth normals would round the silhouette and lose the 16-bit read.",
+        "edgeTreatment": {
+          "type": "chamfer",
+          "bevelRadius": 0.008,
+          "segments": 1
+        },
+        "deformationStack": [],
+        "uvStrategy": "generated procedural coordinates",
+        "normalStrategy": "vertex normals from generated geometry"
+      },
+      "parent": "carcass",
+      "attachment": {
+        "parentSocket": "carcass.body",
+        "contactType": "embed",
+        "localStart": [
+          -0.24,
+          -0.18,
+          0.325
+        ],
+        "localEnd": [
+          -0.24,
+          -0.18,
+          0.325
+        ],
+        "embedDepth": 0.004,
+        "gapTolerance": 0.002
+      },
+      "dimensions": {
+        "width": 0.16,
+        "height": 0.16,
+        "depth": 0.02,
+        "units": "metres",
+        "confidence": 0.8
+      },
+      "transform": {
+        "position": [
+          -0.24,
+          -0.18,
+          0.325
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "actionProfile": {
+        "animationRole": "root",
+        "pivot": {
+          "mode": "center",
+          "localPosition": [
+            0,
+            0,
+            0
+          ],
+          "axis": [
+            0,
+            1,
+            0
+          ],
+          "confidence": 0.9
+        },
+        "transformChannels": {
+          "translate": true,
+          "rotate": true,
+          "scale": true,
+          "bend": false,
+          "twist": false,
+          "detach": false,
+          "visibility": true,
+          "materialState": true
+        },
+        "sockets": [],
+        "collider": {
+          "type": "box",
+          "offset": [
+            0,
+            0,
+            0
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ],
+          "isTrigger": false,
+          "notes": "Replace with sphere/capsule/compound proxy when the object shape demands it."
+        },
+        "constraints": [],
+        "destruction": {
+          "breakable": false,
+          "fractureGroup": "root",
+          "seamRefs": [],
+          "detachableFragments": [],
+          "breakImpulse": 0.0,
+          "debrisMaterial": "base"
+        }
+      },
+      "material": "brass-fitting",
+      "materialLayers": [
+        "brass-fitting"
+      ],
+      "deformations": [],
+      "joints": [],
+      "seams": [],
+      "localFeatures": [
+        {
+          "id": "green-cross-plaque",
+          "kind": "applied plaque — the identity mark"
+        }
+      ],
+      "surfaceDetail": {
+        "macroRoughness": 0.0,
+        "microRoughness": 0.0,
+        "bumpAmplitude": 0.0,
+        "normalPattern": "",
+        "displacementPattern": "",
+        "occlusionPattern": "",
+        "edgeWearPattern": "",
+        "notes": ""
+      },
+      "evidenceRefs": [
+        "full-object"
+      ],
+      "details": [],
+      "fidelityTier": "structure",
+      "colorMaterialRecipe": {
+        "material": "brass-fitting",
+        "baseColorHex": "#57a98d",
+        "trimStrip": "paint",
+        "accentSlot": 2,
+        "source": "palette.js supplies the hue; the greyscale trim strip supplies the luminance detail. No hex literals live outside palette.js.",
+        "finish": "matte",
+        "metalness": 0.85,
+        "dominantAlbedo": "rgba(87, 169, 141, 1.0)",
+        "secondaryAlbedo": "rgba(143, 100, 50, 1.0)",
+        "materialClass": "metal",
+        "materialClassConfidence": 0.9
+      }
+    },
+    {
+      "id": "fascia-band",
+      "name": "Lettered fascia band",
+      "level": "micro",
+      "role": "ornament",
+      "importance": 0.9,
+      "confidence": 0.85,
+      "primitive": "box",
+      "topologyClass": "surface-relief",
+      "topologyRationale": "A thin plate standing proud of the carcass face. surface-relief rather than a solid, because it is applied ornament with no independent volume — and it must NOT be flattened into a texture decal, since the reference shows it catching an edge.",
+      "geometryDescriptor": {
+        "topologyIntent": "Faceted low-poly. Non-indexed geometry with computeVertexNormals so every face keeps its own normal — smooth normals would round the silhouette and lose the 16-bit read.",
+        "edgeTreatment": {
+          "type": "chamfer",
+          "bevelRadius": 0.008,
+          "segments": 1
+        },
+        "deformationStack": [],
+        "uvStrategy": "generated procedural coordinates",
+        "normalStrategy": "vertex normals from generated geometry"
+      },
+      "parent": "carcass",
+      "attachment": {
+        "parentSocket": "carcass.body",
+        "contactType": "embed",
+        "localStart": [
+          0.18,
+          -0.18,
+          0.322
+        ],
+        "localEnd": [
+          0.18,
+          -0.18,
+          0.322
+        ],
+        "embedDepth": 0.004,
+        "gapTolerance": 0.002
+      },
+      "dimensions": {
+        "width": 0.42,
+        "height": 0.1,
+        "depth": 0.015,
+        "units": "metres",
+        "confidence": 0.8
+      },
+      "transform": {
+        "position": [
+          0.18,
+          -0.18,
+          0.322
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "actionProfile": {
+        "animationRole": "root",
+        "pivot": {
+          "mode": "center",
+          "localPosition": [
+            0,
+            0,
+            0
+          ],
+          "axis": [
+            0,
+            1,
+            0
+          ],
+          "confidence": 0.9
+        },
+        "transformChannels": {
+          "translate": true,
+          "rotate": true,
+          "scale": true,
+          "bend": false,
+          "twist": false,
+          "detach": false,
+          "visibility": true,
+          "materialState": true
+        },
+        "sockets": [],
+        "collider": {
+          "type": "box",
+          "offset": [
+            0,
+            0,
+            0
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ],
+          "isTrigger": false,
+          "notes": "Replace with sphere/capsule/compound proxy when the object shape demands it."
+        },
+        "constraints": [],
+        "destruction": {
+          "breakable": false,
+          "fractureGroup": "root",
+          "seamRefs": [],
+          "detachableFragments": [],
+          "breakImpulse": 0.0,
+          "debrisMaterial": "base"
+        }
+      },
+      "material": "brass-fitting",
+      "materialLayers": [
+        "brass-fitting"
+      ],
+      "deformations": [],
+      "joints": [],
+      "seams": [],
+      "localFeatures": [
+        {
+          "id": "fascia-lettering",
+          "kind": "lettered band"
+        }
+      ],
+      "surfaceDetail": {
+        "macroRoughness": 0.0,
+        "microRoughness": 0.0,
+        "bumpAmplitude": 0.0,
+        "normalPattern": "",
+        "displacementPattern": "",
+        "occlusionPattern": "",
+        "edgeWearPattern": "",
+        "notes": ""
+      },
+      "evidenceRefs": [
+        "full-object"
+      ],
+      "details": [],
+      "fidelityTier": "structure",
+      "colorMaterialRecipe": {
+        "material": "brass-fitting",
+        "baseColorHex": "#c08a4a",
+        "trimStrip": "paper",
+        "accentSlot": 2,
+        "source": "palette.js supplies the hue; the greyscale trim strip supplies the luminance detail. No hex literals live outside palette.js.",
+        "finish": "matte",
+        "metalness": 0.85,
+        "dominantAlbedo": "rgba(192, 138, 74, 1.0)",
+        "secondaryAlbedo": "rgba(143, 100, 50, 1.0)",
+        "materialClass": "metal",
+        "materialClassConfidence": 0.9
+      }
+    }
+  ],
+  "materials": [
+    {
+      "id": "painted-metal-green",
+      "name": "Muted green painted metal",
+      "type": "standard",
+      "shaderModel": "MeshStandardMaterial / PBR approximation",
+      "baseColor": "#7d9478",
+      "color": "#7d9478",
+      "albedo": {
+        "dominant": "#CB8E58",
+        "secondary": [
+          "#4B4F40",
+          "#7F795F",
+          "#714C31"
+        ],
+        "samplingNotes": "Reference-derived from foreground pixels; de-lit to reduce baked shadows/highlights.",
+        "map": {
+          "path": "/home/user/Mediguide-pro/tools/img2threejs-work/pbr-evidence/painted-metal-green_albedo.png",
+          "url": "painted-metal-green_albedo.png",
+          "channel": "albedo",
+          "source": "reference-pixel-extraction"
+        }
+      },
+      "colorVariation": {
+        "palette": [
+          "#CB8E58",
+          "#4B4F40",
+          "#7F795F",
+          "#714C31",
+          "#B5B295"
+        ],
+        "pattern": "reference-derived pixel palette",
+        "amplitude": 0.191,
+        "heightCorrelation": 0.42
+      },
+      "textureResolution": 1024,
+      "textureProjection": {
+        "mode": "uv",
+        "repeat": [
+          1.0,
+          1.0
+        ],
+        "anisotropy": 8,
+        "texelDensityIntent": "Preserve stable world/object-scale detail; do not stretch micro detail with component scale."
+      },
+      "surfaceFrequencyBands": [
+        {
+          "id": "macro",
+          "frequency": 2.0,
+          "amplitude": 0.439,
+          "role": "reference-derived broad albedo and height breakup"
+        },
+        {
+          "id": "meso",
+          "frequency": 14.0,
+          "amplitude": 0.35,
+          "role": "reference-derived cracks, ridges, pores, grain, or leaf clusters"
+        },
+        {
+          "id": "micro",
+          "frequency": 72.0,
+          "amplitude": 0.14,
+          "role": "reference-derived micro highlight breakup under grazing light"
+        }
+      ],
+      "roughness": {
+        "base": 0.701,
+        "variation": 0.165,
+        "map": {
+          "path": "/home/user/Mediguide-pro/tools/img2threejs-work/pbr-evidence/painted-metal-green_roughness.png",
+          "url": "painted-metal-green_roughness.png",
+          "channel": "roughness",
+          "source": "reference-pixel-extraction"
+        },
+        "localResponse": "reference-derived roughness estimate; cavities and textured zones trend rougher, bright highlights trend smoother"
+      },
+      "metalness": {
+        "base": 0.0,
+        "variation": 0.0
+      },
+      "normal": {
+        "pattern": "reference-derived height-gradient normal map",
+        "strength": 0.255,
+        "map": {
+          "path": "/home/user/Mediguide-pro/tools/img2threejs-work/pbr-evidence/painted-metal-green_normal.png",
+          "url": "painted-metal-green_normal.png",
+          "channel": "normal",
+          "source": "reference-pixel-extraction"
+        },
+        "heightSource": {
+          "path": "/home/user/Mediguide-pro/tools/img2threejs-work/pbr-evidence/painted-metal-green_height.png",
+          "url": "painted-metal-green_height.png",
+          "channel": "height",
+          "source": "reference-pixel-extraction"
+        },
+        "space": "tangent"
+      },
+      "bump": {
+        "pattern": "reference-derived height field",
+        "amplitude": 0.038,
+        "map": {
+          "path": "/home/user/Mediguide-pro/tools/img2threejs-work/pbr-evidence/painted-metal-green_height.png",
+          "url": "painted-metal-green_height.png",
+          "channel": "height",
+          "source": "reference-pixel-extraction"
+        }
+      },
+      "displacement": {
+        "pattern": "none",
+        "amplitude": 0.0,
+        "scale": 1.0,
+        "silhouetteAffects": false
+      },
+      "ambientOcclusion": {
+        "cavityStrength": 0.38,
+        "contactShadowBias": 0.35,
+        "map": {
+          "path": "/home/user/Mediguide-pro/tools/img2threejs-work/pbr-evidence/painted-metal-green_ao.png",
+          "url": "painted-metal-green_ao.png",
+          "channel": "ao",
+          "source": "reference-pixel-extraction"
+        },
+        "notes": "Reference-derived cavity estimate from local height minima; verify against grazing-light screenshot."
+      },
+      "wear": {
+        "edgeWear": {
+          "amount": 0.3,
+          "source": "vertex-baked edge mask (pointiness), aMasks.g",
+          "response": "convex edges lighten toward #fff0d2"
+        },
+        "scratches": {
+          "amount": 0.0,
+          "note": "none — a flat 16-bit sheet has no room for them"
+        }
+      },
+      "dirt": {
+        "amount": 0.46,
+        "cavityBias": 1.0,
+        "source": "vertex-baked cavity mask (hemisphere raycast AO), aMasks.r",
+        "response": "crevices darken toward #6a5f6a; this is the ambient occlusion"
+      },
+      "localOverrides": [
+        {
+          "id": "reference-pbr-pixel-evidence",
+          "type": "material-map-evidence",
+          "evidenceRefs": [
+            "full-object"
+          ],
+          "channels": [
+            "albedo",
+            "roughness",
+            "height",
+            "normal",
+            "ambient-occlusion"
+          ],
+          "notes": "Use generated maps as material evidence, then refine after browser screenshot comparison."
+        }
+      ],
+      "shaderNotes": [
+        "Prefer MeshPhysicalMaterial when clearcoat, sheen, transmission, or thin-surface response is observed; otherwise use MeshStandardMaterial-compatible PBR channels.",
+        "Generate albedo, roughness, height/normal, and AO independently; never alias albedo into roughness.",
+        "Use normal/bump/displacement only when they map to observed surface relief.",
+        "Use displacement geometry when the observed relief changes the close-up silhouette; texture-only relief is insufficient there.",
+        "Reference-derived maps are estimates from image pixels; verify with neutral, grazing, and reference-matched renders.",
+        "Do not treat baked image shadows as final albedo; rerun extraction with a tighter material crop if highlights/shadows pollute the maps."
+      ],
+      "notes": "The cabinetry. Flat, matte, no baked highlight — the toon ramp supplies value.",
+      "referencePbr": {
+        "version": "1.0",
+        "sourceImage": "/home/user/Mediguide-pro/docs/concept/shape-reference.png",
+        "extractor": "stage1_intake/extract_pbr_evidence.py",
+        "method": "single-image pixel evidence with de-lighting estimate; not photogrammetry",
+        "usable": true,
+        "verdict": "pass",
+        "confidence": 0.86,
+        "estimatedFidelity": 0.86,
+        "targetThreshold": 0.7,
+        "hardLimit": "A single image cannot uniquely recover true albedo/roughness/normal/AO; maps are reference-derived estimates.",
+        "maps": {
+          "albedo": {
+            "path": "/home/user/Mediguide-pro/tools/img2threejs-work/pbr-evidence/painted-metal-green_albedo.png",
+            "url": "painted-metal-green_albedo.png",
+            "channel": "albedo",
+            "source": "reference-pixel-extraction"
+          },
+          "roughness": {
+            "path": "/home/user/Mediguide-pro/tools/img2threejs-work/pbr-evidence/painted-metal-green_roughness.png",
+            "url": "painted-metal-green_roughness.png",
+            "channel": "roughness",
+            "source": "reference-pixel-extraction"
+          },
+          "height": {
+            "path": "/home/user/Mediguide-pro/tools/img2threejs-work/pbr-evidence/painted-metal-green_height.png",
+            "url": "painted-metal-green_height.png",
+            "channel": "height",
+            "source": "reference-pixel-extraction"
+          },
+          "normal": {
+            "path": "/home/user/Mediguide-pro/tools/img2threejs-work/pbr-evidence/painted-metal-green_normal.png",
+            "url": "painted-metal-green_normal.png",
+            "channel": "normal",
+            "source": "reference-pixel-extraction"
+          },
+          "ao": {
+            "path": "/home/user/Mediguide-pro/tools/img2threejs-work/pbr-evidence/painted-metal-green_ao.png",
+            "url": "painted-metal-green_ao.png",
+            "channel": "ao",
+            "source": "reference-pixel-extraction"
+          }
+        },
+        "diagnostics": {
+          "sourceWidth": 1408,
+          "sourceHeight": 768,
+          "mapSize": 1024,
+          "cropBBoxPixels": {
+            "x": 369,
+            "y": 38,
+            "width": 670,
+            "height": 674
+          },
+          "mask": {
+            "backgroundColor": "#F9F9F9",
+            "backgroundNoise": 1.732,
+            "transparentPixelFraction": 0.0,
+            "foregroundCoverage": 0.2471
+          },
+          "mapStats": {
+            "valueRange": 0.4538,
+            "heightP90Gradient": 0.08417,
+            "roughnessBase": 0.701,
+            "roughnessVariation": 0.165,
+            "normalStrength": 0.255,
+            "blurRadius": 21
+          },
+          "palette": [
+            "#CB8E58",
+            "#4B4F40",
+            "#7F795F",
+            "#714C31",
+            "#B5B295"
+          ]
+        },
+        "warnings": [
+          "single-image inverse rendering cannot prove true physical PBR; confidence is capped"
+        ]
+      }
+    },
+    {
+      "id": "timber-warm",
+      "name": "Warm timber",
+      "type": "standard",
+      "shaderModel": "MeshStandardMaterial / PBR approximation",
+      "baseColor": "#a9713f",
+      "color": "#a9713f",
+      "albedo": {
+        "dominant": "#CB8E58",
+        "secondary": [
+          "#4B4F40",
+          "#7F795F",
+          "#714C31"
+        ],
+        "samplingNotes": "Reference-derived from foreground pixels; de-lit to reduce baked shadows/highlights.",
+        "map": {
+          "path": "/home/user/Mediguide-pro/tools/img2threejs-work/pbr-evidence/timber-warm_albedo.png",
+          "url": "timber-warm_albedo.png",
+          "channel": "albedo",
+          "source": "reference-pixel-extraction"
+        }
+      },
+      "colorVariation": {
+        "palette": [
+          "#CB8E58",
+          "#4B4F40",
+          "#7F795F",
+          "#714C31",
+          "#B5B295"
+        ],
+        "pattern": "reference-derived pixel palette",
+        "amplitude": 0.191,
+        "heightCorrelation": 0.42
+      },
+      "textureResolution": 1024,
+      "textureProjection": {
+        "mode": "uv",
+        "repeat": [
+          1.0,
+          1.0
+        ],
+        "anisotropy": 8,
+        "texelDensityIntent": "Preserve stable world/object-scale detail; do not stretch micro detail with component scale."
+      },
+      "surfaceFrequencyBands": [
+        {
+          "id": "macro",
+          "frequency": 2.0,
+          "amplitude": 0.439,
+          "role": "reference-derived broad albedo and height breakup"
+        },
+        {
+          "id": "meso",
+          "frequency": 14.0,
+          "amplitude": 0.35,
+          "role": "reference-derived cracks, ridges, pores, grain, or leaf clusters"
+        },
+        {
+          "id": "micro",
+          "frequency": 72.0,
+          "amplitude": 0.14,
+          "role": "reference-derived micro highlight breakup under grazing light"
+        }
+      ],
+      "roughness": {
+        "base": 0.701,
+        "variation": 0.165,
+        "map": {
+          "path": "/home/user/Mediguide-pro/tools/img2threejs-work/pbr-evidence/timber-warm_roughness.png",
+          "url": "timber-warm_roughness.png",
+          "channel": "roughness",
+          "source": "reference-pixel-extraction"
+        },
+        "localResponse": "reference-derived roughness estimate; cavities and textured zones trend rougher, bright highlights trend smoother"
+      },
+      "metalness": {
+        "base": 0.0,
+        "variation": 0.0
+      },
+      "normal": {
+        "pattern": "reference-derived height-gradient normal map",
+        "strength": 0.255,
+        "map": {
+          "path": "/home/user/Mediguide-pro/tools/img2threejs-work/pbr-evidence/timber-warm_normal.png",
+          "url": "timber-warm_normal.png",
+          "channel": "normal",
+          "source": "reference-pixel-extraction"
+        },
+        "heightSource": {
+          "path": "/home/user/Mediguide-pro/tools/img2threejs-work/pbr-evidence/timber-warm_height.png",
+          "url": "timber-warm_height.png",
+          "channel": "height",
+          "source": "reference-pixel-extraction"
+        },
+        "space": "tangent"
+      },
+      "bump": {
+        "pattern": "reference-derived height field",
+        "amplitude": 0.038,
+        "map": {
+          "path": "/home/user/Mediguide-pro/tools/img2threejs-work/pbr-evidence/timber-warm_height.png",
+          "url": "timber-warm_height.png",
+          "channel": "height",
+          "source": "reference-pixel-extraction"
+        }
+      },
+      "displacement": {
+        "pattern": "none",
+        "amplitude": 0.0,
+        "scale": 1.0,
+        "silhouetteAffects": false
+      },
+      "ambientOcclusion": {
+        "cavityStrength": 0.38,
+        "contactShadowBias": 0.35,
+        "map": {
+          "path": "/home/user/Mediguide-pro/tools/img2threejs-work/pbr-evidence/timber-warm_ao.png",
+          "url": "timber-warm_ao.png",
+          "channel": "ao",
+          "source": "reference-pixel-extraction"
+        },
+        "notes": "Reference-derived cavity estimate from local height minima; verify against grazing-light screenshot."
+      },
+      "wear": {
+        "edgeWear": {
+          "amount": 0.3,
+          "source": "vertex-baked edge mask (pointiness), aMasks.g",
+          "response": "convex edges lighten toward #fff0d2"
+        },
+        "scratches": {
+          "amount": 0.0,
+          "note": "none — a flat 16-bit sheet has no room for them"
+        }
+      },
+      "dirt": {
+        "amount": 0.46,
+        "cavityBias": 1.0,
+        "source": "vertex-baked cavity mask (hemisphere raycast AO), aMasks.r",
+        "response": "crevices darken toward #6a5f6a; this is the ambient occlusion"
+      },
+      "localOverrides": [
+        {
+          "id": "reference-pbr-pixel-evidence",
+          "type": "material-map-evidence",
+          "evidenceRefs": [
+            "full-object"
+          ],
+          "channels": [
+            "albedo",
+            "roughness",
+            "height",
+            "normal",
+            "ambient-occlusion"
+          ],
+          "notes": "Use generated maps as material evidence, then refine after browser screenshot comparison."
+        }
+      ],
+      "shaderNotes": [
+        "Prefer MeshPhysicalMaterial when clearcoat, sheen, transmission, or thin-surface response is observed; otherwise use MeshStandardMaterial-compatible PBR channels.",
+        "Generate albedo, roughness, height/normal, and AO independently; never alias albedo into roughness.",
+        "Use normal/bump/displacement only when they map to observed surface relief.",
+        "Use displacement geometry when the observed relief changes the close-up silhouette; texture-only relief is insufficient there.",
+        "Reference-derived maps are estimates from image pixels; verify with neutral, grazing, and reference-matched renders.",
+        "Do not treat baked image shadows as final albedo; rerun extraction with a tighter material crop if highlights/shadows pollute the maps."
+      ],
+      "notes": "Worktop, drawer and door fronts. Grain runs ALONG the part, never across.",
+      "referencePbr": {
+        "version": "1.0",
+        "sourceImage": "/home/user/Mediguide-pro/docs/concept/shape-reference.png",
+        "extractor": "stage1_intake/extract_pbr_evidence.py",
+        "method": "single-image pixel evidence with de-lighting estimate; not photogrammetry",
+        "usable": true,
+        "verdict": "pass",
+        "confidence": 0.86,
+        "estimatedFidelity": 0.86,
+        "targetThreshold": 0.7,
+        "hardLimit": "A single image cannot uniquely recover true albedo/roughness/normal/AO; maps are reference-derived estimates.",
+        "maps": {
+          "albedo": {
+            "path": "/home/user/Mediguide-pro/tools/img2threejs-work/pbr-evidence/timber-warm_albedo.png",
+            "url": "timber-warm_albedo.png",
+            "channel": "albedo",
+            "source": "reference-pixel-extraction"
+          },
+          "roughness": {
+            "path": "/home/user/Mediguide-pro/tools/img2threejs-work/pbr-evidence/timber-warm_roughness.png",
+            "url": "timber-warm_roughness.png",
+            "channel": "roughness",
+            "source": "reference-pixel-extraction"
+          },
+          "height": {
+            "path": "/home/user/Mediguide-pro/tools/img2threejs-work/pbr-evidence/timber-warm_height.png",
+            "url": "timber-warm_height.png",
+            "channel": "height",
+            "source": "reference-pixel-extraction"
+          },
+          "normal": {
+            "path": "/home/user/Mediguide-pro/tools/img2threejs-work/pbr-evidence/timber-warm_normal.png",
+            "url": "timber-warm_normal.png",
+            "channel": "normal",
+            "source": "reference-pixel-extraction"
+          },
+          "ao": {
+            "path": "/home/user/Mediguide-pro/tools/img2threejs-work/pbr-evidence/timber-warm_ao.png",
+            "url": "timber-warm_ao.png",
+            "channel": "ao",
+            "source": "reference-pixel-extraction"
+          }
+        },
+        "diagnostics": {
+          "sourceWidth": 1408,
+          "sourceHeight": 768,
+          "mapSize": 1024,
+          "cropBBoxPixels": {
+            "x": 369,
+            "y": 38,
+            "width": 670,
+            "height": 674
+          },
+          "mask": {
+            "backgroundColor": "#F9F9F9",
+            "backgroundNoise": 1.732,
+            "transparentPixelFraction": 0.0,
+            "foregroundCoverage": 0.2471
+          },
+          "mapStats": {
+            "valueRange": 0.4538,
+            "heightP90Gradient": 0.08417,
+            "roughnessBase": 0.701,
+            "roughnessVariation": 0.165,
+            "normalStrength": 0.255,
+            "blurRadius": 21
+          },
+          "palette": [
+            "#CB8E58",
+            "#4B4F40",
+            "#7F795F",
+            "#714C31",
+            "#B5B295"
+          ]
+        },
+        "warnings": [
+          "single-image inverse rendering cannot prove true physical PBR; confidence is capped"
+        ]
+      }
+    },
+    {
+      "id": "brass-fitting",
+      "name": "Brass fitting",
+      "type": "standard",
+      "shaderModel": "MeshStandardMaterial / PBR approximation",
+      "baseColor": "#c08a4a",
+      "color": "#c08a4a",
+      "albedo": {
+        "dominant": "#CB8E58",
+        "secondary": [
+          "#4B4F40",
+          "#7F795F",
+          "#714C31"
+        ],
+        "samplingNotes": "Reference-derived from foreground pixels; de-lit to reduce baked shadows/highlights.",
+        "map": {
+          "path": "/home/user/Mediguide-pro/tools/img2threejs-work/pbr-evidence/brass-fitting_albedo.png",
+          "url": "brass-fitting_albedo.png",
+          "channel": "albedo",
+          "source": "reference-pixel-extraction"
+        }
+      },
+      "colorVariation": {
+        "palette": [
+          "#CB8E58",
+          "#4B4F40",
+          "#7F795F",
+          "#714C31",
+          "#B5B295"
+        ],
+        "pattern": "reference-derived pixel palette",
+        "amplitude": 0.191,
+        "heightCorrelation": 0.42
+      },
+      "textureResolution": 1024,
+      "textureProjection": {
+        "mode": "uv",
+        "repeat": [
+          1.0,
+          1.0
+        ],
+        "anisotropy": 8,
+        "texelDensityIntent": "Preserve stable world/object-scale detail; do not stretch micro detail with component scale."
+      },
+      "surfaceFrequencyBands": [
+        {
+          "id": "macro",
+          "frequency": 2.0,
+          "amplitude": 0.439,
+          "role": "reference-derived broad albedo and height breakup"
+        },
+        {
+          "id": "meso",
+          "frequency": 14.0,
+          "amplitude": 0.35,
+          "role": "reference-derived cracks, ridges, pores, grain, or leaf clusters"
+        },
+        {
+          "id": "micro",
+          "frequency": 72.0,
+          "amplitude": 0.14,
+          "role": "reference-derived micro highlight breakup under grazing light"
+        }
+      ],
+      "roughness": {
+        "base": 0.701,
+        "variation": 0.165,
+        "map": {
+          "path": "/home/user/Mediguide-pro/tools/img2threejs-work/pbr-evidence/brass-fitting_roughness.png",
+          "url": "brass-fitting_roughness.png",
+          "channel": "roughness",
+          "source": "reference-pixel-extraction"
+        },
+        "localResponse": "reference-derived roughness estimate; cavities and textured zones trend rougher, bright highlights trend smoother"
+      },
+      "metalness": {
+        "base": 0.85,
+        "variation": 0.0
+      },
+      "normal": {
+        "pattern": "reference-derived height-gradient normal map",
+        "strength": 0.255,
+        "map": {
+          "path": "/home/user/Mediguide-pro/tools/img2threejs-work/pbr-evidence/brass-fitting_normal.png",
+          "url": "brass-fitting_normal.png",
+          "channel": "normal",
+          "source": "reference-pixel-extraction"
+        },
+        "heightSource": {
+          "path": "/home/user/Mediguide-pro/tools/img2threejs-work/pbr-evidence/brass-fitting_height.png",
+          "url": "brass-fitting_height.png",
+          "channel": "height",
+          "source": "reference-pixel-extraction"
+        },
+        "space": "tangent"
+      },
+      "bump": {
+        "pattern": "reference-derived height field",
+        "amplitude": 0.038,
+        "map": {
+          "path": "/home/user/Mediguide-pro/tools/img2threejs-work/pbr-evidence/brass-fitting_height.png",
+          "url": "brass-fitting_height.png",
+          "channel": "height",
+          "source": "reference-pixel-extraction"
+        }
+      },
+      "displacement": {
+        "pattern": "none",
+        "amplitude": 0.0,
+        "scale": 1.0,
+        "silhouetteAffects": false
+      },
+      "ambientOcclusion": {
+        "cavityStrength": 0.38,
+        "contactShadowBias": 0.35,
+        "map": {
+          "path": "/home/user/Mediguide-pro/tools/img2threejs-work/pbr-evidence/brass-fitting_ao.png",
+          "url": "brass-fitting_ao.png",
+          "channel": "ao",
+          "source": "reference-pixel-extraction"
+        },
+        "notes": "Reference-derived cavity estimate from local height minima; verify against grazing-light screenshot."
+      },
+      "wear": {
+        "edgeWear": {
+          "amount": 0.3,
+          "source": "vertex-baked edge mask (pointiness), aMasks.g",
+          "response": "convex edges lighten toward #fff0d2"
+        },
+        "scratches": {
+          "amount": 0.0,
+          "note": "none — a flat 16-bit sheet has no room for them"
+        }
+      },
+      "dirt": {
+        "amount": 0.46,
+        "cavityBias": 1.0,
+        "source": "vertex-baked cavity mask (hemisphere raycast AO), aMasks.r",
+        "response": "crevices darken toward #6a5f6a; this is the ambient occlusion"
+      },
+      "localOverrides": [
+        {
+          "id": "reference-pbr-pixel-evidence",
+          "type": "material-map-evidence",
+          "evidenceRefs": [
+            "full-object"
+          ],
+          "channels": [
+            "albedo",
+            "roughness",
+            "height",
+            "normal",
+            "ambient-occlusion"
+          ],
+          "notes": "Use generated maps as material evidence, then refine after browser screenshot comparison."
+        }
+      ],
+      "shaderNotes": [
+        "Prefer MeshPhysicalMaterial when clearcoat, sheen, transmission, or thin-surface response is observed; otherwise use MeshStandardMaterial-compatible PBR channels.",
+        "Generate albedo, roughness, height/normal, and AO independently; never alias albedo into roughness.",
+        "Use normal/bump/displacement only when they map to observed surface relief.",
+        "Use displacement geometry when the observed relief changes the close-up silhouette; texture-only relief is insufficient there.",
+        "Reference-derived maps are estimates from image pixels; verify with neutral, grazing, and reference-matched renders.",
+        "Do not treat baked image shadows as final albedo; rerun extraction with a tighter material crop if highlights/shadows pollute the maps."
+      ],
+      "notes": "Pulls and the plaque. The only metal, and only a few texels of it.",
+      "referencePbr": {
+        "version": "1.0",
+        "sourceImage": "/home/user/Mediguide-pro/docs/concept/shape-reference.png",
+        "extractor": "stage1_intake/extract_pbr_evidence.py",
+        "method": "single-image pixel evidence with de-lighting estimate; not photogrammetry",
+        "usable": true,
+        "verdict": "pass",
+        "confidence": 0.86,
+        "estimatedFidelity": 0.86,
+        "targetThreshold": 0.7,
+        "hardLimit": "A single image cannot uniquely recover true albedo/roughness/normal/AO; maps are reference-derived estimates.",
+        "maps": {
+          "albedo": {
+            "path": "/home/user/Mediguide-pro/tools/img2threejs-work/pbr-evidence/brass-fitting_albedo.png",
+            "url": "brass-fitting_albedo.png",
+            "channel": "albedo",
+            "source": "reference-pixel-extraction"
+          },
+          "roughness": {
+            "path": "/home/user/Mediguide-pro/tools/img2threejs-work/pbr-evidence/brass-fitting_roughness.png",
+            "url": "brass-fitting_roughness.png",
+            "channel": "roughness",
+            "source": "reference-pixel-extraction"
+          },
+          "height": {
+            "path": "/home/user/Mediguide-pro/tools/img2threejs-work/pbr-evidence/brass-fitting_height.png",
+            "url": "brass-fitting_height.png",
+            "channel": "height",
+            "source": "reference-pixel-extraction"
+          },
+          "normal": {
+            "path": "/home/user/Mediguide-pro/tools/img2threejs-work/pbr-evidence/brass-fitting_normal.png",
+            "url": "brass-fitting_normal.png",
+            "channel": "normal",
+            "source": "reference-pixel-extraction"
+          },
+          "ao": {
+            "path": "/home/user/Mediguide-pro/tools/img2threejs-work/pbr-evidence/brass-fitting_ao.png",
+            "url": "brass-fitting_ao.png",
+            "channel": "ao",
+            "source": "reference-pixel-extraction"
+          }
+        },
+        "diagnostics": {
+          "sourceWidth": 1408,
+          "sourceHeight": 768,
+          "mapSize": 1024,
+          "cropBBoxPixels": {
+            "x": 369,
+            "y": 38,
+            "width": 670,
+            "height": 674
+          },
+          "mask": {
+            "backgroundColor": "#F9F9F9",
+            "backgroundNoise": 1.732,
+            "transparentPixelFraction": 0.0,
+            "foregroundCoverage": 0.2471
+          },
+          "mapStats": {
+            "valueRange": 0.4538,
+            "heightP90Gradient": 0.08417,
+            "roughnessBase": 0.701,
+            "roughnessVariation": 0.165,
+            "normalStrength": 0.255,
+            "blurRadius": 21
+          },
+          "palette": [
+            "#CB8E58",
+            "#4B4F40",
+            "#7F795F",
+            "#714C31",
+            "#B5B295"
+          ]
+        },
+        "warnings": [
+          "single-image inverse rendering cannot prove true physical PBR; confidence is capped"
+        ]
+      }
+    }
+  ],
+  "repetitionSystems": [
+    {
+      "id": "bay-repeat",
+      "kind": "linear-array",
+      "axis": "x",
+      "unit": 0.9,
+      "min": 1,
+      "max": 8,
+      "default": 2,
+      "rationale": "The run is one bay repeated, and it must be REPEATED rather than stretched. Real dispensing furniture is built from carcasses, and a repeat never distorts a texel: every pull, seam and plaque stays at authored size at any length. Stretching the length would smear all of them."
+    }
+  ],
+  "buildPasses": [
+    {
+      "id": "blockout",
+      "goal": "Match macro silhouette and proportions.",
+      "componentRefs": [
+        "root"
+      ],
+      "acceptance": [
+        "Silhouette reads correctly without materials.",
+        "Quality contract has named all required macro feature groups before code generation.",
+        "AI vision comparison score meets selfCorrectLoop.visualAcceptance.threshold."
+      ]
+    },
+    {
+      "id": "structural-pass",
+      "goal": "Build the component hierarchy implied by the pre-spec complexity assessment.",
+      "componentRefs": [
+        "root"
+      ],
+      "acceptance": [
+        "Macro, meso, and repeated structures meet qualityContract.minimumSpecDepth.",
+        "Parent-child relations, joints, seams, sockets, and contact points are explicit.",
+        "Every attached child appendage/connector has parentSocket, localStart/localEnd, contactType, embedDepth or overlap, and gapTolerance.",
+        "AI vision comparison score meets selfCorrectLoop.visualAcceptance.threshold."
+      ]
+    },
+    {
+      "id": "form-refinement",
+      "goal": "Refine shape, deformation, bevels, tapers, curves, asymmetry, and visible local geometry.",
+      "componentRefs": [
+        "root"
+      ],
+      "acceptance": [
+        "Important visible forms are represented in component geometryDescriptor, deformations, localFeatures, or repetitionSystems.",
+        "Endpoint-based child parts are rooted at their attachment sockets and do not visibly float away from parents.",
+        "AI vision comparison score meets selfCorrectLoop.visualAcceptance.threshold."
+      ]
+    },
+    {
+      "id": "material-pass",
+      "goal": "Match material color, roughness, bump, and local variation.",
+      "componentRefs": [
+        "root"
+      ],
+      "acceptance": [
+        "Reference-derived albedo palette records dominant, secondary, and accent colors per visible material.",
+        "Each important material defines roughness variation and at least one normal/bump/displacement response.",
+        "Local material overrides, dirt/wear/stains/moss/chips/scratches or equivalent masks are tied to evidenceRefs.",
+        "Thin, transparent, reflective, wet, or fibrous materials document alpha/transmission/clearcoat/metalness/fiber response when relevant.",
+        "Generated preview uses procedural albedo/roughness/bump texture or vertex color variation instead of one flat color.",
+        "Generated preview uses independent PBR maps at 1024px or higher for the quality-first tier.",
+        "If source pixels are available, referencePbr extraction passed at confidence >= 0.7 or the pass is stopped/requesting better references.",
+        "Macro, meso, and micro surface frequency bands are visible at the intended review distance without obvious tiling.",
+        "AI vision comparison score meets selfCorrectLoop.visualAcceptance.threshold."
+      ]
+    },
+    {
+      "id": "surface-pass",
+      "goal": "Add procedural surface locality such as normal/bump/displacement, AO, dirt, stains, chips, grain, moss, scratches, and wear.",
+      "componentRefs": [
+        "root"
+      ],
+      "acceptance": [
+        "Every required material feature group has local overrides or surfaceDetail tied to evidenceRefs.",
+        "A grazing-angle close-up proves that normal/height detail breaks highlights naturally and does not read as smooth plastic.",
+        "AI vision comparison score meets selfCorrectLoop.visualAcceptance.threshold."
+      ]
+    },
+    {
+      "id": "lighting-pass",
+      "goal": "Make material and form readable under neutral turntable lighting plus optional reference lighting.",
+      "componentRefs": [
+        "root"
+      ],
+      "acceptance": [
+        "lightingFromPhoto identifies key light direction/color/intensity, fill light, rim or environment light, and ambient color.",
+        "Exposure, tone mapping, background color/gradient, shadow softness, and contact shadow behavior are specified.",
+        "Lighting does not hide geometry/material gaps and screenshots can be compared fairly to the reference.",
+        "Neutral, grazing, and reference-matched lighting checks distinguish material errors from lighting errors.",
+        "AI vision comparison score meets selfCorrectLoop.visualAcceptance.threshold."
+      ]
+    },
+    {
+      "id": "interaction-pass",
+      "goal": "Make the model ready for future animation, transformation, physics, or destruction.",
+      "componentRefs": [
+        "root"
+      ],
+      "acceptance": [
+        "Macro and movable meso components have stable pivot nodes.",
+        "Sockets, collider proxies, and destruction metadata are present for future runtime actions.",
+        "AI vision comparison score meets selfCorrectLoop.visualAcceptance.threshold."
+      ]
+    },
+    {
+      "id": "optimization-pass",
+      "goal": "Protect runtime performance after visual fidelity is accepted.",
+      "componentRefs": [
+        "root"
+      ],
+      "acceptance": [
+        "Triangle count, draw calls, instancing, LOD strategy, and FPS target are documented or verified.",
+        "Repeated detail is instanced or simplified where possible without breaking silhouette/material believability."
+      ]
+    }
+  ],
+  "visualEvidence": [],
+  "reviewHistory": [],
+  "lodPlan": [
+    {
+      "tier": "near",
+      "distance": 0,
+      "strategy": "full component tree and material layers"
+    },
+    {
+      "tier": "far",
+      "distance": 30,
+      "strategy": "merge static components and reduce local feature geometry"
+    }
+  ],
+  "performanceBudget": {
+    "qualityPriority": "reference-fidelity",
+    "targetTriangles": 250000,
+    "maxDrawCalls": 160,
+    "textureSize": 2048,
+    "fpsTarget": 30,
+    "optimizationPolicy": "Reach accepted visual fidelity first, then optimize without removing reference-critical geometry or surface layers."
+  },
+  "lightingFromPhoto": [
+    {
+      "id": "key",
+      "type": "directional",
+      "azimuthDegrees": 37,
+      "elevationDegrees": 53,
+      "colorHex": "#fff3de",
+      "intensity": 0.72,
+      "note": "Matches this project's fixed key in docs/style-bible.md. The reference has its own baked light; the model is lit by ours, not by the image."
+    },
+    {
+      "id": "fill",
+      "type": "directional",
+      "azimuthDegrees": -140,
+      "elevationDegrees": 20,
+      "colorHex": "#bcd2ea",
+      "intensity": 0.14
+    },
+    {
+      "id": "ambient",
+      "type": "hemisphere",
+      "skyHex": "#d6e6f4",
+      "groundHex": "#f6e2c4",
+      "intensity": 0.16,
+      "note": "Cool from above, warm bounce from the floor."
+    },
+    {
+      "id": "exposure-and-tone",
+      "type": "render-intent",
+      "exposure": 1.0,
+      "toneMapping": "NoToneMapping",
+      "note": "Tone mapping is deliberately OFF. A filmic or ACES curve desaturates exactly the limited palette this style depends on, and there is no HDR range to compress — the toon ramp already quantises to three steps.",
+      "contactShadow": {
+        "mode": "blob decal",
+        "source": "src/art/shadow.js",
+        "note": "Ground shadow is a painted blob under each module, not a shadow map. A shadow map would fight the toon ramp: a soft penumbra across a face reintroduces exactly the gradient the flat shading removes."
+      },
+      "ambientOcclusion": {
+        "mode": "vertex-baked",
+        "source": "src/art/bakeMasks.js",
+        "note": "AO is a per-vertex hemisphere raycast baked at load, so it deforms correctly under the 9-slice for free."
+      }
+    }
+  ],
+  "proceduralStrategy": [
+    "Block out macro silhouette first.",
+    "Add component hierarchy and joints.",
+    "Create stable pivot groups, sockets, collider proxies, and destruction metadata before visual polish.",
+    "Refine forms with bevels, tapers, bends, and procedural noise.",
+    "Run reference PBR extraction for important source-image materials and stop when confidence is below the target threshold.",
+    "Add material variation before adding expensive micro-geometry."
+  ],
+  "animationAnchors": [
+    "root pivot node supports whole-object translation, rotation, scale, and visibility changes",
+    "component pivot groups support later local transforms without rebuilding geometry"
+  ],
+  "destructionAnchors": [
+    "actionProfile.destruction.fractureGroup marks detachable or breakable component sets",
+    "component seams and sockets define plausible break points instead of random explosions"
+  ],
+  "risks": [
+    {
+      "risk": "Rebuilding the whole U as one rigid factory",
+      "severity": "high",
+      "mitigation": "Scope to one bay plus a repeat axis; the shelving and props already exist as separate modules and decor."
+    },
+    {
+      "risk": "Sampling the reference image as albedo",
+      "severity": "high",
+      "mitigation": "Reference is measured, never sampled. Albedo comes from the cleaned nano-atlas and the greyscale trim sheet."
+    },
+    {
+      "risk": "Smooth vertex normals rounding the low-poly read",
+      "severity": "medium",
+      "mitigation": "Non-indexed geometry + computeVertexNormals, asserted by the smoke test."
+    }
+  ],
+  "localSpecSearch": {
+    "collection": "core_3d",
+    "query": "Pharmacy dispensing counter run",
+    "index": {
+      "status": "rebuilt",
+      "reason": "missing",
+      "fingerprint": "6857e5ab528b42ac12f4f411f862610a0bffce8e47aee3610a7603c318072fe8"
+    },
+    "matches": [
+      {
+        "record_id": "core.pbr-emission",
+        "file_path": "docs/raw/img2threejs-skill-dataset.json",
+        "heading": null,
+        "key_path": "categories.material_pbr[7]",
+        "score": 3.400790976589,
+        "snippets": [
+          "... Recognition cues: A region stays bright/colored regardless of light direction or shadow (e.g. StatTrak orange LED counter module); Often masked to a small, specific submesh rather than the whole surface Dấu hiệu nhận diện: Một vùng ..."
+        ],
+        "source_refs": [
+          {
+            "path": "docs/raw/img2threejs-skill-dataset.json",
+            "heading": null,
+            "key_path": "categories.material_pbr[7]"
+          }
+        ],
+        "evidence_refs": [
+          {
+            "kind": "source",
+            "ref": "docs/raw/img2threejs-skill-dataset.json",
+            "note": "img2threejs NotebookLM research distillation"
+          }
+        ]
+      }
+    ]
+  },
+  "pbrExtractionHistory": [
+    {
+      "materialId": "painted-metal-green",
+      "confidence": 0.86,
+      "verdict": "pass",
+      "usable": true,
+      "maps": {
+        "albedo": {
+          "path": "/home/user/Mediguide-pro/tools/img2threejs-work/pbr-evidence/painted-metal-green_albedo.png",
+          "url": "painted-metal-green_albedo.png",
+          "channel": "albedo",
+          "source": "reference-pixel-extraction"
+        },
+        "roughness": {
+          "path": "/home/user/Mediguide-pro/tools/img2threejs-work/pbr-evidence/painted-metal-green_roughness.png",
+          "url": "painted-metal-green_roughness.png",
+          "channel": "roughness",
+          "source": "reference-pixel-extraction"
+        },
+        "height": {
+          "path": "/home/user/Mediguide-pro/tools/img2threejs-work/pbr-evidence/painted-metal-green_height.png",
+          "url": "painted-metal-green_height.png",
+          "channel": "height",
+          "source": "reference-pixel-extraction"
+        },
+        "normal": {
+          "path": "/home/user/Mediguide-pro/tools/img2threejs-work/pbr-evidence/painted-metal-green_normal.png",
+          "url": "painted-metal-green_normal.png",
+          "channel": "normal",
+          "source": "reference-pixel-extraction"
+        },
+        "ao": {
+          "path": "/home/user/Mediguide-pro/tools/img2threejs-work/pbr-evidence/painted-metal-green_ao.png",
+          "url": "painted-metal-green_ao.png",
+          "channel": "ao",
+          "source": "reference-pixel-extraction"
+        }
+      }
+    },
+    {
+      "materialId": "timber-warm",
+      "confidence": 0.86,
+      "verdict": "pass",
+      "usable": true,
+      "maps": {
+        "albedo": {
+          "path": "/home/user/Mediguide-pro/tools/img2threejs-work/pbr-evidence/timber-warm_albedo.png",
+          "url": "timber-warm_albedo.png",
+          "channel": "albedo",
+          "source": "reference-pixel-extraction"
+        },
+        "roughness": {
+          "path": "/home/user/Mediguide-pro/tools/img2threejs-work/pbr-evidence/timber-warm_roughness.png",
+          "url": "timber-warm_roughness.png",
+          "channel": "roughness",
+          "source": "reference-pixel-extraction"
+        },
+        "height": {
+          "path": "/home/user/Mediguide-pro/tools/img2threejs-work/pbr-evidence/timber-warm_height.png",
+          "url": "timber-warm_height.png",
+          "channel": "height",
+          "source": "reference-pixel-extraction"
+        },
+        "normal": {
+          "path": "/home/user/Mediguide-pro/tools/img2threejs-work/pbr-evidence/timber-warm_normal.png",
+          "url": "timber-warm_normal.png",
+          "channel": "normal",
+          "source": "reference-pixel-extraction"
+        },
+        "ao": {
+          "path": "/home/user/Mediguide-pro/tools/img2threejs-work/pbr-evidence/timber-warm_ao.png",
+          "url": "timber-warm_ao.png",
+          "channel": "ao",
+          "source": "reference-pixel-extraction"
+        }
+      }
+    },
+    {
+      "materialId": "brass-fitting",
+      "confidence": 0.86,
+      "verdict": "pass",
+      "usable": true,
+      "maps": {
+        "albedo": {
+          "path": "/home/user/Mediguide-pro/tools/img2threejs-work/pbr-evidence/brass-fitting_albedo.png",
+          "url": "brass-fitting_albedo.png",
+          "channel": "albedo",
+          "source": "reference-pixel-extraction"
+        },
+        "roughness": {
+          "path": "/home/user/Mediguide-pro/tools/img2threejs-work/pbr-evidence/brass-fitting_roughness.png",
+          "url": "brass-fitting_roughness.png",
+          "channel": "roughness",
+          "source": "reference-pixel-extraction"
+        },
+        "height": {
+          "path": "/home/user/Mediguide-pro/tools/img2threejs-work/pbr-evidence/brass-fitting_height.png",
+          "url": "brass-fitting_height.png",
+          "channel": "height",
+          "source": "reference-pixel-extraction"
+        },
+        "normal": {
+          "path": "/home/user/Mediguide-pro/tools/img2threejs-work/pbr-evidence/brass-fitting_normal.png",
+          "url": "brass-fitting_normal.png",
+          "channel": "normal",
+          "source": "reference-pixel-extraction"
+        },
+        "ao": {
+          "path": "/home/user/Mediguide-pro/tools/img2threejs-work/pbr-evidence/brass-fitting_ao.png",
+          "url": "brass-fitting_ao.png",
+          "channel": "ao",
+          "source": "reference-pixel-extraction"
+        }
+      }
+    }
+  ]
+}

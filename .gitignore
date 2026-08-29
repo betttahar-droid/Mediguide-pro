@@ -22,3 +22,6 @@ __pycache__/
 
 # Working state for a tools/setup/install-skills.sh skill run. Scratch, not art.
 tools/img2threejs-work/
+
+# scratch probes written next to the real harnesses
+test/.*.mjs
