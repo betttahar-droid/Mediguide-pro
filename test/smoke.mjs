@@ -340,6 +340,56 @@ check(
 );
 await page.evaluate(() => __app.clearBatch());
 
+// --- AdaptivePropBase: 9-slice + slot spawner on a standalone prop ---------
+// The interesting property is not "more props appear" — it is that the ones
+// already there DO NOT MOVE OR CHANGE when more appear beside them. A spawner
+// that reshuffles on every resize looks broken while you drag the handle.
+const adaptive = await page.evaluate(async () => {
+  await __app.nanoAtlasReady;
+  const prop = __app.makeAdaptiveProp({
+    parts: [
+      { size: [1.2, 0.06, 0.6], at: [0, 0.44, 0], mat: 'wood' },
+      { size: [1.1, 0.8, 0.55], at: [0, 0.02, 0], mat: 'panel' },
+    ],
+    halfExtents: [0.6, 0.47, 0.3],
+    margins: [0.16, 0, 0],
+    propSpacing: 0.4,
+    socketY: 0.47,
+    seed: 12345,
+  });
+
+  // Types and positions are checked separately on purpose. The prop grows
+  // SYMMETRICALLY about its origin, so its left edge moves and every slot
+  // shifts with it — positions are expected to change on a grow. What must not
+  // change is what each slot HOLDS.
+  const types = () => Object.fromEntries([...prop.decor.live].map(([k, v]) => [k, v.type]));
+  const full = () => Object.fromEntries(
+    [...prop.decor.live].map(([k, v]) => [k, `${v.type}@${v.mesh.position.x.toFixed(4)}`])
+  );
+
+  prop.updateSize(1, 1, 1);
+  const small = { slots: prop.availableSlots, types: types(), full: full(), scale: prop.material.uniforms.uTargetScale.value.x };
+  prop.updateSize(3, 1, 1);
+  const big = { slots: prop.availableSlots, types: types(), scale: prop.material.uniforms.uTargetScale.value.x };
+  prop.updateSize(1, 1, 1);
+  const back = { slots: prop.availableSlots, full: full() };
+
+  prop.dispose();
+  return { small, big, back };
+});
+
+const keptOnGrow = Object.keys(adaptive.small.types)
+  .every((k) => adaptive.big.types[k] === adaptive.small.types[k]);
+const restored = JSON.stringify(adaptive.small.full) === JSON.stringify(adaptive.back.full);
+const slotsScale = adaptive.big.slots === 3 * adaptive.small.slots;
+check(
+  'AdaptivePropBase resizes on the GPU and fills the new space without disturbing the old',
+  slotsScale && adaptive.big.scale === 3 && adaptive.small.scale === 1 && keptOnGrow && restored,
+  `${adaptive.small.slots} slots at 1x -> ${adaptive.big.slots} at 3x (uTargetScale.x drives the 9-slice, mesh transform untouched); ` +
+  `all ${Object.keys(adaptive.small.types).length} original slots kept their prop on grow${keptOnGrow ? '' : ' [FAILED]'}, ` +
+  `and shrinking restored them position-identical${restored ? '' : ' [FAILED]'}`
+);
+
 // --- screenshots ----------------------------------------------------------
 await page.evaluate(() => {
   __app.setMode('select'); // put the ghost away

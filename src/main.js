@@ -10,6 +10,8 @@ import { createAdaptiveMaterial, createOutlinePass } from './shaders/index.js';
 import { bevelBox } from './modules/geometry.js';
 import { bakeMasks } from './art/bakeMasks.js';
 import { MODULE_IDS, REGISTRY, validateRegistry } from './modules/registry.js';
+import { AdaptivePropBase } from './modules/AdaptivePropBase.js';
+import { nanoAtlasReady } from './art/nanoAtlas.js';
 import { ModuleInstance, warmGeometryCache } from './modules/ModuleInstance.js';
 import { createInstancedBatch, disposeBatch } from './modules/InstancedBatch.js';
 import { Placement } from './build/placement.js';
@@ -245,6 +247,16 @@ const app = {
 app.selectType(app.state.moduleId);
 buildGui(app);
 app.catalogue = buildCatalogue(app);
+// The standalone adaptive prop, exposed for the smoke test and for driving a
+// generated factory that has no registry entry. Nothing is spawned until
+// something asks for one — a scene full of modules does not need this path.
+app.nanoAtlasReady = nanoAtlasReady();
+app.makeAdaptiveProp = (opts) => {
+  const prop = new AdaptivePropBase(opts);
+  scene.add(prop.group);
+  return prop;
+};
+
 globalThis.__app = app; // handle for the smoke test and for poking at the scene
 
 // --------------------------------------------------------------- pointer
