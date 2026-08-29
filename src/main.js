@@ -68,10 +68,14 @@ function panel(w, h, d, position, color, textureScale) {
   return mesh;
 }
 
+// The room commits to a colour: cool mint walls against a warm putty floor, so
+// the warm oak furniture has something to sit against. Every isometric diorama
+// in the reference that reads well does this; a neutral room makes its contents
+// float.
 const room = {
   floor: panel(24, 0.2, 24, [0, -0.1, 0], PALETTE.floorTile, 0.34),
-  backWall: panel(24, 4.4, 0.24, [0, 2.2, -7], PALETTE.paper, 0.32),
-  sideWall: panel(0.24, 4.4, 24, [-9, 2.2, 0], PALETTE.paper, 0.32),
+  backWall: panel(24, 4.4, 0.24, [0, 2.2, -7], PALETTE.wall, 0.32),
+  sideWall: panel(0.24, 4.4, 24, [-9, 2.2, 0], PALETTE.wall, 0.32),
 };
 
 warmGeometryCache();

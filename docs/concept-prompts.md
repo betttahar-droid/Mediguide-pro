@@ -24,32 +24,68 @@ for every module after it.
 Nano Banana output carries an invisible SynthID watermark and C2PA credentials
 (§11.2). Not a problem for reference images you never ship, but know it is there.
 
+## Running it
+
+`tools/authoring/concept_sheet.py` is this page as a script — same style block,
+same subject lines, one file per module into `docs/concept/`.
+
+```bash
+cp .env.example .env                       # then put your Gemini key in it
+python3 tools/authoring/concept_sheet.py dispensing_desk
+python3 tools/authoring/concept_sheet.py --all --ref docs/reference/crop-*.png
+```
+
+`--ref` is the flag that matters, and it takes **several images at once**: one
+reference gives you one object's quirks, a set gives you the shared style
+underneath them. Style references live in `docs/reference/`, which is gitignored
+— they are other people's work, kept locally to feed the model, never committed.
+Crop any UI chrome out of a reference before using it; the model will happily
+reproduce a phone status bar it sees in the corner of a screenshot.
+
 ## The style block
 
-Every prompt below is prefixed with this. Do not paraphrase it between modules —
-consistency across the catalogue comes from the prefix being identical.
+Every prompt is prefixed with this. Do not paraphrase it between modules —
+consistency across the catalogue comes from the prefix being identical. It lives
+in `STYLE` in the script; this is a copy for reading.
 
 ```
-Orthographic front, side and three-quarter views of {SUBJECT}, laid out in a row
-on a plain flat background, evenly spaced, all three at the same scale.
+Style: isometric low-poly voxel game prop, retro pixel-art textures.
 
-Style: cute pixelated low-poly game asset. Chunky, slightly squat proportions.
-Softly bevelled corners, not sharp and not rounded — a visible small chamfer.
-Low texel density, so surfaces read as visible pixels. Simple readable
-silhouette with a small number of large forms plus two or three small identifying
-fittings.
+FORM: blocky and hard-edged. Square corners, no rounded or bevelled edges, no
+smooth curves. A small number of large box-like masses. The silhouette should be
+simple and chunky.
 
-Flat lighting, albedo only, no shadows, no baked highlights, no ambient
-occlusion, no outlines.
+DETAIL: all of the detail is in the TEXTURE painted onto flat faces, not in the
+geometry. Dense pixel-art surface detail — panel lines, seams, screw heads,
+vents and grille slots, small labels and readouts, hinges, catches, thin
+highlight and shadow lines along every panel edge. Large visible texels, crisp
+pixel edges, no blur, no gradients, no anti-aliasing.
 
-Palette, use only these: cream #f9efdc, bone #ecdcc0, warm oak #dda265,
+COLOUR: use only this palette — cream #f9efdc, bone #ecdcc0, warm oak #dda265,
 dark oak #b0763e, walnut #835531, mint #9ad9b8, teal #57a98d, deep teal #356f5e,
-coral #f28b60, steel #b0bcbd, dark steel #77868a, pale glass #d2e8e4,
-plum #413353.
+coral #f5804f, steel #b0bcbd, dark steel #77868a, pale glass #d2e8e4,
+plum #413353. Give the object two or three of these as its body colours, not
+one: a light frame against darker panels reads far better than a single tone.
+Then a few TINY saturated accent pixels — an indicator, a coloured label, a
+bright handle. The accents must be small, a handful of pixels each.
 
-No text, no labels, no logos, no watermarks, no people, no props other than the
-subject itself.
+PRESENTATION: single object, isometric three-quarter view, centred on a plain
+flat background, with a soft light drop shadow beneath it.
+
+No text or lettering, no logos, no watermarks, no people, no background scenery,
+no props other than the subject itself.
+
+Do NOT draw a user interface, a phone screen, a browser window, buttons, icons
+or a website. Output the object alone, filling the frame.
 ```
+
+Two lines in there are scar tissue, and both are worth keeping:
+
+- **"two or three of these as its body colours."** Handed the palette without
+  it, the model picks one hue and renders the whole object in it. A light frame
+  against darker panels is most of what makes these sheets readable.
+- **the UI negative.** The first reference images still had phone chrome around
+  the artwork, and the model dutifully drew a cabinet inside a browser window.
 
 ## Per module
 
@@ -60,7 +96,7 @@ what the sheet must resolve — the rest of the shape is a box and needs no help
 
 | Module | `{SUBJECT}` |
 | --- | --- |
-| Dispensing bench | a single pharmacy dispensing bench bay, 0.9 m wide, with a thick overhanging worktop with a rounded front lip, a low back upstand, two stacked drawers of different depths with long horizontal pull handles and small label holders, framed by vertical side stiles and horizontal rails, on a recessed kick plinth |
+| Dispensing bench | a single pharmacy dispensing bench bay, 0.9 m wide, with a thick overhanging worktop with a square front lip, a low back upstand, two stacked drawers of different depths with long horizontal pull handles and small label holders, framed by vertical side stiles and horizontal rails, on a recessed kick plinth |
 | Dispensary racking | one bay of shallow pharmacy dispensary shelving, open-fronted, with a thin label strip running along the front edge of each shelf and a small vertical divider at the back |
 | CD cabinet | a small steel controlled-drugs cabinet, floor standing on a plinth, one solid door with no glass, three heavy barrel hinges down one side, a keypad lock, a stubby vertical handle and a small warning plate near the top |
 | Vaccine fridge | an upright pharmacy vaccine fridge with a full-height glass door, a slim vertical handle, horizontal rails top and bottom of the door, a small digital temperature readout above the door, and a condenser grille along the bottom |
@@ -114,6 +150,19 @@ a stapled paper prescription bag; an angled desk lamp; a stack of ring binders;
 a white cardboard dispensing pack with a printed label panel; an amber glass
 bottle with a white cap and a label; a stacking plastic tote.
 ```
+
+## The generated set
+
+`docs/concept/` holds one sheet per module plus a props row, generated from the
+five style references with the block above. They are committed at half size and
+64 colours — they are read, not sampled, and the full-size set was 6.7 MB.
+
+One thing to decide before any of it is copied into the build: **every sheet has
+a dark silhouette outline**, and the shipped look does not (`docs/style-bible.md`,
+"No outlines"). The ink pass is still there and correct —
+`Look dev → Outlines → enabled` — so this is a toggle, not a rebuild. But the
+sheets and the engine currently disagree, and the sheets should not win that one
+by default.
 
 ## When the sheet disagrees with the build
 

@@ -25,6 +25,7 @@ uniform vec3 uBaseColor;
 uniform vec3 uMiddleColor;
 uniform vec3 uAccent1;
 uniform vec3 uAccent2;
+uniform vec3 uAccent3;
 uniform vec3 uTrimAxis;
 uniform float uTrimDensity;    // trim repeats per metre along the stretch axis
 uniform vec2 uAtlasScale;
@@ -94,7 +95,8 @@ void main() {
 
   // a part can opt into one of two accent colours from the module's palette
   // entry, so one material still paints a two-tone desk
-  if (vAccent > 1.5) tint = uAccent2;
+  if (vAccent > 2.5) tint = uAccent3;
+  else if (vAccent > 1.5) tint = uAccent2;
   else if (vAccent > 0.5) tint = uAccent1;
 
   // the detail sheets are luminance around mid-grey; the palette supplies hue
@@ -147,6 +149,7 @@ export function createAdaptiveMaterial(opts = {}) {
     middleColor = PALETTE.oakDark,
     accent1 = null,
     accent2 = null,
+    accent3 = null,
     trimAxis = new Vector3(1, 0, 0),
     trimDensity = 0.45,
     atlasCell = [0, 0], // 2×2 atlas
@@ -182,6 +185,7 @@ export function createAdaptiveMaterial(opts = {}) {
       uMiddleColor: { value: middleColor.clone() },
       uAccent1: { value: (accent1 ?? baseColor).clone() },
       uAccent2: { value: (accent2 ?? middleColor).clone() },
+      uAccent3: { value: (accent3 ?? accent1 ?? baseColor).clone() },
       uTrimAxis: { value: trimAxis.clone() },
       uTrimDensity: { value: trimDensity },
       uAtlasScale: { value: new Vector2(0.5, 0.5) },

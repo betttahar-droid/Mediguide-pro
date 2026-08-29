@@ -2,3 +2,12 @@ node_modules/
 dist/
 test/shots/
 .DS_Store
+
+# Secrets. The authoring tools read a key from here; it must never be committed.
+.env
+.env.*
+!.env.example
+
+# Style reference supplied by the user. Other people's work: kept locally for
+# the authoring tools to feed to the image model, never committed.
+docs/reference/

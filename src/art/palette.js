@@ -8,8 +8,11 @@ const hex = {
   bone: '#ecdcc0',
   putty: '#d3c3a4',
   backdrop: '#b9c4c0', // the room beyond the build area
-  floorTile: '#bcc5b7', // cool floor, so the warm furniture reads against it
-  wall: '#e4d9c1', // a shade under paper, so a worktop reads against the wall
+  // The room commits to a colour. Every isometric diorama in the reference that
+  // reads well does this: cool walls, a warmer floor, warm furniture against
+  // them. A neutral room makes everything in it float.
+  wall: '#aed6c2', // mint. Pushed hard, because a strong warm key washes a pale cool out
+  floorTile: '#c9c2b2', // warm putty, so it separates from the wall
 
   // woods
   oak: '#dda265',
@@ -20,7 +23,7 @@ const hex = {
   mint: '#9ad9b8',
   teal: '#57a98d',
   tealDeep: '#356f5e',
-  signal: '#f28b60',
+  signal: '#f5804f', // the one properly saturated accent; used sparingly
 
   // metals / glass
   steel: '#b0bcbd',

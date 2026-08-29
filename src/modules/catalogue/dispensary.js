@@ -30,11 +30,16 @@ export const DISPENSARY = {
     trimAxis: AXIS.x,
     trimDensity: 0.42,
     atlasCell: [0, 0],
+    // Read off the concept sheet in docs/concept/dispensing_desk.png. The sheet
+    // inverted what this had been: the FRAME is the light colour and the drawer
+    // fronts are dark, not the other way round, and the pull is a saturated
+    // teal rather than another brown. Both reads are much stronger.
     colors: {
-      base: PALETTE.oak,
-      middle: PALETTE.oakDark,
-      accent1: PALETTE.bone, // worktop, upstand
-      accent2: PALETTE.walnut, // pulls, kick, fittings
+      base: PALETTE.oakDark, // carcass and drawer fronts
+      middle: PALETTE.walnut,
+      accent1: PALETTE.paper, // stiles, rails, worktop, upstand — the frame
+      accent2: PALETTE.teal, // pulls: the one saturated accent
+      accent3: PALETTE.steel, // kick plinth
     },
     axes: {
       x: { mode: 'repeat', unit: 0.9, min: 1, max: 6, default: 2, label: 'bays' },
@@ -43,28 +48,28 @@ export const DISPENSARY = {
     },
     // One bay. Local origin is the bay centre; the floor is at local -0.525.
     build: () => [
-      { size: [0.86, 0.09, 0.50], at: [0, -0.480, 0], bevel: 0.02, accent: 2 }, // recessed kick
+      { size: [0.86, 0.075, 0.50], at: [0, -0.4875, 0], bevel: 0.02, accent: 3 }, // recessed kick, thinner per the sheet
       { size: [0.90, 0.805, 0.62], at: [0, -0.0325, 0], bevel: 0.04 }, // carcass
-      { size: [0.055, 0.805, 0.635], at: [-0.4225, -0.0325, 0.005], bevel: 0.016 }, // stile
-      { size: [0.055, 0.805, 0.635], at: [0.4225, -0.0325, 0.005], bevel: 0.016 }, // stile
-      { size: [0.79, 0.050, 0.632], at: [0, -0.395, 0.006], bevel: 0.014 }, // bottom rail
-      { size: [0.79, 0.045, 0.632], at: [0, -0.0175, 0.006], bevel: 0.014 }, // mid rail
-      { size: [0.79, 0.050, 0.632], at: [0, 0.270, 0.006], bevel: 0.014 }, // top rail
+      { size: [0.055, 0.805, 0.635], at: [-0.4225, -0.0325, 0.005], bevel: 0.016, accent: 1 }, // stile
+      { size: [0.055, 0.805, 0.635], at: [0.4225, -0.0325, 0.005], bevel: 0.016, accent: 1 }, // stile
+      { size: [0.79, 0.050, 0.632], at: [0, -0.395, 0.006], bevel: 0.014, accent: 1 }, // bottom rail
+      { size: [0.79, 0.045, 0.632], at: [0, -0.0175, 0.006], bevel: 0.014, accent: 1 }, // mid rail
+      { size: [0.79, 0.050, 0.632], at: [0, 0.270, 0.006], bevel: 0.014, accent: 1 }, // top rail
       { size: [0.76, 0.300, 0.626], at: [0, -0.210, 0.008], bevel: 0.018 }, // deep drawer
       { size: [0.76, 0.220, 0.626], at: [0, 0.115, 0.008], bevel: 0.018 }, // shallow drawer
-      { size: [0.74, 0.016, 0.020], at: [0, -0.052, 0.320], bevel: 0.005, accent: 2 }, // drawer top lip
-      { size: [0.74, 0.016, 0.020], at: [0, 0.232, 0.320], bevel: 0.005, accent: 2 }, // drawer top lip
+      { size: [0.74, 0.016, 0.020], at: [0, -0.052, 0.320], bevel: 0.005, accent: 1 }, // drawer reveal
+      { size: [0.74, 0.016, 0.020], at: [0, 0.232, 0.320], bevel: 0.005, accent: 1 }, // drawer reveal
       { size: [0.30, 0.030, 0.050], at: [0, -0.210, 0.340], bevel: 0.012, accent: 2 }, // pull
       { size: [0.30, 0.030, 0.050], at: [0, 0.115, 0.340], bevel: 0.012, accent: 2 }, // pull
       { size: [0.15, 0.038, 0.014], at: [-0.245, -0.290, 0.334], bevel: 0.006, strip: 'detail', accent: 1 },
       { size: [0.15, 0.038, 0.014], at: [-0.245, 0.045, 0.334], bevel: 0.006, strip: 'detail', accent: 1 },
-      { size: [0.92, 0.018, 0.66], at: [0, 0.362, 0.015], bevel: 0.006, accent: 2 }, // shadow bead under the worktop
+      { size: [0.92, 0.018, 0.66], at: [0, 0.362, 0.015], bevel: 0.006, accent: 3 }, // shadow bead under the worktop
       { size: [0.94, 0.055, 0.700], at: [0, 0.3975, 0.02], bevel: 0.022, accent: 1 }, // worktop
       { size: [0.94, 0.032, 0.075], at: [0, 0.356, 0.352], bevel: 0.014, accent: 1 }, // bullnose lip
       { size: [0.94, 0.100, 0.045], at: [0, 0.475, -0.3275], bevel: 0.016, accent: 1 }, // rear upstand
       { size: [0.10, 0.050, 0.020], at: [0.28, 0.475, -0.300], bevel: 0.008, strip: 'detail', accent: 2 },
-      { size: [0.075, 0.030, 0.075], at: [-0.36, -0.535, 0.19], bevel: 0.010, accent: 2 }, // foot pad
-      { size: [0.075, 0.030, 0.075], at: [0.36, -0.535, 0.19], bevel: 0.010, accent: 2 }, // foot pad
+      { size: [0.075, 0.030, 0.075], at: [-0.36, -0.535, 0.19], bevel: 0.010, accent: 3 }, // foot pad
+      { size: [0.075, 0.030, 0.075], at: [0.36, -0.535, 0.19], bevel: 0.010, accent: 3 }, // foot pad
     ],
     mounts: onFloor,
     provides: (p, unit) => {

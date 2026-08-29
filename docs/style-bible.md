@@ -37,6 +37,23 @@ retro boards gave three things the first pass had missed:
 - **Very limited palette, one or two saturated accents**, everything else
   desaturated pastel.
 
+Then a set of five images supplied directly as the style target: hard-edged
+isometric voxel props where the pixel texture carries the detail and the
+geometry is close to a plain box. Those live in `docs/reference/` — gitignored,
+because they are not this project's work to redistribute — and they are what
+`tools/authoring/concept_sheet.py` feeds the image model. They moved two things:
+
+- **The detail belongs to the texture, not the silhouette.** The server tower in
+  that set is a box; everything that makes it read is painted on. Our answer to
+  that is the trim sheet's detail strip plus small dedicated fitting parts, not
+  more chamfer.
+- **The room is a colour, not an absence of one.** Every diorama that reads well
+  commits: cool walls against a warmer floor, warm furniture against both. The
+  walls were paper `#e4d9c1` — near enough to the worktops that a bench dissolved
+  into the wall behind it — and are now mint `#aed6c2`, with the floor moved warm
+  to `#c9c2b2`. The mint is pushed harder than it looks like it should be,
+  because a 0.72 warm key washes a pale cool out.
+
 ## The look: pixel art, not painted
 
 The style target is **cute pixelated low-poly** — Minecraft-ish texel density,
@@ -106,7 +123,8 @@ One source of truth: `src/art/palette.js`. No hex literals anywhere else.
 
 | Role | Hex | Used on |
 | --- | --- | --- |
-| paper | `#f2e6d2` | gondola carcass, walls |
+| paper | `#f2e6d2` | gondola carcass, desk frame |
+| wall | `#aed6c2` | walls — the room's cool half |
 | bone | `#ded0b6` | worktops, upstands |
 | putty | `#c4b294` | — |
 | oak | `#c98f4e` | dispensing desk carcass and drawers |
@@ -116,7 +134,7 @@ One source of truth: `src/art/palette.js`. No hex literals anywhere else.
 | signal | `#e0704a` | medicine boxes — the one warm signal colour |
 | steel / steelDark | `#9aa6a8` `#5e6b6e` | till, fridge carcass, fittings |
 | glass | `#bfd8d6` | fridge door |
-| floorTile | `#b6bdb2` | floor |
+| floorTile | `#c9c2b2` | floor — the room's warm half |
 | ink | `#2b1f33` | outlines, hatching — never black |
 
 ## Shading
@@ -172,8 +190,13 @@ on a shelf, where the spacing is already tight, set `pair: 0` and stay single.
 ## Before you change a module's shape
 
 Generate a concept sheet first and read the numbers off it — §11.1 in order.
-`docs/concept-prompts.md` holds the ready-to-paste prompts, one per module, with
-a shared style block that must not be paraphrased between them.
+`docs/concept-prompts.md` explains the prompt and the flags;
+`tools/authoring/concept_sheet.py` runs it; `docs/concept/` holds the generated
+set, one sheet per module plus a props row.
+
+The sheet is reference, never an asset. Nothing in `docs/concept/` is loaded,
+sampled or imported by the game — what comes back into the build is the numbers
+you read off it and the fittings you decide are worth a part.
 
 ## Believable detail, per object
 

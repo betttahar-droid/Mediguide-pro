@@ -98,7 +98,8 @@ src/
 public/textures/         the authored sheets: trim · atlas · tiling · hatch
 tools/authoring/         one-off asset authoring, run by hand (§11)
 docs/style-bible.md      palette, fixed light, fixed camera, the reference rules
-docs/concept-prompts.md  per-module concept sheet prompts, for you to run
+docs/concept-prompts.md  the concept-sheet prompt and how to run it
+docs/concept/            the generated sheets — reference only, never loaded
 test/smoke.mjs           headless acceptance checks
 ```
 
@@ -149,6 +150,15 @@ Nothing outside `src/shaders/` contains a line of GLSL, constructs a
   pipeline cannot supply. `tools/authoring/make_textures.py` regenerates them;
   it is an authoring tool, never a build, CI or runtime dependency, and deleting
   it does not affect the game.
+- **The concept sheets are generated, and they are reference.**
+  `tools/authoring/concept_sheet.py` drives Nano Banana 2 (§11.1 step 2) from a
+  style block and a set of local reference images, and writes `docs/concept/`.
+  Nothing in there is loaded, sampled or imported: what returns to the build is
+  the numbers read off a sheet. §11 is explicit that the generation service is a
+  desktop authoring tool and never a build, CI or runtime dependency, and this
+  keeps to that — the key lives in a gitignored `.env` that only the script
+  reads. The output also carries a SynthID watermark and C2PA credentials
+  (§11.2), which is fine for reference you never ship.
 - **No normal maps, so no UDN blending.** §6.2's UDN blend exists to fix
   triplanar normal maps. This project authors albedo only and puts AO in vertex
   colours (§6.3), so there is nothing to blend yet. The note is in
