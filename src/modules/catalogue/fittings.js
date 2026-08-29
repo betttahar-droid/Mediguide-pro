@@ -44,7 +44,7 @@ export const GLASS = 4; //  glass, lit faces, pale label windows and readouts
  *   at     — centre of the face, [x, y, z]
  *   spread — half-distance to the studs, [dx, dy]
  */
-export function studs({ at, spread, size = 0.022, accent = DARK }) {
+export function studs({ at, spread, size = 0.022, accent = DARK, mat = 'steel' }) {
   const [x, y, z] = at;
   const [dx, dy] = spread;
   const out = [];
@@ -54,6 +54,7 @@ export function studs({ at, spread, size = 0.022, accent = DARK }) {
         size: [size, size, size * 0.6],
         at: [x + sx * dx, y + sy * dy, z],
         bevel: size * 0.25,
+        mat,
         accent,
       });
     }
@@ -66,7 +67,7 @@ export function studs({ at, spread, size = 0.022, accent = DARK }) {
  * cabinets all carry one in the sheets, and it is the cheapest fitting that
  * says "this is a manufactured steel thing" rather than "this is a box".
  */
-export function vents({ at, n = 3, w = 0.24, thickness = 0.02, gap = 0.036, depth = 0.014, accent = DARK, axis = 'z' }) {
+export function vents({ at, n = 3, w = 0.24, thickness = 0.02, gap = 0.036, depth = 0.014, accent = DARK, axis = 'z', mat = 'grille' }) {
   const [x, y, z] = at;
   const out = [];
   for (let i = 0; i < n; i++) {
@@ -74,6 +75,7 @@ export function vents({ at, n = 3, w = 0.24, thickness = 0.02, gap = 0.036, dept
       size: axis === 'x' ? [depth, thickness, w] : [w, thickness, depth],
       at: [x, y + (i - (n - 1) / 2) * gap, z],
       bevel: thickness * 0.3,
+      mat,
       accent,
     });
   }
@@ -87,11 +89,11 @@ export function vents({ at, n = 3, w = 0.24, thickness = 0.02, gap = 0.036, dept
  * what makes it read as screwed on rather than printed. The face samples the
  * trim sheet's detail strip, which is where the small crisp marks live (§4.1).
  */
-export function plate({ at, w = 0.13, h = 0.05, depth = 0.012, accent = GLASS, surround = FRAME }) {
+export function plate({ at, w = 0.13, h = 0.05, depth = 0.012, accent = GLASS, surround = FRAME, mat = 'paper' }) {
   const [x, y, z] = at;
   return [
-    { size: [w, h, depth], at: [x, y, z], bevel: 0.004, accent: surround },
-    { size: [w - 0.022, h - 0.016, depth * 0.7], at: [x, y, z + depth * 0.4], bevel: 0.002, strip: 'detail', accent },
+    { size: [w, h, depth], at: [x, y, z], bevel: 0.004, mat: 'paint', accent: surround },
+    { size: [w - 0.022, h - 0.016, depth * 0.7], at: [x, y, z + depth * 0.4], bevel: 0.002, mat, accent },
   ];
 }
 
@@ -102,17 +104,18 @@ export function plate({ at, w = 0.13, h = 0.05, depth = 0.012, accent = GLASS, s
  */
 export function keypad({ at, w = 0.10, h = 0.13, depth = 0.026, accent = ACCENT }) {
   const [x, y, z] = at;
-  const out = [{ size: [w, h, depth], at: [x, y, z], bevel: 0.006, accent: DARK }];
+  const out = [{ size: [w, h, depth], at: [x, y, z], bevel: 0.006, mat: 'paint', accent: DARK }];
   for (let i = 0; i < 3; i++) {
     out.push({
       size: [w - 0.028, 0.016, depth * 0.5],
       at: [x, y - 0.028 + (i - 1) * -0.026, z + depth * 0.4],
       bevel: 0.003,
-      strip: 'detail',
+      mat: 'detail',
       accent,
     });
   }
-  out.push({ size: [w - 0.028, 0.022, depth * 0.5], at: [x, y + 0.038, z + depth * 0.4], bevel: 0.003, accent: GLASS });
+  // the little readout above the keys is a display, so it gets the screen strip
+  out.push({ size: [w - 0.028, 0.022, depth * 0.5], at: [x, y + 0.038, z + depth * 0.4], bevel: 0.003, mat: 'screen', accent: GLASS });
   return out;
 }
 
@@ -123,14 +126,15 @@ export function keypad({ at, w = 0.10, h = 0.13, depth = 0.026, accent = ACCENT 
  * that separates a piece of furniture from an extruded rectangle — the eye
  * reads the rim's shadow line as a lid sitting on a carcass.
  */
-export function capTray({ at, w, d, rim = 0.030, thickness = 0.030, accent = FRAME, panel = BODY }) {
+export function capTray({ at, w, d, rim = 0.030, thickness = 0.030, accent = FRAME, panel = BODY, mat = 'paint' }) {
   const [x, y, z] = at;
   return [
-    { size: [w, thickness, d], at: [x, y, z], bevel: 0.010, accent },
+    { size: [w, thickness, d], at: [x, y, z], bevel: 0.010, mat: 'paint', accent },
     {
       size: [w - rim * 2, thickness * 0.55, d - rim * 2],
       at: [x, y + thickness * 0.35, z],
       bevel: 0.008,
+      mat,
       accent: panel,
     },
   ];
@@ -141,7 +145,7 @@ export function capTray({ at, w, d, rim = 0.030, thickness = 0.030, accent = FRA
  * between them. This is the sheets' light frame in one call, and standing the
  * posts proud is what makes the panels read as infill rather than as the object.
  */
-export function posts({ at = [0, 0, 0], w, h, d, thickness = 0.055, accent = FRAME, bevel = 0.014 }) {
+export function posts({ at = [0, 0, 0], w, h, d, thickness = 0.055, accent = FRAME, bevel = 0.014, mat = 'steel' }) {
   const [x, y, z] = at;
   const out = [];
   for (const sx of [-1, 1]) {
@@ -150,6 +154,7 @@ export function posts({ at = [0, 0, 0], w, h, d, thickness = 0.055, accent = FRA
         size: [thickness, h, thickness],
         at: [x + sx * (w / 2 - thickness / 2), y, z + sz * (d / 2 - thickness / 2)],
         bevel,
+        mat,
         accent,
       });
     }
@@ -165,10 +170,10 @@ export function posts({ at = [0, 0, 0], w, h, d, thickness = 0.055, accent = FRA
  * separates the top plane from the carcass front by value, at exactly the line
  * where the two meet.
  */
-export function worktop({ at, w, d, thickness = 0.055, lip = 0.030, accent = FRAME, band = DARK }) {
+export function worktop({ at, w, d, thickness = 0.055, lip = 0.030, accent = FRAME, band = DARK, mat = 'wood' }) {
   const [x, y, z] = at;
   return [
-    { size: [w, thickness, d], at: [x, y, z], bevel: 0.014, accent },
-    { size: [w, lip, d + 0.012], at: [x, y - thickness / 2 - lip / 2 + 0.006, z], bevel: 0.008, accent: band },
+    { size: [w, thickness, d], at: [x, y, z], bevel: 0.014, mat, accent },
+    { size: [w, lip, d + 0.012], at: [x, y - thickness / 2 - lip / 2 + 0.006, z], bevel: 0.008, mat, accent: band },
   ];
 }

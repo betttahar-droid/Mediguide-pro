@@ -53,7 +53,7 @@ export function buildGui(app) {
   const look = gui.addFolder('Look dev').close();
 
   const light = look.addFolder('Lighting');
-  const lightState = { rampSteps: 3, key: 0.72, fill: 0.18, ambient: 0.33, upLift: 0.09, rim: 0.14, rimPower: 3.2, keyAzimuth: 37, keyElevation: 53 };
+  const lightState = { rampSteps: 3, key: 0.72, fill: 0.14, ambient: 0.24, upLift: 0.16, rim: 0.05, rimPower: 3.2, keyAzimuth: 37, keyElevation: 53 };
   light.add(lightState, 'rampSteps', 2, 8, 1).onChange((v) => setToonRampSteps(v));
   light.add(lightState, 'key', 0, 2).onChange((v) => setSharedUniform('uKeyIntensity', v));
   light.add(lightState, 'fill', 0, 1).onChange((v) => setSharedUniform('uFillIntensity', v));
@@ -72,8 +72,8 @@ export function buildGui(app) {
   // The six ramp parameters of §4.3. These are tuned by eye, not by formula.
   const masks = look.addFolder('Vertex masks');
   const maskState = {
-    cavityLo: 0.12, cavityHi: 0.62, cavityStrength: 0.34,
-    edgeLo: 0.55, edgeHi: 0.88, edgeStrength: 0.34, dust: 0.03,
+    cavityLo: 0.36, cavityHi: 0.74, cavityStrength: 0.46,
+    edgeLo: 0.62, edgeHi: 0.95, edgeStrength: 0.30, dust: 0.03,
   };
   masks.add(maskState, 'cavityLo', 0, 1).onChange((v) => setSharedUniform('uCavityLo', v));
   masks.add(maskState, 'cavityHi', 0, 1).onChange((v) => setSharedUniform('uCavityHi', v));

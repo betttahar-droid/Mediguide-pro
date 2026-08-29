@@ -25,16 +25,24 @@ import random
 from PIL import Image, ImageDraw, ImageStat
 
 OUT = "public/textures"
-SHEET = 128
+SHEET = 128       # sheet WIDTH, and the size of the square sheets
+TRIM_H = 256      # the trim sheet is tall: one row per material
 
-# The brief's standard trim sheet layout, §4.1, at pixel-art resolution.
-# Proportions match 64/128/512/128/192 of 1024. Mirrored by src/art/trimLayout.js.
+# The trim sheet layout, §4.1. These strips are MATERIALS — see the long note in
+# src/art/trimLayout.js, which holds the same table and must be kept in step.
 STRIPS = {
-    "edge":       (0, 8),     # painted bevels, borders
-    "detail":     (8, 16),    # screw heads, panel seams, label holders
-    "surface":    (24, 64),   # painted wood, laminate, painted metal
-    "transition": (88, 16),   # wear gradients, dirt masks
-    "alpha":      (104, 24),  # cutouts — grilles, handles
+    "edge":       (0, 12),    # painted bevels and borders
+    "detail":     (12, 16),   # screw heads, panel seams, label rails
+    "paint":      (28, 24),   # painted metal and plastic — the DEFAULT
+    "panel":      (52, 32),   # a big flat panel: seam border, corner bolts
+    "wood":       (84, 32),   # real grain, broken dashes, one knot
+    "steel":      (116, 24),  # bare metal: flat, faint sheen band, rivets
+    "grille":     (140, 16),  # hard dark slots with lit lips
+    "screen":     (156, 16),  # a lit display: near-black with a diagonal streak
+    "glass":      (172, 16),  # pale and flat, one diagonal streak
+    "paper":      (188, 16),  # card and labels: flat, the faintest fibre
+    "fabric":     (204, 24),  # upholstery: an even weave
+    "transition": (228, 28),  # wear gradients, dirt masks
 }
 
 V = lambda v: (int(max(0, min(255, v))),) * 3
@@ -121,46 +129,44 @@ def knot(d, cx, cy, v_core, v_ring, w=SHEET):
     d.point((wrap_x(cx - 1, w), cy), fill=V(v_core))
 
 
+def streak(d, x0, y0, x1, y1, v, step=2, spacing=13, width=2):
+    """A hard diagonal highlight band, drawn as a pixel staircase.
+
+    This is the single mark that makes a screen read as a screen in the
+    reference set (docs/reference/03-retro-computers): a near-black rectangle
+    with one or two bright diagonals across it and nothing else. No gradient,
+    no glow — a staircase of solid pixels.
+    """
+    for sx in range(x0 - (y1 - y0) * step, x1, spacing):
+        for row in range(y1 - y0):
+            x = sx + row * step
+            for k in range(width):
+                if x0 <= x + k < x1:
+                    d.point((x + k, y0 + row), fill=V(v))
+
+
 # ---------------------------------------------------------------- trim sheet
 def make_trim():
-    img = Image.new("RGB", (SHEET, SHEET), V(128))
+    img = Image.new("RGB", (SHEET, TRIM_H), V(128))
     d = ImageDraw.Draw(img)
     rnd = random.Random(60912)
 
-    # --- surface strip: a general material -------------------------------
-    # Low contrast on purpose. Everything here is within about +/-22 of mid
-    # grey, so the strip reads as "surface" at any scale and never competes
-    # with the geometry for the eye.
-    sy, sh = STRIPS["surface"]
-    BOARD = 32                                     # two soft separations, not four
-    dither_band(d, 0, sy, SHEET, sy + sh, 136, 128, spread=8)
-    mottle(d, rnd, 0, sy, SHEET, sy + sh, 90, 11, 132)
-    speckle(d, rnd, 0, sy, SHEET, sy + sh, 0.10, 13, 132)
+    def strip(name):
+        y, h = STRIPS[name]
+        return y, h, y + h
 
-    for p in range(sh // BOARD):
-        top = sy + p * BOARD
-        # the whisper of a board edge: a soft shadow with a soft lip, roughly
-        # a fifth of the contrast the plank version used
-        hline(d, top + 0, 0, SHEET, 108)
-        hline(d, top + 1, 0, SHEET, 156)
-        for _ in range(rnd.randint(2, 4)):         # broken grain, barely there
-            dashed_grain(d, rnd.randint(top + 4, top + BOARD - 4),
-                         132 + rnd.choice([-20, -14, 16, 22]), rnd)
-        if rnd.random() < 0.5:
-            knot(d, rnd.randrange(SHEET), rnd.randint(top + 8, top + BOARD - 8), 112, 124)
-
-    # --- edge trim: a painted bevel, eight rows ---------------------------
-    ey, eh = STRIPS["edge"]
-    for i, v in enumerate((92, 128, 196, 172, 146, 130, 112, 98)):
+    # --- edge: a painted bevel -------------------------------------------
+    ey, eh, ee = strip("edge")
+    for i, v in enumerate((88, 120, 200, 178, 158, 142, 130, 120, 112, 104, 96, 88)):
         hline(d, ey + i, 0, SHEET, v)
     for _ in range(18):                            # nicks in the lit row
         x = rnd.randrange(SHEET)
         for i in range(rnd.randint(1, 3)):
-            d.point((wrap_x(x + i), ey + 2), fill=V(160))
+            d.point((wrap_x(x + i), ey + 2), fill=V(164))
 
-    # --- detail strip: bolts and a label rail -----------------------------
-    dy, dh = STRIPS["detail"]
-    dither_band(d, 0, dy, SHEET, dy + dh, 140, 112, spread=12)
+    # --- detail: bolts and a label rail -----------------------------------
+    dy, dh, de = strip("detail")
+    dither_band(d, 0, dy, SHEET, de, 140, 112, spread=12)
     for x in range(4, SHEET, 16):                  # bolts: 2x2 with one lit pixel
         d.rectangle([x, dy + 3, x + 1, dy + 4], fill=V(58))
         d.point((x, dy + 3), fill=V(206))
@@ -171,17 +177,109 @@ def make_trim():
     for x in range(2, SHEET, 8):                   # label cards in the rail
         d.rectangle([x, dy + 11, x + 4, dy + 12], fill=V(224))
 
-    # --- transition: a dithered wear ramp ---------------------------------
-    ty, th = STRIPS["transition"]
-    dither_band(d, 0, ty, SHEET, ty + th, 160, 104, spread=18)
-    speckle(d, rnd, 0, ty, SHEET, ty + th, 0.14, 16, 132)
+    # --- paint: painted metal and plastic, the default --------------------
+    # Nearly flat. In the reference a plastic casing is one value with a very
+    # slight tonal drift and a couple of moulding lines; anything more and the
+    # object starts reading as stone. Everything here is within +/-10 of mid.
+    py, ph, pe = strip("paint")
+    dither_band(d, 0, py, SHEET, pe, 134, 129, spread=4)
+    speckle(d, rnd, 0, py, SHEET, pe, 0.04, 6, 132)
+    hline(d, py + ph // 2, 0, SHEET, 122)          # one moulding line
+    hline(d, py + ph // 2 + 1, 0, SHEET, 142)
 
-    # --- alpha: grille ----------------------------------------------------
-    ay, ah = STRIPS["alpha"]
-    d.rectangle([0, ay, SHEET, ay + ah], fill=V(44))
+    # --- panel: a big flat panel with a drawn border and corner bolts ------
+    # For door and side panels. The border is the whole point: the reference
+    # draws a recessed rectangle into a flat face rather than modelling one.
+    ny, nh, ne = strip("panel")
+    dither_band(d, 0, ny, SHEET, ne, 135, 128, spread=4)
+    speckle(d, rnd, 0, ny, SHEET, ne, 0.05, 7, 132)
+    for x0 in range(0, SHEET, 64):                 # two panels across the strip
+        x1 = x0 + 64
+        d.rectangle([x0 + 5, ny + 4, x1 - 6, ne - 5], outline=V(92))
+        d.rectangle([x0 + 6, ny + 5, x1 - 7, ne - 6], outline=V(166))
+        for cx in (x0 + 3, x1 - 5):                # corner bolts
+            for cy in (ny + 2, ne - 4):
+                d.rectangle([cx, cy, cx + 1, cy + 1], fill=V(92))
+                d.point((cx, cy), fill=V(186))
+
+    # --- wood: real grain, because a worktop should read as wood ----------
+    # This is the one strip that IS allowed a direction: it is only ever used
+    # on parts that are actually made of wood, so the grain running along the
+    # part is right rather than being a stripe on every object in the room.
+    wy, wh, we = strip("wood")
+    # Low contrast, and that is the lesson from the first cut of this strip: at
+    # 2 cm per texel a grain line drawn at catalogue contrast reads as a stripe
+    # painted across the furniture, not as wood. Everything here sits within
+    # about +/-12 of mid grey; the eye reads it as timber from the DIRECTION,
+    # which is the one thing this strip is allowed to have.
+    dither_band(d, 0, wy, SHEET, we, 136, 128, spread=5)
+    mottle(d, rnd, 0, wy, SHEET, we, 34, 6, 132)
+    for _ in range(12):
+        dashed_grain(d, rnd.randrange(wy + 1, we - 1),
+                     132 + rnd.choice([-12, -9, -6, 7, 10, 12]), rnd,
+                     run_range=(6, 18), gap_range=(3, 10))
+    hline(d, wy, 0, SHEET, 120)                    # a board edge with a lit lip
+    hline(d, wy + 1, 0, SHEET, 146)
+    knot(d, rnd.randrange(SHEET), rnd.randint(wy + 6, we - 6), 118, 126)
+
+    # --- steel: flat, one sheen band, rivets ------------------------------
+    sy, sh, se = strip("steel")
+    dither_band(d, 0, sy, SHEET, se, 136, 130, spread=4)
+    speckle(d, rnd, 0, sy, SHEET, se, 0.05, 8, 132)
+    for i in range(4):                             # a broad soft sheen
+        hline(d, sy + 4 + i, 0, SHEET, 148 - i * 4)
+    for x in range(6, SHEET, 22):                  # rivets
+        d.rectangle([x, se - 5, x + 1, se - 4], fill=V(104))
+        d.point((x, se - 5), fill=V(190))
+
+    # --- grille: hard slots -----------------------------------------------
+    gy, gh, ge = strip("grille")
+    d.rectangle([0, gy, SHEET, ge - 1], fill=V(150))
     for x in range(0, SHEET, 6):
-        d.rectangle([x + 1, ay + 3, x + 3, ay + ah - 4], fill=V(196))
-        vline(d, x + 1, ay + 3, ay + ah - 4, 236)
+        d.rectangle([x + 1, gy + 2, x + 3, ge - 3], fill=V(52))
+        vline(d, x + 4, gy + 2, ge - 3, 196)       # the lit lip beside each slot
+
+    # --- screen: near-black with a hard diagonal streak --------------------
+    # The fix for the thing that looked like rock. A display is not a surface
+    # with a material; it is a dark rectangle with a reflection drawn on it.
+    cy, ch, ce = strip("screen")
+    d.rectangle([0, cy, SHEET, ce - 1], fill=V(52))
+    speckle(d, rnd, 0, cy + 1, SHEET, ce - 1, 0.05, 7, 56)   # faint scanline grain
+    for y in range(cy + 1, ce - 1, 2):             # scanlines
+        hline(d, y, 0, SHEET, 44)
+    streak(d, 0, cy + 1, SHEET, ce - 1, 150, spacing=37, width=3)
+    streak(d, 0, cy + 1, SHEET, ce - 1, 190, spacing=37, width=1)
+    hline(d, cy, 0, SHEET, 30)                     # the bezel shadow at the top
+    hline(d, ce - 1, 0, SHEET, 78)                 # bounce at the bottom
+
+    # --- glass: pale, flat, one streak ------------------------------------
+    ly, lh, le = strip("glass")
+    d.rectangle([0, ly, SHEET, le - 1], fill=V(168))
+    dither_band(d, 0, ly, SHEET, le, 176, 160, spread=5)
+    streak(d, 0, ly + 1, SHEET, le - 1, 226, spacing=41, width=3)
+    streak(d, 0, ly + 1, SHEET, le - 1, 138, spacing=41, width=1)
+    hline(d, le - 1, 0, SHEET, 120)                # the pane's bottom edge
+
+    # --- paper: flat card, the faintest fibre -----------------------------
+    ay, ah, ae = strip("paper")
+    d.rectangle([0, ay, SHEET, ae - 1], fill=V(150))
+    speckle(d, rnd, 0, ay, SHEET, ae, 0.05, 5, 150)
+    hline(d, ae - 1, 0, SHEET, 122)                # the sheet's shadowed edge
+
+    # --- fabric: an even weave --------------------------------------------
+    fy, fh, fe = strip("fabric")
+    d.rectangle([0, fy, SHEET, fe - 1], fill=V(132))
+    for y in range(fy, fe):
+        for x in range(SHEET):
+            if (x + y) % 2 == 0:
+                d.point((x, y), fill=V(126 if (x // 2 + y // 2) % 2 else 140))
+    speckle(d, rnd, 0, fy, SHEET, fe, 0.06, 9, 132)
+
+    # --- transition: a dithered wear ramp ---------------------------------
+    ty, th, te = strip("transition")
+    dither_band(d, 0, ty, SHEET, te, 160, 104, spread=18)
+    speckle(d, rnd, 0, ty, SHEET, te, 0.14, 16, 132)
+
     return img
 
 

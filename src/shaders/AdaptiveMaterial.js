@@ -35,11 +35,6 @@ uniform float uTextureScale;   // triplanar, repeats per metre
 uniform float uTriplanarSharpness;
 uniform float uDetailGain;
 uniform float uDetailContrast;
-
-// tools/authoring/make_textures.py normalises every sheet's mean to 132/255, so
-// mixing toward that constant flattens a surface without darkening it. That is
-// what a backdrop wants: the same material, quieter, not a different one.
-const float SHEET_MEAN = 0.518;
 uniform float uHatchScale;
 uniform float uHatchStrength;
 uniform vec3 uInkTint;
@@ -57,6 +52,11 @@ varying vec2 vUv;
 varying float vTrimV;
 varying float vAccent;
 varying float vCapMask;
+
+// tools/authoring/make_textures.py normalises every sheet's mean to 132/255, so
+// mixing toward that constant flattens a surface without darkening it. That is
+// what a backdrop wants: the same material, quieter, not a different one.
+const float SHEET_MEAN = 0.518;
 
 // tone-mapping and colour-space helpers are already in the fragment prefix
 #include <common>
@@ -217,26 +217,26 @@ export function createAdaptiveMaterial(opts = {}) {
       uKeyIntensity: { value: 0.72 },
       uFillDir: { value: new Vector3(-0.7, 0.35, -0.5) },
       uFillColor: { value: PALETTE.fillCool.clone() },
-      uFillIntensity: { value: 0.18 },
+      uFillIntensity: { value: 0.14 },
       uRimColor: { value: PALETTE.rim.clone() },
-      uRimStrength: { value: 0.14 },
+      uRimStrength: { value: 0.05 },
       uRimPower: { value: 3.2 },
       uSkyColor: { value: PALETTE.sky.clone() },
       uGroundColor: { value: PALETTE.ground.clone() },
-      uAmbientStrength: { value: 0.33 },
+      uAmbientStrength: { value: 0.24 },
       uShadowColor: { value: PALETTE.shadowCool.clone() },
-      uUpLift: { value: 0.09 },
+      uUpLift: { value: 0.16 },
       // hatching
       uHatchScale: { value: 4.5 },
       uHatchStrength: { value: 0.0 },
       uInkTint: { value: PALETTE.ink.clone() },
       // mask ramps — all six tuned by eye in lil-gui (§4.3)
-      uCavityLo: { value: 0.12 },
-      uCavityHi: { value: 0.62 },
-      uCavityStrength: { value: 0.34 },
-      uEdgeLo: { value: 0.55 },
-      uEdgeHi: { value: 0.88 },
-      uEdgeStrength: { value: 0.34 },
+      uCavityLo: { value: 0.36 },
+      uCavityHi: { value: 0.74 },
+      uCavityStrength: { value: 0.46 },
+      uEdgeLo: { value: 0.62 },
+      uEdgeHi: { value: 0.95 },
+      uEdgeStrength: { value: 0.30 },
       uDustStrength: { value: 0.03 },
       uShadowTint: { value: PALETTE.shadowTint.clone() },
       uEdgeLightTint: { value: PALETTE.edgeLightTint.clone() },

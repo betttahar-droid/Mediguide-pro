@@ -66,11 +66,10 @@ things:
   texels read as texels.
 - **No blur, no antialiasing, no gradients.** Value steps and 4×4 Bayer
   dithering. A groove is one dark pixel with one bright pixel beside it.
-- **Soft corners.** `EDGE_SOFTNESS` in `modules/geometry.js` scales every
-  chamfer. It sat at 0.4 for a hard voxel edge and is now **0.85**: a visible
-  bevel that catches the edge highlight. Rounded corners are most of what makes
-  an object read as friendly rather than as a crate, and the wider chamfer gives
-  the §4.3 mask bake a much stronger convex signal — which matters with no ink.
+- **Hard corners.** `EDGE_SOFTNESS` in `modules/geometry.js` scales every
+  chamfer, and it is **0.3**. A wide bevel was tried and abandoned: it read as
+  friendly but also as soft and inflated, where the reference props are square.
+  See "Hard edges and flat faces" below.
 - **Flat lighting.** A 3-step ramp, a weak rim, no cross-hatching by default.
   Pixel art gets its detail from texels; a soft shading gradient over them just
   muddies the palette.
@@ -82,6 +81,75 @@ things:
   were higher, and came down when the catalogue's part counts doubled and the
   masks started covering most of every surface.
   `Look dev → Outlines → enabled` puts the ink back.
+
+## Materials: a part says what it is made of
+
+The single worst bug in the look, and the one that gives the rule its name: a
+computer screen was textured like rock.
+
+The trim sheet used to carry one generic `surface` strip — mottling and speckle
+— and every part in the catalogue sampled it. That is fine for a painted
+carcass and wrong for everything else, so a display, a pane of glass, a paper
+label and a stone mortar all came out as the same lightly-mottled stuff. The
+mortar was the only one it was right for.
+
+So the sheet is now **twelve material strips**, and a part declares which one it
+is made of:
+
+| `mat` | What it looks like | Used on |
+| --- | --- | --- |
+| `paint` | nearly flat, one moulding line — **the default** | painted metal and plastic |
+| `panel` | a drawn recessed border with corner bolts | doors, side panels, carcasses |
+| `wood` | broken grain dashes and a knot, low contrast | drawer fronts, worktops, shelf boards, pallets |
+| `steel` | flat, a faint sheen band, rivets | handles, hinges, posts, taps, legs |
+| `grille` | hard dark slots with a lit lip | vents, condensers |
+| `screen` | near-black, scanlines, a hard diagonal streak | displays, readouts, tills |
+| `glass` | pale and flat, one diagonal streak | fridge doors, glazing, lit signs |
+| `paper` | flat, the faintest fibre | labels, cards, cartons, headers |
+| `fabric` | an even weave | the consultation chair's cushions |
+| `edge` · `detail` · `transition` | bevels · bolts and rails · wear | as before |
+
+Three rules came out of painting them:
+
+1. **The screen is the test case.** In `docs/reference/03-retro-computers` a
+   display is not a surface with a material on it — it is a near-black
+   rectangle with one or two bright diagonals drawn across it. No gradient, no
+   glow. `streak()` in the authoring script draws exactly that, as a staircase
+   of solid pixels.
+2. **`wood` is the only strip allowed a direction.** Rule 2 below says a tiling
+   sheet must have none, because anything linear becomes a stripe on every
+   object — but `wood` is only ever used on parts that are actually timber, so
+   grain running along the part is right rather than universal. It is still
+   drawn quietly: within about ±12 of mid grey, because at 2 cm per texel a
+   grain line at catalogue contrast reads as a painted stripe.
+3. **Strips get guard rows.** The sheet is mipmapped so distant modules do not
+   shimmer, and a mip level blends rows — which across a strip boundary means a
+   near-black screen bleeding into the pale glass above it. `stripV()` never
+   samples the outer two rows of a strip.
+
+`validateRegistry()` rejects an unknown `mat` at load with the module and part
+named, because the failure mode of a typo is silent: it lands on whatever strip
+happens to sit at that V, which is how the screen looked like rock in the first
+place.
+
+## Hard edges and flat faces
+
+The reference set is hard-edged. Look at `docs/reference/02-server-tower`: the
+corners are square, each face is one flat value, and what separates one face
+from the next is a clean step — not a rounded highlight running along the join.
+
+Two settings had drifted away from that and are back:
+
+- **`EDGE_SOFTNESS` is 0.3**, not 0.85. A wide chamfer was making everything
+  read soft and slightly inflated — closer to a toy than to a blocky voxel prop.
+  The bevel is now a hairline: enough to catch the edge strip and stop a corner
+  aliasing, not enough to see as a radius.
+- **The shading is flatter and deeper.** The rim fresnel is the only term that
+  varies *across* a flat face, so it is nearly off (0.05); the vertex masks were
+  smearing a soft wash over whole faces, so their ramps are narrow now — they
+  darken the crease and leave the face alone. What carries the separation
+  instead is the up-face lift at 0.16 and a shorter ambient, which is how the
+  reference does it: adjacent faces at clearly different flat values.
 
 ## The frame rule
 

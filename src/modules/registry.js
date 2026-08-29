@@ -12,6 +12,7 @@
 // is why a counter's front face only reads as trim once z has a real margin.
 import { Vector3 } from 'three';
 import { buildParts } from './geometry.js';
+import { STRIPS } from '../art/trimLayout.js';
 import { DISPENSARY } from './catalogue/dispensary.js';
 import { RETAIL } from './catalogue/retail.js';
 import { CONSULTATION, STAFF, SIGNAGE } from './catalogue/rooms.js';
@@ -57,6 +58,17 @@ export function validateRegistry() {
   for (const [id, def] of Object.entries(REGISTRY)) {
     if (def.id !== id) throw new Error(`module "${id}" declares a different id "${def.id}"`);
     if (!def.category) throw new Error(`module "${id}" has no category, so the catalogue cannot shelve it`);
+
+    // A part says what it is MADE OF, and a typo would silently fall back to
+    // whatever strip happened to be at that V — which is exactly how a computer
+    // screen ended up textured like rock. Fail loudly instead.
+    def.build().forEach((part, i) => {
+      if (part.mat !== undefined && !STRIPS[part.mat]) {
+        throw new Error(
+          `module "${id}" part ${i}: unknown material "${part.mat}" — known: ${Object.keys(STRIPS).join(', ')}`
+        );
+      }
+    });
 
     const h = def.unit;
     def.margins.forEach((m, i) => {

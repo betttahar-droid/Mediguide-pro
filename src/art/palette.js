@@ -49,7 +49,7 @@ const hex = {
   sky: '#d6e6f4',
   ground: '#f6e2c4',
   // shadows carry a hue rather than just less light
-  shadowCool: '#9c90a6',
+  shadowCool: '#877b95',
 
   // ink — outlines and UI. A dark saturated shadow tone, never black (§7.3)
   ink: '#413353',

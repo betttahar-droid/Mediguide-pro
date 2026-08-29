@@ -30,10 +30,10 @@ export const PROPS = {
     atlasCell: [1, 0],
     trimDensity: 2.2,
     parts: [
-      { size: [0.21, 0.012, 0.15], at: [0, 0.006, 0], bevel: 0.004 },
-      { size: [0.20, 0.010, 0.145], at: [0.006, 0.017, 0.004], bevel: 0.004 },
-      { size: [0.205, 0.010, 0.15], at: [-0.004, 0.027, -0.003], bevel: 0.004 },
-      { size: [0.09, 0.004, 0.06], at: [0.03, 0.034, 0.01], bevel: 0.002, accent: 1 },
+      { size: [0.21, 0.012, 0.15], at: [0, 0.006, 0], bevel: 0.004, mat: 'paper' },
+      { size: [0.20, 0.010, 0.145], at: [0.006, 0.017, 0.004], bevel: 0.004, mat: 'paper' },
+      { size: [0.205, 0.010, 0.15], at: [-0.004, 0.027, -0.003], bevel: 0.004, mat: 'paper' },
+      { size: [0.09, 0.004, 0.06], at: [0.03, 0.034, 0.01], bevel: 0.002, mat: 'detail', accent: 1 },
     ],
   },
 
@@ -42,9 +42,9 @@ export const PROPS = {
     atlasCell: [0, 0],
     trimDensity: 2.4,
     parts: [
-      { size: [0.17, 0.012, 0.23], at: [0, 0.006, 0], bevel: 0.004 },
-      { size: [0.15, 0.008, 0.20], at: [0, 0.015, -0.008], bevel: 0.003, accent: 1 },
-      { size: [0.07, 0.016, 0.03], at: [0, 0.020, 0.095], bevel: 0.005, accent: 2 },
+      { size: [0.17, 0.012, 0.23], at: [0, 0.006, 0], bevel: 0.004, mat: 'wood' },
+      { size: [0.15, 0.008, 0.20], at: [0, 0.015, -0.008], bevel: 0.003, mat: 'paper', accent: 1 },
+      { size: [0.07, 0.016, 0.03], at: [0, 0.020, 0.095], bevel: 0.005, mat: 'steel', accent: 2 },
     ],
   },
 
@@ -80,8 +80,8 @@ export const PROPS = {
     atlasCell: [1, 0],
     trimDensity: 3.0,
     parts: [
-      { size: [0.10, 0.16, 0.06], at: [0, 0.08, 0], bevel: 0.006 },
-      { size: [0.07, 0.045, 0.005], at: [0, 0.10, 0.032], bevel: 0.002, accent: 1 },
+      { size: [0.10, 0.16, 0.06], at: [0, 0.08, 0], bevel: 0.006, mat: 'paper' },
+      { size: [0.07, 0.045, 0.005], at: [0, 0.10, 0.032], bevel: 0.002, mat: 'detail', accent: 1 },
     ],
   },
 
@@ -90,10 +90,10 @@ export const PROPS = {
     atlasCell: [1, 1],
     trimDensity: 4.5,
     parts: [
-      { size: [0.065, 0.13, 0.065], at: [0, 0.065, 0], bevel: 0.010 },
-      { size: [0.035, 0.05, 0.035], at: [0, 0.152, 0], bevel: 0.006 },
-      { size: [0.042, 0.022, 0.042], at: [0, 0.185, 0], bevel: 0.005, accent: 2 },
-      { size: [0.055, 0.05, 0.005], at: [0, 0.07, 0.034], bevel: 0.002, accent: 1 },
+      { size: [0.065, 0.13, 0.065], at: [0, 0.065, 0], bevel: 0.010, mat: 'glass' },
+      { size: [0.035, 0.05, 0.035], at: [0, 0.152, 0], bevel: 0.006, mat: 'glass' },
+      { size: [0.042, 0.022, 0.042], at: [0, 0.185, 0], bevel: 0.005, mat: 'paint', accent: 2 }, // cap
+      { size: [0.055, 0.05, 0.005], at: [0, 0.07, 0.034], bevel: 0.002, mat: 'paper', accent: 1 }, // label
     ],
   },
 
@@ -102,8 +102,8 @@ export const PROPS = {
     atlasCell: [1, 0],
     trimDensity: 3.5,
     parts: [
-      { size: [0.085, 0.085, 0.085], at: [0, 0.043, 0], bevel: 0.014 },
-      { size: [0.075, 0.006, 0.10], at: [0, 0.086, 0.05], bevel: 0.002, accent: 1 },
+      { size: [0.085, 0.085, 0.085], at: [0, 0.043, 0], bevel: 0.014, mat: 'paper' },
+      { size: [0.075, 0.006, 0.10], at: [0, 0.086, 0.05], bevel: 0.002, mat: 'paper', accent: 1 }, // the tail
     ],
   },
 
@@ -112,9 +112,9 @@ export const PROPS = {
     atlasCell: [0, 1],
     trimDensity: 3.0,
     parts: [
-      { size: [0.22, 0.045, 0.18], at: [0, 0.022, 0], bevel: 0.008 },
-      { size: [0.14, 0.012, 0.13], at: [0, 0.051, -0.01], bevel: 0.004, accent: 2 },
-      { size: [0.10, 0.035, 0.012], at: [0, 0.062, 0.078], bevel: 0.004, accent: 1 },
+      { size: [0.22, 0.045, 0.18], at: [0, 0.022, 0], bevel: 0.008, mat: 'paint' },
+      { size: [0.14, 0.012, 0.13], at: [0, 0.051, -0.01], bevel: 0.004, mat: 'steel', accent: 2 }, // the pan
+      { size: [0.10, 0.035, 0.012], at: [0, 0.062, 0.078], bevel: 0.004, mat: 'screen', accent: 1 }, // readout
     ],
   },
 
@@ -123,10 +123,10 @@ export const PROPS = {
     atlasCell: [0, 1],
     trimDensity: 2.4,
     parts: [
-      { size: [0.20, 0.020, 0.14], at: [0, 0.010, 0.02], bevel: 0.005 },
-      { size: [0.045, 0.10, 0.045], at: [0, 0.070, -0.03], bevel: 0.008 },
-      { size: [0.30, 0.20, 0.022], at: [0, 0.220, -0.04], bevel: 0.008, accent: 2 },
-      { size: [0.26, 0.155, 0.006], at: [0, 0.222, -0.026], bevel: 0.002, accent: 1 },
+      { size: [0.20, 0.020, 0.14], at: [0, 0.010, 0.02], bevel: 0.005, mat: 'detail' }, // keyboard
+      { size: [0.045, 0.10, 0.045], at: [0, 0.070, -0.03], bevel: 0.008, mat: 'steel' }, // neck
+      { size: [0.30, 0.20, 0.022], at: [0, 0.220, -0.04], bevel: 0.008, mat: 'panel', accent: 2 },
+      { size: [0.26, 0.155, 0.006], at: [0, 0.222, -0.026], bevel: 0.002, mat: 'screen', accent: 1 }, // the display
     ],
   },
 
@@ -135,11 +135,11 @@ export const PROPS = {
     atlasCell: [1, 1],
     trimDensity: 2.6,
     parts: [
-      { size: [0.24, 0.020, 0.17], at: [0, 0.010, 0], bevel: 0.005 },
-      { size: [0.24, 0.085, 0.018], at: [0, 0.052, 0.078], bevel: 0.005, accent: 1 },
-      { size: [0.24, 0.085, 0.018], at: [0, 0.052, -0.078], bevel: 0.005, accent: 1 },
-      { size: [0.018, 0.085, 0.14], at: [0.112, 0.052, 0], bevel: 0.005, accent: 1 },
-      { size: [0.018, 0.085, 0.14], at: [-0.112, 0.052, 0], bevel: 0.005, accent: 1 },
+      { size: [0.24, 0.020, 0.17], at: [0, 0.010, 0], bevel: 0.005, mat: 'paint' },
+      { size: [0.24, 0.085, 0.018], at: [0, 0.052, 0.078], bevel: 0.005, mat: 'panel', accent: 1 },
+      { size: [0.24, 0.085, 0.018], at: [0, 0.052, -0.078], bevel: 0.005, mat: 'panel', accent: 1 },
+      { size: [0.018, 0.085, 0.14], at: [0.112, 0.052, 0], bevel: 0.005, mat: 'panel', accent: 1 },
+      { size: [0.018, 0.085, 0.14], at: [-0.112, 0.052, 0], bevel: 0.005, mat: 'panel', accent: 1 },
     ],
   },
 
@@ -148,8 +148,8 @@ export const PROPS = {
     atlasCell: [0, 0],
     trimDensity: 3.0,
     parts: [
-      { size: [0.11, 0.10, 0.11], at: [0, 0.05, 0], bevel: 0.012 },
-      { size: [0.13, 0.022, 0.13], at: [0, 0.098, 0], bevel: 0.005 },
+      { size: [0.11, 0.10, 0.11], at: [0, 0.05, 0], bevel: 0.012, mat: 'paint' },
+      { size: [0.13, 0.022, 0.13], at: [0, 0.098, 0], bevel: 0.005, mat: 'paint' },
       { size: [0.10, 0.09, 0.03], at: [-0.02, 0.15, 0.01], bevel: 0.008, accent: 1 },
       { size: [0.03, 0.11, 0.09], at: [0.03, 0.17, -0.01], bevel: 0.008, accent: 2 },
       { size: [0.08, 0.07, 0.05], at: [0.005, 0.215, 0.02], bevel: 0.008, accent: 1 },
@@ -163,9 +163,9 @@ export const PROPS = {
     atlasCell: [1, 0],
     trimDensity: 3.2,
     parts: [
-      { size: [0.075, 0.13, 0.045], at: [0, 0.065, 0], bevel: 0.005 },
-      { size: [0.055, 0.055, 0.005], at: [0, 0.072, 0.025], bevel: 0.002, accent: 1 },
-      { size: [0.055, 0.010, 0.005], at: [0, 0.032, 0.025], bevel: 0.002, accent: 2 },
+      { size: [0.075, 0.13, 0.045], at: [0, 0.065, 0], bevel: 0.005, mat: 'paper' },
+      { size: [0.055, 0.055, 0.005], at: [0, 0.072, 0.025], bevel: 0.002, mat: 'detail', accent: 1 },
+      { size: [0.055, 0.010, 0.005], at: [0, 0.032, 0.025], bevel: 0.002, mat: 'detail', accent: 2 },
     ],
   },
 
@@ -175,10 +175,10 @@ export const PROPS = {
     atlasCell: [1, 1],
     trimDensity: 5.0,
     parts: [
-      { size: [0.055, 0.105, 0.055], at: [0, 0.053, 0], bevel: 0.010 },
-      { size: [0.032, 0.028, 0.032], at: [0, 0.118, 0], bevel: 0.005 },
-      { size: [0.040, 0.020, 0.040], at: [0, 0.140, 0], bevel: 0.004, accent: 2 },
-      { size: [0.046, 0.050, 0.005], at: [0, 0.055, 0.029], bevel: 0.002, accent: 1 },
+      { size: [0.055, 0.105, 0.055], at: [0, 0.053, 0], bevel: 0.010, mat: 'glass' },
+      { size: [0.032, 0.028, 0.032], at: [0, 0.118, 0], bevel: 0.005, mat: 'glass' },
+      { size: [0.040, 0.020, 0.040], at: [0, 0.140, 0], bevel: 0.004, mat: 'paint', accent: 2 }, // white cap
+      { size: [0.046, 0.050, 0.005], at: [0, 0.055, 0.029], bevel: 0.002, mat: 'paper', accent: 1 },
     ],
   },
 
@@ -188,12 +188,12 @@ export const PROPS = {
     atlasCell: [1, 1],
     trimDensity: 2.4,
     parts: [
-      { size: [0.20, 0.015, 0.14], at: [0, 0.008, 0], bevel: 0.004 },
-      { size: [0.20, 0.085, 0.016], at: [0, 0.050, 0.062], bevel: 0.004, accent: 1 },
-      { size: [0.20, 0.085, 0.016], at: [0, 0.050, -0.062], bevel: 0.004, accent: 1 },
-      { size: [0.016, 0.085, 0.11], at: [0.092, 0.050, 0], bevel: 0.004, accent: 1 },
-      { size: [0.016, 0.085, 0.11], at: [-0.092, 0.050, 0], bevel: 0.004, accent: 1 },
-      { size: [0.075, 0.030, 0.006], at: [0, 0.060, 0.068], bevel: 0.002, accent: 2 },
+      { size: [0.20, 0.015, 0.14], at: [0, 0.008, 0], bevel: 0.004, mat: 'paint' },
+      { size: [0.20, 0.085, 0.016], at: [0, 0.050, 0.062], bevel: 0.004, mat: 'panel', accent: 1 },
+      { size: [0.20, 0.085, 0.016], at: [0, 0.050, -0.062], bevel: 0.004, mat: 'panel', accent: 1 },
+      { size: [0.016, 0.085, 0.11], at: [0.092, 0.050, 0], bevel: 0.004, mat: 'panel', accent: 1 },
+      { size: [0.016, 0.085, 0.11], at: [-0.092, 0.050, 0], bevel: 0.004, mat: 'panel', accent: 1 },
+      { size: [0.075, 0.030, 0.006], at: [0, 0.060, 0.068], bevel: 0.002, mat: 'paper', accent: 2 }, // stock label
     ],
   },
 
@@ -204,11 +204,12 @@ export const PROPS = {
     atlasCell: [0, 1],
     trimDensity: 4.0,
     parts: [
-      { size: [0.085, 0.030, 0.085], at: [0, 0.015, 0], bevel: 0.010 },
-      { size: [0.105, 0.070, 0.105], at: [0, 0.062, 0], bevel: 0.016 },
-      { size: [0.085, 0.014, 0.085], at: [0, 0.100, 0], bevel: 0.006, accent: 1 },
-      { size: [0.020, 0.090, 0.020], at: [0.028, 0.125, -0.02], bevel: 0.006, accent: 2 },
-      { size: [0.032, 0.026, 0.032], at: [0.028, 0.170, -0.02], bevel: 0.008, accent: 2 },
+      // the one prop that really is stoneware, so it keeps the mottled strip
+      { size: [0.085, 0.030, 0.085], at: [0, 0.015, 0], bevel: 0.010, mat: 'transition' },
+      { size: [0.105, 0.070, 0.105], at: [0, 0.062, 0], bevel: 0.016, mat: 'transition' },
+      { size: [0.085, 0.014, 0.085], at: [0, 0.100, 0], bevel: 0.006, mat: 'paint', accent: 1 },
+      { size: [0.020, 0.090, 0.020], at: [0.028, 0.125, -0.02], bevel: 0.006, mat: 'wood', accent: 2 }, // pestle
+      { size: [0.032, 0.026, 0.032], at: [0.028, 0.170, -0.02], bevel: 0.008, mat: 'wood', accent: 2 },
     ],
   },
 
@@ -218,10 +219,10 @@ export const PROPS = {
     atlasCell: [1, 0],
     trimDensity: 3.0,
     parts: [
-      { size: [0.115, 0.155, 0.055], at: [0, 0.078, 0], bevel: 0.006 },
-      { size: [0.115, 0.022, 0.055], at: [0, 0.163, 0], bevel: 0.004, accent: 2 },
-      { size: [0.080, 0.055, 0.005], at: [0, 0.095, 0.030], bevel: 0.002, accent: 1 },
-      { size: [0.030, 0.008, 0.005], at: [0.028, 0.055, 0.030], bevel: 0.002, accent: 2 },
+      { size: [0.115, 0.155, 0.055], at: [0, 0.078, 0], bevel: 0.006, mat: 'paper' },
+      { size: [0.115, 0.022, 0.055], at: [0, 0.163, 0], bevel: 0.004, mat: 'paper', accent: 2 }, // the staple fold
+      { size: [0.080, 0.055, 0.005], at: [0, 0.095, 0.030], bevel: 0.002, mat: 'detail', accent: 1 },
+      { size: [0.030, 0.008, 0.005], at: [0.028, 0.055, 0.030], bevel: 0.002, mat: 'detail', accent: 2 },
     ],
   },
 
@@ -231,11 +232,11 @@ export const PROPS = {
     atlasCell: [0, 1],
     trimDensity: 3.4,
     parts: [
-      { size: [0.115, 0.022, 0.115], at: [0, 0.011, 0], bevel: 0.008, accent: 2 },
-      { size: [0.030, 0.230, 0.030], at: [0, 0.140, 0], bevel: 0.006, accent: 2 },
-      { size: [0.030, 0.130, 0.030], at: [0.012, 0.290, -0.045], bevel: 0.006, rotX: 0.6, accent: 2 },
-      { size: [0.130, 0.075, 0.130], at: [0.012, 0.345, -0.105], bevel: 0.018 },
-      { size: [0.095, 0.012, 0.095], at: [0.012, 0.308, -0.105], bevel: 0.004, accent: 1 },
+      { size: [0.115, 0.022, 0.115], at: [0, 0.011, 0], bevel: 0.008, mat: 'steel', accent: 2 },
+      { size: [0.030, 0.230, 0.030], at: [0, 0.140, 0], bevel: 0.006, mat: 'steel', accent: 2 },
+      { size: [0.030, 0.130, 0.030], at: [0.012, 0.290, -0.045], bevel: 0.006, rotX: 0.6, mat: 'steel', accent: 2 },
+      { size: [0.130, 0.075, 0.130], at: [0.012, 0.345, -0.105], bevel: 0.018, mat: 'paint' },
+      { size: [0.095, 0.012, 0.095], at: [0.012, 0.308, -0.105], bevel: 0.004, mat: 'glass', accent: 1 }, // the bulb face
     ],
   },
 
@@ -244,10 +245,10 @@ export const PROPS = {
     atlasCell: [1, 0],
     trimDensity: 3.0,
     parts: [
-      { size: [0.035, 0.20, 0.14], at: [-0.05, 0.10, 0], bevel: 0.004 },
-      { size: [0.035, 0.20, 0.14], at: [-0.012, 0.10, 0], bevel: 0.004, accent: 1 },
-      { size: [0.035, 0.20, 0.14], at: [0.026, 0.10, 0], bevel: 0.004 },
-      { size: [0.035, 0.19, 0.14], at: [0.064, 0.095, 0], bevel: 0.004, accent: 2 },
+      { size: [0.035, 0.20, 0.14], at: [-0.05, 0.10, 0], bevel: 0.004, mat: 'paper' },
+      { size: [0.035, 0.20, 0.14], at: [-0.012, 0.10, 0], bevel: 0.004, mat: 'paper', accent: 1 },
+      { size: [0.035, 0.20, 0.14], at: [0.026, 0.10, 0], bevel: 0.004, mat: 'paper' },
+      { size: [0.035, 0.19, 0.14], at: [0.064, 0.095, 0], bevel: 0.004, mat: 'paper', accent: 2 },
     ],
   },
 };

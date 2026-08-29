@@ -16,12 +16,17 @@ import { stripV } from '../art/trimLayout.js';
 
 const EDGE = stripV('edge');
 
-// Cute forms are rounded ones. The chamfer had been scaled almost to nothing
-// for a hard voxel edge; at 0.85 the corners come back as a visible soft bevel
-// that catches the edge highlight, which is most of what makes an object read
-// as friendly rather than as a crate. It also gives the §4.3 mask bake a much
-// stronger convex signal, which matters now that there are no outlines.
-const EDGE_SOFTNESS = 0.85;
+// The reference set is HARD-EDGED. Look at docs/reference/02-server-tower or
+// 03-retro-computers: the corners are square, and what separates one face from
+// the next is a clean step in value, not a rounded highlight running along the
+// join. A wide chamfer was making everything read soft and slightly inflated —
+// closer to a toy than to the blocky voxel props those images are.
+//
+// So the bevel is back to a hairline: just enough to catch the edge strip and
+// stop a corner aliasing, not enough to see as a radius. What replaces it is
+// the flatter shading — a bigger value step between face orientations — which
+// is how the reference separates forms too.
+const EDGE_SOFTNESS = 0.3;
 
 /**
  * Chamfered box centred on the origin.
@@ -29,15 +34,18 @@ const EDGE_SOFTNESS = 0.85;
  * @param {number} h full height (y)
  * @param {number} d full depth (z)
  * @param {number} bevel chamfer size, clamped to a third of the smallest extent
- * @param {{trimAxis?:number, strip?:string}} opts
+ * @param {{trimAxis?:number, mat?:string}} opts
  *   trimAxis — index of the axis the trim sheet tiles along (U)
- *   strip    — which trim strip this part's flat faces sample
- *   accent   — 0 base colour, 1 or 2 an accent from the module's palette entry
+ *   mat      — what this part is MADE OF; picks its strip off the trim sheet.
+ *              See art/trimLayout.js. Defaults to painted metal/plastic, which
+ *              is what most of a carcass is; wood, steel, glass, screen, paper,
+ *              fabric and grille all look different and must be asked for.
+ *   accent   — 0 base colour, 1–4 an accent from the module's palette entry
  */
 export function bevelBox(w, h, d, bevel = 0.03, opts = {}) {
   const trimAxis = opts.trimAxis ?? 0;
   const accent = opts.accent ?? 0;
-  const flat = stripV(opts.strip ?? 'surface');
+  const flat = stripV(opts.mat ?? 'paint');
 
   const e = [w / 2, h / 2, d / 2];
   const b = Math.min(bevel, Math.min(w, h, d) / 3);
@@ -148,14 +156,14 @@ function normalOf(a, b, c) {
 /**
  * Merge a list of parts into one faceted geometry. Parts are how every module
  * in the registry is described.
- * @param {{size:number[], at?:number[], bevel?:number, rotX?:number, strip?:string, accent?:number}[]} parts
+ * @param {{size:number[], at?:number[], bevel?:number, rotX?:number, mat?:string, accent?:number}[]} parts
  * @param {{trimAxis?:number}} opts
  */
 export function buildParts(parts, opts = {}) {
   const geos = parts.map((p) => {
     const g = bevelBox(p.size[0], p.size[1], p.size[2], (p.bevel ?? 0.025) * EDGE_SOFTNESS, {
       trimAxis: opts.trimAxis ?? 0,
-      strip: p.strip,
+      mat: p.mat,
       accent: p.accent,
     });
     if (p.rotX) g.rotateX(p.rotX);

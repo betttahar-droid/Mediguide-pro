@@ -139,6 +139,12 @@ Nothing outside `src/shaders/` contains a line of GLSL, constructs a
   `validateRegistry()` rejects it with the module named.
 - **Object-space triplanar, post-deform.** World space swims; sampling the
   original position smears under stretch.
+- **Hard edges, flat faces.** `EDGE_SOFTNESS` is 0.3. A wide chamfer was tried
+  and abandoned: it read friendly but also soft and inflated, where the
+  reference props are square-cornered. The rim fresnel is the only shading term
+  that varies *across* a face, so it is nearly off; the vertex masks darken the
+  crease and leave the face alone. Separation comes from adjacent faces sitting
+  at clearly different flat values, which is how the reference does it.
 - **Ink is not black** — when it is on at all. The shipped look has outlines off
   and separates forms three other ways instead: hemisphere ambient (cool from
   above, warm bounce from the floor), a tinted rather than merely darker shadow,
@@ -152,9 +158,20 @@ Nothing outside `src/shaders/` contains a line of GLSL, constructs a
   `bakeMasks` now buckets triangles into a grid the size of one ray and tests
   only the 3×3×3 block around each vertex — provably every triangle a ray could
   reach, and nothing else.
-- **A tiling sheet must have no direction.** Anything linear in it becomes a
-  stripe on every object that uses it. The surface strip is mottling and
-  speckle; the joinery lines come from the geometry, which already has rails,
+- **A part says what it is MADE OF.** The trim sheet carries twelve material
+  strips — paint, panel, wood, steel, grille, screen, glass, paper, fabric —
+  and a part declares one. It used to carry a single generic "surface" strip
+  that everything sampled, which meant a computer screen was textured like
+  rock, and so were the glass and the paper labels. A screen is now a
+  near-black field with a hard diagonal reflection staircase, which is what a
+  display is in the reference. `validateRegistry()` rejects an unknown material
+  at load, because a typo's failure mode is silent: it lands on whichever strip
+  happens to sit at that V.
+- **A tiling sheet must have no direction** — with exactly one exception.
+  `wood` has grain, because it is only ever used on parts that really are
+  timber. Every other strip is isotropic, because anything linear in a sheet
+  sampled by everything becomes a stripe on every object in the room.
+  The joinery lines still come from the geometry, which already has rails,
   stiles and drawer fronts as separate parts.
 - **Decor is declared, not placed.** A module's `decor(params)` returns slots;
   the contents are a pure function of a saved seed and the slot key, so growth
