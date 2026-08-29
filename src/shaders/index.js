@@ -12,7 +12,7 @@ import { makeToonRamp } from '../art/ramps.js';
 const live = new Set();
 
 /** The one shared ramp texture — swapping it re-lights the whole scene. */
-let sharedRamp = makeToonRamp(4);
+let sharedRamp = makeToonRamp(3);
 
 export function createAdaptiveMaterial(opts = {}) {
   const material = build({ ramp: sharedRamp, ...opts });

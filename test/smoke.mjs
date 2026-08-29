@@ -193,6 +193,7 @@ async function capShot(scale) {
     const desk = __app.placed.find((m) => m.typeId === 'serving_counter');
     for (const m of __app.placed) for (const mesh of m.meshes) mesh.visible = m === desk;
     for (const m of __app.placed) if (m.shadow) m.shadow.visible = false;
+    __app.setDecorVisible(false); // decor is atmosphere, not the geometry claim
     for (const k of ['floor', 'backWall', 'sideWall']) __app.room[k].visible = false;
     desk.setParams({ x: s, z: 1.0 });
     const capX = desk.group.position.x - desk.def.unit[0] * s;
@@ -208,6 +209,7 @@ const capAt1 = await capShot(1.0);
 const capAt4 = await capShot(4.0);
 await page.evaluate(() => {
   __app.placed.find((m) => m.typeId === 'serving_counter').setParams({ x: 1.9, z: 1.0 });
+  __app.setDecorVisible(true);
 });
 const capDiff = meanAbsDiff(capAt1, capAt4);
 await page.screenshot({ path: `${shotDir}/04-cap-at-4x.png`, clip: CROP });
@@ -227,6 +229,7 @@ const swim = await (async () => {
       for (const mesh of m.meshes) mesh.visible = false;
       if (m.shadow) m.shadow.visible = false;
     }
+    __app.setDecorVisible(false);
     __app.room.floor.visible = true;
     __app.camera.position.set(0, 2.6, 2.4);
     __app.controls.target.set(0, 0, 0);
@@ -265,6 +268,7 @@ const inkAt = async (distance) => {
       for (const mesh of m.meshes) mesh.visible = true;
       if (m.shadow) m.shadow.visible = true;
     }
+    __app.setDecorVisible(true);
     for (const k of ['floor', 'backWall', 'sideWall']) __app.room[k].visible = true;
     __app.camera.position.set(d * 0.55, d * 0.42, d * 0.72);
     __app.controls.target.set(0, 0.8, 0);
@@ -281,6 +285,35 @@ check(
   `ink covers ${(inkNear * 100).toFixed(2)}% of the frame at 3m and ${(inkFar * 100).toFixed(2)}% at 30m`
 );
 await page.screenshot({ path: `${shotDir}/05-zoomed-out.png` });
+
+// --- §8.4: decor fills the module as it grows, and never reshuffles -------
+const decorTest = await page.evaluate(() => {
+  const desk = __app.placed.find((m) => m.typeId === 'dispensing_desk');
+  const snapshot = () =>
+    [...desk.decor.live.entries()].map(([k, v]) => `${k}:${v.type}`).sort();
+
+  desk.setParams({ x: 2 });
+  const two = snapshot();
+  desk.setParams({ x: 5 });
+  const five = snapshot();
+  desk.setParams({ x: 2 });
+  const back = snapshot();
+
+  return {
+    two: two.length,
+    five: five.length,
+    kept: two.filter((e) => five.includes(e)).length,
+    stable: JSON.stringify(two) === JSON.stringify(back),
+  };
+});
+check(
+  'decor pops in with new bays and leaves the old ones alone',
+  decorTest.five > decorTest.two && decorTest.kept === decorTest.two && decorTest.stable,
+  `2 bays carry ${decorTest.two} props, 5 bays carry ${decorTest.five}; all ${decorTest.kept} original props unchanged, and resizing back restores exactly the same set`
+);
+await page.evaluate(() => {
+  __app.placed.find((m) => m.typeId === 'dispensing_desk').setParams({ x: 3 });
+});
 
 // --- Phase 6: many modules, one draw call ---------------------------------
 const instTest = await page.evaluate(async () => {
@@ -310,8 +343,8 @@ await page.waitForTimeout(500);
 await page.screenshot({ path: `${shotDir}/01-scene.png` });
 
 await page.evaluate(() => {
-  __app.camera.position.set(2.6, 1.35, 4.3);
-  __app.controls.target.set(0.2, 0.58, 1.1);
+  __app.camera.position.set(2.5, 1.72, 4.0);
+  __app.controls.target.set(0.2, 0.72, 1.1);
   __app.controls.update();
 });
 await page.waitForTimeout(500);

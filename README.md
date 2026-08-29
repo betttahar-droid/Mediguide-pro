@@ -1,7 +1,8 @@
 # Pharmacy Modular Builder
 
 A browser game where you lay out a pharmacy from modular, resizable furniture,
-rendered in a stylised low-poly hand-painted style. Built against `CLAUDE CODE
+rendered in a pixel-art low-poly style — and the modules fill themselves with
+props as you grow them. Built against `CLAUDE CODE
 BRIEF — Pharmacy Modular Builder`, Phases 0–6.
 
 ```bash
@@ -23,12 +24,12 @@ test and every look-dev knob are in the lil-gui panel.
 | 0 — Scaffold | Vite, three r185, lil-gui, stats, orbit controls |
 | 1 — Look development | toon ramp, warm key + cool fill, rim, palette module, faceted normals, all three vertex mask channels with their six ramps in the UI |
 | 2 — Nine-slice | margins as uniforms, normals corrected by the inverse-transpose, `capMask` varying, both §5.2 guards asserted at load |
-| 3 — Hybrid material | 1024² trim sheet, 1024² atlas, Tier A/B blend on `capMask`, Tier C triplanar for floor and walls |
+| 3 — Hybrid material | 128² pixel-art trim sheet, 128² atlas, Tier A/B blend on `capMask`, Tier C triplanar for floor and walls |
 | 4 — Outlines and hatching | normal-depth prepass sharing the vertex stage, Roberts cross on linearised depth, tinted ink, surface-locked cross-hatching in the beauty pass |
-| 5 — Module system | registry, sockets, both resize modes, socket + surface snapping, raycast placement, detail props, save/load |
+| 5 — Module system | registry, sockets, both resize modes, socket + surface snapping, raycast placement, seeded decor slots, save/load |
 | 6 — Instancing | `InstancedMesh` with `aTargetScale` / `aMargins` instanced attributes |
 
-`npm test` drives the built app in headless Chromium and checks twelve things,
+`npm test` drives the built app in headless Chromium and checks thirteen things,
 including the acceptance tests that can be made objective:
 
 - **Phase 2** — the cap crop is *pixel-identical* from 1.0× to 4.0× (mean
@@ -42,6 +43,9 @@ including the acceptance tests that can be made objective:
   not four taller ones; a gondola snaps into a flush run; save → clear → load
   round-trips identically.
 - **Phase 6** — 200 modules (399 unit instances) cost one extra draw call.
+- **§8.4 decor** — a 2-bay desk carries 4 props and a 5-bay desk carries 9; all
+  4 originals are untouched by the resize, and shrinking back restores exactly
+  the same set.
 
 It also asserts the authored sheets actually loaded, so a missing PNG fails
 loudly instead of quietly rendering flat colour.
@@ -67,7 +71,7 @@ src/
 │   ├── NormalDepthMaterial.js    the prepass twin
 │   └── OutlinePass.js            prepass target + Roberts composite
 ├── art/                 palette · ramps · bakeMasks · trimLayout · textures · shadow
-├── modules/             registry · geometry · ModuleInstance · resize · InstancedBatch
+├── modules/             registry · geometry · ModuleInstance · resize · decor · InstancedBatch
 ├── build/               snapping · placement · serialize
 └── ui/                  gui
 public/textures/         the authored sheets: trim · atlas · tiling · hatch
@@ -101,6 +105,10 @@ Nothing outside `src/shaders/` contains a line of GLSL, constructs a
 - **Object-space triplanar, post-deform.** World space swims; sampling the
   original position smears under stretch.
 - **Ink is not black.** It is the palette's shadow tone (§7.3).
+- **Decor is declared, not placed.** A module's `decor(params)` returns slots;
+  the contents are a pure function of a saved seed and the slot key, so growth
+  adds props without disturbing the ones already there — and a save reloads
+  identically. See `docs/style-bible.md`.
 
 ## What is not the brief's, and why
 
@@ -118,6 +126,11 @@ Nothing outside `src/shaders/` contains a line of GLSL, constructs a
   `chunks/triplanar.glsl.js`.
 - **Snapping stops at rule 2.** Socket-to-socket and surface are implemented;
   edge alignment (smart guides) is not.
+- **Decor is not batched yet.** Each prop is its own mesh, so a busy scene adds
+  draw calls quickly (the seeded room runs about 78 with the outline prepass
+  doubling everything). Props are fixed-size and share geometry per type, which
+  is exactly the shape `createInstancedBatch()` wants — batching them is the
+  obvious next win.
 - **Instancing is an API, not the whole scene.** `createInstancedBatch()` builds
   the batched path and the stress test drives it; placed modules still use one
   mesh per unit so they stay individually selectable and resizable. Converting

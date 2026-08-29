@@ -4,6 +4,7 @@ import { bakeMasks } from '../art/bakeMasks.js';
 import { REGISTRY, defaultParams, buildGeometry, trimAxisVector } from './registry.js';
 import { clampParams, layout, footprint } from './resize.js';
 import { contactShadowMaterial, contactShadowGeometry } from '../art/shadow.js';
+import { DecorLayer, warmDecorCache } from './decor.js';
 
 /** One baked geometry per module type — the masks are baked on the undeformed mesh. */
 const geometryCache = new Map();
@@ -18,6 +19,7 @@ export function unitGeometry(def) {
 /** Pre-bake everything up front so placement never stalls mid-drag. */
 export function warmGeometryCache() {
   for (const def of Object.values(REGISTRY)) unitGeometry(def);
+  warmDecorCache();
 }
 
 /** The material a module type wants, shared by ModuleInstance and the batches. */
@@ -39,12 +41,14 @@ export function materialOptionsFor(def, extra = {}) {
 let nextId = 1;
 
 export class ModuleInstance {
-  constructor(typeId, { params, position, rotY = 0, ghost = false } = {}) {
+  constructor(typeId, { params, position, rotY = 0, ghost = false, seed } = {}) {
     this.def = REGISTRY[typeId];
     if (!this.def) throw new Error(`unknown module type "${typeId}"`);
     this.uid = nextId++;
     this.typeId = typeId;
     this.ghost = ghost;
+    // Saved with the module, so decor survives a reload unchanged.
+    this.seed = seed ?? (Math.random() * 0xffffffff) >>> 0;
     this.params = clampParams(this.def, params ?? defaultParams(this.def));
 
     this.group = new Group();
@@ -68,6 +72,13 @@ export class ModuleInstance {
       this.shadow = new Mesh(contactShadowGeometry(), contactShadowMaterial());
       this.shadow.renderOrder = -1;
       this.group.add(this.shadow);
+    }
+
+    // Decor pops in and out as the module is resized. Ghosts stay bare so the
+    // placement preview reads as a shape, not a shopping list.
+    if (!ghost && this.def.decor) {
+      this.decor = new DecorLayer();
+      this.group.add(this.decor.group);
     }
 
     this.rebuild();
@@ -106,6 +117,8 @@ export class ModuleInstance {
       this.shadow.scale.set(this.footprint[0] * 2.9, 1, this.footprint[2] * 3.0);
       this.shadow.position.y = 0.008;
     }
+
+    if (this.decor) this.decor.update(this.seed, this.def.decor(this.params, this.def.unit));
   }
 
   setHighlight(amount) {
@@ -141,11 +154,17 @@ export class ModuleInstance {
       ],
       rotY: round(this.rotY, 4),
       params: { ...this.params },
+      seed: this.seed,
     };
+  }
+
+  setDecorVisible(visible) {
+    if (this.decor) this.decor.group.visible = visible;
   }
 
   dispose() {
     this.group.parent?.remove(this.group);
+    this.decor?.dispose();
     this.material.dispose();
     this.meshes.length = 0;
   }

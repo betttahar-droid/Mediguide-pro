@@ -5,14 +5,16 @@
 // Keep every strip at a consistent real-world scale so detail on one module
 // matches the next. Change a row here and you must repaint the sheet:
 // tools/authoring/make_textures.py holds the same table.
-export const SHEET = 1024;
+export const SHEET = 128;
 
+// Pixel art: the sheet is small so a texel lands near 2cm in world space.
+// Proportions still match the brief's 64/128/512/128/192 of 1024.
 export const STRIPS = {
-  edge: { y: 0, h: 64 }, // painted bevels, borders
-  detail: { y: 64, h: 128 }, // screw heads, panel seams, label holders
-  surface: { y: 192, h: 512 }, // painted wood, laminate, painted metal
-  transition: { y: 704, h: 128 }, // wear gradients, dirt masks
-  alpha: { y: 832, h: 192 }, // cutouts — grilles, handles
+  edge: { y: 0, h: 8 }, // painted bevels, borders
+  detail: { y: 8, h: 16 }, // screw heads, panel seams, label holders
+  surface: { y: 24, h: 64 }, // painted wood, laminate, painted metal
+  transition: { y: 88, h: 16 }, // wear gradients, dirt masks
+  alpha: { y: 104, h: 24 }, // cutouts — grilles, handles
 };
 
 /** The V range of a strip, in UV space. Textures load with flipY = false. */

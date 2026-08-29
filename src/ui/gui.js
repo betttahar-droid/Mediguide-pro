@@ -53,7 +53,7 @@ export function buildGui(app) {
   const look = gui.addFolder('Look dev').close();
 
   const light = look.addFolder('Lighting');
-  const lightState = { rampSteps: 4, key: 0.68, fill: 0.28, rim: 0.35, rimPower: 3.0, keyAzimuth: 37, keyElevation: 53 };
+  const lightState = { rampSteps: 3, key: 0.68, fill: 0.28, rim: 0.16, rimPower: 3.0, keyAzimuth: 37, keyElevation: 53 };
   light.add(lightState, 'rampSteps', 2, 8, 1).onChange((v) => setToonRampSteps(v));
   light.add(lightState, 'key', 0, 2).onChange((v) => setSharedUniform('uKeyIntensity', v));
   light.add(lightState, 'fill', 0, 1).onChange((v) => setSharedUniform('uFillIntensity', v));
@@ -70,8 +70,8 @@ export function buildGui(app) {
   // The six ramp parameters of §4.3. These are tuned by eye, not by formula.
   const masks = look.addFolder('Vertex masks');
   const maskState = {
-    cavityLo: 0.12, cavityHi: 0.62, cavityStrength: 0.5,
-    edgeLo: 0.55, edgeHi: 0.95, edgeStrength: 0.45, dust: 0.05,
+    cavityLo: 0.12, cavityHi: 0.62, cavityStrength: 0.34,
+    edgeLo: 0.55, edgeHi: 0.95, edgeStrength: 0.26, dust: 0.03,
   };
   masks.add(maskState, 'cavityLo', 0, 1).onChange((v) => setSharedUniform('uCavityLo', v));
   masks.add(maskState, 'cavityHi', 0, 1).onChange((v) => setSharedUniform('uCavityHi', v));
@@ -82,14 +82,14 @@ export function buildGui(app) {
   masks.add(maskState, 'dust', 0, 0.3).onChange((v) => setSharedUniform('uDustStrength', v));
 
   const tex = look.addFolder('Texturing');
-  const texState = { detailGain: 2.0, trimDensity: 0.85, triplanarScale: 0.75, triplanarSharpness: 8 };
+  const texState = { detailGain: 2.0, trimDensity: 0.45, triplanarScale: 0.5, triplanarSharpness: 8 };
   tex.add(texState, 'detailGain', 1, 3).name('detail gain').onChange((v) => setSharedUniform('uDetailGain', v));
   tex.add(texState, 'trimDensity', 0.2, 4).name('trim per metre').onChange((v) => setSharedUniform('uTrimDensity', v));
   tex.add(texState, 'triplanarScale', 0.1, 3).name('triplanar per metre').onChange((v) => setSharedUniform('uTextureScale', v));
   tex.add(texState, 'triplanarSharpness', 1, 16).name('triplanar blend').onChange((v) => setSharedUniform('uTriplanarSharpness', v));
 
   const hatch = look.addFolder('Hatching');
-  const hatchState = { scale: 4.5, strength: 0.22 };
+  const hatchState = { scale: 4.5, strength: 0.0 };
   hatch.add(hatchState, 'scale', 0.5, 12).onChange((v) => setSharedUniform('uHatchScale', v));
   hatch.add(hatchState, 'strength', 0, 1).onChange((v) => setSharedUniform('uHatchStrength', v));
 

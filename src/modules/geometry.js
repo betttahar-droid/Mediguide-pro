@@ -16,6 +16,12 @@ import { stripV } from '../art/trimLayout.js';
 
 const EDGE = stripV('edge');
 
+// Pixel-art / voxel forms have hard edges. The chamfer is kept — the vertex
+// mask bake needs convex edges to find, and the trim sheet's edge strip needs
+// somewhere to land — but scaled down until it reads as a crisp corner with a
+// one-texel painted highlight rather than a rounded bevel.
+const EDGE_SOFTNESS = 0.4;
+
 /**
  * Chamfered box centred on the origin.
  * @param {number} w full width (x)
@@ -146,7 +152,7 @@ function normalOf(a, b, c) {
  */
 export function buildParts(parts, opts = {}) {
   const geos = parts.map((p) => {
-    const g = bevelBox(p.size[0], p.size[1], p.size[2], p.bevel ?? 0.025, {
+    const g = bevelBox(p.size[0], p.size[1], p.size[2], (p.bevel ?? 0.025) * EDGE_SOFTNESS, {
       trimAxis: opts.trimAxis ?? 0,
       strip: p.strip,
       accent: p.accent,

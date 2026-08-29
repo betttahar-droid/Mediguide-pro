@@ -7,7 +7,7 @@
 // Every sheet is painted as LUMINANCE around mid-grey and tinted by palette.js
 // at sample time, which is what holds the limited palette across a catalogue
 // authored in separate passes (§4.4).
-import { TextureLoader, RepeatWrapping, LinearFilter, LinearMipmapLinearFilter, SRGBColorSpace, NoColorSpace } from 'three';
+import { TextureLoader, RepeatWrapping, NearestFilter, NearestMipmapLinearFilter, SRGBColorSpace, NoColorSpace } from 'three';
 
 const loader = new TextureLoader();
 const pending = [];
@@ -25,8 +25,11 @@ function load(url, { colorSpace = SRGBColorSpace, anisotropy = 8 } = {}) {
   tex.flipY = false;
   tex.colorSpace = colorSpace;
   tex.anisotropy = anisotropy;
-  tex.minFilter = LinearMipmapLinearFilter;
-  tex.magFilter = LinearFilter;
+  // Pixel art: NEAREST on magnification is the whole look. Mipmaps stay linear
+  // between levels so distant modules do not shimmer, which is the one place
+  // sharpness costs more than it buys.
+  tex.minFilter = NearestMipmapLinearFilter;
+  tex.magFilter = NearestFilter;
   return tex;
 }
 

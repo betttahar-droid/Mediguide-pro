@@ -9,6 +9,7 @@
 import { Vector3 } from 'three';
 import { buildParts } from './geometry.js';
 import { PALETTE } from '../art/palette.js';
+import { POOLS } from './decor.js';
 
 const AXIS = { x: 0, y: 1, z: 2 };
 
@@ -23,6 +24,9 @@ const AXIS = { x: 0, y: 1, z: 2 };
  *   atlasCell     which 2×2 cell of the Tier A atlas the caps sample
  *   mounts        sockets on this module's underside: what it can sit on
  *   provides(p)   sockets this module offers to others, in group space
+ *   decor(p)      §8.4 — slots for detail props, as a function of the params,
+ *                 so growing a module fills the new space with things. Keys
+ *                 must be stable: a slot keeps its prop when others appear.
  */
 export const REGISTRY = {
   gondola_shelf: {
@@ -33,7 +37,7 @@ export const REGISTRY = {
     unit: [0.5, 0.18, 0.25],
     margins: [0, 0, 0.06],
     trimAxis: AXIS.z,
-    trimDensity: 1.6,
+    trimDensity: 0.7,
     atlasCell: [0, 0], // wood
     colors: { base: PALETTE.paper, middle: PALETTE.bone, accent1: PALETTE.oak, accent2: PALETTE.steelDark },
     axes: {
@@ -65,6 +69,21 @@ export const REGISTRY = {
       }
       return out;
     },
+    // Every bay × tier gets a slot. Raise the shelf count and the new tiers
+    // stock themselves; the tiers already there do not change.
+    decor: (p, unit) => {
+      const slots = [];
+      for (let i = 0; i < p.x; i++) {
+        for (let j = 0; j < p.y; j++) {
+          const x = (i - (p.x - 1) / 2) * unit[0] * 2;
+          const y = j * unit[1] * 2 + 0.075;
+          slots.push({ key: `s${i}.${j}.a`, pos: [x - 0.24, y, 0.02], pool: POOLS.shelf, chance: 0.85, jitter: 0.04 });
+          slots.push({ key: `s${i}.${j}.b`, pos: [x + 0.02, y, 0.02], pool: POOLS.shelf, chance: 0.7, jitter: 0.04 });
+          slots.push({ key: `s${i}.${j}.c`, pos: [x + 0.28, y, 0.02], pool: POOLS.shelf, chance: 0.55, jitter: 0.04 });
+        }
+      }
+      return slots;
+    },
   },
 
   // The hero, and the project's §1 argument made visible. Real dispensing
@@ -87,7 +106,7 @@ export const REGISTRY = {
     unit: [0.45, 0.525, 0.33],
     margins: [0, 0, 0.1],
     trimAxis: AXIS.x,
-    trimDensity: 0.85,
+    trimDensity: 0.42,
     atlasCell: [0, 0], // wood
     colors: {
       base: PALETTE.oak, // carcass and drawer fronts
@@ -135,6 +154,22 @@ export const REGISTRY = {
       }
       return out;
     },
+    // Two slots per bay, plus one rare slot that only unlocks once the run is
+    // long enough to deserve a terminal or a plant. Drag the bays from 1 to 6
+    // and the desk fills with work rather than getting emptier per metre.
+    decor: (p, unit) => {
+      const slots = [];
+      for (let i = 0; i < p.x; i++) {
+        const x = (i - (p.x - 1) / 2) * unit[0] * 2;
+        slots.push({ key: `d${i}.a`, pos: [x - 0.22, 0.955, 0.14], pool: POOLS.worktop, chance: 0.95 });
+        slots.push({ key: `d${i}.b`, pos: [x + 0.19, 0.955, 0.02], pool: POOLS.worktop, chance: 0.8 });
+        slots.push({ key: `d${i}.c`, pos: [x - 0.06, 0.955, -0.12], pool: POOLS.worktop, chance: 0.62 });
+        if (p.x >= 3) {
+          slots.push({ key: `d${i}.hero`, pos: [x + 0.10, 0.955, -0.22], pool: POOLS.worktopRare, chance: 0.45, jitter: 0.05 });
+        }
+      }
+      return slots;
+    },
   },
 
   // The brief's catalogue entry, kept as the continuous alternative: the same
@@ -150,7 +185,7 @@ export const REGISTRY = {
     unit: [0.6, 0.475, 0.33],
     margins: [0.14, 0, 0.1],
     trimAxis: AXIS.x,
-    trimDensity: 0.85,
+    trimDensity: 0.42,
     atlasCell: [1, 0],
     colors: { base: PALETTE.teal, middle: PALETTE.tealDeep, accent1: PALETTE.bone, accent2: PALETTE.steelDark },
     axes: {
@@ -172,6 +207,18 @@ export const REGISTRY = {
       { tag: 'counter_side', pos: [unit[0] * p.x, unit[1], 0], normal: [1, 0, 0] },
       { tag: 'counter_side', pos: [-unit[0] * p.x, unit[1], 0], normal: [-1, 0, 0] },
     ],
+    // A stretch axis has no bays to hang slots off, so the slots are spaced by
+    // length instead: one every 0.55m of counter, added at the ends as it grows.
+    decor: (p, unit) => {
+      const half = unit[0] * p.x;
+      const n = Math.max(1, Math.floor((half * 2) / 0.55));
+      const slots = [];
+      for (let i = 0; i < n; i++) {
+        const x = -half + (i + 0.5) * ((half * 2) / n);
+        slots.push({ key: `c${i}`, pos: [x, unit[1] * 2 + 0.01, -0.02], pool: POOLS.counter, chance: 0.62 });
+      }
+      return slots;
+    },
   },
 
   till_block: {
@@ -182,7 +229,7 @@ export const REGISTRY = {
     unit: [0.17, 0.11, 0.14],
     margins: [0, 0, 0],
     trimAxis: AXIS.x,
-    trimDensity: 3.0,
+    trimDensity: 1.4,
     atlasCell: [0, 1],
     colors: { base: PALETTE.steel, middle: PALETTE.steelDark, accent1: PALETTE.ink, accent2: PALETTE.steelDark },
     axes: { x: { mode: 'fixed' }, y: { mode: 'fixed' }, z: { mode: 'fixed' } },
@@ -206,7 +253,7 @@ export const REGISTRY = {
     unit: [0.4, 0.85, 0.32],
     margins: [0, 0, 0],
     trimAxis: AXIS.y,
-    trimDensity: 1.1,
+    trimDensity: 0.5,
     atlasCell: [1, 1],
     colors: { base: PALETTE.steel, middle: PALETTE.steelDark, accent1: PALETTE.glass, accent2: PALETTE.tealDeep },
     axes: {
@@ -234,7 +281,7 @@ export const REGISTRY = {
     unit: [0.055, 0.09, 0.035],
     margins: [0, 0, 0],
     trimAxis: AXIS.y,
-    trimDensity: 6.0,
+    trimDensity: 2.6,
     atlasCell: [0, 1],
     colors: { base: PALETTE.signal, middle: PALETTE.oak },
     axes: {
@@ -259,7 +306,7 @@ export const REGISTRY = {
     unit: [0.5, 0.5, 0.06],
     margins: [0, 0, 0],
     trimAxis: AXIS.x,
-    trimDensity: 1.4,
+    trimDensity: 0.6,
     atlasCell: [1, 1],
     colors: { base: PALETTE.walnut, middle: PALETTE.oakDark, accent1: PALETTE.oak, accent2: PALETTE.steelDark },
     axes: {

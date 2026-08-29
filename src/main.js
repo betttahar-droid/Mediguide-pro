@@ -68,7 +68,7 @@ function panel(w, h, d, position, color, textureScale) {
 }
 
 const room = {
-  floor: panel(24, 0.2, 24, [0, -0.1, 0], PALETTE.floorTile, 0.75),
+  floor: panel(24, 0.2, 24, [0, -0.1, 0], PALETTE.floorTile, 0.5),
   backWall: panel(24, 4.4, 0.24, [0, 2.2, -7], PALETTE.paper, 0.32),
   sideWall: panel(0.24, 4.4, 24, [-9, 2.2, 0], PALETTE.paper, 0.32),
 };
@@ -205,6 +205,11 @@ const app = {
     scene.add(batch);
     console.log(`instanced ${entries.length} modules → ${batch.count} instances in 1 draw call`);
     return batch;
+  },
+
+  /** Decor is atmosphere, not geometry — the 9-slice checks hide it. */
+  setDecorVisible(visible) {
+    for (const m of placed) m.setDecorVisible(visible);
   },
 
   clearBatch() {

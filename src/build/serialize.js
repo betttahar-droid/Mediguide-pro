@@ -25,6 +25,7 @@ export function deserialize(data) {
       params: entry.params,
       position: entry.pos,
       rotY: entry.rotY,
+      seed: entry.seed, // keeps the decor identical across a reload
     }));
 }
 
