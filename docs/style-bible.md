@@ -132,6 +132,44 @@ named, because the failure mode of a typo is silent: it lands on whatever strip
 happens to sit at that V, which is how the screen looked like rock in the first
 place.
 
+## Why it read dull, measured
+
+"Dull" is diagnosable. Sampling the reference boards in `docs/reference/` and
+the build's own portraits on luminance percentiles, saturation and local
+contrast turned up four separate causes, in order of how much each mattered.
+
+| | reference | build, before | build, after |
+| --- | --- | --- | --- |
+| 2nd percentile | 5–41 | **60–89** | 39–58 |
+| 98th percentile | 225–255 | **189** | 229–241 |
+| range | 208–226 | 133–153 | 173–190 |
+| local contrast (SD) | 17–21 | **10–12** | 16–20 |
+
+1. **The detail gain was calibrated in the wrong colour space, and it capped the
+   whole look.** The sheets are authored as sRGB and three decodes them to
+   linear on sample, so the normalised mean of 132/255 arrives as **0.231
+   linear, not 0.518**. `uDetailGain` was 2.0 — the value that would make a mid
+   texel neutral if the mean were 0.5 — so every surface in the scene was
+   multiplied by 0.46. Nothing could be brighter than 189/255. The gain is
+   1/0.231 = **4.33**, and `SHEET_MEAN` in the shader is the linear value too.
+2. **The toon ramp had no dark step.** `makeToonRamp` used `t = (i+1)/steps`, so
+   three steps emitted 0.41 / 0.71 / 1.0 — the darkest a face could ever be lit
+   was 41%. A toon ramp's whole job is a few steps across the *whole* range;
+   starting at `1/steps` throws the darkest one away. It spans properly now.
+3. **The palette had no bottom.** The darkest working tint was `steelDark` at
+   52% luminance, so the CD cabinet's near-black sheet panels rendered mid-grey.
+   `charcoal` and `espresso` are the bottom of the palette and are used wherever
+   a sheet is genuinely dark.
+4. **The drawn marks were mid-value.** The materials are correctly flat — that
+   is what the reference does — but the fittings *on* them carry the local
+   contrast, and ours were painted at the same low contrast as the surfaces.
+   Vent slots, bolts, label rails and screens now go properly dark and properly
+   bright; the base materials did not change.
+
+The one number still short of reference is the median: ours sits higher because
+this catalogue is a cream-and-oak pharmacy and the reference boards are dark
+server racks and dumpsters. That is a subject difference, not a fault.
+
 ## Hard edges and flat faces
 
 The reference set is hard-edged. Look at `docs/reference/02-server-tower`: the

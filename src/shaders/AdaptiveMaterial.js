@@ -53,10 +53,13 @@ varying float vTrimV;
 varying float vAccent;
 varying float vCapMask;
 
-// tools/authoring/make_textures.py normalises every sheet's mean to 132/255, so
-// mixing toward that constant flattens a surface without darkening it. That is
-// what a backdrop wants: the same material, quieter, not a different one.
-const float SHEET_MEAN = 0.518;
+// The sheets are authored as sRGB and every one is normalised to a mean of
+// 132/255 by tools/authoring/make_textures.py. three decodes them to LINEAR on
+// sample, and 132/255 sRGB is 0.231 linear — not 0.518. Mixing toward the
+// linear value is what makes uDetailContrast flatten a surface without also
+// darkening it. Getting this constant wrong in sRGB was half of a bug that
+// made the whole scene read dull; see uDetailGain below for the other half.
+const float SHEET_MEAN = 0.231;
 
 // tone-mapping and colour-space helpers are already in the fragment prefix
 #include <common>
@@ -205,7 +208,14 @@ export function createAdaptiveMaterial(opts = {}) {
       uAtlasOffset: { value: new Vector2(atlasCell[0] * 0.5, atlasCell[1] * 0.5) },
       uTextureScale: { value: textureScale },
       uTriplanarSharpness: { value: 8.0 },
-      uDetailGain: { value: 2.0 },
+      // A mid-grey texel must come out of the multiply NEUTRAL, and mid grey
+      // is 0.231 in the linear space the shader works in, so the gain that
+      // makes `tint * detail * gain == tint` is 1/0.231 = 4.33. It was 2.0 —
+      // calibrated as though the sheet mean were 0.5 — which multiplied EVERY
+      // surface in the scene by 0.46. That single constant was the ceiling on
+      // the whole look: measured against the reference boards the build could
+      // not get a pixel brighter than 189/255 where they reach 249-255.
+      uDetailGain: { value: 4.33 },
       uDetailContrast: { value: 1.0 },
       uOpacity: { value: opacity },
       uHighlight: { value: PALETTE.mint.clone() },
@@ -223,7 +233,7 @@ export function createAdaptiveMaterial(opts = {}) {
       uRimPower: { value: 3.2 },
       uSkyColor: { value: PALETTE.sky.clone() },
       uGroundColor: { value: PALETTE.ground.clone() },
-      uAmbientStrength: { value: 0.24 },
+      uAmbientStrength: { value: 0.16 },
       uShadowColor: { value: PALETTE.shadowCool.clone() },
       uUpLift: { value: 0.16 },
       // hatching

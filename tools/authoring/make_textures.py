@@ -168,12 +168,12 @@ def make_trim():
     dy, dh, de = strip("detail")
     dither_band(d, 0, dy, SHEET, de, 140, 112, spread=12)
     for x in range(4, SHEET, 16):                  # bolts: 2x2 with one lit pixel
-        d.rectangle([x, dy + 3, x + 1, dy + 4], fill=V(58))
-        d.point((x, dy + 3), fill=V(206))
-    hline(d, dy + 10, 0, SHEET, 62)                # label rail
-    hline(d, dy + 11, 0, SHEET, 210)
-    hline(d, dy + 12, 0, SHEET, 158)
-    hline(d, dy + 13, 0, SHEET, 88)
+        d.rectangle([x, dy + 3, x + 1, dy + 4], fill=V(26))
+        d.point((x, dy + 3), fill=V(240))
+    hline(d, dy + 10, 0, SHEET, 30)                # label rail
+    hline(d, dy + 11, 0, SHEET, 236)
+    hline(d, dy + 12, 0, SHEET, 168)
+    hline(d, dy + 13, 0, SHEET, 58)
     for x in range(2, SHEET, 8):                   # label cards in the rail
         d.rectangle([x, dy + 11, x + 4, dy + 12], fill=V(224))
 
@@ -195,12 +195,12 @@ def make_trim():
     speckle(d, rnd, 0, ny, SHEET, ne, 0.05, 7, 132)
     for x0 in range(0, SHEET, 64):                 # two panels across the strip
         x1 = x0 + 64
-        d.rectangle([x0 + 5, ny + 4, x1 - 6, ne - 5], outline=V(92))
-        d.rectangle([x0 + 6, ny + 5, x1 - 7, ne - 6], outline=V(166))
+        d.rectangle([x0 + 5, ny + 4, x1 - 6, ne - 5], outline=V(62))
+        d.rectangle([x0 + 6, ny + 5, x1 - 7, ne - 6], outline=V(188))
         for cx in (x0 + 3, x1 - 5):                # corner bolts
             for cy in (ny + 2, ne - 4):
-                d.rectangle([cx, cy, cx + 1, cy + 1], fill=V(92))
-                d.point((cx, cy), fill=V(186))
+                d.rectangle([cx, cy, cx + 1, cy + 1], fill=V(58))
+                d.point((cx, cy), fill=V(214))
 
     # --- wood: real grain, because a worktop should read as wood ----------
     # This is the one strip that IS allowed a direction: it is only ever used
@@ -229,28 +229,28 @@ def make_trim():
     for i in range(4):                             # a broad soft sheen
         hline(d, sy + 4 + i, 0, SHEET, 148 - i * 4)
     for x in range(6, SHEET, 22):                  # rivets
-        d.rectangle([x, se - 5, x + 1, se - 4], fill=V(104))
-        d.point((x, se - 5), fill=V(190))
+        d.rectangle([x, se - 5, x + 1, se - 4], fill=V(74))
+        d.point((x, se - 5), fill=V(210))
 
     # --- grille: hard slots -----------------------------------------------
     gy, gh, ge = strip("grille")
     d.rectangle([0, gy, SHEET, ge - 1], fill=V(150))
     for x in range(0, SHEET, 6):
-        d.rectangle([x + 1, gy + 2, x + 3, ge - 3], fill=V(52))
-        vline(d, x + 4, gy + 2, ge - 3, 196)       # the lit lip beside each slot
+        d.rectangle([x + 1, gy + 2, x + 3, ge - 3], fill=V(18))
+        vline(d, x + 4, gy + 2, ge - 3, 214)       # the lit lip beside each slot
 
     # --- screen: near-black with a hard diagonal streak --------------------
     # The fix for the thing that looked like rock. A display is not a surface
     # with a material; it is a dark rectangle with a reflection drawn on it.
     cy, ch, ce = strip("screen")
-    d.rectangle([0, cy, SHEET, ce - 1], fill=V(52))
-    speckle(d, rnd, 0, cy + 1, SHEET, ce - 1, 0.05, 7, 56)   # faint scanline grain
+    d.rectangle([0, cy, SHEET, ce - 1], fill=V(34))
+    speckle(d, rnd, 0, cy + 1, SHEET, ce - 1, 0.05, 7, 38)   # faint scanline grain
     for y in range(cy + 1, ce - 1, 2):             # scanlines
-        hline(d, y, 0, SHEET, 44)
-    streak(d, 0, cy + 1, SHEET, ce - 1, 150, spacing=37, width=3)
-    streak(d, 0, cy + 1, SHEET, ce - 1, 190, spacing=37, width=1)
-    hline(d, cy, 0, SHEET, 30)                     # the bezel shadow at the top
-    hline(d, ce - 1, 0, SHEET, 78)                 # bounce at the bottom
+        hline(d, y, 0, SHEET, 24)
+    streak(d, 0, cy + 1, SHEET, ce - 1, 156, spacing=37, width=3)
+    streak(d, 0, cy + 1, SHEET, ce - 1, 214, spacing=37, width=1)
+    hline(d, cy, 0, SHEET, 16)                     # the bezel shadow at the top
+    hline(d, ce - 1, 0, SHEET, 62)                 # bounce at the bottom
 
     # --- glass: pale, flat, one streak ------------------------------------
     ly, lh, le = strip("glass")
@@ -262,9 +262,9 @@ def make_trim():
 
     # --- paper: flat card, the faintest fibre -----------------------------
     ay, ah, ae = strip("paper")
-    d.rectangle([0, ay, SHEET, ae - 1], fill=V(150))
-    speckle(d, rnd, 0, ay, SHEET, ae, 0.05, 5, 150)
-    hline(d, ae - 1, 0, SHEET, 122)                # the sheet's shadowed edge
+    d.rectangle([0, ay, SHEET, ae - 1], fill=V(186))
+    speckle(d, rnd, 0, ay, SHEET, ae, 0.05, 5, 186)
+    hline(d, ae - 1, 0, SHEET, 104)                # the sheet's shadowed edge
 
     # --- fabric: an even weave --------------------------------------------
     fy, fh, fe = strip("fabric")

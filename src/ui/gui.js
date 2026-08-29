@@ -53,7 +53,7 @@ export function buildGui(app) {
   const look = gui.addFolder('Look dev').close();
 
   const light = look.addFolder('Lighting');
-  const lightState = { rampSteps: 3, key: 0.72, fill: 0.14, ambient: 0.24, upLift: 0.16, rim: 0.05, rimPower: 3.2, keyAzimuth: 37, keyElevation: 53 };
+  const lightState = { rampSteps: 3, key: 0.72, fill: 0.14, ambient: 0.16, upLift: 0.16, rim: 0.05, rimPower: 3.2, keyAzimuth: 37, keyElevation: 53 };
   light.add(lightState, 'rampSteps', 2, 8, 1).onChange((v) => setToonRampSteps(v));
   light.add(lightState, 'key', 0, 2).onChange((v) => setSharedUniform('uKeyIntensity', v));
   light.add(lightState, 'fill', 0, 1).onChange((v) => setSharedUniform('uFillIntensity', v));
@@ -84,8 +84,8 @@ export function buildGui(app) {
   masks.add(maskState, 'dust', 0, 0.3).onChange((v) => setSharedUniform('uDustStrength', v));
 
   const tex = look.addFolder('Texturing');
-  const texState = { detailGain: 2.0, detailContrast: 1.0, trimDensity: 0.45, triplanarScale: 0.34, triplanarSharpness: 8 };
-  tex.add(texState, 'detailGain', 1, 3).name('detail gain').onChange((v) => setSharedUniform('uDetailGain', v));
+  const texState = { detailGain: 4.33, detailContrast: 1.0, trimDensity: 0.45, triplanarScale: 0.34, triplanarSharpness: 8 };
+  tex.add(texState, 'detailGain', 1, 8).name('detail gain').onChange((v) => setSharedUniform('uDetailGain', v));
   // Contrast flattens a sheet toward its own mean instead of darkening it, so
   // a surface can go quiet without going grey. The room panels are built at a
   // low setting for exactly that reason; this slider overrides every material.

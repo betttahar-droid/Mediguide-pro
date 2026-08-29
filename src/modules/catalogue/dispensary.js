@@ -45,7 +45,7 @@ export const DISPENSARY = {
       middle: PALETTE.oakDark,
       accent1: PALETTE.paper, // FRAME  — posts, rails, worktop, upstand
       accent2: PALETTE.tealDeep, // ACCENT — plinth and pulls
-      accent3: PALETTE.steelDark, // DARK   — studs, shadow band, reveals
+      accent3: PALETTE.espresso, // DARK   — studs, shadow band, reveals
       accent4: PALETTE.glass, // GLASS  — label windows
     },
     axes: {
@@ -219,8 +219,8 @@ export const DISPENSARY = {
     // changed; the object went from a grey box to a safe on the strength of
     // where the light and dark went.
     colors: {
-      base: PALETTE.steelDark, // door and side panels
-      middle: PALETTE.steelDark,
+      base: PALETTE.charcoal, // door and side panels — near-black on the sheet
+      middle: PALETTE.charcoal,
       accent1: PALETTE.steel, // FRAME  — posts, cap, plinth
       accent2: PALETTE.signal, // ACCENT — the keypad's live keys
       accent3: PALETTE.ink, // DARK   — hinges, handle, vents
@@ -285,7 +285,7 @@ export const DISPENSARY = {
       middle: PALETTE.oakDark,
       accent1: PALETTE.steel, // FRAME  — posts, door surround, top tray
       accent2: PALETTE.tealDeep, // ACCENT — the cold band under the cap
-      accent3: PALETTE.steelDark, // DARK   — fittings, readout body, plinth
+      accent3: PALETTE.charcoal, // DARK   — fittings, readout body, plinth
       accent4: PALETTE.glass, // GLASS  — the door and the readout face
     },
     axes: {
@@ -344,7 +344,7 @@ export const DISPENSARY = {
     // bench, so the two run together instead of stepping 5 cm.
     colors: {
       base: PALETTE.steelDark, // door panels
-      middle: PALETTE.steelDark,
+      middle: PALETTE.charcoal,
       accent1: PALETTE.steel, // FRAME  — posts, worktop, rails
       accent2: PALETTE.signal, // ACCENT — the one warm mark on a cold object
       accent3: PALETTE.ink, // DARK   — basin well, vents, handles
@@ -418,7 +418,7 @@ export const DISPENSARY = {
       middle: PALETTE.teal,
       accent1: PALETTE.paper, // FRAME  — the belt, the sharps box
       accent2: PALETTE.signal, // ACCENT — the hazard plate
-      accent3: PALETTE.steelDark, // DARK   — grille, pedal, linkage
+      accent3: PALETTE.charcoal, // DARK   — grille, pedal, linkage
       accent4: PALETTE.glass, // GLASS  — the sharps label
     },
     axes: { x: FIXED, y: FIXED, z: FIXED },

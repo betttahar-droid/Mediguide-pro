@@ -35,7 +35,7 @@ export const CONSULTATION = {
       middle: PALETTE.bone,
       accent1: PALETTE.walnut, // FRAME  — posts, door surround, glazing beads
       accent2: PALETTE.mint, // ACCENT — the skirting band
-      accent3: PALETTE.steelDark, // DARK   — roof cap, hinges, vents
+      accent3: PALETTE.charcoal, // DARK   — roof cap, hinges, vents
       accent4: PALETTE.glass, // GLASS  — glazing and the sign face
     },
     axes: {
@@ -98,8 +98,8 @@ export const CONSULTATION = {
       middle: PALETTE.steelDark,
       accent1: PALETTE.oak, // FRAME  — the cushions
       accent2: PALETTE.signal, // ACCENT — the maker's label
-      accent3: PALETTE.steelDark, // DARK   — piping, brackets, vents
-      accent4: PALETTE.walnut, // the cushions' shadow edge
+      accent3: PALETTE.charcoal, // DARK   — piping, brackets, vents
+      accent4: PALETTE.espresso, // the cushions' shadow edge
     },
     axes: { x: FIXED, y: FIXED, z: FIXED },
     build: () => [
@@ -151,7 +151,7 @@ export const STAFF = {
       middle: PALETTE.teal,
       accent1: PALETTE.paper, // FRAME  — stiles, rails, crown
       accent2: PALETTE.steel, // ACCENT — handles and hinges
-      accent3: PALETTE.steelDark, // DARK   — plinth, vents, side seams
+      accent3: PALETTE.charcoal, // DARK   — plinth, vents, side seams
       accent4: PALETTE.glass, // GLASS  — the number plates
     },
     axes: {
@@ -207,7 +207,7 @@ export const STAFF = {
     // cabinet at all. Cheap to build, and it changes the object completely.
     colors: {
       base: PALETTE.steelDark, // drawer fronts
-      middle: PALETTE.steel,
+      middle: PALETTE.charcoal,
       accent1: PALETTE.steel, // FRAME  — stiles, rails, top cap
       accent2: PALETTE.paper, // ACCENT — the pull blocks
       accent3: PALETTE.ink, // DARK   — plinth, vents, label slots
@@ -269,7 +269,7 @@ export const SIGNAGE = {
       middle: PALETTE.teal,
       accent1: PALETTE.steel, // FRAME  — the rim
       accent2: PALETTE.mint, // ACCENT — the lit face's inner glow
-      accent3: PALETTE.steelDark, // DARK   — back plate, stalk, screws
+      accent3: PALETTE.charcoal, // DARK   — back plate, stalk, screws
       accent4: PALETTE.glass, // GLASS  — the lit face
     },
     axes: { x: FIXED, y: FIXED, z: FIXED },
@@ -312,9 +312,9 @@ export const SIGNAGE = {
     colors: {
       base: PALETTE.oak, // the panel
       middle: PALETTE.oakDark,
-      accent1: PALETTE.steelDark, // FRAME  — the deep surround and the rods
+      accent1: PALETTE.charcoal, // FRAME  — the deep surround and the rods
       accent2: PALETTE.signal, // ACCENT — the coral marks
-      accent3: PALETTE.walnut, // DARK   — rod collars and the panel's shadow
+      accent3: PALETTE.espresso, // DARK   — rod collars and the panel's shadow
       accent4: PALETTE.paper, // the lettering band
     },
     axes: {

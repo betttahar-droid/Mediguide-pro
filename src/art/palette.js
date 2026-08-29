@@ -17,18 +17,26 @@ const hex = {
   // woods
   oak: '#dda265',
   oakDark: '#b0763e',
-  walnut: '#835531',
+  walnut: '#6b4426',
 
   // accents — the shop's brand greens and a single warm signal colour
   mint: '#9ad9b8',
   teal: '#57a98d',
-  tealDeep: '#356f5e',
+  tealDeep: '#24544a',
   signal: '#f5804f', // the one properly saturated accent; used sparingly
 
   // metals / glass
   steel: '#b0bcbd',
-  steelDark: '#77868a',
+  steelDark: '#68777c',
   glass: '#d2e8e4',
+
+  // The dark end. Measured against the reference boards, the build had NO dark
+  // values in it: our 2nd percentile sat at 60-89/255 where every reference
+  // image bottoms out between 5 and 36. A limited palette still needs a bottom,
+  // and these are it — the near-black panels on the CD cabinet's sheet, the
+  // dark timber under a worktop, the body of a screen.
+  charcoal: '#39424a', // dark blue-grey: steel panels, screens, deep fittings
+  espresso: '#4a3626', // dark timber: shadow bands, dark oak, plinths
 
   // light
   keyWarm: '#fff3de',
@@ -49,7 +57,7 @@ const hex = {
   sky: '#d6e6f4',
   ground: '#f6e2c4',
   // shadows carry a hue rather than just less light
-  shadowCool: '#877b95',
+  shadowCool: '#5f5673',
 
   // ink — outlines and UI. A dark saturated shadow tone, never black (§7.3)
   ink: '#413353',

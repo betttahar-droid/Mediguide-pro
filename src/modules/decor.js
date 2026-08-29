@@ -119,7 +119,7 @@ export const PROPS = {
   },
 
   terminal: {
-    colors: { base: PALETTE.steelDark, accent1: PALETTE.mint, accent2: PALETTE.ink },
+    colors: { base: PALETTE.charcoal, accent1: PALETTE.mint, accent2: PALETTE.ink },
     atlasCell: [0, 1],
     trimDensity: 2.4,
     parts: [
@@ -184,7 +184,7 @@ export const PROPS = {
 
   // A stacking tote — how stock actually moves around a dispensary.
   tote: {
-    colors: { base: PALETTE.steelDark, accent1: PALETTE.ink, accent2: PALETTE.paper },
+    colors: { base: PALETTE.charcoal, accent1: PALETTE.ink, accent2: PALETTE.paper },
     atlasCell: [1, 1],
     trimDensity: 2.4,
     parts: [

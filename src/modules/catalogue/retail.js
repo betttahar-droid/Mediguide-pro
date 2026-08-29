@@ -107,7 +107,7 @@ export const RETAIL = {
       middle: PALETTE.oakDark,
       accent1: PALETTE.steel, // FRAME  — wall rail and brackets
       accent2: PALETTE.teal, // ACCENT — the price rail
-      accent3: PALETTE.walnut, // DARK   — the board's shadow edge
+      accent3: PALETTE.espresso, // DARK   — the board's shadow edge
       accent4: PALETTE.paper, // label windows
     },
     axes: {
@@ -185,7 +185,7 @@ export const RETAIL = {
       middle: PALETTE.bone,
       accent1: PALETTE.oak, // FRAME  — worktop, customer shelf, pull rail
       accent2: PALETTE.signal, // ACCENT — the label plate and its buttons
-      accent3: PALETTE.walnut, // DARK   — the dark oak band under both tops
+      accent3: PALETTE.espresso, // DARK   — the dark oak band under both tops
       accent4: PALETTE.tealDeep, // no glass on this one: slot 4 buys the plinth
     },
     axes: {
@@ -250,7 +250,7 @@ export const RETAIL = {
       middle: PALETTE.bone,
       accent1: PALETTE.steel, // FRAME  — monitor shell, reader shell
       accent2: PALETTE.oak, // ACCENT — the bezel and the receipt slot
-      accent3: PALETTE.steelDark, // DARK   — stalk, vents, shadow lines
+      accent3: PALETTE.charcoal, // DARK   — stalk, vents, shadow lines
       accent4: PALETTE.glass, // GLASS  — the screen and the reader display
     },
     axes: { x: FIXED, y: FIXED, z: FIXED },
@@ -306,7 +306,7 @@ export const RETAIL = {
       middle: PALETTE.tealDeep,
       accent1: PALETTE.paper, // FRAME  — the rim rails
       accent2: PALETTE.signal, // ACCENT — the handle bar
-      accent3: PALETTE.walnut, // DARK   — corner posts
+      accent3: PALETTE.espresso, // DARK   — corner posts
       accent4: PALETTE.glass, // GLASS  — the label window
     },
     axes: {
@@ -358,7 +358,7 @@ export const RETAIL = {
       middle: PALETTE.oakDark,
       accent1: PALETTE.paper, // FRAME  — pallet slats, header card
       accent2: PALETTE.tealDeep, // ACCENT — the rim and the header frame
-      accent3: PALETTE.walnut, // DARK   — posts, pallet feet, seams
+      accent3: PALETTE.espresso, // DARK   — posts, pallet feet, seams
       accent4: PALETTE.glass, // GLASS  — the header's lettering band
     },
     axes: {
@@ -434,7 +434,7 @@ export const RETAIL = {
       middle: PALETTE.bone,
       accent1: PALETTE.oak, // FRAME  — caps, base plinths, top rail
       accent2: PALETTE.tealDeep, // ACCENT — the inset panels
-      accent3: PALETTE.steelDark, // DARK   — the lower rail and the studs
+      accent3: PALETTE.charcoal, // DARK   — the lower rail and the studs
       accent4: PALETTE.glass, // GLASS  — the notice plate
     },
     axes: {
