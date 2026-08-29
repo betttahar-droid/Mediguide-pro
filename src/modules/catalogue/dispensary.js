@@ -85,9 +85,9 @@ export const DISPENSARY = {
       const slots = [];
       for (let i = 0; i < p.x; i++) {
         const x = (i - (p.x - 1) / 2) * unit[0] * 2;
-        slots.push({ key: `d${i}.a`, pos: [x - 0.22, 0.955, 0.14], pool: POOLS.worktop, chance: 0.95 });
-        slots.push({ key: `d${i}.b`, pos: [x + 0.19, 0.955, 0.02], pool: POOLS.worktop, chance: 0.8 });
-        slots.push({ key: `d${i}.c`, pos: [x - 0.06, 0.955, -0.12], pool: POOLS.worktop, chance: 0.62 });
+        slots.push({ key: `d${i}.a`, pos: [x - 0.22, 0.955, 0.14], pool: POOLS.worktop, chance: 0.95, pair: 0.55 });
+        slots.push({ key: `d${i}.b`, pos: [x + 0.19, 0.955, 0.02], pool: POOLS.worktop, chance: 0.8, pair: 0.4 });
+        slots.push({ key: `d${i}.c`, pos: [x - 0.06, 0.955, -0.12], pool: POOLS.worktop, chance: 0.62, pair: 0.3 });
         if (p.x >= 3) {
           slots.push({ key: `d${i}.hero`, pos: [x + 0.10, 0.955, -0.22], pool: POOLS.worktopRare, chance: 0.45, jitter: 0.05 });
         }
@@ -150,10 +150,10 @@ export const DISPENSARY = {
         for (let j = 0; j < p.y; j++) {
           const x = (i - (p.x - 1) / 2) * unit[0] * 2;
           const y = j * unit[1] * 2 + 0.045;
-          slots.push({ key: `r${i}.${j}.a`, pos: [x - 0.24, y, 0.0], pool: POOLS.dispensary, chance: 0.95, jitter: 0.02 });
-          slots.push({ key: `r${i}.${j}.b`, pos: [x - 0.08, y, 0.0], pool: POOLS.dispensary, chance: 0.9, jitter: 0.02 });
-          slots.push({ key: `r${i}.${j}.c`, pos: [x + 0.09, y, 0.0], pool: POOLS.dispensary, chance: 0.85, jitter: 0.02 });
-          slots.push({ key: `r${i}.${j}.d`, pos: [x + 0.25, y, 0.0], pool: POOLS.dispensary, chance: 0.7, jitter: 0.02 });
+          slots.push({ key: `r${i}.${j}.a`, pos: [x - 0.24, y, 0.0], pool: POOLS.dispensary, chance: 0.95, jitter: 0.02, pair: 0 });
+          slots.push({ key: `r${i}.${j}.b`, pos: [x - 0.08, y, 0.0], pool: POOLS.dispensary, chance: 0.9, jitter: 0.02, pair: 0 });
+          slots.push({ key: `r${i}.${j}.c`, pos: [x + 0.09, y, 0.0], pool: POOLS.dispensary, chance: 0.85, jitter: 0.02, pair: 0 });
+          slots.push({ key: `r${i}.${j}.d`, pos: [x + 0.25, y, 0.0], pool: POOLS.dispensary, chance: 0.7, jitter: 0.02, pair: 0 });
         }
       }
       return slots;

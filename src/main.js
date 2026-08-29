@@ -69,7 +69,7 @@ function panel(w, h, d, position, color, textureScale) {
 }
 
 const room = {
-  floor: panel(24, 0.2, 24, [0, -0.1, 0], PALETTE.floorTile, 0.5),
+  floor: panel(24, 0.2, 24, [0, -0.1, 0], PALETTE.floorTile, 0.34),
   backWall: panel(24, 4.4, 0.24, [0, 2.2, -7], PALETTE.paper, 0.32),
   sideWall: panel(0.24, 4.4, 24, [-9, 2.2, 0], PALETTE.paper, 0.32),
 };

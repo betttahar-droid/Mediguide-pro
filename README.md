@@ -98,6 +98,7 @@ src/
 public/textures/         the authored sheets: trim · atlas · tiling · hatch
 tools/authoring/         one-off asset authoring, run by hand (§11)
 docs/style-bible.md      palette, fixed light, fixed camera, the reference rules
+docs/concept-prompts.md  per-module concept sheet prompts, for you to run
 test/smoke.mjs           headless acceptance checks
 ```
 

@@ -314,30 +314,56 @@ const unit01 = (h) => (h >>> 8) / 16777216;
 
 /**
  * Resolve a module's slots into concrete props.
+ *
+ * Slots can spawn a COMPANION: a second prop tucked up against the first. The
+ * isometric-diorama reference is emphatic about this — things on a surface sit
+ * in little clusters, a mug beside a stack of paper, two bottles together —
+ * and evenly spaced single objects read as a showroom rather than a workplace.
+ * The companion is derived from the same seed and key, so clustering costs
+ * nothing in stability: it appears and disappears with its parent slot.
+ *
  * @param {number} seed the module's saved seed
- * @param {{key:string,pos:number[],pool:string[],chance?:number,jitter?:number,faceZ?:number}[]} slots
+ * @param {{key:string,pos:number[],pool:string[],chance?:number,jitter?:number,
+ *          faceZ?:number,pair?:number}[]} slots
  */
 export function resolveDecor(seed, slots) {
   const out = [];
+
+  const place = (key, pool, pos, jitter, faceZ) => {
+    const type = pool[hash(seed, `${key}#type`) % pool.length];
+    const jx = (unit01(hash(seed, `${key}#jx`)) - 0.5) * 2 * jitter;
+    const jz = (unit01(hash(seed, `${key}#jz`)) - 0.5) * 2 * jitter;
+    // a lazy quarter-turn plus a few degrees, so nothing sits perfectly square
+    const spin = Math.round(unit01(hash(seed, `${key}#r`)) * 3) * (Math.PI / 2);
+    const lean = (unit01(hash(seed, `${key}#l`)) - 0.5) * 0.5;
+    out.push({
+      key,
+      type,
+      position: [pos[0] + jx, pos[1], pos[2] + jz],
+      rotY: (faceZ ?? 0) + spin + lean,
+    });
+  };
+
   for (const slot of slots) {
     const h = hash(seed, slot.key);
     if (slot.chance !== undefined && unit01(h) > slot.chance) continue;
 
-    const pool = slot.pool;
-    const type = pool[hash(seed, `${slot.key}#type`) % pool.length];
     const jitter = slot.jitter ?? 0.03;
-    const jx = (unit01(hash(seed, `${slot.key}#jx`)) - 0.5) * 2 * jitter;
-    const jz = (unit01(hash(seed, `${slot.key}#jz`)) - 0.5) * 2 * jitter;
-    // a lazy quarter-turn plus a few degrees, so nothing sits perfectly square
-    const spin = Math.round(unit01(hash(seed, `${slot.key}#r`)) * 3) * (Math.PI / 2);
-    const lean = (unit01(hash(seed, `${slot.key}#l`)) - 0.5) * 0.5;
+    place(slot.key, slot.pool, slot.pos, jitter, slot.faceZ);
 
-    out.push({
-      key: slot.key,
-      type,
-      position: [slot.pos[0] + jx, slot.pos[1], slot.pos[2] + jz],
-      rotY: (slot.faceZ ?? 0) + spin + lean,
-    });
+    // the companion, tucked in at a small offset around the parent
+    const pair = slot.pair ?? 0.4;
+    if (unit01(hash(seed, `${slot.key}#pair`)) < pair) {
+      const angle = unit01(hash(seed, `${slot.key}#pa`)) * Math.PI * 2;
+      const reach = 0.11 + unit01(hash(seed, `${slot.key}#pd`)) * 0.07;
+      place(
+        `${slot.key}+`,
+        slot.pool,
+        [slot.pos[0] + Math.cos(angle) * reach, slot.pos[1], slot.pos[2] + Math.sin(angle) * reach],
+        jitter * 0.5,
+        slot.faceZ
+      );
+    }
   }
   return out;
 }

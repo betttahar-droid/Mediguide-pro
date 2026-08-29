@@ -53,9 +53,9 @@ export const RETAIL = {
         for (let j = 0; j < p.y; j++) {
           const x = (i - (p.x - 1) / 2) * unit[0] * 2;
           const y = j * unit[1] * 2 + 0.075;
-          slots.push({ key: `s${i}.${j}.a`, pos: [x - 0.24, y, 0.02], pool: POOLS.shelf, chance: 0.85, jitter: 0.04 });
-          slots.push({ key: `s${i}.${j}.b`, pos: [x + 0.02, y, 0.02], pool: POOLS.shelf, chance: 0.7, jitter: 0.04 });
-          slots.push({ key: `s${i}.${j}.c`, pos: [x + 0.28, y, 0.02], pool: POOLS.shelf, chance: 0.55, jitter: 0.04 });
+          slots.push({ key: `s${i}.${j}.a`, pos: [x - 0.24, y, 0.02], pool: POOLS.shelf, chance: 0.85, jitter: 0.04, pair: 0.2 });
+          slots.push({ key: `s${i}.${j}.b`, pos: [x + 0.02, y, 0.02], pool: POOLS.shelf, chance: 0.7, jitter: 0.04, pair: 0.2 });
+          slots.push({ key: `s${i}.${j}.c`, pos: [x + 0.28, y, 0.02], pool: POOLS.shelf, chance: 0.55, jitter: 0.04, pair: 0.2 });
         }
       }
       return slots;
@@ -110,9 +110,9 @@ export const RETAIL = {
         for (let j = 0; j < p.y; j++) {
           const x = (i - (p.x - 1) / 2) * unit[0] * 2;
           const y = j * unit[1] * 2 + 0.03;
-          slots.push({ key: `w${i}.${j}.a`, pos: [x - 0.26, y, 0.01], pool: POOLS.shelf, chance: 0.8, jitter: 0.03 });
-          slots.push({ key: `w${i}.${j}.b`, pos: [x + 0.04, y, 0.01], pool: POOLS.shelf, chance: 0.65, jitter: 0.03 });
-          slots.push({ key: `w${i}.${j}.c`, pos: [x + 0.30, y, 0.01], pool: POOLS.shelf, chance: 0.45, jitter: 0.03 });
+          slots.push({ key: `w${i}.${j}.a`, pos: [x - 0.26, y, 0.01], pool: POOLS.shelf, chance: 0.8, jitter: 0.03, pair: 0.15 });
+          slots.push({ key: `w${i}.${j}.b`, pos: [x + 0.04, y, 0.01], pool: POOLS.shelf, chance: 0.65, jitter: 0.03, pair: 0.15 });
+          slots.push({ key: `w${i}.${j}.c`, pos: [x + 0.30, y, 0.01], pool: POOLS.shelf, chance: 0.45, jitter: 0.03, pair: 0.15 });
         }
       }
       return slots;
@@ -161,7 +161,7 @@ export const RETAIL = {
       const slots = [];
       for (let i = 0; i < n; i++) {
         const x = -half + (i + 0.5) * ((half * 2) / n);
-        slots.push({ key: `c${i}`, pos: [x, unit[1] * 2 + 0.01, -0.02], pool: POOLS.counter, chance: 0.62 });
+        slots.push({ key: `c${i}`, pos: [x, unit[1] * 2 + 0.01, -0.02], pool: POOLS.counter, chance: 0.62, pair: 0.45 });
       }
       return slots;
     },

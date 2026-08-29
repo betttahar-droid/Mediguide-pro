@@ -17,8 +17,25 @@ only — none of these images are redistributed in this repo.
 - <https://www.pinterest.com/xsbharp/textures-stylized-wood/>
 - <https://www.pinterest.com/loquaciouslit/texture-low-poly-ref/>
 
-The cluster that matters is the WoW / Albion / Aetherlight family: chunky
-forms, warm woods, painted metal fittings, ink outlines.
+Then surveyed again for "low poly retro pixelated models":
+
+- <https://www.pinterest.com/blobman605/ps1-graphics/>
+- <https://www.pinterest.com/themaxp12345/ps1-aesthetic/>
+- <https://www.pinterest.com/alexdelker/ps1-style-graphics/>
+- <https://www.pinterest.com/ryoung13/low-poly-ps1/>
+
+Two clusters matter. The WoW / Albion / Aetherlight family gave the chunky
+forms, warm woods and painted metal fittings. The isometric-room dioramas in the
+retro boards gave three things the first pass had missed:
+
+- **Props sit in clusters, not evenly spaced.** A mug beside a stack of paper,
+  two bottles together. Evenly spaced single objects read as a showroom.
+  `resolveDecor` now spawns a companion prop next to a slot's main one.
+- **The floor stays quiet.** In every diorama that reads well the ground is a
+  near-flat field and the furniture carries the detail. Our floor tiles were
+  0.5 m and busy; they are 0.73 m now.
+- **Very limited palette, one or two saturated accents**, everything else
+  desaturated pastel.
 
 ## The look: pixel art, not painted
 
@@ -146,6 +163,17 @@ slot's key, which buys two things worth more than the randomness itself:
    the module.
 
 Props are fixed-size, so one geometry and one material serve every copy.
+
+A slot can also spawn a **companion** — a second prop tucked against the first
+at a small offset, derived from the same seed and key. Clustering costs nothing
+in stability: the companion appears and disappears with its parent slot. Slots
+on a shelf, where the spacing is already tight, set `pair: 0` and stay single.
+
+## Before you change a module's shape
+
+Generate a concept sheet first and read the numbers off it — §11.1 in order.
+`docs/concept-prompts.md` holds the ready-to-paste prompts, one per module, with
+a shared style block that must not be paraphrased between them.
 
 ## Believable detail, per object
 
