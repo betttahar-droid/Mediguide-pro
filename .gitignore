@@ -11,3 +11,14 @@ test/shots/
 # Style reference supplied by the user. Other people's work: kept locally for
 # the authoring tools to feed to the image model, never committed.
 docs/reference/
+
+# Third-party agent skills, installed by tools/setup/install-skills.sh.
+# Not vendored: img2threejs is 4.9 MB of someone else's Apache-2.0 repo and a
+# committed copy would silently fork it.
+.claude/skills/
+
+__pycache__/
+*.pyc
+
+# Working state for a tools/setup/install-skills.sh skill run. Scratch, not art.
+tools/img2threejs-work/

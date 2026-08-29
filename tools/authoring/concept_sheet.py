@@ -134,26 +134,37 @@ def prompt_for(name):
 MIME = {".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".webp": "image/webp"}
 
 
-def generate(name, key, refs=(), model=MODEL):
-    parts = [{"text": prompt_for(name)}]
-    if refs:
-        # References go FIRST, so the model reads them as context for the text.
-        # Several at once is the point: one image gives you one object's quirks,
-        # a set gives you the shared style underneath them.
-        parts = []
-        for ref in refs:
-            path = Path(ref)
-            parts.append({"inline_data": {
-                "mime_type": MIME.get(path.suffix.lower(), "image/png"),
-                "data": base64.b64encode(path.read_bytes()).decode(),
-            }})
-        parts.append({"text":
-            "The images above are the STYLE REFERENCE. Match their rendering style "
-            "exactly: the same hard-edged blocky forms, the same dense pixel-art "
-            "surface detail on flat faces, the same texel size, the same muted "
-            "palette with small saturated accents, the same isometric presentation "
-            "on a plain background with a soft drop shadow. Do not copy their "
-            "subject matter.\n\n" + prompt_for(name)})
+# The style-match instruction that precedes a prompt when references are given.
+# Kept separate so callers that want a raw prompt (a texture atlas, say) can ask
+# for the same references without also asking for a three-quarter hero shot.
+REF_INSTRUCTION = (
+    "The images above are the STYLE REFERENCE. Match their rendering style "
+    "exactly: the same hard-edged blocky forms, the same dense pixel-art "
+    "surface detail on flat faces, the same texel size, the same muted "
+    "palette with small saturated accents. Do not copy their subject matter."
+)
+
+
+def generate_image(prompt, out_path, key, refs=(), model=MODEL, ref_instruction=REF_INSTRUCTION):
+    """POST one prompt to the image model and write the PNG it returns.
+
+    The single place this project talks to the image API. Everything else —
+    concept sheets, texture atlases, shape references — is a prompt and an
+    output path handed to this function, so there is one timeout, one response
+    shape to get wrong, and one place to fix it.
+
+    @param refs image paths used as STYLE reference, sent FIRST so the model
+      reads them as context for the text. Several at once is the point: one
+      image gives you one object's quirks, a set gives you the style underneath.
+    """
+    parts = []
+    for ref in refs:
+        path = Path(ref)
+        parts.append({"inline_data": {
+            "mime_type": MIME.get(path.suffix.lower(), "image/png"),
+            "data": base64.b64encode(path.read_bytes()).decode(),
+        }})
+    parts.append({"text": f"{ref_instruction}\n\n{prompt}" if refs else prompt})
 
     body = json.dumps({
         "contents": [{"parts": parts}],
@@ -172,11 +183,21 @@ def generate(name, key, refs=(), model=MODEL):
         for part in cand.get("content", {}).get("parts", []):
             blob = part.get("inlineData") or part.get("inline_data")
             if blob:
-                OUT_DIR.mkdir(parents=True, exist_ok=True)
-                path = OUT_DIR / f"{name}.png"
-                path.write_bytes(base64.b64decode(blob["data"]))
-                return path
+                out_path = Path(out_path)
+                out_path.parent.mkdir(parents=True, exist_ok=True)
+                out_path.write_bytes(base64.b64decode(blob["data"]))
+                return out_path
     raise RuntimeError(f"no image in response: {json.dumps(payload)[:500]}")
+
+
+def generate(name, key, refs=(), model=MODEL):
+    """One module's concept sheet, into docs/concept/<name>.png."""
+    return generate_image(
+        prompt_for(name), OUT_DIR / f"{name}.png", key,
+        refs=refs, model=model,
+        ref_instruction=REF_INSTRUCTION + " Keep the same isometric presentation "
+                        "on a plain background with a soft drop shadow.",
+    )
 
 
 if __name__ == "__main__":
