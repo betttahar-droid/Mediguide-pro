@@ -352,8 +352,8 @@ await page.waitForTimeout(500);
 await page.screenshot({ path: `${shotDir}/01-scene.png` });
 
 await page.evaluate(() => {
-  __app.camera.position.set(2.5, 1.72, 4.0);
-  __app.controls.target.set(0.2, 0.72, 1.1);
+  __app.camera.position.set(1.75, 1.66, 2.35);
+  __app.controls.target.set(-0.65, 0.72, -0.4);
   __app.controls.update();
 });
 await page.waitForTimeout(500);

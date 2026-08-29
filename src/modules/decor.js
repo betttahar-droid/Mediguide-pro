@@ -193,6 +193,48 @@ export const PROPS = {
     ],
   },
 
+  // A pestle and mortar. Nothing says pharmacy faster, and it is the one prop
+  // in the set that exists purely for character.
+  mortar: {
+    colors: { base: PALETTE.bone, accent1: PALETTE.paper, accent2: PALETTE.walnut },
+    atlasCell: [0, 1],
+    trimDensity: 4.0,
+    parts: [
+      { size: [0.085, 0.030, 0.085], at: [0, 0.015, 0], bevel: 0.010 },
+      { size: [0.105, 0.070, 0.105], at: [0, 0.062, 0], bevel: 0.016 },
+      { size: [0.085, 0.014, 0.085], at: [0, 0.100, 0], bevel: 0.006, accent: 1 },
+      { size: [0.020, 0.090, 0.020], at: [0.028, 0.125, -0.02], bevel: 0.006, accent: 2 },
+      { size: [0.032, 0.026, 0.032], at: [0.028, 0.170, -0.02], bevel: 0.008, accent: 2 },
+    ],
+  },
+
+  // A stapled prescription bag waiting to be collected.
+  script_bag: {
+    colors: { base: PALETTE.paper, accent1: PALETTE.mint, accent2: PALETTE.signal },
+    atlasCell: [1, 0],
+    trimDensity: 3.0,
+    parts: [
+      { size: [0.115, 0.155, 0.055], at: [0, 0.078, 0], bevel: 0.006 },
+      { size: [0.115, 0.022, 0.055], at: [0, 0.163, 0], bevel: 0.004, accent: 2 },
+      { size: [0.080, 0.055, 0.005], at: [0, 0.095, 0.030], bevel: 0.002, accent: 1 },
+      { size: [0.030, 0.008, 0.005], at: [0.028, 0.055, 0.030], bevel: 0.002, accent: 2 },
+    ],
+  },
+
+  // An angled desk lamp. The tilt is what gives it character.
+  desk_lamp: {
+    colors: { base: PALETTE.teal, accent1: PALETTE.paper, accent2: PALETTE.steelDark },
+    atlasCell: [0, 1],
+    trimDensity: 3.4,
+    parts: [
+      { size: [0.115, 0.022, 0.115], at: [0, 0.011, 0], bevel: 0.008, accent: 2 },
+      { size: [0.030, 0.230, 0.030], at: [0, 0.140, 0], bevel: 0.006, accent: 2 },
+      { size: [0.030, 0.130, 0.030], at: [0.012, 0.290, -0.045], bevel: 0.006, rotX: 0.6, accent: 2 },
+      { size: [0.130, 0.075, 0.130], at: [0.012, 0.345, -0.105], bevel: 0.018 },
+      { size: [0.095, 0.012, 0.095], at: [0.012, 0.308, -0.105], bevel: 0.004, accent: 1 },
+    ],
+  },
+
   folders: {
     colors: { base: PALETTE.bone, accent1: PALETTE.signal, accent2: PALETTE.teal },
     atlasCell: [1, 0],
@@ -208,14 +250,14 @@ export const PROPS = {
 
 /** Named pools, so a registry entry reads as intent rather than a list. */
 export const POOLS = {
-  worktop: ['paper_stack', 'clipboard', 'mug', 'pen_pot', 'till_roll', 'scales', 'folders'],
-  worktopRare: ['terminal', 'plant', 'basket', 'scales'],
+  worktop: ['paper_stack', 'clipboard', 'mug', 'pen_pot', 'till_roll', 'scales', 'folders', 'mortar', 'script_bag'],
+  worktopRare: ['terminal', 'plant', 'desk_lamp', 'basket', 'mortar'],
   shelf: ['med_box', 'bottle', 'med_box', 'bottle', 'basket', 'folders'],
-  counter: ['paper_stack', 'mug', 'basket', 'till_roll', 'plant'],
+  counter: ['paper_stack', 'mug', 'basket', 'till_roll', 'plant', 'script_bag'],
   // Behind the counter the stock is dispensing packs and amber bottles, and it
   // is packed in tight — a half-empty dispensary shelf reads as a shop that
   // has closed down.
-  dispensary: ['dispensing_pack', 'amber_bottle', 'dispensing_pack', 'med_box', 'amber_bottle', 'tote'],
+  dispensary: ['dispensing_pack', 'amber_bottle', 'dispensing_pack', 'med_box', 'amber_bottle', 'tote', 'script_bag'],
 };
 
 const cache = new Map();

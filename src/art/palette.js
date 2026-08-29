@@ -4,41 +4,48 @@ import { Color } from 'three';
 
 const hex = {
   // neutrals — warm off-whites, the pharmacy's clinical-but-friendly base
-  paper: '#f2e6d2',
-  bone: '#ded0b6',
-  putty: '#c4b294',
-  backdrop: '#a7aeaa', // the room beyond the build area
-  floorTile: '#b6bdb2', // cool floor, so the warm furniture reads against it
+  paper: '#f9efdc',
+  bone: '#ecdcc0',
+  putty: '#d3c3a4',
+  backdrop: '#b9c4c0', // the room beyond the build area
+  floorTile: '#bcc5b7', // cool floor, so the warm furniture reads against it
+  wall: '#e4d9c1', // a shade under paper, so a worktop reads against the wall
 
   // woods
-  oak: '#c98f4e',
-  oakDark: '#9a6531',
-  walnut: '#6b4325',
+  oak: '#dda265',
+  oakDark: '#b0763e',
+  walnut: '#835531',
 
   // accents — the shop's brand greens and a single warm signal colour
-  mint: '#7fbfa4',
-  teal: '#3f8a76',
-  tealDeep: '#27594c',
-  signal: '#e0704a',
+  mint: '#9ad9b8',
+  teal: '#57a98d',
+  tealDeep: '#356f5e',
+  signal: '#f28b60',
 
   // metals / glass
-  steel: '#9aa6a8',
-  steelDark: '#5e6b6e',
-  glass: '#bfd8d6',
+  steel: '#b0bcbd',
+  steelDark: '#77868a',
+  glass: '#d2e8e4',
 
   // light
-  keyWarm: '#fff0d6',
-  fillCool: '#a9c0dd',
-  rim: '#ffd39b',
+  keyWarm: '#fff3de',
+  fillCool: '#bcd2ea',
+  rim: '#ffdfb4',
 
   // shading tints used by the vertex-mask ramps (§4.3)
-  shadowTint: '#3c3a4c', // cool, for cavity
-  edgeLightTint: '#ffdcae', // warm, for convex edges
-  dustTint: '#e8dcc4',
+  shadowTint: '#5a5470', // cool, for cavity
+  edgeLightTint: '#fff0d2', // warm, for convex edges
+  dustTint: '#f2e6d0',
+
+  // hemisphere ambient — cool from above, warm bounce from the floor
+  sky: '#d6e6f4',
+  ground: '#f6e2c4',
+  // shadows carry a hue rather than just less light
+  shadowCool: '#8d85b0',
 
   // ink — outlines and UI. A dark saturated shadow tone, never black (§7.3)
-  ink: '#2b1f33',
-  ghost: '#6d5a7a',
+  ink: '#413353',
+  ghost: '#8878a0',
 };
 
 // three's ColorManagement converts these sRGB hexes into the linear working

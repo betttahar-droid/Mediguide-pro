@@ -1,4 +1,4 @@
-import { ShaderMaterial, Vector2, Vector3, Color, DoubleSide, FrontSide } from 'three';
+import { ShaderMaterial, Vector2, Vector3, DoubleSide, FrontSide } from 'three';
 import { vertexStageGLSL } from './chunks/vertexStage.glsl.js';
 import { toonLightingGLSL, toonLightingUniformsGLSL } from './chunks/toonLighting.glsl.js';
 import { masksGLSL, masksUniformsGLSL } from './chunks/masks.glsl.js';
@@ -196,14 +196,18 @@ export function createAdaptiveMaterial(opts = {}) {
       uToonRamp: { value: ramp },
       uKeyDir: { value: new Vector3(0.6, 0.8, 0.45) },
       uKeyColor: { value: PALETTE.keyWarm.clone() },
-      uKeyIntensity: { value: 0.68 },
+      uKeyIntensity: { value: 0.72 },
       uFillDir: { value: new Vector3(-0.7, 0.35, -0.5) },
       uFillColor: { value: PALETTE.fillCool.clone() },
-      uFillIntensity: { value: 0.28 },
+      uFillIntensity: { value: 0.18 },
       uRimColor: { value: PALETTE.rim.clone() },
-      uRimStrength: { value: 0.10 },
-      uRimPower: { value: 3.0 },
-      uAmbient: { value: new Color(0.26, 0.25, 0.29) },
+      uRimStrength: { value: 0.14 },
+      uRimPower: { value: 3.2 },
+      uSkyColor: { value: PALETTE.sky.clone() },
+      uGroundColor: { value: PALETTE.ground.clone() },
+      uAmbientStrength: { value: 0.33 },
+      uShadowColor: { value: PALETTE.shadowCool.clone() },
+      uUpLift: { value: 0.09 },
       // hatching
       uHatchScale: { value: 4.5 },
       uHatchStrength: { value: 0.0 },
@@ -211,10 +215,10 @@ export function createAdaptiveMaterial(opts = {}) {
       // mask ramps — all six tuned by eye in lil-gui (§4.3)
       uCavityLo: { value: 0.12 },
       uCavityHi: { value: 0.62 },
-      uCavityStrength: { value: 0.55 },
+      uCavityStrength: { value: 0.5 },
       uEdgeLo: { value: 0.55 },
       uEdgeHi: { value: 0.88 },
-      uEdgeStrength: { value: 0.42 },
+      uEdgeStrength: { value: 0.34 },
       uDustStrength: { value: 0.03 },
       uShadowTint: { value: PALETTE.shadowTint.clone() },
       uEdgeLightTint: { value: PALETTE.edgeLightTint.clone() },

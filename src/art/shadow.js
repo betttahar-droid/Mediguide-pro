@@ -16,8 +16,8 @@ function blobTexture() {
   c.width = c.height = size;
   const ctx = c.getContext('2d');
   const g = ctx.createRadialGradient(size / 2, size / 2, size * 0.08, size / 2, size / 2, size / 2);
-  g.addColorStop(0, 'rgba(255,255,255,1.0)');
-  g.addColorStop(0.5, 'rgba(255,255,255,0.55)');
+  g.addColorStop(0, 'rgba(255,255,255,0.9)');
+  g.addColorStop(0.45, 'rgba(255,255,255,0.45)');
   g.addColorStop(1, 'rgba(255,255,255,0)');
   ctx.fillStyle = g;
   ctx.fillRect(0, 0, size, size);
@@ -30,9 +30,9 @@ export function contactShadowMaterial() {
   if (!material) {
     material = new MeshBasicMaterial({
       map: blobTexture(),
-      color: PALETTE_HEX.ink,
+      color: PALETTE_HEX.shadowCool,
       transparent: true,
-      opacity: 0.5,
+      opacity: 0.4,
       depthWrite: false,
       side: DoubleSide,
     });

@@ -52,14 +52,19 @@ export const DISPENSARY = {
       { size: [0.79, 0.050, 0.632], at: [0, 0.270, 0.006], bevel: 0.014 }, // top rail
       { size: [0.76, 0.300, 0.626], at: [0, -0.210, 0.008], bevel: 0.018 }, // deep drawer
       { size: [0.76, 0.220, 0.626], at: [0, 0.115, 0.008], bevel: 0.018 }, // shallow drawer
+      { size: [0.74, 0.016, 0.020], at: [0, -0.052, 0.320], bevel: 0.005, accent: 2 }, // drawer top lip
+      { size: [0.74, 0.016, 0.020], at: [0, 0.232, 0.320], bevel: 0.005, accent: 2 }, // drawer top lip
       { size: [0.30, 0.030, 0.050], at: [0, -0.210, 0.340], bevel: 0.012, accent: 2 }, // pull
       { size: [0.30, 0.030, 0.050], at: [0, 0.115, 0.340], bevel: 0.012, accent: 2 }, // pull
       { size: [0.15, 0.038, 0.014], at: [-0.245, -0.290, 0.334], bevel: 0.006, strip: 'detail', accent: 1 },
       { size: [0.15, 0.038, 0.014], at: [-0.245, 0.045, 0.334], bevel: 0.006, strip: 'detail', accent: 1 },
+      { size: [0.92, 0.018, 0.66], at: [0, 0.362, 0.015], bevel: 0.006, accent: 2 }, // shadow bead under the worktop
       { size: [0.94, 0.055, 0.700], at: [0, 0.3975, 0.02], bevel: 0.022, accent: 1 }, // worktop
       { size: [0.94, 0.032, 0.075], at: [0, 0.356, 0.352], bevel: 0.014, accent: 1 }, // bullnose lip
       { size: [0.94, 0.100, 0.045], at: [0, 0.475, -0.3275], bevel: 0.016, accent: 1 }, // rear upstand
       { size: [0.10, 0.050, 0.020], at: [0.28, 0.475, -0.300], bevel: 0.008, strip: 'detail', accent: 2 },
+      { size: [0.075, 0.030, 0.075], at: [-0.36, -0.535, 0.19], bevel: 0.010, accent: 2 }, // foot pad
+      { size: [0.075, 0.030, 0.075], at: [0.36, -0.535, 0.19], bevel: 0.010, accent: 2 }, // foot pad
     ],
     mounts: onFloor,
     provides: (p, unit) => {
@@ -117,6 +122,7 @@ export const DISPENSARY = {
       { size: [0.03, 0.32, 0.30], at: [0.385, 0, 0.005], bevel: 0.008 }, // upright
       { size: [0.78, 0.32, 0.018], at: [0, 0, -0.151], bevel: 0.006 }, // back panel
       { size: [0.74, 0.035, 0.012], at: [0, -0.118, 0.148], bevel: 0.005, strip: 'detail', accent: 1 }, // label strip
+      { size: [0.76, 0.018, 0.016], at: [0, -0.150, 0.146], bevel: 0.005, accent: 2 }, // shelf front lip
       { size: [0.02, 0.30, 0.02], at: [0, 0, -0.14], bevel: 0.004, accent: 2 }, // bay divider
     ],
     mounts: onFloor,

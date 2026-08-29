@@ -1,7 +1,7 @@
 # Pharmacy Modular Builder
 
 A browser game where you lay out a pharmacy from modular, resizable furniture,
-rendered in a flat pixel-art low-poly style — and the modules fill themselves
+rendered in a cute pixel-art low-poly style — and the modules fill themselves
 with props as you grow them. Built against `CLAUDE CODE BRIEF — Pharmacy
 Modular Builder`, Phases 0–6.
 
@@ -125,9 +125,14 @@ Nothing outside `src/shaders/` contains a line of GLSL, constructs a
   `validateRegistry()` rejects it with the module named.
 - **Object-space triplanar, post-deform.** World space swims; sampling the
   original position smears under stretch.
-- **Ink is not black** — when it is on at all. The shipped look has outlines
-  off and leans on the §4.3 vertex masks instead, with cavity and edge pushed to
-  0.55 and 0.42 so forms separate by value rather than by line.
+- **Ink is not black** — when it is on at all. The shipped look has outlines off
+  and separates forms three other ways instead: hemisphere ambient (cool from
+  above, warm bounce from the floor), a tinted rather than merely darker shadow,
+  and a small lift on upward faces. See `docs/style-bible.md`.
+- **A tiling sheet must have no direction.** Anything linear in it becomes a
+  stripe on every object that uses it. The surface strip is mottling and
+  speckle; the joinery lines come from the geometry, which already has rails,
+  stiles and drawer fronts as separate parts.
 - **Decor is declared, not placed.** A module's `decor(params)` returns slots;
   the contents are a pure function of a saved seed and the slot key, so growth
   adds props without disturbing the ones already there — and a save reloads

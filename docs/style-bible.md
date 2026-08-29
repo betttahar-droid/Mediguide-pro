@@ -22,19 +22,21 @@ forms, warm woods, painted metal fittings, ink outlines.
 
 ## The look: pixel art, not painted
 
-The style target is **pixelated low-poly** — Minecraft-ish texel density, chunky
-voxel forms, hard edges, **no ink outlines**, and enough small props that a
-scene reads as lived in. That decision drives five things:
+The style target is **cute pixelated low-poly** — Minecraft-ish texel density,
+chunky forms with soft bevelled corners, **no ink outlines**, warm pastel
+colour, and enough small props that a scene reads as lived in. That drives five
+things:
 
 - **Sheets are tiny.** 128² trim and atlas, 64² floor and hatch. A texel lands
   near 2 cm in world space. Combined with `NearestFilter` on magnification,
   texels read as texels.
 - **No blur, no antialiasing, no gradients.** Value steps and 4×4 Bayer
   dithering. A groove is one dark pixel with one bright pixel beside it.
-- **Hard edges.** `EDGE_SOFTNESS` in `modules/geometry.js` scales every chamfer
-  down to about a texel. The chamfer stays because the vertex-mask bake needs
-  convex edges to find and the trim sheet's edge strip needs somewhere to land,
-  but it reads as a crisp corner, not a rounded bevel.
+- **Soft corners.** `EDGE_SOFTNESS` in `modules/geometry.js` scales every
+  chamfer. It sat at 0.4 for a hard voxel edge and is now **0.85**: a visible
+  bevel that catches the edge highlight. Rounded corners are most of what makes
+  an object read as friendly rather than as a crate, and the wider chamfer gives
+  the §4.3 mask bake a much stronger convex signal — which matters with no ink.
 - **Flat lighting.** A 3-step ramp, a weak rim, no cross-hatching by default.
   Pixel art gets its detail from texels; a soft shading gradient over them just
   muddies the palette.
@@ -50,29 +52,34 @@ scene reads as lived in. That decision drives five things:
 Nine rules, each of which is now a line in `tools/authoring/make_textures.py`
 or in a module's part list.
 
-1. **The light is painted in, not lit.** Every board, panel and plate is lighter
-   at the top and darker at the bottom in the albedo itself — as a dithered band
-   at this resolution. The toon ramp then lights that again, which is why the
-   sheets are authored as luminance and the ramp is kept to three flat steps.
-2. **Every groove has a bright lip.** The single most repeated mark in the
-   reference: a dark core with a near-white lip on one side. It is what makes a
-   flat plane read as two boards.
-3. **Grain is few, long and confident.** Two or three dashed lines per board,
-   with real gaps — never solid, never per-pixel noise. Noise reads as dirt.
+1. **The surface strip is a MATERIAL, not a structure.** This is the rule that
+   replaced three earlier ones, and it is the most important on the page. The
+   sheet used to draw four hard plank bands with near-black grooves and
+   near-white lips; mapped across a part's height that reads as loud horizontal
+   stripes on every object in the room. The joinery lines are the geometry's job
+   — rails, stiles and drawer fronts are already separate parts — so the strip
+   now carries low-contrast mottling, isotropic speckle and a whisper of a board
+   edge at about a fifth of the old contrast. Everything in it sits within
+   roughly ±22 of mid grey.
+2. **Texture should have no direction.** Anything linear in a tiling sheet
+   becomes a stripe on every object that uses it. Mottling is round; speckle is
+   single pixels; grain is short broken dashes, never a run across the sheet.
+   The metal cell lost its brushed lines for the same reason.
+3. **Keep the deliberate marks deliberate.** Bolts, the label rail and the floor
+   grout stay crisp, because those are structure and you want to see them. Only
+   the *material* went quiet.
 4. **Knots are drawn deliberately** — at this size, an eight-pixel ring around a
-   two-pixel core. One per board at most, never evenly spaced.
-5. **Joints are staggered.** Aligned butt joints turn a plank sheet into a tile
-   grid instantly — the first version of our trim sheet made exactly this
-   mistake.
-6. **Fittings are ornament.** Bolts, corner plates, label rails and pulls are
+   two-pixel core, now at low contrast. One per board at most.
+5. **Fittings are ornament.** Bolts, corner plates, label rails and pulls are
    what separate "a box" from "a piece of furniture". They live on the trim
    sheet's detail strip and on small dedicated parts.
-7. **Chunky, slightly squat proportions.** A thick worktop, a deep overhang,
+6. **Chunky, slightly squat proportions.** A thick worktop, a deep overhang,
    heavy pulls. A correctly-proportioned realistic desk looks realistic.
-8. **Wide value range, narrow hue range.** The grooves go near-black and the
-   lips near-white; the hue barely moves. This is why the sheets are greyscale
-   and `palette.js` supplies the colour.
-9. **When there is ink, it is a drawn line, not a filter** — dark, tinted
+7. **Narrow hue range, and the value range lives in the lighting.** The sheets
+   are greyscale and `palette.js` supplies the colour; the contrast that used to
+   be painted into the texture now comes from the shading model instead, where
+   it can respond to the form.
+8. **When there is ink, it is a drawn line, not a filter** — dark, tinted
    toward the palette's shadow tone, never black. This project ships with it
    off; the rule stands for anyone who turns it on.
 
@@ -95,16 +102,27 @@ One source of truth: `src/art/palette.js`. No hex literals anywhere else.
 | floorTile | `#b6bdb2` | floor |
 | ink | `#2b1f33` | outlines, hatching — never black |
 
-## Fixed light
+## Shading
 
-One direction for the whole project, so separately-authored modules agree.
+Four things carry the look, in order of how much they do. All of them live in
+`shaders/chunks/toonLighting.glsl.js`.
 
-- Key: warm `#fff0d6`, azimuth 37°, elevation 53°, intensity 0.68
-- Fill: cool `#a9c0dd`, from behind-left, intensity 0.28
-- Rim: `#ffd39b`, suppressed on upward faces
-- Ambient: slightly cool, 0.26
-- Toon ramp: 3 steps, terminator wrapped past halfway
-- Hatching off by default — it fights the texels
+1. **Hemisphere ambient.** Fill light is not one colour: cool `#d6e6f4` from
+   above, warm `#f6e2c4` bounced off the floor, mixed on the world normal. One
+   `mix()`, and every upward face picks up sky while every downward face picks
+   up the room. It is the cheapest thing that stops flat shading looking flat.
+2. **Coloured shadow.** The dark end of the ramp is tinted `#8d85b0`, not just
+   darkened. Shadows with a hue read as chosen; grey shadows read as an absence
+   of light.
+3. **The ramp.** Three flat steps, terminator wrapped past halfway.
+4. **Up-face lift.** +9% on upward faces, −9% on downward ones, independent of
+   the key. The classic voxel trick: it separates a worktop from the carcass
+   front under it even in full light, and it does the job the outline pass used
+   to.
+
+The fixed key stays: warm `#fff3de` at azimuth 37°, elevation 53°, intensity
+0.72; cool fill from behind-left at 0.18; rim at 0.14, suppressed on upward
+faces; hemisphere strength 0.33. Hatching off — it fights the texels.
 
 ## Decor: things pop in when a module grows
 

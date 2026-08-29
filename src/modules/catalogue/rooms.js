@@ -66,6 +66,8 @@ export const CONSULTATION = {
       { size: [0.045, 0.42, 0.045], at: [-0.19, -0.275, -0.15], bevel: 0.008, accent: 2 }, // leg
       { size: [0.045, 0.42, 0.045], at: [0.19, -0.275, -0.15], bevel: 0.008, accent: 2 }, // leg
       { size: [0.42, 0.03, 0.03], at: [0, -0.400, 0.17], bevel: 0.006, accent: 2 }, // stretcher
+      { size: [0.46, 0.020, 0.026], at: [0, 0.036, 0.225], bevel: 0.006, accent: 2 }, // seat piping
+      { size: [0.44, 0.024, 0.026], at: [0, 0.428, -0.175], bevel: 0.006, accent: 2 }, // back piping
     ],
     mounts: onFloor,
     provides: () => [],
@@ -107,6 +109,8 @@ export const STAFF = {
       { size: [0.030, 0.16, 0.045], at: [0.225, -0.550, 0.276], bevel: 0.006, accent: 2 }, // handle
       { size: [0.09, 0.055, 0.010], at: [-0.17, 0.790, 0.272], bevel: 0.003, strip: 'detail', accent: 2 }, // number
       { size: [0.09, 0.055, 0.010], at: [-0.17, -0.060, 0.272], bevel: 0.003, strip: 'detail', accent: 2 }, // number
+      { size: [0.62, 0.040, 0.52], at: [0, 0.920, 0], bevel: 0.012, accent: 2 }, // top cap
+      { size: [0.56, 0.026, 0.46], at: [0, 0.955, 0.02], bevel: 0.010, accent: 1 }, // sloped crown
     ],
     mounts: onFloor,
     provides: (p, unit) => [

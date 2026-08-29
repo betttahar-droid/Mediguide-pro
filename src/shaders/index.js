@@ -33,6 +33,7 @@ export { makeDeformUniforms };
 /** Uniforms the look-dev UI is allowed to drive across every material at once. */
 export const SHARED_UNIFORMS = [
   'uKeyIntensity', 'uFillIntensity', 'uRimStrength', 'uRimPower',
+  'uAmbientStrength', 'uUpLift',
   'uCavityLo', 'uCavityHi', 'uCavityStrength',
   'uEdgeLo', 'uEdgeHi', 'uEdgeStrength', 'uDustStrength',
   'uTrimDensity', 'uDetailGain', 'uTextureScale', 'uTriplanarSharpness',

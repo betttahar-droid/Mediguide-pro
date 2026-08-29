@@ -71,17 +71,46 @@ def wrap_x(x, w=SHEET):
     return x % w
 
 
-def dashed_grain(d, y, v, rnd, w=SHEET):
-    """A grain line as pixel dashes — long runs with gaps, never solid."""
+def dashed_grain(d, y, v, rnd, w=SHEET, run_range=(3, 9), gap_range=(4, 14)):
+    """A grain line as short pixel dashes — broken up, so it never reads as a
+    stripe running the width of the sheet."""
     x = rnd.randrange(0, w)
     drawn = 0
     while drawn < w:
-        run = rnd.randint(4, 14)
+        run = rnd.randint(*run_range)
         for i in range(run):
             d.point((wrap_x(x + i, w), y), fill=V(v))
-        gap = rnd.randint(2, 9)
+        gap = rnd.randint(*gap_range)
         x = wrap_x(x + run + gap, w)
         drawn += run + gap
+
+
+def speckle(d, rnd, x0, y0, x1, y1, amount, spread, base=None):
+    """Isotropic single-pixel noise. This is what makes a flat panel read as
+    "a material" rather than "a colour", and it has no direction at all."""
+    n = int((x1 - x0) * (y1 - y0) * amount)
+    for _ in range(n):
+        x, y = rnd.randrange(x0, x1), rnd.randrange(y0, y1)
+        v = (base if base is not None else 132) + rnd.choice([-spread, -spread // 2, spread // 2, spread])
+        d.point((x, y), fill=V(v))
+
+
+def mottle(d, rnd, x0, y0, x1, y1, count, spread, base):
+    """Soft irregular blotches — deliberately round, never linear."""
+    for _ in range(count):
+        cx, cy = rnd.randrange(x0, x1), rnd.randrange(y0, y1)
+        rx, ry = rnd.randint(3, 11), rnd.randint(2, 7)
+        v = base + rnd.choice([-spread, spread])
+        for yy in range(cy - ry, cy + ry + 1):
+            if not (y0 <= yy < y1):
+                continue
+            for xx in range(cx - rx, cx + rx + 1):
+                dx, dy = (xx - cx) / max(1, rx), (yy - cy) / max(1, ry)
+                if dx * dx + dy * dy > 1.0:
+                    continue
+                if BAYER[yy % 4][xx % 4] / 16.0 > 0.55:
+                    continue
+                d.point((wrap_x(xx, x1 - x0) + x0 if x1 - x0 == SHEET else xx, yy), fill=V(v))
 
 
 def knot(d, cx, cy, v_core, v_ring, w=SHEET):
@@ -98,46 +127,36 @@ def make_trim():
     d = ImageDraw.Draw(img)
     rnd = random.Random(60912)
 
-    # --- surface strip: four painted boards, running along U ---------------
+    # --- surface strip: a general material -------------------------------
+    # Low contrast on purpose. Everything here is within about +/-22 of mid
+    # grey, so the strip reads as "surface" at any scale and never competes
+    # with the geometry for the eye.
     sy, sh = STRIPS["surface"]
-    PLANK = 16
-    for p in range(sh // PLANK):
-        top = sy + p * PLANK
-        body = rnd.choice([120, 128, 134, 140])
+    BOARD = 32                                     # two soft separations, not four
+    dither_band(d, 0, sy, SHEET, sy + sh, 136, 128, spread=8)
+    mottle(d, rnd, 0, sy, SHEET, sy + sh, 90, 11, 132)
+    speckle(d, rnd, 0, sy, SHEET, sy + sh, 0.10, 13, 132)
 
-        dither_band(d, 0, top + 3, SHEET, top + 13, body + 10, body - 14, spread=14)
-        hline(d, top + 0, 0, SHEET, 38)            # groove
-        hline(d, top + 1, 0, SHEET, 232)           # the lit lip — the key mark
-        hline(d, top + 2, 0, SHEET, 176)
-        hline(d, top + 13, 0, SHEET, 92)
-        hline(d, top + 14, 0, SHEET, 66)
-        hline(d, top + 15, 0, SHEET, 48)
-
-        for _ in range(rnd.randint(2, 3)):         # grain, as dashes
-            dashed_grain(d, rnd.randint(top + 4, top + 12),
-                         body + rnd.choice([-46, -34, 40, 54]), rnd)
-        if rnd.random() < 0.6:
-            knot(d, rnd.randrange(SHEET), rnd.randint(top + 6, top + 10), 44, body - 30)
-
-        # a staggered butt joint: never aligned between boards, or the sheet
-        # stops reading as planks and starts reading as tiles
-        jx = rnd.randrange(SHEET)
-        vline(d, jx, top + 1, top + 15, 42)
-        vline(d, wrap_x(jx + 1), top + 1, top + 15, 206)
-
-        for _ in range(rnd.randint(1, 3)):         # paint chipped off the lip
-            cx = rnd.randrange(SHEET)
-            for i in range(rnd.randint(2, 5)):
-                d.point((wrap_x(cx + i), top + 1), fill=V(120))
+    for p in range(sh // BOARD):
+        top = sy + p * BOARD
+        # the whisper of a board edge: a soft shadow with a soft lip, roughly
+        # a fifth of the contrast the plank version used
+        hline(d, top + 0, 0, SHEET, 108)
+        hline(d, top + 1, 0, SHEET, 156)
+        for _ in range(rnd.randint(2, 4)):         # broken grain, barely there
+            dashed_grain(d, rnd.randint(top + 4, top + BOARD - 4),
+                         132 + rnd.choice([-20, -14, 16, 22]), rnd)
+        if rnd.random() < 0.5:
+            knot(d, rnd.randrange(SHEET), rnd.randint(top + 8, top + BOARD - 8), 112, 124)
 
     # --- edge trim: a painted bevel, eight rows ---------------------------
     ey, eh = STRIPS["edge"]
-    for i, v in enumerate((40, 104, 236, 198, 146, 112, 74, 46)):
+    for i, v in enumerate((92, 128, 196, 172, 146, 130, 112, 98)):
         hline(d, ey + i, 0, SHEET, v)
-    for _ in range(14):                            # nicks in the lit row
+    for _ in range(18):                            # nicks in the lit row
         x = rnd.randrange(SHEET)
         for i in range(rnd.randint(1, 3)):
-            d.point((wrap_x(x + i), ey + 2), fill=V(150))
+            d.point((wrap_x(x + i), ey + 2), fill=V(160))
 
     # --- detail strip: bolts and a label rail -----------------------------
     dy, dh = STRIPS["detail"]
@@ -154,7 +173,8 @@ def make_trim():
 
     # --- transition: a dithered wear ramp ---------------------------------
     ty, th = STRIPS["transition"]
-    dither_band(d, 0, ty, SHEET, ty + th, 196, 64, spread=34)
+    dither_band(d, 0, ty, SHEET, ty + th, 160, 104, spread=18)
+    speckle(d, rnd, 0, ty, SHEET, ty + th, 0.14, 16, 132)
 
     # --- alpha: grille ----------------------------------------------------
     ay, ah = STRIPS["alpha"]
@@ -185,34 +205,34 @@ def panel(d, x0, y0, size, kind, seed):
     px0, py0, px1, py1 = x0 + i + 1, y0 + i + 1, x1 - i - 1, y1 - i - 1
 
     if kind == "wood":
-        boards = 3
-        bh = (py1 - py0) // boards
-        for b in range(boards):
-            by = py0 + b * bh
-            body = rnd.choice([122, 130, 138])
-            dither_band(d, px0, by + 2, px1, by + bh, body + 8, body - 16, spread=12)
-            hline(d, by, px0, px1, 44)
-            hline(d, by + 1, px0, px1, 226)
-            for _ in range(2):
-                dashed_grain(d, rnd.randint(by + 3, by + bh - 2),
-                             body + rnd.choice([-42, 46]), rnd, w=px1 - px0)
-            if rnd.random() < 0.7:
-                knot(d, rnd.randint(px0 + 4, px1 - 6), by + bh // 2, 46, body - 28)
+        # one soft board line across the middle, then material
+        dither_band(d, px0, py0, px1, py1, 140, 126, spread=9)
+        mottle(d, rnd, px0, py0, px1, py1, 26, 12, 132)
+        speckle(d, rnd, px0, py0, px1, py1, 0.10, 14, 132)
+        mid = (py0 + py1) // 2
+        hline(d, mid, px0, px1, 110)
+        hline(d, mid + 1, px0, px1, 154)
+        for _ in range(3):
+            dashed_grain(d, rnd.randint(py0 + 2, py1 - 2), 132 + rnd.choice([-18, 20]),
+                         rnd, w=px1 - px0)
+        if rnd.random() < 0.6:
+            knot(d, rnd.randint(px0 + 6, px1 - 8), rnd.randint(py0 + 4, py1 - 4), 112, 124)
     elif kind == "laminate":
-        dither_band(d, px0, py0, px1, py1, 150, 108, spread=22)
-        hline(d, py1 - 1, px0, px1, 214)
+        dither_band(d, px0, py0, px1, py1, 142, 124, spread=10)
+        speckle(d, rnd, px0, py0, px1, py1, 0.14, 15, 132)
+        mottle(d, rnd, px0, py0, px1, py1, 18, 9, 132)
     elif kind == "metal":
-        for x in range(px0, px1):                  # brushed, one pixel at a time
-            dither_band(d, x, py0, x + 1, py1, rnd.randint(126, 148),
-                        rnd.randint(96, 118), spread=10)
+        # no brushed stripes — a faint isotropic grain and two soft highlights
+        dither_band(d, px0, py0, px1, py1, 144, 122, spread=9)
+        speckle(d, rnd, px0, py0, px1, py1, 0.16, 12, 132)
         for cx in (px0 + 2, px1 - 5):              # bolts
             for cy in (py0 + 2, py1 - 5):
-                d.rectangle([cx, cy, cx + 2, cy + 2], fill=V(54))
-                d.point((cx, cy), fill=V(212))
-        for k in range(14):                        # one painted specular streak
-            d.rectangle([px0 + 8 + k, py1 - 3 - k, px0 + 10 + k, py1 - 2 - k], fill=V(224))
+                d.rectangle([cx, cy, cx + 2, cy + 2], fill=V(96))
+                d.point((cx, cy), fill=V(178))
+        for k in range(14):                        # a soft painted sheen
+            d.rectangle([px0 + 8 + k, py1 - 3 - k, px0 + 9 + k, py1 - 2 - k], fill=V(170))
     elif kind == "glass":
-        dither_band(d, px0, py0, px1, py1, 200, 140, spread=18)
+        dither_band(d, px0, py0, px1, py1, 186, 148, spread=12)
         for k in range(16):
             d.rectangle([px0 + 5 + k, py1 - 3 - k, px0 + 7 + k, py1 - 2 - k], fill=V(246))
             if k < 8:
@@ -251,10 +271,11 @@ def make_tiling():
                 for _ in range(6):
                     d.point((x0 + rnd.randrange(2, tile - 2), y0 + rnd.randrange(2, tile - 2)),
                             fill=V(base - 24))
-            hline(d, y0, x0, x0 + tile, 78)        # grout, with a lit lip
-            hline(d, y0 + 1, x0, x0 + tile, 196)
-            vline(d, x0, y0, y0 + tile, 78)
-            vline(d, x0 + 1, y0, y0 + tile, 190)
+            speckle(d, rnd, x0 + 2, y0 + 2, x0 + tile, y0 + tile, 0.12, 10, base)
+            hline(d, y0, x0, x0 + tile, 104)       # grout, with a lit lip
+            hline(d, y0 + 1, x0, x0 + tile, 172)
+            vline(d, x0, y0, y0 + tile, 104)
+            vline(d, x0 + 1, y0, y0 + tile, 168)
     return img
 
 

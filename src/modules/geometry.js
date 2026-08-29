@@ -16,11 +16,12 @@ import { stripV } from '../art/trimLayout.js';
 
 const EDGE = stripV('edge');
 
-// Pixel-art / voxel forms have hard edges. The chamfer is kept — the vertex
-// mask bake needs convex edges to find, and the trim sheet's edge strip needs
-// somewhere to land — but scaled down until it reads as a crisp corner with a
-// one-texel painted highlight rather than a rounded bevel.
-const EDGE_SOFTNESS = 0.4;
+// Cute forms are rounded ones. The chamfer had been scaled almost to nothing
+// for a hard voxel edge; at 0.85 the corners come back as a visible soft bevel
+// that catches the edge highlight, which is most of what makes an object read
+// as friendly rather than as a crate. It also gives the §4.3 mask bake a much
+// stronger convex signal, which matters now that there are no outlines.
+const EDGE_SOFTNESS = 0.85;
 
 /**
  * Chamfered box centred on the origin.
