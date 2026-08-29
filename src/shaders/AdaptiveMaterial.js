@@ -201,7 +201,7 @@ export function createAdaptiveMaterial(opts = {}) {
       uFillColor: { value: PALETTE.fillCool.clone() },
       uFillIntensity: { value: 0.28 },
       uRimColor: { value: PALETTE.rim.clone() },
-      uRimStrength: { value: 0.16 },
+      uRimStrength: { value: 0.10 },
       uRimPower: { value: 3.0 },
       uAmbient: { value: new Color(0.26, 0.25, 0.29) },
       // hatching
@@ -211,10 +211,10 @@ export function createAdaptiveMaterial(opts = {}) {
       // mask ramps — all six tuned by eye in lil-gui (§4.3)
       uCavityLo: { value: 0.12 },
       uCavityHi: { value: 0.62 },
-      uCavityStrength: { value: 0.34 },
+      uCavityStrength: { value: 0.55 },
       uEdgeLo: { value: 0.55 },
-      uEdgeHi: { value: 0.95 },
-      uEdgeStrength: { value: 0.26 },
+      uEdgeHi: { value: 0.88 },
+      uEdgeStrength: { value: 0.42 },
       uDustStrength: { value: 0.03 },
       uShadowTint: { value: PALETTE.shadowTint.clone() },
       uEdgeLightTint: { value: PALETTE.edgeLightTint.clone() },

@@ -1,9 +1,9 @@
 # Pharmacy Modular Builder
 
 A browser game where you lay out a pharmacy from modular, resizable furniture,
-rendered in a pixel-art low-poly style — and the modules fill themselves with
-props as you grow them. Built against `CLAUDE CODE
-BRIEF — Pharmacy Modular Builder`, Phases 0–6.
+rendered in a flat pixel-art low-poly style — and the modules fill themselves
+with props as you grow them. Built against `CLAUDE CODE BRIEF — Pharmacy
+Modular Builder`, Phases 0–6.
 
 ```bash
 npm install
@@ -13,9 +13,26 @@ npm run build && npm run preview &
 npm test           # headless acceptance checks, writes test/shots/
 ```
 
-Controls: **click** place · **drag** orbit · **R** rotate 45° · **Esc** toggle
-place/select · **X** delete selected. Sizes, save/load, the instancing stress
-test and every look-dev knob are in the lil-gui panel.
+Pick something from the **catalogue** on the left, click to place it. **Drag**
+orbits · **R** rotates 45° · **X** deletes the selected module · **Esc** swaps
+place and select mode. Sizes, save/load, the instancing stress test and every
+look-dev knob are in the panel on the right.
+
+## The catalogue
+
+Nineteen modules on five shelves, grouped the way a pharmacy is laid out.
+
+| Shelf | Modules |
+| --- | --- |
+| **Dispensary** | Dispensing bench · Dispensary racking · CD cabinet · Vaccine fridge · Sink unit · Waste & sharps |
+| **Retail floor** | Gondola shelving · Wall shelving · OTC counter (stretch) · Till / POS · Basket stack · Offers dump bin · Queue barrier · Stock boxes |
+| **Consultation** | Consultation booth · Consultation chair |
+| **Staff** | Staff lockers · Filing cabinet |
+| **Signage** | Pharmacy cross · Aisle sign |
+
+Definitions live in `src/modules/catalogue/`, one file per area. A module is
+pure data — form, resize behaviour, sockets and decor slots — so adding one is
+a part list and a few numbers, not code.
 
 ## Phases
 
@@ -25,7 +42,7 @@ test and every look-dev knob are in the lil-gui panel.
 | 1 — Look development | toon ramp, warm key + cool fill, rim, palette module, faceted normals, all three vertex mask channels with their six ramps in the UI |
 | 2 — Nine-slice | margins as uniforms, normals corrected by the inverse-transpose, `capMask` varying, both §5.2 guards asserted at load |
 | 3 — Hybrid material | 128² pixel-art trim sheet, 128² atlas, Tier A/B blend on `capMask`, Tier C triplanar for floor and walls |
-| 4 — Outlines and hatching | normal-depth prepass sharing the vertex stage, Roberts cross on linearised depth, tinted ink, surface-locked cross-hatching in the beauty pass |
+| 4 — Outlines and hatching | normal-depth prepass sharing the vertex stage, Roberts cross on linearised depth, tinted ink, surface-locked cross-hatching — **built, and off by default**: the flat pixel look does not want ink |
 | 5 — Module system | registry, sockets, both resize modes, socket + surface snapping, raycast placement, seeded decor slots, save/load |
 | 6 — Instancing | `InstancedMesh` with `aTargetScale` / `aMargins` instanced attributes |
 
@@ -37,8 +54,9 @@ including the acceptance tests that can be made objective:
 - **Phase 3** — moving the triplanar floor half a texture period shifts the
   pattern; moving it a whole period does not. The texture is carried by the
   panel, which is what "object space, not world space" buys.
-- **Phase 4** — ink covers ~6% of the frame at 3m and ~2.5% at 30m: the lines
-  hold their weight instead of flooding.
+- **Phase 4** — with the pass switched on for the measurement, ink covers ~12%
+  of the frame at 3m and ~5% at 30m: the lines hold their weight instead of
+  flooding.
 - **Phase 5** — raising a gondola from 4 to 6 shelves gives six shelf meshes,
   not four taller ones; a gondola snaps into a flush run; save → clear → load
   round-trips identically.
@@ -71,9 +89,12 @@ src/
 │   ├── NormalDepthMaterial.js    the prepass twin
 │   └── OutlinePass.js            prepass target + Roberts composite
 ├── art/                 palette · ramps · bakeMasks · trimLayout · textures · shadow
-├── modules/             registry · geometry · ModuleInstance · resize · decor · InstancedBatch
+├── modules/
+│   ├── catalogue/       the modules themselves, one file per shelf
+│   ├── registry.js      merge point, schema docs, load-time validation
+│   └── geometry · ModuleInstance · resize · decor · InstancedBatch
+├── ui/                  catalogue panel · lil-gui look-dev
 ├── build/               snapping · placement · serialize
-└── ui/                  gui
 public/textures/         the authored sheets: trim · atlas · tiling · hatch
 tools/authoring/         one-off asset authoring, run by hand (§11)
 docs/style-bible.md      palette, fixed light, fixed camera, the reference rules
@@ -104,7 +125,9 @@ Nothing outside `src/shaders/` contains a line of GLSL, constructs a
   `validateRegistry()` rejects it with the module named.
 - **Object-space triplanar, post-deform.** World space swims; sampling the
   original position smears under stretch.
-- **Ink is not black.** It is the palette's shadow tone (§7.3).
+- **Ink is not black** — when it is on at all. The shipped look has outlines
+  off and leans on the §4.3 vertex masks instead, with cavity and edge pushed to
+  0.55 and 0.42 so forms separate by value rather than by line.
 - **Decor is declared, not placed.** A module's `decor(params)` returns slots;
   the contents are a pure function of a saved seed and the slot key, so growth
   adds props without disturbing the ones already there — and a save reloads
@@ -126,11 +149,15 @@ Nothing outside `src/shaders/` contains a line of GLSL, constructs a
   `chunks/triplanar.glsl.js`.
 - **Snapping stops at rule 2.** Socket-to-socket and surface are implemented;
   edge alignment (smart guides) is not.
-- **Decor is not batched yet.** Each prop is its own mesh, so a busy scene adds
-  draw calls quickly (the seeded room runs about 78 with the outline prepass
-  doubling everything). Props are fixed-size and share geometry per type, which
-  is exactly the shape `createInstancedBatch()` wants — batching them is the
-  obvious next win.
+- **Decor is not batched, and the seeded shop feels it.** Each prop is its own
+  mesh, so the twenty-module starting scene runs around 250–290 draw calls. That
+  is fine on a real GPU and wrong in principle. Props are fixed-size and already
+  share geometry and material per type, which is exactly the shape
+  `createInstancedBatch()` wants — batching decor is the clear next win and the
+  one thing I would do before adding more modules.
+- **Wall mounting is a `hover` height, not a wall socket.** Signs and wall
+  shelving float at a declared height and you position them against a wall by
+  eye. Real wall sockets on the room panels would be better.
 - **Instancing is an API, not the whole scene.** `createInstancedBatch()` builds
   the batched path and the stress test drives it; placed modules still use one
   mesh per unit so they stay individually selectable and resizable. Converting

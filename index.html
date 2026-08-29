@@ -10,7 +10,7 @@
       html, body { margin: 0; height: 100%; overflow: hidden; background: #c4b294; }
       #app { display: block; width: 100vw; height: 100vh; }
       #help {
-        position: fixed; left: 12px; bottom: 12px; max-width: 30ch;
+        position: fixed; right: 12px; bottom: 12px; max-width: 34ch;
         font: 12px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
         color: #2b1f33; background: rgba(242, 230, 210, 0.82);
         padding: 10px 12px; border-radius: 8px; pointer-events: none;
@@ -21,9 +21,9 @@
   <body>
     <canvas id="app"></canvas>
     <div id="help">
-      <b>click</b> place · <b>drag</b> orbit · <b>R</b> rotate 45°<br />
-      <b>Esc</b> place/select mode · <b>X</b> delete selected<br />
-      size sliders are in the panel, top right
+      pick from the <b>catalogue</b>, left · <b>click</b> to place<br />
+      <b>drag</b> orbit · <b>R</b> rotate 45° · <b>X</b> delete selected<br />
+      <b>Esc</b> switches place / select · sizes are top right
     </div>
     <script type="module" src="/src/main.js"></script>
   </body>

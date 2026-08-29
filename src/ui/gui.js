@@ -1,5 +1,5 @@
 import GUI from 'lil-gui';
-import { REGISTRY, MODULE_IDS } from '../modules/registry.js';
+
 import { setSharedUniform, setSharedVector, setToonRampSteps } from '../shaders/index.js';
 import { PALETTE_HEX } from '../art/palette.js';
 
@@ -8,8 +8,8 @@ export function buildGui(app) {
 
   // ---- build -----------------------------------------------------------
   const build = gui.addFolder('Build');
-  const labels = Object.fromEntries(MODULE_IDS.map((id) => [REGISTRY[id].label, id]));
-  build.add(app.state, 'moduleId', labels).name('module').onChange(() => app.selectType(app.state.moduleId));
+  // Module choice lives in the catalogue panel; this folder is the controls
+  // for whatever is currently selected.
   build.add(app.state, 'mode', ['place', 'select']).name('mode').listen().onChange(() => app.setMode(app.state.mode));
   build.add({ rotate: () => app.rotate() }, 'rotate').name('rotate 45° (R)');
   build.add({ del: () => app.deleteSelected() }, 'del').name('delete selected (X)');
@@ -53,7 +53,7 @@ export function buildGui(app) {
   const look = gui.addFolder('Look dev').close();
 
   const light = look.addFolder('Lighting');
-  const lightState = { rampSteps: 3, key: 0.68, fill: 0.28, rim: 0.16, rimPower: 3.0, keyAzimuth: 37, keyElevation: 53 };
+  const lightState = { rampSteps: 3, key: 0.68, fill: 0.28, rim: 0.10, rimPower: 3.0, keyAzimuth: 37, keyElevation: 53 };
   light.add(lightState, 'rampSteps', 2, 8, 1).onChange((v) => setToonRampSteps(v));
   light.add(lightState, 'key', 0, 2).onChange((v) => setSharedUniform('uKeyIntensity', v));
   light.add(lightState, 'fill', 0, 1).onChange((v) => setSharedUniform('uFillIntensity', v));
@@ -70,8 +70,8 @@ export function buildGui(app) {
   // The six ramp parameters of §4.3. These are tuned by eye, not by formula.
   const masks = look.addFolder('Vertex masks');
   const maskState = {
-    cavityLo: 0.12, cavityHi: 0.62, cavityStrength: 0.34,
-    edgeLo: 0.55, edgeHi: 0.95, edgeStrength: 0.26, dust: 0.03,
+    cavityLo: 0.12, cavityHi: 0.62, cavityStrength: 0.55,
+    edgeLo: 0.55, edgeHi: 0.88, edgeStrength: 0.42, dust: 0.03,
   };
   masks.add(maskState, 'cavityLo', 0, 1).onChange((v) => setSharedUniform('uCavityLo', v));
   masks.add(maskState, 'cavityHi', 0, 1).onChange((v) => setSharedUniform('uCavityHi', v));
@@ -97,7 +97,7 @@ export function buildGui(app) {
   const ink = look.addFolder('Outlines');
   const u = app.outline.material.uniforms;
   const inkState = {
-    enabled: true,
+    enabled: false,
     thickness: u.uThickness.value,
     normalThreshold: u.uNormalThreshold.value,
     depthThreshold: u.uDepthThreshold.value,

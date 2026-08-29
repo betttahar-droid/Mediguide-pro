@@ -152,6 +152,47 @@ export const PROPS = {
     ],
   },
 
+  // A white dispensing pack with a printed label — the thing that actually
+  // comes off a dispensary shelf.
+  dispensing_pack: {
+    colors: { base: PALETTE.paper, accent1: PALETTE.teal, accent2: PALETTE.signal },
+    atlasCell: [1, 0],
+    trimDensity: 3.2,
+    parts: [
+      { size: [0.075, 0.13, 0.045], at: [0, 0.065, 0], bevel: 0.005 },
+      { size: [0.055, 0.055, 0.005], at: [0, 0.072, 0.025], bevel: 0.002, accent: 1 },
+      { size: [0.055, 0.010, 0.005], at: [0, 0.032, 0.025], bevel: 0.002, accent: 2 },
+    ],
+  },
+
+  // Amber glass, white cap, dispensing label.
+  amber_bottle: {
+    colors: { base: PALETTE.oak, accent1: PALETTE.paper, accent2: PALETTE.bone },
+    atlasCell: [1, 1],
+    trimDensity: 5.0,
+    parts: [
+      { size: [0.055, 0.105, 0.055], at: [0, 0.053, 0], bevel: 0.010 },
+      { size: [0.032, 0.028, 0.032], at: [0, 0.118, 0], bevel: 0.005 },
+      { size: [0.040, 0.020, 0.040], at: [0, 0.140, 0], bevel: 0.004, accent: 2 },
+      { size: [0.046, 0.050, 0.005], at: [0, 0.055, 0.029], bevel: 0.002, accent: 1 },
+    ],
+  },
+
+  // A stacking tote — how stock actually moves around a dispensary.
+  tote: {
+    colors: { base: PALETTE.teal, accent1: PALETTE.tealDeep, accent2: PALETTE.paper },
+    atlasCell: [1, 1],
+    trimDensity: 2.4,
+    parts: [
+      { size: [0.20, 0.015, 0.14], at: [0, 0.008, 0], bevel: 0.004 },
+      { size: [0.20, 0.085, 0.016], at: [0, 0.050, 0.062], bevel: 0.004, accent: 1 },
+      { size: [0.20, 0.085, 0.016], at: [0, 0.050, -0.062], bevel: 0.004, accent: 1 },
+      { size: [0.016, 0.085, 0.11], at: [0.092, 0.050, 0], bevel: 0.004, accent: 1 },
+      { size: [0.016, 0.085, 0.11], at: [-0.092, 0.050, 0], bevel: 0.004, accent: 1 },
+      { size: [0.075, 0.030, 0.006], at: [0, 0.060, 0.068], bevel: 0.002, accent: 2 },
+    ],
+  },
+
   folders: {
     colors: { base: PALETTE.bone, accent1: PALETTE.signal, accent2: PALETTE.teal },
     atlasCell: [1, 0],
@@ -171,6 +212,10 @@ export const POOLS = {
   worktopRare: ['terminal', 'plant', 'basket', 'scales'],
   shelf: ['med_box', 'bottle', 'med_box', 'bottle', 'basket', 'folders'],
   counter: ['paper_stack', 'mug', 'basket', 'till_roll', 'plant'],
+  // Behind the counter the stock is dispensing packs and amber bottles, and it
+  // is packed in tight — a half-empty dispensary shelf reads as a shop that
+  // has closed down.
+  dispensary: ['dispensing_pack', 'amber_bottle', 'dispensing_pack', 'med_box', 'amber_bottle', 'tote'],
 };
 
 const cache = new Map();

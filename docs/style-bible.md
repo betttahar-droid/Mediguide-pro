@@ -23,8 +23,8 @@ forms, warm woods, painted metal fittings, ink outlines.
 ## The look: pixel art, not painted
 
 The style target is **pixelated low-poly** — Minecraft-ish texel density, chunky
-voxel forms, hard edges, strong ink outlines, and enough small props that a
-scene reads as lived in. That decision drives four things:
+voxel forms, hard edges, **no ink outlines**, and enough small props that a
+scene reads as lived in. That decision drives five things:
 
 - **Sheets are tiny.** 128² trim and atlas, 64² floor and hatch. A texel lands
   near 2 cm in world space. Combined with `NearestFilter` on magnification,
@@ -38,6 +38,12 @@ scene reads as lived in. That decision drives four things:
 - **Flat lighting.** A 3-step ramp, a weak rim, no cross-hatching by default.
   Pixel art gets its detail from texels; a soft shading gradient over them just
   muddies the palette.
+- **No outlines.** The Phase 4 ink pass is built and correct, and it is off. In
+  this style the texels already carry the detail and a line around every box
+  competes with them. What replaces the ink is the vertex-mask work of §4.3:
+  cavity and edge strengths are pushed up (0.55 and 0.42) so a convex corner
+  lightens and a crevice darkens in the albedo itself. Forms separate by value,
+  not by line. `Look dev → Outlines → enabled` puts the ink back.
 
 ## What the reference actually does
 
@@ -66,8 +72,9 @@ or in a module's part list.
 8. **Wide value range, narrow hue range.** The grooves go near-black and the
    lips near-white; the hue barely moves. This is why the sheets are greyscale
    and `palette.js` supplies the colour.
-9. **Ink is a drawn line, not a filter.** Dark, tinted toward the palette's
-   shadow tone, never black.
+9. **When there is ink, it is a drawn line, not a filter** — dark, tinted
+   toward the palette's shadow tone, never black. This project ships with it
+   off; the rule stands for anyone who turns it on.
 
 ## Palette
 
@@ -121,6 +128,32 @@ slot's key, which buys two things worth more than the randomness itself:
    the module.
 
 Props are fixed-size, so one geometry and one material serve every copy.
+
+## Believable detail, per object
+
+The rule for every module in `catalogue/`: **detail earns its place by naming
+what the object is for.** A box with a bevel is a box. The same box with three
+hinges, a keypad and a warning plate is a controlled-drugs cabinet, and a
+pharmacist reads it as one instantly.
+
+So each module carries the two or three fittings that identify it:
+
+| Module | What makes it that thing |
+| --- | --- |
+| Dispensing bench | Kick recess, stiles and rails, two drawer depths, label holders, rear upstand, socket block |
+| Dispensary racking | Shallow shelves, a label strip on every one, bay dividers |
+| CD cabinet | Three heavy hinges, keypad, warning plate, no glass |
+| Vaccine fridge | Glass door, head and foot rails, temperature readout, condenser grille |
+| Sink unit | Basin well and rim, mixer column, lever, two cupboard doors |
+| Waste & sharps | Yellow lid, flap, hazard plate, foot pedal and linkage, sharps box on top |
+| Staff lockers | Three vent slots per door, stubby handle, number plate, plinth |
+| Filing cabinet | Four drawers, pull and label holder on each, a top things get left on |
+| Consultation booth | Glazed upper panels with beads, door post and head, skirting, sign over the door |
+| Pharmacy cross | Two bars, a lit face inset, a wall stalk |
+
+Fittings go on the trim sheet's **detail strip** when they repeat along a run
+(bolts, label rails) and on their own small parts when they are positional (a
+keypad, a temperature readout). That split is what §4.1 means by tiers.
 
 ## Fixed camera for reviewing an asset
 

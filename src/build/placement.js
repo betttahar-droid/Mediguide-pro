@@ -54,7 +54,9 @@ export class Placement {
       ghost.group.position.copy(snap.position);
       return { snapped: true, tag: snap.tag };
     }
-    ghost.group.position.y = Math.max(0, ghost.group.position.y);
+    // Wall-mounted modules declare a hover height, which is what lets a sign or
+    // a wall shelf be placed against a wall without a wall-socket system.
+    ghost.group.position.y = Math.max(0, ghost.group.position.y) + (ghost.def.hover ?? 0);
     return { snapped: false, tag: null };
   }
 }

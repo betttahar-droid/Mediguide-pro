@@ -184,6 +184,7 @@ const settle = (frames = 4) =>
     requestAnimationFrame(tick);
   }), frames);
 const CROP = { x: 340, y: 220, width: 340, height: 300 };
+const CAP_CROP = { x: 430, y: 300, width: 190, height: 200 };
 
 // --- Phase 2: the cap is pixel-identical before and after stretching -------
 // Camera is anchored to the left cap, and everything but the desk is hidden, so
@@ -196,23 +197,29 @@ async function capShot(scale) {
     __app.setDecorVisible(false); // decor is atmosphere, not the geometry claim
     for (const k of ['floor', 'backWall', 'sideWall']) __app.room[k].visible = false;
     desk.setParams({ x: s, z: 1.0 });
+    // Anchor to the cap wherever the counter actually stands, so the crop
+    // frames the same corner at any length.
     const capX = desk.group.position.x - desk.def.unit[0] * s;
-    __app.camera.position.set(capX - 0.62, 0.78, 1.95);
-    __app.controls.target.set(capX, 0.45, 1.0);
+    const z = desk.group.position.z;
+    __app.camera.position.set(capX - 0.60, 0.80, z + 0.95);
+    __app.controls.target.set(capX + 0.06, 0.48, z);
     __app.controls.update();
   }, scale);
   await settle();
-  return grab(CROP);
+  return grab(CAP_CROP);
 }
 
 const capAt1 = await capShot(1.0);
+await page.screenshot({ path: `${shotDir}/04-cap-at-1x.png`, clip: CAP_CROP });
 const capAt4 = await capShot(4.0);
+// Write the artefact while the counter is still at 4x — after the restore it
+// would be a picture of something else entirely.
+await page.screenshot({ path: `${shotDir}/04-cap-at-4x.png`, clip: CAP_CROP });
 await page.evaluate(() => {
-  __app.placed.find((m) => m.typeId === 'serving_counter').setParams({ x: 1.9, z: 1.0 });
+  __app.placed.find((m) => m.typeId === 'serving_counter').setParams({ x: 1.3, z: 1.0 });
   __app.setDecorVisible(true);
 });
 const capDiff = meanAbsDiff(capAt1, capAt4);
-await page.screenshot({ path: `${shotDir}/04-cap-at-4x.png`, clip: CROP });
 check(
   'nine-slice: the cap is unchanged from 1.0× to 4.0×',
   capDiff < 4,
@@ -264,6 +271,7 @@ check(
 // --- Phase 4: outlines stay ~1px and do not flood when zoomed out ---------
 const inkAt = async (distance) => {
   await page.evaluate((d) => {
+    __app.outline.enabled = true; // off in the shipped look; this checks the pass
     for (const m of __app.placed) {
       for (const mesh of m.meshes) mesh.visible = true;
       if (m.shadow) m.shadow.visible = true;
@@ -279,8 +287,9 @@ const inkAt = async (distance) => {
 };
 const inkNear = await inkAt(3);
 const inkFar = await inkAt(30);
+await page.evaluate(() => { __app.outline.enabled = false; });
 check(
-  'outlines hold from 3m to 30m without flooding',
+  'the outline pass holds from 3m to 30m without flooding (off by default)',
   inkNear > 0.001 && inkFar > 0.0005 && inkFar < 0.12,
   `ink covers ${(inkNear * 100).toFixed(2)}% of the frame at 3m and ${(inkFar * 100).toFixed(2)}% at 30m`
 );
@@ -334,8 +343,8 @@ await page.evaluate(() => __app.clearBatch());
 // --- screenshots ----------------------------------------------------------
 await page.evaluate(() => {
   __app.setMode('select'); // put the ghost away
-  __app.camera.position.set(4.6, 2.9, 5.4);
-  __app.controls.target.set(0, 0.85, 0);
+  __app.camera.position.set(8.4, 6.2, 9.6);
+  __app.controls.target.set(-0.8, 0.9, -0.6);
   __app.controls.update();
 });
 await page.mouse.move(20, 780);

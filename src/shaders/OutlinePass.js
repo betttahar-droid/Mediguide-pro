@@ -137,7 +137,9 @@ export function createOutlinePass({ renderer }) {
   }
 
   return {
-    enabled: true,
+    // Off by default: the art direction is flat pixel colour with no ink. The
+    // pass is kept whole — it is a Phase 4 deliverable and one toggle away.
+    enabled: false,
     material,
 
     setSize(width, height, pixelRatio = 1) {

@@ -16,6 +16,7 @@ import { Placement } from './build/placement.js';
 import { findSocketSnap } from './build/snapping.js';
 import { saveLocal, loadLocal, clearLocal } from './build/serialize.js';
 import { buildGui } from './ui/gui.js';
+import { buildCatalogue } from './ui/catalogue.js';
 import { texturesReady } from './art/textures.js';
 
 validateRegistry();
@@ -88,6 +89,7 @@ const app = {
   camera,
   controls,
   state: { moduleId: 'dispensing_desk', mode: 'place' },
+  catalogue: null,
   stats: { modules: 0, cost: 0, drawCalls: 0 },
   ghost: null,
   selected: null,
@@ -226,11 +228,13 @@ const app = {
         .reduce((n, [axis]) => n * m.params[axis], 1);
       return sum + def.cost * bays;
     }, 0);
+    this.catalogue?.refresh();
   },
 };
 
 app.selectType(app.state.moduleId);
 buildGui(app);
+app.catalogue = buildCatalogue(app);
 globalThis.__app = app; // handle for the smoke test and for poking at the scene
 
 // --------------------------------------------------------------- pointer
@@ -251,7 +255,10 @@ addEventListener('keydown', (e) => {
   const k = e.key.toLowerCase();
   if (k === 'r') app.rotate();
   else if (k === 'x' || e.key === 'Delete') app.deleteSelected();
-  else if (e.key === 'Escape') app.setMode(app.state.mode === 'place' ? 'select' : 'place');
+  else if (e.key === 'Escape') {
+    app.setMode(app.state.mode === 'place' ? 'select' : 'place');
+    app.catalogue?.refresh();
+  }
 });
 
 // ------------------------------------------------------------------ loop
@@ -298,14 +305,34 @@ frame();
 // a small starting scene so the first frame is not an empty room
 seed();
 function seed() {
-  const desk = new ModuleInstance('dispensing_desk', { params: { x: 3, z: 1.0 }, position: [0.2, 0, 1.2] });
-  const counter = new ModuleInstance('serving_counter', { params: { x: 1.4, z: 1.0 }, position: [4.0, 0, 1.2] });
-  const run = new ModuleInstance('gondola_shelf', { params: { x: 3, y: 4, z: 1.0 }, position: [-2.6, 0, -2.6] });
-  const fridge = new ModuleInstance('fridge_cabinet', { params: { x: 1 }, position: [2.8, 0, -2.6] });
-  const till = new ModuleInstance('till_block', { position: [1.1, 0.955, 1.22] });
-  const boxes = new ModuleInstance('medicine_box', { params: { x: 5 }, position: [-2.6, 0.775, -2.6] });
-  const queue = new ModuleInstance('queue_barrier', { params: { x: 2 }, position: [0.2, 0, 3.6] });
-  for (const m of [desk, counter, run, fridge, till, boxes, queue]) {
+  // A plausible small pharmacy: the dispensary along the back wall with its
+  // racking behind the bench, the CD cabinet and fridge beside it, the retail
+  // floor in front, and the consultation room in the corner.
+  const layout = [
+    ['dispensing_desk', { x: 3, z: 1.0 }, [-0.6, 0, -0.4], 0],
+    ['dispensary_shelving', { x: 4, y: 6, z: 1.0 }, [-0.6, 0, -2.4], 0],
+    ['cd_cabinet', { x: 1 }, [2.1, 0, -2.4], 0],
+    ['fridge_cabinet', { x: 1 }, [3.1, 0, -2.4], 0],
+    ['sink_unit', { x: 1, z: 1.0 }, [-3.0, 0, -0.4], 0],
+    ['waste_station', {}, [-4.0, 0, -0.4], 0],
+    ['till_block', {}, [0.3, 0.955, -0.2], 0],
+    ['serving_counter', { x: 1.3, z: 1.0 }, [3.6, 0, -0.4], 0],
+    ['gondola_shelf', { x: 3, y: 4, z: 1.0 }, [-2.4, 0, 2.4], 0],
+    ['gondola_shelf', { x: 3, y: 4, z: 1.0 }, [1.4, 0, 2.4], 0],
+    ['promo_bin', { x: 1 }, [4.2, 0, 1.6], 0],
+    ['basket_stack', { y: 5 }, [5.0, 0, 3.4], 0],
+    ['queue_barrier', { x: 2 }, [0.4, 0, 1.1], 0],
+    ['consultation_booth', { x: 1.1, z: 1.0 }, [-4.6, 0, 3.0], 0],
+    ['consult_chair', {}, [-4.9, 0, 2.6], 0.6],
+    ['locker_bank', { x: 3 }, [-7.4, 0, -1.2], Math.PI / 2],
+    ['filing_cabinet', {}, [-7.4, 0, 0.9], Math.PI / 2],
+    ['wall_shelving', { x: 3, y: 3 }, [3.2, 0, -6.4], 0],
+    ['green_cross', {}, [0.0, 0, -6.6], 0],
+    ['aisle_sign', { x: 1 }, [-0.5, 0, 3.9], 0],
+  ];
+  for (const [type, params, position, rotY] of layout) {
+    const m = new ModuleInstance(type, { params, position, rotY });
+    if (REGISTRY[type].hover) m.group.position.y += REGISTRY[type].hover;
     scene.add(m.group);
     placed.push(m);
   }
