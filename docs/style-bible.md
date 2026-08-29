@@ -77,9 +77,62 @@ things:
 - **No outlines.** The Phase 4 ink pass is built and correct, and it is off. In
   this style the texels already carry the detail and a line around every box
   competes with them. What replaces the ink is the vertex-mask work of §4.3:
-  cavity and edge strengths are pushed up (0.55 and 0.42) so a convex corner
-  lightens and a crevice darkens in the albedo itself. Forms separate by value,
-  not by line. `Look dev → Outlines → enabled` puts the ink back.
+  a convex corner lightens and a crevice darkens in the albedo itself, so forms
+  separate by value rather than by line. The strengths are 0.34 and 0.34 — they
+  were higher, and came down when the catalogue's part counts doubled and the
+  masks started covering most of every surface.
+  `Look dev → Outlines → enabled` puts the ink back.
+
+## The frame rule
+
+The twenty sheets in `docs/concept/` were generated from one prompt prefix, and
+what they turned out to share is more useful than any single one of them:
+
+> **A light frame around darker panels.** Corner posts, stiles, rails and a
+> tray-like top cap in the pale colour, standing *proud*; the body panels
+> darker and set back between them.
+
+Nothing else moved as many objects as far. The staff lockers had it exactly
+backwards — mint carcass, dark doors flush with it — and inverting them is the
+whole finding in one module. The CD cabinet is a grey box until it becomes a
+pale steel cage with near-black panels dropped into it.
+
+The same handful of fittings recurs on nearly every sheet, so they live in
+`catalogue/fittings.js` and a part list calls them rather than retyping them:
+
+| Fitting | What it does |
+| --- | --- |
+| `studs` | four corner bolts on a face — the mark that says a panel is *fixed to* a frame |
+| `vents` | a stack of slots; says manufactured steel rather than box |
+| `plate` | a pale window in a darker surround: labels, readouts, notices |
+| `keypad` | a plate with three key rows — three read as a keypad, twelve read as noise |
+| `capTray` | a light rim with the body inset: a lid sitting on a carcass |
+| `posts` | the four proud corner posts, i.e. the frame rule itself |
+| `worktop` | a top with a darker band under its front lip |
+
+Two of those deserve their reasoning written down. **The keypad is three rows,
+not twelve keys**, because at 1.5 cm a key is one texel. **The worktop band**
+does the job the outline pass used to: it separates the top plane from the
+carcass front by value, at exactly the line where the two meet.
+
+A module's `colors` block fills five slots — body, frame, accent, dark, glass —
+and the discipline is that each slot does *one* job in that module, so the frame
+never drifts into the panels. The slot *names* are the usual role, not a law:
+the gondola spends its "dark" slot on warm oak shelf boards and says so.
+
+### What it cost, and what paid for it
+
+Every module roughly doubled its part count. Two things had to move with it:
+
+- **The AO bake stopped being quadratic.** It raycast every vertex against every
+  triangle, so twice the parts meant four times the work. Rays are at most
+  `radius` long, so `bakeMasks` now buckets triangles into a grid of exactly
+  that cell size and only tests the 3×3×3 block around each vertex — provably
+  every triangle a ray could reach, and nothing else.
+- **The cavity tint came down.** A cool crevice tint that looked right on a
+  plain box turned the whole room lilac once the geometry carried five times as
+  much occlusion. `uCavityStrength` went 0.5 → 0.34 and both cool tints warmed.
+  More geometry means less tint, not more.
 
 ## What the reference actually does
 
@@ -123,19 +176,19 @@ One source of truth: `src/art/palette.js`. No hex literals anywhere else.
 
 | Role | Hex | Used on |
 | --- | --- | --- |
-| paper | `#f2e6d2` | gondola carcass, desk frame |
+| paper | `#f9efdc` | the light frame, nearly everywhere |
 | wall | `#aed6c2` | walls — the room's cool half |
-| bone | `#ded0b6` | worktops, upstands |
-| putty | `#c4b294` | — |
-| oak | `#c98f4e` | dispensing desk carcass and drawers |
-| oakDark | `#9a6531` | desk trim middle |
-| walnut | `#6b4325` | desk pulls, kick, queue barrier |
-| mint / teal / tealDeep | `#7fbfa4` `#3f8a76` `#27594c` | serving counter, accents |
-| signal | `#e0704a` | medicine boxes — the one warm signal colour |
-| steel / steelDark | `#9aa6a8` `#5e6b6e` | till, fridge carcass, fittings |
-| glass | `#bfd8d6` | fridge door |
+| bone | `#ecdcc0` | the stretched middle under paper |
+| putty | `#d3c3a4` | — |
+| oak | `#dda265` | drawer fronts, shelf boards, worktops |
+| oakDark | `#b0763e` | the stretched middle under oak |
+| walnut | `#835531` | booth frame, corner posts, dark bands |
+| mint / teal / tealDeep | `#9ad9b8` `#57a98d` `#356f5e` | locker doors, price rails, plinths |
+| signal | `#f5804f` | the one properly saturated accent; a few pixels at a time |
+| steel / steelDark | `#b0bcbd` `#77868a` | steel frames, fittings, shadow bands |
+| glass | `#d2e8e4` | fridge door, lit faces, label windows |
 | floorTile | `#c9c2b2` | floor — the room's warm half |
-| ink | `#2b1f33` | outlines, hatching — never black |
+| ink | `#413353` | outlines, hatching, the darkest fittings — never black |
 
 ## Shading
 
@@ -146,7 +199,7 @@ Four things carry the look, in order of how much they do. All of them live in
    above, warm `#f6e2c4` bounced off the floor, mixed on the world normal. One
    `mix()`, and every upward face picks up sky while every downward face picks
    up the room. It is the cheapest thing that stops flat shading looking flat.
-2. **Coloured shadow.** The dark end of the ramp is tinted `#8d85b0`, not just
+2. **Coloured shadow.** The dark end of the ramp is tinted `#9c90a6`, not just
    darkened. Shadows with a hue read as chosen; grey shadows read as an absence
    of light.
 3. **The ramp.** Three flat steps, terminator wrapped past halfway.
@@ -209,16 +262,25 @@ So each module carries the two or three fittings that identify it:
 
 | Module | What makes it that thing |
 | --- | --- |
-| Dispensing bench | Kick recess, stiles and rails, two drawer depths, label holders, rear upstand, socket block |
-| Dispensary racking | Shallow shelves, a label strip on every one, bay dividers |
-| CD cabinet | Three heavy hinges, keypad, warning plate, no glass |
-| Vaccine fridge | Glass door, head and foot rails, temperature readout, condenser grille |
-| Sink unit | Basin well and rim, mixer column, lever, two cupboard doors |
-| Waste & sharps | Yellow lid, flap, hazard plate, foot pedal and linkage, sharps box on top |
-| Staff lockers | Three vent slots per door, stubby handle, number plate, plinth |
-| Filing cabinet | Four drawers, pull and label holder on each, a top things get left on |
-| Consultation booth | Glazed upper panels with beads, door post and head, skirting, sign over the door |
-| Pharmacy cross | Two bars, a lit face inset, a wall stalk |
+| Dispensing bench | Proud steel posts, oak drawer fronts, teal pulls, label holders, banded worktop |
+| Dispensary racking | A cream label strip with a window on **every** shelf front, bay dividers |
+| CD cabinet | Pale cage over near-black panels, three barrel hinges, keypad, warning plate |
+| Vaccine fridge | Oak sides in a steel cage, glass in a pale surround, readout above the door, oak grille |
+| Sink unit | A real basin *well* inside a raised rim, square mixer column and square spout |
+| Waste & sharps | A cream belt across a mint body, front grille, pedal tray with the linkage rod visible |
+| Staff lockers | Cream frame, deep-green doors set into it, vents, number plates, sloped crown |
+| Filing cabinet | A fat cream pull block on each drawer with a dark label slot cut into it |
+| Consultation booth | Walnut posts and door surround, cream infill under full glazing, mint skirting |
+| Pharmacy cross | Three layers — steel rim, teal body, lit face inset — so the rim reads as glow |
+| Till / POS | A fat CRT in a steel shell with an oak bezel, keypad, receipt slot, card reader |
+| Offers dump bin | A pallet, not a plinth, under a deep-teal rimmed box |
+| Queue barrier | Cream posts with teal insets, oak caps and plinths, two rails not one |
+| Gondola shelving | End posts standing proud of cream panels, oak boards, a teal price rail |
+| Wall shelving | A teal price rail with cream label windows punched along it |
+| Aisle sign | An oak panel set deep into a steel frame, lettering band across it |
+| Consultation chair | Fat tan cushions proud of a steel frame, piped, on visible brackets |
+| Basket stack | Teal panels, cream rim rails, walnut corner posts |
+| OTC counter | Cream carcass, oak top banded in dark oak, projecting customer shelf |
 
 Fittings go on the trim sheet's **detail strip** when they repeat along a run
 (bolts, label rails) and on their own small parts when they are positional (a

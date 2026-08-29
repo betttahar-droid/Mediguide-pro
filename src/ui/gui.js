@@ -72,7 +72,7 @@ export function buildGui(app) {
   // The six ramp parameters of §4.3. These are tuned by eye, not by formula.
   const masks = look.addFolder('Vertex masks');
   const maskState = {
-    cavityLo: 0.12, cavityHi: 0.62, cavityStrength: 0.5,
+    cavityLo: 0.12, cavityHi: 0.62, cavityStrength: 0.34,
     edgeLo: 0.55, edgeHi: 0.88, edgeStrength: 0.34, dust: 0.03,
   };
   masks.add(maskState, 'cavityLo', 0, 1).onChange((v) => setSharedUniform('uCavityLo', v));
@@ -84,8 +84,12 @@ export function buildGui(app) {
   masks.add(maskState, 'dust', 0, 0.3).onChange((v) => setSharedUniform('uDustStrength', v));
 
   const tex = look.addFolder('Texturing');
-  const texState = { detailGain: 2.0, trimDensity: 0.45, triplanarScale: 0.34, triplanarSharpness: 8 };
+  const texState = { detailGain: 2.0, detailContrast: 1.0, trimDensity: 0.45, triplanarScale: 0.34, triplanarSharpness: 8 };
   tex.add(texState, 'detailGain', 1, 3).name('detail gain').onChange((v) => setSharedUniform('uDetailGain', v));
+  // Contrast flattens a sheet toward its own mean instead of darkening it, so
+  // a surface can go quiet without going grey. The room panels are built at a
+  // low setting for exactly that reason; this slider overrides every material.
+  tex.add(texState, 'detailContrast', 0, 1.5).name('detail contrast').onChange((v) => setSharedUniform('uDetailContrast', v));
   tex.add(texState, 'trimDensity', 0.2, 4).name('trim per metre').onChange((v) => setSharedUniform('uTrimDensity', v));
   tex.add(texState, 'triplanarScale', 0.1, 3).name('triplanar per metre').onChange((v) => setSharedUniform('uTextureScale', v));
   tex.add(texState, 'triplanarSharpness', 1, 16).name('triplanar blend').onChange((v) => setSharedUniform('uTriplanarSharpness', v));

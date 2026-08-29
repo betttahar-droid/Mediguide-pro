@@ -9,7 +9,7 @@ import { PALETTE, PALETTE_HEX } from './art/palette.js';
 import { createAdaptiveMaterial, createOutlinePass } from './shaders/index.js';
 import { bevelBox } from './modules/geometry.js';
 import { bakeMasks } from './art/bakeMasks.js';
-import { REGISTRY, validateRegistry } from './modules/registry.js';
+import { MODULE_IDS, REGISTRY, validateRegistry } from './modules/registry.js';
 import { ModuleInstance, warmGeometryCache } from './modules/ModuleInstance.js';
 import { createInstancedBatch, disposeBatch } from './modules/InstancedBatch.js';
 import { Placement } from './build/placement.js';
@@ -52,7 +52,7 @@ const outline = createOutlinePass({ renderer });
 // -------------------------------------------------------------- the room
 // §9 "Floor / wall panel — Tier C triplanar". Object space and post-deform, so
 // the texture does not swim when a panel is moved or stretched.
-function panel(w, h, d, position, color, textureScale) {
+function panel(w, h, d, position, color, textureScale, contrast = 1.0) {
   const geo = bakeMasks(bevelBox(w, h, d, 0.05), { rays: 6, radius: 0.2 });
   const material = createAdaptiveMaterial({
     baseColor: color,
@@ -62,6 +62,11 @@ function panel(w, h, d, position, color, textureScale) {
     tier: 'C',
     textureScale,
   });
+  // The room is a backdrop. Every isometric sheet in docs/concept/ sits its
+  // object on a plain ground, and the walls here were competing with the
+  // furniture's own detail — so the panels get a flatter reading of the same
+  // tiling sheet rather than a different one.
+  material.uniforms.uDetailContrast.value = contrast;
   const mesh = new Mesh(geo, material);
   mesh.position.set(...position);
   scene.add(mesh);
@@ -73,9 +78,9 @@ function panel(w, h, d, position, color, textureScale) {
 // in the reference that reads well does this; a neutral room makes its contents
 // float.
 const room = {
-  floor: panel(24, 0.2, 24, [0, -0.1, 0], PALETTE.floorTile, 0.34),
-  backWall: panel(24, 4.4, 0.24, [0, 2.2, -7], PALETTE.wall, 0.32),
-  sideWall: panel(0.24, 4.4, 24, [-9, 2.2, 0], PALETTE.wall, 0.32),
+  floor: panel(24, 0.2, 24, [0, -0.1, 0], PALETTE.floorTile, 0.34, 0.80),
+  backWall: panel(24, 4.4, 0.24, [0, 2.2, -7], PALETTE.wall, 0.32, 0.45),
+  sideWall: panel(0.24, 4.4, 24, [-9, 2.2, 0], PALETTE.wall, 0.32, 0.45),
 };
 
 warmGeometryCache();
@@ -87,6 +92,7 @@ let batch = null;
 
 const app = {
   placed,
+  moduleIds: MODULE_IDS, // test/portraits.mjs walks these
   texturesReady: texturesReady(),
   room,
   scene,

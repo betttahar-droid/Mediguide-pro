@@ -11,6 +11,7 @@ npm run dev        # http://localhost:5173
 
 npm run build && npm run preview &
 npm test           # headless acceptance checks, writes test/shots/
+npm run portraits  # one framed shot per module, to compare against docs/concept/
 ```
 
 Pick something from the **catalogue** on the left, click to place it. **Drag**
@@ -34,6 +35,15 @@ Definitions live in `src/modules/catalogue/`, one file per area. A module is
 pure data — form, resize behaviour, sockets and decor slots — so adding one is
 a part list and a few numbers, not code.
 
+Every one of them was rebuilt from its concept sheet in `docs/concept/`, and
+the sheets turned out to agree on one thing above all: **a light frame around
+darker panels** — proud corner posts, stiles, rails and a tray-like top cap in
+the pale colour, with the body set back between them. The staff lockers had it
+exactly backwards and inverting them is the whole finding in one object. The
+fittings that recur on nearly every sheet — corner studs, vent stacks, label
+plates, keypads — live in `catalogue/fittings.js`, so a part list says what the
+object *is* and calls one function for the ornament. See `docs/style-bible.md`.
+
 ## Phases
 
 | Phase | Status |
@@ -54,16 +64,16 @@ including the acceptance tests that can be made objective:
 - **Phase 3** — moving the triplanar floor half a texture period shifts the
   pattern; moving it a whole period does not. The texture is carried by the
   panel, which is what "object space, not world space" buys.
-- **Phase 4** — with the pass switched on for the measurement, ink covers ~12%
-  of the frame at 3m and ~5% at 30m: the lines hold their weight instead of
-  flooding.
+- **Phase 4** — with the pass switched on for the measurement, ink covers
+  roughly 8% of the frame at 3m and 3% at 30m: the lines hold their weight
+  instead of flooding.
 - **Phase 5** — raising a gondola from 4 to 6 shelves gives six shelf meshes,
   not four taller ones; a gondola snaps into a flush run; save → clear → load
   round-trips identically.
 - **Phase 6** — 200 modules (399 unit instances) cost one extra draw call.
-- **§8.4 decor** — a 2-bay desk carries 4 props and a 5-bay desk carries 9; all
-  4 originals are untouched by the resize, and shrinking back restores exactly
-  the same set.
+- **§8.4 decor** — growing a desk from 2 bays to 5 adds props without touching
+  a single one of the originals, and shrinking back restores exactly the same
+  set. The test asserts the identities, not the counts.
 
 It also asserts the authored sheets actually loaded, so a missing PNG fails
 loudly instead of quietly rendering flat colour.
@@ -91,6 +101,7 @@ src/
 ├── art/                 palette · ramps · bakeMasks · trimLayout · textures · shadow
 ├── modules/
 │   ├── catalogue/       the modules themselves, one file per shelf
+│   │   └── fittings.js  studs · vents · plates · keypads · caps · posts
 │   ├── registry.js      merge point, schema docs, load-time validation
 │   └── geometry · ModuleInstance · resize · decor · InstancedBatch
 ├── ui/                  catalogue panel · lil-gui look-dev
@@ -101,6 +112,7 @@ docs/style-bible.md      palette, fixed light, fixed camera, the reference rules
 docs/concept-prompts.md  the concept-sheet prompt and how to run it
 docs/concept/            the generated sheets — reference only, never loaded
 test/smoke.mjs           headless acceptance checks
+test/portraits.mjs       a framed shot per module, for judging by eye
 ```
 
 Nothing outside `src/shaders/` contains a line of GLSL, constructs a
@@ -131,6 +143,15 @@ Nothing outside `src/shaders/` contains a line of GLSL, constructs a
   and separates forms three other ways instead: hemisphere ambient (cool from
   above, warm bounce from the floor), a tinted rather than merely darker shadow,
   and a small lift on upward faces. See `docs/style-bible.md`.
+- **More geometry means less mask, not more.** Rebuilding the catalogue from
+  the concept sheets roughly doubled every module's part count, which multiplied
+  how much of each surface the cavity mask covers. A cool crevice tint that was
+  right on a plain box turned the whole room lilac on a detailed one, so
+  `uCavityStrength` came down and both cool tints warmed. The same change made
+  the AO bake's cost matter: it raycast every vertex against every triangle, so
+  `bakeMasks` now buckets triangles into a grid the size of one ray and tests
+  only the 3×3×3 block around each vertex — provably every triangle a ray could
+  reach, and nothing else.
 - **A tiling sheet must have no direction.** Anything linear in it becomes a
   stripe on every object that uses it. The surface strip is mottling and
   speckle; the joinery lines come from the geometry, which already has rails,
@@ -186,13 +207,20 @@ Nothing outside `src/shaders/` contains a line of GLSL, constructs a
 
 ## The part that is still yours
 
-**The look still needs your eye.** `docs/style-bible.md` now holds the palette,
+**The look still needs your eye**, and `npm run portraits` is now how you use
+it: it shoots every module at one framing so you can put the result beside its
+sheet in `docs/concept/` and see the disagreements. That is how the dispensary
+racking was caught with cream shelf boards where its sheet has oak ones — a
+thing no amount of reading the part list would have surfaced.
+
+`docs/style-bible.md` holds the palette,
 one fixed light, one fixed review camera, the nine rules read off the reference
 boards, and the desk's proportions as a table of numbers. That is the §11.1
 artefact the brief wants — but it was assembled from reference by me, not
 judged by a pharmacist looking at their own dispensary. Phase 1 says landing the
-style takes several rounds; this is round one. Change the numbers in that table
-and in `src/modules/registry.js` and the engine does not care.
+style takes several rounds; the concept sheets and this rebuild are round two.
+Change the numbers in that table and in `src/modules/catalogue/` and the engine
+does not care.
 
 Everything the brief says to tune by eye is in the **Look dev** folder:
 lighting, the six mask ramps, texturing density, hatching, and the outline

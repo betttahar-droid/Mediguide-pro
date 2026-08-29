@@ -48,8 +48,12 @@ export const PROPS = {
     ],
   },
 
+  // Colours checked against docs/concept/props.png, which disagreed with four
+  // of these: the mug is cream not coral, the pen pot is the coral one, and the
+  // lamp and the tote are both grey steel. That reads better as a set — the
+  // saturated colour lands on two small objects instead of half the row.
   mug: {
-    colors: { base: PALETTE.signal, accent1: PALETTE.paper, accent2: PALETTE.walnut },
+    colors: { base: PALETTE.paper, accent1: PALETTE.bone, accent2: PALETTE.teal },
     atlasCell: [1, 0],
     trimDensity: 4.0,
     parts: [
@@ -60,7 +64,7 @@ export const PROPS = {
   },
 
   pen_pot: {
-    colors: { base: PALETTE.steelDark, accent1: PALETTE.signal, accent2: PALETTE.teal },
+    colors: { base: PALETTE.signal, accent1: PALETTE.ink, accent2: PALETTE.tealDeep },
     atlasCell: [0, 1],
     trimDensity: 4.0,
     parts: [
@@ -180,7 +184,7 @@ export const PROPS = {
 
   // A stacking tote — how stock actually moves around a dispensary.
   tote: {
-    colors: { base: PALETTE.teal, accent1: PALETTE.tealDeep, accent2: PALETTE.paper },
+    colors: { base: PALETTE.steelDark, accent1: PALETTE.ink, accent2: PALETTE.paper },
     atlasCell: [1, 1],
     trimDensity: 2.4,
     parts: [
@@ -223,7 +227,7 @@ export const PROPS = {
 
   // An angled desk lamp. The tilt is what gives it character.
   desk_lamp: {
-    colors: { base: PALETTE.teal, accent1: PALETTE.paper, accent2: PALETTE.steelDark },
+    colors: { base: PALETTE.steel, accent1: PALETTE.paper, accent2: PALETTE.steelDark },
     atlasCell: [0, 1],
     trimDensity: 3.4,
     parts: [
@@ -275,6 +279,7 @@ function propAssets(type) {
       accent1: def.colors.accent1 ?? null,
       accent2: def.colors.accent2 ?? null,
       accent3: def.colors.accent3 ?? null,
+      accent4: def.colors.accent4 ?? null,
       sourceHalfExtents: new Vector3(
         Math.max(bb.max.x, -bb.min.x),
         Math.max(bb.max.y, -bb.min.y),

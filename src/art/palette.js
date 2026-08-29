@@ -35,8 +35,13 @@ const hex = {
   fillCool: '#bcd2ea',
   rim: '#ffdfb4',
 
-  // shading tints used by the vertex-mask ramps (§4.3)
-  shadowTint: '#5a5470', // cool, for cavity
+  // Shading tints used by the vertex-mask ramps (§4.3). Both of the cool ones
+  // were pulled back and warmed when the catalogue was rebuilt from the concept
+  // sheets: every module roughly doubled its part count, so the cavity mask now
+  // covers far more of every surface, and a tint that read as a nice cool
+  // crevice on a plain box turned the whole room lilac on a detailed one. The
+  // strength came down with it — see uCavityStrength in AdaptiveMaterial.
+  shadowTint: '#6a5f6a', // cool, for cavity
   edgeLightTint: '#fff0d2', // warm, for convex edges
   dustTint: '#f2e6d0',
 
@@ -44,7 +49,7 @@ const hex = {
   sky: '#d6e6f4',
   ground: '#f6e2c4',
   // shadows carry a hue rather than just less light
-  shadowCool: '#8d85b0',
+  shadowCool: '#9c90a6',
 
   // ink — outlines and UI. A dark saturated shadow tone, never black (§7.3)
   ink: '#413353',

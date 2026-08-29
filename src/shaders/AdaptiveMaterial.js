@@ -26,6 +26,7 @@ uniform vec3 uMiddleColor;
 uniform vec3 uAccent1;
 uniform vec3 uAccent2;
 uniform vec3 uAccent3;
+uniform vec3 uAccent4;
 uniform vec3 uTrimAxis;
 uniform float uTrimDensity;    // trim repeats per metre along the stretch axis
 uniform vec2 uAtlasScale;
@@ -33,6 +34,12 @@ uniform vec2 uAtlasOffset;
 uniform float uTextureScale;   // triplanar, repeats per metre
 uniform float uTriplanarSharpness;
 uniform float uDetailGain;
+uniform float uDetailContrast;
+
+// tools/authoring/make_textures.py normalises every sheet's mean to 132/255, so
+// mixing toward that constant flattens a surface without darkening it. That is
+// what a backdrop wants: the same material, quieter, not a different one.
+const float SHEET_MEAN = 0.518;
 uniform float uHatchScale;
 uniform float uHatchStrength;
 uniform vec3 uInkTint;
@@ -93,13 +100,17 @@ void main() {
   tint = mix(uMiddleColor, uBaseColor, capBlend);
 #endif
 
-  // a part can opt into one of two accent colours from the module's palette
-  // entry, so one material still paints a two-tone desk
-  if (vAccent > 2.5) tint = uAccent3;
+  // A part can opt into one of four accent colours from the module's palette
+  // entry, so one material still paints a whole object. Four is what the
+  // concept sheets ask for and no more: a light frame, the body panels, a dark
+  // plinth or fitting, one saturated accent, and glass where there is glass.
+  if (vAccent > 3.5) tint = uAccent4;
+  else if (vAccent > 2.5) tint = uAccent3;
   else if (vAccent > 1.5) tint = uAccent2;
   else if (vAccent > 0.5) tint = uAccent1;
 
   // the detail sheets are luminance around mid-grey; the palette supplies hue
+  detail = mix(vec3(SHEET_MEAN), detail, uDetailContrast);
   vec3 albedo = tint * detail * uDetailGain;
 
   albedo = applyMasks(albedo, vMasks);
@@ -150,6 +161,7 @@ export function createAdaptiveMaterial(opts = {}) {
     accent1 = null,
     accent2 = null,
     accent3 = null,
+    accent4 = null,
     trimAxis = new Vector3(1, 0, 0),
     trimDensity = 0.45,
     atlasCell = [0, 0], // 2×2 atlas
@@ -186,6 +198,7 @@ export function createAdaptiveMaterial(opts = {}) {
       uAccent1: { value: (accent1 ?? baseColor).clone() },
       uAccent2: { value: (accent2 ?? middleColor).clone() },
       uAccent3: { value: (accent3 ?? accent1 ?? baseColor).clone() },
+      uAccent4: { value: (accent4 ?? accent2 ?? middleColor).clone() },
       uTrimAxis: { value: trimAxis.clone() },
       uTrimDensity: { value: trimDensity },
       uAtlasScale: { value: new Vector2(0.5, 0.5) },
@@ -193,6 +206,7 @@ export function createAdaptiveMaterial(opts = {}) {
       uTextureScale: { value: textureScale },
       uTriplanarSharpness: { value: 8.0 },
       uDetailGain: { value: 2.0 },
+      uDetailContrast: { value: 1.0 },
       uOpacity: { value: opacity },
       uHighlight: { value: PALETTE.mint.clone() },
       uHighlightAmount: { value: 0 },
@@ -219,7 +233,7 @@ export function createAdaptiveMaterial(opts = {}) {
       // mask ramps — all six tuned by eye in lil-gui (§4.3)
       uCavityLo: { value: 0.12 },
       uCavityHi: { value: 0.62 },
-      uCavityStrength: { value: 0.5 },
+      uCavityStrength: { value: 0.34 },
       uEdgeLo: { value: 0.55 },
       uEdgeHi: { value: 0.88 },
       uEdgeStrength: { value: 0.34 },

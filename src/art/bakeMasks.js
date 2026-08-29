@@ -6,7 +6,7 @@
 //   B — up     : max(dot(normal, +Y), 0)
 //
 // These are per-vertex quantities, so they deform correctly under 9-slice for free.
-import { BufferAttribute, Mesh, MeshBasicMaterial, Raycaster, Vector3 } from 'three';
+import { BufferAttribute, Vector3 } from 'three';
 
 const KEY = 1e4; // position weld tolerance: 0.1mm
 
@@ -72,20 +72,25 @@ export function bakeMasks(geometry, { rays = 20, radius = 0.35 } = {}) {
   }
 
   // --- R: hemisphere AO -------------------------------------------------
-  const collider = new Mesh(geometry, new MeshBasicMaterial());
-  collider.updateMatrixWorld();
-  const raycaster = new Raycaster();
-  raycaster.far = radius;
+  // Every ray is at most `radius` long, so it can only ever hit a triangle
+  // near its origin. Bucketing the triangles into a grid of exactly that cell
+  // size means the 3×3×3 block around a vertex provably contains every
+  // triangle it could reach, and the whole bake stops being quadratic in the
+  // part count — which is what lets a module carry studs, vents and label
+  // plates without the loader stalling.
+  const grid = triangleGrid(pos, tri, triCount, radius);
   const dirs = hemisphereDirs(rays);
   const origin = new Vector3(), normal = new Vector3(), dir = new Vector3();
   const tangent = new Vector3(), bitangent = new Vector3();
   const aoByWeld = new Map();
+  const candidates = new Set();
   for (const [k, w] of welds) {
     const i = w.verts[0];
     origin.fromBufferAttribute(pos, i);
     normal.fromBufferAttribute(nrm, i).normalize();
     basis(normal, tangent, bitangent);
     origin.addScaledVector(normal, 1e-3);
+    grid.near(origin, candidates);
     let hits = 0;
     for (const s of dirs) {
       dir.set(0, 0, 0)
@@ -93,14 +98,16 @@ export function bakeMasks(geometry, { rays = 20, radius = 0.35 } = {}) {
         .addScaledVector(bitangent, s.y)
         .addScaledVector(normal, s.z)
         .normalize();
-      raycaster.set(origin, dir);
-      const hit = raycaster.intersectObject(collider, false)[0];
+      let nearest = radius;
+      for (const t of candidates) {
+        const d = grid.hit(t, origin, dir, nearest);
+        if (d >= 0) nearest = d;
+      }
       // near hits occlude more than distant ones
-      if (hit) hits += 1 - hit.distance / radius;
+      if (nearest < radius) hits += 1 - nearest / radius;
     }
     aoByWeld.set(k, hits / dirs.length);
   }
-  collider.material.dispose();
 
   // --- scatter back -----------------------------------------------------
   const masks = new Float32Array(count * 3);
@@ -119,6 +126,86 @@ export function bakeMasks(geometry, { rays = 20, radius = 0.35 } = {}) {
   geometry.setAttribute('aMasks', attr);
   geometry.setAttribute('color', attr); // COLOR_0, same buffer
   return geometry;
+}
+
+/**
+ * Triangles bucketed by a grid whose cell is the ray length, plus the
+ * ray/triangle test itself (Möller–Trumbore). Registering a triangle in every
+ * cell its bounding box touches is what makes the 3×3×3 lookup exact rather
+ * than approximate: a hit within `radius` of the origin lies in that block, and
+ * whichever cell it lies in has the triangle.
+ */
+function triangleGrid(pos, tri, triCount, radius) {
+  const cell = Math.max(radius, 1e-4);
+  const verts = new Float32Array(triCount * 9);
+  const cells = new Map();
+  const key = (x, y, z) => `${x},${y},${z}`;
+  const idx = (v) => Math.floor(v / cell);
+
+  for (let f = 0; f < triCount; f++) {
+    let lo = [Infinity, Infinity, Infinity];
+    let hi = [-Infinity, -Infinity, -Infinity];
+    for (let c = 0; c < 3; c++) {
+      const i = tri(f * 3 + c);
+      const p = [pos.getX(i), pos.getY(i), pos.getZ(i)];
+      verts.set(p, f * 9 + c * 3);
+      for (let a = 0; a < 3; a++) {
+        if (p[a] < lo[a]) lo[a] = p[a];
+        if (p[a] > hi[a]) hi[a] = p[a];
+      }
+    }
+    for (let x = idx(lo[0]); x <= idx(hi[0]); x++) {
+      for (let y = idx(lo[1]); y <= idx(hi[1]); y++) {
+        for (let z = idx(lo[2]); z <= idx(hi[2]); z++) {
+          const k = key(x, y, z);
+          let bucket = cells.get(k);
+          if (!bucket) cells.set(k, (bucket = []));
+          bucket.push(f);
+        }
+      }
+    }
+  }
+
+  return {
+    /** Every triangle a ray of length `radius` from `p` could possibly reach. */
+    near(p, out) {
+      out.clear();
+      const cx = idx(p.x), cy = idx(p.y), cz = idx(p.z);
+      for (let x = cx - 1; x <= cx + 1; x++) {
+        for (let y = cy - 1; y <= cy + 1; y++) {
+          for (let z = cz - 1; z <= cz + 1; z++) {
+            const bucket = cells.get(key(x, y, z));
+            if (bucket) for (const f of bucket) out.add(f);
+          }
+        }
+      }
+      return out;
+    },
+
+    /** Distance along `dir` to triangle `f`, or -1 for no hit inside `far`. */
+    hit(f, origin, dir, far) {
+      const o = f * 9;
+      const ax = verts[o], ay = verts[o + 1], az = verts[o + 2];
+      const e1x = verts[o + 3] - ax, e1y = verts[o + 4] - ay, e1z = verts[o + 5] - az;
+      const e2x = verts[o + 6] - ax, e2y = verts[o + 7] - ay, e2z = verts[o + 8] - az;
+      const px = dir.y * e2z - dir.z * e2y;
+      const py = dir.z * e2x - dir.x * e2z;
+      const pz = dir.x * e2y - dir.y * e2x;
+      const det = e1x * px + e1y * py + e1z * pz;
+      if (det > -1e-12 && det < 1e-12) return -1; // parallel
+      const inv = 1 / det;
+      const tx = origin.x - ax, ty = origin.y - ay, tz = origin.z - az;
+      const u = (tx * px + ty * py + tz * pz) * inv;
+      if (u < 0 || u > 1) return -1;
+      const qx = ty * e1z - tz * e1y;
+      const qy = tz * e1x - tx * e1z;
+      const qz = tx * e1y - ty * e1x;
+      const v = (dir.x * qx + dir.y * qy + dir.z * qz) * inv;
+      if (v < 0 || u + v > 1) return -1;
+      const t = (e2x * qx + e2y * qy + e2z * qz) * inv;
+      return t > 1e-6 && t < far ? t : -1;
+    },
+  };
 }
 
 function basis(n, t, b) {

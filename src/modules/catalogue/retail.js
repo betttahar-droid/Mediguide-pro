@@ -4,6 +4,7 @@
 import { PALETTE } from '../../art/palette.js';
 import { POOLS } from '../decor.js';
 import { AXIS, FIXED, onFloor, onSurface } from './schema.js';
+import { ACCENT, DARK, FRAME, GLASS, plate, studs, vents, worktop } from './fittings.js';
 
 export const RETAIL = {
   gondola_shelf: {
@@ -17,18 +18,38 @@ export const RETAIL = {
     trimAxis: AXIS.z,
     trimDensity: 0.7,
     atlasCell: [0, 0],
-    colors: { base: PALETTE.paper, middle: PALETTE.bone, accent1: PALETTE.oak, accent2: PALETTE.steelDark },
+    // docs/concept/gondola_shelf.png. The posts on that sheet stand PROUD of
+    // the carcass, full height and capped, with the cream panels reading as
+    // infill between them — the same frame-and-panel move as the dispensary,
+    // and it is what stops a long retail run reading as one extruded slab. The
+    // shelf boards went warm oak against the cream, so a stocked shelf has a
+    // ground to sit on.
+    colors: {
+      base: PALETTE.paper, // carcass and back panels
+      middle: PALETTE.bone,
+      accent1: PALETTE.steel, // FRAME  — the proud end posts and their caps
+      accent2: PALETTE.teal, // ACCENT — the price rail
+      accent3: PALETTE.oak, // shelf boards and the front band: warm, not dark
+      accent4: PALETTE.glass, // GLASS  — price windows
+    },
     axes: {
       x: { mode: 'repeat', unit: 1.0, min: 1, max: 8, default: 3, label: 'bays' },
       y: { mode: 'repeat', unit: 0.36, min: 2, max: 7, default: 4, label: 'shelves' },
       z: { mode: 'stretch', min: 0.6, max: 1.6, default: 1.0, label: 'depth' },
     },
     build: () => [
-      { size: [0.96, 0.035, 0.46], at: [0, -0.16, 0.01], accent: 1 }, // shelf board
-      { size: [0.04, 0.36, 0.46], at: [-0.48, 0, 0.01] }, // post
-      { size: [0.04, 0.36, 0.46], at: [0.48, 0, 0.01] }, // post
+      { size: [0.96, 0.035, 0.46], at: [0, -0.16, 0.01], bevel: 0.008, accent: DARK }, // shelf board
+      { size: [0.94, 0.030, 0.035], at: [0, -0.150, 0.222], bevel: 0.006, accent: DARK }, // front band
+      { size: [0.055, 0.36, 0.055], at: [-0.4875, 0, 0.222], bevel: 0.012, accent: FRAME }, // proud post
+      { size: [0.055, 0.36, 0.055], at: [0.4875, 0, 0.222], bevel: 0.012, accent: FRAME },
+      { size: [0.045, 0.36, 0.44], at: [-0.4825, 0, 0.005], bevel: 0.010, accent: FRAME }, // end panel
+      { size: [0.045, 0.36, 0.44], at: [0.4825, 0, 0.005], bevel: 0.010, accent: FRAME },
       { size: [0.96, 0.36, 0.03], at: [0, 0, -0.235] }, // back panel
-      { size: [0.9, 0.045, 0.02], at: [0, -0.128, 0.225], bevel: 0.008, strip: 'detail', accent: 2 }, // price rail
+      { size: [0.88, 0.038, 0.022], at: [0, -0.126, 0.235], bevel: 0.008, accent: ACCENT }, // price rail
+      { size: [0.20, 0.022, 0.010], at: [-0.26, -0.126, 0.244], bevel: 0.003, strip: 'detail', accent: GLASS },
+      { size: [0.20, 0.022, 0.010], at: [0.22, -0.126, 0.244], bevel: 0.003, strip: 'detail', accent: GLASS },
+      ...studs({ at: [-0.4825, 0, 0.222], spread: [0, 0.15], size: 0.018 }),
+      ...studs({ at: [0.4825, 0, 0.222], spread: [0, 0.15], size: 0.018 }),
     ],
     mounts: onFloor,
     provides: (p, unit) => {
@@ -77,18 +98,35 @@ export const RETAIL = {
     trimAxis: AXIS.x,
     trimDensity: 0.55,
     atlasCell: [1, 0],
-    colors: { base: PALETTE.bone, middle: PALETTE.putty, accent1: PALETTE.oak, accent2: PALETTE.steelDark },
+    // docs/concept/wall_shelving.png. The sheet's identity is a TEAL PRICE RAIL
+    // with cream label windows punched along it, running the full front edge of
+    // an oak board. That rail is the only saturated thing on the object and it
+    // reads from across the room, which is exactly what shop signage is for.
+    colors: {
+      base: PALETTE.oak, // shelf board
+      middle: PALETTE.oakDark,
+      accent1: PALETTE.steel, // FRAME  — wall rail and brackets
+      accent2: PALETTE.teal, // ACCENT — the price rail
+      accent3: PALETTE.walnut, // DARK   — the board's shadow edge
+      accent4: PALETTE.paper, // label windows
+    },
     axes: {
       x: { mode: 'repeat', unit: 1.0, min: 1, max: 8, default: 3, label: 'bays' },
       y: { mode: 'repeat', unit: 0.38, min: 1, max: 5, default: 3, label: 'shelves' },
       z: FIXED,
     },
     build: () => [
-      { size: [0.98, 0.030, 0.28], at: [0, -0.175, 0.01], bevel: 0.008, accent: 1 }, // shelf board
-      { size: [0.98, 0.38, 0.022], at: [0, 0, -0.139], bevel: 0.006 }, // back rail
-      { size: [0.028, 0.13, 0.22], at: [-0.42, -0.115, 0.01], bevel: 0.006, accent: 2 }, // bracket
-      { size: [0.028, 0.13, 0.22], at: [0.42, -0.115, 0.01], bevel: 0.006, accent: 2 }, // bracket
-      { size: [0.94, 0.030, 0.012], at: [0, -0.148, 0.153], bevel: 0.004, strip: 'detail', accent: 2 }, // price strip
+      { size: [0.98, 0.034, 0.28], at: [0, -0.175, 0.01], bevel: 0.008 }, // shelf board
+      { size: [0.98, 0.014, 0.26], at: [0, -0.196, 0.01], bevel: 0.004, accent: DARK }, // its shadow edge
+      { size: [0.98, 0.38, 0.026], at: [0, 0, -0.137], bevel: 0.006, accent: FRAME }, // wall rail
+      { size: [0.034, 0.14, 0.22], at: [-0.42, -0.118, 0.01], bevel: 0.006, accent: FRAME }, // bracket
+      { size: [0.034, 0.14, 0.22], at: [0.42, -0.118, 0.01], bevel: 0.006, accent: FRAME },
+      { size: [0.96, 0.050, 0.026], at: [0, -0.166, 0.152], bevel: 0.006, accent: ACCENT }, // price rail
+      ...[-0.32, 0, 0.32].map((x) => ({
+        size: [0.19, 0.026, 0.012], at: [x, -0.166, 0.163], bevel: 0.003, strip: 'detail', accent: GLASS,
+      })), // label windows
+      ...studs({ at: [-0.42, -0.118, 0.122], spread: [0, 0.05], size: 0.016 }),
+      ...studs({ at: [0.42, -0.118, 0.122], spread: [0, 0.05], size: 0.016 }),
     ],
     mounts: onFloor,
     provides: (p, unit) => {
@@ -133,19 +171,41 @@ export const RETAIL = {
     trimAxis: AXIS.x,
     trimDensity: 0.42,
     atlasCell: [1, 0],
-    colors: { base: PALETTE.teal, middle: PALETTE.tealDeep, accent1: PALETTE.bone, accent2: PALETTE.steelDark },
+    // docs/concept/serving_counter.png changed this object's mind about its own
+    // colour. It had been the teal one; the sheet made it CREAM with a warm oak
+    // top banded in dark oak, and that is much better — the counter is the
+    // thing a customer stands at, so it should be the calm object and let the
+    // dispensing bench behind it carry the colour.
+    //
+    // Every fitting sits inside the 9-slice CAPS (|x| > 0.46), which is the
+    // whole discipline of a stretch axis: ornament in the middle band would
+    // smear as the counter grows, and ornament in the caps never moves.
+    colors: {
+      base: PALETTE.paper, // carcass
+      middle: PALETTE.bone,
+      accent1: PALETTE.oak, // FRAME  — worktop, customer shelf, pull rail
+      accent2: PALETTE.signal, // ACCENT — the label plate and its buttons
+      accent3: PALETTE.walnut, // DARK   — the dark oak band under both tops
+      accent4: PALETTE.tealDeep, // no glass on this one: slot 4 buys the plinth
+    },
     axes: {
       x: { mode: 'stretch', min: 1.0, max: 4.0, default: 1.8, label: 'length' },
       y: FIXED,
       z: { mode: 'stretch', min: 0.8, max: 1.6, default: 1.0, label: 'depth' },
     },
     build: () => [
-      { size: [1.02, 0.10, 0.50], at: [0, -0.425, 0.0], bevel: 0.02, accent: 2 }, // kick plinth
+      { size: [1.02, 0.10, 0.50], at: [0, -0.425, 0.0], bevel: 0.02, accent: GLASS }, // plinth
       { size: [1.2, 0.72, 0.60], at: [0, -0.015, 0.02], bevel: 0.05 }, // carcass
       { size: [1.16, 0.17, 0.63], at: [0, 0.11, 0.02], bevel: 0.022, strip: 'detail' }, // drawer band
-      { size: [1.0, 0.032, 0.05], at: [0, 0.11, 0.345], bevel: 0.014, accent: 2 }, // handle rail
-      { size: [1.26, 0.075, 0.70], at: [0, 0.4375, 0.0], bevel: 0.03, accent: 1 }, // worktop
-      { size: [1.1, 0.045, 0.16], at: [0, 0.32, 0.40], bevel: 0.018, strip: 'transition', accent: 1 }, // customer shelf
+      { size: [1.18, 0.016, 0.635], at: [0, 0.020, 0.02], bevel: 0.005, accent: DARK }, // band shadow
+      { size: [1.0, 0.034, 0.05], at: [0, 0.11, 0.345], bevel: 0.014, accent: FRAME }, // pull rail
+      ...worktop({ at: [0, 0.4375, 0.0], w: 1.26, d: 0.70, thickness: 0.075, lip: 0.034 }),
+      { size: [1.1, 0.045, 0.16], at: [0, 0.32, 0.40], bevel: 0.018, strip: 'transition', accent: FRAME }, // customer shelf
+      { size: [1.1, 0.020, 0.17], at: [0, 0.297, 0.40], bevel: 0.006, accent: DARK }, // its edge band
+      ...plate({ at: [-0.52, 0.24, 0.345], w: 0.16, h: 0.05, accent: ACCENT, surround: FRAME }),
+      ...studs({ at: [-0.545, -0.10, 0.325], spread: [0, 0.22], size: 0.020 }),
+      ...studs({ at: [0.545, -0.10, 0.325], spread: [0, 0.22], size: 0.020 }),
+      ...vents({ at: [0.545, -0.30, 0.325], n: 3, w: 0.14, thickness: 0.016, gap: 0.030, depth: 0.012 }),
     ],
     mounts: onFloor,
     provides: (p, unit) => [
@@ -173,18 +233,46 @@ export const RETAIL = {
     category: 'retail',
     blurb: 'Screen, keypad, card reader. Sits on a counter.',
     cost: 190,
-    unit: [0.17, 0.11, 0.14],
+    unit: [0.24, 0.20, 0.18],
     margins: [0, 0, 0],
     trimAxis: AXIS.x,
     trimDensity: 1.4,
     atlasCell: [0, 1],
-    colors: { base: PALETTE.steel, middle: PALETTE.steelDark, accent1: PALETTE.ink, accent2: PALETTE.steelDark },
+    // docs/concept/till_block.png is the most characterful thing in the set: a
+    // fat retro CRT in a steel shell with a warm oak bezel around a pale green
+    // screen, sitting on a cream base with a real keypad and a receipt slot.
+    // It was four boxes and it is now a machine, and the module grew a third
+    // taller to make room for it — a POS terminal that reads as a toy till is
+    // worth more than one that fits in the old bounding box.
+    colors: {
+      base: PALETTE.paper, // base body and keys
+      middle: PALETTE.bone,
+      accent1: PALETTE.steel, // FRAME  — monitor shell, reader shell
+      accent2: PALETTE.oak, // ACCENT — the bezel and the receipt slot
+      accent3: PALETTE.steelDark, // DARK   — stalk, vents, shadow lines
+      accent4: PALETTE.glass, // GLASS  — the screen and the reader display
+    },
     axes: { x: FIXED, y: FIXED, z: FIXED },
     build: () => [
-      { size: [0.34, 0.07, 0.28], at: [0, -0.155, 0], bevel: 0.02 }, // base
-      { size: [0.30, 0.03, 0.16], at: [0, -0.10, 0.06], bevel: 0.012, strip: 'detail', accent: 2 }, // keypad
-      { size: [0.28, 0.24, 0.03], at: [0, -0.01, -0.04], bevel: 0.015, rotX: -0.22, accent: 1 }, // screen
-      { size: [0.09, 0.13, 0.05], at: [0.19, -0.06, 0.09], bevel: 0.010, rotX: -0.35, accent: 2 }, // card reader
+      { size: [0.46, 0.10, 0.34], at: [0, -0.15, 0], bevel: 0.016 }, // base
+      { size: [0.44, 0.020, 0.32], at: [0, -0.092, 0], bevel: 0.005, accent: FRAME }, // base top plate
+      // the keypad, as four rows of keys rather than twenty separate ones
+      ...[0, 1, 2, 3].map((i) => ({
+        size: [0.17, 0.022, 0.032], at: [0.06, -0.078, 0.10 - i * 0.042], bevel: 0.005, strip: 'detail',
+      })),
+      { size: [0.20, 0.026, 0.055], at: [0, -0.196, 0.175], bevel: 0.006, accent: ACCENT }, // receipt slot
+      ...vents({ at: [-0.16, -0.150, 0.172], n: 3, w: 0.11, thickness: 0.014, gap: 0.026, depth: 0.010 }),
+      // the CRT
+      { size: [0.07, 0.06, 0.07], at: [-0.06, -0.062, -0.055], bevel: 0.010, accent: DARK }, // neck
+      { size: [0.34, 0.30, 0.20], at: [-0.06, 0.075, -0.055], bevel: 0.020, rotX: -0.12, accent: FRAME }, // shell
+      { size: [0.29, 0.25, 0.03], at: [-0.06, 0.079, 0.048], bevel: 0.010, rotX: -0.12, accent: ACCENT }, // bezel
+      { size: [0.235, 0.195, 0.02], at: [-0.06, 0.079, 0.060], bevel: 0.005, rotX: -0.12, accent: GLASS }, // screen
+      ...vents({ at: [-0.06, 0.205, -0.15], n: 3, w: 0.20, thickness: 0.016, gap: 0.028, depth: 0.012 }),
+      // the card reader, on its own stalk beside the till
+      { size: [0.05, 0.09, 0.05], at: [0.185, -0.055, -0.02], bevel: 0.008, accent: ACCENT }, // stalk
+      { size: [0.14, 0.055, 0.17], at: [0.185, 0.020, -0.02], bevel: 0.012, accent: DARK }, // body
+      { size: [0.13, 0.030, 0.15], at: [0.185, 0.052, -0.01], bevel: 0.008, accent: FRAME }, // face
+      { size: [0.09, 0.014, 0.06], at: [0.185, 0.070, -0.045], bevel: 0.004, strip: 'detail', accent: GLASS }, // display
     ],
     mounts: onSurface,
     provides: () => [],
@@ -203,7 +291,20 @@ export const RETAIL = {
     trimAxis: AXIS.x,
     trimDensity: 1.6,
     atlasCell: [1, 1],
-    colors: { base: PALETTE.teal, middle: PALETTE.tealDeep, accent1: PALETTE.mint, accent2: PALETTE.steelDark },
+    // The one sheet the model argued with: asked for nesting baskets, it drew a
+    // slatted crate. It stays a basket — that is what the module is for — but
+    // the sheet's colour language was too good to waste, so the panels went
+    // teal, every rim got a cream rail, and the corners got walnut posts. A
+    // stack of them by the door now reads as a stack of *something*, which the
+    // flat teal trays did not.
+    colors: {
+      base: PALETTE.teal, // basket panels
+      middle: PALETTE.tealDeep,
+      accent1: PALETTE.paper, // FRAME  — the rim rails
+      accent2: PALETTE.signal, // ACCENT — the handle bar
+      accent3: PALETTE.walnut, // DARK   — corner posts
+      accent4: PALETTE.glass, // GLASS  — the label window
+    },
     axes: {
       x: FIXED,
       y: { mode: 'repeat', unit: 0.13, min: 2, max: 9, default: 5, label: 'baskets' },
@@ -211,11 +312,20 @@ export const RETAIL = {
     },
     build: () => [
       { size: [0.42, 0.020, 0.30], at: [0, -0.055, 0], bevel: 0.006 }, // base
-      { size: [0.42, 0.10, 0.022], at: [0, 0.0, 0.145], bevel: 0.006, accent: 1 }, // side
-      { size: [0.42, 0.10, 0.022], at: [0, 0.0, -0.145], bevel: 0.006, accent: 1 }, // side
-      { size: [0.022, 0.10, 0.26], at: [0.20, 0.0, 0], bevel: 0.006, accent: 1 }, // end
-      { size: [0.022, 0.10, 0.26], at: [-0.20, 0.0, 0], bevel: 0.006, accent: 1 }, // end
-      { size: [0.24, 0.018, 0.018], at: [0, 0.058, 0], bevel: 0.005, accent: 2 }, // handle bar
+      { size: [0.42, 0.10, 0.022], at: [0, 0.0, 0.145], bevel: 0.006 }, // side
+      { size: [0.42, 0.10, 0.022], at: [0, 0.0, -0.145], bevel: 0.006 }, // side
+      { size: [0.022, 0.10, 0.26], at: [0.20, 0.0, 0], bevel: 0.006 }, // end
+      { size: [0.022, 0.10, 0.26], at: [-0.20, 0.0, 0], bevel: 0.006 }, // end
+      { size: [0.44, 0.024, 0.030], at: [0, 0.050, 0.148], bevel: 0.006, accent: FRAME }, // rim rail
+      { size: [0.44, 0.024, 0.030], at: [0, 0.050, -0.148], bevel: 0.006, accent: FRAME },
+      { size: [0.030, 0.024, 0.30], at: [0.204, 0.050, 0], bevel: 0.006, accent: FRAME },
+      { size: [0.030, 0.024, 0.30], at: [-0.204, 0.050, 0], bevel: 0.006, accent: FRAME },
+      { size: [0.034, 0.13, 0.034], at: [0.198, 0.0, 0.143], bevel: 0.008, accent: DARK }, // corner post
+      { size: [0.034, 0.13, 0.034], at: [-0.198, 0.0, 0.143], bevel: 0.008, accent: DARK },
+      { size: [0.034, 0.13, 0.034], at: [0.198, 0.0, -0.143], bevel: 0.008, accent: DARK },
+      { size: [0.034, 0.13, 0.034], at: [-0.198, 0.0, -0.143], bevel: 0.008, accent: DARK },
+      { size: [0.13, 0.040, 0.012], at: [0, -0.010, 0.156], bevel: 0.003, strip: 'detail', accent: GLASS }, // label
+      { size: [0.26, 0.020, 0.020], at: [0, 0.062, 0], bevel: 0.005, accent: ACCENT }, // handle bar
     ],
     mounts: onFloor,
     provides: () => [],
@@ -234,20 +344,45 @@ export const RETAIL = {
     trimAxis: AXIS.x,
     trimDensity: 0.9,
     atlasCell: [1, 0],
-    colors: { base: PALETTE.signal, middle: PALETTE.oakDark, accent1: PALETTE.paper, accent2: PALETTE.steelDark },
+    // docs/concept/promo_bin.png put the bin on a PALLET — real slats and real
+    // feet, not a plinth — and that one substitution is what makes it read as
+    // stock dumped on the shop floor this morning rather than as fitted
+    // furniture. The thick deep-teal rim around the top is the other half: it
+    // caps the open box so the eye stops at the rim instead of falling in.
+    colors: {
+      base: PALETTE.oak, // bin body
+      middle: PALETTE.oakDark,
+      accent1: PALETTE.paper, // FRAME  — pallet slats, header card
+      accent2: PALETTE.tealDeep, // ACCENT — the rim and the header frame
+      accent3: PALETTE.walnut, // DARK   — posts, pallet feet, seams
+      accent4: PALETTE.glass, // GLASS  — the header's lettering band
+    },
     axes: {
       x: { mode: 'repeat', unit: 0.66, min: 1, max: 4, default: 1, label: 'bins' },
       y: FIXED,
       z: FIXED,
     },
     build: () => [
-      { size: [0.60, 0.055, 0.48], at: [0, -0.520, 0], bevel: 0.010, accent: 2 }, // base
-      { size: [0.62, 0.42, 0.50], at: [0, -0.280, 0], bevel: 0.018 }, // bin body
-      { size: [0.66, 0.045, 0.54], at: [0, -0.060, 0], bevel: 0.010, accent: 2 }, // rim
-      { size: [0.035, 0.46, 0.035], at: [-0.26, 0.180, -0.20], bevel: 0.008, accent: 2 }, // post
-      { size: [0.035, 0.46, 0.035], at: [0.26, 0.180, -0.20], bevel: 0.008, accent: 2 }, // post
-      { size: [0.64, 0.24, 0.022], at: [0, 0.420, -0.20], bevel: 0.008, accent: 1 }, // header card
-      { size: [0.50, 0.06, 0.012], at: [0, 0.455, -0.185], bevel: 0.004, strip: 'detail', accent: 2 }, // header lettering
+      // the pallet
+      ...[-0.19, 0, 0.19].map((z) => ({
+        size: [0.64, 0.030, 0.11], at: [0, -0.520, z], bevel: 0.006, accent: FRAME,
+      })),
+      ...[-0.26, 0, 0.26].map((x) => ({
+        size: [0.075, 0.055, 0.46], at: [x, -0.522, 0], bevel: 0.008, accent: DARK,
+      })),
+      { size: [0.62, 0.40, 0.50], at: [0, -0.285, 0], bevel: 0.018 }, // bin body
+      { size: [0.60, 0.018, 0.48], at: [0, -0.170, 0], bevel: 0.005, accent: DARK }, // panel seam
+      { size: [0.018, 0.36, 0.49], at: [0.06, -0.285, 0], bevel: 0.004, accent: DARK }, // panel seam
+      { size: [0.68, 0.070, 0.56], at: [0, -0.055, 0], bevel: 0.012, accent: ACCENT }, // rim
+      { size: [0.60, 0.040, 0.48], at: [0, -0.040, 0], bevel: 0.008, accent: DARK }, // the hole in it
+      ...vents({ at: [0.22, -0.330, 0.253], n: 3, w: 0.13, thickness: 0.016, gap: 0.030, depth: 0.012 }),
+      ...plate({ at: [-0.20, -0.230, 0.252], w: 0.15, h: 0.05, surround: FRAME }),
+      { size: [0.045, 0.46, 0.045], at: [-0.24, 0.180, -0.20], bevel: 0.008, accent: DARK }, // post
+      { size: [0.045, 0.46, 0.045], at: [0.24, 0.180, -0.20], bevel: 0.008, accent: DARK },
+      { size: [0.66, 0.26, 0.026], at: [0, 0.420, -0.20], bevel: 0.008, accent: ACCENT }, // header frame
+      { size: [0.60, 0.20, 0.020], at: [0, 0.420, -0.188], bevel: 0.006, accent: FRAME }, // header card
+      { size: [0.46, 0.060, 0.012], at: [0, 0.440, -0.176], bevel: 0.004, strip: 'detail', accent: GLASS },
+      ...studs({ at: [0, 0.420, -0.176], spread: [0.30, 0.11], size: 0.018 }),
     ],
     mounts: onFloor,
     provides: (p, unit) => {
@@ -284,18 +419,44 @@ export const RETAIL = {
     trimAxis: AXIS.x,
     trimDensity: 0.6,
     atlasCell: [1, 1],
-    colors: { base: PALETTE.walnut, middle: PALETTE.oakDark, accent1: PALETTE.oak, accent2: PALETTE.steelDark },
+    // docs/concept/queue_barrier.png took the least interesting object in the
+    // catalogue — two posts and a rail — and gave it more character than most
+    // of the furniture: cream posts with teal panels let into them, oak caps
+    // and oak base plinths, an oak top rail with a slim steel one slung below
+    // it. Two rails rather than one is most of it; a single rail reads as a
+    // barrier prop and two read as a thing that was manufactured.
+    colors: {
+      base: PALETTE.paper, // posts
+      middle: PALETTE.bone,
+      accent1: PALETTE.oak, // FRAME  — caps, base plinths, top rail
+      accent2: PALETTE.tealDeep, // ACCENT — the inset panels
+      accent3: PALETTE.steelDark, // DARK   — the lower rail and the studs
+      accent4: PALETTE.glass, // GLASS  — the notice plate
+    },
     axes: {
       x: { mode: 'repeat', unit: 1.0, min: 1, max: 6, default: 2, label: 'spans' },
       y: FIXED,
       z: FIXED,
     },
     build: () => [
-      { size: [0.08, 1.0, 0.08], at: [-0.46, 0, 0], bevel: 0.02 },
-      { size: [0.08, 1.0, 0.08], at: [0.46, 0, 0], bevel: 0.02 },
-      { size: [0.96, 0.06, 0.04], at: [0, 0.36, 0], bevel: 0.015, strip: 'detail', accent: 1 },
-      { size: [0.14, 0.03, 0.14], at: [-0.46, -0.485, 0], bevel: 0.008, accent: 2 }, // foot
-      { size: [0.14, 0.03, 0.14], at: [0.46, -0.485, 0], bevel: 0.008, accent: 2 }, // foot
+      { size: [0.11, 0.94, 0.11], at: [-0.46, -0.015, 0], bevel: 0.016 }, // post
+      { size: [0.11, 0.94, 0.11], at: [0.46, -0.015, 0], bevel: 0.016 },
+      { size: [0.06, 0.56, 0.026], at: [-0.46, -0.055, 0.058], bevel: 0.006, accent: ACCENT }, // inset panel
+      { size: [0.06, 0.56, 0.026], at: [0.46, -0.055, 0.058], bevel: 0.006, accent: ACCENT },
+      { size: [0.15, 0.055, 0.15], at: [-0.46, 0.478, 0], bevel: 0.010, accent: FRAME }, // cap
+      { size: [0.15, 0.055, 0.15], at: [0.46, 0.478, 0], bevel: 0.010, accent: FRAME },
+      { size: [0.19, 0.055, 0.19], at: [-0.46, -0.472, 0], bevel: 0.010, accent: FRAME }, // base plinth
+      { size: [0.19, 0.055, 0.19], at: [0.46, -0.472, 0], bevel: 0.010, accent: FRAME },
+      { size: [0.96, 0.085, 0.075], at: [0, 0.345, 0], bevel: 0.014, accent: FRAME }, // oak top rail
+      { size: [0.90, 0.020, 0.030], at: [0, 0.315, 0.040], bevel: 0.005, strip: 'detail', accent: DARK },
+      { size: [0.94, 0.040, 0.040], at: [0, 0.085, 0], bevel: 0.010, accent: DARK }, // steel lower rail
+      { size: [0.055, 0.055, 0.055], at: [-0.42, 0.085, 0], bevel: 0.008, accent: FRAME }, // rail boss
+      { size: [0.055, 0.055, 0.055], at: [0.42, 0.085, 0], bevel: 0.008, accent: FRAME },
+      { size: [0.075, 0.11, 0.014], at: [-0.46, 0.300, 0.060], bevel: 0.003, strip: 'detail', accent: GLASS }, // notice
+      ...studs({ at: [-0.46, 0.420, 0.058], spread: [0.028, 0.028], size: 0.016 }),
+      ...studs({ at: [0.46, 0.420, 0.058], spread: [0.028, 0.028], size: 0.016 }),
+      ...studs({ at: [-0.46, -0.415, 0.058], spread: [0.028, 0.028], size: 0.016 }),
+      ...studs({ at: [0.46, -0.415, 0.058], spread: [0.028, 0.028], size: 0.016 }),
     ],
     mounts: onFloor,
     provides: () => [],

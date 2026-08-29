@@ -5,6 +5,10 @@
 import { PALETTE } from '../../art/palette.js';
 import { POOLS } from '../decor.js';
 import { AXIS, FIXED, onFloor } from './schema.js';
+import {
+  ACCENT, DARK, FRAME, GLASS,
+  capTray, keypad, plate, posts, studs, vents, worktop,
+} from './fittings.js';
 
 export const DISPENSARY = {
   // The hero, and the project's §1 argument made visible. Real dispensing
@@ -30,16 +34,19 @@ export const DISPENSARY = {
     trimAxis: AXIS.x,
     trimDensity: 0.42,
     atlasCell: [0, 0],
-    // Read off the concept sheet in docs/concept/dispensing_desk.png. The sheet
-    // inverted what this had been: the FRAME is the light colour and the drawer
-    // fronts are dark, not the other way round, and the pull is a saturated
-    // teal rather than another brown. Both reads are much stronger.
+    // Rebuilt from docs/concept/dispensing_desk.png. The sheet reorganised the
+    // whole object around a PROUD STEEL FRAME: four corner posts standing off
+    // the panels, studded top and bottom, with warm oak drawer fronts infilled
+    // between them and a cream worktop banded in shadow where it meets the
+    // carcass. That inversion — light frame, dark panels — is the single thing
+    // the twenty sheets have in common, and it is what the catalogue now does.
     colors: {
-      base: PALETTE.oakDark, // carcass and drawer fronts
-      middle: PALETTE.walnut,
-      accent1: PALETTE.paper, // stiles, rails, worktop, upstand — the frame
-      accent2: PALETTE.teal, // pulls: the one saturated accent
-      accent3: PALETTE.steel, // kick plinth
+      base: PALETTE.oak, // drawer fronts and carcass
+      middle: PALETTE.oakDark,
+      accent1: PALETTE.paper, // FRAME  — posts, rails, worktop, upstand
+      accent2: PALETTE.tealDeep, // ACCENT — plinth and pulls
+      accent3: PALETTE.steelDark, // DARK   — studs, shadow band, reveals
+      accent4: PALETTE.glass, // GLASS  — label windows
     },
     axes: {
       x: { mode: 'repeat', unit: 0.9, min: 1, max: 6, default: 2, label: 'bays' },
@@ -48,28 +55,35 @@ export const DISPENSARY = {
     },
     // One bay. Local origin is the bay centre; the floor is at local -0.525.
     build: () => [
-      { size: [0.86, 0.075, 0.50], at: [0, -0.4875, 0], bevel: 0.02, accent: 3 }, // recessed kick, thinner per the sheet
+      { size: [0.86, 0.075, 0.50], at: [0, -0.4875, 0], bevel: 0.02, accent: ACCENT }, // recessed kick
       { size: [0.90, 0.805, 0.62], at: [0, -0.0325, 0], bevel: 0.04 }, // carcass
-      { size: [0.055, 0.805, 0.635], at: [-0.4225, -0.0325, 0.005], bevel: 0.016, accent: 1 }, // stile
-      { size: [0.055, 0.805, 0.635], at: [0.4225, -0.0325, 0.005], bevel: 0.016, accent: 1 }, // stile
-      { size: [0.79, 0.050, 0.632], at: [0, -0.395, 0.006], bevel: 0.014, accent: 1 }, // bottom rail
-      { size: [0.79, 0.045, 0.632], at: [0, -0.0175, 0.006], bevel: 0.014, accent: 1 }, // mid rail
-      { size: [0.79, 0.050, 0.632], at: [0, 0.270, 0.006], bevel: 0.014, accent: 1 }, // top rail
+      // the frame: four posts standing proud of the panels between them
+      ...posts({ at: [0, -0.0325, 0.005], w: 0.90, h: 0.805, d: 0.64, thickness: 0.055 }),
+      { size: [0.79, 0.050, 0.632], at: [0, -0.395, 0.006], bevel: 0.014, accent: FRAME }, // bottom rail
+      { size: [0.79, 0.045, 0.632], at: [0, -0.0175, 0.006], bevel: 0.014, accent: FRAME }, // mid rail
+      { size: [0.79, 0.050, 0.632], at: [0, 0.270, 0.006], bevel: 0.014, accent: FRAME }, // top rail
+      ...studs({ at: [-0.4225, 0.230, 0.335], spread: [0, 0.055] }),
+      ...studs({ at: [0.4225, 0.230, 0.335], spread: [0, 0.055] }),
+      ...studs({ at: [-0.4225, -0.355, 0.335], spread: [0, 0.055] }),
+      ...studs({ at: [0.4225, -0.355, 0.335], spread: [0, 0.055] }),
       { size: [0.76, 0.300, 0.626], at: [0, -0.210, 0.008], bevel: 0.018 }, // deep drawer
       { size: [0.76, 0.220, 0.626], at: [0, 0.115, 0.008], bevel: 0.018 }, // shallow drawer
-      { size: [0.74, 0.016, 0.020], at: [0, -0.052, 0.320], bevel: 0.005, accent: 1 }, // drawer reveal
-      { size: [0.74, 0.016, 0.020], at: [0, 0.232, 0.320], bevel: 0.005, accent: 1 }, // drawer reveal
-      { size: [0.30, 0.030, 0.050], at: [0, -0.210, 0.340], bevel: 0.012, accent: 2 }, // pull
-      { size: [0.30, 0.030, 0.050], at: [0, 0.115, 0.340], bevel: 0.012, accent: 2 }, // pull
-      { size: [0.15, 0.038, 0.014], at: [-0.245, -0.290, 0.334], bevel: 0.006, strip: 'detail', accent: 1 },
-      { size: [0.15, 0.038, 0.014], at: [-0.245, 0.045, 0.334], bevel: 0.006, strip: 'detail', accent: 1 },
-      { size: [0.92, 0.018, 0.66], at: [0, 0.362, 0.015], bevel: 0.006, accent: 3 }, // shadow bead under the worktop
-      { size: [0.94, 0.055, 0.700], at: [0, 0.3975, 0.02], bevel: 0.022, accent: 1 }, // worktop
-      { size: [0.94, 0.032, 0.075], at: [0, 0.356, 0.352], bevel: 0.014, accent: 1 }, // bullnose lip
-      { size: [0.94, 0.100, 0.045], at: [0, 0.475, -0.3275], bevel: 0.016, accent: 1 }, // rear upstand
-      { size: [0.10, 0.050, 0.020], at: [0.28, 0.475, -0.300], bevel: 0.008, strip: 'detail', accent: 2 },
-      { size: [0.075, 0.030, 0.075], at: [-0.36, -0.535, 0.19], bevel: 0.010, accent: 3 }, // foot pad
-      { size: [0.075, 0.030, 0.075], at: [0.36, -0.535, 0.19], bevel: 0.010, accent: 3 }, // foot pad
+      { size: [0.74, 0.016, 0.020], at: [0, -0.052, 0.320], bevel: 0.005, accent: DARK }, // drawer reveal
+      { size: [0.74, 0.016, 0.020], at: [0, 0.232, 0.320], bevel: 0.005, accent: DARK }, // drawer reveal
+      { size: [0.34, 0.032, 0.055], at: [0, -0.210, 0.342], bevel: 0.012, accent: ACCENT }, // pull
+      { size: [0.34, 0.032, 0.055], at: [0, 0.115, 0.342], bevel: 0.012, accent: ACCENT }, // pull
+      { size: [0.36, 0.014, 0.022], at: [0, -0.232, 0.352], bevel: 0.004, accent: DARK }, // pull shadow
+      { size: [0.36, 0.014, 0.022], at: [0, 0.093, 0.352], bevel: 0.004, accent: DARK },
+      ...plate({ at: [-0.255, -0.300, 0.330], w: 0.16, h: 0.045 }), // label holder
+      ...plate({ at: [-0.255, 0.035, 0.330], w: 0.16, h: 0.045 }),
+      // the worktop, banded underneath: the band separates the top plane from
+      // the carcass front by value, exactly where a drawn outline used to
+      ...worktop({ at: [0, 0.3975, 0.02], w: 0.94, d: 0.700, thickness: 0.055, lip: 0.028 }),
+      { size: [0.94, 0.030, 0.078], at: [0, 0.352, 0.352], bevel: 0.012, accent: FRAME }, // front lip
+      { size: [0.94, 0.100, 0.045], at: [0, 0.475, -0.3275], bevel: 0.016, accent: FRAME }, // rear upstand
+      ...plate({ at: [0.29, 0.478, -0.298], w: 0.13, h: 0.052 }), // socket block
+      { size: [0.075, 0.030, 0.075], at: [-0.36, -0.535, 0.19], bevel: 0.010, accent: DARK }, // foot pad
+      { size: [0.075, 0.030, 0.075], at: [0.36, -0.535, 0.19], bevel: 0.010, accent: DARK }, // foot pad
     ],
     mounts: onFloor,
     provides: (p, unit) => {
@@ -115,20 +129,37 @@ export const DISPENSARY = {
     trimAxis: AXIS.z,
     trimDensity: 0.8,
     atlasCell: [1, 0],
-    colors: { base: PALETTE.paper, middle: PALETTE.bone, accent1: PALETTE.mint, accent2: PALETTE.steelDark },
+    // From docs/concept/dispensary_shelving.png: a warm oak carcass, and a
+    // CREAM LABEL STRIP running the full front edge of every single shelf. On
+    // the sheet those strips are the loudest thing about the object — they are
+    // what makes a bank of open shelves read as a dispensary rather than as
+    // a bookcase, so here the strip is a full-width fitting with its own window
+    // rather than the thin bead it was.
+    colors: {
+      base: PALETTE.oak,
+      middle: PALETTE.oakDark,
+      accent1: PALETTE.paper, // FRAME  — uprights, shelf boards, label strips
+      accent2: PALETTE.teal, // ACCENT — the front lip
+      accent3: PALETTE.walnut, // DARK   — bay dividers, back shadow
+      accent4: PALETTE.glass, // GLASS  — the label window
+    },
     axes: {
       x: { mode: 'repeat', unit: 0.8, min: 1, max: 8, default: 3, label: 'bays' },
       y: { mode: 'repeat', unit: 0.32, min: 3, max: 9, default: 6, label: 'shelves' },
       z: { mode: 'stretch', min: 0.8, max: 1.5, default: 1.0, label: 'depth' },
     },
     build: () => [
-      { size: [0.78, 0.028, 0.30], at: [0, -0.145, 0.005], bevel: 0.008 }, // shelf board
-      { size: [0.03, 0.32, 0.30], at: [-0.385, 0, 0.005], bevel: 0.008 }, // upright
-      { size: [0.03, 0.32, 0.30], at: [0.385, 0, 0.005], bevel: 0.008 }, // upright
+      { size: [0.78, 0.028, 0.30], at: [0, -0.145, 0.005], bevel: 0.008 }, // shelf board, oak like the sheet
+      { size: [0.045, 0.32, 0.31], at: [-0.3875, 0, 0.005], bevel: 0.010, accent: FRAME }, // upright
+      { size: [0.045, 0.32, 0.31], at: [0.3875, 0, 0.005], bevel: 0.010, accent: FRAME }, // upright
       { size: [0.78, 0.32, 0.018], at: [0, 0, -0.151], bevel: 0.006 }, // back panel
-      { size: [0.74, 0.035, 0.012], at: [0, -0.118, 0.148], bevel: 0.005, strip: 'detail', accent: 1 }, // label strip
-      { size: [0.76, 0.018, 0.016], at: [0, -0.150, 0.146], bevel: 0.005, accent: 2 }, // shelf front lip
-      { size: [0.02, 0.30, 0.02], at: [0, 0, -0.14], bevel: 0.004, accent: 2 }, // bay divider
+      { size: [0.74, 0.030, 0.018], at: [0, -0.126, 0.150], bevel: 0.005, accent: FRAME }, // label strip
+      { size: [0.70, 0.018, 0.010], at: [0, -0.126, 0.158], bevel: 0.003, strip: 'detail', accent: GLASS }, // its window
+      { size: [0.76, 0.016, 0.020], at: [0, -0.152, 0.148], bevel: 0.005, accent: ACCENT }, // shelf front lip
+      { size: [0.018, 0.28, 0.26], at: [-0.13, 0.015, -0.02], bevel: 0.004, accent: DARK }, // bay divider
+      { size: [0.018, 0.28, 0.26], at: [0.17, 0.015, -0.02], bevel: 0.004, accent: DARK }, // bay divider
+      ...studs({ at: [-0.3875, 0, 0.163], spread: [0, 0.115], size: 0.018 }),
+      ...studs({ at: [0.3875, 0, 0.163], spread: [0, 0.115], size: 0.018 }),
     ],
     mounts: onFloor,
     provides: (p, unit) => {
@@ -179,23 +210,47 @@ export const DISPENSARY = {
     trimAxis: AXIS.y,
     trimDensity: 0.7,
     atlasCell: [0, 1],
-    colors: { base: PALETTE.steel, middle: PALETTE.steelDark, accent1: PALETTE.signal, accent2: PALETTE.ink },
+    // docs/concept/cd_cabinet.png is the clearest statement of the frame rule in
+    // the whole set: a pale steel cage — four posts, a lidded top tray, a
+    // plinth band — with near-black door and side panels dropped into it. Every
+    // frame member is studded at both ends. Nothing else about the shape
+    // changed; the object went from a grey box to a safe on the strength of
+    // where the light and dark went.
+    colors: {
+      base: PALETTE.steelDark, // door and side panels
+      middle: PALETTE.steelDark,
+      accent1: PALETTE.steel, // FRAME  — posts, cap, plinth
+      accent2: PALETTE.signal, // ACCENT — the keypad's live keys
+      accent3: PALETTE.ink, // DARK   — hinges, handle, vents
+      accent4: PALETTE.glass, // GLASS  — the warning plate
+    },
     axes: {
       x: { mode: 'repeat', unit: 0.7, min: 1, max: 3, default: 1, label: 'cabinets' },
       y: FIXED,
       z: FIXED,
     },
     build: () => [
-      { size: [0.66, 0.07, 0.40], at: [0, -0.515, -0.01], bevel: 0.012, accent: 2 }, // plinth
-      { size: [0.70, 1.03, 0.46], at: [0, 0.035, 0], bevel: 0.018 }, // carcass
-      { size: [0.62, 0.94, 0.035], at: [0.01, 0.045, 0.240], bevel: 0.010 }, // door
-      { size: [0.045, 0.10, 0.055], at: [-0.325, 0.400, 0.245], bevel: 0.008, accent: 2 }, // hinge
-      { size: [0.045, 0.10, 0.055], at: [-0.325, 0.045, 0.245], bevel: 0.008, accent: 2 }, // hinge
-      { size: [0.045, 0.10, 0.055], at: [-0.325, -0.310, 0.245], bevel: 0.008, accent: 2 }, // hinge
-      { size: [0.035, 0.24, 0.045], at: [0.255, -0.06, 0.268], bevel: 0.008, accent: 2 }, // handle
-      { size: [0.10, 0.14, 0.028], at: [0.225, 0.230, 0.268], bevel: 0.006, strip: 'detail', accent: 2 }, // keypad
-      { size: [0.22, 0.10, 0.012], at: [-0.06, 0.400, 0.262], bevel: 0.004, strip: 'detail', accent: 1 }, // warning plate
-      { size: [0.50, 0.012, 0.030], at: [0.01, -0.240, 0.262], bevel: 0.004, accent: 2 }, // door rail
+      { size: [0.66, 0.055, 0.42], at: [0, -0.5225, -0.01], bevel: 0.010, accent: DARK }, // plinth shadow
+      { size: [0.68, 0.055, 0.44], at: [0, -0.472, -0.005], bevel: 0.010, accent: FRAME }, // plinth band
+      { size: [0.70, 0.94, 0.46], at: [0, 0.020, 0], bevel: 0.018 }, // carcass
+      ...posts({ at: [0, 0.020, 0], w: 0.70, h: 0.95, d: 0.47, thickness: 0.05, bevel: 0.012 }),
+      ...capTray({ at: [0, 0.520, 0], w: 0.72, d: 0.48, rim: 0.05 }),
+      ...studs({ at: [0, 0.520, 0.245], spread: [0.31, 0], size: 0.020 }),
+      { size: [0.60, 0.86, 0.035], at: [0.015, 0.020, 0.242], bevel: 0.010 }, // door
+      { size: [0.62, 0.020, 0.045], at: [0.015, 0.462, 0.245], bevel: 0.005, accent: DARK }, // door head reveal
+      { size: [0.62, 0.020, 0.045], at: [0.015, -0.422, 0.245], bevel: 0.005, accent: DARK }, // door foot reveal
+      // three heavy barrel hinges: the legal giveaway that this is a CD cabinet
+      ...[0.360, 0.020, -0.320].flatMap((y) => [
+        { size: [0.055, 0.105, 0.060], at: [-0.318, y, 0.248], bevel: 0.010, accent: DARK },
+        { size: [0.070, 0.045, 0.030], at: [-0.318, y, 0.262], bevel: 0.006, accent: FRAME },
+      ]),
+      { size: [0.032, 0.26, 0.050], at: [0.262, -0.075, 0.270], bevel: 0.008, accent: DARK }, // handle
+      { size: [0.048, 0.045, 0.030], at: [0.262, 0.048, 0.258], bevel: 0.006, accent: FRAME }, // handle bracket
+      { size: [0.048, 0.045, 0.030], at: [0.262, -0.198, 0.258], bevel: 0.006, accent: FRAME },
+      ...keypad({ at: [0.215, 0.210, 0.268] }),
+      ...plate({ at: [0.190, 0.395, 0.264], w: 0.19, h: 0.075 }), // warning plate
+      ...vents({ at: [-0.352, -0.300, 0.06], n: 5, w: 0.18, thickness: 0.016, gap: 0.028, depth: 0.012, axis: 'x' }),
+      { size: [0.024, 0.020, 0.40], at: [-0.352, 0.020, 0], bevel: 0.005, accent: DARK }, // side seam
     ],
     mounts: onFloor,
     provides: (p, unit) => [
@@ -217,21 +272,45 @@ export const DISPENSARY = {
     trimAxis: AXIS.y,
     trimDensity: 0.5,
     atlasCell: [1, 1],
-    colors: { base: PALETTE.steel, middle: PALETTE.steelDark, accent1: PALETTE.glass, accent2: PALETTE.tealDeep },
+    // docs/concept/fridge_cabinet.png: warm oak side panels in a steel cage,
+    // a glass door set into a thick pale surround rather than floating in the
+    // carcass, a dark readout right above the door where you would actually
+    // read it, and an oak condenser grille along the foot. The oak is the
+    // surprise and it is why the sheet works — a clinical object with a warm
+    // body sits in this room instead of punching a grey hole in it.
+    colors: {
+      base: PALETTE.oak, // side panels and grille
+      middle: PALETTE.oakDark,
+      accent1: PALETTE.steel, // FRAME  — posts, door surround, top tray
+      accent2: PALETTE.tealDeep, // ACCENT — the cold band under the cap
+      accent3: PALETTE.steelDark, // DARK   — fittings, readout body, plinth
+      accent4: PALETTE.glass, // GLASS  — the door and the readout face
+    },
     axes: {
       x: { mode: 'repeat', unit: 0.8, min: 1, max: 4, default: 1, label: 'sections' },
       y: FIXED,
       z: FIXED,
     },
     build: () => [
-      { size: [0.78, 1.70, 0.60], at: [0, 0, -0.02], bevel: 0.03 }, // carcass
-      { size: [0.60, 1.24, 0.06], at: [0, 0.12, 0.30], bevel: 0.012, accent: 1 }, // door glass
-      { size: [0.68, 0.05, 0.075], at: [0, 0.755, 0.285], bevel: 0.008, accent: 2 }, // door head rail
-      { size: [0.68, 0.05, 0.075], at: [0, -0.515, 0.285], bevel: 0.008, accent: 2 }, // door foot rail
-      { size: [0.035, 0.90, 0.045], at: [0.315, 0.12, 0.305], bevel: 0.008, accent: 2 }, // handle
-      { size: [0.20, 0.09, 0.025], at: [-0.16, 0.800, 0.300], bevel: 0.006, strip: 'detail', accent: 2 }, // temp readout
-      { size: [0.68, 0.16, 0.10], at: [0, -0.72, 0.28], bevel: 0.014, strip: 'detail', accent: 2 }, // grille
-      { size: [0.72, 0.06, 0.50], at: [0, -0.83, -0.02], bevel: 0.010, accent: 2 }, // plinth
+      { size: [0.72, 0.06, 0.52], at: [0, -0.820, -0.02], bevel: 0.010, accent: DARK }, // plinth
+      { size: [0.78, 1.64, 0.60], at: [0, 0.010, -0.02], bevel: 0.03 }, // carcass
+      ...posts({ at: [0, 0.010, -0.02], w: 0.78, h: 1.66, d: 0.61, thickness: 0.06, bevel: 0.014 }),
+      { size: [0.80, 0.055, 0.62], at: [0, 0.775, -0.02], bevel: 0.010, accent: ACCENT }, // cold band
+      ...capTray({ at: [0, 0.828, -0.02], w: 0.80, d: 0.62, rim: 0.055 }),
+      // the door: glass set into a pale surround, not floating in the carcass
+      { size: [0.68, 1.30, 0.055], at: [0, 0.075, 0.290], bevel: 0.012, accent: FRAME },
+      { size: [0.56, 1.18, 0.030], at: [0, 0.075, 0.312], bevel: 0.008, accent: GLASS },
+      { size: [0.68, 0.045, 0.075], at: [0, 0.700, 0.292], bevel: 0.008, accent: DARK }, // head rail
+      { size: [0.68, 0.045, 0.075], at: [0, -0.550, 0.292], bevel: 0.008, accent: DARK }, // foot rail
+      { size: [0.034, 0.86, 0.050], at: [0.300, 0.075, 0.322], bevel: 0.008, accent: DARK }, // handle
+      { size: [0.052, 0.042, 0.032], at: [0.300, 0.470, 0.308], bevel: 0.006, accent: FRAME }, // handle bracket
+      { size: [0.052, 0.042, 0.032], at: [0.300, -0.320, 0.308], bevel: 0.006, accent: FRAME },
+      ...plate({ at: [-0.135, 0.775, 0.300], w: 0.22, h: 0.085, surround: DARK }), // temperature readout
+      { size: [0.70, 0.17, 0.10], at: [0, -0.715, 0.285], bevel: 0.012 }, // condenser grille
+      ...vents({ at: [0, -0.715, 0.340], n: 4, w: 0.60, thickness: 0.018, gap: 0.040, depth: 0.014 }),
+      { size: [0.016, 0.075, 0.14], at: [-0.394, 0.400, 0.10], bevel: 0.004, accent: DARK }, // side data plate
+      { size: [0.010, 0.052, 0.115], at: [-0.400, 0.400, 0.10], bevel: 0.003, strip: 'detail', accent: GLASS },
+      ...studs({ at: [0, 0.828, 0.290], spread: [0.34, 0], size: 0.022 }),
     ],
     mounts: onFloor,
     provides: (p, unit) => [
@@ -252,25 +331,49 @@ export const DISPENSARY = {
     trimAxis: AXIS.x,
     trimDensity: 0.6,
     atlasCell: [0, 1],
-    colors: { base: PALETTE.steel, middle: PALETTE.steelDark, accent1: PALETTE.bone, accent2: PALETTE.steelDark },
+    // docs/concept/sink_unit.png. Two things came off that sheet. The basin is
+    // a genuine WELL — a dark recess inside a raised rim, not a plate laid on
+    // the top — and the mixer is square-sectioned, a column with a square
+    // spout, which is both truer to real dispensary fittings and the only
+    // version of a tap this part system can express honestly.
+    //
+    // Its worktop also now lands at 0.95, the same height as the dispensing
+    // bench, so the two run together instead of stepping 5 cm.
+    colors: {
+      base: PALETTE.steelDark, // door panels
+      middle: PALETTE.steelDark,
+      accent1: PALETTE.steel, // FRAME  — posts, worktop, rails
+      accent2: PALETTE.signal, // ACCENT — the one warm mark on a cold object
+      accent3: PALETTE.ink, // DARK   — basin well, vents, handles
+      accent4: PALETTE.glass, // GLASS  — label windows
+    },
     axes: {
       x: { mode: 'repeat', unit: 0.7, min: 1, max: 4, default: 1, label: 'bays' },
       y: FIXED,
       z: { mode: 'stretch', min: 0.85, max: 1.3, default: 1.0, label: 'depth' },
     },
     build: () => [
-      { size: [0.66, 0.09, 0.48], at: [0, -0.430, 0], bevel: 0.012, accent: 2 }, // kick
-      { size: [0.70, 0.76, 0.58], at: [0, -0.005, 0], bevel: 0.022 }, // carcass
-      { size: [0.32, 0.60, 0.028], at: [-0.17, -0.045, 0.295], bevel: 0.010 }, // door
-      { size: [0.32, 0.60, 0.028], at: [0.17, -0.045, 0.295], bevel: 0.010 }, // door
-      { size: [0.028, 0.16, 0.035], at: [-0.02, -0.045, 0.315], bevel: 0.006, accent: 2 }, // handle
-      { size: [0.028, 0.16, 0.035], at: [0.02, -0.045, 0.315], bevel: 0.006, accent: 2 }, // handle
-      { size: [0.74, 0.050, 0.62], at: [0, 0.400, 0], bevel: 0.014, accent: 1 }, // worktop
-      { size: [0.42, 0.030, 0.34], at: [-0.02, 0.412, 0.03], bevel: 0.008, accent: 2 }, // basin rim
-      { size: [0.34, 0.020, 0.27], at: [-0.02, 0.404, 0.03], bevel: 0.004, accent: 2 }, // basin well
-      { size: [0.05, 0.24, 0.05], at: [-0.02, 0.545, -0.20], bevel: 0.010, accent: 2 }, // tap column
-      { size: [0.045, 0.040, 0.20], at: [-0.02, 0.650, -0.11], bevel: 0.008, accent: 2 }, // spout
-      { size: [0.16, 0.030, 0.030], at: [0.14, 0.645, -0.20], bevel: 0.006, accent: 2 }, // lever
+      { size: [0.66, 0.085, 0.48], at: [0, -0.4325, 0], bevel: 0.012, accent: DARK }, // kick
+      { size: [0.70, 0.79, 0.58], at: [0, 0.005, 0], bevel: 0.022 }, // carcass
+      ...posts({ at: [0, 0.005, 0], w: 0.70, h: 0.80, d: 0.59, thickness: 0.05, bevel: 0.012 }),
+      { size: [0.31, 0.62, 0.030], at: [-0.175, -0.030, 0.296], bevel: 0.010 }, // door
+      { size: [0.31, 0.62, 0.030], at: [0.175, -0.030, 0.296], bevel: 0.010 }, // door
+      { size: [0.022, 0.66, 0.034], at: [0, -0.030, 0.294], bevel: 0.005, accent: FRAME }, // meeting stile
+      { size: [0.042, 0.042, 0.040], at: [-0.042, -0.030, 0.316], bevel: 0.008, accent: DARK }, // knob
+      { size: [0.042, 0.042, 0.040], at: [0.042, -0.030, 0.316], bevel: 0.008, accent: DARK }, // knob
+      ...studs({ at: [-0.325, 0.005, 0.298], spread: [0, 0.345], size: 0.020 }),
+      ...studs({ at: [0.325, 0.005, 0.298], spread: [0, 0.345], size: 0.020 }),
+      ...vents({ at: [-0.352, -0.120, 0.10], n: 5, w: 0.22, thickness: 0.016, gap: 0.030, depth: 0.012, axis: 'x' }),
+      ...plate({ at: [0.215, 0.310, 0.298], w: 0.14, h: 0.048 }),
+      { size: [0.74, 0.055, 0.62], at: [0, 0.4475, 0], bevel: 0.014, accent: FRAME }, // worktop, top at 0.95
+      // the basin: a raised rim with a real recess inside it
+      { size: [0.44, 0.036, 0.36], at: [-0.02, 0.470, 0.03], bevel: 0.008, accent: FRAME },
+      { size: [0.36, 0.026, 0.28], at: [-0.02, 0.478, 0.03], bevel: 0.005, accent: DARK },
+      { size: [0.30, 0.016, 0.22], at: [-0.02, 0.468, 0.03], bevel: 0.004, accent: DARK },
+      { size: [0.055, 0.26, 0.055], at: [-0.02, 0.600, -0.21], bevel: 0.010, accent: FRAME }, // mixer column
+      { size: [0.048, 0.048, 0.22], at: [-0.02, 0.708, -0.115], bevel: 0.008, accent: FRAME }, // square spout
+      { size: [0.15, 0.030, 0.032], at: [0.145, 0.705, -0.21], bevel: 0.006, accent: DARK }, // lever
+      { size: [0.030, 0.030, 0.030], at: [0.075, 0.705, -0.21], bevel: 0.006, accent: ACCENT }, // lever boss
     ],
     mounts: onFloor,
     provides: (p, unit) => {
@@ -299,17 +402,39 @@ export const DISPENSARY = {
     trimAxis: AXIS.y,
     trimDensity: 1.4,
     atlasCell: [0, 1],
-    colors: { base: PALETTE.bone, middle: PALETTE.putty, accent1: PALETTE.signal, accent2: PALETTE.ink },
+    // docs/concept/waste_station.png. The sheet BANDS the body — a cream belt
+    // across a mint carcass — and puts a real grille on the front, and those
+    // two things do all the work: the band gives a small object a horizontal
+    // line to read against, and the grille says clinical waste rather than
+    // kitchen bin. The pedal sits on a projecting tray with the linkage rod
+    // visibly running up the back corner to the lid, which is how the thing
+    // actually works.
+    colors: {
+      base: PALETTE.mint, // body
+      middle: PALETTE.teal,
+      accent1: PALETTE.paper, // FRAME  — the belt, the sharps box
+      accent2: PALETTE.signal, // ACCENT — the hazard plate
+      accent3: PALETTE.steelDark, // DARK   — grille, pedal, linkage
+      accent4: PALETTE.glass, // GLASS  — the sharps label
+    },
     axes: { x: FIXED, y: FIXED, z: FIXED },
     build: () => [
-      { size: [0.44, 0.60, 0.42], at: [0, -0.09, 0], bevel: 0.016 }, // body
-      { size: [0.48, 0.07, 0.46], at: [0, 0.245, 0], bevel: 0.012, accent: 1 }, // lid
-      { size: [0.24, 0.022, 0.16], at: [0, 0.285, 0.02], bevel: 0.005, accent: 2 }, // flap
-      { size: [0.20, 0.14, 0.012], at: [0, 0.02, 0.216], bevel: 0.004, strip: 'detail', accent: 1 }, // hazard plate
-      { size: [0.16, 0.035, 0.09], at: [0, -0.365, 0.235], bevel: 0.008, accent: 2 }, // pedal
-      { size: [0.03, 0.30, 0.03], at: [-0.235, -0.09, -0.19], bevel: 0.006, accent: 2 }, // pedal linkage
-      { size: [0.22, 0.16, 0.18], at: [0.10, 0.360, -0.06], bevel: 0.012, accent: 1 }, // sharps box
-      { size: [0.14, 0.022, 0.10], at: [0.10, 0.442, -0.06], bevel: 0.004, accent: 2 }, // sharps aperture
+      { size: [0.44, 0.58, 0.42], at: [0, -0.10, 0], bevel: 0.016 }, // body
+      { size: [0.455, 0.13, 0.435], at: [0, 0.055, 0], bevel: 0.010, accent: FRAME }, // the belt
+      { size: [0.46, 0.020, 0.44], at: [0, -0.015, 0], bevel: 0.005, accent: DARK }, // belt shadow
+      { size: [0.48, 0.075, 0.46], at: [0, 0.242, 0], bevel: 0.012 }, // lid slab
+      { size: [0.42, 0.030, 0.40], at: [0, 0.290, 0], bevel: 0.008, accent: FRAME }, // lid rim
+      { size: [0.24, 0.026, 0.16], at: [0, 0.312, 0.02], bevel: 0.005, accent: DARK }, // flap
+      { size: [0.26, 0.20, 0.020], at: [-0.04, 0.055, 0.215], bevel: 0.006, accent: DARK }, // grille panel
+      ...vents({ at: [-0.04, 0.055, 0.228], n: 5, w: 0.21, thickness: 0.018, gap: 0.036, depth: 0.010, accent: FRAME }),
+      ...plate({ at: [0.135, -0.230, 0.214], w: 0.13, h: 0.10, accent: ACCENT, surround: FRAME }), // hazard plate
+      { size: [0.20, 0.026, 0.11], at: [0, -0.372, 0.245], bevel: 0.006, accent: FRAME }, // pedal tray
+      { size: [0.15, 0.030, 0.075], at: [0, -0.348, 0.250], bevel: 0.008, accent: DARK }, // pedal
+      { size: [0.026, 0.60, 0.026], at: [-0.222, 0.030, -0.196], bevel: 0.006, accent: DARK }, // linkage rod
+      { size: [0.045, 0.030, 0.045], at: [-0.222, 0.300, -0.196], bevel: 0.006, accent: DARK }, // linkage elbow
+      { size: [0.22, 0.17, 0.19], at: [0.10, 0.365, -0.06], bevel: 0.012, accent: FRAME }, // sharps box
+      { size: [0.16, 0.026, 0.11], at: [0.10, 0.455, -0.06], bevel: 0.005, accent: DARK }, // sharps aperture
+      { size: [0.13, 0.070, 0.010], at: [0.10, 0.360, 0.038], bevel: 0.003, strip: 'detail', accent: GLASS }, // its label
     ],
     mounts: onFloor,
     provides: () => [],
