@@ -170,6 +170,54 @@ The one number still short of reference is the median: ours sits higher because
 this catalogue is a cream-and-oak pharmacy and the reference boards are dark
 server racks and dumpsters. That is a subject difference, not a fault.
 
+## Flat faces, and what that costs
+
+The reference's decisive property, and the one hardest to hold onto: **a face is
+one value.** Look at `docs/reference/05-dumpsters` — a painted side is a single
+flat colour with a drawn line across it. No speckle, no mottle, no grain. What
+separates one face from the next is a clean step: top bright, front mid, side
+dark. Nothing gradients across a face anywhere in that image.
+
+Three things in this project were fighting that, and all three are settled now.
+
+1. **The material strips carried noise.** `paint`, `panel`, `steel` and `fabric`
+   were speckled and mottled fields; they are flat now, with only their drawn
+   marks — a moulding line, a panel border, a sheen band — surviving. `wood`
+   keeps its grain, because grain is character and the reference's timber does
+   read as timber, but it is six long lines on a flat field rather than a noise
+   field. Surface noise is exactly what made these objects read as stone.
+2. **The rim was the only per-pixel term on a flat face**, so it was a gradient
+   by construction. It is 0.
+3. **The vertex masks interpolate across a face.** That is what they are — a
+   per-vertex value smeared over the triangle — so any strength above a whisper
+   puts a gradient on every panel. Their ramps are narrow and weak now: enough
+   to seat a crevice, not enough to shade a face. Dust is off entirely.
+
+What carries the form instead is the **up-face lift at 0.22**, which is per
+NORMAL and therefore constant across a flat face. Top, front and side land on
+three unmistakable steps, which is precisely how the reference does it.
+
+## Ornament has to earn the distance
+
+The catalogue had 96 corner studs across 24 calls. They are gone. At 2 cm they
+do not survive the distance the game is played at, and all they contributed at
+range was noise on faces the reference keeps clean — the same mistake as the
+surface texture, in geometry instead of pixels.
+
+The test for a fitting is now: **does it name the object?** Three hinges, a
+keypad and a warning plate make a controlled-drugs cabinet, so they stay. A
+stud makes nothing. `studs()` remains in `fittings.js` for a case that wants it;
+nothing currently does.
+
+## Cartooned, not realistic
+
+The reference proportions are exaggerated: fat slabs, deep overhangs, stubby
+legs. A correctly-proportioned desk reads as a desk and nothing more. The
+dispensing bench is the exemplar — worktop 0.055 to **0.085** thick with a wider
+oversail, pulls 0.030 to **0.050** and standing further proud, plinth and feet
+heavier, posts 0.055 to **0.070** — and the rest of the catalogue should follow
+it as each module is next touched.
+
 ## Hard edges and flat faces
 
 The reference set is hard-edged. Look at `docs/reference/02-server-tower`: the

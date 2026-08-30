@@ -4,7 +4,7 @@
 import { PALETTE } from '../../art/palette.js';
 import { POOLS } from '../decor.js';
 import { AXIS, FIXED, onFloor, onSurface } from './schema.js';
-import { ACCENT, DARK, FRAME, GLASS, plate, studs, vents, worktop } from './fittings.js';
+import { ACCENT, DARK, FRAME, GLASS, plate, vents, worktop } from './fittings.js';
 
 export const RETAIL = {
   gondola_shelf: {
@@ -48,8 +48,6 @@ export const RETAIL = {
       { size: [0.88, 0.038, 0.022], at: [0, -0.126, 0.235], bevel: 0.008, mat: 'paint', accent: ACCENT }, // price rail
       { size: [0.20, 0.022, 0.010], at: [-0.26, -0.126, 0.244], bevel: 0.003, mat: 'paper', accent: GLASS },
       { size: [0.20, 0.022, 0.010], at: [0.22, -0.126, 0.244], bevel: 0.003, mat: 'paper', accent: GLASS },
-      ...studs({ at: [-0.4825, 0, 0.222], spread: [0, 0.15], size: 0.018 }),
-      ...studs({ at: [0.4825, 0, 0.222], spread: [0, 0.15], size: 0.018 }),
     ],
     mounts: onFloor,
     provides: (p, unit) => {
@@ -125,8 +123,6 @@ export const RETAIL = {
       ...[-0.32, 0, 0.32].map((x) => ({
         size: [0.19, 0.026, 0.012], at: [x, -0.166, 0.163], bevel: 0.003, mat: 'paper', accent: GLASS,
       })), // label windows
-      ...studs({ at: [-0.42, -0.118, 0.122], spread: [0, 0.05], size: 0.016 }),
-      ...studs({ at: [0.42, -0.118, 0.122], spread: [0, 0.05], size: 0.016 }),
     ],
     mounts: onFloor,
     provides: (p, unit) => {
@@ -204,8 +200,6 @@ export const RETAIL = {
       { size: [1.1, 0.045, 0.16], at: [0, 0.32, 0.40], bevel: 0.018, mat: 'wood', accent: FRAME }, // customer shelf
       { size: [1.1, 0.020, 0.17], at: [0, 0.297, 0.40], bevel: 0.006, mat: 'wood', accent: DARK }, // its edge band
       ...plate({ at: [-0.52, 0.24, 0.345], w: 0.16, h: 0.05, accent: ACCENT, surround: FRAME }),
-      ...studs({ at: [-0.545, -0.10, 0.325], spread: [0, 0.22], size: 0.020 }),
-      ...studs({ at: [0.545, -0.10, 0.325], spread: [0, 0.22], size: 0.020 }),
       ...vents({ at: [0.545, -0.30, 0.325], n: 3, w: 0.14, thickness: 0.016, gap: 0.030, depth: 0.012 }),
     ],
     mounts: onFloor,
@@ -386,7 +380,6 @@ export const RETAIL = {
       { size: [0.66, 0.26, 0.026], at: [0, 0.420, -0.20], bevel: 0.008, mat: 'paint', accent: ACCENT }, // header frame
       { size: [0.60, 0.20, 0.020], at: [0, 0.420, -0.188], bevel: 0.006, mat: 'paper', accent: FRAME }, // header card
       { size: [0.46, 0.060, 0.012], at: [0, 0.440, -0.176], bevel: 0.004, mat: 'detail', accent: GLASS },
-      ...studs({ at: [0, 0.420, -0.176], spread: [0.30, 0.11], size: 0.018 }),
     ],
     mounts: onFloor,
     provides: (p, unit) => {
@@ -457,10 +450,6 @@ export const RETAIL = {
       { size: [0.055, 0.055, 0.055], at: [-0.42, 0.085, 0], bevel: 0.008, mat: 'steel', accent: FRAME }, // rail boss
       { size: [0.055, 0.055, 0.055], at: [0.42, 0.085, 0], bevel: 0.008, mat: 'steel', accent: FRAME },
       { size: [0.075, 0.11, 0.014], at: [-0.46, 0.300, 0.060], bevel: 0.003, mat: 'paper', accent: GLASS }, // notice
-      ...studs({ at: [-0.46, 0.420, 0.058], spread: [0.028, 0.028], size: 0.016 }),
-      ...studs({ at: [0.46, 0.420, 0.058], spread: [0.028, 0.028], size: 0.016 }),
-      ...studs({ at: [-0.46, -0.415, 0.058], spread: [0.028, 0.028], size: 0.016 }),
-      ...studs({ at: [0.46, -0.415, 0.058], spread: [0.028, 0.028], size: 0.016 }),
     ],
     mounts: onFloor,
     provides: () => [],

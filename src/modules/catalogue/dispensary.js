@@ -7,7 +7,7 @@ import { POOLS } from '../decor.js';
 import { AXIS, FIXED, onFloor } from './schema.js';
 import {
   ACCENT, DARK, FRAME, GLASS,
-  capTray, keypad, plate, posts, studs, vents, worktop,
+  capTray, keypad, plate, posts, vents, worktop,
 } from './fittings.js';
 
 export const DISPENSARY = {
@@ -54,38 +54,46 @@ export const DISPENSARY = {
       z: { mode: 'stretch', min: 0.85, max: 1.4, default: 1.0, label: 'depth' },
     },
     // One bay. Local origin is the bay centre; the floor is at local -0.525.
+    //
+    // CHUNKIER, AND WITH LESS ON IT. Measured against docs/reference/, two
+    // things were wrong. The proportions were realistic where the reference is
+    // cartooned — its dumpsters and props have fat slabs, deep overhangs and
+    // stubby legs, and a correctly-proportioned desk just reads as a desk. And
+    // it carried ornament that does not survive the distance the game is played
+    // at: sixteen 2 cm studs, two pull shadow bars and two drawer reveals, none
+    // of which read at 3 m and all of which added noise to faces the reference
+    // keeps flat.
+    //
+    // So: the worktop is half again as thick with a bigger oversail, the pulls
+    // are fat enough to read as handles, the plinth and feet are heavier, and
+    // the studs and shadow bars are gone. What stays is what says what this IS —
+    // the frame, the two drawer depths, the pulls, the label holders, the
+    // upstand. That is the test for every fitting now: does it name the object?
     build: () => [
-      { size: [0.86, 0.075, 0.50], at: [0, -0.4875, 0], bevel: 0.02, mat: 'paint', accent: ACCENT }, // recessed kick
-      { size: [0.90, 0.805, 0.62], at: [0, -0.0325, 0], bevel: 0.04, mat: 'panel' }, // carcass
+      { size: [0.86, 0.10, 0.50], at: [0, -0.475, 0], bevel: 0.02, mat: 'paint', accent: ACCENT }, // recessed kick
+      { size: [0.90, 0.775, 0.62], at: [0, -0.0475, 0], bevel: 0.04, mat: 'panel' }, // carcass
       // the frame: four posts standing proud of the panels between them
-      ...posts({ at: [0, -0.0325, 0.005], w: 0.90, h: 0.805, d: 0.64, thickness: 0.055 }),
-      { size: [0.79, 0.050, 0.632], at: [0, -0.395, 0.006], bevel: 0.014, mat: 'paint', accent: FRAME }, // bottom rail
-      { size: [0.79, 0.045, 0.632], at: [0, -0.0175, 0.006], bevel: 0.014, mat: 'paint', accent: FRAME }, // mid rail
-      { size: [0.79, 0.050, 0.632], at: [0, 0.270, 0.006], bevel: 0.014, mat: 'paint', accent: FRAME }, // top rail
-      ...studs({ at: [-0.4225, 0.230, 0.335], spread: [0, 0.055] }),
-      ...studs({ at: [0.4225, 0.230, 0.335], spread: [0, 0.055] }),
-      ...studs({ at: [-0.4225, -0.355, 0.335], spread: [0, 0.055] }),
-      ...studs({ at: [0.4225, -0.355, 0.335], spread: [0, 0.055] }),
+      ...posts({ at: [0, -0.0475, 0.005], w: 0.90, h: 0.775, d: 0.64, thickness: 0.07 }),
+      { size: [0.76, 0.060, 0.632], at: [0, -0.395, 0.006], bevel: 0.014, mat: 'paint', accent: FRAME }, // bottom rail
+      { size: [0.76, 0.055, 0.632], at: [0, -0.0325, 0.006], bevel: 0.014, mat: 'paint', accent: FRAME }, // mid rail
+      { size: [0.76, 0.060, 0.632], at: [0, 0.268, 0.006], bevel: 0.014, mat: 'paint', accent: FRAME }, // top rail
       // the drawer fronts are the only wood on the object, so they get the grain
-      { size: [0.76, 0.300, 0.626], at: [0, -0.210, 0.008], bevel: 0.018, mat: 'wood' }, // deep drawer
-      { size: [0.76, 0.220, 0.626], at: [0, 0.115, 0.008], bevel: 0.018, mat: 'wood' }, // shallow drawer
-      { size: [0.74, 0.016, 0.020], at: [0, -0.052, 0.320], bevel: 0.005, mat: 'paint', accent: DARK }, // drawer reveal
-      { size: [0.74, 0.016, 0.020], at: [0, 0.232, 0.320], bevel: 0.005, mat: 'paint', accent: DARK }, // drawer reveal
-      { size: [0.34, 0.032, 0.055], at: [0, -0.210, 0.342], bevel: 0.012, mat: 'steel', accent: ACCENT }, // pull
-      { size: [0.34, 0.032, 0.055], at: [0, 0.115, 0.342], bevel: 0.012, mat: 'steel', accent: ACCENT }, // pull
-      { size: [0.36, 0.014, 0.022], at: [0, -0.232, 0.352], bevel: 0.004, mat: 'paint', accent: DARK }, // pull shadow
-      { size: [0.36, 0.014, 0.022], at: [0, 0.093, 0.352], bevel: 0.004, mat: 'paint', accent: DARK },
-      ...plate({ at: [-0.255, -0.300, 0.330], w: 0.16, h: 0.045 }), // label holder
-      ...plate({ at: [-0.255, 0.035, 0.330], w: 0.16, h: 0.045 }),
+      { size: [0.74, 0.290, 0.626], at: [0, -0.222, 0.008], bevel: 0.018, mat: 'wood' }, // deep drawer
+      { size: [0.74, 0.215, 0.626], at: [0, 0.1275, 0.008], bevel: 0.018, mat: 'wood' }, // shallow drawer
+      // fat pulls, standing well proud — a handle you could actually grab
+      { size: [0.38, 0.050, 0.075], at: [0, -0.222, 0.352], bevel: 0.016, mat: 'steel', accent: ACCENT },
+      { size: [0.38, 0.050, 0.075], at: [0, 0.1275, 0.352], bevel: 0.016, mat: 'steel', accent: ACCENT },
+      ...plate({ at: [-0.255, -0.315, 0.330], w: 0.17, h: 0.052 }), // label holder
+      ...plate({ at: [-0.255, 0.035, 0.330], w: 0.17, h: 0.052 }),
       // The worktop, banded underneath: the band separates the top plane from
       // the carcass front by value, exactly where a drawn outline used to. A
       // dispensing bench top is wipe-clean laminate, not timber, so 'paint'.
-      ...worktop({ at: [0, 0.3975, 0.02], w: 0.94, d: 0.700, thickness: 0.055, lip: 0.028, mat: 'paint' }),
-      { size: [0.94, 0.030, 0.078], at: [0, 0.352, 0.352], bevel: 0.012, mat: 'paint', accent: FRAME }, // front lip
-      { size: [0.94, 0.100, 0.045], at: [0, 0.475, -0.3275], bevel: 0.016, mat: 'paint', accent: FRAME }, // rear upstand
-      ...plate({ at: [0.29, 0.478, -0.298], w: 0.13, h: 0.052 }), // socket block
-      { size: [0.075, 0.030, 0.075], at: [-0.36, -0.535, 0.19], bevel: 0.010, mat: 'steel', accent: DARK }, // foot pad
-      { size: [0.075, 0.030, 0.075], at: [0.36, -0.535, 0.19], bevel: 0.010, mat: 'steel', accent: DARK }, // foot pad
+      ...worktop({ at: [0, 0.3925, 0.02], w: 0.96, d: 0.740, thickness: 0.085, lip: 0.034, mat: 'paint' }),
+      { size: [0.96, 0.115, 0.032], at: [0, 0.475, -0.354], bevel: 0.016, mat: 'paint', accent: FRAME }, // rear upstand
+      { size: [0.11, 0.055, 0.11], at: [-0.345, -0.5375, 0.19], bevel: 0.014, mat: 'steel', accent: DARK }, // foot
+      { size: [0.11, 0.055, 0.11], at: [0.345, -0.5375, 0.19], bevel: 0.014, mat: 'steel', accent: DARK },
+      { size: [0.11, 0.055, 0.11], at: [-0.345, -0.5375, -0.19], bevel: 0.014, mat: 'steel', accent: DARK },
+      { size: [0.11, 0.055, 0.11], at: [0.345, -0.5375, -0.19], bevel: 0.014, mat: 'steel', accent: DARK },
     ],
     mounts: onFloor,
     provides: (p, unit) => {
@@ -160,8 +168,6 @@ export const DISPENSARY = {
       { size: [0.76, 0.016, 0.020], at: [0, -0.152, 0.148], bevel: 0.005, mat: 'paint', accent: ACCENT }, // shelf front lip
       { size: [0.018, 0.28, 0.26], at: [-0.13, 0.015, -0.02], bevel: 0.004, mat: 'wood', accent: DARK }, // bay divider
       { size: [0.018, 0.28, 0.26], at: [0.17, 0.015, -0.02], bevel: 0.004, mat: 'wood', accent: DARK }, // bay divider
-      ...studs({ at: [-0.3875, 0, 0.163], spread: [0, 0.115], size: 0.018 }),
-      ...studs({ at: [0.3875, 0, 0.163], spread: [0, 0.115], size: 0.018 }),
     ],
     mounts: onFloor,
     provides: (p, unit) => {
@@ -237,7 +243,6 @@ export const DISPENSARY = {
       { size: [0.70, 0.94, 0.46], at: [0, 0.020, 0], bevel: 0.018, mat: 'panel' }, // carcass
       ...posts({ at: [0, 0.020, 0], w: 0.70, h: 0.95, d: 0.47, thickness: 0.05, bevel: 0.012 }),
       ...capTray({ at: [0, 0.520, 0], w: 0.72, d: 0.48, rim: 0.05 }),
-      ...studs({ at: [0, 0.520, 0.245], spread: [0.31, 0], size: 0.020 }),
       { size: [0.60, 0.86, 0.035], at: [0.015, 0.020, 0.242], bevel: 0.010, mat: 'panel' }, // door
       { size: [0.62, 0.020, 0.045], at: [0.015, 0.462, 0.245], bevel: 0.005, accent: DARK }, // door head reveal
       { size: [0.62, 0.020, 0.045], at: [0.015, -0.422, 0.245], bevel: 0.005, accent: DARK }, // door foot reveal
@@ -313,7 +318,6 @@ export const DISPENSARY = {
       ...vents({ at: [0, -0.715, 0.340], n: 4, w: 0.60, thickness: 0.018, gap: 0.040, depth: 0.014 }),
       { size: [0.016, 0.075, 0.14], at: [-0.394, 0.400, 0.10], bevel: 0.004, mat: 'paint', accent: DARK }, // side data plate
       { size: [0.010, 0.052, 0.115], at: [-0.400, 0.400, 0.10], bevel: 0.003, mat: 'paper', accent: GLASS },
-      ...studs({ at: [0, 0.828, 0.290], spread: [0.34, 0], size: 0.022 }),
     ],
     mounts: onFloor,
     provides: (p, unit) => [
@@ -364,8 +368,6 @@ export const DISPENSARY = {
       { size: [0.022, 0.66, 0.034], at: [0, -0.030, 0.294], bevel: 0.005, mat: 'steel', accent: FRAME }, // meeting stile
       { size: [0.042, 0.042, 0.040], at: [-0.042, -0.030, 0.316], bevel: 0.008, mat: 'steel', accent: DARK }, // knob
       { size: [0.042, 0.042, 0.040], at: [0.042, -0.030, 0.316], bevel: 0.008, mat: 'steel', accent: DARK }, // knob
-      ...studs({ at: [-0.325, 0.005, 0.298], spread: [0, 0.345], size: 0.020 }),
-      ...studs({ at: [0.325, 0.005, 0.298], spread: [0, 0.345], size: 0.020 }),
       ...vents({ at: [-0.352, -0.120, 0.10], n: 5, w: 0.22, thickness: 0.016, gap: 0.030, depth: 0.012, axis: 'x' }),
       ...plate({ at: [0.215, 0.310, 0.298], w: 0.14, h: 0.048 }),
       // a dispensary sink is a single pressed stainless top, so every part of

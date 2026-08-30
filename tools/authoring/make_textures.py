@@ -181,18 +181,21 @@ def make_trim():
     # Nearly flat. In the reference a plastic casing is one value with a very
     # slight tonal drift and a couple of moulding lines; anything more and the
     # object starts reading as stone. Everything here is within +/-10 of mid.
+    # FLAT. Look at docs/reference/05-dumpsters: a painted face is a single
+    # value with a drawn line across it and nothing else — no speckle, no
+    # mottle, no grain. Surface noise is what made this project's objects read
+    # as stone rather than as painted metal, and removing it is most of what
+    # separates "16-bit flat" from "textured low-poly".
     py, ph, pe = strip("paint")
-    dither_band(d, 0, py, SHEET, pe, 134, 129, spread=4)
-    speckle(d, rnd, 0, py, SHEET, pe, 0.04, 6, 132)
-    hline(d, py + ph // 2, 0, SHEET, 122)          # one moulding line
-    hline(d, py + ph // 2 + 1, 0, SHEET, 142)
+    d.rectangle([0, py, SHEET, pe - 1], fill=V(132))
+    hline(d, py + ph // 2, 0, SHEET, 120)          # one moulding line
+    hline(d, py + ph // 2 + 1, 0, SHEET, 146)
 
     # --- panel: a big flat panel with a drawn border and corner bolts ------
     # For door and side panels. The border is the whole point: the reference
     # draws a recessed rectangle into a flat face rather than modelling one.
     ny, nh, ne = strip("panel")
-    dither_band(d, 0, ny, SHEET, ne, 135, 128, spread=4)
-    speckle(d, rnd, 0, ny, SHEET, ne, 0.05, 7, 132)
+    d.rectangle([0, ny, SHEET, ne - 1], fill=V(132))
     for x0 in range(0, SHEET, 64):                 # two panels across the strip
         x1 = x0 + 64
         d.rectangle([x0 + 5, ny + 4, x1 - 6, ne - 5], outline=V(62))
@@ -212,22 +215,22 @@ def make_trim():
     # painted across the furniture, not as wood. Everything here sits within
     # about +/-12 of mid grey; the eye reads it as timber from the DIRECTION,
     # which is the one thing this strip is allowed to have.
-    dither_band(d, 0, wy, SHEET, we, 136, 128, spread=5)
-    mottle(d, rnd, 0, wy, SHEET, we, 34, 6, 132)
-    for _ in range(12):
-        dashed_grain(d, rnd.randrange(wy + 1, we - 1),
-                     132 + rnd.choice([-12, -9, -6, 7, 10, 12]), rnd,
-                     run_range=(6, 18), gap_range=(3, 10))
-    hline(d, wy, 0, SHEET, 120)                    # a board edge with a lit lip
-    hline(d, wy + 1, 0, SHEET, 146)
-    knot(d, rnd.randrange(SHEET), rnd.randint(wy + 6, we - 6), 118, 126)
+    # Wood keeps its grain, because grain is CHARACTER and the reference's
+    # timber does read as timber. But it is a few long lines on a flat field,
+    # not a noise field: no mottle, no speckle, and half the line count.
+    d.rectangle([0, wy, SHEET, we - 1], fill=V(132))
+    for _ in range(6):
+        dashed_grain(d, rnd.randrange(wy + 2, we - 2),
+                     132 + rnd.choice([-11, -8, 8, 11]), rnd,
+                     run_range=(14, 40), gap_range=(6, 16))
+    hline(d, wy, 0, SHEET, 118)                    # a board edge with a lit lip
+    hline(d, wy + 1, 0, SHEET, 148)
 
     # --- steel: flat, one sheen band, rivets ------------------------------
     sy, sh, se = strip("steel")
-    dither_band(d, 0, sy, SHEET, se, 136, 130, spread=4)
-    speckle(d, rnd, 0, sy, SHEET, se, 0.05, 8, 132)
-    for i in range(4):                             # a broad soft sheen
-        hline(d, sy + 4 + i, 0, SHEET, 148 - i * 4)
+    d.rectangle([0, sy, SHEET, se - 1], fill=V(132))
+    for i in range(3):                             # one hard sheen band
+        hline(d, sy + 4 + i, 0, SHEET, 150)
     for x in range(6, SHEET, 22):                  # rivets
         d.rectangle([x, se - 5, x + 1, se - 4], fill=V(74))
         d.point((x, se - 5), fill=V(210))
@@ -269,11 +272,8 @@ def make_trim():
     # --- fabric: an even weave --------------------------------------------
     fy, fh, fe = strip("fabric")
     d.rectangle([0, fy, SHEET, fe - 1], fill=V(132))
-    for y in range(fy, fe):
-        for x in range(SHEET):
-            if (x + y) % 2 == 0:
-                d.point((x, y), fill=V(126 if (x // 2 + y // 2) % 2 else 140))
-    speckle(d, rnd, 0, fy, SHEET, fe, 0.06, 9, 132)
+    for y in range(fy + 2, fe - 2, 4):             # a few weave lines, not a field
+        hline(d, y, 0, SHEET, 126)
 
     # --- transition: a dithered wear ramp ---------------------------------
     ty, th, te = strip("transition")

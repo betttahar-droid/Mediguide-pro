@@ -3,7 +3,7 @@
 import { PALETTE } from '../../art/palette.js';
 import { POOLS } from '../decor.js';
 import { AXIS, FIXED, onFloor } from './schema.js';
-import { ACCENT, DARK, FRAME, GLASS, capTray, plate, studs, vents } from './fittings.js';
+import { ACCENT, DARK, FRAME, GLASS, capTray, plate, vents } from './fittings.js';
 
 export const CONSULTATION = {
   // The brief's stretch × fixed × stretch case. A private room has to be
@@ -70,8 +70,6 @@ export const CONSULTATION = {
       { size: [0.05, 0.34, 0.86], at: [0.900, 0.86, 0.35], bevel: 0.010, mat: 'wood', accent: FRAME },
       { size: [0.03, 0.26, 0.76], at: [0.922, 0.86, 0.35], bevel: 0.006, mat: 'paper', accent: GLASS },
       { size: [0.02, 0.10, 0.46], at: [0.936, 0.86, 0.35], bevel: 0.004, mat: 'detail', accent: FRAME },
-      ...studs({ at: [0.860, -0.70, 0.855], spread: [0, 0.30], size: 0.026 }),
-      ...studs({ at: [-0.860, -0.70, 0.700], spread: [0, 0.30], size: 0.026 }),
     ],
     mounts: onFloor,
     provides: () => [],
@@ -179,7 +177,6 @@ export const STAFF = {
       { size: [0.024, 0.020, 0.44], at: [-0.302, 0.04, 0], bevel: 0.005, mat: 'steel', accent: DARK }, // side seam
       { size: [0.62, 0.050, 0.52], at: [0, 0.905, 0], bevel: 0.012, accent: DARK }, // top cap
       { size: [0.60, 0.055, 0.48], at: [0, 0.950, 0.02], bevel: 0.012, accent: FRAME }, // sloped crown
-      ...studs({ at: [0, 0.905, 0.258], spread: [0.26, 0], size: 0.020 }),
     ],
     mounts: onFloor,
     provides: (p, unit) => [
@@ -230,7 +227,6 @@ export const STAFF = {
       ]),
       ...vents({ at: [-0.245, 0.330, 0.10], n: 4, w: 0.20, thickness: 0.016, gap: 0.028, depth: 0.012, axis: 'x' }),
       ...vents({ at: [-0.245, -0.330, 0.10], n: 4, w: 0.20, thickness: 0.016, gap: 0.028, depth: 0.012, axis: 'x' }),
-      ...studs({ at: [0, 0.670, 0.320], spread: [0.20, 0], size: 0.018 }),
     ],
     mounts: onFloor,
     provides: () => [
@@ -285,8 +281,6 @@ export const SIGNAGE = {
       { size: [0.15, 0.61, 0.016], at: [0, 0, 0.056], bevel: 0.004, mat: 'glass', accent: GLASS },
       { size: [0.61, 0.15, 0.016], at: [0, 0, 0.056], bevel: 0.004, mat: 'glass', accent: GLASS },
       { size: [0.08, 0.08, 0.16], at: [0, 0, -0.14], bevel: 0.010, mat: 'steel', accent: DARK }, // wall stalk
-      ...studs({ at: [0, 0.325, 0.046], spread: [0.10, 0], size: 0.020 }),
-      ...studs({ at: [0, -0.325, 0.046], spread: [0.10, 0], size: 0.020 }),
     ],
     mounts: onFloor,
     provides: () => [],
@@ -335,7 +329,6 @@ export const SIGNAGE = {
       { size: [0.055, 0.050, 0.055], at: [0.34, 0.205, 0], bevel: 0.008, mat: 'wood', accent: DARK },
       { size: [0.028, 0.30, 0.028], at: [-0.34, 0.345, 0], bevel: 0.006, mat: 'steel', accent: FRAME }, // drop rod
       { size: [0.028, 0.30, 0.028], at: [0.34, 0.345, 0], bevel: 0.006, mat: 'steel', accent: FRAME },
-      ...studs({ at: [0, -0.02, 0.040], spread: [0.405, 0.155], size: 0.018 }),
     ],
     mounts: onFloor,
     provides: () => [],
