@@ -53,7 +53,7 @@ export function buildGui(app) {
   const look = gui.addFolder('Look dev').close();
 
   const light = look.addFolder('Lighting');
-  const lightState = { rampSteps: 3, key: 0.72, fill: 0.14, ambient: 0.16, upLift: 0.22, rim: 0.0, rimPower: 3.2, keyAzimuth: 37, keyElevation: 53 };
+  const lightState = { rampSteps: 3, key: 0.72, fill: 0.14, ambient: 0.2, upLift: 0.22, rim: 0.0, rimPower: 3.2, keyAzimuth: 37, keyElevation: 53 };
   light.add(lightState, 'rampSteps', 2, 8, 1).onChange((v) => setToonRampSteps(v));
   light.add(lightState, 'key', 0, 2).onChange((v) => setSharedUniform('uKeyIntensity', v));
   light.add(lightState, 'fill', 0, 1).onChange((v) => setSharedUniform('uFillIntensity', v));
@@ -70,10 +70,12 @@ export function buildGui(app) {
   light.add(lightState, 'keyElevation', 0, 89, 1).onChange(applyKeyDir);
 
   // The six ramp parameters of §4.3. These are tuned by eye, not by formula.
+  // Since applyMasks posterises, lo/hi set the THRESHOLD (their midpoint) that
+  // the flat AO / edge step crosses the face at — they no longer soften it.
   const masks = look.addFolder('Vertex masks');
   const maskState = {
-    cavityLo: 0.55, cavityHi: 0.92, cavityStrength: 0.22,
-    edgeLo: 0.78, edgeHi: 0.99, edgeStrength: 0.14, dust: 0.0,
+    cavityLo: 0.55, cavityHi: 0.92, cavityStrength: 0.15,
+    edgeLo: 0.78, edgeHi: 0.99, edgeStrength: 0.06, dust: 0.0,
   };
   masks.add(maskState, 'cavityLo', 0, 1).onChange((v) => setSharedUniform('uCavityLo', v));
   masks.add(maskState, 'cavityHi', 0, 1).onChange((v) => setSharedUniform('uCavityHi', v));

@@ -239,24 +239,39 @@ export function createAdaptiveMaterial(opts = {}) {
       uRimColor: { value: PALETTE.rim.clone() },
       uRimStrength: { value: 0.0 },
       uRimPower: { value: 3.2 },
-      uSkyColor: { value: PALETTE.sky.clone() },
-      uGroundColor: { value: PALETTE.ground.clone() },
-      uAmbientStrength: { value: 0.16 },
+      // "GI" is really coloured bounce: the room's own mint walls light the
+      // upward faces and the warm floor lights the undersides. Using the
+      // literal wall/floor palette entries (rather than a generic pale blue and
+      // cream) is what makes a shaded cream face read faintly mint-cool instead
+      // of grey — the reference boards get their whole global-illumination feel
+      // from exactly this and nothing else.
+      uSkyColor: { value: PALETTE.wall.clone() },
+      uGroundColor: { value: PALETTE.floorTile.clone() },
+      // both bounce colours are darker than the old sky/ground pair, so the
+      // strength comes up to keep the same amount of fill in the shadows
+      uAmbientStrength: { value: 0.2 },
       uShadowColor: { value: PALETTE.shadowCool.clone() },
       uUpLift: { value: 0.22 },
-      // hatching
+      // hatching — off by default. The hatch is a per-PIXEL term inside a lit
+      // band, so it is the one thing in this shader that can break the flatness
+      // of a face even when the geometry is faceted and the ramp is hard. The
+      // code path stays; turn it on from lil-gui if a scene wants it.
       uHatchScale: { value: 4.5 },
       uHatchStrength: { value: 0.0 },
       uInkTint: { value: PALETTE.ink.clone() },
-      // mask ramps — all six tuned by eye in lil-gui (§4.3)
+      // mask ramps (§4.3). Lo/Hi no longer ramp — applyMasks posterises each
+      // mask to two levels and uses their MIDPOINT as the threshold, so these
+      // move the painted border across the face rather than softening it.
+      // Strength is now the size of that single step: ~15% for AO, kept pastel
+      // and hue-preserved, and a small warm lift on convex edges.
       uCavityLo: { value: 0.55 },
       uCavityHi: { value: 0.92 },
-      uCavityStrength: { value: 0.22 },
+      uCavityStrength: { value: 0.15 },
       uEdgeLo: { value: 0.78 },
       uEdgeHi: { value: 0.99 },
-      uEdgeStrength: { value: 0.14 },
+      uEdgeStrength: { value: 0.06 },
       uDustStrength: { value: 0.0 },
-      uShadowTint: { value: PALETTE.shadowTint.clone() },
+      uShadowTint: { value: PALETTE.shadowCool.clone() },
       uEdgeLightTint: { value: PALETTE.edgeLightTint.clone() },
       uDustTint: { value: PALETTE.dustTint.clone() },
     },
