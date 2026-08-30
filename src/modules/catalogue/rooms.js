@@ -199,7 +199,7 @@ export const STAFF = {
       z: FIXED,
     },
     build: () => [
-      { size: [0.60, 1.72, 0.50], at: [0, 0.04, 0], bevel: 0.016, mat: 'paint', accent: FRAME }, // carcass / frame
+      { size: [0.60, 1.72, 0.50], at: [0, 0.04, 0], bevel: 0.032, mat: 'paint', accent: FRAME }, // carcass / frame
       { size: [0.62, 0.115, 0.52], at: [0, -0.875, 0], bevel: 0.012, mat: 'paint', accent: DARK }, // plinth
       { size: [0.53, 0.79, 0.035], at: [0.005, 0.455, 0.256], bevel: 0.010, mat: 'panel' }, // upper door
       { size: [0.53, 0.79, 0.035], at: [0.005, -0.395, 0.256], bevel: 0.010, mat: 'panel' }, // lower door
@@ -256,7 +256,7 @@ export const STAFF = {
     },
     axes: { x: FIXED, y: FIXED, z: FIXED },
     build: () => [
-      { size: [0.48, 1.29, 0.62], at: [0, 0.005, 0], bevel: 0.014, mat: 'paint', accent: FRAME }, // carcass / frame
+      { size: [0.48, 1.29, 0.62], at: [0, 0.005, 0], bevel: 0.032, mat: 'paint', accent: FRAME }, // carcass / frame
       { size: [0.46, 0.070, 0.60], at: [0, -0.630, 0], bevel: 0.008, mat: 'paint', accent: DARK }, // plinth
       ...capTray({ at: [0, 0.670, 0], w: 0.52, d: 0.66, rim: 0.045, thickness: 0.036, panel: GLASS }),
       { size: [0.042, 1.26, 0.045], at: [-0.221, 0.005, 0.315], bevel: 0.008, mat: 'steel', accent: FRAME }, // stile

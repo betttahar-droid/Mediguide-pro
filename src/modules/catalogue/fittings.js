@@ -174,7 +174,7 @@ export function posts({ at = [0, 0, 0], w, h, d, thickness = 0.055, accent = FRA
 export function worktop({ at, w, d, thickness = 0.055, lip = 0.030, accent = FRAME, band = DARK, mat = 'wood' }) {
   const [x, y, z] = at;
   return [
-    { size: [w, thickness, d], at: [x, y, z], bevel: 0.014, mat, accent },
+    { size: [w, thickness, d], at: [x, y, z], bevel: 0.028, mat, accent },
     { size: [w, lip, d + 0.012], at: [x, y - thickness / 2 - lip / 2 + 0.006, z], bevel: 0.008, mat, accent: band },
   ];
 }

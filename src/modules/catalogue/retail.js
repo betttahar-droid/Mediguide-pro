@@ -336,11 +336,15 @@ export const RETAIL = {
       // On the sheet a basket is WIDE and DEEP — the stack ends up broader than
       // it is tall. Ours was narrow enough that a stack of them read as a pile
       // of trays rather than as shopping baskets.
-      { size: [0.52, 0.020, 0.38], at: [0, -0.055, 0], bevel: 0.006, mat: 'paint' }, // base
-      { size: [0.52, 0.10, 0.024], at: [0, 0.0, 0.185], bevel: 0.006, mat: 'panel' }, // side
-      { size: [0.52, 0.10, 0.024], at: [0, 0.0, -0.185], bevel: 0.006, mat: 'panel' }, // side
-      { size: [0.024, 0.10, 0.34], at: [0.250, 0.0, 0], bevel: 0.006, mat: 'panel' }, // end
-      { size: [0.024, 0.10, 0.34], at: [-0.250, 0.0, 0], bevel: 0.006, mat: 'panel' }, // end
+      // The sheet's tub is a moulded shell that FLARES: the foot is visibly
+      // narrower than the rim, which is what lets one basket nest into the next.
+      // taper widens each tub part toward +y so the stack's silhouette steps
+      // outward instead of running straight up.
+      { size: [0.52, 0.020, 0.38], at: [0, -0.055, 0], bevel: 0.006, mat: 'paint', taper: 1.12 }, // base
+      { size: [0.52, 0.10, 0.024], at: [0, 0.0, 0.185], bevel: 0.006, mat: 'panel', taper: 1.12 }, // side
+      { size: [0.52, 0.10, 0.024], at: [0, 0.0, -0.185], bevel: 0.006, mat: 'panel', taper: 1.12 }, // side
+      { size: [0.024, 0.10, 0.34], at: [0.250, 0.0, 0], bevel: 0.006, mat: 'panel', taper: 1.12 }, // end
+      { size: [0.024, 0.10, 0.34], at: [-0.250, 0.0, 0], bevel: 0.006, mat: 'panel', taper: 1.12 }, // end
       { size: [0.545, 0.026, 0.034], at: [0, 0.050, 0.188], bevel: 0.006, accent: FRAME }, // rim rail
       { size: [0.545, 0.026, 0.034], at: [0, 0.050, -0.188], bevel: 0.006, accent: FRAME },
       { size: [0.034, 0.026, 0.38], at: [0.254, 0.050, 0], bevel: 0.006, accent: FRAME },
@@ -402,7 +406,9 @@ export const RETAIL = {
       ...[-0.26, 0, 0.26].map((x) => ({
         size: [0.075, 0.055, 0.46], at: [x, -0.522, 0], bevel: 0.008, mat: 'wood', accent: DARK,
       })),
-      { size: [0.62, 0.40, 0.50], at: [0, -0.285, 0], bevel: 0.018, mat: 'panel' }, // bin body
+      // Slight flare on the tub — the sheet's cream body is a shade wider at the
+      // rim than at the pallet, just enough to stop it reading as a packing case.
+      { size: [0.62, 0.40, 0.50], at: [0, -0.285, 0], bevel: 0.032, mat: 'panel', taper: 1.06 }, // bin body
       { size: [0.60, 0.018, 0.48], at: [0, -0.170, 0], bevel: 0.005, mat: 'paint', accent: DARK }, // panel seam
       { size: [0.018, 0.36, 0.49], at: [0.06, -0.285, 0], bevel: 0.004, mat: 'paint', accent: DARK }, // panel seam
       { size: [0.68, 0.070, 0.56], at: [0, -0.055, 0], bevel: 0.012, mat: 'paint', accent: ACCENT }, // rim

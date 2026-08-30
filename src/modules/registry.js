@@ -54,7 +54,7 @@ export const MODULE_IDS = Object.keys(REGISTRY);
 /** Build the unit geometry for a module, with its trim axis baked into aTrimV. */
 export const buildGeometry = (def) => buildParts(def.build(), { trimAxis: def.trimAxis });
 
-const PART_KEYS = new Set(['size', 'at', 'bevel', 'rotX', 'rotY', 'rotZ', 'mat', 'accent']);
+const PART_KEYS = new Set(['size', 'at', 'bevel', 'rotX', 'rotY', 'rotZ', 'mat', 'accent', 'taper']);
 
 /** §5.2 guards 1 and 2, plus the §4.2 margin rule, asserted at load. */
 export function validateRegistry() {

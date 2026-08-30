@@ -7,12 +7,12 @@
 // Every sheet is painted as LUMINANCE around mid-grey and tinted by palette.js
 // at sample time, which is what holds the limited palette across a catalogue
 // authored in separate passes (§4.4).
-import { TextureLoader, RepeatWrapping, NearestFilter, NearestMipmapLinearFilter, SRGBColorSpace, NoColorSpace } from 'three';
+import { TextureLoader, RepeatWrapping, NearestFilter, NearestMipmapNearestFilter, SRGBColorSpace, NoColorSpace } from 'three';
 
 const loader = new TextureLoader();
 const pending = [];
 
-function load(url, { colorSpace = SRGBColorSpace, anisotropy = 8 } = {}) {
+function load(url, { colorSpace = SRGBColorSpace, anisotropy = 1 } = {}) {
   let resolve;
   pending.push(new Promise((r) => { resolve = r; }));
   const tex = loader.load(url, resolve, undefined, (err) => {
@@ -25,10 +25,13 @@ function load(url, { colorSpace = SRGBColorSpace, anisotropy = 8 } = {}) {
   tex.flipY = false;
   tex.colorSpace = colorSpace;
   tex.anisotropy = anisotropy;
-  // Pixel art: NEAREST on magnification is the whole look. Mipmaps stay linear
-  // between levels so distant modules do not shimmer, which is the one place
-  // sharpness costs more than it buys.
-  tex.minFilter = NearestMipmapLinearFilter;
+  // Pixel art: NEAREST on magnification is the whole look, and it has to hold
+  // at distance too. Blending BETWEEN mip levels (NearestMipmapLinear) plus
+  // anisotropy 8 was averaging several texels per pixel on anything more than a
+  // metre away, so a wall or a floor faded back into soft noise exactly where
+  // the sheets have their chunkiest texel grid. One mip, one texel, no
+  // anisotropic averaging: the pixels stay pixels.
+  tex.minFilter = NearestMipmapNearestFilter;
   tex.magFilter = NearestFilter;
   return tex;
 }

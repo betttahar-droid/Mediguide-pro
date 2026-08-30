@@ -16,17 +16,24 @@ import { stripV } from '../art/trimLayout.js';
 
 const EDGE = stripV('edge');
 
-// The reference set is HARD-EDGED. Look at docs/reference/02-server-tower or
-// 03-retro-computers: the corners are square, and what separates one face from
-// the next is a clean step in value, not a rounded highlight running along the
-// join. A wide chamfer was making everything read soft and slightly inflated —
-// closer to a toy than to the blocky voxel props those images are.
+// The concept sheets in docs/concept/views are CHAMFERED, not square: look at
+// waste_station or promo_bin and every corner is a visible 45° cut, two or
+// three pixels of its own value between the front face and the side. That cut
+// is a painted facet, not a rounded highlight — which is why bevelBox builds it
+// as real geometry with its own trim strip rather than faking it in the shader.
 //
-// So the bevel is back to a hairline: just enough to catch the edge strip and
-// stop a corner aliasing, not enough to see as a radius. What replaces it is
-// the flatter shading — a bigger value step between face orientations — which
-// is how the reference separates forms too.
-const EDGE_SOFTNESS = 0.3;
+// This factor used to be 0.3, shrinking every authored bevel to a hairline. It
+// was set against an older hard-edged reference set, and against the sheets we
+// actually ship it just made everything read as an untextured box. Authored
+// bevels are now taken at face value; the clamp to a third of the smallest
+// extent in bevelBox is what protects genuinely thin parts.
+const EDGE_SOFTNESS = 1.0;
+
+// ...and below this a chamfer is one subpixel at portrait distance, i.e. the
+// same sharp corner we are trying to get rid of. Small trim parts authored at
+// 0.003–0.005 get pulled up to here; the clamp keeps them from turning into
+// pyramids.
+const MIN_BEVEL = 0.008;
 
 /**
  * Chamfered box centred on the origin.
@@ -41,10 +48,15 @@ const EDGE_SOFTNESS = 0.3;
  *              is what most of a carcass is; wood, steel, glass, screen, paper,
  *              fabric and grille all look different and must be asked for.
  *   accent   — 0 base colour, 1–4 an accent from the module's palette entry
+ *   taper    — top-ring x/z scale, 1 = a prism. >1 widens toward +y, which is
+ *              the shape a basket or a dump bin has on the sheets. Applied to
+ *              the finished vertices before normals are computed, so the
+ *              chamfer facets stay correctly lit on the leaning faces.
  */
 export function bevelBox(w, h, d, bevel = 0.03, opts = {}) {
   const trimAxis = opts.trimAxis ?? 0;
   const accent = opts.accent ?? 0;
+  const taper = opts.taper ?? 1;
   const flat = stripV(opts.mat ?? 'paint');
 
   const e = [w / 2, h / 2, d / 2];
@@ -131,7 +143,13 @@ export function bevelBox(w, h, d, bevel = 0.03, opts = {}) {
   const trimV = new Float32Array(count);
   const accents = new Float32Array(count).fill(accent);
   verts.forEach((v, i) => {
-    positions.set(v.p, i * 3);
+    // Taper: the top ring is scaled by `taper`, the bottom by 1, linear in
+    // between. UVs and aTrimV are untouched — the painted bands should follow
+    // the leaning face, not stay square to the world.
+    const s = h > 1e-6 ? 1 + (taper - 1) * (v.p[1] / h + 0.5) : 1;
+    positions[i * 3] = v.p[0] * s;
+    positions[i * 3 + 1] = v.p[1];
+    positions[i * 3 + 2] = v.p[2] * s;
     uvs.set(v.uv, i * 2);
     trimV[i] = v.trimV;
   });
@@ -157,15 +175,17 @@ function normalOf(a, b, c) {
  * Merge a list of parts into one faceted geometry. Parts are how every module
  * in the registry is described.
  * @param {{size:number[], at?:number[], bevel?:number, rotX?:number, rotY?:number,
- *   rotZ?:number, mat?:string, accent?:number}[]} parts
+ *   rotZ?:number, mat?:string, accent?:number, taper?:number}[]} parts
  * @param {{trimAxis?:number}} opts
  */
 export function buildParts(parts, opts = {}) {
   const geos = parts.map((p) => {
-    const g = bevelBox(p.size[0], p.size[1], p.size[2], (p.bevel ?? 0.025) * EDGE_SOFTNESS, {
+    const bevel = Math.max((p.bevel ?? 0.025) * EDGE_SOFTNESS, MIN_BEVEL);
+    const g = bevelBox(p.size[0], p.size[1], p.size[2], bevel, {
       trimAxis: opts.trimAxis ?? 0,
       mat: p.mat,
       accent: p.accent,
+      taper: p.taper,
     });
     // Applied X, Y, Z in that order. Rotation is baked into the merged
     // geometry, so a rotated part 9-slices exactly like an axis-aligned one.

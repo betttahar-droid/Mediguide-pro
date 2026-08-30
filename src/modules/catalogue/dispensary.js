@@ -256,7 +256,7 @@ export const DISPENSARY = {
     build: () => [
       { size: [0.66, 0.055, 0.42], at: [0, -0.5225, -0.01], bevel: 0.010, accent: DARK }, // plinth shadow
       { size: [0.68, 0.055, 0.44], at: [0, -0.472, -0.005], bevel: 0.010, accent: FRAME }, // plinth band
-      { size: [0.70, 0.94, 0.46], at: [0, 0.020, 0], bevel: 0.018, mat: 'panel' }, // carcass
+      { size: [0.70, 0.94, 0.46], at: [0, 0.020, 0], bevel: 0.032, mat: 'panel' }, // carcass
       ...posts({ at: [0, 0.020, 0], w: 0.70, h: 0.95, d: 0.47, thickness: 0.05, bevel: 0.012 }),
       ...capTray({ at: [0, 0.520, 0], w: 0.72, d: 0.48, rim: 0.05 }),
       { size: [0.60, 0.86, 0.035], at: [0.015, 0.020, 0.242], bevel: 0.010, mat: 'panel' }, // door
@@ -394,7 +394,7 @@ export const DISPENSARY = {
     },
     build: () => [
       { size: [0.66, 0.085, 0.48], at: [0, -0.4325, 0], bevel: 0.012, accent: DARK }, // kick
-      { size: [0.70, 0.79, 0.58], at: [0, 0.005, 0], bevel: 0.022, mat: 'panel' }, // carcass
+      { size: [0.70, 0.79, 0.58], at: [0, 0.005, 0], bevel: 0.032, mat: 'panel' }, // carcass
       ...posts({ at: [0, 0.005, 0], w: 0.70, h: 0.80, d: 0.59, thickness: 0.05, bevel: 0.012 }),
       { size: [0.31, 0.62, 0.030], at: [-0.175, -0.030, 0.296], bevel: 0.010, mat: 'panel' }, // door
       { size: [0.31, 0.62, 0.030], at: [0.175, -0.030, 0.296], bevel: 0.010, mat: 'panel' }, // door
@@ -405,7 +405,7 @@ export const DISPENSARY = {
       ...plate({ at: [0.215, 0.310, 0.298], w: 0.14, h: 0.048 }),
       // a dispensary sink is a single pressed stainless top, so every part of
       // it from the worktop to the spout is the same 'steel'
-      { size: [0.74, 0.055, 0.62], at: [0, 0.4475, 0], bevel: 0.014, mat: 'steel', accent: FRAME }, // worktop, top at 0.95
+      { size: [0.74, 0.055, 0.62], at: [0, 0.4475, 0], bevel: 0.028, mat: 'steel', accent: FRAME }, // worktop, top at 0.95
       { size: [0.44, 0.036, 0.36], at: [-0.02, 0.470, 0.03], bevel: 0.008, mat: 'steel', accent: FRAME }, // basin rim
       // The well is a pressed steel recess, not a hole into the object. It was
       // 'ink' — a purple-black — which read as a void punched in the worktop.
@@ -464,7 +464,9 @@ export const DISPENSARY = {
     },
     axes: { x: FIXED, y: FIXED, z: FIXED },
     build: () => [
-      { size: [0.44, 0.58, 0.42], at: [0, -0.10, 0], bevel: 0.016, mat: 'panel' }, // body
+      // The sheet's carcass is not a prism: it widens a little from the base to
+      // the belt, the way a moulded bin does so the liner drops in.
+      { size: [0.44, 0.58, 0.42], at: [0, -0.10, 0], bevel: 0.032, mat: 'panel', taper: 1.05 }, // body
       { size: [0.455, 0.13, 0.435], at: [0, 0.055, 0], bevel: 0.010, accent: FRAME }, // the belt
       { size: [0.46, 0.020, 0.44], at: [0, -0.015, 0], bevel: 0.005, accent: DARK }, // belt shadow
       { size: [0.48, 0.075, 0.46], at: [0, 0.242, 0], bevel: 0.012, mat: 'paint' }, // lid slab
