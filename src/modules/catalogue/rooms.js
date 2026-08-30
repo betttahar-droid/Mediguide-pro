@@ -153,7 +153,7 @@ export const STAFF = {
     // mint carcass, dark doors flush with it — and the difference between the
     // two is the whole finding from the concept set in one object.
     colors: {
-      base: PALETTE.tealDeep, // the doors
+      base: PALETTE.teal, // the doors: green on the sheet, and tealDeep went to black in shadow
       middle: PALETTE.teal,
       accent1: PALETTE.paper, // FRAME  — stiles, rails, crown
       accent2: PALETTE.steel, // ACCENT — handles and hinges
@@ -278,7 +278,11 @@ export const SIGNAGE = {
     },
     axes: { x: FIXED, y: FIXED, z: FIXED },
     build: () => [
-      { size: [0.78, 0.78, 0.045], at: [0, 0, -0.055], bevel: 0.010, mat: 'panel', accent: DARK }, // back plate
+      // The back plate was 0.78 square behind a cross 0.80 across, so from any
+      // angle off-axis the object read as a dark SQUARE with a cross on it. The
+      // silhouette is the entire job of this sign. The plate is now small enough
+      // to hide behind the cross's own arms, which is what the sheet shows.
+      { size: [0.26, 0.26, 0.045], at: [0, 0, -0.055], bevel: 0.010, mat: 'panel', accent: DARK }, // back plate
       { size: [0.30, 0.80, 0.10], at: [0, 0, -0.004], bevel: 0.014, mat: 'steel', accent: FRAME }, // rim
       { size: [0.80, 0.30, 0.10], at: [0, 0, -0.004], bevel: 0.014, mat: 'steel', accent: FRAME },
       { size: [0.26, 0.76, 0.098], at: [0, 0, 0.004], bevel: 0.012, mat: 'paint' }, // body

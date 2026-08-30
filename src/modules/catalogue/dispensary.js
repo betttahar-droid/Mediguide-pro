@@ -357,8 +357,11 @@ export const DISPENSARY = {
     // Its worktop also now lands at 0.95, the same height as the dispensing
     // bench, so the two run together instead of stepping 5 cm.
     colors: {
-      base: PALETTE.steelDark, // door panels
-      middle: PALETTE.charcoal,
+      // The sheet puts TEAL cupboard doors under a pale steel top. Ours had grey
+      // doors under a grey top, so the whole unit read as one undifferentiated
+      // slab and the sink — the thing it is named for — disappeared into it.
+      base: PALETTE.teal, // door panels
+      middle: PALETTE.tealDeep,
       accent1: PALETTE.steel, // FRAME  — posts, worktop, rails
       accent2: PALETTE.signal, // ACCENT — the one warm mark on a cold object
       accent3: PALETTE.ink, // DARK   — basin well, vents, handles

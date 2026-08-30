@@ -27,7 +27,7 @@ export const RETAIL = {
     colors: {
       base: PALETTE.paper, // carcass and back panels
       middle: PALETTE.bone,
-      accent1: PALETTE.steel, // FRAME  — the proud end posts and their caps
+      accent1: PALETTE.paper, // FRAME  — end posts, gables and caps: cream on the sheet, not steel
       accent2: PALETTE.teal, // ACCENT — the price rail
       accent3: PALETTE.oak, // shelf boards and the front band: warm, not dark
       accent4: PALETTE.glass, // GLASS  — price windows
@@ -46,9 +46,13 @@ export const RETAIL = {
       { size: [0.045, 0.36, 0.44], at: [-0.4825, 0, 0.005], bevel: 0.010, mat: 'panel', accent: FRAME }, // end panel
       { size: [0.045, 0.36, 0.44], at: [0.4825, 0, 0.005], bevel: 0.010, mat: 'panel', accent: FRAME },
       { size: [0.96, 0.36, 0.03], at: [0, 0, -0.235], mat: 'panel' }, // back panel
-      { size: [0.88, 0.038, 0.022], at: [0, -0.126, 0.235], bevel: 0.008, mat: 'paint', accent: ACCENT }, // price rail
-      { size: [0.20, 0.022, 0.010], at: [-0.26, -0.126, 0.244], bevel: 0.003, mat: 'paper', accent: GLASS },
-      { size: [0.20, 0.022, 0.010], at: [0.22, -0.126, 0.244], bevel: 0.003, mat: 'paper', accent: GLASS },
+      // The sheet runs the teal rail the FULL width of the bay with a dashed
+      // row of cream windows punched along it. Ours was a short stub with two
+      // windows on it, which is why the teal never read from across the room.
+      { size: [0.96, 0.060, 0.026], at: [0, -0.118, 0.238], bevel: 0.008, mat: 'paint', accent: ACCENT }, // price rail
+      ...[-0.36, -0.12, 0.12, 0.36].map((x) => ({
+        size: [0.16, 0.028, 0.012], at: [x, -0.118, 0.250], bevel: 0.003, mat: 'paper', accent: GLASS,
+      })), // label windows
     ],
     mounts: onFloor,
     provides: (p, unit) => {
@@ -247,18 +251,22 @@ export const RETAIL = {
     colors: {
       base: PALETTE.paper, // base body and keys
       middle: PALETTE.bone,
-      accent1: PALETTE.steel, // FRAME  — monitor shell, reader shell
-      accent2: PALETTE.oak, // ACCENT — the bezel and the receipt slot
+      accent1: PALETTE.bone, // FRAME  — monitor and reader shells: beige-box cream, not steel
+      accent2: PALETTE.signal, // ACCENT — the coral function keys and the receipt slot
       accent3: PALETTE.charcoal, // DARK   — stalk, vents, shadow lines
-      accent4: PALETTE.glass, // GLASS  — the screen and the reader display
+      accent4: PALETTE.mint, // GLASS  — the pale green screen and the enter key
     },
     axes: { x: FIXED, y: FIXED, z: FIXED },
     build: () => [
       { size: [0.46, 0.10, 0.34], at: [0, -0.15, 0], bevel: 0.016, mat: 'panel' }, // base
       { size: [0.44, 0.020, 0.32], at: [0, -0.092, 0], bevel: 0.005, mat: 'paint', accent: FRAME }, // base top plate
       // the keypad, as four rows of keys rather than twenty separate ones
-      ...[0, 1, 2, 3].map((i) => ({
-        size: [0.17, 0.022, 0.032], at: [0.06, -0.078, 0.10 - i * 0.042], bevel: 0.005, mat: 'detail',
+      // Four rows, and they are not all one colour. On the sheet the keypad is
+      // where every saturated colour on the object lives — coral function keys,
+      // green enter, dark numbers — and it is the single thing that says TILL
+      // rather than computer. Ours were four identical cream bars.
+      ...[DARK, DARK, ACCENT, GLASS].map((a, i) => ({
+        size: [0.17, 0.026, 0.034], at: [0.06, -0.076, 0.10 - i * 0.042], bevel: 0.005, mat: 'detail', accent: a,
       })),
       { size: [0.20, 0.026, 0.055], at: [0, -0.196, 0.175], bevel: 0.006, mat: 'paint', accent: ACCENT }, // receipt slot
       ...vents({ at: [-0.16, -0.150, 0.172], n: 3, w: 0.11, thickness: 0.014, gap: 0.026, depth: 0.010 }),
@@ -355,9 +363,9 @@ export const RETAIL = {
     // furniture. The thick deep-teal rim around the top is the other half: it
     // caps the open box so the eye stops at the rim instead of falling in.
     colors: {
-      base: PALETTE.oak, // bin body
-      middle: PALETTE.oakDark,
-      accent1: PALETTE.paper, // FRAME  — pallet slats, header card
+      base: PALETTE.paper, // bin body: a cream tub on the sheet, not an oak one
+      middle: PALETTE.bone,
+      accent1: PALETTE.oak, // FRAME  — the pallet it stands on, which is the wood here
       accent2: PALETTE.tealDeep, // ACCENT — the rim and the header frame
       accent3: PALETTE.espresso, // DARK   — posts, pallet feet, seams
       accent4: PALETTE.glass, // GLASS  — the header's lettering band
@@ -477,7 +485,18 @@ export const RETAIL = {
     trimAxis: AXIS.y,
     trimDensity: 2.6,
     atlasCell: [1, 0],
-    colors: { base: PALETTE.signal, middle: PALETTE.oak },
+    // A carton is mostly PRINT. On the sheet the front is a big mint panel with
+    // coral shapes across it covering most of the face; ours was a plain tan box
+    // with a 7 cm white speck on it, because the module declared no accent
+    // colours at all and the label fell back to a default.
+    colors: {
+      base: PALETTE.bone, // the card itself
+      middle: PALETTE.oak,
+      accent1: PALETTE.mint, // FRAME  — the printed panel
+      accent2: PALETTE.signal, // ACCENT — the marks printed on it
+      accent3: PALETTE.espresso, // DARK   — the box's own shadow edge
+      accent4: PALETTE.paper,
+    },
     axes: {
       x: { mode: 'repeat', unit: 0.115, min: 1, max: 8, default: 4, label: 'boxes' },
       y: FIXED,
@@ -486,7 +505,9 @@ export const RETAIL = {
     build: () => [
       // a dispensing carton is printed card, not a painted surface
       { size: [0.11, 0.18, 0.07], at: [0, 0, 0], bevel: 0.012, mat: 'paper' },
-      { size: [0.075, 0.05, 0.006], at: [0, 0.02, 0.037], bevel: 0.002, mat: 'detail', accent: 1 },
+      { size: [0.088, 0.125, 0.008], at: [0, 0.012, 0.036], bevel: 0.003, mat: 'paper', accent: FRAME }, // printed panel
+      { size: [0.060, 0.022, 0.004], at: [0, 0.046, 0.041], bevel: 0.002, mat: 'detail', accent: ACCENT }, // its marks
+      { size: [0.038, 0.018, 0.004], at: [-0.018, 0.006, 0.041], bevel: 0.002, mat: 'detail', accent: ACCENT },
     ],
     mounts: onSurface,
     provides: () => [],
