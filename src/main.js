@@ -266,6 +266,7 @@ app.spawnFromSpec = async (url = 'spec/counter-run.json', at = [0, 0, 0], scaleX
     halfExtents: built.unit,
     margins: built.margins,
     colors: built.colors,
+    repeat: built.repeat,
     propSpacing: 0.45,
     socketY: built.unit[1],
     socketZ: 0.02,

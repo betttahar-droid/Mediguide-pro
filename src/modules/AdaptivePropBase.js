@@ -94,6 +94,7 @@ export class AdaptivePropBase {
     trimAxis = 0,
     trimDensity = 0.45,
     atlasCell = [0, 0],
+    repeat = null,
     propSpacing = 0.55,
     propPool = POOLS.worktop,
     socketY = null,
@@ -104,6 +105,14 @@ export class AdaptivePropBase {
 
     this.halfExtents = new Vector3(...halfExtents);
     this.margins = new Vector3(...margins);
+    // A repeat axis instances the unit mesh instead of stretching it. This is
+    // §1 of the brief and it is not a preference: a stretched run smears every
+    // pull, plaque and seam along its length, while a repeated one never
+    // distorts a texel however long it gets. The reconstruction's own spec
+    // declares `repetitionSystems`, and its featureReviewTargets calls
+    // "length authored as a stretch axis" a CRITICAL failure — which is exactly
+    // what a 3x stretch produced before this existed.
+    this.repeat = repeat;
     this.propSpacing = propSpacing;
     this.propPool = propPool;
     this.seed = seed;
@@ -134,8 +143,13 @@ export class AdaptivePropBase {
 
     this.group = new Group();
     this.group.name = 'adaptive-prop';
-    this.mesh = new Mesh(this.geometry, this.material);
-    this.group.add(this.mesh);
+    // One mesh per bay on a repeat axis; one mesh total otherwise. They all
+    // share the geometry and the material, so extra bays cost transforms, not
+    // uploads — and with instancing they would cost one draw call.
+    this.meshes = [];
+    this.bays = new Group();
+    this.bays.name = 'bays';
+    this.group.add(this.bays);
 
     // The clutter lives in its own layer so the base mesh can be replaced or
     // re-scaled without disturbing what is standing on it.
@@ -162,8 +176,21 @@ export class AdaptivePropBase {
    * would actually type.
    */
   get availableSlots() {
-    const width = this.halfExtents.x * 2 * this.scale.x;
-    return Math.max(1, Math.floor(width / this.propSpacing + 1e-9));
+    return Math.max(1, Math.floor(this.width / this.propSpacing + 1e-9));
+  }
+
+  /** Overall width, however the x axis grows — by repeat or by stretch. */
+  get width() {
+    return this.repeat
+      ? this.bayCount * this.repeat.unit
+      : this.halfExtents.x * 2 * this.scale.x;
+  }
+
+  /** Bays on a repeat axis: a whole number, clamped to the spec's range. */
+  get bayCount() {
+    if (!this.repeat) return 1;
+    const r = this.repeat;
+    return Math.min(r.max ?? 99, Math.max(r.min ?? 1, Math.round(this.scale.x)));
   }
 
   /**
@@ -176,9 +203,33 @@ export class AdaptivePropBase {
    */
   updateSize(scaleX = 1, scaleY = 1, scaleZ = 1) {
     this.scale.set(scaleX, scaleY, scaleZ);
-    this.material.uniforms.uTargetScale.value.copy(this.scale);
+    // On a repeat axis the SHADER must not stretch: the growth is bays, so
+    // uTargetScale.x stays 1 and only y/z reach the 9-slice.
+    this.material.uniforms.uTargetScale.value.set(
+      this.repeat ? 1 : scaleX, scaleY, scaleZ
+    );
+    this.layoutBays();
     this.spawnProps();
     return this;
+  }
+
+  /** Add, remove and position the bay meshes for the current scale. */
+  layoutBays() {
+    const n = this.bayCount;
+    while (this.meshes.length > n) {
+      const mesh = this.meshes.pop();
+      this.bays.remove(mesh);
+    }
+    while (this.meshes.length < n) {
+      const mesh = new Mesh(this.geometry, this.material);
+      this.bays.add(mesh);
+      this.meshes.push(mesh);
+    }
+    const step = this.repeat ? this.repeat.unit : 0;
+    for (let i = 0; i < n; i++) {
+      this.meshes[i].position.x = (i - (n - 1) / 2) * step;
+    }
+    return n;
   }
 
   /**
@@ -192,7 +243,7 @@ export class AdaptivePropBase {
    */
   spawnProps() {
     const n = this.availableSlots;
-    const half = this.halfExtents.x * scaleOr1(this.scale.x);
+    const half = this.width / 2;
     const step = (half * 2) / n;
     const y = this.socketY * scaleOr1(this.scale.y);
     const slots = [];
@@ -211,6 +262,7 @@ export class AdaptivePropBase {
   }
 
   dispose() {
+    this.meshes.length = 0;
     this.decor.dispose();
     this.group.parent?.remove(this.group);
     this.geometry.dispose();

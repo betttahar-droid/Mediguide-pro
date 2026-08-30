@@ -57,6 +57,39 @@ seeded layout in the game, not just this factory.
 
 ## Gate
 
-Blockout accepted. The next pass would be structure → material → lighting, but
-the object is already being rendered by this project's material and lighting
-systems rather than the skill's, so those passes have no work to do here.
+Blockout accepted, and then immediately superseded — see below.
+
+# Structural pass
+
+Render: `render-structure-pass.png`.
+
+The blockout was correct and it looked worse than the catalogue desk it sits
+next to, which is the honest verdict on a blockout: seven boxes, one flat
+"drawer bank" and one flat "door bank", no doors, no pulls, no frame. That is
+what a blockout IS, and it is not something to ship.
+
+The structural pass takes it to 21 components: two real drawer fronts and two
+real DOOR LEAVES with a meeting stile, a pull on each of the four, stiles down
+both sides, three rails, and a dark band under the worktop. 616 triangles to
+1,188 — still an order of magnitude under the generated factory's ~12,000 for
+the cruder version.
+
+## The critical target failed again, differently
+
+`bay-repetition` is listed critical with the failure mode *"length authored as
+a stretch axis"*, and at 3× that is exactly what happened: every pull, plaque
+and stile smeared along the run, because `AdaptivePropBase` only knew how to
+9-slice. The spec had declared `repetitionSystems` from the start and nothing
+was reading it.
+
+It repeats now. Three bays at 3×, each at authored size, nothing distorted —
+which is §1 of the brief and the same decision the dispensing bench makes.
+
+## Known, and not fixed
+
+A repeated bay repeats *everything*, so a three-bay run carries three green
+cross plaques where a pharmacy has one. The catalogue modules avoid this by
+keeping identity ornament off the repeated unit. Fixing it properly needs
+per-bay variation — a first/middle/last distinction in the repeat system —
+which is a real feature and not a tweak, so it is written down rather than
+bodged.
