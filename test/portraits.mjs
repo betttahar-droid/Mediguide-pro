@@ -46,6 +46,7 @@ for (const id of names) {
 
     // frame the camera on the module's own bounds, from the style bible's angle
     const box = { min: [Infinity, Infinity, Infinity], max: [-Infinity, -Infinity, -Infinity] };
+    m.group.updateMatrixWorld(true); // the rotation above is not in matrixWorld yet
     m.group.traverse((o) => {
       if (!o.isMesh) return;
       o.geometry.computeBoundingBox();
@@ -57,7 +58,10 @@ for (const id of names) {
       }
     });
     const c = box.min.map((v, i) => (v + box.max[i]) / 2);
-    const r = Math.max(...box.max.map((v, i) => v - box.min[i])) * 0.72 + 0.5;
+    // the diagonal, not the longest edge: a tall thin cabinet framed on its
+    // height alone put the camera inside it and cropped the top off.
+    const d = box.max.map((v, i) => v - box.min[i]);
+    const r = Math.hypot(d[0], d[1], d[2]) * 0.62 + 0.35;
     __app.controls.target.set(c[0], c[1], c[2]);
     __app.camera.position.set(c[0] + r * 1.5, c[1] + r * 1.15, c[2] + r * 2.0);
     __app.camera.lookAt(c[0], c[1], c[2]);

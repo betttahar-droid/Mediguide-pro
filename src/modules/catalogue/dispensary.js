@@ -75,7 +75,10 @@ export const DISPENSARY = {
       // the frame: four posts standing proud of the panels between them
       ...posts({ at: [0, -0.0475, 0.005], w: 0.90, h: 0.775, d: 0.64, thickness: 0.07 }),
       { size: [0.76, 0.060, 0.632], at: [0, -0.395, 0.006], bevel: 0.014, mat: 'paint', accent: FRAME }, // bottom rail
-      { size: [0.76, 0.055, 0.632], at: [0, -0.0325, 0.006], bevel: 0.014, mat: 'paint', accent: FRAME }, // mid rail
+      // Between two drawers of ONE carcass there is no rail — there is a gap you
+      // can see darkness through. A cream bar there read as a random white
+      // stripe because that is what it was. It is now a recessed dark reveal.
+      { size: [0.74, 0.030, 0.600], at: [0, -0.0325, -0.004], bevel: 0.008, mat: 'paint', accent: DARK }, // drawer gap
       { size: [0.76, 0.060, 0.632], at: [0, 0.268, 0.006], bevel: 0.014, mat: 'paint', accent: FRAME }, // top rail
       // the drawer fronts are the only wood on the object, so they get the grain
       { size: [0.74, 0.290, 0.626], at: [0, -0.222, 0.008], bevel: 0.018, mat: 'wood' }, // deep drawer
@@ -83,8 +86,10 @@ export const DISPENSARY = {
       // fat pulls, standing well proud — a handle you could actually grab
       { size: [0.38, 0.050, 0.075], at: [0, -0.222, 0.352], bevel: 0.016, mat: 'steel', accent: ACCENT },
       { size: [0.38, 0.050, 0.075], at: [0, 0.1275, 0.352], bevel: 0.016, mat: 'steel', accent: ACCENT },
-      ...plate({ at: [-0.255, -0.315, 0.330], w: 0.17, h: 0.052 }), // label holder
-      ...plate({ at: [-0.255, 0.035, 0.330], w: 0.17, h: 0.052 }),
+      // Label holders: a dark recess routed into the drawer front with a paper
+      // card in it. The default pale surround made a white blob on the wood.
+      ...plate({ at: [-0.255, -0.315, 0.330], w: 0.17, h: 0.052, surround: DARK }), // label holder
+      ...plate({ at: [-0.255, 0.035, 0.330], w: 0.17, h: 0.052, surround: DARK }),
       // The worktop, banded underneath: the band separates the top plane from
       // the carcass front by value, exactly where a drawn outline used to. A
       // dispensing bench top is wipe-clean laminate, not timber, so 'paint'.
@@ -279,18 +284,21 @@ export const DISPENSARY = {
     trimAxis: AXIS.y,
     trimDensity: 0.5,
     atlasCell: [1, 1],
-    // docs/concept/fridge_cabinet.png: warm oak side panels in a steel cage,
-    // a glass door set into a thick pale surround rather than floating in the
-    // carcass, a dark readout right above the door where you would actually
-    // read it, and an oak condenser grille along the foot. The oak is the
-    // surprise and it is why the sheet works — a clinical object with a warm
-    // body sits in this room instead of punching a grey hole in it.
+    // Nothing in a vaccine fridge is made of wood. The first pass gave this one
+    // oak sides and an oak condenser grille because the concept model has a
+    // warm-tone bias and drew them tan — but a wood-clad cold cabinet is a
+    // detail with no reason behind it, and it was the loudest wrong thing on
+    // the object. A vaccine fridge is a painted steel box: pale steel body,
+    // darker steel where it is in shadow, a glass door in a steel surround, a
+    // dark stamped grille at the foot where the condenser breathes. The one
+    // warm note it is allowed is the teal door handle, which is a colour choice
+    // a manufacturer actually makes.
     colors: {
-      base: PALETTE.oak, // side panels and grille
-      middle: PALETTE.oakDark,
-      accent1: PALETTE.steel, // FRAME  — posts, door surround, top tray
-      accent2: PALETTE.tealDeep, // ACCENT — the cold band under the cap
-      accent3: PALETTE.charcoal, // DARK   — fittings, readout body, plinth
+      base: PALETTE.steel, // painted steel body
+      middle: PALETTE.steelDark,
+      accent1: PALETTE.steel, // FRAME  — posts, door surround, top cap
+      accent2: PALETTE.tealDeep, // ACCENT — the door handle
+      accent3: PALETTE.charcoal, // DARK   — fittings, readout body, plinth, grille
       accent4: PALETTE.glass, // GLASS  — the door and the readout face
     },
     axes: {
@@ -302,22 +310,24 @@ export const DISPENSARY = {
       { size: [0.72, 0.06, 0.52], at: [0, -0.820, -0.02], bevel: 0.010, accent: DARK }, // plinth
       { size: [0.78, 1.64, 0.60], at: [0, 0.010, -0.02], bevel: 0.03, mat: 'panel' }, // carcass
       ...posts({ at: [0, 0.010, -0.02], w: 0.78, h: 1.66, d: 0.61, thickness: 0.06, bevel: 0.014 }),
-      { size: [0.80, 0.055, 0.62], at: [0, 0.775, -0.02], bevel: 0.010, accent: ACCENT }, // cold band
-      ...capTray({ at: [0, 0.828, -0.02], w: 0.80, d: 0.62, rim: 0.055 }),
+      // A plain steel cap. The teal band and the lipped tray that used to sit
+      // here were decoration: a fridge does not carry a tray on its head, and
+      // nothing about the top of a cold cabinet is a different colour.
+      { size: [0.82, 0.055, 0.63], at: [0, 0.860, -0.02], bevel: 0.012, mat: 'paint', accent: FRAME }, // top cap
       // the door: glass set into a pale surround, not floating in the carcass
       { size: [0.68, 1.30, 0.055], at: [0, 0.075, 0.290], bevel: 0.012, mat: 'paint', accent: FRAME },
       { size: [0.56, 1.18, 0.030], at: [0, 0.075, 0.312], bevel: 0.008, mat: 'glass', accent: GLASS },
       { size: [0.68, 0.045, 0.075], at: [0, 0.700, 0.292], bevel: 0.008, accent: DARK }, // head rail
       { size: [0.68, 0.045, 0.075], at: [0, -0.550, 0.292], bevel: 0.008, accent: DARK }, // foot rail
-      { size: [0.034, 0.86, 0.050], at: [0.300, 0.075, 0.322], bevel: 0.008, mat: 'steel', accent: DARK }, // handle
+      { size: [0.034, 0.86, 0.050], at: [0.300, 0.075, 0.322], bevel: 0.008, mat: 'steel', accent: ACCENT }, // handle
       { size: [0.052, 0.042, 0.032], at: [0.300, 0.470, 0.308], bevel: 0.006, mat: 'steel', accent: FRAME }, // handle bracket
       { size: [0.052, 0.042, 0.032], at: [0.300, -0.320, 0.308], bevel: 0.006, mat: 'steel', accent: FRAME },
       // a temperature readout is a lit display, not a printed label
       ...plate({ at: [-0.135, 0.775, 0.300], w: 0.22, h: 0.085, surround: DARK, mat: 'screen' }),
-      { size: [0.70, 0.17, 0.10], at: [0, -0.715, 0.285], bevel: 0.012 }, // condenser grille
+      // The condenser grille is stamped steel in shadow behind its own louvres,
+      // so it is the darkest thing on the object, not the warmest.
+      { size: [0.70, 0.17, 0.10], at: [0, -0.715, 0.285], bevel: 0.012, mat: 'grille', accent: DARK }, // condenser grille
       ...vents({ at: [0, -0.715, 0.340], n: 4, w: 0.60, thickness: 0.018, gap: 0.040, depth: 0.014 }),
-      { size: [0.016, 0.075, 0.14], at: [-0.394, 0.400, 0.10], bevel: 0.004, mat: 'paint', accent: DARK }, // side data plate
-      { size: [0.010, 0.052, 0.115], at: [-0.400, 0.400, 0.10], bevel: 0.003, mat: 'paper', accent: GLASS },
     ],
     mounts: onFloor,
     provides: (p, unit) => [
