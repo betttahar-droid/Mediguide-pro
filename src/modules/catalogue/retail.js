@@ -38,8 +38,9 @@ export const RETAIL = {
       z: { mode: 'stretch', min: 0.6, max: 1.6, default: 1.0, label: 'depth' },
     },
     build: () => [
-      { size: [0.96, 0.035, 0.46], at: [0, -0.16, 0.01], bevel: 0.008, mat: 'wood', accent: DARK }, // shelf board
-      { size: [0.94, 0.030, 0.035], at: [0, -0.150, 0.222], bevel: 0.006, mat: 'wood', accent: DARK }, // front band
+      // fat slab, not a joiner's board — see the note on wall shelving
+      { size: [0.96, 0.055, 0.46], at: [0, -0.152, 0.01], bevel: 0.010, mat: 'wood', accent: DARK }, // shelf board
+      { size: [0.94, 0.045, 0.040], at: [0, -0.146, 0.226], bevel: 0.008, mat: 'wood', accent: DARK }, // front band
       { size: [0.055, 0.36, 0.055], at: [-0.4875, 0, 0.222], bevel: 0.012, mat: 'steel', accent: FRAME }, // proud post
       { size: [0.055, 0.36, 0.055], at: [0.4875, 0, 0.222], bevel: 0.012, mat: 'steel', accent: FRAME },
       { size: [0.045, 0.36, 0.44], at: [-0.4825, 0, 0.005], bevel: 0.010, mat: 'panel', accent: FRAME }, // end panel
@@ -114,14 +115,18 @@ export const RETAIL = {
       z: FIXED,
     },
     build: () => [
-      { size: [0.98, 0.034, 0.28], at: [0, -0.175, 0.01], bevel: 0.008, mat: 'wood' }, // shelf board
-      { size: [0.98, 0.014, 0.26], at: [0, -0.196, 0.01], bevel: 0.004, mat: 'wood', accent: DARK }, // its shadow edge
-      { size: [0.98, 0.38, 0.026], at: [0, 0, -0.137], bevel: 0.006, mat: 'steel', accent: FRAME }, // wall rail
-      { size: [0.034, 0.14, 0.22], at: [-0.42, -0.118, 0.01], bevel: 0.006, mat: 'steel', accent: FRAME }, // bracket
-      { size: [0.034, 0.14, 0.22], at: [0.42, -0.118, 0.01], bevel: 0.006, mat: 'steel', accent: FRAME },
-      { size: [0.96, 0.050, 0.026], at: [0, -0.166, 0.152], bevel: 0.006, mat: 'paint', accent: ACCENT }, // price rail
+      // A 34 mm board on a 1 m span is what a joiner would fit and what reads
+      // as a pencil line at three metres. The reference builds everything from
+      // fat slabs, so the board is 60 mm with a deep shadow edge under it and
+      // brackets thick enough to look like they are holding something up.
+      { size: [0.98, 0.060, 0.30], at: [0, -0.168, 0.01], bevel: 0.010, mat: 'wood' }, // shelf board
+      { size: [0.98, 0.024, 0.28], at: [0, -0.208, 0.01], bevel: 0.005, mat: 'wood', accent: DARK }, // its shadow edge
+      { size: [0.98, 0.38, 0.030], at: [0, 0, -0.137], bevel: 0.006, mat: 'steel', accent: FRAME }, // wall rail
+      { size: [0.055, 0.16, 0.24], at: [-0.42, -0.118, 0.01], bevel: 0.008, mat: 'steel', accent: FRAME }, // bracket
+      { size: [0.055, 0.16, 0.24], at: [0.42, -0.118, 0.01], bevel: 0.008, mat: 'steel', accent: FRAME },
+      { size: [0.96, 0.065, 0.030], at: [0, -0.158, 0.162], bevel: 0.008, mat: 'paint', accent: ACCENT }, // price rail
       ...[-0.32, 0, 0.32].map((x) => ({
-        size: [0.19, 0.026, 0.012], at: [x, -0.166, 0.163], bevel: 0.003, mat: 'paper', accent: GLASS,
+        size: [0.19, 0.032, 0.012], at: [x, -0.158, 0.174], bevel: 0.003, mat: 'paper', accent: GLASS,
       })), // label windows
     ],
     mounts: onFloor,
@@ -300,7 +305,7 @@ export const RETAIL = {
       middle: PALETTE.tealDeep,
       accent1: PALETTE.paper, // FRAME  — the rim rails
       accent2: PALETTE.signal, // ACCENT — the handle bar
-      accent3: PALETTE.espresso, // DARK   — corner posts
+      accent3: PALETTE.charcoal, // DARK   — corner posts: dark plastic, not timber
       accent4: PALETTE.glass, // GLASS  — the label window
     },
     axes: {
@@ -318,10 +323,12 @@ export const RETAIL = {
       { size: [0.44, 0.024, 0.030], at: [0, 0.050, -0.148], bevel: 0.006, accent: FRAME },
       { size: [0.030, 0.024, 0.30], at: [0.204, 0.050, 0], bevel: 0.006, accent: FRAME },
       { size: [0.030, 0.024, 0.30], at: [-0.204, 0.050, 0], bevel: 0.006, accent: FRAME },
-      { size: [0.034, 0.13, 0.034], at: [0.198, 0.0, 0.143], bevel: 0.008, mat: 'wood', accent: DARK }, // corner post
-      { size: [0.034, 0.13, 0.034], at: [-0.198, 0.0, 0.143], bevel: 0.008, mat: 'wood', accent: DARK },
-      { size: [0.034, 0.13, 0.034], at: [0.198, 0.0, -0.143], bevel: 0.008, mat: 'wood', accent: DARK },
-      { size: [0.034, 0.13, 0.034], at: [-0.198, 0.0, -0.143], bevel: 0.008, mat: 'wood', accent: DARK },
+      // A shopping basket is one moulded plastic shell. Its corners are thicker
+      // where it is stacked and scuffed, not made of a different, wooden thing.
+      { size: [0.034, 0.13, 0.034], at: [0.198, 0.0, 0.143], bevel: 0.008, mat: 'paint', accent: DARK }, // corner post
+      { size: [0.034, 0.13, 0.034], at: [-0.198, 0.0, 0.143], bevel: 0.008, mat: 'paint', accent: DARK },
+      { size: [0.034, 0.13, 0.034], at: [0.198, 0.0, -0.143], bevel: 0.008, mat: 'paint', accent: DARK },
+      { size: [0.034, 0.13, 0.034], at: [-0.198, 0.0, -0.143], bevel: 0.008, mat: 'paint', accent: DARK },
       { size: [0.13, 0.040, 0.012], at: [0, -0.010, 0.156], bevel: 0.003, mat: 'paper', accent: GLASS }, // label
       { size: [0.26, 0.020, 0.020], at: [0, 0.062, 0], bevel: 0.005, mat: 'steel', accent: ACCENT }, // handle bar
     ],
@@ -440,16 +447,20 @@ export const RETAIL = {
       { size: [0.11, 0.94, 0.11], at: [0.46, -0.015, 0], bevel: 0.016, mat: 'panel' },
       { size: [0.06, 0.56, 0.026], at: [-0.46, -0.055, 0.058], bevel: 0.006, mat: 'paint', accent: ACCENT }, // inset panel
       { size: [0.06, 0.56, 0.026], at: [0.46, -0.055, 0.058], bevel: 0.006, mat: 'paint', accent: ACCENT },
-      { size: [0.15, 0.055, 0.15], at: [-0.46, 0.478, 0], bevel: 0.010, mat: 'wood', accent: FRAME }, // cap
-      { size: [0.15, 0.055, 0.15], at: [0.46, 0.478, 0], bevel: 0.010, mat: 'wood', accent: FRAME },
-      { size: [0.19, 0.055, 0.19], at: [-0.46, -0.472, 0], bevel: 0.010, mat: 'wood', accent: FRAME }, // base plinth
-      { size: [0.19, 0.055, 0.19], at: [0.46, -0.472, 0], bevel: 0.010, mat: 'wood', accent: FRAME },
-      { size: [0.96, 0.085, 0.075], at: [0, 0.345, 0], bevel: 0.014, mat: 'wood', accent: FRAME }, // oak top rail
-      { size: [0.90, 0.020, 0.030], at: [0, 0.315, 0.040], bevel: 0.005, mat: 'detail', accent: DARK },
-      { size: [0.94, 0.040, 0.040], at: [0, 0.085, 0], bevel: 0.010, mat: 'steel', accent: DARK }, // steel lower rail
-      { size: [0.055, 0.055, 0.055], at: [-0.42, 0.085, 0], bevel: 0.008, mat: 'steel', accent: FRAME }, // rail boss
-      { size: [0.055, 0.055, 0.055], at: [0.42, 0.085, 0], bevel: 0.008, mat: 'steel', accent: FRAME },
-      { size: [0.075, 0.11, 0.014], at: [-0.46, 0.300, 0.060], bevel: 0.003, mat: 'paper', accent: GLASS }, // notice
+      // Heavier everywhere: a cap and a plinth you could grip, and rails fat
+      // enough to lean on. The brief asks for exactly two things here — two
+      // rails and a base that cannot be knocked over — so the drawn shadow
+      // line under the top rail and the paper notice stuck to a post are
+      // gone. The rail casts its own shadow, and nobody pins a notice to a
+      // queue post.
+      { size: [0.17, 0.075, 0.17], at: [-0.46, 0.468, 0], bevel: 0.012, mat: 'wood', accent: FRAME }, // cap
+      { size: [0.17, 0.075, 0.17], at: [0.46, 0.468, 0], bevel: 0.012, mat: 'wood', accent: FRAME },
+      { size: [0.22, 0.085, 0.22], at: [-0.46, -0.457, 0], bevel: 0.012, mat: 'wood', accent: FRAME }, // base plinth
+      { size: [0.22, 0.085, 0.22], at: [0.46, -0.457, 0], bevel: 0.012, mat: 'wood', accent: FRAME },
+      { size: [0.96, 0.120, 0.095], at: [0, 0.335, 0], bevel: 0.018, mat: 'wood', accent: FRAME }, // oak top rail
+      { size: [0.94, 0.060, 0.060], at: [0, 0.075, 0], bevel: 0.012, mat: 'steel', accent: DARK }, // steel lower rail
+      { size: [0.070, 0.075, 0.070], at: [-0.42, 0.075, 0], bevel: 0.010, mat: 'steel', accent: FRAME }, // rail boss
+      { size: [0.070, 0.075, 0.070], at: [0.42, 0.075, 0], bevel: 0.010, mat: 'steel', accent: FRAME },
     ],
     mounts: onFloor,
     provides: () => [],

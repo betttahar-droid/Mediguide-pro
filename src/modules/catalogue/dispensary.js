@@ -164,7 +164,7 @@ export const DISPENSARY = {
       z: { mode: 'stretch', min: 0.8, max: 1.5, default: 1.0, label: 'depth' },
     },
     build: () => [
-      { size: [0.78, 0.028, 0.30], at: [0, -0.145, 0.005], bevel: 0.008, mat: 'wood' }, // shelf board, oak like the sheet
+      { size: [0.78, 0.048, 0.30], at: [0, -0.136, 0.005], bevel: 0.010, mat: 'wood' }, // shelf board, oak like the sheet
       { size: [0.045, 0.32, 0.31], at: [-0.3875, 0, 0.005], bevel: 0.010, mat: 'paint', accent: FRAME }, // upright
       { size: [0.045, 0.32, 0.31], at: [0.3875, 0, 0.005], bevel: 0.010, mat: 'paint', accent: FRAME }, // upright
       { size: [0.78, 0.32, 0.018], at: [0, 0, -0.151], bevel: 0.006, mat: 'panel' }, // back panel

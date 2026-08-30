@@ -100,25 +100,33 @@ export const CONSULTATION = {
       accent4: PALETTE.espresso, // the cushions' shadow edge
     },
     axes: { x: FIXED, y: FIXED, z: FIXED },
+    // Reproportioned to the reference's cartooned build. It was a correctly
+    // sized chair — thin legs, thin cushions, a tall thin back — and a
+    // correctly sized chair reads as spindly next to everything else here.
+    // The legs are half again as thick and a third shorter, the cushions are
+    // fat slabs, and the frame is heavy enough to carry them.
+    //
+    // The seat-pan vent strip and the coral maker's label are gone. A chair
+    // seat does not need to breathe through its front edge, and nothing in
+    // this room is read at a distance where a 3 cm label is anything but a
+    // coral speck — neither could survive the question of why it was there.
     build: () => [
-      { size: [0.44, 0.105, 0.42], at: [0, -0.005, 0.02], bevel: 0.018, mat: 'fabric', accent: FRAME }, // seat cushion
-      { size: [0.44, 0.020, 0.42], at: [0, -0.060, 0.02], bevel: 0.006, mat: 'fabric', accent: GLASS }, // its shadow edge
-      { size: [0.42, 0.42, 0.10], at: [0, 0.235, -0.170], bevel: 0.018, mat: 'fabric', accent: FRAME }, // back cushion
-      { size: [0.42, 0.020, 0.10], at: [0, 0.020, -0.170], bevel: 0.006, mat: 'fabric', accent: GLASS },
-      { size: [0.46, 0.040, 0.44], at: [0, -0.078, 0.02], bevel: 0.008, mat: 'steel' }, // seat pan
-      { size: [0.055, 0.50, 0.055], at: [-0.195, 0.190, -0.215], bevel: 0.010, mat: 'steel' }, // back post
-      { size: [0.055, 0.50, 0.055], at: [0.195, 0.190, -0.215], bevel: 0.010, mat: 'steel' },
-      { size: [0.075, 0.055, 0.055], at: [-0.195, 0.330, -0.208], bevel: 0.008, mat: 'steel', accent: DARK }, // bracket
-      { size: [0.075, 0.055, 0.055], at: [-0.195, 0.130, -0.208], bevel: 0.008, mat: 'steel', accent: DARK },
-      { size: [0.048, 0.42, 0.048], at: [-0.19, -0.290, 0.17], bevel: 0.008, mat: 'steel' }, // leg
-      { size: [0.048, 0.42, 0.048], at: [0.19, -0.290, 0.17], bevel: 0.008, mat: 'steel' },
-      { size: [0.048, 0.42, 0.048], at: [-0.19, -0.290, -0.15], bevel: 0.008, mat: 'steel' },
-      { size: [0.048, 0.42, 0.048], at: [0.19, -0.290, -0.15], bevel: 0.008, mat: 'steel' },
-      { size: [0.42, 0.032, 0.032], at: [0, -0.400, 0.17], bevel: 0.006, mat: 'steel', accent: DARK }, // stretcher
-      { size: [0.46, 0.022, 0.028], at: [0, 0.046, 0.226], bevel: 0.006, mat: 'paint', accent: DARK }, // seat piping
-      { size: [0.44, 0.026, 0.028], at: [0, 0.442, -0.170], bevel: 0.006, mat: 'paint', accent: DARK }, // back piping
-      ...vents({ at: [0, -0.078, 0.244], n: 3, w: 0.16, thickness: 0.012, gap: 0.020, depth: 0.012 }),
-      ...plate({ at: [0.145, -0.078, 0.244], w: 0.10, h: 0.030, accent: ACCENT, surround: DARK }),
+      { size: [0.46, 0.160, 0.44], at: [0, 0.020, 0.02], bevel: 0.020, mat: 'fabric', accent: FRAME }, // seat cushion
+      { size: [0.46, 0.024, 0.44], at: [0, -0.052, 0.02], bevel: 0.006, mat: 'fabric', accent: GLASS }, // its shadow edge
+      { size: [0.44, 0.400, 0.15], at: [0, 0.220, -0.155], bevel: 0.020, mat: 'fabric', accent: FRAME }, // back cushion
+      { size: [0.44, 0.024, 0.15], at: [0, 0.032, -0.155], bevel: 0.006, mat: 'fabric', accent: GLASS },
+      { size: [0.48, 0.060, 0.46], at: [0, -0.080, 0.02], bevel: 0.010, mat: 'steel' }, // seat pan
+      { size: [0.085, 0.46, 0.075], at: [-0.190, 0.160, -0.215], bevel: 0.012, mat: 'steel' }, // back post
+      { size: [0.085, 0.46, 0.075], at: [0.190, 0.160, -0.215], bevel: 0.012, mat: 'steel' },
+      { size: [0.100, 0.070, 0.060], at: [-0.190, 0.340, -0.205], bevel: 0.010, mat: 'steel', accent: DARK }, // bracket
+      { size: [0.100, 0.070, 0.060], at: [-0.190, 0.100, -0.205], bevel: 0.010, mat: 'steel', accent: DARK },
+      { size: [0.075, 0.34, 0.075], at: [-0.180, -0.280, 0.17], bevel: 0.012, mat: 'steel' }, // leg
+      { size: [0.075, 0.34, 0.075], at: [0.180, -0.280, 0.17], bevel: 0.012, mat: 'steel' },
+      { size: [0.075, 0.34, 0.075], at: [-0.180, -0.280, -0.15], bevel: 0.012, mat: 'steel' },
+      { size: [0.075, 0.34, 0.075], at: [0.180, -0.280, -0.15], bevel: 0.012, mat: 'steel' },
+      { size: [0.42, 0.045, 0.045], at: [0, -0.360, 0.17], bevel: 0.008, mat: 'steel', accent: DARK }, // stretcher
+      { size: [0.48, 0.030, 0.030], at: [0, 0.050, 0.232], bevel: 0.008, mat: 'paint', accent: DARK }, // seat piping
+      { size: [0.46, 0.034, 0.034], at: [0, 0.425, -0.155], bevel: 0.008, mat: 'paint', accent: DARK }, // back piping
     ],
     mounts: onFloor,
     provides: () => [],
@@ -308,7 +316,7 @@ export const SIGNAGE = {
       middle: PALETTE.oakDark,
       accent1: PALETTE.charcoal, // FRAME  — the deep surround and the rods
       accent2: PALETTE.signal, // ACCENT — the coral marks
-      accent3: PALETTE.espresso, // DARK   — rod collars and the panel's shadow
+      accent3: PALETTE.ink, // DARK   — rod collars and the panel's shadow: dark steel
       accent4: PALETTE.paper, // the lettering band
     },
     axes: {
@@ -325,8 +333,10 @@ export const SIGNAGE = {
       { size: [0.075, 0.045, 0.020], at: [-0.335, -0.115, 0.046], bevel: 0.004, mat: 'paint', accent: ACCENT }, // coral marks
       { size: [0.075, 0.045, 0.020], at: [0.290, -0.115, 0.046], bevel: 0.004, mat: 'paint', accent: ACCENT },
       { size: [0.90, 0.050, 0.085], at: [0, 0.190, 0], bevel: 0.008, mat: 'steel', accent: FRAME }, // top rail
-      { size: [0.055, 0.050, 0.055], at: [-0.34, 0.205, 0], bevel: 0.008, mat: 'wood', accent: DARK }, // rod collar
-      { size: [0.055, 0.050, 0.055], at: [0.34, 0.205, 0], bevel: 0.008, mat: 'wood', accent: DARK },
+      // The collar is the fitting that clamps a steel rod to a steel rail. It
+      // was carrying wood grain and a timber colour, which no such part has.
+      { size: [0.055, 0.050, 0.055], at: [-0.34, 0.205, 0], bevel: 0.008, mat: 'steel', accent: DARK }, // rod collar
+      { size: [0.055, 0.050, 0.055], at: [0.34, 0.205, 0], bevel: 0.008, mat: 'steel', accent: DARK },
       { size: [0.028, 0.30, 0.028], at: [-0.34, 0.345, 0], bevel: 0.006, mat: 'steel', accent: FRAME }, // drop rod
       { size: [0.028, 0.30, 0.028], at: [0.34, 0.345, 0], bevel: 0.006, mat: 'steel', accent: FRAME },
     ],
