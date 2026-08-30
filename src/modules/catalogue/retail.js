@@ -6,6 +6,62 @@ import { POOLS } from '../decor.js';
 import { AXIS, FIXED, onFloor, onSurface } from './schema.js';
 import { ACCENT, DARK, FRAME, GLASS, plate, vents, worktop } from './fittings.js';
 
+/**
+ * The OTC counter at a given step: a run of `bays` drawer bays between two
+ * 0.36 m end zones, all of it cut to the width the step asks for.
+ *
+ * Half-width is unit[0] * v, the same convention a repeat axis uses, so every
+ * socket and decor expression written as `unit[0] * p.x` is unchanged. The
+ * carcass, plinth, worktop and customer shelf are single slabs sized to that
+ * width — they are featureless, so a longer one is genuinely the same object —
+ * and everything that is NOT featureless is built per bay: a drawer front, its
+ * own pull rail, and a dark reveal at each joint between two drawers.
+ */
+function counterParts(v) {
+  const W = 0.72 * v; // half-width
+  const bays = Math.round((v - 1) / 0.5) + 1; // 1.0 → 1 bay … 2.5 → 4 bays
+  const band = 0.36 * bays; // half-width of the drawer band; the rest is end zone
+  const drawers = [];
+  for (let i = 0; i < bays; i++) {
+    const x = -band + (i + 0.5) * 0.72;
+    drawers.push(
+      { size: [0.68, 0.17, 0.63], at: [x, 0.11, 0.02], bevel: 0.022, mat: 'detail' }, // drawer front
+      // One pull per drawer, and it stops where the drawer does. The brief asks
+      // for "a continuous pull rail … because the drawer band runs the whole
+      // length" — that premise is the very thing this change gets rid of. Once
+      // the band is four separate drawers, a rail crossing all four is a rail
+      // screwed to four things that move independently, which is not a handle.
+      { size: [0.52, 0.034, 0.05], at: [x, 0.11, 0.345], bevel: 0.014, mat: 'steel', accent: FRAME },
+    );
+    // Between two drawers of one carcass there is a gap you see darkness
+    // through, exactly as on the dispensing bench — and it is what the sheet
+    // draws as the vertical line dividing the band.
+    if (i < bays - 1) {
+      drawers.push({ size: [0.04, 0.17, 0.60], at: [x + 0.36, 0.11, 0.01], bevel: 0.006, mat: 'paint', accent: DARK });
+    }
+  }
+  return [
+    { size: [2 * W - 0.18, 0.10, 0.50], at: [0, -0.425, 0.0], bevel: 0.02, accent: GLASS }, // plinth
+    { size: [2 * W, 0.72, 0.60], at: [0, -0.015, 0.02], bevel: 0.05, mat: 'panel' }, // carcass
+    { size: [2 * band + 0.04, 0.034, 0.640], at: [0, 0.014, 0.02], bevel: 0.006, mat: 'paint', accent: DARK }, // band shadow
+    ...drawers,
+    // the oak top and the customer shelf are genuinely timber here
+    ...worktop({ at: [0, 0.4375, 0.0], w: 2 * W + 0.06, d: 0.70, thickness: 0.075, lip: 0.034, mat: 'wood' }),
+    // The sheet is a DISPLAY counter with three levels you can count: the oak
+    // top, a dark band under it, and an oak customer shelf projecting well out
+    // in front below that. Ours had all three but the shelf was 4.5 cm thick
+    // and barely cleared the carcass, so the object read as a flat lid on a
+    // cream box. Thicker, and standing further out.
+    { size: [2 * W - 0.06, 0.080, 0.22], at: [0, 0.300, 0.435], bevel: 0.020, mat: 'wood', accent: FRAME }, // customer shelf
+    { size: [2 * W - 0.06, 0.032, 0.235], at: [0, 0.250, 0.435], bevel: 0.008, mat: 'wood', accent: DARK }, // its edge band
+    // The end zones are why the bays stop short of the ends: they are the bit
+    // of counter with no drawer behind it, which is where the till label and
+    // the card-reader vents have always lived.
+    ...plate({ at: [-(W - 0.08), 0.24, 0.345], w: 0.16, h: 0.05, accent: ACCENT, surround: FRAME }),
+    ...vents({ at: [W - 0.055, -0.30, 0.325], n: 3, w: 0.14, thickness: 0.016, gap: 0.030, depth: 0.012 }),
+  ];
+}
+
 export const RETAIL = {
   gondola_shelf: {
     id: 'gondola_shelf',
@@ -170,12 +226,16 @@ export const RETAIL = {
   // repeated bays. Side by side the two are the whole §1 argument.
   serving_counter: {
     id: 'serving_counter',
-    label: 'OTC counter (stretch)',
+    label: 'OTC counter',
     category: 'retail',
-    blurb: 'Continuous-length counter. The 9-slice reference case.',
+    blurb: 'Serving counter in drawer bays. Its depth is the 9-slice case.',
     cost: 780,
-    unit: [0.6, 0.475, 0.33],
-    margins: [0.14, 0, 0.1],
+    // §C2 — the bay is 0.72 m and the two end zones are 0.36 m each, so a
+    // counter is 0.72·(bays + 1) long. That is what makes unit[0] = 0.72 and
+    // the steps 1.0/1.5/2.0/2.5: the default '2 bays' is 2.16 m, the same
+    // length the old stretch axis defaulted to at 1.8 × 1.2 m.
+    unit: [0.72, 0.475, 0.33],
+    margins: [0, 0, 0.1],
     trimAxis: AXIS.x,
     trimDensity: 0.42,
     atlasCell: [1, 0],
@@ -185,9 +245,21 @@ export const RETAIL = {
     // thing a customer stands at, so it should be the calm object and let the
     // dispensing bench behind it carry the colour.
     //
-    // Every fitting sits inside the 9-slice CAPS (|x| > 0.46), which is the
-    // whole discipline of a stretch axis: ornament in the middle band would
-    // smear as the counter grows, and ornament in the caps never moves.
+    // Its LENGTH used to be a stretch axis, and it was the worst piece of
+    // geometry in the game. A counter's front is not featureless: the drawer
+    // band, its pull rail and the customer shelf all ran through the middle
+    // band, so every one of them widened with it — one 3.6 m drawer with one
+    // 3 m handle on it, which is not a thing that exists. The discipline of
+    // keeping ornament in the caps kept the ENDS honest and left the whole
+    // middle of the object lying.
+    //
+    // So length steps between rebuilt variants (§C1's `steps`), and the object
+    // it rebuilds into is the one the sheet draws: a run of drawer bays, each
+    // with its own front and its own pull, divided by a dark reveal you can see
+    // between the drawers. What stays continuous is what is genuinely
+    // featureless — the carcass, the plinth, the worktop and the customer
+    // shelf are single slabs cut to length, because that is how they are made.
+    // Depth is still stretch: the depth middle really is featureless.
     colors: {
       base: PALETTE.paper, // carcass
       middle: PALETTE.bone,
@@ -197,36 +269,33 @@ export const RETAIL = {
       accent4: PALETTE.tealDeep, // no glass on this one: slot 4 buys the plinth
     },
     axes: {
-      x: { mode: 'stretch', min: 1.0, max: 4.0, default: 1.8, label: 'length' },
+      x: {
+        mode: 'steps',
+        default: 1.5,
+        label: 'length',
+        steps: [
+          { v: 1.0, label: '1 bay' },
+          { v: 1.5, label: '2 bays' },
+          { v: 2.0, label: '3 bays' },
+          { v: 2.5, label: '4 bays' },
+        ],
+      },
       y: FIXED,
       z: { mode: 'stretch', min: 0.8, max: 1.6, default: 1.0, label: 'depth' },
     },
-    build: () => [
-      { size: [1.02, 0.10, 0.50], at: [0, -0.425, 0.0], bevel: 0.02, accent: GLASS }, // plinth
-      { size: [1.2, 0.72, 0.60], at: [0, -0.015, 0.02], bevel: 0.05, mat: 'panel' }, // carcass
-      { size: [1.16, 0.17, 0.63], at: [0, 0.11, 0.02], bevel: 0.022, mat: 'detail' }, // drawer band
-      { size: [1.20, 0.034, 0.640], at: [0, 0.014, 0.02], bevel: 0.006, mat: 'paint', accent: DARK }, // band shadow
-      { size: [1.0, 0.034, 0.05], at: [0, 0.11, 0.345], bevel: 0.014, mat: 'steel', accent: FRAME }, // pull rail
-      // the oak top and the customer shelf are genuinely timber here
-      ...worktop({ at: [0, 0.4375, 0.0], w: 1.26, d: 0.70, thickness: 0.075, lip: 0.034, mat: 'wood' }),
-      // The sheet is a DISPLAY counter with three levels you can count: the oak
-      // top, a dark band under it, and an oak customer shelf projecting well out
-      // in front below that. Ours had all three but the shelf was 4.5 cm thick
-      // and barely cleared the carcass, so the object read as a flat lid on a
-      // cream box. Thicker, and standing further out.
-      { size: [1.14, 0.080, 0.22], at: [0, 0.300, 0.435], bevel: 0.020, mat: 'wood', accent: FRAME }, // customer shelf
-      { size: [1.14, 0.032, 0.235], at: [0, 0.250, 0.435], bevel: 0.008, mat: 'wood', accent: DARK }, // its edge band
-      ...plate({ at: [-0.52, 0.24, 0.345], w: 0.16, h: 0.05, accent: ACCENT, surround: FRAME }),
-      ...vents({ at: [0.545, -0.30, 0.325], n: 3, w: 0.14, thickness: 0.016, gap: 0.030, depth: 0.012 }),
-    ],
+    build: (p) => counterParts(p.x),
     mounts: onFloor,
     provides: (p, unit) => [
       { tag: 'counter_surface', pos: [0, unit[1] * 2 + 0.005, 0], normal: [0, 1, 0] },
       { tag: 'counter_side', pos: [unit[0] * p.x, unit[1], 0], normal: [1, 0, 0] },
       { tag: 'counter_side', pos: [-unit[0] * p.x, unit[1], 0], normal: [-1, 0, 0] },
     ],
-    // A stretch axis has no bays to hang slots off, so the slots are spaced by
-    // length instead: one every 0.55m, added at the ends as it grows.
+    // Props are spaced by LENGTH rather than per bay, and stay that way now the
+    // axis steps: the drawer bays below are 0.72 m apart, but what stands on
+    // the top is a queue of paper bags and card machines that has nothing to do
+    // with the joinery under it. `unit[0] * p.x` is the counter's half-width on
+    // a steps axis exactly as it was on a stretch one, so this reads the new
+    // width for free — 5 slots at '1 bay', 13 at '4 bays'.
     decor: (p, unit) => {
       const half = unit[0] * p.x;
       const n = Math.max(1, Math.floor((half * 2) / 0.55));

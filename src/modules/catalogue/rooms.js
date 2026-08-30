@@ -166,6 +166,61 @@ export const CONSULTATION = {
   },
 };
 
+/** One tier of locker: a 0.79 m door and the rail under it. */
+const LOCKER_TIER = 0.85;
+
+/**
+ * One BAY of lockers at a given tier count — two doors, or three.
+ *
+ * A locker bank does not get taller by having taller doors; it gets taller by
+ * having another tier of them, which is 0.85 m of object each time. So the
+ * doors, their vents, their handles and their number plates come per tier,
+ * while the things there is only ever one of — the sloped crown, the cap under
+ * it, the plinth, the two full-height stiles and the carcass — stay singular
+ * and simply grow with the bank.
+ *
+ * Everything is a literal per tier count rather than derived arithmetic, so the
+ * two-tier bay is the original part list to the last bit. The origin is the
+ * centre of the bay's own height (unit[1] * v above the floor), which is what
+ * resize.layout's stepLift exists to place.
+ */
+function lockerParts(v) {
+  const three = v > 1;
+  const carcassH = three ? 2.57 : 1.72;
+  const stileH = three ? 2.53 : 1.68;
+  const plinthY = three ? -1.300 : -0.875;
+  const footY = three ? -1.223 : -0.798;
+  const headY = three ? 1.303 : 0.878;
+  const capY = three ? 1.330 : 0.905;
+  const crownY = three ? 1.375 : 0.950;
+  const doorY = three ? [0.880, 0.030, -0.820] : [0.455, -0.395]; // top down
+  const railY = three ? [0.455, -0.395] : [0.030]; // one between each pair
+  const ventY = three ? [1.125, 0.275, -0.575] : [0.700, -0.150];
+  const handleY = three ? [0.725, -0.125, -0.975] : [0.300, -0.550];
+  const plateY = three ? [0.905, 0.055, -0.795] : [0.480, -0.370];
+
+  return [
+    { size: [0.60, carcassH, 0.50], at: [0, 0.04, 0], bevel: 0.032, mat: 'paint', accent: FRAME }, // carcass / frame
+    { size: [0.62, 0.115, 0.52], at: [0, plinthY, 0], bevel: 0.012, mat: 'paint', accent: DARK }, // plinth
+    ...doorY.map((y) => ({ size: [0.53, 0.79, 0.035], at: [0.005, y, 0.256], bevel: 0.010, mat: 'panel' })), // door
+    // the frame reading through: stiles down the sides, a rail between doors
+    { size: [0.045, stileH, 0.045], at: [-0.2775, 0.04, 0.262], bevel: 0.010, accent: FRAME },
+    { size: [0.045, stileH, 0.045], at: [0.2775, 0.04, 0.262], bevel: 0.010, accent: FRAME },
+    ...railY.map((y) => ({ size: [0.60, 0.055, 0.045], at: [0, y, 0.262], bevel: 0.010, accent: FRAME })), // mid rail
+    { size: [0.60, 0.045, 0.045], at: [0, headY, 0.262], bevel: 0.010, accent: FRAME }, // head rail
+    { size: [0.60, 0.045, 0.045], at: [0, footY, 0.262], bevel: 0.010, accent: FRAME }, // foot rail
+    // Both fittings were drawn at the size a real locker has them, which at
+    // playing distance is nothing. On the sheet the vent stack and the number
+    // plate are the two things you read on a door, so they are sized to be read.
+    ...ventY.flatMap((y) => vents({ at: [0, y, 0.276], n: 4, w: 0.34, thickness: 0.030, gap: 0.052, depth: 0.018 })),
+    ...handleY.map((y) => ({ size: [0.034, 0.17, 0.050], at: [0.228, y, 0.280], bevel: 0.006, mat: 'steel', accent: ACCENT })), // handle
+    ...plateY.flatMap((y) => plate({ at: [-0.150, y, 0.278], w: 0.17, h: 0.090, depth: 0.014 })), // number plate
+    { size: [0.024, 0.020, 0.44], at: [-0.302, 0.04, 0], bevel: 0.005, mat: 'steel', accent: DARK }, // side seam
+    { size: [0.62, 0.050, 0.52], at: [0, capY, 0], bevel: 0.012, accent: DARK }, // top cap
+    { size: [0.60, 0.055, 0.48], at: [0, crownY, 0.02], bevel: 0.012, accent: FRAME }, // sloped crown
+  ];
+}
+
 export const STAFF = {
   // Straight off the reference: green steel lockers, three vent slots per door,
   // a number plate and a stubby handle. Repeat them along the wall.
@@ -173,7 +228,7 @@ export const STAFF = {
     id: 'locker_bank',
     label: 'Staff lockers',
     category: 'staff',
-    blurb: 'Two tiers per bay, vented doors, numbered.',
+    blurb: 'Two or three tiers per bay, vented doors, numbered.',
     cost: 240,
     unit: [0.3, 0.9, 0.25],
     margins: [0, 0, 0],
@@ -193,39 +248,33 @@ export const STAFF = {
       accent3: PALETTE.charcoal, // DARK   — plinth, vents, side seams
       accent4: PALETTE.glass, // GLASS  — the number plates
     },
+    // §C2 — height used to be FIXED, because the only honest way to make a
+    // locker bank taller is to put another tier of doors in it, and a stretch
+    // axis would have given you one 1.6 m door with the vents pulled into
+    // stripes. It steps now: one more tier is one more 0.85 m of locker, so the
+    // step's v is exactly that as a multiple of the 1.8 m unit height. Width
+    // stays repeat — a bay of lockers really is one bay repeated — and the two
+    // compose: the bay geometry is rebuilt at the current tier count and then
+    // instanced along x, which is one geometry per (tiers × nothing) and N
+    // meshes per bank.
     axes: {
       x: { mode: 'repeat', unit: 0.6, min: 1, max: 8, default: 3, label: 'bays' },
-      y: FIXED,
+      y: {
+        mode: 'steps',
+        default: 1,
+        label: 'tiers',
+        steps: [
+          { v: 1, label: '2 tiers' },
+          { v: (1.8 + LOCKER_TIER) / 1.8, label: '3 tiers' },
+        ],
+      },
       z: FIXED,
     },
-    build: () => [
-      { size: [0.60, 1.72, 0.50], at: [0, 0.04, 0], bevel: 0.032, mat: 'paint', accent: FRAME }, // carcass / frame
-      { size: [0.62, 0.115, 0.52], at: [0, -0.875, 0], bevel: 0.012, mat: 'paint', accent: DARK }, // plinth
-      { size: [0.53, 0.79, 0.035], at: [0.005, 0.455, 0.256], bevel: 0.010, mat: 'panel' }, // upper door
-      { size: [0.53, 0.79, 0.035], at: [0.005, -0.395, 0.256], bevel: 0.010, mat: 'panel' }, // lower door
-      // the frame reading through: stiles down the sides, a rail between doors
-      { size: [0.045, 1.68, 0.045], at: [-0.2775, 0.04, 0.262], bevel: 0.010, accent: FRAME },
-      { size: [0.045, 1.68, 0.045], at: [0.2775, 0.04, 0.262], bevel: 0.010, accent: FRAME },
-      { size: [0.60, 0.055, 0.045], at: [0, 0.030, 0.262], bevel: 0.010, accent: FRAME }, // mid rail
-      { size: [0.60, 0.045, 0.045], at: [0, 0.878, 0.262], bevel: 0.010, accent: FRAME }, // head rail
-      { size: [0.60, 0.045, 0.045], at: [0, -0.798, 0.262], bevel: 0.010, accent: FRAME }, // foot rail
-      // Both fittings were drawn at the size a real locker has them, which at
-      // playing distance is nothing. On the sheet the vent stack and the number
-      // plate are the two things you read on a door, so they are sized to be read.
-      ...vents({ at: [0, 0.700, 0.276], n: 4, w: 0.34, thickness: 0.030, gap: 0.052, depth: 0.018 }),
-      ...vents({ at: [0, -0.150, 0.276], n: 4, w: 0.34, thickness: 0.030, gap: 0.052, depth: 0.018 }),
-      { size: [0.034, 0.17, 0.050], at: [0.228, 0.300, 0.280], bevel: 0.006, mat: 'steel', accent: ACCENT }, // handle
-      { size: [0.034, 0.17, 0.050], at: [0.228, -0.550, 0.280], bevel: 0.006, mat: 'steel', accent: ACCENT },
-      ...plate({ at: [-0.150, 0.480, 0.278], w: 0.17, h: 0.090, depth: 0.014 }), // number plate
-      ...plate({ at: [-0.150, -0.370, 0.278], w: 0.17, h: 0.090, depth: 0.014 }),
-      { size: [0.024, 0.020, 0.44], at: [-0.302, 0.04, 0], bevel: 0.005, mat: 'steel', accent: DARK }, // side seam
-      { size: [0.62, 0.050, 0.52], at: [0, 0.905, 0], bevel: 0.012, accent: DARK }, // top cap
-      { size: [0.60, 0.055, 0.48], at: [0, 0.950, 0.02], bevel: 0.012, accent: FRAME }, // sloped crown
-    ],
+    build: (p) => lockerParts(p.y),
     mounts: onFloor,
     provides: (p, unit) => [
-      { tag: 'gondola_side', pos: [unit[0] * p.x, unit[1], 0], normal: [1, 0, 0] },
-      { tag: 'gondola_side', pos: [-unit[0] * p.x, unit[1], 0], normal: [-1, 0, 0] },
+      { tag: 'gondola_side', pos: [unit[0] * p.x, unit[1] * p.y, 0], normal: [1, 0, 0] },
+      { tag: 'gondola_side', pos: [-unit[0] * p.x, unit[1] * p.y, 0], normal: [-1, 0, 0] },
     ],
   },
 

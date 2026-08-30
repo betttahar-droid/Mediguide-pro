@@ -71,27 +71,33 @@ check(
 );
 
 // --- stretch axis: one mesh, 9-slice in the vertex shader ------------------
+// The counter's length used to be this case; §C2 made it a steps axis, so the
+// reference stretch is now the booth, whose walls really are featureless.
 const stretchTest = await page.evaluate(() => {
-  const c = __app.placed.find((m) => m.typeId === 'serving_counter');
-  c.setParams({ x: 4.0 });
-  return { meshes: c.meshes.length, scale: c.material.uniforms.uTargetScale.value.toArray() };
+  const c = __app.placed.find((m) => m.typeId === 'consultation_booth');
+  c.setParams({ x: 2.1 });
+  const out = { meshes: c.meshes.length, scale: c.material.uniforms.uTargetScale.value.toArray() };
+  c.setParams({ x: 1.0 });
+  return out;
 });
 check(
   'stretch axis stays one draw, drives uTargetScale',
-  stretchTest.meshes === 1 && stretchTest.scale[0] === 4,
+  stretchTest.meshes === 1 && stretchTest.scale[0] === 2.1,
   `meshes ${stretchTest.meshes}, uTargetScale ${stretchTest.scale.join(', ')}`
 );
 await page.screenshot({ path: `${shotDir}/02-stretched-counter.png` });
 
 // --- clamping (§5.2 guard 1) ----------------------------------------------
+// Both kinds at once: a stretch axis clamps to its range, a steps axis snaps to
+// its nearest step, and neither leaves a value the geometry cache cannot key.
 const clampTest = await page.evaluate(() => {
   const c = __app.placed.find((m) => m.typeId === 'serving_counter');
   c.setParams({ x: 99, z: -5 });
   const out = { ...c.params };
-  c.setParams({ x: 2.4, z: 1.0 });
+  c.setParams({ x: 1.5, z: 1.0 });
   return out;
 });
-check('params clamp to the axis spec', clampTest.x === 4 && clampTest.z === 0.8, JSON.stringify(clampTest));
+check('params clamp to the axis spec', clampTest.x === 2.5 && clampTest.z === 0.8, JSON.stringify(clampTest));
 
 // --- vertex masks were baked ----------------------------------------------
 const maskTest = await page.evaluate(() => {
@@ -223,6 +229,58 @@ await page.evaluate(() => {
 });
 
 
+// --- §C2: the same trick on the two objects that most needed it ------------
+// The counter's length was a stretch axis (one drawer three metres long); the
+// lockers' height was FIXED because there was no honest way to stretch it. Both
+// step now, and the claims are the same two: the default step is the object
+// that was there before, part for part, and the other steps are DIFFERENT built
+// objects — plus, on the lockers, that a steps axis composes with the repeat
+// axis beside it (three bays of a three-tier bay, one geometry, three meshes,
+// standing on the floor rather than sunk into it).
+const c2 = await page.evaluate(() => {
+  const counter = __app.placed.find((m) => m.typeId === 'serving_counter');
+  const lockers = __app.placed.find((m) => m.typeId === 'locker_bank');
+  const geo = (m) => m.meshes[0].geometry;
+  const verts = (m) => geo(m).getAttribute('position').count;
+  const tall = lockers.def.axes.y.steps[1].v;
+
+  counter.setParams({ x: 1.5 });
+  const two = { verts: verts(counter), geo: geo(counter), meshes: counter.meshes.length };
+  counter.setParams({ x: 2.5 });
+  const four = { verts: verts(counter), meshes: counter.meshes.length };
+  counter.setParams({ x: 1.5 });
+  const counterCached = geo(counter) === two.geo;
+
+  lockers.setParams({ x: 3, y: 1 });
+  const t2 = { verts: verts(lockers), meshes: lockers.meshes.length, floor: lockers.meshes[0].position.y };
+  lockers.setParams({ y: tall });
+  const t3 = {
+    verts: verts(lockers),
+    meshes: lockers.meshes.length,
+    floor: lockers.meshes[0].position.y,
+    shared: lockers.meshes.every((m) => m.geometry === geo(lockers)),
+    spread: lockers.meshes.map((m) => m.position.x),
+    height: lockers.footprint[1],
+  };
+  lockers.setParams({ y: 1 });
+  // The default step has to BE the object that was there before the axis
+  // existed: 26 parts is the pre-§C2 locker bay, part for part.
+  const defaultParts = lockers.def.build({ x: 3, y: 1 }).length;
+  return { two, four, counterCached, t2, t3, tall, defaultParts };
+});
+check(
+  'a steps axis rebuilds the counter in bays and the lockers in tiers',
+  c2.four.verts > c2.two.verts && c2.four.meshes === 1 && c2.two.meshes === 1 && c2.counterCached &&
+    c2.t3.verts > c2.t2.verts && c2.t3.meshes === 3 && c2.t3.shared &&
+    Math.abs(c2.t2.floor - 0.9) < 1e-6 && Math.abs(c2.t3.floor - 0.9 * c2.tall) < 1e-6 &&
+    Math.abs(c2.t3.height - 0.9 * c2.tall) < 1e-6 && c2.defaultParts === 26,
+  `counter '2 bays' ${c2.two.verts} verts → '4 bays' ${c2.four.verts} in one mesh, and back is the same cached ` +
+  `geometry${c2.counterCached ? '' : ' [FAILED]'}; lockers '2 tiers' ${c2.t2.verts} verts → '3 tiers' ${c2.t3.verts}, ` +
+  `still 3 repeat bays sharing one geometry${c2.t3.shared ? '' : ' [FAILED]'} at x ${c2.t3.spread.map((v) => v.toFixed(2)).join('/')}, ` +
+  `lifted onto the floor at ${c2.t3.floor.toFixed(3)}m (2 tiers: ${c2.t2.floor.toFixed(3)}m); ` +
+  `the default step is still the ${c2.defaultParts}-part bay it was before the axis existed${c2.defaultParts === 26 ? '' : ' [FAILED]'}`
+);
+
 // --- pixel helpers ---------------------------------------------------------
 const grab = async (clip) => PNG.sync.read(await page.screenshot({ clip }));
 
@@ -258,11 +316,14 @@ const settle = (frames = 4) =>
     requestAnimationFrame(tick);
   }), frames);
 const CROP = { x: 340, y: 220, width: 340, height: 300 };
-const CAP_CROP = { x: 430, y: 300, width: 190, height: 200 };
+const CAP_CROP = { x: 420, y: 300, width: 440, height: 280 };
 
 // --- Phase 2: the cap is pixel-identical before and after stretching -------
-// Camera is anchored to the left cap, and everything but the desk is hidden, so
-// the only thing that could change in the crop is the cap itself.
+// The counter's DEPTH is its stretch axis now (§C2 made the length step), and
+// the front face is where all its fittings live — the pull rails, the label
+// plate, the customer shelf. Camera is anchored to that front plane and
+// everything else is hidden, so the only thing that could change in the crop is
+// the front cap itself.
 async function capShot(scale) {
   await page.evaluate((s) => {
     const desk = __app.placed.find((m) => m.typeId === 'serving_counter');
@@ -270,32 +331,35 @@ async function capShot(scale) {
     for (const m of __app.placed) if (m.shadow) m.shadow.visible = false;
     __app.setDecorVisible(false); // decor is atmosphere, not the geometry claim
     for (const k of ['floor', 'backWall', 'sideWall']) __app.room[k].visible = false;
-    desk.setParams({ x: s, z: 1.0 });
-    // Anchor to the cap wherever the counter actually stands, so the crop
-    // frames the same corner at any length.
-    const capX = desk.group.position.x - desk.def.unit[0] * s;
-    const z = desk.group.position.z;
-    __app.camera.position.set(capX - 0.60, 0.80, z + 0.95);
-    __app.controls.target.set(capX + 0.06, 0.48, z);
+    desk.setParams({ x: 1.5, z: s });
+    // Anchor to the front cap wherever the counter actually stands and however
+    // deep it is, so the crop frames the same fittings at any depth.
+    const capZ = desk.group.position.z + desk.def.unit[2] * s;
+    const x = desk.group.position.x - 1.0; // the end zone, with its vents on it
+    // Eye level with the front, so the crop is front face and fittings and not
+    // the worktop's top plane — the top is the one surface that genuinely gets
+    // deeper, and framing it would be testing the stretch, not the cap.
+    __app.camera.position.set(x - 0.85, 0.46, capZ + 1.75);
+    __app.controls.target.set(x + 0.30, 0.34, capZ);
     __app.controls.update();
   }, scale);
   await settle();
   return grab(CAP_CROP);
 }
 
-const capAt1 = await capShot(1.0);
+const capAt1 = await capShot(0.8);
 await page.screenshot({ path: `${shotDir}/04-cap-at-1x.png`, clip: CAP_CROP });
-const capAt4 = await capShot(4.0);
-// Write the artefact while the counter is still at 4x — after the restore it
+const capAt4 = await capShot(1.6);
+// Write the artefact while the counter is still deep — after the restore it
 // would be a picture of something else entirely.
 await page.screenshot({ path: `${shotDir}/04-cap-at-4x.png`, clip: CAP_CROP });
 await page.evaluate(() => {
-  __app.placed.find((m) => m.typeId === 'serving_counter').setParams({ x: 1.3, z: 1.0 });
+  __app.placed.find((m) => m.typeId === 'serving_counter').setParams({ x: 1.5, z: 1.0 });
   __app.setDecorVisible(true);
 });
 const capDiff = meanAbsDiff(capAt1, capAt4);
 check(
-  'nine-slice: the cap is unchanged from 1.0× to 4.0×',
+  'nine-slice: the front cap is unchanged from 0.8× to 1.6× depth',
   capDiff < 4,
   `mean channel difference ${capDiff.toFixed(2)}/255 over the cap crop`
 );

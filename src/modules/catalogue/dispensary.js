@@ -88,6 +88,73 @@ function fridgeParts(steps = 1) {
   ];
 }
 
+/**
+ * The sink at a given step: one basin, or two in ONE carcass.
+ *
+ * The double is not two sinks glued together — that is what the repeat axis
+ * used to build, and it gave you two carcasses, two worktops with a seam
+ * between them and two taps. A dispensary double sink is a single pressed top
+ * with two bowls pressed into it, one mixer standing between them so it swings
+ * to either, and three cupboard doors under a carcass that is one box. Only the
+ * bowls, the doors and the knobs multiply; the top, the carcass, the kick, the
+ * side vents and the label plate happen once however many bowls there are.
+ *
+ * Written as literals per variant rather than derived arithmetic, so the
+ * single-basin unit is the original part list to the last bit.
+ */
+function sinkParts(v) {
+  const two = v > 1;
+  const w = two ? 1.19 : 0.70; // carcass
+  const kickW = two ? 1.15 : 0.66;
+  const topW = two ? 1.23 : 0.74;
+  const doorX = two ? [-0.365, 0, 0.365] : [-0.175, 0.175];
+  const doorW = two ? 0.35 : 0.31;
+  // Three doors in a run hang the same way round, so every knob is on the
+  // right-hand edge of its own door; a pair meeting in the middle does not.
+  const stileX = two ? [-0.1825, 0.1825] : [0];
+  const knobX = two ? [-0.212, 0.153, 0.518] : [-0.042, 0.042];
+  const sideX = two ? -0.597 : -0.352; // the vent stack, on the side panel
+  const plateX = two ? 0.460 : 0.215;
+  // Two bowls of the same pressing, 4 cm narrower than the single so both fit
+  // with a hand's width of deck between them for the mixer and a drainer's
+  // width at each end.
+  const basinX = two ? [-0.245, 0.245] : [-0.02];
+  const [rimW, wellW, innerW] = two ? [0.40, 0.33, 0.27] : [0.44, 0.36, 0.30];
+  const tapX = two ? 0 : -0.02;
+  const leverX = two ? 0.165 : 0.145;
+  const bossX = two ? 0.095 : 0.075;
+
+  return [
+    { size: [kickW, 0.085, 0.48], at: [0, -0.4325, 0], bevel: 0.012, accent: DARK }, // kick
+    { size: [w, 0.79, 0.58], at: [0, 0.005, 0], bevel: 0.032, mat: 'panel' }, // carcass
+    ...posts({ at: [0, 0.005, 0], w, h: 0.80, d: 0.59, thickness: 0.05, bevel: 0.012 }),
+    ...doorX.map((x) => ({ size: [doorW, 0.62, 0.030], at: [x, -0.030, 0.296], bevel: 0.010, mat: 'panel' })),
+    ...stileX.map((x) => ({ size: [0.022, 0.66, 0.034], at: [x, -0.030, 0.294], bevel: 0.005, mat: 'steel', accent: FRAME })), // meeting stile
+    ...knobX.map((x) => ({ size: [0.042, 0.042, 0.040], at: [x, -0.030, 0.316], bevel: 0.008, mat: 'steel', accent: DARK })), // knob
+    ...vents({ at: [sideX, -0.120, 0.10], n: 5, w: 0.22, thickness: 0.016, gap: 0.030, depth: 0.012, axis: 'x' }),
+    ...plate({ at: [plateX, 0.310, 0.298], w: 0.14, h: 0.048 }),
+    // a dispensary sink is a single pressed stainless top, so every part of
+    // it from the worktop to the spout is the same 'steel'
+    { size: [topW, 0.055, 0.62], at: [0, 0.4475, 0], bevel: 0.028, mat: 'steel', accent: FRAME }, // worktop, top at 0.95
+    ...basinX.flatMap((x) => [
+      { size: [rimW, 0.036, 0.36], at: [x, 0.470, 0.03], bevel: 0.008, mat: 'steel', accent: FRAME }, // basin rim
+      // The well is a pressed steel recess, not a hole into the object. It was
+      // 'ink' — a purple-black — which read as a void punched in the worktop.
+      { size: [wellW, 0.026, 0.28], at: [x, 0.478, 0.03], bevel: 0.005, mat: 'steel', accent: NEUTRAL }, // the well
+      { size: [innerW, 0.016, 0.22], at: [x, 0.468, 0.03], bevel: 0.004, mat: 'steel', accent: NEUTRAL },
+    ]),
+    // The tap is what says SINK from across the room, and ours was a stub.
+    // The sheet draws a tall gooseneck: a column up, a long arm out over the
+    // middle of the basin, and a short drop at the end of it. ONE of them on
+    // the double, standing on the deck between the two bowls.
+    { size: [0.060, 0.40, 0.060], at: [tapX, 0.672, -0.215], bevel: 0.012, mat: 'steel', accent: FRAME }, // mixer column
+    { size: [0.052, 0.052, 0.30], at: [tapX, 0.860, -0.090], bevel: 0.010, mat: 'steel', accent: FRAME }, // gooseneck arm
+    { size: [0.046, 0.075, 0.046], at: [tapX, 0.815, 0.045], bevel: 0.008, mat: 'steel', accent: FRAME }, // its drop
+    { size: [0.15, 0.030, 0.032], at: [leverX, 0.800, -0.215], bevel: 0.006, mat: 'steel', accent: DARK }, // lever
+    { size: [0.030, 0.030, 0.030], at: [bossX, 0.800, -0.215], bevel: 0.006, mat: 'paint', accent: ACCENT }, // lever boss
+  ];
+}
+
 export const DISPENSARY = {
   // The hero, and the project's §1 argument made visible. Real dispensing
   // furniture is built from carcasses, so the length axis is `repeat`: one
@@ -453,51 +520,30 @@ export const DISPENSARY = {
       accent4: PALETTE.glass, // GLASS  — label windows
       accent5: PALETTE.steel, // NEUTRAL — the pressed well: a recess, not a void
     },
+    // §C2 — width used to repeat the whole unit, which built a row of sinks:
+    // two carcasses, two worktops with a seam down the middle and two taps
+    // fighting over one drainer. So it steps between rebuilt variants instead,
+    // and the wide one is a real double-bowl sink. See sinkParts above.
     axes: {
-      x: { mode: 'repeat', unit: 0.7, min: 1, max: 4, default: 1, label: 'bays' },
+      x: {
+        mode: 'steps',
+        default: 1,
+        label: 'bowls',
+        steps: [
+          { v: 1, label: 'single basin' },
+          { v: 1.7, label: 'double basin' },
+        ],
+      },
       y: FIXED,
       z: { mode: 'stretch', min: 0.85, max: 1.3, default: 1.0, label: 'depth' },
     },
-    build: () => [
-      { size: [0.66, 0.085, 0.48], at: [0, -0.4325, 0], bevel: 0.012, accent: DARK }, // kick
-      { size: [0.70, 0.79, 0.58], at: [0, 0.005, 0], bevel: 0.032, mat: 'panel' }, // carcass
-      ...posts({ at: [0, 0.005, 0], w: 0.70, h: 0.80, d: 0.59, thickness: 0.05, bevel: 0.012 }),
-      { size: [0.31, 0.62, 0.030], at: [-0.175, -0.030, 0.296], bevel: 0.010, mat: 'panel' }, // door
-      { size: [0.31, 0.62, 0.030], at: [0.175, -0.030, 0.296], bevel: 0.010, mat: 'panel' }, // door
-      { size: [0.022, 0.66, 0.034], at: [0, -0.030, 0.294], bevel: 0.005, mat: 'steel', accent: FRAME }, // meeting stile
-      { size: [0.042, 0.042, 0.040], at: [-0.042, -0.030, 0.316], bevel: 0.008, mat: 'steel', accent: DARK }, // knob
-      { size: [0.042, 0.042, 0.040], at: [0.042, -0.030, 0.316], bevel: 0.008, mat: 'steel', accent: DARK }, // knob
-      ...vents({ at: [-0.352, -0.120, 0.10], n: 5, w: 0.22, thickness: 0.016, gap: 0.030, depth: 0.012, axis: 'x' }),
-      ...plate({ at: [0.215, 0.310, 0.298], w: 0.14, h: 0.048 }),
-      // a dispensary sink is a single pressed stainless top, so every part of
-      // it from the worktop to the spout is the same 'steel'
-      { size: [0.74, 0.055, 0.62], at: [0, 0.4475, 0], bevel: 0.028, mat: 'steel', accent: FRAME }, // worktop, top at 0.95
-      { size: [0.44, 0.036, 0.36], at: [-0.02, 0.470, 0.03], bevel: 0.008, mat: 'steel', accent: FRAME }, // basin rim
-      // The well is a pressed steel recess, not a hole into the object. It was
-      // 'ink' — a purple-black — which read as a void punched in the worktop.
-      { size: [0.36, 0.026, 0.28], at: [-0.02, 0.478, 0.03], bevel: 0.005, mat: 'steel', accent: NEUTRAL }, // the well
-      { size: [0.30, 0.016, 0.22], at: [-0.02, 0.468, 0.03], bevel: 0.004, mat: 'steel', accent: NEUTRAL },
-      // The tap is what says SINK from across the room, and ours was a stub.
-      // The sheet draws a tall gooseneck: a column up, a long arm out over the
-      // middle of the basin, and a short drop at the end of it.
-      { size: [0.060, 0.40, 0.060], at: [-0.02, 0.672, -0.215], bevel: 0.012, mat: 'steel', accent: FRAME }, // mixer column
-      { size: [0.052, 0.052, 0.30], at: [-0.02, 0.860, -0.090], bevel: 0.010, mat: 'steel', accent: FRAME }, // gooseneck arm
-      { size: [0.046, 0.075, 0.046], at: [-0.02, 0.815, 0.045], bevel: 0.008, mat: 'steel', accent: FRAME }, // its drop
-      { size: [0.15, 0.030, 0.032], at: [0.145, 0.800, -0.215], bevel: 0.006, mat: 'steel', accent: DARK }, // lever
-      { size: [0.030, 0.030, 0.030], at: [0.075, 0.800, -0.215], bevel: 0.006, mat: 'paint', accent: ACCENT }, // lever boss
-    ],
+    build: (p) => sinkParts(p.x),
     mounts: onFloor,
-    provides: (p, unit) => {
-      const out = [];
-      for (let i = 0; i < p.x; i++) {
-        out.push({
-          tag: 'counter_surface',
-          pos: [(i - (p.x - 1) / 2) * unit[0] * 2 + 0.24, 0.955, -0.16],
-          normal: [0, 1, 0],
-        });
-      }
-      return out;
-    },
+    // The dry deck: beside the bowl on a single, and at both ends of a double.
+    // A socket over a bowl would hand you a till standing in the water.
+    provides: (p) => (p.x === 1
+      ? [{ tag: 'counter_surface', pos: [0.24, 0.955, -0.16], normal: [0, 1, 0] }]
+      : [-0.53, 0.53].map((x) => ({ tag: 'counter_surface', pos: [x, 0.955, -0.16], normal: [0, 1, 0] }))),
   },
 
   // Pharmaceutical waste and sharps. Yellow lid, foot pedal, hazard plate —

@@ -245,8 +245,8 @@ OBJECTS = {
         "The counter a customer stands at. The calm object in the room — the "
         "working furniture behind it carries the colour.",
         "an over-the-counter serving counter: a long plain carcass on a "
-        "plinth, a thick timber worktop oversailing it, a drawer band across "
-        "the front with one continuous pull rail, and a lower shelf projecting "
+        "plinth, a thick timber worktop oversailing it, a row of drawer bays "
+        "across the front each with its own pull, and a lower shelf projecting "
         "toward the customer",
         {
             "carcass": ("painted steel, cream", "calm, so the customer looks "
@@ -256,14 +256,15 @@ OBJECTS = {
                 "the top plane from the front by value"),
         },
         [
-            ("a continuous pull rail", "one rail rather than separate handles, "
-                "because the drawer band runs the whole length"),
+            ("one pull per drawer bay", "a rail crossing four independently "
+                "moving drawers is not a handle — each drawer gets its own, and "
+                "a longer counter is more bays, not a stretched one"),
             ("a projecting customer shelf", "where a bag gets put down — it is "
                 "the difference between a counter and a desk"),
         ],
-        {"x": "length STRETCHES 1.0-4.0 — kept deliberately as the continuous "
-              "counterpart to the dispensing bench, so the two standing side "
-              "by side are the repeat-versus-stretch argument in one screenshot",
+        {"x": "bays SNAP in steps (1-4) — the drawer fronts, pulls and the "
+              "reveals between them are rebuilt per step, while the worktop, "
+              "shelf and plinth are cut longer; nothing stretches",
          "y": "fixed", "z": "depth STRETCHES"},
         "Props space themselves one every 0.55 m along the top, so a longer "
         "counter fills rather than spreading the same few items further apart.",
