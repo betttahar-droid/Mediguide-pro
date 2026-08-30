@@ -10,6 +10,84 @@ import {
   capTray, keypad, plate, posts, vents, worktop,
 } from './fittings.js';
 
+/**
+ * One fridge BODY: a carcass with `n` glass doors on it, centred at cx.
+ *
+ * Everything is computed off the carcass width so a two-door body is one box
+ * with two doors, not two boxes touching. The handles sit on the OUTER edge of
+ * each door with the hinges to the centre, the way a french-door cabinet opens,
+ * and the readout goes on the head of the leftmost door only — a cabinet has
+ * one thermostat however many doors it has.
+ *
+ * The single-door body is the original part list, value for value and in the
+ * original order: the default fridge is unchanged by this.
+ */
+function fridgeBody(cx, n) {
+  // Written as literals rather than derived arithmetic so the one-door body is
+  // the original part list to the last bit, not to within a float epsilon.
+  const w = n === 2 ? 1.58 : 0.78;
+  const capW = n === 2 ? 1.62 : 0.82;
+  const grilleW = n === 2 ? 1.60 : 0.80;
+  const ventW = n === 2 ? 1.52 : 0.72;
+  const parts = [
+    { size: [w, 1.64, 0.60], at: [cx, 0.010, -0.02], bevel: 0.03, mat: 'panel' }, // carcass
+    ...posts({ at: [cx, 0.010, -0.02], w, h: 1.66, d: 0.61, thickness: 0.06, bevel: 0.014 }),
+    // A plain steel cap. The teal band and the lipped tray that used to sit
+    // here were decoration: a fridge does not carry a tray on its head, and
+    // nothing about the top of a cold cabinet is a different colour.
+    // ONE cap across the whole body, however many doors are under it — the seam
+    // a repeated cabinet used to show is exactly what this removes.
+    { size: [capW, 0.055, 0.63], at: [cx, 0.860, -0.02], bevel: 0.012, mat: 'paint', accent: FRAME },
+  ];
+
+  for (let i = 0; i < n; i++) {
+    const dx = cx + (i - (n - 1) / 2) * 0.80;
+    const side = n === 1 ? 1 : i === 0 ? -1 : 1; // handle outboard, hinge to centre
+    parts.push(
+      // the door: glass set into a pale surround, not floating in the carcass
+      { size: [0.68, 1.30, 0.055], at: [dx, 0.075, 0.290], bevel: 0.012, mat: 'paint', accent: FRAME },
+      { size: [0.56, 1.18, 0.030], at: [dx, 0.075, 0.312], bevel: 0.008, mat: 'glass', accent: GLASS },
+      { size: [0.68, 0.045, 0.075], at: [dx, 0.700, 0.292], bevel: 0.008, accent: DARK }, // head rail
+      { size: [0.68, 0.045, 0.075], at: [dx, -0.550, 0.292], bevel: 0.008, accent: DARK }, // foot rail
+      { size: [0.034, 0.86, 0.050], at: [dx + side * 0.300, 0.075, 0.322], bevel: 0.008, mat: 'steel', accent: ACCENT }, // handle
+      { size: [0.052, 0.042, 0.032], at: [dx + side * 0.300, 0.470, 0.308], bevel: 0.006, mat: 'steel', accent: FRAME }, // handle bracket
+      { size: [0.052, 0.042, 0.032], at: [dx + side * 0.300, -0.320, 0.308], bevel: 0.006, mat: 'steel', accent: FRAME },
+    );
+    // a temperature readout is a lit display, not a printed label
+    // The sheet puts the readout HIGH on the door head, at eye level, which is
+    // where you would read it. Ours sat low on the surround where the door
+    // furniture is. One per cabinet, on the first door, clear of its handle.
+    if (i === 0) {
+      parts.push(...plate({ at: [dx - side * 0.150, 0.700, 0.335], w: 0.24, h: 0.095, surround: DARK, mat: 'screen' }));
+    }
+  }
+
+  // The condenser grille is stamped steel in shadow behind its own louvres,
+  // so it is the darkest thing on the object, not the warmest.
+  // On the sheet the grille is a bold black louvred band across the WHOLE
+  // foot of the cabinet — it is the second-strongest mark on the object
+  // after the door. Ours was a modest inset panel two-thirds the width.
+  parts.push(
+    { size: [grilleW, 0.22, 0.115], at: [cx, -0.700, 0.285], bevel: 0.012, mat: 'grille', accent: DARK },
+    ...vents({ at: [cx, -0.700, 0.348], n: 5, w: ventW, thickness: 0.024, gap: 0.042, depth: 0.016 }),
+  );
+  return parts;
+}
+
+/**
+ * The fridge at a given step: 1 door, 2 doors in one carcass, or that double
+ * with a single-door body beside it. The bodies stand on ONE continuous plinth,
+ * which is what stops the 2+1 reading as two appliances shoved together.
+ */
+function fridgeParts(steps = 1) {
+  // bodies fill `steps * 0.80` centred on the origin, matching unit[0] * p.x
+  const bodies = steps >= 3 ? [[-0.4, 2], [0.8, 1]] : [[0, steps]];
+  return [
+    { size: [[0.72, 1.52, 2.32][steps - 1], 0.06, 0.52], at: [0, -0.820, -0.02], bevel: 0.010, accent: DARK }, // plinth
+    ...bodies.flatMap(([cx, n]) => fridgeBody(cx, n)),
+  ];
+}
+
 export const DISPENSARY = {
   // The hero, and the project's §1 argument made visible. Real dispensing
   // furniture is built from carcasses, so the length axis is `repeat`: one
@@ -314,40 +392,28 @@ export const DISPENSARY = {
       accent3: PALETTE.charcoal, // DARK   — fittings, readout body, plinth, grille
       accent4: PALETTE.mint, // GLASS  — the door: a lit cabinet you see stock through, not a grey mirror
     },
+    // §C1 — the pilot for the `steps` axis. Widening this used to REPEAT the
+    // whole cabinet, which gave you two fridges standing shoulder to shoulder
+    // with two plinths, two top caps and a seam up the middle. A real wide
+    // vaccine fridge is not that: it is ONE carcass with two doors on it. So
+    // the width axis snaps between rebuilt variants instead — the thing the
+    // whole phase exists to demonstrate, and the reason nothing here is ever
+    // scaled sideways.
     axes: {
-      x: { mode: 'repeat', unit: 0.8, min: 1, max: 4, default: 1, label: 'sections' },
+      x: {
+        mode: 'steps',
+        default: 1,
+        label: 'cabinet',
+        steps: [
+          { v: 1, label: '1 door' },
+          { v: 2, label: '2 doors' },
+          { v: 3, label: '2 + 1 doors' },
+        ],
+      },
       y: FIXED,
       z: FIXED,
     },
-    build: () => [
-      { size: [0.72, 0.06, 0.52], at: [0, -0.820, -0.02], bevel: 0.010, accent: DARK }, // plinth
-      { size: [0.78, 1.64, 0.60], at: [0, 0.010, -0.02], bevel: 0.03, mat: 'panel' }, // carcass
-      ...posts({ at: [0, 0.010, -0.02], w: 0.78, h: 1.66, d: 0.61, thickness: 0.06, bevel: 0.014 }),
-      // A plain steel cap. The teal band and the lipped tray that used to sit
-      // here were decoration: a fridge does not carry a tray on its head, and
-      // nothing about the top of a cold cabinet is a different colour.
-      { size: [0.82, 0.055, 0.63], at: [0, 0.860, -0.02], bevel: 0.012, mat: 'paint', accent: FRAME }, // top cap
-      // the door: glass set into a pale surround, not floating in the carcass
-      { size: [0.68, 1.30, 0.055], at: [0, 0.075, 0.290], bevel: 0.012, mat: 'paint', accent: FRAME },
-      { size: [0.56, 1.18, 0.030], at: [0, 0.075, 0.312], bevel: 0.008, mat: 'glass', accent: GLASS },
-      { size: [0.68, 0.045, 0.075], at: [0, 0.700, 0.292], bevel: 0.008, accent: DARK }, // head rail
-      { size: [0.68, 0.045, 0.075], at: [0, -0.550, 0.292], bevel: 0.008, accent: DARK }, // foot rail
-      { size: [0.034, 0.86, 0.050], at: [0.300, 0.075, 0.322], bevel: 0.008, mat: 'steel', accent: ACCENT }, // handle
-      { size: [0.052, 0.042, 0.032], at: [0.300, 0.470, 0.308], bevel: 0.006, mat: 'steel', accent: FRAME }, // handle bracket
-      { size: [0.052, 0.042, 0.032], at: [0.300, -0.320, 0.308], bevel: 0.006, mat: 'steel', accent: FRAME },
-      // a temperature readout is a lit display, not a printed label
-      // The sheet puts the readout HIGH on the door head, at eye level, which is
-      // where you would read it. Ours sat low on the surround where the door
-      // furniture is.
-      ...plate({ at: [-0.150, 0.700, 0.335], w: 0.24, h: 0.095, surround: DARK, mat: 'screen' }),
-      // The condenser grille is stamped steel in shadow behind its own louvres,
-      // so it is the darkest thing on the object, not the warmest.
-      // On the sheet the grille is a bold black louvred band across the WHOLE
-      // foot of the cabinet — it is the second-strongest mark on the object
-      // after the door. Ours was a modest inset panel two-thirds the width.
-      { size: [0.80, 0.22, 0.115], at: [0, -0.700, 0.285], bevel: 0.012, mat: 'grille', accent: DARK }, // condenser grille
-      ...vents({ at: [0, -0.700, 0.348], n: 5, w: 0.72, thickness: 0.024, gap: 0.042, depth: 0.016 }),
-    ],
+    build: (p) => fridgeParts(p.x),
     mounts: onFloor,
     provides: (p, unit) => [
       { tag: 'gondola_side', pos: [unit[0] * p.x, unit[1], 0], normal: [1, 0, 0] },

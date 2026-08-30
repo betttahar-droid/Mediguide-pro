@@ -25,10 +25,17 @@ export function buildGui(app) {
     for (const [axis, spec] of Object.entries(target.def.axes)) {
       if (spec.mode === 'fixed') continue;
       const proxy = { [axis]: target.params[axis] };
-      const c = axesFolder
-        .add(proxy, axis, spec.min, spec.max, spec.mode === 'repeat' ? 1 : 0.01)
-        .name(`${spec.label ?? axis} (${spec.mode})`)
-        .onChange((v) => app.setParam(axis, v));
+      // A steps axis has no meaningful in-between value — it snaps to a rebuilt
+      // variant — so it gets the variant NAMES, not a number line.
+      const c = spec.mode === 'steps'
+        ? axesFolder
+            .add(proxy, axis, Object.fromEntries(spec.steps.map((s) => [s.label, s.v])))
+            .name(`${spec.label ?? axis} (variant)`)
+            .onChange((v) => app.setParam(axis, Number(v)))
+        : axesFolder
+            .add(proxy, axis, spec.min, spec.max, spec.mode === 'repeat' ? 1 : 0.01)
+            .name(`${spec.label ?? axis} (${spec.mode})`)
+            .onChange((v) => app.setParam(axis, v));
       axisControllers.push(c);
     }
   }

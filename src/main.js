@@ -236,7 +236,8 @@ const app = {
     this.stats.cost = placed.reduce((sum, m) => {
       const def = REGISTRY[m.typeId];
       const bays = Object.entries(def.axes)
-        .filter(([, s]) => s.mode === 'repeat')
+        // steps counts too: a double-door fridge is two fridges' worth of cabinet
+        .filter(([, s]) => s.mode === 'repeat' || s.mode === 'steps')
         .reduce((n, [axis]) => n * m.params[axis], 1);
       return sum + def.cost * bays;
     }, 0);

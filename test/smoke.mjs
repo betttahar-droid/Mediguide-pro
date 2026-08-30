@@ -148,6 +148,80 @@ check(
   `${saveTest.count} modules restored`
 );
 
+// --- §C1: a steps axis SNAPS to a rebuilt variant, out of one cache ---------
+// The claim is not "it looks different at x=2" — it is that the fridge is a
+// DIFFERENT BUILT OBJECT there (more parts, its own geometry), that coming back
+// to x=1 returns the very same BufferGeometry rather than rebuilding one, and
+// that two fridges at the same step share it — which is what lets the instanced
+// batch group them.
+const stepsTest = await page.evaluate(() => {
+  const fridge = __app.placed.find((m) => m.typeId === 'fridge_cabinet');
+  const geo = () => fridge.meshes[0].geometry;
+  const verts = () => geo().getAttribute('position').count;
+
+  fridge.setParams({ x: 1 });
+  const one = { geo: geo(), verts: verts(), meshes: fridge.meshes.length };
+  fridge.setParams({ x: 2 });
+  const two = { geo: geo(), verts: verts(), meshes: fridge.meshes.length };
+  fridge.setParams({ x: 1 });
+  const back = geo();
+
+  // a second fridge at the same step must land on the same cached geometry
+  __app.selectType('fridge_cabinet');
+  __app.ghost.group.position.set(3.1, 0, -0.9);
+  __app.commit();
+  const other = __app.placed[__app.placed.length - 1];
+  other.setParams({ x: 2 });
+  fridge.setParams({ x: 2 });
+  const shared = other.meshes[0].geometry === fridge.meshes[0].geometry;
+
+  // and a saved '2 doors' comes back as '2 doors', not as a number in between
+  __app.save();
+  __app.clearScene();
+  const emptied = __app.placed.length;
+  __app.load();
+  const loaded = __app.placed.filter((m) => m.typeId === 'fridge_cabinet');
+  const restored = loaded.length === 2 && loaded.every((m) => m.params.x === 2);
+  const clamps = (() => {
+    const m = loaded[0];
+    m.setParams({ x: 2.6 }); // a stale/hand-edited save value
+    const snapped = m.params.x;
+    m.setParams({ x: 1 });
+    return snapped;
+  })();
+  return {
+    grew: two.verts > one.verts,
+    rebuilt: one.geo !== two.geo,
+    cacheHit: back === one.geo,
+    oneMesh: one.meshes === 1 && two.meshes === 1,
+    shared, emptied, restored, clamps,
+    verts: [one.verts, two.verts],
+  };
+});
+check(
+  'a steps axis rebuilds the fridge as a wider variant, cached and shared',
+  stepsTest.grew && stepsTest.rebuilt && stepsTest.cacheHit && stepsTest.oneMesh &&
+    stepsTest.shared && stepsTest.emptied === 0 && stepsTest.restored && stepsTest.clamps === 3,
+  `'1 door' ${stepsTest.verts[0]} verts → '2 doors' ${stepsTest.verts[1]} verts in one mesh (no repeat, no stretch); ` +
+  `back to '1 door' is the same cached geometry object${stepsTest.cacheHit ? '' : ' [FAILED]'}, ` +
+  `two fridges at '2 doors' share one${stepsTest.shared ? '' : ' [FAILED]'}, ` +
+  `save → clear → load restores both at '2 doors'${stepsTest.restored ? '' : ' [FAILED]'}, ` +
+  `and an off-step 2.6 snaps to ${stepsTest.clamps}`
+);
+// leave the scene as the rest of the checks expect it
+await page.evaluate(() => {
+  __app.clearScene();
+  __app.load();
+  const extra = __app.placed.filter((m) => m.typeId === 'fridge_cabinet').pop();
+  const i = __app.placed.indexOf(extra);
+  if (i >= 0) __app.placed.splice(i, 1);
+  extra.dispose();
+  __app.placed.find((m) => m.typeId === 'fridge_cabinet').setParams({ x: 1 });
+  __app.setMode('select');
+  __app.refreshStats();
+  __app.save();
+});
+
 
 // --- pixel helpers ---------------------------------------------------------
 const grab = async (clip) => PNG.sync.read(await page.screenshot({ clip }));

@@ -5,29 +5,38 @@
 // per-mesh constant baked into the geometry, and baking it would have made this
 // path impossible. As uniforms in Phases 2–5 and instanced attributes here, the
 // same shader serves both.
-import { InstancedMesh, InstancedBufferAttribute, Matrix4, Vector3, Euler, Quaternion } from 'three';
+//
+// §C1 amends "per module type" to "per (module type × discrete params)", the
+// same key the geometry cache uses: two fridges at '2 doors' are one draw call
+// because they are literally the same BufferGeometry, while a '1 door' fridge
+// is a different mesh and cannot be in that batch. For every module whose build
+// ignores its params — which is all of them but the fridge — the key collapses
+// back to the id and the batch is a single InstancedMesh as before.
+import {
+  Group, InstancedMesh, InstancedBufferAttribute, Matrix4, Vector3, Euler, Quaternion,
+} from 'three';
 import { createAdaptiveMaterial } from '../shaders/index.js';
-import { REGISTRY } from './registry.js';
-import { unitGeometry, materialOptionsFor } from './ModuleInstance.js';
+import { REGISTRY, geometryKey } from './registry.js';
+import { geometryFor, materialOptionsFor } from './ModuleInstance.js';
 import { clampParams, layout } from './resize.js';
 
 /**
  * @param {string} typeId
  * @param {{position:number[], rotY?:number, params?:object}[]} entries
- * @returns {THREE.InstancedMesh} one draw call for the whole list
+ * @returns {THREE.Group} one draw call per distinct built variant, `.count`
+ *   being the total instance count across them
  */
 export function createInstancedBatch(typeId, entries) {
   const def = REGISTRY[typeId];
   if (!def) throw new Error(`unknown module type "${typeId}"`);
 
-  // clone: the instanced attributes must not land on the shared unit geometry
-  const geometry = unitGeometry(def).clone();
-  const material = createAdaptiveMaterial(materialOptionsFor(def, { instancedParams: true }));
-
   // one instance per laid-out cell, so repeat axes batch too
-  const cells = [];
+  const byVariant = new Map();
   for (const entry of entries) {
     const params = clampParams(def, entry.params);
+    const key = geometryKey(def, params);
+    if (!byVariant.has(key)) byVariant.set(key, { params, cells: [] });
+    const { cells } = byVariant.get(key);
     const origin = new Vector3(...entry.position);
     const quat = new Quaternion().setFromEuler(new Euler(0, entry.rotY ?? 0, 0));
     for (const cell of layout(def, params)) {
@@ -38,6 +47,19 @@ export function createInstancedBatch(typeId, entries) {
       });
     }
   }
+
+  const group = new Group();
+  group.name = `batch:${typeId}`;
+  for (const variant of byVariant.values()) group.add(variantMesh(def, variant));
+  group.count = group.children.reduce((n, m) => n + m.count, 0);
+  group.userData.instancedBatch = true;
+  return group;
+}
+
+function variantMesh(def, { params, cells }) {
+  // clone: the instanced attributes must not land on the shared unit geometry
+  const geometry = geometryFor(def, params).clone();
+  const material = createAdaptiveMaterial(materialOptionsFor(def, { instancedParams: true }));
 
   const mesh = new InstancedMesh(geometry, material, cells.length);
   const scales = new Float32Array(cells.length * 3);
@@ -59,9 +81,12 @@ export function createInstancedBatch(typeId, entries) {
 
 const ONE = new Vector3(1, 1, 1);
 
-export function disposeBatch(mesh) {
-  mesh.parent?.remove(mesh);
-  mesh.geometry.dispose();
-  mesh.material.dispose();
-  mesh.dispose();
+export function disposeBatch(group) {
+  group.parent?.remove(group);
+  for (const mesh of group.children) {
+    mesh.geometry.dispose();
+    mesh.material.dispose();
+    mesh.dispose();
+  }
+  group.clear();
 }
