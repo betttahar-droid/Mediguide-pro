@@ -25,3 +25,6 @@ tools/img2threejs-work/
 
 # scratch probes written next to the real harnesses
 test/.*.mjs
+
+# stray output from running test/portraits.mjs with a URL in the path argument
+http:/

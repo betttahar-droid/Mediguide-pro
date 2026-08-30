@@ -44,10 +44,10 @@ The sheets are built from solid volumes with things set *into* them. Several
 modules were built as skeletons instead — posts and shelves with air
 between them. The dispensary racking is the clearest: the sheet shows a
 carcass with solid gables, a solid back and a top, shelves living inside
-it. Ours is five boards on two thin uprights, which reads as flimsy and
-throws no interior shadow. The consultation booth has the same problem more
-severely — with no reading infill panels it looks like a canopy on legs
-rather than a room you would go into.
+it. Ours was five boards on two thin uprights, which read as flimsy and
+threw no interior shadow. The consultation booth had the same problem more
+severely — no front wall at all, and then, once it had one, full-height
+opaque walls that hid their own glazing on the inner face.
 
 ### 3. Silhouette contaminated by parts behind the object
 
@@ -75,133 +75,160 @@ default and rendered white.
 
 ## Object by object
 
-Status key: **[fixed]** applied and re-rendered · **[open]** diagnosed, not
-yet applied.
+Everything below is applied and re-rendered. Status is kept because the
+*reason* is the useful part — it says what the sheet was asking for.
 
 ### Dispensing bench
-Closest match in the set. The sheet's carcass sides are a cool grey against
-the oak drawer fronts; ours are warm on warm, so the drawers do not separate
-from the box they sit in. Its plinth is teal where the sheet's is dark
-walnut. **[open]** Carcass sides to steel-grey, plinth to `espresso`.
+The sheet's carcass sides are a cool grey against the oak drawer fronts;
+ours were warm on warm, so the drawers never separated from the box they sit
+in. Its plinth is dark walnut where ours was teal — on a warm object the
+plinth is the shadow the whole thing stands in, and a saturated colour down
+there competes with the pulls for the one accent the object gets. Carcass to
+`steelDark` on the new NEUTRAL slot, plinth to `espresso`.
 
 ### Vaccine fridge
-**[fixed]** All wood removed; steel body, steel cap, dark grille at the foot.
-**[open]** The door still reads as opaque grey metal where the sheet shows a
-*pale* glass you can see stock through — the `glass` accent is too dark and
-too reflective for a lit interior. The sheet also puts the temperature
-readout at the top-left of the door, high and visible; ours sits low on the
-surround. And the sheet's grille is a bold black louvred band across the
-whole foot, where ours is a modest inset.
+All wood removed earlier; steel body, steel cap, dark grille. The door then
+still read as opaque grey metal where the sheet shows a *pale* glass you see
+stock through — the glass slot was too dark for a lit interior, and is now
+mint. The readout moved to the door head, at eye level, where you would
+actually read it. And the grille is now a bold louvred band across the whole
+foot: on the sheet it is the second-strongest mark on the object after the
+door, where ours was a modest inset two-thirds the width.
 
 ### CD cabinet
-Reads as one near-black mass with a purple cast. The sheet contrasts a
-**pale** cap and pale feet against the dark body — that contrast is what
-makes it read as a safe rather than a fridge — and puts four coral keypad
-squares in a 2×2 big enough to see. **[open]** Lift the cap and feet to
-`paper`, enlarge the keypad, add the three visible hinge blocks the sheet
-draws down the left edge.
+Read as one near-black mass. The sheet contrasts a **pale** cap and pale
+feet against the dark body, and that contrast is what makes it a safe rather
+than a fridge — the cage is now `paper`. The keypad was a 10 cm plate of
+1.6 cm bands, i.e. invisible; it is now four coral squares you can count
+across the room.
 
 ### Consultation chair
-**[fixed]** Reproportioned to the sheet's chunk. **[open]** One thing still
-missing and it is the identifying feature: in the sheet there is an **open
-gap between the seat and the back rest** — the back floats on the posts.
-Ours has the back cushion sitting directly on the seat, which reads as an
-armchair, not a contract chair.
+Reproportioned earlier. The identifying feature was still missing: in the
+sheet there is an **open gap between the seat and the back**, the back
+floating on its posts. Ours had the back cushion sitting straight down on the
+seat, which reads as an armchair. The back now starts 9 cm higher.
 
 ### Consultation booth
-The weakest match. The sheet is a solid little room: dark timber corner
-posts, cream infill below waist height, big pale glazing above, a flat dark
-roof with two vent boxes standing on it, and a full dark timber door.
-Ours reads as an open canopy on legs, because the glazing is nearly
-invisible and the infill panels do not hold. **[open]** Thicken and opaque
-the lower panels on all four sides, give the glass a visible pale-cyan
-value, add a real door leaf, stand the vent boxes on the roof.
+The weakest match in the set, and it took two goes. It had no front wall at
+all, so it was open on the side you look at it from and read as a canopy on
+legs. Adding the wall was not enough: all four walls were full-height opaque
+with a glass panel stuck on the *inner* face, which from outside is
+invisible, so it then read as a solid shed. The walls are now **split** —
+solid infill to waist height, glazing above — which is the object's entire
+privacy logic and has to be on the faces people see. And there is a door
+leaf: there had been a door post, a door head and two hinges hung on nothing.
 
 ### Dispensary racking
-**[open]** Needs enclosure — see fault 2. Solid gables, back and top; the
-shelves then sit *in* something. Label strips are already right.
+The sheet draws a carcass — solid oak gables full depth with the shelves
+living inside it. Ours was two thin cream posts, so it read as an open cage
+with boards floating in it and threw no interior shadow. Gables now, in the
+same timber as the shelves, because it is one piece of joinery.
 
 ### OTC counter
-The sheet is a display counter: a big oak top with a deep overhang, an oak
-customer shelf **projecting at the front** below it, dark bands separating
-the levels, coral price marks. Ours reads as a flat oak lid on a cream box —
-the projecting shelf and the bands are present but too small to register.
-**[open]** Scale both up until the counter has three visible levels.
+The sheet is a display counter with three levels you can count: oak top, a
+dark band under it, an oak customer shelf projecting well out in front. Ours
+had all three, but the shelf was 4.5 cm thick and barely cleared the carcass,
+so it read as a flat lid on a cream box. Thicker, and standing 22 cm proud.
 
 ### Gondola shelving
-**[fixed]** Gables and posts to cream (they were steel grey); the teal price
-rail now runs the full bay width with four cream windows dashed along it,
-where it was a short stub with two.
+Gables and posts to cream (they were steel grey); the teal price rail now
+runs the full bay width with four cream windows dashed along it, where it was
+a short stub with two.
 
 ### Wall shelving
-**[fixed]** Fat board and brackets. **[open]** The teal band on the front
-edge still does not read, and in the sheet it is the loudest thing on the
-object. Same full-width treatment as the gondola.
+Fat board and brackets earlier. The teal band — the loudest thing on the
+object in the sheet — was thin and short and lost against the board above it;
+same full-width dashed treatment as the gondola.
 
 ### Till / POS
-**[fixed]** Shells to beige-box cream (they were steel grey, which made a
-modern machine out of a deliberately retro one); the keypad is now coral
-function keys, a green enter and dark number rows — on the sheet the keypad
-is where every saturated colour lives and it is what says *till* rather than
-*computer*. **[open]** Base unit and CRT are both a size small against the
-sheet's proportions.
+Shells to beige-box cream (steel grey made a modern machine out of a
+deliberately retro one). The keypad is coral function keys, a green enter and
+dark number rows: on the sheet the keypad is where every saturated colour
+lives and it is what says *till* rather than *computer*. Base and CRT were
+both a size small against a sheet that draws a machine dominating its
+counter, and are now bigger.
 
 ### Basket stack
-**[open]** Proportion is wrong in plan: the sheet's basket is wide and deep —
-the stack is wider than it is tall — where ours is narrow enough to read as
-a stack of trays. The handle is a **cream arch** on two diagonal struts, not
-a coral bar. **[fixed]** the wooden corner posts on a plastic shell.
+On the sheet a basket is wide and deep — the stack ends up broader than it is
+tall — where ours was narrow enough to read as a pile of trays. And the
+handle is a **cream arch on two struts**, not a coral bar laid across the top;
+it is the part that reads first.
 
 ### Offers dump bin
-**[fixed]** Cream tub with a teal rim on an oak pallet. It had been an oak
-tub, so the pallet and the bin were the same material and the object had no
-parts.
+Cream tub with a teal rim on an oak pallet. It had been an oak tub, so the
+pallet and the bin were the same material and the object had no parts. Its
+header card is cream, not oak.
 
 ### Queue barrier
-**[fixed]** Heavier caps, plinths and rails; drawn shadow line and paper
-notice removed. **[open]** The teal inset panel on each post is not on the
-sheet — the sheet has a small dark window there instead.
+Heavier caps, plinths and rails; the drawn shadow line and the paper notice
+removed. The 56 cm teal stripe down each post is now the small dark window
+the sheet has — the stripe was a second saturated colour competing with the
+oak, on an object whose whole job is to be ignored.
 
 ### Pharmacy cross
-**[fixed]** Back plate shrunk to hide behind the arms; the silhouette is a
-cross from every angle now. **[open]** The face is paler than the sheet's,
-which keeps a strong dark green border all the way round the lit panel.
+The back plate was 0.78 m behind a 0.80 m cross, so from every angle but
+head-on it read as a dark square with a cross on it; it now hides behind the
+arms. The pale glow surround had also eaten most of the face, leaving a thin
+green edge — narrower now, so the deep green border reads.
 
 ### Staff lockers
-**[fixed]** Doors to `teal`; they were `tealDeep` and rendering black.
-**[open]** The number plates and vent slots are smaller than the sheet's and
-do not read; the dark plinth under the carcass is missing.
+Doors to `teal`; they were `tealDeep` and rendering black. The vent stacks
+and number plates were drawn at the size a real locker has them, which at
+playing distance is nothing — both are now sized to be read, on a heavier
+dark plinth.
 
 ### Filing cabinet
-Body colour and sloped-lighter top are right. What is missing is the
-**seams**: the sheet separates four drawers with dark reveals, so it reads
-as four drawers. Ours is one grey box with pull blocks on it. **[open]** Add
-the reveals, widen the label plates.
+A 16 mm reveal between drawers is invisible, so the cabinet read as one grey
+box with handles stuck on it. The reveal is the seam that does the
+identifying and now has the width to do it.
 
 ### Aisle sign
-The sheet is a deep dark tray with an oak panel set well inside it and
-**one** wide cream lettering band across the middle. Ours chops the panel
-into horizontal stripes — a shadow band, a lettering band, a detail band and
-two coral marks — so it reads as a venetian blind. **[open]** Delete the
-extra bands, make the lettering band tall and full width.
+The panel had been sliced into four horizontal stripes — a shadow bead, a
+lettering band, a detail band and two coral marks — which at any distance
+reads as a venetian blind. The sheet is an oak panel with a single wide cream
+band and one coral mark at the end of the line.
 
 ### Stock boxes
-**[fixed]** The module declared no accent colours, so the label rendered
-white by fallback. It now has a proper palette and a printed mint panel with
-coral marks across most of the front face. **[open]** The panel could still
-go larger; the sheet's covers nearly the whole face.
+The module declared **no accent colours at all**, so its label fell through to
+a default and rendered white. It now has a palette and a printed mint panel
+with coral marks across most of the front face.
 
 ### Sink unit
-**[fixed]** Doors to teal. **[open]** The tap is a stub where the sheet
-draws a tall gooseneck — a vertical column with a horizontal spout, and it
-is the thing that says *sink* from across the room. The basin well is `ink`
-purple where the sheet's is a pale steel recess.
+Doors to teal — grey doors under a grey top collapsed into one slab. The tap
+was a stub where the sheet draws a tall gooseneck, which is the thing that
+says *sink* from across the room: a column, a long arm out over the basin and
+a drop at the end. The well was `ink`, a purple-black that read as a void
+punched through the worktop, and is now a pale pressed recess.
 
 ### Waste & sharps
-Good match. **[open]** The sheet puts a single clean cream box on top;
-ours splits it into two blocks with dark caps.
+The sheet has a single clean cream sharps box sitting square on the lid; ours
+was a box plus a dark capped aperture offset to one side, reading as two
+half-objects.
 
 ---
+
+## Three bugs the pass turned up in the systems themselves
+
+None of these are art. All three have the same shape: **a change that
+silently does not happen.**
+
+- **The accent chain aliased out-of-range indices.** The shader picks an
+  accent with a descending chain of comparisons, so an index past the top
+  slot landed on the top slot rather than failing. I wrote `accent: 5`
+  before the fifth slot existed and got a plausible wrong colour, not an
+  error.
+- **`rotZ` was never read.** `buildParts` handled `rotX` only. The basket's
+  angled handle struts were written and simply did not rotate.
+- **The catalogue needed a fifth colour.** Two sheets want a cool grey that
+  is neither the frame nor a shadow — a bench carcass behind warm drawer
+  fronts, a pressed steel sink well — and four slots could not express it.
+
+So: `NEUTRAL` (slot 5) added through the shader and every call site; `rotY`
+and `rotZ` added to `buildParts`; and `validateRegistry` now rejects an
+out-of-range accent by number, a NEUTRAL used without an `accent5`, and any
+part key it does not recognise. That last one is the general fix — the
+unknown-material check already existed for exactly this reason, and these
+were the same failure wearing different clothes.
 
 ## What this changes about how the catalogue is built
 

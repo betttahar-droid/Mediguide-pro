@@ -31,6 +31,7 @@ export function materialOptionsFor(def, extra = {}) {
     accent2: def.colors.accent2 ?? null,
     accent3: def.colors.accent3 ?? null,
     accent4: def.colors.accent4 ?? null,
+    accent5: def.colors.accent5 ?? null,
     sourceHalfExtents: new Vector3(...def.unit),
     margins: new Vector3(...def.margins),
     trimAxis: trimAxisVector(def),

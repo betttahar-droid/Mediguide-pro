@@ -156,7 +156,8 @@ function normalOf(a, b, c) {
 /**
  * Merge a list of parts into one faceted geometry. Parts are how every module
  * in the registry is described.
- * @param {{size:number[], at?:number[], bevel?:number, rotX?:number, mat?:string, accent?:number}[]} parts
+ * @param {{size:number[], at?:number[], bevel?:number, rotX?:number, rotY?:number,
+ *   rotZ?:number, mat?:string, accent?:number}[]} parts
  * @param {{trimAxis?:number}} opts
  */
 export function buildParts(parts, opts = {}) {
@@ -166,7 +167,11 @@ export function buildParts(parts, opts = {}) {
       mat: p.mat,
       accent: p.accent,
     });
+    // Applied X, Y, Z in that order. Rotation is baked into the merged
+    // geometry, so a rotated part 9-slices exactly like an axis-aligned one.
     if (p.rotX) g.rotateX(p.rotX);
+    if (p.rotY) g.rotateY(p.rotY);
+    if (p.rotZ) g.rotateZ(p.rotZ);
     g.translate(p.at?.[0] ?? 0, p.at?.[1] ?? 0, p.at?.[2] ?? 0);
     return g;
   });

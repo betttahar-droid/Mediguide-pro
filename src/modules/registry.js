@@ -13,6 +13,7 @@
 import { Vector3 } from 'three';
 import { buildParts } from './geometry.js';
 import { STRIPS } from '../art/trimLayout.js';
+import { NEUTRAL } from './catalogue/fittings.js';
 import { DISPENSARY } from './catalogue/dispensary.js';
 import { RETAIL } from './catalogue/retail.js';
 import { CONSULTATION, STAFF, SIGNAGE } from './catalogue/rooms.js';
@@ -53,6 +54,8 @@ export const MODULE_IDS = Object.keys(REGISTRY);
 /** Build the unit geometry for a module, with its trim axis baked into aTrimV. */
 export const buildGeometry = (def) => buildParts(def.build(), { trimAxis: def.trimAxis });
 
+const PART_KEYS = new Set(['size', 'at', 'bevel', 'rotX', 'rotY', 'rotZ', 'mat', 'accent']);
+
 /** §5.2 guards 1 and 2, plus the §4.2 margin rule, asserted at load. */
 export function validateRegistry() {
   for (const [id, def] of Object.entries(REGISTRY)) {
@@ -67,6 +70,33 @@ export function validateRegistry() {
         throw new Error(
           `module "${id}" part ${i}: unknown material "${part.mat}" — known: ${Object.keys(STRIPS).join(', ')}`
         );
+      }
+      // A key nobody reads is a change that silently does not happen — a
+      // `rotZ` written against a build that only handled `rotX` cost a rebuild
+      // to notice, and would have cost a lot more had it looked plausible.
+      for (const key of Object.keys(part)) {
+        if (!PART_KEYS.has(key)) {
+          throw new Error(
+            `module "${id}" part ${i}: unknown key "${key}" — known: ${[...PART_KEYS].join(', ')}`
+          );
+        }
+      }
+      // The shader picks an accent with a descending chain of comparisons, so
+      // an index past the top slot lands on the top slot instead of failing —
+      // the part comes out a plausible wrong colour and nobody notices. Same
+      // failure shape as the unknown material above, so the same treatment.
+      if (part.accent !== undefined) {
+        const a = part.accent;
+        if (!Number.isInteger(a) || a < 0 || a > NEUTRAL) {
+          throw new Error(
+            `module "${id}" part ${i}: accent ${a} is not a slot — 0=BODY 1=FRAME 2=ACCENT 3=DARK 4=GLASS ${NEUTRAL}=NEUTRAL`
+          );
+        }
+        if (a === NEUTRAL && def.colors.accent5 === undefined) {
+          throw new Error(
+            `module "${id}" part ${i}: uses NEUTRAL but the module declares no accent5, so it would fall back to accent1`
+          );
+        }
       }
     });
 

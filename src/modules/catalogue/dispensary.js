@@ -6,7 +6,7 @@ import { PALETTE } from '../../art/palette.js';
 import { POOLS } from '../decor.js';
 import { AXIS, FIXED, onFloor } from './schema.js';
 import {
-  ACCENT, DARK, FRAME, GLASS,
+  ACCENT, DARK, FRAME, GLASS, NEUTRAL,
   capTray, keypad, plate, posts, vents, worktop,
 } from './fittings.js';
 
@@ -44,9 +44,10 @@ export const DISPENSARY = {
       base: PALETTE.oak, // drawer fronts and carcass
       middle: PALETTE.oakDark,
       accent1: PALETTE.paper, // FRAME  — posts, rails, worktop, upstand
-      accent2: PALETTE.tealDeep, // ACCENT — plinth and pulls
-      accent3: PALETTE.espresso, // DARK   — studs, shadow band, reveals
+      accent2: PALETTE.tealDeep, // ACCENT — the pulls, and only the pulls
+      accent3: PALETTE.espresso, // DARK   — the plinth, the drawer reveal, shadow bands
       accent4: PALETTE.glass, // GLASS  — label windows
+      accent5: PALETTE.steelDark, // NEUTRAL — the carcass sides, cool against the oak
     },
     axes: {
       x: { mode: 'repeat', unit: 0.9, min: 1, max: 6, default: 2, label: 'bays' },
@@ -70,8 +71,13 @@ export const DISPENSARY = {
     // the frame, the two drawer depths, the pulls, the label holders, the
     // upstand. That is the test for every fitting now: does it name the object?
     build: () => [
-      { size: [0.86, 0.10, 0.50], at: [0, -0.475, 0], bevel: 0.02, mat: 'paint', accent: ACCENT }, // recessed kick
-      { size: [0.90, 0.775, 0.62], at: [0, -0.0475, 0], bevel: 0.04, mat: 'panel' }, // carcass
+      // The sheet's plinth is dark walnut, not teal: on a warm object the plinth
+      // is the shadow the whole thing stands in, and a saturated colour down
+      // there competes with the pulls for the one accent the object gets.
+      { size: [0.86, 0.10, 0.50], at: [0, -0.475, 0], bevel: 0.02, mat: 'paint', accent: DARK }, // recessed kick
+      // The sheet's carcass sides are a COOL grey against the oak drawer fronts.
+      // Ours were warm on warm, so the drawers never separated from the box.
+      { size: [0.90, 0.775, 0.62], at: [0, -0.0475, 0], bevel: 0.04, mat: 'panel', accent: NEUTRAL }, // carcass
       // the frame: four posts standing proud of the panels between them
       ...posts({ at: [0, -0.0475, 0.005], w: 0.90, h: 0.775, d: 0.64, thickness: 0.07 }),
       { size: [0.76, 0.060, 0.632], at: [0, -0.395, 0.006], bevel: 0.014, mat: 'paint', accent: FRAME }, // bottom rail
@@ -165,8 +171,13 @@ export const DISPENSARY = {
     },
     build: () => [
       { size: [0.78, 0.048, 0.30], at: [0, -0.136, 0.005], bevel: 0.010, mat: 'wood' }, // shelf board, oak like the sheet
-      { size: [0.045, 0.32, 0.31], at: [-0.3875, 0, 0.005], bevel: 0.010, mat: 'paint', accent: FRAME }, // upright
-      { size: [0.045, 0.32, 0.31], at: [0.3875, 0, 0.005], bevel: 0.010, mat: 'paint', accent: FRAME }, // upright
+      // The sheet draws a CARCASS — solid oak gables full depth, with the
+      // shelves living inside it. Ours were two thin cream posts, so the object
+      // read as an open cage with boards floating in it and threw no interior
+      // shadow at all. Same timber as the shelves, because it is one piece of
+      // joinery, not a frame with panels in it.
+      { size: [0.060, 0.32, 0.32], at: [-0.380, 0, 0.005], bevel: 0.010, mat: 'wood' }, // gable
+      { size: [0.060, 0.32, 0.32], at: [0.380, 0, 0.005], bevel: 0.010, mat: 'wood' }, // gable
       { size: [0.78, 0.32, 0.018], at: [0, 0, -0.151], bevel: 0.006, mat: 'panel' }, // back panel
       { size: [0.74, 0.030, 0.018], at: [0, -0.126, 0.150], bevel: 0.005, mat: 'paint', accent: FRAME }, // label strip
       { size: [0.70, 0.018, 0.010], at: [0, -0.126, 0.158], bevel: 0.003, mat: 'paper', accent: GLASS }, // its window
@@ -232,7 +243,7 @@ export const DISPENSARY = {
     colors: {
       base: PALETTE.charcoal, // door and side panels — near-black on the sheet
       middle: PALETTE.charcoal,
-      accent1: PALETTE.steel, // FRAME  — posts, cap, plinth
+      accent1: PALETTE.paper, // FRAME  — posts, cap, plinth: the sheet's cage is pale, and that contrast is the object
       accent2: PALETTE.signal, // ACCENT — the keypad's live keys
       accent3: PALETTE.ink, // DARK   — hinges, handle, vents
       accent4: PALETTE.glass, // GLASS  — the warning plate
@@ -259,7 +270,9 @@ export const DISPENSARY = {
       { size: [0.032, 0.26, 0.050], at: [0.262, -0.075, 0.270], bevel: 0.008, mat: 'steel', accent: DARK }, // handle
       { size: [0.048, 0.045, 0.030], at: [0.262, 0.048, 0.258], bevel: 0.006, mat: 'steel', accent: FRAME }, // handle bracket
       { size: [0.048, 0.045, 0.030], at: [0.262, -0.198, 0.258], bevel: 0.006, mat: 'steel', accent: FRAME },
-      ...keypad({ at: [0.215, 0.210, 0.268] }),
+      // The sheet's keypad is four big coral squares in a 2x2 you can count from
+      // across the room. Ours was a 10 cm plate of 1.6 cm bands — invisible.
+      ...keypad({ at: [0.205, 0.200, 0.268], w: 0.155, h: 0.185, depth: 0.032 }),
       ...plate({ at: [0.190, 0.395, 0.264], w: 0.19, h: 0.075 }), // warning plate
       ...vents({ at: [-0.352, -0.300, 0.06], n: 5, w: 0.18, thickness: 0.016, gap: 0.028, depth: 0.012, axis: 'x' }),
       { size: [0.024, 0.020, 0.40], at: [-0.352, 0.020, 0], bevel: 0.005, mat: 'steel', accent: DARK }, // side seam
@@ -299,7 +312,7 @@ export const DISPENSARY = {
       accent1: PALETTE.steel, // FRAME  — posts, door surround, top cap
       accent2: PALETTE.tealDeep, // ACCENT — the door handle
       accent3: PALETTE.charcoal, // DARK   — fittings, readout body, plinth, grille
-      accent4: PALETTE.glass, // GLASS  — the door and the readout face
+      accent4: PALETTE.mint, // GLASS  — the door: a lit cabinet you see stock through, not a grey mirror
     },
     axes: {
       x: { mode: 'repeat', unit: 0.8, min: 1, max: 4, default: 1, label: 'sections' },
@@ -323,11 +336,17 @@ export const DISPENSARY = {
       { size: [0.052, 0.042, 0.032], at: [0.300, 0.470, 0.308], bevel: 0.006, mat: 'steel', accent: FRAME }, // handle bracket
       { size: [0.052, 0.042, 0.032], at: [0.300, -0.320, 0.308], bevel: 0.006, mat: 'steel', accent: FRAME },
       // a temperature readout is a lit display, not a printed label
-      ...plate({ at: [-0.135, 0.775, 0.300], w: 0.22, h: 0.085, surround: DARK, mat: 'screen' }),
+      // The sheet puts the readout HIGH on the door head, at eye level, which is
+      // where you would read it. Ours sat low on the surround where the door
+      // furniture is.
+      ...plate({ at: [-0.150, 0.700, 0.335], w: 0.24, h: 0.095, surround: DARK, mat: 'screen' }),
       // The condenser grille is stamped steel in shadow behind its own louvres,
       // so it is the darkest thing on the object, not the warmest.
-      { size: [0.70, 0.17, 0.10], at: [0, -0.715, 0.285], bevel: 0.012, mat: 'grille', accent: DARK }, // condenser grille
-      ...vents({ at: [0, -0.715, 0.340], n: 4, w: 0.60, thickness: 0.018, gap: 0.040, depth: 0.014 }),
+      // On the sheet the grille is a bold black louvred band across the WHOLE
+      // foot of the cabinet — it is the second-strongest mark on the object
+      // after the door. Ours was a modest inset panel two-thirds the width.
+      { size: [0.80, 0.22, 0.115], at: [0, -0.700, 0.285], bevel: 0.012, mat: 'grille', accent: DARK }, // condenser grille
+      ...vents({ at: [0, -0.700, 0.348], n: 5, w: 0.72, thickness: 0.024, gap: 0.042, depth: 0.016 }),
     ],
     mounts: onFloor,
     provides: (p, unit) => [
@@ -366,6 +385,7 @@ export const DISPENSARY = {
       accent2: PALETTE.signal, // ACCENT — the one warm mark on a cold object
       accent3: PALETTE.ink, // DARK   — basin well, vents, handles
       accent4: PALETTE.glass, // GLASS  — label windows
+      accent5: PALETTE.steel, // NEUTRAL — the pressed well: a recess, not a void
     },
     axes: {
       x: { mode: 'repeat', unit: 0.7, min: 1, max: 4, default: 1, label: 'bays' },
@@ -387,12 +407,18 @@ export const DISPENSARY = {
       // it from the worktop to the spout is the same 'steel'
       { size: [0.74, 0.055, 0.62], at: [0, 0.4475, 0], bevel: 0.014, mat: 'steel', accent: FRAME }, // worktop, top at 0.95
       { size: [0.44, 0.036, 0.36], at: [-0.02, 0.470, 0.03], bevel: 0.008, mat: 'steel', accent: FRAME }, // basin rim
-      { size: [0.36, 0.026, 0.28], at: [-0.02, 0.478, 0.03], bevel: 0.005, mat: 'steel', accent: DARK }, // the well
-      { size: [0.30, 0.016, 0.22], at: [-0.02, 0.468, 0.03], bevel: 0.004, mat: 'steel', accent: DARK },
-      { size: [0.055, 0.26, 0.055], at: [-0.02, 0.600, -0.21], bevel: 0.010, mat: 'steel', accent: FRAME }, // mixer column
-      { size: [0.048, 0.048, 0.22], at: [-0.02, 0.708, -0.115], bevel: 0.008, mat: 'steel', accent: FRAME }, // square spout
-      { size: [0.15, 0.030, 0.032], at: [0.145, 0.705, -0.21], bevel: 0.006, mat: 'steel', accent: DARK }, // lever
-      { size: [0.030, 0.030, 0.030], at: [0.075, 0.705, -0.21], bevel: 0.006, mat: 'paint', accent: ACCENT }, // lever boss
+      // The well is a pressed steel recess, not a hole into the object. It was
+      // 'ink' — a purple-black — which read as a void punched in the worktop.
+      { size: [0.36, 0.026, 0.28], at: [-0.02, 0.478, 0.03], bevel: 0.005, mat: 'steel', accent: NEUTRAL }, // the well
+      { size: [0.30, 0.016, 0.22], at: [-0.02, 0.468, 0.03], bevel: 0.004, mat: 'steel', accent: NEUTRAL },
+      // The tap is what says SINK from across the room, and ours was a stub.
+      // The sheet draws a tall gooseneck: a column up, a long arm out over the
+      // middle of the basin, and a short drop at the end of it.
+      { size: [0.060, 0.40, 0.060], at: [-0.02, 0.672, -0.215], bevel: 0.012, mat: 'steel', accent: FRAME }, // mixer column
+      { size: [0.052, 0.052, 0.30], at: [-0.02, 0.860, -0.090], bevel: 0.010, mat: 'steel', accent: FRAME }, // gooseneck arm
+      { size: [0.046, 0.075, 0.046], at: [-0.02, 0.815, 0.045], bevel: 0.008, mat: 'steel', accent: FRAME }, // its drop
+      { size: [0.15, 0.030, 0.032], at: [0.145, 0.800, -0.215], bevel: 0.006, mat: 'steel', accent: DARK }, // lever
+      { size: [0.030, 0.030, 0.030], at: [0.075, 0.800, -0.215], bevel: 0.006, mat: 'paint', accent: ACCENT }, // lever boss
     ],
     mounts: onFloor,
     provides: (p, unit) => {
@@ -451,9 +477,12 @@ export const DISPENSARY = {
       { size: [0.15, 0.030, 0.075], at: [0, -0.348, 0.250], bevel: 0.008, mat: 'steel', accent: DARK }, // pedal
       { size: [0.026, 0.60, 0.026], at: [-0.222, 0.030, -0.196], bevel: 0.006, mat: 'steel', accent: DARK }, // linkage rod
       { size: [0.045, 0.030, 0.045], at: [-0.222, 0.300, -0.196], bevel: 0.006, mat: 'steel', accent: DARK }, // linkage elbow
-      { size: [0.22, 0.17, 0.19], at: [0.10, 0.365, -0.06], bevel: 0.012, accent: FRAME }, // sharps box
-      { size: [0.16, 0.026, 0.11], at: [0.10, 0.455, -0.06], bevel: 0.005, accent: DARK }, // sharps aperture
-      { size: [0.13, 0.070, 0.010], at: [0.10, 0.360, 0.038], bevel: 0.003, mat: 'paper', accent: GLASS }, // its label
+      // One clean cream box, centred. The sheet has a single sharps container
+      // sitting square on the lid; ours was split into a box plus a dark capped
+      // aperture offset to one side, which read as two half-objects.
+      { size: [0.26, 0.20, 0.22], at: [0, 0.380, -0.02], bevel: 0.014, accent: FRAME }, // sharps box
+      { size: [0.15, 0.024, 0.10], at: [0, 0.482, -0.02], bevel: 0.005, accent: DARK }, // sharps aperture
+      { size: [0.15, 0.075, 0.010], at: [0, 0.375, 0.093], bevel: 0.003, mat: 'paper', accent: GLASS }, // its label
     ],
     mounts: onFloor,
     provides: () => [],

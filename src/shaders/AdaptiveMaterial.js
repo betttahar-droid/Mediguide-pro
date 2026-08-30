@@ -27,6 +27,7 @@ uniform vec3 uAccent1;
 uniform vec3 uAccent2;
 uniform vec3 uAccent3;
 uniform vec3 uAccent4;
+uniform vec3 uAccent5;
 uniform vec3 uTrimAxis;
 uniform float uTrimDensity;    // trim repeats per metre along the stretch axis
 uniform vec2 uAtlasScale;
@@ -103,11 +104,16 @@ void main() {
   tint = mix(uMiddleColor, uBaseColor, capBlend);
 #endif
 
-  // A part can opt into one of four accent colours from the module's palette
-  // entry, so one material still paints a whole object. Four is what the
-  // concept sheets ask for and no more: a light frame, the body panels, a dark
-  // plinth or fitting, one saturated accent, and glass where there is glass.
-  if (vAccent > 3.5) tint = uAccent4;
+  // A part can opt into one of five accent colours from the module's palette
+  // entry, so one material still paints a whole object: a light frame, the body
+  // panels, a dark plinth or fitting, one saturated accent, glass where there
+  // is glass — and a fifth NEUTRAL, which several sheets need for a cool grey
+  // that is neither the frame nor a shadow (a bench carcass behind warm drawer
+  // fronts, a pressed steel sink well). Note the test is on the TOP slot first:
+  // an out-of-range index would otherwise land here silently, which is why
+  // validateRegistry rejects one by number.
+  if (vAccent > 4.5) tint = uAccent5;
+  else if (vAccent > 3.5) tint = uAccent4;
   else if (vAccent > 2.5) tint = uAccent3;
   else if (vAccent > 1.5) tint = uAccent2;
   else if (vAccent > 0.5) tint = uAccent1;
@@ -165,6 +171,7 @@ export function createAdaptiveMaterial(opts = {}) {
     accent2 = null,
     accent3 = null,
     accent4 = null,
+    accent5 = null,
     trimAxis = new Vector3(1, 0, 0),
     trimDensity = 0.45,
     atlasCell = [0, 0], // 2×2 atlas
@@ -202,6 +209,7 @@ export function createAdaptiveMaterial(opts = {}) {
       uAccent2: { value: (accent2 ?? middleColor).clone() },
       uAccent3: { value: (accent3 ?? accent1 ?? baseColor).clone() },
       uAccent4: { value: (accent4 ?? accent2 ?? middleColor).clone() },
+      uAccent5: { value: (accent5 ?? accent1 ?? baseColor).clone() },
       uTrimAxis: { value: trimAxis.clone() },
       uTrimDensity: { value: trimDensity },
       uAtlasScale: { value: new Vector2(0.5, 0.5) },

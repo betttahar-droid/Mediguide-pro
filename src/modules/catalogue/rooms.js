@@ -44,15 +44,37 @@ export const CONSULTATION = {
       z: { mode: 'stretch', min: 0.85, max: 2.1, default: 1.0, label: 'depth' },
     },
     build: () => [
-      { size: [1.80, 2.20, 0.09], at: [0, -0.05, -0.855], bevel: 0.02, mat: 'panel' }, // back wall
-      { size: [1.44, 0.76, 0.03], at: [0, 0.53, -0.800], bevel: 0.008, mat: 'glass', accent: GLASS }, // glazed panel
-      { size: [1.52, 0.050, 0.050], at: [0, 0.140, -0.794], bevel: 0.008, mat: 'wood', accent: FRAME }, // glazing bead
-      { size: [1.52, 0.045, 0.045], at: [0, 0.930, -0.794], bevel: 0.008, mat: 'wood', accent: FRAME },
-      { size: [0.09, 2.20, 1.80], at: [-0.855, -0.05, 0], bevel: 0.02, mat: 'panel' }, // side wall
-      { size: [0.03, 0.76, 1.44], at: [-0.800, 0.53, 0], bevel: 0.008, mat: 'glass', accent: GLASS }, // glazed panel
-      { size: [0.050, 0.050, 1.52], at: [-0.794, 0.140, 0], bevel: 0.008, mat: 'wood', accent: FRAME }, // glazing bead
-      { size: [0.045, 0.045, 1.52], at: [-0.794, 0.930, 0], bevel: 0.008, mat: 'wood', accent: FRAME },
-      { size: [0.09, 2.20, 0.80], at: [0.855, -0.05, -0.50], bevel: 0.02, mat: 'panel' }, // door-side return
+      // THE WALLS ARE SPLIT, and that split is the whole object. A consultation
+      // booth is solid to waist height so nobody outside sees who is sitting
+      // down, and glazed above so the pharmacist can be seen but not heard.
+      // Ours had full-height opaque walls with a glass panel stuck on the INNER
+      // face, which from outside is invisible — the booth read as a solid shed,
+      // and before the front wall existed at all, as a canopy on legs.
+      //
+      // Lower panel to y = 0.10, glazing from there to the head, on all four
+      // faces including the one you look at it from.
+      { size: [1.80, 1.25, 0.09], at: [0, -0.525, -0.855], bevel: 0.02, mat: 'panel' }, // back: infill
+      { size: [1.72, 0.94, 0.05], at: [0, 0.585, -0.855], bevel: 0.010, mat: 'glass', accent: GLASS }, // back: glazing
+      { size: [1.80, 0.060, 0.11], at: [0, 0.115, -0.855], bevel: 0.010, mat: 'wood', accent: FRAME }, // glazing bead
+      { size: [1.80, 0.055, 0.11], at: [0, 1.055, -0.855], bevel: 0.010, mat: 'wood', accent: FRAME },
+      { size: [0.09, 1.25, 1.80], at: [-0.855, -0.525, 0], bevel: 0.02, mat: 'panel' }, // side: infill
+      { size: [0.05, 0.94, 1.72], at: [-0.855, 0.585, 0], bevel: 0.010, mat: 'glass', accent: GLASS }, // side: glazing
+      { size: [0.11, 0.060, 1.80], at: [-0.855, 0.115, 0], bevel: 0.010, mat: 'wood', accent: FRAME }, // glazing bead
+      { size: [0.11, 0.055, 1.80], at: [-0.855, 1.055, 0], bevel: 0.010, mat: 'wood', accent: FRAME },
+      { size: [1.80, 1.25, 0.09], at: [0, -0.525, 0.855], bevel: 0.02, mat: 'panel' }, // front: infill
+      { size: [1.72, 0.94, 0.05], at: [0, 0.585, 0.855], bevel: 0.010, mat: 'glass', accent: GLASS }, // front: glazing
+      { size: [1.80, 0.060, 0.11], at: [0, 0.115, 0.855], bevel: 0.010, mat: 'wood', accent: FRAME }, // glazing bead
+      { size: [1.80, 0.055, 0.11], at: [0, 1.055, 0.855], bevel: 0.010, mat: 'wood', accent: FRAME },
+      { size: [0.09, 1.25, 0.80], at: [0.855, -0.525, -0.50], bevel: 0.02, mat: 'panel' }, // door-side return
+      { size: [0.05, 0.94, 0.72], at: [0.855, 0.585, -0.50], bevel: 0.010, mat: 'glass', accent: GLASS },
+      { size: [0.11, 0.060, 0.80], at: [0.855, 0.115, -0.50], bevel: 0.010, mat: 'wood', accent: FRAME },
+      { size: [0.11, 0.055, 0.80], at: [0.855, 1.055, -0.50], bevel: 0.010, mat: 'wood', accent: FRAME },
+      // A DOOR LEAF in the opening. There was a door post, a door head and two
+      // hinges hung on nothing — the booth had a doorway you could walk through
+      // and the sheet has a heavy timber door filling it.
+      { size: [0.075, 2.00, 0.86], at: [0.855, -0.150, 0.345], bevel: 0.016, mat: 'wood', accent: FRAME }, // door leaf
+      { size: [0.030, 1.60, 0.62], at: [0.900, -0.150, 0.345], bevel: 0.012, mat: 'wood', accent: DARK }, // its sunk panel
+      { size: [0.045, 0.045, 0.20], at: [0.905, -0.150, 0.700], bevel: 0.008, mat: 'steel', accent: DARK }, // handle
       // the heavy timber frame: corner posts and a real door surround
       { size: [0.15, 2.24, 0.15], at: [-0.855, -0.05, -0.855], bevel: 0.018, mat: 'wood', accent: FRAME },
       { size: [0.15, 2.24, 0.15], at: [0.855, -0.05, -0.855], bevel: 0.018, mat: 'wood', accent: FRAME },
@@ -62,7 +84,13 @@ export const CONSULTATION = {
       { size: [0.14, 0.16, 0.16], at: [0.860, 0.500, 0.395], bevel: 0.012, mat: 'steel', accent: DARK }, // hinge
       { size: [0.14, 0.16, 0.16], at: [0.860, -0.500, 0.395], bevel: 0.012, mat: 'steel', accent: DARK },
       { size: [1.94, 0.10, 1.94], at: [0, 1.115, 0], bevel: 0.02, mat: 'panel', accent: DARK }, // roof cap
-      ...vents({ at: [-0.30, 1.170, -0.62], n: 3, w: 0.44, thickness: 0.030, gap: 0.070, depth: 0.030, accent: FRAME }),
+      // The sheet stands two real vent boxes on the roof. Slots cut into the cap
+      // read as nothing from below, which is the only angle this roof is seen
+      // from; a box breaks the roofline and is visible from across the room.
+      { size: [0.42, 0.15, 0.34], at: [-0.34, 1.240, -0.30], bevel: 0.014, mat: 'panel', accent: DARK },
+      ...vents({ at: [-0.34, 1.240, -0.135], n: 3, w: 0.34, thickness: 0.030, gap: 0.055, depth: 0.020, accent: FRAME }),
+      { size: [0.34, 0.12, 0.30], at: [0.36, 1.225, 0.22], bevel: 0.014, mat: 'panel', accent: DARK },
+      ...vents({ at: [0.36, 1.225, 0.375], n: 3, w: 0.26, thickness: 0.026, gap: 0.048, depth: 0.018, accent: FRAME }),
       { size: [1.86, 0.13, 0.13], at: [0, -1.085, -0.855], bevel: 0.014, mat: 'paint', accent: ACCENT }, // skirting
       { size: [0.13, 0.13, 1.86], at: [-0.855, -1.085, 0], bevel: 0.014, mat: 'paint', accent: ACCENT },
       { size: [0.13, 0.13, 0.86], at: [0.855, -1.085, -0.50], bevel: 0.014, mat: 'paint', accent: ACCENT },
@@ -113,8 +141,13 @@ export const CONSULTATION = {
     build: () => [
       { size: [0.46, 0.160, 0.44], at: [0, 0.020, 0.02], bevel: 0.020, mat: 'fabric', accent: FRAME }, // seat cushion
       { size: [0.46, 0.024, 0.44], at: [0, -0.052, 0.02], bevel: 0.006, mat: 'fabric', accent: GLASS }, // its shadow edge
-      { size: [0.44, 0.400, 0.15], at: [0, 0.220, -0.155], bevel: 0.020, mat: 'fabric', accent: FRAME }, // back cushion
-      { size: [0.44, 0.024, 0.15], at: [0, 0.032, -0.155], bevel: 0.006, mat: 'fabric', accent: GLASS },
+      // A contract chair's back FLOATS on its posts, with daylight between it
+      // and the seat. Ours sat the back cushion straight down on the seat, which
+      // reads as an armchair. That gap is the single thing that identifies the
+      // object in the sheet, so the back starts 9 cm higher and loses the depth
+      // it does not need.
+      { size: [0.44, 0.330, 0.13], at: [0, 0.290, -0.165], bevel: 0.020, mat: 'fabric', accent: FRAME }, // back cushion
+      { size: [0.44, 0.024, 0.13], at: [0, 0.137, -0.165], bevel: 0.006, mat: 'fabric', accent: GLASS },
       { size: [0.48, 0.060, 0.46], at: [0, -0.080, 0.02], bevel: 0.010, mat: 'steel' }, // seat pan
       { size: [0.085, 0.46, 0.075], at: [-0.190, 0.160, -0.215], bevel: 0.012, mat: 'steel' }, // back post
       { size: [0.085, 0.46, 0.075], at: [0.190, 0.160, -0.215], bevel: 0.012, mat: 'steel' },
@@ -126,7 +159,7 @@ export const CONSULTATION = {
       { size: [0.075, 0.34, 0.075], at: [0.180, -0.280, -0.15], bevel: 0.012, mat: 'steel' },
       { size: [0.42, 0.045, 0.045], at: [0, -0.360, 0.17], bevel: 0.008, mat: 'steel', accent: DARK }, // stretcher
       { size: [0.48, 0.030, 0.030], at: [0, 0.050, 0.232], bevel: 0.008, mat: 'paint', accent: DARK }, // seat piping
-      { size: [0.46, 0.034, 0.034], at: [0, 0.425, -0.155], bevel: 0.008, mat: 'paint', accent: DARK }, // back piping
+      { size: [0.46, 0.034, 0.034], at: [0, 0.442, -0.165], bevel: 0.008, mat: 'paint', accent: DARK }, // back piping
     ],
     mounts: onFloor,
     provides: () => [],
@@ -167,7 +200,7 @@ export const STAFF = {
     },
     build: () => [
       { size: [0.60, 1.72, 0.50], at: [0, 0.04, 0], bevel: 0.016, mat: 'paint', accent: FRAME }, // carcass / frame
-      { size: [0.56, 0.075, 0.46], at: [0, -0.858, 0], bevel: 0.010, mat: 'paint', accent: DARK }, // plinth
+      { size: [0.62, 0.115, 0.52], at: [0, -0.875, 0], bevel: 0.012, mat: 'paint', accent: DARK }, // plinth
       { size: [0.53, 0.79, 0.035], at: [0.005, 0.455, 0.256], bevel: 0.010, mat: 'panel' }, // upper door
       { size: [0.53, 0.79, 0.035], at: [0.005, -0.395, 0.256], bevel: 0.010, mat: 'panel' }, // lower door
       // the frame reading through: stiles down the sides, a rail between doors
@@ -176,12 +209,15 @@ export const STAFF = {
       { size: [0.60, 0.055, 0.045], at: [0, 0.030, 0.262], bevel: 0.010, accent: FRAME }, // mid rail
       { size: [0.60, 0.045, 0.045], at: [0, 0.878, 0.262], bevel: 0.010, accent: FRAME }, // head rail
       { size: [0.60, 0.045, 0.045], at: [0, -0.798, 0.262], bevel: 0.010, accent: FRAME }, // foot rail
-      ...vents({ at: [0, 0.745, 0.276], n: 3, w: 0.26, thickness: 0.024, gap: 0.046, depth: 0.016 }),
-      ...vents({ at: [0, -0.105, 0.276], n: 3, w: 0.26, thickness: 0.024, gap: 0.046, depth: 0.016 }),
+      // Both fittings were drawn at the size a real locker has them, which at
+      // playing distance is nothing. On the sheet the vent stack and the number
+      // plate are the two things you read on a door, so they are sized to be read.
+      ...vents({ at: [0, 0.700, 0.276], n: 4, w: 0.34, thickness: 0.030, gap: 0.052, depth: 0.018 }),
+      ...vents({ at: [0, -0.150, 0.276], n: 4, w: 0.34, thickness: 0.030, gap: 0.052, depth: 0.018 }),
       { size: [0.034, 0.17, 0.050], at: [0.228, 0.300, 0.280], bevel: 0.006, mat: 'steel', accent: ACCENT }, // handle
       { size: [0.034, 0.17, 0.050], at: [0.228, -0.550, 0.280], bevel: 0.006, mat: 'steel', accent: ACCENT },
-      ...plate({ at: [-0.165, 0.560, 0.276], w: 0.10, h: 0.060, depth: 0.010 }), // number plate
-      ...plate({ at: [-0.165, -0.290, 0.276], w: 0.10, h: 0.060, depth: 0.010 }),
+      ...plate({ at: [-0.150, 0.480, 0.278], w: 0.17, h: 0.090, depth: 0.014 }), // number plate
+      ...plate({ at: [-0.150, -0.370, 0.278], w: 0.17, h: 0.090, depth: 0.014 }),
       { size: [0.024, 0.020, 0.44], at: [-0.302, 0.04, 0], bevel: 0.005, mat: 'steel', accent: DARK }, // side seam
       { size: [0.62, 0.050, 0.52], at: [0, 0.905, 0], bevel: 0.012, accent: DARK }, // top cap
       { size: [0.60, 0.055, 0.48], at: [0, 0.950, 0.02], bevel: 0.012, accent: FRAME }, // sloped crown
@@ -227,10 +263,13 @@ export const STAFF = {
       { size: [0.042, 1.26, 0.045], at: [0.221, 0.005, 0.315], bevel: 0.008, mat: 'steel', accent: FRAME },
       ...[-0.475, -0.165, 0.145, 0.455].flatMap((y) => [
         { size: [0.42, 0.280, 0.030], at: [0, y, 0.312], bevel: 0.008, mat: 'panel' },
-        { size: [0.42, 0.016, 0.036], at: [0, y - 0.148, 0.314], bevel: 0.004, mat: 'paint', accent: DARK }, // reveal
+        // A 16 mm reveal is invisible, so the cabinet read as one grey box with
+        // handles stuck on it instead of as four drawers. This is the seam that
+        // does the identifying, so it gets the width to do it.
+        { size: [0.44, 0.032, 0.042], at: [0, y - 0.152, 0.316], bevel: 0.005, mat: 'paint', accent: DARK }, // reveal
         // the pull block: proud, cream, with a dark label slot cut into it
         { size: [0.20, 0.075, 0.055], at: [0, y + 0.010, 0.342], bevel: 0.010, mat: 'paint', accent: ACCENT },
-        { size: [0.15, 0.030, 0.030], at: [0, y + 0.020, 0.362], bevel: 0.005, mat: 'paper', accent: DARK },
+        { size: [0.165, 0.038, 0.030], at: [0, y + 0.020, 0.362], bevel: 0.005, mat: 'paper', accent: DARK },
         { size: [0.20, 0.020, 0.030], at: [0, y - 0.030, 0.356], bevel: 0.004, mat: 'paint', accent: DARK }, // its shadow
       ]),
       ...vents({ at: [-0.245, 0.330, 0.10], n: 4, w: 0.20, thickness: 0.016, gap: 0.028, depth: 0.012, axis: 'x' }),
@@ -287,8 +326,12 @@ export const SIGNAGE = {
       { size: [0.80, 0.30, 0.10], at: [0, 0, -0.004], bevel: 0.014, mat: 'steel', accent: FRAME },
       { size: [0.26, 0.76, 0.098], at: [0, 0, 0.004], bevel: 0.012, mat: 'paint' }, // body
       { size: [0.76, 0.26, 0.098], at: [0, 0, 0.004], bevel: 0.012, mat: 'paint' },
-      { size: [0.20, 0.66, 0.024], at: [0, 0, 0.046], bevel: 0.006, mat: 'paint', accent: ACCENT }, // glow surround
-      { size: [0.66, 0.20, 0.024], at: [0, 0, 0.046], bevel: 0.006, mat: 'paint', accent: ACCENT },
+      // Narrower than it was. The pale glow surround had eaten most of the
+      // face, leaving a thin green edge; on the sheet the deep green border is
+      // wide and the lit panel sits well inside it, which is what stops the
+      // sign reading as a white cross.
+      { size: [0.15, 0.58, 0.024], at: [0, 0, 0.046], bevel: 0.006, mat: 'paint', accent: ACCENT }, // glow surround
+      { size: [0.58, 0.15, 0.024], at: [0, 0, 0.046], bevel: 0.006, mat: 'paint', accent: ACCENT },
       // the lit face is an illuminated panel, so it takes the glass strip
       { size: [0.15, 0.61, 0.016], at: [0, 0, 0.056], bevel: 0.004, mat: 'glass', accent: GLASS },
       { size: [0.61, 0.15, 0.016], at: [0, 0, 0.056], bevel: 0.004, mat: 'glass', accent: GLASS },
@@ -331,11 +374,13 @@ export const SIGNAGE = {
     build: () => [
       { size: [0.90, 0.38, 0.075], at: [0, -0.02, 0], bevel: 0.010, mat: 'steel', accent: FRAME }, // the frame
       { size: [0.84, 0.32, 0.055], at: [0, -0.02, 0.014], bevel: 0.008, mat: 'wood' }, // panel
-      { size: [0.84, 0.020, 0.030], at: [0, 0.128, 0.036], bevel: 0.004, mat: 'paint', accent: DARK }, // shadow under the head
-      { size: [0.78, 0.115, 0.020], at: [0, 0.010, 0.044], bevel: 0.005, mat: 'paper', accent: GLASS }, // lettering band
-      { size: [0.70, 0.055, 0.012], at: [0, 0.010, 0.056], bevel: 0.003, mat: 'detail', accent: FRAME },
-      { size: [0.075, 0.045, 0.020], at: [-0.335, -0.115, 0.046], bevel: 0.004, mat: 'paint', accent: ACCENT }, // coral marks
-      { size: [0.075, 0.045, 0.020], at: [0.290, -0.115, 0.046], bevel: 0.004, mat: 'paint', accent: ACCENT },
+      // ONE band. The panel had been sliced into four horizontal stripes — a
+      // shadow bead, a lettering band, a detail band and two coral marks — and
+      // at any distance that reads as a venetian blind rather than as a sign.
+      // The sheet is an oak panel with a single wide cream band across it and
+      // one coral mark at the end of the line.
+      { size: [0.80, 0.150, 0.024], at: [0, 0.010, 0.046], bevel: 0.005, mat: 'paper', accent: GLASS }, // lettering band
+      { size: [0.075, 0.055, 0.016], at: [0.300, -0.115, 0.046], bevel: 0.004, mat: 'paint', accent: ACCENT }, // its one mark
       { size: [0.90, 0.050, 0.085], at: [0, 0.190, 0], bevel: 0.008, mat: 'steel', accent: FRAME }, // top rail
       // The collar is the fitting that clamps a steel rod to a steel rail. It
       // was carrying wood grain and a timber colour, which no such part has.

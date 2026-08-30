@@ -35,14 +35,14 @@ const names = await page.evaluate(() => __app.moduleIds);
 console.log(`${names.length} modules -> ${out}`);
 
 for (const id of names) {
-  await page.evaluate((mid) => {
+  await page.evaluate(({ mid, rot }) => {
     __app.clearScene();
     __app.selectType(mid);
     __app.ghost.group.position.set(0, 0, 0);
     __app.commit();
     __app.ghost.group.visible = false; // or it ghosts over the real one
     const m = __app.placed[__app.placed.length - 1];
-    m.group.rotation.y = -0.62;
+    m.group.rotation.y = rot;
 
     // frame the camera on the module's own bounds, from the style bible's angle
     const box = { min: [Infinity, Infinity, Infinity], max: [-Infinity, -Infinity, -Infinity] };
@@ -66,7 +66,7 @@ for (const id of names) {
     __app.camera.position.set(c[0] + r * 1.5, c[1] + r * 1.15, c[2] + r * 2.0);
     __app.camera.lookAt(c[0], c[1], c[2]);
     __app.controls.update();
-  }, id);
+  }, { mid: id, rot: Number(process.env.PORTRAIT_ROT ?? -0.62) });
   await page.waitForTimeout(450);
   await page.screenshot({ path: `${out}/${id}.png` });
   console.log(' ', id);

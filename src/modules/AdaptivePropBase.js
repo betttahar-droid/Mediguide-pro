@@ -79,7 +79,7 @@ export class AdaptivePropBase {
    *   geometry     foreign geometry instead of `parts` (run adaptGeometry first)
    *   halfExtents  [hx, hy, hz] of the undeformed mesh
    *   margins      [mx, my, mz] 9-slice cap thickness; 0 on axes that do not stretch
-   *   colors       { base, middle, accent1..accent4 }
+   *   colors       { base, middle, accent1..accent5 }
    *   propSpacing  metres of top surface each spawned prop is given
    *   propPool     which decor props may appear (see decor.js POOLS)
    *   socketY      height of the top surface the props snap to, in local space
@@ -134,6 +134,7 @@ export class AdaptivePropBase {
       accent2: colors.accent2 ?? null,
       accent3: colors.accent3 ?? null,
       accent4: colors.accent4 ?? null,
+      accent5: colors.accent5 ?? null,
       sourceHalfExtents: this.halfExtents,
       margins: this.margins,
       trimAxis: axis,

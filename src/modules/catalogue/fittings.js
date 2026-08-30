@@ -27,6 +27,7 @@ export const FRAME = 1; //  the light frame: posts, stiles, rails, caps, worktop
 export const ACCENT = 2; //  the one saturated colour: pulls, price rails, signals
 export const DARK = 3; //  plinths, hinges, vent slots, shadow beads
 export const GLASS = 4; //  glass, lit faces, pale label windows and readouts
+export const NEUTRAL = 5; // a cool grey that is neither the frame nor a shadow
 
 // The names are the usual role, not a rule: these are slot numbers, and a
 // module whose sheet wants an oak shelf board where most want a dark plinth

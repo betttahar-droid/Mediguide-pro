@@ -281,6 +281,7 @@ function propAssets(type) {
       accent2: def.colors.accent2 ?? null,
       accent3: def.colors.accent3 ?? null,
       accent4: def.colors.accent4 ?? null,
+      accent5: def.colors.accent5 ?? null,
       sourceHalfExtents: new Vector3(
         Math.max(bb.max.x, -bb.min.x),
         Math.max(bb.max.y, -bb.min.y),
