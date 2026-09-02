@@ -225,9 +225,14 @@ function buildFridge(H) {
   // is 1:2.18; the reference's own FRONT view is 290x780 px = 1:2.7, its crown
   // is 11% of the height and its glass 72% of the width. PARTS.md says the
   // drawn views win where the two disagree, so the body is 2H = 32 against 96.
-  const W = H - 1;        // carcass / base half-width
-  const S = H - 4;        // inside the flanks: cavity, shelves, door opening
-  const G = H - 5;        // glass half-width
+  // MEASURED ACROSS THE SHEET'S FRONT VIEW, band by band. Its cream border is
+  // 15.5% of the width on EACH side, the teal door frame 4%, and the glass 61%
+  // between them. An earlier pass widened the glass to 74% and left a 4.7%
+  // cream strip, which is why the door sprawled and the frame vanished: the
+  // vertical proportions were already right and the whole error was here.
+  const W = H - 1;        // carcass / base half-width      (100%)
+  const S = W - 5;        // inside the flanks: cavity, shelves, door opening
+  const G = W - 6.5;      // glass half-width               (~61%)
 
   // ---- P01 feet: four corner blocks, outer faces flush with the base -------
   for (const sx of [-1, 1]) for (const sy of [-1, 1]) {
@@ -312,7 +317,11 @@ renderer.outputColorSpace = THREE.LinearSRGBColorSpace; // see atlas.colorSpace
 renderer.setSize(W, Hpx, false);
 renderer.domElement.style.width = W + 'px';
 renderer.domElement.style.height = Hpx + 'px';
-renderer.setClearColor(new THREE.Color(BG));
+// ?bg= overrides the clear colour. Measuring the render against the normal
+// cream ground silently classified the cream door frame AS ground - the two
+// are within a few values of each other - and reported a frame three times
+// thinner than it is. A contrasting ground makes the silhouette unambiguous.
+renderer.setClearColor(new THREE.Color(params.get('bg') ?? BG));
 document.body.appendChild(renderer.domElement);
 
 const scene = new THREE.Scene();

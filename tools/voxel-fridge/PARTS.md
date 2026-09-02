@@ -235,3 +235,35 @@ they are adjusted.
 region's outer 14 texels are FIXED and its middle tiles on x only" is a
 decision about the MODEL, not about the image. That lives in the spec, and is
 the same information PARTS.md records per part.
+
+
+---
+
+## Measuring, rather than eyeballing
+
+Proportion is the one thing that cannot be judged by looking, because every
+error reads as "something is a bit off". Render FRONT against a contrasting
+ground and measure the bands:
+
+    ?view=front&bg=%23ff00ff
+
+then classify each pixel by colour family and report each band as a
+percentage of the object's bounding box. Compare against the reference's own
+FRONT view measured the same way.
+
+The state at the time of writing:
+
+| band | reference | here |
+|---|---|---|
+| width : height | 1 : 2.70 | 1 : 2.78 |
+| top of object → top of glass | 16% | 15.9% |
+| glass share of width | 61% | 64.3% |
+| cream door frame, both sides | 31% | ~29% |
+| base block | 14.7% | 14.6% |
+| feet | 4.5% | 4.1% |
+
+**Why `bg` exists.** Measured against the normal cream ground, the cream door
+frame was classified AS ground — the two are within a few values of each
+other — and the measurement reported a frame three times thinner than it is.
+I nearly "fixed" a part that was already correct. A measurement tool that can
+silently mistake the subject for the background is worse than no tool.
