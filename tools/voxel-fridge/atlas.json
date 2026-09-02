@@ -1,0 +1,108 @@
+{
+  "texelsPerUnit": 8,
+  "size": [
+    256,
+    256
+  ],
+  "surfaces": {
+    "cream": {
+      "rect": [
+        0,
+        0,
+        48,
+        48
+      ],
+      "corner": 8
+    },
+    "blueGrey": {
+      "rect": [
+        48,
+        0,
+        48,
+        48
+      ],
+      "corner": 8
+    },
+    "teal": {
+      "rect": [
+        96,
+        0,
+        48,
+        48
+      ],
+      "corner": 8
+    },
+    "purple": {
+      "rect": [
+        144,
+        0,
+        48,
+        48
+      ],
+      "corner": 8
+    },
+    "plinth": {
+      "rect": [
+        192,
+        0,
+        48,
+        48
+      ],
+      "corner": 8
+    },
+    "interior": {
+      "rect": [
+        0,
+        48,
+        48,
+        48
+      ],
+      "corner": 8
+    },
+    "shelf": {
+      "rect": [
+        48,
+        48,
+        48,
+        48
+      ],
+      "corner": 8
+    },
+    "grille": {
+      "rect": [
+        0,
+        96,
+        48,
+        24
+      ],
+      "corner": 8
+    },
+    "glass": {
+      "rect": [
+        144,
+        96,
+        48,
+        48
+      ],
+      "corner": 1
+    }
+  },
+  "decals": {
+    "display": {
+      "rect": [
+        52,
+        96,
+        88,
+        24
+      ]
+    },
+    "bolt": {
+      "rect": [
+        52,
+        124,
+        4,
+        4
+      ]
+    }
+  }
+}

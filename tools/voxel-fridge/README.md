@@ -40,3 +40,39 @@ is a light.
 
 **Pixel output.** Rendered at ~380x500 and CSS-upscaled x2 with
 image-rendering: pixelated, so the screen grid is the texture grid.
+
+
+## The atlas is a nine-slice sprite kit
+
+`make_atlas.py` writes `atlas.png` + `atlas.json`. The reference sheet labels
+its own regions — tileable centres, FIXED corners and edge strips, FIXED decal
+islands, a grille that is "END CAPS (FIXED) + SLOTS (TILEABLE HORIZONTAL)" —
+and that labelling *is* the architecture. Every surface is one patch with a
+fixed outer ring and a tiling middle; `sliceAxis` in the fragment shader
+reconstructs any part size from it.
+
+No UV attribute is read anywhere. A fragment asks how many texels it is from
+its own face's edge (from position and the part's half-extents), and the
+nine-slice map answers with a corner texel inside the ring and a tiling centre
+texel outside it. So geometry can be any size, including fractional, and
+nothing stretches — corners stay native, centres tile further.
+
+### Three rules this technique runs on
+
+1. **A patch's pixel size is the part's world size** on any axis it does not
+   tile. The grille tiles on x only, so its height must be exactly
+   `patchHeight / texelsPerUnit`. Left at 7 units against a 3-unit patch it
+   tiled vertically too and the slots collapsed into a mesh.
+2. **A fixed decal has no tiling centre**, so its geometry size must come FROM
+   the atlas — `decalBox()` enforces this. Sizing one by hand reads outside its
+   own rect and renders garbage.
+3. **Texel density must match render density.** Authored at 32 texels/unit and
+   rendered at ~4 px/unit, the grille aliased into moire: six texels fighting
+   over every screen pixel. The sheet is now 8 texels/unit and the renderer
+   draws 8 px/unit — one texel, one pixel.
+
+Two more traps worth recording: three sets `flipY` on upload by default, which
+put every sample in the sheet's dark background and rendered the whole cabinet
+black; and each face needs a *signed* basis, not just a pair of axes, or the
+two faces of an axis mirror each other and the temperature display reads
+backwards.
