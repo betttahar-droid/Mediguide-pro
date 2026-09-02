@@ -35,7 +35,6 @@ long as it keeps the layout and the density.
 """
 import json
 import os
-import random
 from PIL import Image, ImageDraw
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -44,49 +43,52 @@ TEXELS_PER_UNIT = 8
 PATCH = 48          # 6 units square
 CORNER = 8          # 1 unit of fixed ring; the inner 32x32 tiles
 
-# Palette read off the reference sheet: base, light bevel, dark bevel, outline.
+# FLAT base colours, read off the multi-view sheet. There is deliberately no
+# light/dark bevel pair here any more: see patch() for why.
 P = {
-    "cream":     ("#ede4d3", "#faf5e9", "#d8cebb", "#b9ab92"),
-    "blueGrey":  ("#c6cfd4", "#dde4e8", "#b3bec5", "#94a2ab"),
-    "teal":      ("#4e8672", "#63997f", "#417460", "#2c5647"),
-    "purple":    ("#5a4966", "#6f5c7d", "#4a3b54", "#332a3e"),
-    "plinth":    ("#5b4a6f", "#6d5a83", "#4a3b5a", "#3a2f47"),
-    "interior":  ("#1f4a40", "#2a5b4f", "#173a32", "#123029"),
-    "shelf":     ("#c3d0c9", "#dbe4de", "#a9b9b1", "#8b9d95"),
-    "grilleTan": ("#d9a75f", "#e8bd7d", "#b1813f", "#8c6430"),
+    "cream":     "#e9e3d4",
+    "blueGrey":  "#c3ced2",
+    "teal":      "#35785f",
+    "purple":    "#5c4a70",
+    "plinth":    "#5c4a72",
+    "interior":  "#2c6a5a",
+    "shelf":     "#dbe9e4",
+    "grilleTan": "#d9a95f",
 }
+GRILLE_FRAME = "#c08c45"
 SLOT = "#3f3a33"
 BOLT = "#5a646e"
 DISP_FRAME, DISP_BG, DISP_GREEN, DISP_ORANGE = "#4a3e58", "#262b36", "#74de96", "#e2894e"
-GLASS, STREAK = "#c9d6d9", "#eef4f2"
+GLASS, STREAK = "#b9d4cd", "#f0f7f4"
 
 
 def box(d, x, y, w, h, fill):
     d.rectangle([x, y, x + w - 1, y + h - 1], fill=fill)
 
 
-def patch(img, ox, oy, name, seed=1, speckles=4):
-    """One nine-slice patch: fixed bevelled ring, tiling speckled centre."""
-    base, lite, dark, line = P[name]
+def patch(img, ox, oy, name, bolts=False):
+    """One nine-slice patch. FLAT.
+
+    The first version drew a pixel-art bevel ring into every patch - light
+    top/left, dark bottom/right - plus speckle in the centre. That was the
+    single biggest thing making our render look nothing like the reference:
+    every box came out an embossed, slightly dirty panel, and a cabinet is
+    twenty boxes, so the whole object read as busy and rusty.
+
+    In the reference the surfaces are FLAT COLOUR. Form separation comes from
+    geometry (stepped crown, corner posts, proud frames) and from the baked
+    per-face value in the shader - not from a border painted on every face. So
+    a patch is one flat fill, and the only thing that lives in the fixed corner
+    ring is detail the sheet actually draws there: the side panel's bolts.
+    """
     d = ImageDraw.Draw(img)
-    box(d, ox, oy, PATCH, PATCH, base)
-    # The fixed ring, as pixel-art bevel: outline, then light top/left and dark
-    # bottom/right. It lives in the corner/edge zone, so the shader never scales
-    # it - this is the kit's "PROTECTED CORNERS & EDGE STRIPS".
-    b = 2
-    d.rectangle([ox, oy, ox + PATCH - 1, oy + PATCH - 1], outline=line, width=b)
-    box(d, ox + b, oy + b, PATCH - 2 * b, b, lite)
-    box(d, ox + b, oy + b, b, PATCH - 2 * b, lite)
-    box(d, ox + b, oy + PATCH - 2 * b, PATCH - 2 * b, b, dark)
-    box(d, ox + PATCH - 2 * b, oy + b, b, PATCH - 2 * b, dark)
-    # Tiling centre: sparse single-texel flecks only. Anything denser reads as
-    # noise at playing distance, which is what made the old sheets look rusty.
-    rnd = random.Random(seed)
-    span = PATCH - 2 * CORNER
-    for _ in range(speckles):
-        px = ox + CORNER + rnd.randrange(0, span - 1)
-        py = oy + CORNER + rnd.randrange(0, span - 1)
-        box(d, px, py, 1, 1, rnd.choice([lite, dark]))
+    box(d, ox, oy, PATCH, PATCH, P[name])
+    if bolts:
+        # the kit's "SIDE-PANEL CORNER BOLT ISLANDS" - fixed, so they belong in
+        # the corner ring where the nine-slice never scales or repeats them
+        for bx in (ox + 3, ox + PATCH - 6):
+            for by in (oy + 3, oy + PATCH - 6):
+                box(d, bx, by, 3, 3, BOLT)
 
 
 def main():
@@ -98,15 +100,15 @@ def main():
     order = ["cream", "blueGrey", "teal", "purple", "plinth", "interior", "shelf"]
     for i, name in enumerate(order):
         ox, oy = (i % 5) * PATCH, (i // 5) * PATCH
-        patch(img, ox, oy, name, seed=i + 3)
+        patch(img, ox, oy, name, bolts=(name == "blueGrey"))
         man["surfaces"][name] = {"rect": [ox, oy, PATCH, PATCH], "corner": CORNER}
 
     # --- grille: fixed end caps + a horizontally tiling slot run -----------
     # 48 x 24 = 6 x 3 units. The part MUST be 3 units tall: on an axis it does
     # not tile, a patch's pixel size IS the part's world size.
     gx, gy, gw, gh = 0, PATCH * 2, PATCH, 24
-    box(d, gx, gy, gw, gh, P["grilleTan"][2])
-    box(d, gx + 1, gy + 1, gw - 2, gh - 2, P["grilleTan"][0])
+    box(d, gx, gy, gw, gh, GRILLE_FRAME)
+    box(d, gx + 2, gy + 2, gw - 4, gh - 4, P["grilleTan"])
     # The kit's slots are CONTINUOUS lines, so they run across the whole patch
     # INCLUDING the corner ring. A slot that stopped at the ring broke into a
     # dotted mesh the moment the tile repeated.
@@ -114,9 +116,9 @@ def main():
     top = gy + (gh - (rows * rowh + (rows - 1) * gap)) // 2
     for r in range(rows):
         box(d, gx, top + r * (rowh + gap), gw, rowh, SLOT)
-    for bx in (gx + 2, gx + gw - 4):          # fixed end-cap bolts, in the ring
-        for by in (gy + 3, gy + gh - 5):
-            box(d, bx, by, 2, 2, P["grilleTan"][3])
+    for bx in (gx + 3, gx + gw - 5):          # fixed end-cap bolts, in the ring
+        for by in (gy + 4, gy + gh - 6):
+            box(d, bx, by, 2, 2, GRILLE_FRAME)
     man["surfaces"]["grille"] = {"rect": [gx, gy, gw, gh], "corner": CORNER}
 
     # --- fixed decals: blitted at native size, never scaled ----------------
@@ -139,21 +141,19 @@ def main():
     man["decals"]["display"] = {"rect": [dx, dy, dw, dh]}
 
     bx, by = PATCH + 4, PATCH * 2 + 28           # corner bolt island, 4 x 4
-    box(d, bx, by, 4, 4, P["blueGrey"][2])
+    box(d, bx, by, 4, 4, P["blueGrey"])
     box(d, bx + 1, by + 1, 2, 2, BOLT)
     man["decals"]["bolt"] = {"rect": [bx, by, 4, 4]}
 
     # glass: pale field carrying the kit's fixed diagonal reflection streak
     gx2, gy2 = PATCH * 3, PATCH * 2
     box(d, gx2, gy2, PATCH, PATCH, GLASS)
-    for i in range(11):
-        px, py = gx2 + 30 - i * 3, gy2 + 3 + i * 3
-        if gx2 <= px < gx2 + PATCH - 5:
-            box(d, px, py, 5, 3, STREAK)
-    for i in range(6):
-        px, py = gx2 + 42 - i * 3, gy2 + 5 + i * 3
-        if gx2 <= px < gx2 + PATCH - 2:
-            box(d, px, py, 2, 3, STREAK)
+    # ONE bold staircase, top-left, like the sheet. Several faint ones read as
+    # smudges on the glass rather than as a reflection.
+    for i in range(13):
+        px, py = gx2 + 26 - i * 2, gy2 + 2 + i * 3
+        if gx2 <= px < gx2 + PATCH - 6:
+            box(d, px, py, 6, 3, STREAK)
     man["surfaces"]["glass"] = {"rect": [gx2, gy2, PATCH, PATCH], "corner": 1}
 
     img.save(os.path.join(HERE, "atlas.png"))

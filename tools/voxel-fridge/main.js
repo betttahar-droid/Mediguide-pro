@@ -35,7 +35,13 @@ const atlas = await new THREE.TextureLoader().loadAsync('/tools/voxel-fridge/atl
 atlas.magFilter = THREE.NearestFilter;
 atlas.minFilter = THREE.NearestFilter;
 atlas.generateMipmaps = false;
-atlas.colorSpace = THREE.SRGBColorSpace;
+// NO colour management. A stock ShaderMaterial does not get three's output
+// colour-space conversion appended, so a texture tagged sRGB is decoded to
+// linear on sample and then written straight out — everything landed markedly
+// darker than authored, which is why the mid-teal base was reading near-black.
+// For flat pixel art the honest setup is raw texels in, raw texels out: what
+// make_atlas.py writes is exactly what appears on screen, times the face tint.
+atlas.colorSpace = THREE.NoColorSpace;
 atlas.wrapS = atlas.wrapT = THREE.ClampToEdgeWrapping;
 // three flips images on upload by default, which puts v=0 at the BOTTOM of the
 // PNG. The manifest's rects are top-down pixel coordinates straight out of the
@@ -117,9 +123,12 @@ void main() {
 
   // Baked shading: the reference paints it per face, so the normal alone picks
   // the value. There are no lights in this scene at all.
-  float t = 0.90;
-  if (vNrm.y > 0.5)       t = 1.06;
-  else if (vNrm.y < -0.5) t = 0.80;
+  // Spread wider than before. With the textures now flat, per-face value is
+  // the ONLY thing separating one form from the next, so it has to carry the
+  // whole job the painted bevel rings were doing badly.
+  float t = 0.86;
+  if (vNrm.y > 0.5)       t = 1.09;
+  else if (vNrm.y < -0.5) t = 0.74;
   else if (vNrm.z < -0.5) t = 1.00;
   else if (vNrm.z > 0.5)  t = 0.90;
 
@@ -147,7 +156,7 @@ function surfaceMaterial(name, { opacity = 1 } = {}) {
 }
 
 const MATS = {};
-const matFor = (kind) => (MATS[kind] ??= surfaceMaterial(kind, { opacity: kind === 'glass' ? 0.2 : 1 }));
+const matFor = (kind) => (MATS[kind] ??= surfaceMaterial(kind, { opacity: kind === 'glass' ? 0.17 : 1 }));
 
 // ---------------------------------------------------------------------------
 // a box from table coords [x1,y1,z1]-[x2,y2,z2] (Blender, z-up, front = -y)
@@ -238,6 +247,7 @@ const viewH = 116, viewW = viewH * (0.72 + Math.max(0, (H - 22) * 0.024));
 const Hpx = Math.round(viewH * man.texelsPerUnit);
 const W = Math.round(viewW * man.texelsPerUnit);
 const renderer = new THREE.WebGLRenderer({ antialias: false });
+renderer.outputColorSpace = THREE.LinearSRGBColorSpace; // see atlas.colorSpace
 renderer.setSize(W, Hpx, false);
 renderer.domElement.style.width = W + 'px';
 renderer.domElement.style.height = Hpx + 'px';
