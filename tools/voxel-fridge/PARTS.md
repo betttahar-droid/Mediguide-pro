@@ -54,11 +54,11 @@ Built bottom-up, the way the object stacks. Status: ☐ not started ·
 | P03 | Condenser base | ☑ |
 | P04 | Condenser grille | ☑ |
 | P05 | Base corner blocks | ☑ |
-| P06 | Carcass sides | ☐ |
-| P07 | Back panel | ☐ |
-| P08 | Corner posts | ☐ |
-| P09 | Cavity liner | ☐ |
-| P10 | Shelves | ☐ |
+| P06 | Carcass sides | ☑ |
+| P07 | Back panel | ☑ |
+| P08 | Corner posts | ☑ |
+| P09 | Cavity liner | ☑ |
+| P10 | Shelves | ☑ |
 | P11 | Door outer frame | ☐ |
 | P12 | Door inner frame | ☐ |
 | P13 | Glass | ☐ |
@@ -148,3 +148,66 @@ Extents: 3 units in `x`, 4 in `y`, `z` 13 → 18.
 **Texture.** Surface `cream`, all-corner like the feet.
 
 **Adapts.** Move with width; never scale.
+
+
+## P06 — Carcass sides (×2)
+
+**Geometry.** SIDE shows a pale blue-grey field filling the flank, held in a
+cream frame: the crown caps it, corner posts (P08) run down its front and back
+edges. The detail earlier passes missed is a **horizontal seam** roughly 45%
+up the panel — the side is two stacked panels, not one. BACK shows the same
+seam at the same height, so it runs right round the cabinet: it is a real
+carcass joint, not a mark on one face.
+
+Extents: `x` ±(H−6) → ±(H−2), `y` ±14, `z` 18 → 84, split at `z` 50/52.
+
+**Texture.** Surface `blueGrey`, full nine-slice, tiling both axes. Splitting
+the panel means each half gets its own inset plate, which is what the sheet
+draws — two plates with a rail between, not one tall plate.
+
+**Adapts.** Depth tiles; the seam height is fixed by the object.
+
+## P07 — Back panel
+
+**Geometry.** BACK is a pale blue-grey panel inside a cream frame, carrying
+the same seam as the sides at the same height, with the base's recessed
+rectangle below it. Split to match P06.
+
+Extents: `x` ±(H−2), `y` 11 → 14, `z` 18 → 84, split at `z` 50/52.
+
+**Texture.** Surface `blueGrey`. Nine-slice, tiling.
+
+## P08 — Corner posts (×4)
+
+**Geometry.** Cream strips down the four vertical corners, full carcass
+height. In ISO they are what the side panel is visibly set *into*.
+
+Extents: 2 units square in plan, `z` 18 → 84.
+
+**Texture.** Surface `cream`. At 2 units wide the ring swallows the part, so
+it is all-corner: outline and catch, no tiling.
+
+**Adapts.** Move with width and depth; never scale. The kit's "PROTECTED
+CORNERS" made literal.
+
+## P09 — Cavity liner
+
+**Geometry.** Five dark-teal faces — back, two inner flanks, floor, ceiling.
+FRONT shows a saturated teal behind the shelves, clearly darker than them and
+distinct from the exterior base teal.
+
+**Texture.** Surface `interior`, `panel=False`: a liner is a lining, not a
+pressed plate, so outline and catch only.
+
+## P10 — Shelves (×4)
+
+**Geometry.** FRONT reads four pale mint slabs as bright bands with clear dark
+gaps between; they span the cavity's full width and stop short of the glass.
+At 1.5 units their front edge was too thin to read as a band in FRONT, which
+is the view the sheet leads with — 2.5 units matches.
+
+Extents: `x` ±(H−6), `y` −10 → 1, `z` at 29/41/53/65, 2.5 thick.
+
+**Texture.** Surface `shelf`, `panel=False`. A shelf is a slab.
+
+**Adapts.** Width tiles with the cabinet; count and spacing fixed.

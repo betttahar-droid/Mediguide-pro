@@ -207,19 +207,32 @@ function buildFridge(H) {
   // Carcass sides are SLIM. At six units they ate a third of the front and the
   // cabinet read squat; the sheet gives the glass roughly three quarters of the
   // width and keeps the frame to a narrow border.
-  add('blueGrey', [-(H - 2), -14, 18], [-(H - 6), 14, 84]);             // left side
-  add('blueGrey', [H - 6, -14, 18],    [H - 2, 14, 84]);                // right side
+  // P06: the sides are TWO stacked panels with a joint at z 50-52. SIDE and
+  // BACK both show that seam at the same height, so it runs right round the
+  // cabinet — a real carcass joint, not a mark on one face. Splitting it also
+  // gives each half its own inset plate, which is what the sheet draws.
+  add('blueGrey', [-(H - 2), -14, 18], [-(H - 6), 14, 50]);
+  add('blueGrey', [-(H - 2), -14, 52], [-(H - 6), 14, 84]);
+  add('blueGrey', [H - 6, -14, 18],    [H - 2, 14, 50]);
+  add('blueGrey', [H - 6, -14, 52],    [H - 2, 14, 84]);
+  add('cream',    [-(H - 2), -14.2, 50], [-(H - 6), 14.2, 52]);         // seam rail
+  add('cream',    [H - 6, -14.2, 50],    [H - 2, 14.2, 52]);
   add('cream',    [-(H - 6), -14, 80], [H - 6, 14, 84]);                // top run
   // THE EXTERIOR BACK. Without it the back view looked straight into the dark
   // cavity liner, where the sheet's BACK is a pale panel in a cream frame.
-  add('blueGrey', [-(H - 2), 11, 18],  [H - 2, 14, 84]);                // back panel
+  // P07: same split, same heights
+  add('blueGrey', [-(H - 2), 11, 18],  [H - 2, 14, 50]);
+  add('blueGrey', [-(H - 2), 11, 52],  [H - 2, 14, 84]);
+  add('cream',    [-(H - 2), 11, 50],  [H - 2, 14.2, 52]);              // seam rail
   // five-sided dark cavity: seen through glass, a pale void reads as a flat sheet
   add('interior', [-(H - 6), 8, 18],   [H - 6, 11, 80]);
   add('interior', [-(H - 6), -14, 18], [-(H - 7.5), 8, 80]);
   add('interior', [H - 7.5, -14, 18],  [H - 6, 8, 80]);
   add('interior', [-(H - 6), -14, 18], [H - 6, 8, 20]);
   add('interior', [-(H - 6), -14, 78], [H - 6, 8, 80]);
-  for (const z of [29, 41, 53, 65]) add('shelf', [-(H - 6), -10, z], [H - 6, 1, z + 2]);
+  // P10: 2.5 thick. At 1.5 the front edge was too thin to read as a band in
+  // FRONT, which is the view the sheet leads with.
+  for (const z of [29, 41, 53, 65]) add('shelf', [-(H - 6), -10, z], [H - 6, 1, z + 2.5]);
   // fixed cream corner posts — the kit's "PROTECTED CORNERS", two units square
   // whatever the cabinet's width, which is exactly the point
   for (const sx of [-1, 1]) for (const sy of [-1, 1]) {
