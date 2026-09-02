@@ -175,7 +175,12 @@ def main():
               chips=1 if name in ("shelf", "interior") else 2,
               bolts=(name in ("blueGrey", "teal", "cream")),
               panel=(name not in ("shelf", "interior")))
-        man["surfaces"][name] = {"rect": [ox, oy, PATCH, PATCH], "corner": CORNER}
+        # An axis CLAMPS when its pattern must not recur down the part: the
+        # base and the plinth are single bands, so a vertical repeat would put
+        # a seam through the middle of one plate. See PARTS.md P02/P03.
+        tile = [1, 0] if name in ("teal", "plinth") else [1, 1]
+        man["surfaces"][name] = {"rect": [ox, oy, PATCH, PATCH],
+                                 "corner": CORNER, "tile": tile}
 
     # --- grille: fixed end caps + a horizontally tiling slot run -----------
     # 48 x 24 = 6 x 3 units. The part MUST be 3 units tall: on an axis it does
@@ -193,7 +198,8 @@ def main():
     for bx in (gx + 3, gx + gw - 5):          # fixed end-cap bolts, in the ring
         for by in (gy + 4, gy + gh - 6):
             box(d, bx, by, 2, 2, GRILLE_FRAME)
-    man["surfaces"]["grille"] = {"rect": [gx, gy, gw, gh], "corner": CORNER}
+    man["surfaces"]["grille"] = {"rect": [gx, gy, gw, gh], "corner": CORNER,
+                                 "tile": [1, 0]}
 
     # --- fixed decals: blitted at native size, never scaled ----------------
     # temperature display, 88 x 24 = 11 x 3 units

@@ -72,6 +72,7 @@ uniform sampler2D uAtlas;
 uniform vec2 uAtlasSize;
 uniform vec4 uRect;        // patch x, y, w, h in atlas pixels
 uniform float uCorner;     // fixed ring width in atlas pixels
+uniform vec2 uTile;        // per axis: 1 tile the middle, 0 clamp it
 uniform float uTexels;     // texels per world unit
 uniform float uOpacity;
 varying vec3 vLocal;
@@ -86,13 +87,17 @@ varying vec3 vNrm;
 // Inside a corner we read straight through; past it we tile the middle. The
 // corner is clamped to half the face so a small part degrades to "all corner"
 // rather than reading the middle backwards.
-float sliceAxis(float p, float faceLen, float corner, float srcLen) {
+float sliceAxis(float p, float faceLen, float corner, float srcLen, float tile) {
   float c = min(corner, floor(faceLen * 0.5));
-  if (p < c) return p;
+  if (p < c) return p;                       // start corner, native size
   float fromEnd = faceLen - p;
-  if (fromEnd < c) return srcLen - fromEnd;
+  if (fromEnd < c) return srcLen - fromEnd;  // end corner, native size
   float mid = max(srcLen - 2.0 * c, 1.0);
-  return c + mod(p - c, mid);
+  // CLAMP: hold one line of the patch's middle for the whole span. Uniform
+  // field, no repeat, no seam - the right answer for an axis whose pattern
+  // must not recur (a plain band, or the grille's fixed row of slots).
+  if (tile < 0.5) return c + floor(mid * 0.5);
+  return c + mod(p - c, mid);                // TILE: repeat the middle
 }
 
 void main() {
@@ -115,8 +120,8 @@ void main() {
   vec2 p = (local + half2) * uTexels;
 
   vec2 src = vec2(
-    sliceAxis(p.x, faceLen.x, uCorner, uRect.z),
-    sliceAxis(p.y, faceLen.y, uCorner, uRect.w)
+    sliceAxis(p.x, faceLen.x, uCorner, uRect.z, uTile.x),
+    sliceAxis(p.y, faceLen.y, uCorner, uRect.w, uTile.y)
   );
   // +0.5 lands on the texel centre; without it the nearest fetch straddles a
   // boundary and the sheet shimmers by a pixel as the object moves.
@@ -151,6 +156,7 @@ function surfaceMaterial(name, { opacity = 1 } = {}) {
       uAtlasSize: { value: new THREE.Vector2(man.size[0], man.size[1]) },
       uRect: { value: new THREE.Vector4(s.rect[0], s.rect[1], s.rect[2], s.rect[3]) },
       uCorner: { value: s.corner ?? 1e6 }, // a decal is "all corner": never tiles
+      uTile: { value: new THREE.Vector2(...(s.tile ?? [1, 1])) },
       uTexels: { value: man.texelsPerUnit },
       uOpacity: { value: opacity },
     },
@@ -194,8 +200,10 @@ function buildFridge(H) {
   const g = new THREE.Group();
   const add = (kind, a, b) => g.add(tableBox(kind, a, b));
 
-  add('plinth',   [-(H - 2), -13, 0],  [H - 2, 13, 4]);                 // PLINTH
-  add('teal',     [-(H - 2), -14, 4],  [H - 2, 14, 18]);                // CONDENSER
+  // P02 plinth strip: inset, so the base overhangs it
+  add('plinth',   [-(H - 2), -13, 0],  [H - 2, 13, 4]);
+  // P03 condenser base
+  add('teal',     [-(H - 2), -14, 4],  [H - 2, 14, 18]);
   // Carcass sides are SLIM. At six units they ate a third of the front and the
   // cabinet read squat; the sheet gives the glass roughly three quarters of the
   // width and keeps the frame to a narrow border.
@@ -250,12 +258,14 @@ function buildFridge(H) {
   for (const sx of [-1, 1]) for (const sy of [-1, 1]) {
     const x1 = sx > 0 ? H - 5 : -(H - 2), x2 = sx > 0 ? H - 2 : -(H - 5);
     const y1 = sy > 0 ? 10 : -14, y2 = sy > 0 ? 14 : -10;
-    add('cream', [x1, y1, 13], [x2, y2, 18]);
+    add('cream', [x1, y1, 13], [x2, y2, 18]);   // P05
   }
   // Four distinct feet, one per corner, standing proud of the plinth strip.
   // Two stubs at the front only read as a purple band across the bottom.
   for (const sx of [-1, 1]) for (const sy of [-1, 1]) {
-    const x1 = sx > 0 ? H - 6 : -(H - 1), x2 = sx > 0 ? H - 1 : -(H - 6);
+    // P01: outer faces flush with the base, not inset — the ISO view is
+    // explicit about this, and inset feet read as castors rather than blocks.
+    const x1 = sx > 0 ? H - 8 : -(H - 2), x2 = sx > 0 ? H - 2 : -(H - 8);
     const y1 = sy > 0 ? 9 : -14, y2 = sy > 0 ? 14 : -9;
     add('plinth', [x1, y1, -1.5], [x2, y2, 3.5]);
   }
