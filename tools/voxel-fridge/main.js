@@ -26,8 +26,10 @@ import * as THREE from 'three';
 
 const params = new URLSearchParams(location.search);
 const H = Number(params.get('w') ?? 22);
-const yaw = Number(params.get('yaw') ?? 30) * Math.PI / 180;
-const pitch = Number(params.get('pitch') ?? 18) * Math.PI / 180;
+const VIEWS = { front: [0, 0], side: [90, 0], back: [180, 0], iso: [30, 18] };
+const [vYaw, vPitch] = VIEWS[params.get('view')] ?? VIEWS.iso;
+const yaw = Number(params.get('yaw') ?? vYaw) * Math.PI / 180;
+const pitch = Number(params.get('pitch') ?? vPitch) * Math.PI / 180;
 
 const BG = '#efebe4';
 const man = await (await fetch('/tools/voxel-fridge/atlas.json')).json();
@@ -194,16 +196,22 @@ function buildFridge(H) {
 
   add('plinth',   [-(H - 2), -13, 0],  [H - 2, 13, 4]);                 // PLINTH
   add('teal',     [-(H - 2), -14, 4],  [H - 2, 14, 18]);                // CONDENSER
-  add('blueGrey', [-(H - 2), -14, 18], [-(H - 8), 14, 84]);             // left side
-  add('blueGrey', [H - 8, -14, 18],    [H - 2, 14, 84]);                // right side
-  add('cream',    [-(H - 8), -14, 80], [H - 8, 14, 84]);                // top run
+  // Carcass sides are SLIM. At six units they ate a third of the front and the
+  // cabinet read squat; the sheet gives the glass roughly three quarters of the
+  // width and keeps the frame to a narrow border.
+  add('blueGrey', [-(H - 2), -14, 18], [-(H - 6), 14, 84]);             // left side
+  add('blueGrey', [H - 6, -14, 18],    [H - 2, 14, 84]);                // right side
+  add('cream',    [-(H - 6), -14, 80], [H - 6, 14, 84]);                // top run
+  // THE EXTERIOR BACK. Without it the back view looked straight into the dark
+  // cavity liner, where the sheet's BACK is a pale panel in a cream frame.
+  add('blueGrey', [-(H - 2), 11, 18],  [H - 2, 14, 84]);                // back panel
   // five-sided dark cavity: seen through glass, a pale void reads as a flat sheet
-  add('interior', [-(H - 8), 10, 18],  [H - 8, 13, 80]);
-  add('interior', [-(H - 8), -14, 18], [-(H - 9.5), 10, 80]);
-  add('interior', [H - 9.5, -14, 18],  [H - 8, 10, 80]);
-  add('interior', [-(H - 8), -14, 18], [H - 8, 10, 20]);
-  add('interior', [-(H - 8), -14, 78], [H - 8, 10, 80]);
-  for (const z of [29, 41, 53, 65]) add('shelf', [-(H - 8), -10, z], [H - 8, 1, z + 1.5]);
+  add('interior', [-(H - 6), 8, 18],   [H - 6, 11, 80]);
+  add('interior', [-(H - 6), -14, 18], [-(H - 7.5), 8, 80]);
+  add('interior', [H - 7.5, -14, 18],  [H - 6, 8, 80]);
+  add('interior', [-(H - 6), -14, 18], [H - 6, 8, 20]);
+  add('interior', [-(H - 6), -14, 78], [H - 6, 8, 80]);
+  for (const z of [29, 41, 53, 65]) add('shelf', [-(H - 6), -10, z], [H - 6, 1, z + 2]);
   // fixed cream corner posts — the kit's "PROTECTED CORNERS", two units square
   // whatever the cabinet's width, which is exactly the point
   for (const sx of [-1, 1]) for (const sy of [-1, 1]) {
@@ -211,8 +219,11 @@ function buildFridge(H) {
     const y1 = sy > 0 ? 12 : -14, y2 = sy > 0 ? 14 : -12;
     add('cream', [x1, y1, 18], [x2, y2, 84]);
   }
-  add('cream', [-H, -15, 84],       [H, 15, 88]);                       // CROWN_LOWER
-  add('cream', [-(H - 3), -12, 88], [H - 3, 12, 94]);                   // CROWN_TOP
+  // A slim two-step moulding with a small overhang. Ours was a 6-unit top slab
+  // inset only 3, which shows a big bright top face at any pitch and reads as a
+  // separate box sitting on the cabinet rather than as its cap.
+  add('cream', [-(H - 0.5), -14.5, 84], [H - 0.5, 14.5, 87]);           // CROWN_LOWER
+  add('cream', [-(H - 2.5), -12.5, 87], [H - 2.5, 12.5, 91]);           // CROWN_TOP
 
   const frame = (kind, xIn, xOut, zLo, zHi, y1, y2) => {
     add(kind, [-xOut, y1, zLo], [-xIn, y2, zHi]);
@@ -220,12 +231,12 @@ function buildFridge(H) {
     add(kind, [-xOut, y1, zHi - (xOut - xIn)], [xOut, y2, zHi]);
     add(kind, [-xOut, y1, zLo], [xOut, y2, zLo + (xOut - xIn)]);
   };
-  frame('cream', H - 6, H - 3, 20, 82, -15.5, -12);                     // OUTER_FRAME
-  frame('teal',  H - 8, H - 6, 22, 80, -16.5, -15.5);                   // DOOR_FRAME
-  add('glass',   [-(H - 8), -16.4, 24], [H - 8, -16.2, 78]);            // GLASS
-  add('purple', [H - 5, -18.6, 43],  [H - 2, -17.2, 61]);               // HANDLE
-  add('purple', [H - 4.5, -17.2, 44], [H - 3, -16.2, 47]);
-  add('purple', [H - 4.5, -17.2, 57], [H - 3, -16.2, 60]);
+  frame('cream', H - 4, H - 2, 20, 82, -15.5, -12);                     // OUTER_FRAME
+  frame('teal',  H - 6, H - 4, 22, 80, -16.5, -15.5);                   // DOOR_FRAME
+  add('glass',   [-(H - 6), -16.4, 24], [H - 6, -16.2, 78]);            // GLASS
+  add('purple', [H - 3.5, -18.6, 41], [H - 1, -17.2, 63]);              // HANDLE
+  add('purple', [H - 3, -17.2, 42],   [H - 1.5, -16.2, 45]);
+  add('purple', [H - 3, -17.2, 59],   [H - 1.5, -16.2, 62]);
   // FIXED DECALS — the same pixel size at every cabinet width, sized by the
   // atlas rather than by hand
   g.add(decalBox('display', 0, -15.6, 86.4));
@@ -233,8 +244,20 @@ function buildFridge(H) {
   // 96 px / 32 = 3 units. Left at 7 units it tiled vertically too and the slots
   // collapsed into a fine mesh.
   add('grille',  [-(H - 7), -15.2, 8], [H - 7, -14, 11]);
-  for (const s of [-1, 1]) {
-    add('plinth', [s * (H - 2) - (s > 0 ? 4 : 0), -14, 0], [s * (H - 2) + (s > 0 ? 0 : 4), -10, 3]);
+  // Cream corner blocks capping the base, front and back. They read clearly in
+  // the sheet's FRONT and ISO views and are what stops the base reading as a
+  // plain teal slab the cabinet happens to stand on.
+  for (const sx of [-1, 1]) for (const sy of [-1, 1]) {
+    const x1 = sx > 0 ? H - 5 : -(H - 2), x2 = sx > 0 ? H - 2 : -(H - 5);
+    const y1 = sy > 0 ? 10 : -14, y2 = sy > 0 ? 14 : -10;
+    add('cream', [x1, y1, 13], [x2, y2, 18]);
+  }
+  // Four distinct feet, one per corner, standing proud of the plinth strip.
+  // Two stubs at the front only read as a purple band across the bottom.
+  for (const sx of [-1, 1]) for (const sy of [-1, 1]) {
+    const x1 = sx > 0 ? H - 6 : -(H - 1), x2 = sx > 0 ? H - 1 : -(H - 6);
+    const y1 = sy > 0 ? 9 : -14, y2 = sy > 0 ? 14 : -9;
+    add('plinth', [x1, y1, -1.5], [x2, y2, 3.5]);
   }
   return g;
 }
