@@ -60,7 +60,7 @@ P = {
     "teal":      "#35785f",
     "purple":    "#5c4a70",
     "plinth":    "#5c4a72",
-    "interior":  "#2c6a5a",
+    "interior":  "#357a67",
     "shelf":     "#dbe9e4",
     "grilleTan": "#d9a95f",
 }
@@ -68,7 +68,7 @@ GRILLE_FRAME = "#c08c45"
 SLOT = "#3f3a33"
 BOLT = "#5a646e"
 DISP_FRAME, DISP_BG, DISP_GREEN, DISP_ORANGE = "#4a3e58", "#262b36", "#74de96", "#e2894e"
-GLASS, STREAK = "#b9d4cd", "#f0f7f4"
+GLASS, STREAK = "#bcd8d2", "#f2f8f6"
 
 
 def box(d, x, y, w, h, fill):
@@ -174,7 +174,10 @@ def main():
         patch(img, ox, oy, name, seed=i + 3,
               chips=1 if name in ("shelf", "interior") else 2,
               bolts=(name in ("blueGrey", "teal", "cream")),
-              panel=(name not in ("shelf", "interior")))
+              # Only the big pressed panels get a plate. On the sheet the cream
+              # frames, crown and corner blocks are plain — a plate on every
+              # one of them was most of what made our render read as noisy.
+              panel=(name in ("blueGrey", "teal")))
         # An axis CLAMPS when its pattern must not recur down the part: the
         # base and the plinth are single bands, so a vertical repeat would put
         # a seam through the middle of one plate. See PARTS.md P02/P03.

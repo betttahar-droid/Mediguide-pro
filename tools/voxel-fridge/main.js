@@ -25,7 +25,7 @@
 import * as THREE from 'three';
 
 const params = new URLSearchParams(location.search);
-const H = Number(params.get('w') ?? 22);
+const H = Number(params.get('w') ?? 17);
 const VIEWS = { front: [0, 0], side: [90, 0], back: [180, 0], iso: [30, 18] };
 const [vYaw, vPitch] = VIEWS[params.get('view')] ?? VIEWS.iso;
 const yaw = Number(params.get('yaw') ?? vYaw) * Math.PI / 180;
@@ -164,7 +164,7 @@ function surfaceMaterial(name, { opacity = 1 } = {}) {
 }
 
 const MATS = {};
-const matFor = (kind) => (MATS[kind] ??= surfaceMaterial(kind, { opacity: kind === 'glass' ? 0.17 : 1 }));
+const matFor = (kind) => (MATS[kind] ??= surfaceMaterial(kind, { opacity: kind === 'glass' ? 0.12 : 1 }));
 
 // ---------------------------------------------------------------------------
 // a box from table coords [x1,y1,z1]-[x2,y2,z2] (Blender, z-up, front = -y)
@@ -199,89 +199,82 @@ function decalBox(name, cx, y, cz, depth = 0.6) {
 function buildFridge(H) {
   const g = new THREE.Group();
   const add = (kind, a, b) => g.add(tableBox(kind, a, b));
+  // MEASURED OFF THE DRAWN SHEET, not the coordinate table. The table's 44x96
+  // is 1:2.18; the reference's own FRONT view is 290x780 px = 1:2.7, its crown
+  // is 11% of the height and its glass 72% of the width. PARTS.md says the
+  // drawn views win where the two disagree, so the body is 2H = 32 against 96.
+  const W = H - 1;        // carcass / base half-width
+  const S = H - 4;        // inside the flanks: cavity, shelves, door opening
+  const G = H - 5;        // glass half-width
 
-  // P02 plinth strip: inset, so the base overhangs it
-  add('plinth',   [-(H - 2), -13, 0],  [H - 2, 13, 4]);
-  // P03 condenser base
-  add('teal',     [-(H - 2), -14, 4],  [H - 2, 14, 18]);
-  // Carcass sides are SLIM. At six units they ate a third of the front and the
-  // cabinet read squat; the sheet gives the glass roughly three quarters of the
-  // width and keeps the frame to a narrow border.
-  // P06: the sides are TWO stacked panels with a joint at z 50-52. SIDE and
-  // BACK both show that seam at the same height, so it runs right round the
-  // cabinet — a real carcass joint, not a mark on one face. Splitting it also
-  // gives each half its own inset plate, which is what the sheet draws.
-  add('blueGrey', [-(H - 2), -14, 18], [-(H - 6), 14, 50]);
-  add('blueGrey', [-(H - 2), -14, 52], [-(H - 6), 14, 84]);
-  add('blueGrey', [H - 6, -14, 18],    [H - 2, 14, 50]);
-  add('blueGrey', [H - 6, -14, 52],    [H - 2, 14, 84]);
-  add('cream',    [-(H - 2), -14.2, 50], [-(H - 6), 14.2, 52]);         // seam rail
-  add('cream',    [H - 6, -14.2, 50],    [H - 2, 14.2, 52]);
-  add('cream',    [-(H - 6), -14, 80], [H - 6, 14, 84]);                // top run
-  // THE EXTERIOR BACK. Without it the back view looked straight into the dark
-  // cavity liner, where the sheet's BACK is a pale panel in a cream frame.
-  // P07: same split, same heights
-  add('blueGrey', [-(H - 2), 11, 18],  [H - 2, 14, 50]);
-  add('blueGrey', [-(H - 2), 11, 52],  [H - 2, 14, 84]);
-  add('cream',    [-(H - 2), 11, 50],  [H - 2, 14.2, 52]);              // seam rail
-  // five-sided dark cavity: seen through glass, a pale void reads as a flat sheet
-  add('interior', [-(H - 6), 8, 18],   [H - 6, 11, 80]);
-  add('interior', [-(H - 6), -14, 18], [-(H - 7.5), 8, 80]);
-  add('interior', [H - 7.5, -14, 18],  [H - 6, 8, 80]);
-  add('interior', [-(H - 6), -14, 18], [H - 6, 8, 20]);
-  add('interior', [-(H - 6), -14, 78], [H - 6, 8, 80]);
-  // P10: 2.5 thick. At 1.5 the front edge was too thin to read as a band in
-  // FRONT, which is the view the sheet leads with.
-  for (const z of [29, 41, 53, 65]) add('shelf', [-(H - 6), -10, z], [H - 6, 1, z + 2.5]);
-  // fixed cream corner posts — the kit's "PROTECTED CORNERS", two units square
-  // whatever the cabinet's width, which is exactly the point
+  // ---- P01 feet: four corner blocks, outer faces flush with the base -------
   for (const sx of [-1, 1]) for (const sy of [-1, 1]) {
-    const x1 = sx > 0 ? H - 4 : -(H - 2), x2 = sx > 0 ? H - 2 : -(H - 4);
+    const x1 = sx > 0 ? W - 6 : -W, x2 = sx > 0 ? W : -(W - 6);
+    const y1 = sy > 0 ? 9 : -14, y2 = sy > 0 ? 14 : -9;
+    add('plinth', [x1, y1, -1.5], [x2, y2, 3.5]);
+  }
+  add('plinth', [-(W - 1), -13, 0],   [W - 1, 13, 4]);      // P02 plinth strip
+  add('teal',   [-W, -14, 4],         [W, 14, 18]);         // P03 condenser base
+  add('grille', [-(W - 5), -15.2, 8], [W - 5, -14, 11]);    // P04 grille
+  for (const sx of [-1, 1]) for (const sy of [-1, 1]) {     // P05 corner blocks
+    const x1 = sx > 0 ? W - 3 : -W, x2 = sx > 0 ? W : -(W - 3);
+    const y1 = sy > 0 ? 10 : -14, y2 = sy > 0 ? 14 : -10;
+    add('cream', [x1, y1, 13], [x2, y2, 18]);
+  }
+
+  // ---- P06 flanks, split at the carcass joint ------------------------------
+  for (const sx of [-1, 1]) {
+    const x1 = sx > 0 ? S : -W, x2 = sx > 0 ? W : -S;
+    add('blueGrey', [x1, -14, 18], [x2, 14, 50]);
+    add('blueGrey', [x1, -14, 52], [x2, 14, 84]);
+    // The joint needs a rail. Left as an open 2-unit gap it showed the dark
+    // cavity straight through, and SIDE and BACK both read a green stripe
+    // across the flank.
+    add('cream',    [x1, -14.2, 50], [x2, 14.2, 52]);
+  }
+  // ---- P07 back, same joint -----------------------------------------------
+  add('blueGrey', [-W, 11, 18], [W, 14, 50]);
+  add('blueGrey', [-W, 11, 52], [W, 14, 84]);
+  add('cream',    [-W, 11, 50], [W, 14.2, 52]);
+  add('cream',    [-W, -14, 80], [W, 14, 84]);              // top run
+
+  // ---- P09 cavity: five dark faces ----------------------------------------
+  add('interior', [-S, 8, 18],        [S, 11, 80]);
+  add('interior', [-S, -14, 18],      [-(S - 1.5), 8, 80]);
+  add('interior', [S - 1.5, -14, 18], [S, 8, 80]);
+  add('interior', [-S, -14, 18],      [S, 8, 20]);
+  add('interior', [-S, -14, 78],      [S, 8, 80]);
+  for (const z of [29, 41, 53, 65]) add('shelf', [-S, -10, z], [S, 1, z + 2.5]);  // P10
+
+  // ---- P08 corner posts ---------------------------------------------------
+  for (const sx of [-1, 1]) for (const sy of [-1, 1]) {
+    const x1 = sx > 0 ? W - 2 : -W, x2 = sx > 0 ? W : -(W - 2);
     const y1 = sy > 0 ? 12 : -14, y2 = sy > 0 ? 14 : -12;
     add('cream', [x1, y1, 18], [x2, y2, 84]);
   }
-  // A slim two-step moulding with a small overhang. Ours was a 6-unit top slab
-  // inset only 3, which shows a big bright top face at any pitch and reads as a
-  // separate box sitting on the cabinet rather than as its cap.
-  add('cream', [-(H - 0.5), -14.5, 84], [H - 0.5, 14.5, 87]);           // CROWN_LOWER
-  add('cream', [-(H - 2.5), -12.5, 87], [H - 2.5, 12.5, 91]);           // CROWN_TOP
 
+  // ---- P15 crown: 11% of height, a lip and one block ----------------------
+  // BOTH crown pieces overhang the body, and their heights are close: a top
+  // block narrower than the carcass and twice the lip's height read as a lid
+  // resting on the cabinet rather than as its cap.
+  add('cream', [-H, -15, 84],           [H, 15, 88]);
+  add('cream', [-(H - 0.5), -14.5, 88], [H - 0.5, 14.5, 93]);
+
+  // ---- P11/P12 door: a wide light between two NARROW borders ---------------
   const frame = (kind, xIn, xOut, zLo, zHi, y1, y2) => {
     add(kind, [-xOut, y1, zLo], [-xIn, y2, zHi]);
     add(kind, [xIn, y1, zLo],   [xOut, y2, zHi]);
     add(kind, [-xOut, y1, zHi - (xOut - xIn)], [xOut, y2, zHi]);
     add(kind, [-xOut, y1, zLo], [xOut, y2, zLo + (xOut - xIn)]);
   };
-  frame('cream', H - 4, H - 2, 20, 82, -15.5, -12);                     // OUTER_FRAME
-  frame('teal',  H - 6, H - 4, 22, 80, -16.5, -15.5);                   // DOOR_FRAME
-  add('glass',   [-(H - 6), -16.4, 24], [H - 6, -16.2, 78]);            // GLASS
-  add('purple', [H - 3.5, -18.6, 41], [H - 1, -17.2, 63]);              // HANDLE
-  add('purple', [H - 3, -17.2, 42],   [H - 1.5, -16.2, 45]);
-  add('purple', [H - 3, -17.2, 59],   [H - 1.5, -16.2, 62]);
-  // FIXED DECALS — the same pixel size at every cabinet width, sized by the
-  // atlas rather than by hand
-  g.add(decalBox('display', 0, -15.6, 86.4));
-  // The grille tiles on x only, so its height must equal the patch height:
-  // 96 px / 32 = 3 units. Left at 7 units it tiled vertically too and the slots
-  // collapsed into a fine mesh.
-  add('grille',  [-(H - 7), -15.2, 8], [H - 7, -14, 11]);
-  // Cream corner blocks capping the base, front and back. They read clearly in
-  // the sheet's FRONT and ISO views and are what stops the base reading as a
-  // plain teal slab the cabinet happens to stand on.
-  for (const sx of [-1, 1]) for (const sy of [-1, 1]) {
-    const x1 = sx > 0 ? H - 5 : -(H - 2), x2 = sx > 0 ? H - 2 : -(H - 5);
-    const y1 = sy > 0 ? 10 : -14, y2 = sy > 0 ? 14 : -10;
-    add('cream', [x1, y1, 13], [x2, y2, 18]);   // P05
-  }
-  // Four distinct feet, one per corner, standing proud of the plinth strip.
-  // Two stubs at the front only read as a purple band across the bottom.
-  for (const sx of [-1, 1]) for (const sy of [-1, 1]) {
-    // P01: outer faces flush with the base, not inset — the ISO view is
-    // explicit about this, and inset feet read as castors rather than blocks.
-    const x1 = sx > 0 ? H - 8 : -(H - 2), x2 = sx > 0 ? H - 2 : -(H - 8);
-    const y1 = sy > 0 ? 9 : -14, y2 = sy > 0 ? 14 : -9;
-    add('plinth', [x1, y1, -1.5], [x2, y2, 3.5]);
-  }
+  frame('cream', S, W, 20, 82, -15.5, -12);
+  frame('teal',  G, S, 22, 80, -16.5, -15.5);
+  add('glass',   [-G, -16.4, 24], [G, -16.2, 78]);          // P13
+  // ---- P14 handle ---------------------------------------------------------
+  add('purple', [W - 3.5, -18.6, 41], [W - 1, -17.2, 63]);
+  add('purple', [W - 3, -17.2, 42],   [W - 1.5, -16.2, 45]);
+  add('purple', [W - 3, -17.2, 59],   [W - 1.5, -16.2, 62]);
+  g.add(decalBox('display', 0, -15.6, 89));                 // P16
   return g;
 }
 
@@ -289,7 +282,7 @@ function buildFridge(H) {
 // One screen pixel per texel. viewH units tall at texelsPerUnit px per unit is
 // the only ratio at which a nearest-sampled pixel-art sheet stays crisp: above
 // it the sheet aliases, below it the sheet blurs.
-const viewH = 116, viewW = viewH * (0.72 + Math.max(0, (H - 22) * 0.024));
+const viewH = 116, viewW = viewH * (0.56 + Math.max(0, (H - 17) * 0.030));
 const Hpx = Math.round(viewH * man.texelsPerUnit);
 const W = Math.round(viewW * man.texelsPerUnit);
 const renderer = new THREE.WebGLRenderer({ antialias: false });
