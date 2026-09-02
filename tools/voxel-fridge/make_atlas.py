@@ -35,13 +35,18 @@ long as it keeps the layout and the density.
 """
 import json
 import os
+import random
 from PIL import Image, ImageDraw
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-ATLAS = 256
+ATLAS = 512
 TEXELS_PER_UNIT = 8
-PATCH = 48          # 6 units square
-CORNER = 8          # 1 unit of fixed ring; the inner 32x32 tiles
+# A patch's TILING CENTRE is what repeats across a big face, so its size sets
+# how often the chips recur. At a 48px patch the centre was 32 texels = 4 units
+# and the crown's top face showed a regular dotted grid of them. At 96 the
+# centre is 10 units, which is wider than most parts and reads as scatter.
+PATCH = 96          # 12 units square
+CORNER = 8          # 1 unit of fixed ring; the inner 80x80 tiles
 
 # FLAT base colours, read off the multi-view sheet. There is deliberately no
 # light/dark bevel pair here any more: see patch() for why.
@@ -66,29 +71,58 @@ def box(d, x, y, w, h, fill):
     d.rectangle([x, y, x + w - 1, y + h - 1], fill=fill)
 
 
-def patch(img, ox, oy, name, bolts=False):
-    """One nine-slice patch. FLAT.
+def shade(hexcol, f):
+    """A tone of one flat colour. The palette stays one hex per surface; every
+    outline, chip and bolt is derived, so recolouring a surface is one edit."""
+    n = int(hexcol[1:], 16)
+    ch = [(n >> 16) & 255, (n >> 8) & 255, n & 255]
+    return "#%02x%02x%02x" % tuple(max(0, min(255, round(c * f))) for c in ch)
 
-    The first version drew a pixel-art bevel ring into every patch - light
-    top/left, dark bottom/right - plus speckle in the centre. That was the
-    single biggest thing making our render look nothing like the reference:
-    every box came out an embossed, slightly dirty panel, and a cabinet is
-    twenty boxes, so the whole object read as busy and rusty.
 
-    In the reference the surfaces are FLAT COLOUR. Form separation comes from
-    geometry (stepped crown, corner posts, proud frames) and from the baked
-    per-face value in the shader - not from a border painted on every face. So
-    a patch is one flat fill, and the only thing that lives in the fixed corner
-    ring is detail the sheet actually draws there: the side panel's bolts.
+def patch(img, ox, oy, name, seed=1, chips=5, bolts=True, edge_bolt=False):
+    """One nine-slice patch, with the reference kit's detail in the right zones.
+
+    Two failed attempts are worth recording, because the right answer sits
+    exactly between them. First I painted a 2px light/dark BEVEL RING on all
+    four sides of every patch: a cabinet is twenty boxes, so it came out as
+    twenty embossed panels, busy and rusty. Then I stripped the patches to pure
+    flat colour, which lost the retro pixel character entirely.
+
+    The kit sheet says what it actually wants. Centres are "TILEABLE" fields
+    carrying a few sparse chips. Item 4 is "PROTECTED CREAM CORNERS & EDGE
+    STRIPS (FIXED)": outlined strips with bolts along them. So:
+
+      the fixed ring (outer CORNER texels)  1px darker outline, a 1px lighter
+                                            inner catch on top/left, and a bolt
+                                            near each corner
+      the tiling centre                     flat field plus a few 1px chips
+
+    Every one of those lands in a zone the nine-slice treats correctly: the
+    outline tiles along an edge into one continuous line, the corner bolts are
+    in the corner zone so they appear exactly once per corner at any size, and
+    an optional edge bolt sits in the tiling edge strip so a LONG panel grows a
+    periodic row of them - which is what the sheet's long strips show.
     """
+    base = P[name]
+    line, lite, blt = shade(base, 0.80), shade(base, 1.07), shade(base, 0.58)
     d = ImageDraw.Draw(img)
-    box(d, ox, oy, PATCH, PATCH, P[name])
+    box(d, ox, oy, PATCH, PATCH, base)
+    d.rectangle([ox, oy, ox + PATCH - 1, oy + PATCH - 1], outline=line, width=1)
+    box(d, ox + 1, oy + 1, PATCH - 2, 1, lite)      # 1px catch, top
+    box(d, ox + 1, oy + 1, 1, PATCH - 2, lite)      # and left
     if bolts:
-        # the kit's "SIDE-PANEL CORNER BOLT ISLANDS" - fixed, so they belong in
-        # the corner ring where the nine-slice never scales or repeats them
-        for bx in (ox + 3, ox + PATCH - 6):
-            for by in (oy + 3, oy + PATCH - 6):
-                box(d, bx, by, 3, 3, BOLT)
+        for bx in (ox + 3, ox + PATCH - 5):
+            for by in (oy + 3, oy + PATCH - 5):
+                box(d, bx, by, 2, 2, blt)
+    if edge_bolt:
+        # in the TILING edge strip, so it repeats down a long panel
+        box(d, ox + PATCH // 2, oy + 3, 2, 2, blt)
+        box(d, ox + 3, oy + PATCH // 2, 2, 2, blt)
+    rnd = random.Random(seed)
+    for _ in range(chips):
+        cx = ox + CORNER + rnd.randrange(0, PATCH - 2 * CORNER - 1)
+        cy = oy + CORNER + rnd.randrange(0, PATCH - 2 * CORNER - 1)
+        box(d, cx, cy, 1, 1, rnd.choice([lite, line]))
 
 
 def main():
@@ -100,13 +134,19 @@ def main():
     order = ["cream", "blueGrey", "teal", "purple", "plinth", "interior", "shelf"]
     for i, name in enumerate(order):
         ox, oy = (i % 5) * PATCH, (i // 5) * PATCH
-        patch(img, ox, oy, name, bolts=(name == "blueGrey"))
+        # Bolts only where the kit puts them: its islands are labelled
+        # "SIDE-PANEL CORNER BOLT/DECAL". Cream carries the outline and the
+        # catch but no rivets - run down the door stiles they read as a dotted
+        # line, which the sheet's clean cream frame does not have.
+        patch(img, ox, oy, name, seed=i + 3,
+              chips=1 if name in ("shelf", "interior") else 3,
+              bolts=(name == "blueGrey"))
         man["surfaces"][name] = {"rect": [ox, oy, PATCH, PATCH], "corner": CORNER}
 
     # --- grille: fixed end caps + a horizontally tiling slot run -----------
     # 48 x 24 = 6 x 3 units. The part MUST be 3 units tall: on an axis it does
     # not tile, a patch's pixel size IS the part's world size.
-    gx, gy, gw, gh = 0, PATCH * 2, PATCH, 24
+    gx, gy, gw, gh = 0, PATCH * 2, 48, 24
     box(d, gx, gy, gw, gh, GRILLE_FRAME)
     box(d, gx + 2, gy + 2, gw - 4, gh - 4, P["grilleTan"])
     # The kit's slots are CONTINUOUS lines, so they run across the whole patch
@@ -123,7 +163,7 @@ def main():
 
     # --- fixed decals: blitted at native size, never scaled ----------------
     # temperature display, 88 x 24 = 11 x 3 units
-    dx, dy, dw, dh = PATCH + 4, PATCH * 2, 88, 24
+    dx, dy, dw, dh = 56, PATCH * 2, 88, 24
     box(d, dx, dy, dw, dh, DISP_FRAME)
     box(d, dx + 2, dy + 2, dw - 4, dh - 4, DISP_BG)
     box(d, dx + 7, dy + 10, 4, 4, DISP_ORANGE)
@@ -140,13 +180,13 @@ def main():
         cx += 12
     man["decals"]["display"] = {"rect": [dx, dy, dw, dh]}
 
-    bx, by = PATCH + 4, PATCH * 2 + 28           # corner bolt island, 4 x 4
+    bx, by = 56, PATCH * 2 + 28           # corner bolt island, 4 x 4
     box(d, bx, by, 4, 4, P["blueGrey"])
     box(d, bx + 1, by + 1, 2, 2, BOLT)
     man["decals"]["bolt"] = {"rect": [bx, by, 4, 4]}
 
     # glass: pale field carrying the kit's fixed diagonal reflection streak
-    gx2, gy2 = PATCH * 3, PATCH * 2
+    gx2, gy2 = 152, PATCH * 2
     box(d, gx2, gy2, PATCH, PATCH, GLASS)
     # ONE bold staircase, top-left, like the sheet. Several faint ones read as
     # smudges on the glass rather than as a reflection.
