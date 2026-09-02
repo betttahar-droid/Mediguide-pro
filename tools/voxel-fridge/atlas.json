@@ -12,7 +12,7 @@
         96,
         96
       ],
-      "corner": 8
+      "corner": 20
     },
     "blueGrey": {
       "rect": [
@@ -21,7 +21,7 @@
         96,
         96
       ],
-      "corner": 8
+      "corner": 20
     },
     "teal": {
       "rect": [
@@ -30,7 +30,7 @@
         96,
         96
       ],
-      "corner": 8
+      "corner": 20
     },
     "purple": {
       "rect": [
@@ -39,7 +39,7 @@
         96,
         96
       ],
-      "corner": 8
+      "corner": 20
     },
     "plinth": {
       "rect": [
@@ -48,7 +48,7 @@
         96,
         96
       ],
-      "corner": 8
+      "corner": 20
     },
     "interior": {
       "rect": [
@@ -57,7 +57,7 @@
         96,
         96
       ],
-      "corner": 8
+      "corner": 20
     },
     "shelf": {
       "rect": [
@@ -66,7 +66,7 @@
         96,
         96
       ],
-      "corner": 8
+      "corner": 20
     },
     "grille": {
       "rect": [
@@ -75,7 +75,7 @@
         48,
         24
       ],
-      "corner": 8
+      "corner": 20
     },
     "glass": {
       "rect": [

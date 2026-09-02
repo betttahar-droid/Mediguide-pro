@@ -46,7 +46,11 @@ TEXELS_PER_UNIT = 8
 # and the crown's top face showed a regular dotted grid of them. At 96 the
 # centre is 10 units, which is wider than most parts and reads as scatter.
 PATCH = 96          # 12 units square
-CORNER = 8          # 1 unit of fixed ring; the inner 80x80 tiles
+# The ring has to be wide enough to hold the reference's whole edge treatment:
+# silhouette outline, catch, the INSET PANEL BORDER and its bevel, and a corner
+# bolt inside that. Everything below px 14 is fixed at any part size.
+CORNER = 20
+INSET = 10          # where the inset panel border sits, in texels from the edge
 
 # FLAT base colours, read off the multi-view sheet. There is deliberately no
 # light/dark bevel pair here any more: see patch() for why.
@@ -79,7 +83,7 @@ def shade(hexcol, f):
     return "#%02x%02x%02x" % tuple(max(0, min(255, round(c * f))) for c in ch)
 
 
-def patch(img, ox, oy, name, seed=1, chips=5, bolts=True, edge_bolt=False):
+def patch(img, ox, oy, name, seed=1, chips=5, bolts=True, panel=True):
     """One nine-slice patch, with the reference kit's detail in the right zones.
 
     Two failed attempts are worth recording, because the right answer sits
@@ -104,25 +108,54 @@ def patch(img, ox, oy, name, seed=1, chips=5, bolts=True, edge_bolt=False):
     periodic row of them - which is what the sheet's long strips show.
     """
     base = P[name]
-    line, lite, blt = shade(base, 0.80), shade(base, 1.07), shade(base, 0.58)
+    outline = shade(base, 0.72)
+    catch = shade(base, 1.09)
+    ink = shade(base, 0.79)          # the inset panel border
+    face = shade(base, 1.03)         # the plate inside it, very slightly lifted
+    blt = shade(base, 0.58)
     d = ImageDraw.Draw(img)
     box(d, ox, oy, PATCH, PATCH, base)
-    d.rectangle([ox, oy, ox + PATCH - 1, oy + PATCH - 1], outline=line, width=1)
-    box(d, ox + 1, oy + 1, PATCH - 2, 1, lite)      # 1px catch, top
-    box(d, ox + 1, oy + 1, 1, PATCH - 2, lite)      # and left
+
+    # 1. the silhouette outline, and a 1px catch on the lit edges
+    d.rectangle([ox, oy, ox + PATCH - 1, oy + PATCH - 1], outline=outline, width=1)
+    box(d, ox + 1, oy + 1, PATCH - 2, 1, catch)
+    box(d, ox + 1, oy + 1, 1, PATCH - 2, catch)
+
+    # 2. THE INSET PANEL. This is the motif running through almost every tile on
+    # the reference sheet, and the thing that makes a surface read as a pressed
+    # metal plate rather than a coloured box. Because it is a rectangle a FIXED
+    # number of texels in from the edge, it lives entirely in the ring: along an
+    # edge it tiles into one continuous line, and at a corner it turns exactly
+    # once, at any part size.
+    i = INSET
+    if not panel:
+        # Shelves, the cavity liner and the glass are not pressed plates, so
+        # they get the outline and the catch and nothing else. A plate frame on
+        # a 1.5-unit shelf reads as a mistake.
+        rnd0 = random.Random(seed)
+        for _ in range(chips):
+            cx = ox + CORNER + rnd0.randrange(0, PATCH - 2 * CORNER - 1)
+            cy = oy + CORNER + rnd0.randrange(0, PATCH - 2 * CORNER - 1)
+            box(d, cx, cy, 1, 1, catch)
+        return
+    box(d, ox + i, oy + i, PATCH - 2 * i, PATCH - 2 * i, face)
+    d.rectangle([ox + i, oy + i, ox + PATCH - 1 - i, oy + PATCH - 1 - i],
+                outline=ink, width=1)
+    box(d, ox + i + 1, oy + i + 1, PATCH - 2 * i - 2, 1, catch)   # recess bevel
+    box(d, ox + i + 1, oy + i + 1, 1, PATCH - 2 * i - 2, catch)
+
+    # 3. bolts just inside the panel's corners — corner zone, so once per corner
     if bolts:
-        for bx in (ox + 3, ox + PATCH - 5):
-            for by in (oy + 3, oy + PATCH - 5):
+        for bx in (ox + i + 3, ox + PATCH - i - 5):
+            for by in (oy + i + 3, oy + PATCH - i - 5):
                 box(d, bx, by, 2, 2, blt)
-    if edge_bolt:
-        # in the TILING edge strip, so it repeats down a long panel
-        box(d, ox + PATCH // 2, oy + 3, 2, 2, blt)
-        box(d, ox + 3, oy + PATCH // 2, 2, 2, blt)
+
+    # 4. sparse chips, in the tiling centre only
     rnd = random.Random(seed)
     for _ in range(chips):
         cx = ox + CORNER + rnd.randrange(0, PATCH - 2 * CORNER - 1)
         cy = oy + CORNER + rnd.randrange(0, PATCH - 2 * CORNER - 1)
-        box(d, cx, cy, 1, 1, rnd.choice([lite, line]))
+        box(d, cx, cy, 1, 1, rnd.choice([catch, ink]))
 
 
 def main():
@@ -139,8 +172,9 @@ def main():
         # catch but no rivets - run down the door stiles they read as a dotted
         # line, which the sheet's clean cream frame does not have.
         patch(img, ox, oy, name, seed=i + 3,
-              chips=1 if name in ("shelf", "interior") else 3,
-              bolts=(name == "blueGrey"))
+              chips=1 if name in ("shelf", "interior") else 2,
+              bolts=(name in ("blueGrey", "teal", "cream")),
+              panel=(name not in ("shelf", "interior")))
         man["surfaces"][name] = {"rect": [ox, oy, PATCH, PATCH], "corner": CORNER}
 
     # --- grille: fixed end caps + a horizontally tiling slot run -----------
