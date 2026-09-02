@@ -32,8 +32,30 @@ const yaw = Number(params.get('yaw') ?? vYaw) * Math.PI / 180;
 const pitch = Number(params.get('pitch') ?? vPitch) * Math.PI / 180;
 
 const BG = '#efebe4';
-const man = await (await fetch('/tools/voxel-fridge/atlas.json')).json();
-const atlas = await new THREE.TextureLoader().loadAsync('/tools/voxel-fridge/atlas.png');
+// A GENERATED sheet wins over the hand-authored one. import_atlas.py writes
+// atlas-nano.* from a Nano Banana kit sheet; when those exist the renderer
+// uses them and make_atlas.py's output becomes the fallback. Nothing else in
+// the renderer changes, because the manifest is the whole interface.
+const base = '/tools/voxel-fridge/';
+async function loadAtlas() {
+  for (const name of ['atlas-nano', 'atlas']) {
+    // A dev server answers a MISSING file with index.html and a 200, so
+    // response.ok is not evidence the manifest exists. Parse it and check it
+    // is actually a manifest.
+    let manifest;
+    try {
+      const r = await fetch(base + name + '.json');
+      if (!r.ok) continue;
+      manifest = await r.json();
+      if (!manifest || !manifest.surfaces) continue;
+    } catch { continue; }
+    const tex = await new THREE.TextureLoader().loadAsync(base + name + '.png');
+    console.info('atlas:', name);
+    return [manifest, tex];
+  }
+  throw new Error('no atlas found — run make_atlas.py or import_atlas.py');
+}
+const [man, atlas] = await loadAtlas();
 atlas.magFilter = THREE.NearestFilter;
 atlas.minFilter = THREE.NearestFilter;
 atlas.generateMipmaps = false;

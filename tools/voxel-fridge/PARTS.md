@@ -211,3 +211,27 @@ Extents: `x` ±(H−6), `y` −10 → 1, `z` at 29/41/53/65, 2.5 thick.
 **Texture.** Surface `shelf`, `panel=False`. A shelf is a slab.
 
 **Adapts.** Width tiles with the cabinet; count and spacing fixed.
+
+
+---
+
+## Using a generated sheet instead of the hand-authored one
+
+`make_atlas.py` hand-authors an atlas that imitates the reference. To use a
+real Nano Banana kit sheet instead:
+
+    python3 tools/voxel-fridge/import_atlas.py --sheet <sheet.png> --dump crops/
+
+It crops each labelled region, integer-downscales it with NEAREST to
+8 texels/unit (the sheet is drawn at roughly 4x that), quantises away any soft
+edges, packs it, and writes `atlas-nano.png` + `atlas-nano.json`. The renderer
+prefers those whenever they exist, so it is a drop-in swap with no code change.
+
+`--dump` writes every crop at 4x so the region rects can be checked by eye
+before committing to them; `DEFAULT_SPEC` at the top of the script is where
+they are adjusted.
+
+**What a generated sheet cannot carry** is the nine-slice metadata — "this
+region's outer 14 texels are FIXED and its middle tiles on x only" is a
+decision about the MODEL, not about the image. That lives in the spec, and is
+the same information PARTS.md records per part.
