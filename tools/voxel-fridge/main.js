@@ -3,22 +3,19 @@
 //
 //   geometry   axis-aligned boxes straight off the reference's FINAL IMMUTABLE
 //              COORDINATE TABLE (Blender z-up, front -y → three y-up, front -z)
-//   texturing  ONE hand-authored atlas (make_atlas.py), sampled with NINE-SLICE
-//              UV math driven by the fragment's position on its own face. The
-//              atlas kit labels itself: tileable centres, FIXED corners and edge
-//              strips, FIXED decal islands. That is a nine-slice sprite kit, so
-//              the renderer treats it as one.
-//   shading    baked, not lit. The sheet paints shading per face, so materials
-//              are unlit and the face normal alone picks a tint factor.
+//   texturing  NONE. Detail is geometry and colour is a locked palette, which
+//              is how the reference voxel kits do it and why they have none of
+//              the texture problems this file used to be mostly about.
+//   shading    baked, not lit: the face normal alone picks a tint factor.
 //   output     rendered small and nearest-upscaled: the screen pixel grid IS
 //              the texture grid.
 //
-// WHY THIS IS ADAPTABLE. Nothing samples a UV attribute, so nothing can be
-// stretched by scaling geometry. A fragment asks "how many texels am I from my
-// own face's edge?", and the nine-slice map answers with a corner texel if it
-// is in the fixed ring and a tiling centre texel otherwise. Grow a part and its
-// corners stay native size while its centre tiles further — at any size,
-// including fractional ones, with no per-size canvases and no UV work.
+// WHY THIS IS ADAPTABLE. There is nothing to stretch. Every piece of detail is
+// its own box with its own size, so a border stays the width it was authored
+// while the panel behind it grows, and a repeating feature is a loop over the
+// current size rather than a texture that has to tile. The adaptability
+// problem was never solved — it was deleted, by moving the detail out of the
+// texture and into the geometry that was going to be there anyway.
 //
 //   ?w=<halfWidth>  body half-width (table value 22); try 40, or 28.5
 //   ?yaw= ?pitch=   camera
@@ -32,66 +29,53 @@ const yaw = Number(params.get('yaw') ?? vYaw) * Math.PI / 180;
 const pitch = Number(params.get('pitch') ?? vPitch) * Math.PI / 180;
 
 const BG = '#efebe4';
-// A GENERATED sheet wins over the hand-authored one. import_atlas.py writes
-// atlas-nano.* from a Nano Banana kit sheet; when those exist the renderer
-// uses them and make_atlas.py's output becomes the fallback. Nothing else in
-// the renderer changes, because the manifest is the whole interface.
-const base = '/tools/voxel-fridge/';
-async function loadAtlas() {
-  for (const name of ['atlas-nano', 'atlas']) {
-    // A dev server answers a MISSING file with index.html and a 200, so
-    // response.ok is not evidence the manifest exists. Parse it and check it
-    // is actually a manifest.
-    let manifest;
-    try {
-      const r = await fetch(base + name + '.json');
-      if (!r.ok) continue;
-      manifest = await r.json();
-      if (!manifest || !manifest.surfaces) continue;
-    } catch { continue; }
-    const tex = await new THREE.TextureLoader().loadAsync(base + name + '.png');
-    console.info('atlas:', name);
-    return [manifest, tex];
-  }
-  throw new Error('no atlas found — run make_atlas.py or import_atlas.py');
-}
-const [man, atlas] = await loadAtlas();
-
-// The palette the post pass snaps to. Pixel art is a small locked set of
-// colours; a 3D render is not, because every face tint multiplies every texel
-// into a new value. nano_atlas.py derives this from the atlas at each face
-// tint and reduces it to 32.
-const palette = await new THREE.TextureLoader().loadAsync(base + 'palette.png');
-palette.magFilter = palette.minFilter = THREE.NearestFilter;
-palette.generateMipmaps = false;
-palette.colorSpace = THREE.NoColorSpace;
-atlas.magFilter = THREE.NearestFilter;
-atlas.minFilter = THREE.NearestFilter;
-atlas.generateMipmaps = false;
-// NO colour management. A stock ShaderMaterial does not get three's output
-// colour-space conversion appended, so a texture tagged sRGB is decoded to
-// linear on sample and then written straight out — everything landed markedly
-// darker than authored, which is why the mid-teal base was reading near-black.
-// For flat pixel art the honest setup is raw texels in, raw texels out: what
-// make_atlas.py writes is exactly what appears on screen, times the face tint.
-atlas.colorSpace = THREE.NoColorSpace;
-atlas.wrapS = atlas.wrapT = THREE.ClampToEdgeWrapping;
-// three flips images on upload by default, which puts v=0 at the BOTTOM of the
-// PNG. The manifest's rects are top-down pixel coordinates straight out of the
-// authoring script, so the flip has to go: without it every sample lands in the
-// sheet's dark background and the whole object renders black.
-atlas.flipY = false;
 
 // ---------------------------------------------------------------------------
-// the nine-slice sampler
+// FLAT COLOUR, NO TEXTURES AT ALL.
+//
+// Every texture problem this prototype has had — texel density against render
+// density, mip levels, which nine-slice zone a piece of detail may live in,
+// sRGB round-tripping, a patch's pixel size dictating a part's world size —
+// existed only because the detail was in a texture and the geometry was not.
+// The reference voxel kits do not have those problems because they do not have
+// textures: detail is geometry, colour is flat per surface.
+//
+// So detail is geometry here too. A recessed panel is a recessed BOX. That is
+// adaptable for free, because the border is four thin boxes that keep their
+// size while the middle grows, and it can never smear, because there is
+// nothing to sample. What remains of the pixel-art look is done by the post
+// pass, which was always the part carrying it.
+export const PALETTE = {
+  cream:    '#e9e3d4',
+  cream2:   '#d8d1bf',   // the crown's lower step, a panel's shadowed reveal
+  creamLit: '#f4efe2',   // a catch along a lit edge
+  flank:    '#c3ced2',
+  flank2:   '#aebac0',
+  teal:     '#35785f',
+  teal2:    '#2b6350',
+  cavity:   '#357a67',
+  shelf:    '#dbe9e4',
+  glass:    '#bcd8d2',
+  glint:    '#f2f8f6',
+  tan:      '#d9a95f',
+  tan2:     '#b8873f',
+  slot:     '#3f3a33',
+  purple:   '#5c4a70',
+  purple2:  '#48395a',
+  disp:     '#262b36',
+  digit:    '#74de96',
+  lamp:     '#e2894e',
+};
+// The part list's own names for the same colours, kept so a part says what it
+// IS rather than which swatch it happens to use.
+PALETTE.blueGrey = PALETTE.flank;
+PALETTE.plinth = PALETTE.purple;
+PALETTE.interior = PALETTE.cavity;
+PALETTE.grille = PALETTE.tan;
+
 const VERT = /* glsl */ `
-attribute vec3 aHalf;      // this box's half-extents, so one material serves many
-varying vec3 vLocal;
-varying vec3 vHalf;
 varying vec3 vNrm;
 void main() {
-  vLocal = position;
-  vHalf = aHalf;
   vNrm = normal;
   gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
 }
@@ -99,131 +83,72 @@ void main() {
 
 const FRAG = /* glsl */ `
 precision highp float;
-uniform sampler2D uAtlas;
-uniform vec2 uAtlasSize;
-uniform vec4 uRect;        // patch x, y, w, h in atlas pixels
-uniform float uCorner;     // fixed ring width in atlas pixels
-uniform vec2 uTile;        // per axis: 1 tile the middle, 0 clamp it
-uniform float uTexels;     // texels per world unit
+uniform vec3 uColor;
 uniform float uOpacity;
-varying vec3 vLocal;
-varying vec3 vHalf;
 varying vec3 vNrm;
-
-// One axis of the nine-slice map, all in TEXELS.
-//   p        how far along this face we are, 0..faceLen
-//   faceLen  the face's length
-//   corner   the fixed ring — never scales
-//   srcLen   the patch's length in the atlas
-// Inside a corner we read straight through; past it we tile the middle. The
-// corner is clamped to half the face so a small part degrades to "all corner"
-// rather than reading the middle backwards.
-float sliceAxis(float p, float faceLen, float corner, float srcLen, float tile) {
-  float c = min(corner, floor(faceLen * 0.5));
-  if (p < c) return p;                       // start corner, native size
-  float fromEnd = faceLen - p;
-  if (fromEnd < c) return srcLen - fromEnd;  // end corner, native size
-  float mid = max(srcLen - 2.0 * c, 1.0);
-  // CLAMP: hold one line of the patch's middle for the whole span. Uniform
-  // field, no repeat, no seam - the right answer for an axis whose pattern
-  // must not recur (a plain band, or the grille's fixed row of slots).
-  if (tile < 0.5) return c + floor(mid * 0.5);
-  return c + mod(p - c, mid);                // TILE: repeat the middle
-}
-
 void main() {
-  // Faces are axis-aligned and flat-shaded, so the dominant normal axis picks
-  // the two in-plane axes with no blending and therefore no seams.
-  // Each face needs a signed basis, not just a pair of axes: without the sign
-  // the two faces of an axis mirror each other, and the temperature display
-  // came out reading backwards on the one face anybody looks at.
-  vec3 a = abs(vNrm);
-  vec2 local, half2;
-  if (a.x > a.y && a.x > a.z) {
-    local = vec2((vNrm.x > 0.0 ? -1.0 : 1.0) * vLocal.z, vLocal.y); half2 = vHalf.zy;
-  } else if (a.y > a.z) {
-    local = vec2(vLocal.x, (vNrm.y > 0.0 ? -1.0 : 1.0) * vLocal.z); half2 = vHalf.xz;
-  } else {
-    local = vec2((vNrm.z > 0.0 ? 1.0 : -1.0) * vLocal.x, vLocal.y); half2 = vHalf.xy;
-  }
-
-  vec2 faceLen = half2 * 2.0 * uTexels;
-  vec2 p = (local + half2) * uTexels;
-
-  vec2 src = vec2(
-    sliceAxis(p.x, faceLen.x, uCorner, uRect.z, uTile.x),
-    sliceAxis(p.y, faceLen.y, uCorner, uRect.w, uTile.y)
-  );
-  // +0.5 lands on the texel centre; without it the nearest fetch straddles a
-  // boundary and the sheet shimmers by a pixel as the object moves.
-  vec2 uv = (uRect.xy + vec2(src.x, uRect.w - src.y) + 0.5) / uAtlasSize;
-  vec4 texel = texture2D(uAtlas, uv);
-
-  // Baked shading: the reference paints it per face, so the normal alone picks
-  // the value. There are no lights in this scene at all.
-  // Spread wider than before. With the textures now flat, per-face value is
-  // the ONLY thing separating one form from the next, so it has to carry the
-  // whole job the painted bevel rings were doing badly.
+  // Baked per-face value, exactly as the sheets paint it. This is the entire
+  // shading model and it is three lines, because with flat colour there is
+  // nothing else to compute.
   float t = 0.86;
   if (vNrm.y > 0.5)       t = 1.09;
   else if (vNrm.y < -0.5) t = 0.74;
   else if (vNrm.z < -0.5) t = 1.00;
   else if (vNrm.z > 0.5)  t = 0.90;
-
-  gl_FragColor = vec4(texel.rgb * t, texel.a * uOpacity);
+  gl_FragColor = vec4(uColor * t, uOpacity);
 }
 `;
 
-function surfaceMaterial(name, { opacity = 1 } = {}) {
-  const s = man.surfaces[name] ?? man.decals[name];
-  if (!s) throw new Error(`atlas has no surface "${name}"`);
-  return new THREE.ShaderMaterial({
-    vertexShader: VERT,
-    fragmentShader: FRAG,
-    transparent: opacity < 1,
-    depthWrite: opacity >= 1,
-    uniforms: {
-      uAtlas: { value: atlas },
-      uAtlasSize: { value: new THREE.Vector2(man.size[0], man.size[1]) },
-      uRect: { value: new THREE.Vector4(s.rect[0], s.rect[1], s.rect[2], s.rect[3]) },
-      uCorner: { value: s.corner ?? 1e6 }, // a decal is "all corner": never tiles
-      uTile: { value: new THREE.Vector2(...(s.tile ?? [1, 1])) },
-      uTexels: { value: man.texelsPerUnit },
-      uOpacity: { value: opacity },
-    },
-  });
+// The exact set of colours this object can produce: every palette entry at
+// every face tint. The post pass snaps to it, so the frame cannot contain a
+// value nobody chose. Derived rather than authored, because deriving it by
+// hand is how the grille lost its tan and went grey.
+const TINTS = [1.09, 1.00, 0.90, 0.86, 0.74];
+const paletteColours = [];
+for (const hex of Object.values(PALETTE)) {
+  const c = new THREE.Color(hex);
+  for (const t of TINTS) {
+    paletteColours.push(
+      Math.min(255, Math.round(c.r * 255 * t)),
+      Math.min(255, Math.round(c.g * 255 * t)),
+      Math.min(255, Math.round(c.b * 255 * t)), 255);
+  }
 }
+const paletteCount = paletteColours.length / 4;
+const paletteTexture = new THREE.DataTexture(
+  new Uint8Array(paletteColours), paletteCount, 1, THREE.RGBAFormat);
+paletteTexture.magFilter = paletteTexture.minFilter = THREE.NearestFilter;
+paletteTexture.needsUpdate = true;
 
-const MATS = {};
-const matFor = (kind) => (MATS[kind] ??= surfaceMaterial(kind, { opacity: kind === 'glass' ? 0.12 : 1 }));
+const MATS = new Map();
+function matFor(kind) {
+  if (!MATS.has(kind)) {
+    const hex = PALETTE[kind];
+    if (!hex) throw new Error(`no palette entry "${kind}"`);
+    const glassy = kind === 'glass';
+    MATS.set(kind, new THREE.ShaderMaterial({
+      vertexShader: VERT,
+      fragmentShader: FRAG,
+      transparent: glassy,
+      depthWrite: !glassy,
+      uniforms: {
+        uColor: { value: new THREE.Color(hex) },
+        uOpacity: { value: glassy ? 0.30 : 1 },
+      },
+    }));
+  }
+  return MATS.get(kind);
+}
 
 // ---------------------------------------------------------------------------
 // a box from table coords [x1,y1,z1]-[x2,y2,z2] (Blender, z-up, front = -y)
 function tableBox(kind, [x1, y1, z1], [x2, y2, z2]) {
   const sx = x2 - x1, sy = z2 - z1, sz = y2 - y1; // Blender z → three y
   const geo = new THREE.BoxGeometry(sx, sy, sz);
-  const n = geo.attributes.position.count;
-  const half = new Float32Array(n * 3);
-  for (let i = 0; i < n; i++) {
-    half[i * 3] = sx / 2; half[i * 3 + 1] = sy / 2; half[i * 3 + 2] = sz / 2;
-  }
-  geo.setAttribute('aHalf', new THREE.BufferAttribute(half, 3));
   const mesh = new THREE.Mesh(geo, matFor(kind));
   mesh.position.set((x1 + x2) / 2, (z1 + z2) / 2, (y1 + y2) / 2);
   mesh.renderOrder = kind === 'glass' ? 10 : 0;
   return mesh;
-}
-
-// THE RULE THIS SYSTEM RUNS ON: an atlas patch's pixel size IS its world size,
-// at texelsPerUnit. A tiling surface may be any size along an axis it tiles on,
-// but must match the patch on an axis it does not; and a FIXED decal has no
-// tiling centre at all, so its geometry size must come FROM the atlas. Sizing a
-// decal by hand reads outside its own rect and renders garbage — which is
-// exactly what a hand-placed 11-unit-wide display did on the first attempt.
-function decalBox(name, cx, y, cz, depth = 0.6) {
-  const r = (man.decals[name] ?? man.surfaces[name]).rect;
-  const w = r[2] / man.texelsPerUnit, h = r[3] / man.texelsPerUnit;
-  return tableBox(name, [cx - w / 2, y, cz - h / 2], [cx + w / 2, y + depth, cz + h / 2]);
 }
 
 // ---------------------------------------------------------------------------
@@ -251,7 +176,14 @@ function buildFridge(H) {
   }
   add('plinth', [-(W - 1), -13, 0],   [W - 1, 13, 4]);      // P02 plinth strip
   add('teal',   [-W, -14, 4],         [W, 14, 18]);         // P03 condenser base
-  add('grille', [-(W - 5), -15.2, 8], [W - 5, -14, 11]);    // P04 grille
+  // P04 grille — real louvres now, not a picture of louvres. The slot count
+  // follows the width, so a wider base gets MORE slots at the same pitch: the
+  // adaptive behaviour that used to need a tiling texture, done with a loop.
+  add('tan',  [-(W - 5), -15.2, 7.5], [W - 5, -14.0, 11.5]);
+  add('tan2', [-(W - 5), -15.4, 7.5], [W - 5, -15.2, 11.5]);
+  for (let z = 8.2; z < 11.2; z += 1.1) {
+    add('slot', [-(W - 6), -15.5, z], [W - 6, -15.1, z + 0.6]);
+  }
   for (const sx of [-1, 1]) for (const sy of [-1, 1]) {     // P05 corner blocks
     const x1 = sx > 0 ? W - 3 : -W, x2 = sx > 0 ? W : -(W - 3);
     const y1 = sy > 0 ? 10 : -14, y2 = sy > 0 ? 14 : -10;
@@ -305,12 +237,25 @@ function buildFridge(H) {
   };
   frame('cream', S, W, 20, 82, -15.5, -12);
   frame('teal',  G, S, 22, 80, -16.5, -15.5);
-  add('glass',   [-G, -16.4, 24], [G, -16.2, 78]);          // P13
+  // P13 glass — NOT a transparent pane. Alpha blending produces colours that
+  // are in no palette, so the snap sent them to whatever grey was nearest and
+  // the door went dead. The sheet does not draw a pane either: you see the
+  // interior directly, with a reflection drawn ON it. So the pane is gone and
+  // the reflection is a staircase of small boxes, which is how pixel art draws
+  // a diagonal and costs nothing here.
+  for (let i = 0; i < 9; i++) {
+    add('glint', [G - 5 - i * 1.6, -16.4, 66 - i * 2.4],
+                 [G - 3 - i * 1.6, -16.2, 69 - i * 2.4]);
+  }
   // ---- P14 handle ---------------------------------------------------------
   add('purple', [W - 3.5, -18.6, 41], [W - 1, -17.2, 63]);
   add('purple', [W - 3, -17.2, 42],   [W - 1.5, -16.2, 45]);
   add('purple', [W - 3, -17.2, 59],   [W - 1.5, -16.2, 62]);
-  g.add(decalBox('display', 0, -15.6, 89));                 // P16
+  // P16 display — geometry, not a decal. Exactly one, at the centre, at any
+  // width: the case a tiling texture fundamentally cannot express.
+  add('disp',  [-5.5, -15.7, 87.5], [5.5, -15.0, 91.5]);
+  add('lamp',  [-4.0, -15.9, 89.0], [-2.5, -15.6, 90.0]);
+  add('digit', [-1.0, -15.9, 89.0], [3.5, -15.6, 90.0]);
   return g;
 }
 
@@ -319,8 +264,12 @@ function buildFridge(H) {
 // the only ratio at which a nearest-sampled pixel-art sheet stays crisp: above
 // it the sheet aliases, below it the sheet blurs.
 const viewH = 116, viewW = viewH * (0.56 + Math.max(0, (H - 17) * 0.030));
-const Hpx = Math.round(viewH * man.texelsPerUnit);
-const W = Math.round(viewW * man.texelsPerUnit);
+// Pixels per world unit. With no texture there is no texel density to match,
+// so this is a free choice: it sets how chunky the pixels are, nothing more.
+// The reference draws its 96-unit cabinet about 850 px tall, so 8 is its own.
+const PPU = Number(params.get('ppu') ?? 8);
+const Hpx = Math.round(viewH * PPU);
+const W = Math.round(viewW * PPU);
 const renderer = new THREE.WebGLRenderer({ antialias: false });
 renderer.outputColorSpace = THREE.LinearSRGBColorSpace; // see atlas.colorSpace
 renderer.setSize(W, Hpx, false);
@@ -402,8 +351,8 @@ const post = new THREE.ShaderMaterial({
     tColor: { value: rtColor.texture },
     tNormal: { value: rtNormal.texture },
     tDepth: { value: rtColor.depthTexture },
-    tPalette: { value: palette },
-    uPaletteSize: { value: carvedUrl ? 0 : (man.paletteSize ?? 32) },
+    tPalette: { value: paletteTexture },
+    uPaletteSize: { value: carvedUrl ? 0 : paletteCount },
     uTexel: { value: new THREE.Vector2(1 / W, 1 / Hpx) },
     uOutline: { value: 0.55 },   // how far an edge darkens its own colour
     uNormalEdge: { value: 0.20 },
@@ -444,11 +393,11 @@ const post = new THREE.ShaderMaterial({
       // Snap to the palette. Nearest in RGB is crude but correct for a palette
       // this small and this deliberately spaced. Size 0 passes through: a
       // carved model brings its OWN colours, lifted from the reference views,
-      // and snapping those to the atlas palette turned the whole cabinet dark.
+      // and snapping those to this object's palette turned the cabinet dark.
       if (uPaletteSize < 0.5) { gl_FragColor = vec4(c, 1.0); return; }
       vec3 best = c;
       float bestD = 1e9;
-      for (int i = 0; i < 64; i++) {
+      for (int i = 0; i < 128; i++) {
         if (float(i) >= uPaletteSize) break;
         vec3 p = texture2D(tPalette, vec2((float(i) + 0.5) / uPaletteSize, 0.5)).rgb;
         float dd = distance(p, c);
