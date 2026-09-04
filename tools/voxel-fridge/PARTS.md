@@ -309,3 +309,58 @@ the form it belongs to.
 (Bayer) dithering on the value steps, and snapping the camera to a texel-sized
 grid — the standard fix for pixel crawl once anything moves. Neither matters
 for a still; both matter the moment this is in the game.
+
+
+---
+
+## Reference → model, without me in the measuring loop
+
+Everything above has me READING proportions off the reference and typing
+coordinates. That is where every pass went wrong: "how wide is that door frame
+as a fraction of the cabinet" is not a judgement anyone makes reliably twelve
+times in a row. The workflow the field actually uses removes the judgement.
+
+    nano_views.py     generate a strict orthographic turnaround
+    voxel_carve.py    intersect the silhouettes into a voxel volume
+    ?carved=<url>     render the result
+
+**Shape from silhouette.** For an axis-aligned object a voxel is solid exactly
+when every orthographic silhouette agrees it is. The geometry then IS the
+reference's silhouette, not my reading of it. This is what MagicaVoxel artists
+do by hand — read the views, derive the dimensions, lift the palette, build
+the volume — done arithmetically instead.
+
+**Why Nano Banana belongs at step 1 and nowhere else.** The carve is only as
+good as the views agree with each other, so multi-view CONSISTENCY is the
+whole job — which is exactly what it is built for. Each view after the first
+is generated with the previous ones attached as references, which is what
+makes the front and side come out the same height. Asking an image model for
+3D directly, or asking TRELLIS/Hunyuan3D for a mesh, gets a smooth surface —
+wrong target for voxels.
+
+**What the carver needs, and what a pretty picture gets wrong:** a flat
+single-colour background (the silhouette is found by difference from the
+corner), no drop shadow (a shadow is object as far as a silhouette knows), no
+perspective, the object filling the frame, and the same object in every view.
+
+### Verified, and the honest limits
+
+Carving my own front and side renders — where the true answer is known —
+recovered a 35 × 34 × 96 grid for an object that is really 34 × 30 × 96. The
+proportions come back from the silhouettes alone.
+
+Carving the generated turnaround reproduces the front elevation almost
+exactly: shelves, stock, grille, display, handle, all in the right places.
+
+Three real limits, all worth knowing before leaning on this:
+
+1. **The TOP view came back in perspective** and was unusable, so the carve
+   ran on front + side only. That is correct for a cabinet — solid through its
+   depth wherever the two agree — and wrong for anything with a hole through
+   it.
+2. **Depth is only as good as the side view.** The generator drew a
+   square-plan cabinet (front 1:1.98, side 1:1.94), so the carve is square in
+   plan. If the intended object is shallower, the side view has to say so.
+3. **Back and top faces are unpainted** — no view sees them, so they take a
+   neighbour's colour and read black. A back view fixes it; four views is the
+   real minimum for a closed object.

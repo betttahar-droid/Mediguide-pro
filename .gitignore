@@ -32,3 +32,4 @@ http:/
 # raw Nano Banana generations — cached so a repack is free, but they are
 # regenerable and large; the packed atlas-nano.png is what the renderer reads
 tools/voxel-fridge/.cache/
+tools/voxel-fridge/views/

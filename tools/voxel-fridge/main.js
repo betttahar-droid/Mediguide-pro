@@ -334,7 +334,34 @@ renderer.setClearColor(new THREE.Color(params.get('bg') ?? BG));
 document.body.appendChild(renderer.domElement);
 
 const scene = new THREE.Scene();
-scene.add(buildFridge(H));
+
+// ?carved=<url> builds from a voxel_carve.py result instead of buildFridge().
+// Every box is a flat colour lifted from the reference views, so this is the
+// carve shown raw - no atlas, no nine-slice, nothing of mine between the
+// reference and the screen.
+const carvedUrl = params.get('carved');
+if (carvedUrl) {
+  const data = await (await fetch(carvedUrl)).json();
+  const [gw, gd, gh] = data.grid;
+  const g = new THREE.Group();
+  const mats = new Map();
+  for (const b of data.boxes) {
+    const [x0, y0, z0] = b.min, [x1, y1, z1] = b.max;
+    const geo = new THREE.BoxGeometry(x1 - x0, z1 - z0, y1 - y0);
+    let m = mats.get(b.colour);
+    if (!m) {
+      m = new THREE.MeshBasicMaterial({ color: new THREE.Color(b.colour) });
+      mats.set(b.colour, m);
+    }
+    const mesh = new THREE.Mesh(geo, m);
+    mesh.position.set((x0 + x1) / 2 - gw / 2, (z0 + z1) / 2, (y0 + y1) / 2 - gd / 2);
+    g.add(mesh);
+  }
+  console.info(`carved: ${data.boxes.length} boxes, ${mats.size} colours, grid ${gw}x${gd}x${gh}`);
+  scene.add(g);
+} else {
+  scene.add(buildFridge(H));
+}
 
 const target = new THREE.Vector3(0, 47, 0);
 const cam = new THREE.OrthographicCamera(-viewW / 2, viewW / 2, viewH / 2, -viewH / 2, 1, 1000);
@@ -376,7 +403,7 @@ const post = new THREE.ShaderMaterial({
     tNormal: { value: rtNormal.texture },
     tDepth: { value: rtColor.depthTexture },
     tPalette: { value: palette },
-    uPaletteSize: { value: man.paletteSize ?? 32 },
+    uPaletteSize: { value: carvedUrl ? 0 : (man.paletteSize ?? 32) },
     uTexel: { value: new THREE.Vector2(1 / W, 1 / Hpx) },
     uOutline: { value: 0.55 },   // how far an edge darkens its own colour
     uNormalEdge: { value: 0.20 },
@@ -415,7 +442,10 @@ const post = new THREE.ShaderMaterial({
       c = mix(c, c * uOutline, edge);
 
       // Snap to the palette. Nearest in RGB is crude but correct for a palette
-      // this small and this deliberately spaced.
+      // this small and this deliberately spaced. Size 0 passes through: a
+      // carved model brings its OWN colours, lifted from the reference views,
+      // and snapping those to the atlas palette turned the whole cabinet dark.
+      if (uPaletteSize < 0.5) { gl_FragColor = vec4(c, 1.0); return; }
       vec3 best = c;
       float bestD = 1e9;
       for (int i = 0; i < 64; i++) {
