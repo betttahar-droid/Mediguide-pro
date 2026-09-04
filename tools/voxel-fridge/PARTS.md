@@ -267,3 +267,45 @@ frame was classified AS ground — the two are within a few values of each
 other — and the measurement reported a frame three times thinner than it is.
 I nearly "fixed" a part that was already correct. A measurement tool that can
 silently mistake the subject for the background is worse than no tool.
+
+
+---
+
+## The 3D-to-pixel-art pipeline
+
+Rendering small with nearest filtering is necessary and NOT sufficient. The
+literature on this is consistent — Blender Studio's 3D pixel art notes, David
+Holland's write-up, the Pixelize and Rig Bake tools, the Unreal thread on the
+2D-in-3D look — and lists four stages. We had two of them for a long time,
+which is why the render kept reading as *a render of* a fridge rather than as
+pixel art of one.
+
+| stage | what it does |
+|---|---|
+| low-res render, NEAREST, no filtering | the pixel grid itself |
+| texel density = screen density | one texel per screen pixel, so the sheet neither aliases nor blurs |
+| **palette quantisation** | snap the frame to a small locked palette |
+| **edge pass** | a dark outline at depth and normal discontinuities |
+
+**Palette quantisation.** Pixel art is a small locked set of colours; a 3D
+render is not, because every face tint multiplies every texel into a new
+value. Measured: 356 colours before, ~30 after. The palette is derived from
+the atlas at each of the five face tints, reduced to 32 — and it weights
+DISTINCT colours equally rather than by area, because quantising the atlas
+image directly let median-cut spend its slots on whatever covered the most
+pixels and the grille, a small tan region, came out grey.
+
+**The edge pass.** Hand-drawn pixel art outlines every form; a renderer
+separates forms by value alone. Four-neighbour test: a normal break catches
+the join between two faces of one object, a depth break catches the silhouette
+and one part standing in front of another. The outline darkens the pixel's OWN
+colour rather than stamping one ink, because a single black line over a cream
+cabinet and a teal base reads as ink where pixel art shades its outline from
+the form it belongs to.
+
+`?post=0` disables both, to see what they are doing.
+
+**Not yet done, and the next things to try if this is still short:** ordered
+(Bayer) dithering on the value steps, and snapping the camera to a texel-sized
+grid — the standard fix for pixel crawl once anything moves. Neither matters
+for a still; both matter the moment this is in the game.

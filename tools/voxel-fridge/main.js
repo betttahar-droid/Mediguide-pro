@@ -56,6 +56,15 @@ async function loadAtlas() {
   throw new Error('no atlas found — run make_atlas.py or import_atlas.py');
 }
 const [man, atlas] = await loadAtlas();
+
+// The palette the post pass snaps to. Pixel art is a small locked set of
+// colours; a 3D render is not, because every face tint multiplies every texel
+// into a new value. nano_atlas.py derives this from the atlas at each face
+// tint and reduces it to 32.
+const palette = await new THREE.TextureLoader().loadAsync(base + 'palette.png');
+palette.magFilter = palette.minFilter = THREE.NearestFilter;
+palette.generateMipmaps = false;
+palette.colorSpace = THREE.NoColorSpace;
 atlas.magFilter = THREE.NearestFilter;
 atlas.minFilter = THREE.NearestFilter;
 atlas.generateMipmaps = false;
@@ -336,5 +345,103 @@ cam.position.set(
   target.z - d * Math.cos(yaw) * Math.cos(pitch)
 );
 cam.lookAt(target);
-renderer.render(scene, cam);
+
+// ---------------------------------------------------------------------------
+// THE POST PASS — the two stages that separate a 3D render from pixel art.
+// Rendering small with nearest filtering is necessary and not sufficient; the
+// literature on 3D-to-pixel-art is consistent that you also need
+//
+//   PALETTE QUANTISATION  snap every pixel to a small locked palette, or the
+//                         frame carries hundreds of near-identical values that
+//                         no pixel artist would ever have drawn
+//   AN EDGE PASS          a dark outline at depth and normal discontinuities.
+//                         Hand-drawn pixel art outlines every form; a renderer
+//                         separates forms by value alone, which is the single
+//                         biggest reason ours read as "a render of a fridge"
+//                         rather than "pixel art of a fridge".
+//
+// Disable either with ?post=0 to see the difference.
+const usePost = params.get('post') !== '0';
+const rtColor = new THREE.WebGLRenderTarget(W, Hpx, {
+  minFilter: THREE.NearestFilter, magFilter: THREE.NearestFilter,
+  depthTexture: new THREE.DepthTexture(W, Hpx),
+});
+const rtNormal = new THREE.WebGLRenderTarget(W, Hpx, {
+  minFilter: THREE.NearestFilter, magFilter: THREE.NearestFilter,
+});
+
+const post = new THREE.ShaderMaterial({
+  uniforms: {
+    tColor: { value: rtColor.texture },
+    tNormal: { value: rtNormal.texture },
+    tDepth: { value: rtColor.depthTexture },
+    tPalette: { value: palette },
+    uPaletteSize: { value: man.paletteSize ?? 32 },
+    uTexel: { value: new THREE.Vector2(1 / W, 1 / Hpx) },
+    uOutline: { value: 0.55 },   // how far an edge darkens its own colour
+    uNormalEdge: { value: 0.20 },
+    uDepthEdge: { value: 0.0012 },
+  },
+  vertexShader: `
+    varying vec2 vUv;
+    void main() { vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }
+  `,
+  fragmentShader: /* glsl */ `
+    precision highp float;
+    uniform sampler2D tColor, tNormal, tDepth, tPalette;
+    uniform vec2 uTexel;
+    uniform float uPaletteSize, uOutline, uNormalEdge, uDepthEdge;
+    varying vec2 vUv;
+
+    void main() {
+      vec3 c = texture2D(tColor, vUv).rgb;
+      vec3 n0 = texture2D(tNormal, vUv).rgb;
+      float d0 = texture2D(tDepth, vUv).r;
+
+      // Four-neighbour discontinuity test. A normal break catches the join
+      // between two faces of one object; a depth break catches the silhouette
+      // and one part standing in front of another.
+      float edge = 0.0;
+      for (int i = 0; i < 4; i++) {
+        vec2 o = i == 0 ? vec2(1.0, 0.0) : i == 1 ? vec2(-1.0, 0.0)
+               : i == 2 ? vec2(0.0, 1.0) : vec2(0.0, -1.0);
+        vec2 uv = vUv + o * uTexel;
+        edge = max(edge, step(uNormalEdge, length(texture2D(tNormal, uv).rgb - n0)));
+        edge = max(edge, step(uDepthEdge, abs(texture2D(tDepth, uv).r - d0)));
+      }
+      // Darken the pixel's OWN colour rather than stamping one ink: a single
+      // black outline over a cream cabinet and a teal base reads as ink, where
+      // pixel art shades its outline from the form it belongs to.
+      c = mix(c, c * uOutline, edge);
+
+      // Snap to the palette. Nearest in RGB is crude but correct for a palette
+      // this small and this deliberately spaced.
+      vec3 best = c;
+      float bestD = 1e9;
+      for (int i = 0; i < 64; i++) {
+        if (float(i) >= uPaletteSize) break;
+        vec3 p = texture2D(tPalette, vec2((float(i) + 0.5) / uPaletteSize, 0.5)).rgb;
+        float dd = distance(p, c);
+        if (dd < bestD) { bestD = dd; best = p; }
+      }
+      gl_FragColor = vec4(best, 1.0);
+    }
+  `,
+});
+const quad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), post);
+const postScene = new THREE.Scene().add(quad);
+const postCam = new THREE.Camera();
+
+if (usePost) {
+  renderer.setRenderTarget(rtColor);
+  renderer.render(scene, cam);
+  scene.overrideMaterial = new THREE.MeshNormalMaterial();
+  renderer.setRenderTarget(rtNormal);
+  renderer.render(scene, cam);
+  scene.overrideMaterial = null;
+  renderer.setRenderTarget(null);
+  renderer.render(postScene, postCam);
+} else {
+  renderer.render(scene, cam);
+}
 window.__done = true;

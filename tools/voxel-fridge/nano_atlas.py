@@ -206,6 +206,29 @@ def main():
         x += im.width + 2
         rowh = max(rowh, im.height)
 
+    # THE PALETTE. Pixel art is a small locked set of colours; a 3D render is
+    # not, because every face tint multiplies every texel into a new value. So
+    # the post pass snaps the frame to this palette, and this is where it comes
+    # from: every colour in the atlas, at each of the five face tints, reduced
+    # to 32. Without it the render has hundreds of near-identical colours and
+    # reads as a 3D render OF pixel art rather than as pixel art.
+    TINTS = (1.09, 1.00, 0.90, 0.86, 0.74)
+    # Weight DISTINCT colours equally, not by area. Quantising the atlas image
+    # directly let median-cut spend its 32 slots on whatever covers the most
+    # pixels, and the grille - a small tan region - lost its colour entirely and
+    # came out grey. One pixel per distinct colour per tint fixes that.
+    distinct = {c for _, c in atlas.getcolors(1 << 20)}
+    cells = [tuple(min(255, round(v * t)) for v in c) for c in distinct for t in TINTS]
+    swatch = Image.new("RGB", (len(cells), 1))
+    swatch.putdata(cells)
+    pal = swatch.quantize(colors=32, method=Image.MEDIANCUT).convert("RGB")
+    colours = sorted({c for _, c in pal.getcolors(1 << 20)})
+    strip = Image.new("RGB", (len(colours), 1))
+    strip.putdata(colours)
+    strip.save(HERE / "palette.png")
+    man["paletteSize"] = len(colours)
+    print(f"palette.png {len(colours)} colours")
+
     man["size"] = [ATLAS, ATLAS]
     atlas.save(HERE / "atlas-nano.png")
     (HERE / "atlas-nano.json").write_text(json.dumps(man, indent=2))
