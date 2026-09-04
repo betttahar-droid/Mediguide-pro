@@ -1,0 +1,384 @@
+================================================================================
+MODELLING AND TEXTURING TECHNIQUE
+Retro low-poly pixelated props that resize perfectly and reuse across models
+================================================================================
+
+Reference implementation:  tools/voxel-fridge/style.js   (the technique)
+                           tools/voxel-fridge/main.js    (one model using it)
+Authoring tools:           tools/authoring/style_bible.py
+                           tools/authoring/cut_fittings.py
+
+--------------------------------------------------------------------------------
+0.  THE PROBLEM
+--------------------------------------------------------------------------------
+
+Build a kit of props in a retro voxel / pixel-art style where:
+
+  * the player can scale any object on any axis,
+  * nothing stretches, smears or blurs when they do,
+  * detail stays anchored where it belongs,
+  * the same look applies to every object in the catalogue without an artist
+    re-authoring it each time.
+
+The obvious answers all fail at one of those.
+
+
+--------------------------------------------------------------------------------
+1.  WHY THE TWO STANDARD ANSWERS DON'T WORK
+--------------------------------------------------------------------------------
+
+Ask how to texture a resizable modular kit and the field gives two answers.
+
+TRIM SHEETS
+  Strips of detail packed in one texture; meshes UV onto the right strip and
+  tile along it.
+  - Resizable along ONE axis only.
+  - Every part must be unwrapped and held at a matched texel density.
+  - Change a part's size and you re-check its UVs.
+
+TRIPLANAR / WORLD-SPACE PROJECTION
+  Project a texture down the world axes; no unwrap at all.
+  - Scale-independent, which is what we want, BUT
+  - it cannot place anything relative to a PART. The projection knows about
+    the world, not about the box, so detail slides across a part as it grows.
+    A border drawn this way drifts off its own corner.
+
+We need BOTH properties at once:
+  marks that keep their size          (triplanar's strength)
+  marks welded to the part's corners  (the trim sheet's strength)
+
+
+--------------------------------------------------------------------------------
+2.  THE CORE IDEA
+--------------------------------------------------------------------------------
+
+    *** THE SHADING COORDINATE IS THE FRAGMENT'S DISTANCE TO THE EDGE OF ITS
+        OWN FACE, MEASURED IN WORLD UNITS. ***
+
+It is a per-face signed distance field. It costs nothing: it is computed from
+the fragment's object-space position and the box's half-extents, two numbers
+the geometry already has.
+
+    vec2 fromEdge = half2 - abs(local);
+    float d       = min(fromEdge.x, fromEdge.y);
+
+Every mark in the style then falls out as a threshold on d:
+
+    d < 0.22                     dark outline on the very rim
+    0.22 < d < 0.48              lighter "catch" on the lit (top/left) edges
+    0.95 < d < 1.21              recessed inner border of a pressed plate
+    seam pitch, in world units   subdivision of a large panel
+
+Because d is in WORLD UNITS, a mark is 0.22 units wide on a part of any size:
+nothing stretches, and a bigger part gets MORE marks rather than bigger ones.
+
+Because d is measured from the part's OWN face, marks stay welded to its
+corners however it grows.
+
+Consequences — all of these problems simply stop existing:
+    no UV attribute is read anywhere
+    no atlas page to run out of
+    no texel density to reconcile with the render resolution
+    no mip chain, no filtering choices
+    no patch whose pixel size dictates a part's world size
+
+The adaptability becomes STRUCTURAL rather than something the art has to be
+careful about.
+
+
+--------------------------------------------------------------------------------
+3.  THE FIVE LAYERS
+--------------------------------------------------------------------------------
+
+A model is a list of axis-aligned boxes with material names. Nothing else.
+The look is assembled in five layers, in this order:
+
+  1. GEOMETRY        boxes, sized from measured fractions
+  2. FACE TINT       one flat value per face direction (the whole lighting model)
+  3. MATERIAL RULES  outline / catch / inset / seam / grain / perf, all in
+                     world units, keyed off d
+  4. FITTINGS        authored decals placed deliberately (this is character)
+  5. POST            palette snap + edge pass, to make it read as pixel art
+
+
+--- 3.1  GEOMETRY ------------------------------------------------------------
+
+Boxes only. Every dimension is written as a MEASURED FRACTION of one driving
+dimension, never as a typed offset:
+
+    const W      = H;            // body half-width — the 100%
+    const BORDER = W * 0.175;    // cream door border, each side
+    const FRAME  = W * 0.042;    // door frame, each side
+    const S      = W - BORDER;
+    const G      = S - FRAME;    // glass half-width
+    const C      = W * 1.13;     // crown overhang
+    const D      = W * 0.958;    // half-depth
+
+Written this way, a re-measure is a one-line change and every proportion
+survives a change of scale.
+
+Detail that is STRUCTURE is geometry, not texture: louvre slots are real
+boxes in a loop, so a wider base gets MORE slots at the same pitch. That is
+the adaptive behaviour a tiling texture is usually asked for, done with a
+`for` loop, and it cannot smear.
+
+
+--- 3.2  FACE TINT (the entire lighting model) -------------------------------
+
+Nothing in the scene is a light. The face normal alone picks a multiplier:
+
+    top     1.090
+    front   1.000
+    side    0.858
+    back    0.900
+    bottom  0.740
+
+Measured from the reference's own iso view: its cream reads #fef7e7 on top,
+#e9e3d4 head-on and #c8c3b6 on the side (254 / 233 / 200), and its teal
+agrees at 0.855.
+
+The face basis must be SIGNED, not just a pair of axes, or the two faces of
+one axis mirror each other and anything with handedness (a display, a label)
+reads backwards from behind.
+
+
+--- 3.3  MATERIAL RULES ------------------------------------------------------
+
+A material is a colour FAMILY (base / lit / shade) plus rules:
+
+    inset   the pressed-plate border, on faces big enough to hold one
+    edge    outline + catch width, or 0 for trim too small to carry one
+    seam    subdivide large faces with seams
+    grain   directional runs (brushed metal, wood)
+    perf    a regular dot grid (a vent, a speaker)
+
+Keep the three tones CLOSE together. The reference's flank is 81% one value
+with a border only 3% darker (#adb6ba against #a8b1b5). The big value steps
+in that image are FACE TINTS, not marks within a face. Marks as loud as the
+tints make the surface read as busy rather than as painted metal.
+
+  >> EVERY MARK MUST GATE ON WHETHER ITS FACE CAN CARRY IT. <<
+
+    float lim = min(half2.x, half2.y);      // half the face's shorter side
+    float o   = min(uOutline, lim * 0.34);  // thin the rim on small faces
+    if (uInset > 0 && lim > uInsetAt + 1.0) { ...draw the plate border... }
+
+A rule applied without asking what the part IS produces detail with no logic.
+A 0.6-unit louvre slot given a 0.22 outline plus a 0.22 catch is nothing but
+outline and catch. A face too small for a mark does not get a squashed
+version of it — it does not get the mark.
+
+
+--- 3.4  FITTINGS: where character actually comes from -----------------------
+
+This is the layer that was got wrong twice, so it gets the most space.
+
+Procedural texture CANNOT produce character. Character is detail that MEANS
+something and sits where it belongs — a vent where air moves, a label where
+you would read one, a hinge on the edge the door turns on. A hash spread over
+every face at even 14% coverage is the exact opposite: it reads as grime,
+because placement IS the meaning and a hash has no way to mean anything.
+
+The evidence: docs/style-bible/character-ab.png draws the same cabinet twice,
+plain and finished by a prop artist. BOTH HALVES HAVE PERFECTLY FLAT FIELDS.
+The entire difference is things placed on them, plus screws at the corners of
+every panel.
+
+So detail comes from a small atlas of authored fittings, placed deliberately:
+
+    hinge  latch  vent  ratingPlate  biohazard  labelHolder  rocker
+    dialA  dialB  readout  screwSlot  screwCross  foot  hazardStripe
+
+HOW A DECAL STAYS RESIZABLE
+    A decal is a QUAD OF FIXED WORLD SIZE anchored to a face's own corner (or
+    centre) with a world-unit offset. Widen the cabinet and the rating plate
+    does not stretch and does not drift: same plate, same distance from the
+    same corner. It is the nine-slice property applied to decals.
+
+    Its UVs are its OWN six vertices carrying a rect out of the atlas — never
+    the model's. So there is still no unwrap to stretch and no texel density
+    to reconcile with the body.
+
+SCREWS ARE A RULE, NOT A PLACEMENT
+    The reference puts them on every panel it draws, always the same size,
+    always the same world inset from the corner. So they are generated:
+
+        screws(face, cu, cv, halfU, halfV, depth, inset, size)
+
+    A bigger panel gets its screws in the same place relative to its corners,
+    not proportionally further in.
+
+WHAT STAYS PROCEDURAL
+    Only what is a property of the MATERIAL rather than of the object:
+    `grain` runs along brushed metal wherever it appears; `perf` is what a
+    vent or a speaker IS. Everything else is a placed fitting.
+
+
+--- 3.5  POST PASS -----------------------------------------------------------
+
+Rendering small with nearest filtering is necessary and NOT sufficient. Two
+more stages separate a 3D render from pixel art:
+
+  PALETTE QUANTISATION
+    Snap every pixel to a small locked palette. Without it the frame carries
+    hundreds of near-identical values no pixel artist would ever have drawn.
+    The palette is DERIVED — every material's three tones at every face tint,
+    plus the fittings atlas's own colours, then thinned by distance so near
+    duplicates collapse. Deriving beats typing: a hand-typed palette once lost
+    the grille's tan entirely and rendered it grey.
+
+  EDGE PASS
+    A dark outline at depth and normal discontinuities. Hand-drawn pixel art
+    outlines every form; a renderer separates forms by value alone. Darken
+    the pixel's OWN colour rather than stamping one ink, or a single black
+    line over cream and teal reads as ink rather than as shading.
+
+
+--------------------------------------------------------------------------------
+4.  THE WORKING METHOD: GENERATE -> MEASURE -> DRIVE
+--------------------------------------------------------------------------------
+
+The technique above is only half of it. The other half is how the constants
+get set, and it is the part that actually decides whether the result matches.
+
+    DO NOT READ PROPORTIONS OFF A REFERENCE BY EYE.
+
+"How wide is that border as a fraction of the panel" is not a judgement anyone
+makes reliably twelve times in a row. Every pass that eyeballed it got
+something wrong, and every error read as "something is a bit off" rather than
+as a specific fault.
+
+THE LOOP
+  1. Generate reference sheets with an image model, from the real reference
+     set, on a MAGENTA background.
+  2. Measure them with code. Write numbers to docs/style-spec.json.
+  3. Drive the renderer from those numbers.
+
+DESIGN EACH SHEET BACKWARDS FROM A NUMBER IT MUST YIELD, not from what it
+should look like. The sheets that exist and what each one settles:
+
+  scale-ladder      The same panel at three sizes. ARE BORDERS FIXED OR
+                    PROPORTIONAL? Measured 45 / 40 / 44 px on panels 208 /
+                    262 / 486 px wide: an 11% spread in WIDTH against an 82%
+                    spread in FRACTION. Borders are a world-space constant.
+                    This single measurement decides the whole architecture,
+                    and it is invisible on any one panel.
+
+  character-ab      The same object plain vs. finished. WHAT GIVES A PROP
+                    CHARACTER? Answer: placed fittings, not surface noise.
+
+  face-tints        A cube's three faces. The lighting model, as ratios.
+
+  surface-marks     A big empty panel. Large panels are SUBDIVIDED by seams
+                    into flat sub-panels; they are not speckled.
+
+  texture-swatches  Per-material texture vocabulary: flecks, grain, dither,
+                    perforation.
+
+  edge-vocab        How corners, seams, joints and trim strips are drawn.
+
+  fittings          The kit itself, isolated so it can be cut and measured.
+
+WHY MAGENTA
+  A ground that cannot be confused with any palette colour makes the
+  silhouette unambiguous. Measuring an earlier render against a cream ground
+  silently classified the cream door frame AS ground and reported a frame
+  three times thinner than it is — and nearly caused a correct part to be
+  "fixed".
+
+  >> A MEASUREMENT TOOL THAT CAN SILENTLY MISTAKE THE SUBJECT FOR THE
+     BACKGROUND IS WORSE THAN NO TOOL. <<
+
+  Make tools REPORT EVIDENCE, not just verdicts. When the cutter found 68
+  islands for 15 names it said so and refused to trust the mapping; when the
+  border reader returned a verdict it also returned the band widths it read
+  it from, which is how two wrong verdicts were caught.
+
+
+--------------------------------------------------------------------------------
+5.  GOTCHAS THAT COST REAL TIME
+--------------------------------------------------------------------------------
+
+COLOUR MANAGEMENT
+  three.js converts `new THREE.Color('#e9e3d4')` from sRGB into its linear
+  working space. A renderer that writes linear straight out then shows cream
+  authored #e9e3d4 as #d5ccb6 — every colour ~14% dark.
+  Fix: THREE.ColorManagement.enabled = false, BEFORE the first Color exists.
+  The trap: it presents as an ART problem. The tempting fix is to lighten the
+  hex until it looks right, which bakes a gamma error permanently into a
+  correctly sampled palette. The palette was never wrong; the pipeline was.
+
+QUANTISING BEFORE MEASURING
+  Generated art is anti-aliased however hard the prompt asks otherwise, so a
+  "flat" panel is hundreds of near-identical values. Run-length measurement on
+  a raw sheet found 71 colour bands across one plain panel.
+  Quantise first — and then MERGE NEAR-DUPLICATES BY DISTANCE. Snapping each
+  channel to a grid is the obvious fix and it is wrong: two values 16 apart
+  straddle a 16-grid boundary and survive it.
+
+MEDIAN-CUT ALLOCATES BY AREA
+  Asked for 8 colours on a mostly-magenta sheet it spent SEVEN on shades of
+  magenta and gave the entire subject one, so all three cube faces measured
+  identical. Flatten the background to a single exact value first. (Same trap
+  once turned an atlas grille grey: weight distinct colours equally, not by
+  the area they cover.)
+
+FLOOD FILL PARITY
+  Stepping by 2 preserves parity, so a solid shape splits into four
+  independent even/odd lattices. Fifteen fittings came back as sixty-eight.
+  Step by 1.
+
+KEYING A BACKGROUND OUT TO ALPHA
+  Distance from pure magenta leaves the anti-aliased fringe behind, and a
+  fitting's own black outline blended halfway to magenta lands near #3a1a3a —
+  too dark to trip a hue test. Key on hue, THEN erode any tinted pixel that
+  TOUCHES transparency. Anchoring the erode on adjacency is what makes it
+  safe: it can only eat a border, never an interior.
+
+TRANSPARENCY AND A LOCKED PALETTE DON'T MIX
+  Alpha blending produces colours that are in no palette, so the snap sends
+  them to whatever is nearest and the surface goes dead. Draw the reflection
+  as opaque geometry, or leave it out.
+
+A SWATCH IS NOT AN OBJECT
+  Texture swatches measure 12-20% of texels off the base tone. Applying that
+  measurement at OBJECT level put noise on every face. The measurement was
+  right; the level it was applied at was wrong.
+
+MEASURE THE RIGHT REFERENCE
+  Deriving the texture question from a smooth-shaded turnaround produced
+  "fields are flat" and deleted a whole class of detail. The style's character
+  lived in a different reference in the same set. When two references
+  disagree (they did, on lighting contrast: 0.86 vs 0.75 side tint), say so
+  and pick deliberately — do not average them silently.
+
+
+--------------------------------------------------------------------------------
+6.  APPLYING THIS TO A NEW MODEL
+--------------------------------------------------------------------------------
+
+  1. Write the part list as boxes with material names, every dimension a
+     measured fraction of one driving dimension.
+  2. `import { tableBox, decal, screws } from './style.js'` — the module knows
+     nothing about any specific object, so the look comes for free and a style
+     change lands on every object at once.
+  3. Put STRUCTURE in geometry (slots, rails, plinths), especially anything
+     that should multiply as the object grows.
+  4. Add material rules only where the part physically has them.
+  5. Place fittings where the real thing would have them. Resist the urge to
+     add surface noise; if a face looks empty it wants a FITTING or a SEAM,
+     not speckle.
+  6. Render the object at its default size AND at ~2x on each axis. Every
+     fitting, border and outline must be the same size in both; only counts
+     (slots, seams, sub-panels) should change.
+
+--------------------------------------------------------------------------------
+7.  ONE-LINE SUMMARY
+--------------------------------------------------------------------------------
+
+  Geometry carries structure; a per-face distance field in world units carries
+  the material marks; an atlas of authored fittings carries the character; and
+  every constant in all three is measured off generated reference sheets by
+  code rather than read off them by eye.
+
+================================================================================
