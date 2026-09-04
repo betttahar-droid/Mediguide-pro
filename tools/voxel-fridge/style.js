@@ -133,27 +133,33 @@ export const STYLE = {
 //     edge    outline+catch width, or 0 for trim too small to carry one
 //     seam    subdivide large faces with seams
 //
-// FLECK IS NOT DECORATION AND IT IS NOT GUESSED. The style bible's texture
-// swatches measure 12-20% of texels off the base tone on every painted surface
-// — cream 88/12, steel 80/16, wood 61/28/11. An earlier pass set this to zero
-// after measuring the FRIDGE TURNAROUND, which is flat; but that sheet is a
-// smooth-shaded render, and the prop kit the style actually comes from is
-// densely pixel-textured. Measuring the wrong reference is how a whole class of
-// detail went missing: the cabinet came out correct in colour and proportion
-// and still looked like untextured plastic.
+// FLECK AND DITHER ARE OFF ON EVERY PAINTED SURFACE, and that is the third and
+// final position on this question, so it is worth saying why it is not a
+// flip-flop. The texture swatches genuinely do measure 12-20% of texels off the
+// base tone — but a SWATCH is not an OBJECT. The character-ab sheet settles it
+// by drawing the same cabinet plain and finished: both halves have flat fields,
+// and every bit of the difference is placed fittings. Spraying that 14% over a
+// whole cabinet produced uniform noise, which reads as grime rather than as
+// character, because character is detail that MEANS something and a hash cannot
+// mean anything.
+//
+// What survives procedurally is the detail that is genuinely a property of the
+// MATERIAL rather than of the object: `grain` runs along brushed metal wherever
+// it appears, `perf` is what a speaker or a vent IS. Everything else moved into
+// the fittings atlas at the bottom of this file, where it can be placed.
 const D = { lit: null, shade: null, inset: 0, edge: 0.22, seam: 0,
             fleck: 0, grain: 0, dither: 0, perf: 0 };
 const M = (o) => ({ ...D, ...o });
 
 export const MATERIALS = {
-  cream:    M({ base: '#e9e3d4', lit: '#f7f2e6', shade: '#dcd6c6', inset: 1, fleck: 0.13, dither: 1 }),
-  blueGrey: M({ base: '#adb6ba', lit: '#b7c2c5', shade: '#a3adb2', inset: 1, fleck: 0.16, dither: 1 }),
-  teal:     M({ base: '#377c62', lit: '#3f8a6d', shade: '#2e6752', inset: 1, fleck: 0.12, dither: 1 }),
-  frame:    M({ base: '#35785f', lit: '#3a8368', shade: '#2e6752', edge: 0.14, fleck: 0.07 }),
-  purple:   M({ base: '#5c4a70', lit: '#6b5780', shade: '#4a3e58', edge: 0.16, fleck: 0.10 }),
-  plinth:   M({ base: '#5c4a72', lit: '#6b5780', shade: '#4a3e58', edge: 0.16, fleck: 0.10 }),
-  interior: M({ base: '#458574', lit: '#4c8978', shade: '#3b7565', edge: 0.16, fleck: 0.08 }),
-  shelf:    M({ base: '#d7e7e2', lit: '#deebe6', shade: '#bed2cc', edge: 0.10, fleck: 0.05 }),
+  cream:    M({ base: '#e9e3d4', lit: '#f7f2e6', shade: '#dcd6c6', inset: 1 }),
+  blueGrey: M({ base: '#adb6ba', lit: '#b7c2c5', shade: '#a3adb2', inset: 1 }),
+  teal:     M({ base: '#377c62', lit: '#3f8a6d', shade: '#2e6752', inset: 1 }),
+  frame:    M({ base: '#35785f', lit: '#3a8368', shade: '#2e6752', edge: 0.14 }),
+  purple:   M({ base: '#5c4a70', lit: '#6b5780', shade: '#4a3e58', edge: 0.16 }),
+  plinth:   M({ base: '#5c4a72', lit: '#6b5780', shade: '#4a3e58', edge: 0.16 }),
+  interior: M({ base: '#458574', lit: '#4c8978', shade: '#3b7565', edge: 0.16 }),
+  shelf:    M({ base: '#d7e7e2', lit: '#deebe6', shade: '#bed2cc', edge: 0.10 }),
   glint:    M({ base: '#5c9c88', lit: '#6aa896', shade: '#4c8978', edge: 0 }),
   tan:      M({ base: '#d9a95f', lit: '#e8bc76', shade: '#c08c45', edge: 0.14, grain: 0.30 }),
   tan2:     M({ base: '#c08c45', lit: '#d9a95f', shade: '#8e6529', edge: 0 }),
@@ -393,4 +399,93 @@ export function tableBox(THREE, kind, [x1, y1, z1], [x2, y2, z2], cache) {
   const mesh = new THREE.Mesh(geo, cache ? cache.get(name) : makeMaterial(THREE, kind));
   mesh.position.set((x1 + x2) / 2, (z1 + z2) / 2, (y1 + y2) / 2);
   return mesh;
+}
+
+
+// ---------------------------------------------------------------------------
+// FITTINGS — the part that actually gives a model character.
+//
+// The style bible's character-ab sheet draws the same cabinet plain and
+// finished. Both halves have perfectly FLAT fields; the whole difference is
+// things placed ON them — a vent where air moves, a rating plate where you
+// would read one, screws at the corners of each panel. That is why the
+// procedural pass before this one failed: a hash spread over every face at 14%
+// coverage is the opposite of character, because the placement IS the meaning,
+// and a hash has no way to mean anything. It read as dirt, correctly.
+//
+// So detail comes from a small atlas of authored fittings, placed deliberately.
+//
+// HOW THIS STAYS PERFECTLY RESIZABLE. A decal is a quad of FIXED WORLD SIZE
+// anchored to a face's own corner (or centre) with a world-unit offset. Widen
+// the cabinet and the rating plate does not stretch and does not drift: it
+// stays the same plate the same distance from the same corner, exactly as a
+// nine-slice keeps its corners native. The UVs here are the decal's own — six
+// vertices with a rect out of the atlas — and never the cabinet's, so there is
+// no unwrap to stretch and no texel density to reconcile with the body.
+//
+// ANCHORS: 'c' centre, and any of tl tr bl br t b l r, measured in the face's
+// own (u, v) with +u right and +v up as seen from outside that face.
+const FACES = {
+  front: { rot: [0, Math.PI, 0], put: (u, v, d) => [u, v, d] },
+  back: { rot: [0, 0, 0], put: (u, v, d) => [u, v, d] },
+  left: { rot: [0, -Math.PI / 2, 0], put: (u, v, d) => [d, v, u] },
+  right: { rot: [0, Math.PI / 2, 0], put: (u, v, d) => [d, v, u] },
+  top: { rot: [-Math.PI / 2, 0, 0], put: (u, v, d) => [u, d, v] },
+};
+
+export function loadFittings(THREE, tex, manifest) {
+  tex.magFilter = tex.minFilter = THREE.NearestFilter;
+  tex.colorSpace = THREE.NoColorSpace;   // colours are already output-ready
+  tex.generateMipmaps = false;
+  return { tex, man: manifest };
+}
+
+// One fitting, as its own quad. `h` is its world HEIGHT; the width follows the
+// tile's aspect so a fitting is never squashed.
+export function decal(THREE, kit, name, face, u, v, h, depth, tint = 1.0) {
+  const t = kit.man.tiles[name];
+  if (!t) throw new Error(`no fitting "${name}"`);
+  const [rx, ry, rw, rh] = t.rect;
+  const [aw, ah] = kit.man.size;
+  const geo = new THREE.PlaneGeometry(h * t.aspect, h);
+  // Remap the quad's UVs onto this tile's rect. Half-texel inset, or nearest
+  // filtering picks up the neighbouring tile along the shared edge.
+  const uv = geo.attributes.uv;
+  const e = 0.5;
+  for (let i = 0; i < uv.count; i++) {
+    uv.setXY(i,
+      (rx + e + uv.getX(i) * (rw - 2 * e)) / aw,
+      1 - (ry + e + (1 - uv.getY(i)) * (rh - 2 * e)) / ah);
+  }
+  uv.needsUpdate = true;
+  const f = FACES[face];
+  const mesh = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({
+    map: kit.tex, transparent: true, alphaTest: 0.5,
+    // Tinted to the face it sits on, so a fitting on a side panel darkens with
+    // that panel instead of floating in front of it at full brightness.
+    color: new THREE.Color(tint, tint, tint),
+    // The quad sits a hair off the surface; polygonOffset keeps it there under
+    // any camera without the gap becoming visible at a grazing angle.
+    polygonOffset: true, polygonOffsetFactor: -4, polygonOffsetUnits: -4,
+  }));
+  mesh.rotation.set(...f.rot);
+  mesh.position.set(...f.put(u, v, depth));
+  return mesh;
+}
+
+// Screws at the corners of a panel — the one fitting the reference applies as a
+// RULE rather than a placement. character-ab puts them on every sub-panel it
+// draws, always the same size, always the same inset from the corner. Inset is
+// in world units, so a bigger panel gets its screws in the same place relative
+// to its corners rather than proportionally further in.
+export function screws(THREE, kit, face, cu, cv, halfU, halfV, depth,
+                       inset = 1.6, size = 1.1, tint = 1.0, name = 'screwCross') {
+  const out = [];
+  for (const su of [-1, 1]) {
+    for (const sv of [-1, 1]) {
+      out.push(decal(THREE, kit, name, face,
+        cu + su * (halfU - inset), cv + sv * (halfV - inset), size, depth, tint));
+    }
+  }
+  return out;
 }

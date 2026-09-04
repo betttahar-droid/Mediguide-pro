@@ -127,6 +127,33 @@ SHEETS = {
         "pixel size as each other, so the larger square simply contains MORE "
         "pixels of the same texture rather than the same number of bigger "
         "pixels. No borders, no frames, no outlines."),
+    # WHAT ACTUALLY GIVES A PROP CHARACTER. Procedural texture cannot answer
+    # this: character is detail that MEANS something and sits where it belongs —
+    # a vent where air moves, a label where you would read one, wear on the
+    # corner that gets knocked. A uniform hash over every face is the exact
+    # opposite, and produces noise that reads as dirt. Ask for the same object
+    # twice so the difference IS the answer.
+    "character-ab": (
+        "Draw the SAME tall narrow cabinet TWICE, side by side on the magenta "
+        "background, both exactly the same size and shape and colour, both in "
+        "flat orthographic front view. "
+        "The LEFT one is completely plain: flat panels, nothing on them. "
+        "The RIGHT one is the same cabinet finished by a professional prop "
+        "artist in this art style — add the fittings and markings that give a "
+        "prop its character, each placed where it would really belong. "
+        "Do not add random speckle or dirt to either one."),
+    # The fittings themselves, isolated so they can be cut out and measured.
+    "fittings": (
+        "Draw a set of TWELVE small separate pixel-art fittings for a retro "
+        "pharmacy refrigerator, arranged in a loose grid on the magenta "
+        "background with clear magenta space between every one of them, each "
+        "drawn straight on with no perspective: "
+        "a hinge, a latch, a small vent of horizontal slots, a rating plate, a "
+        "warning label, a paper label in a holder, a rocker switch, a dial, a "
+        "small digital readout, a screw head, a rubber foot, and a short strip "
+        "of diagonal hazard stripes. "
+        "Each fitting is small and chunky, a few dozen pixels across, drawn "
+        "flat with hard pixel edges. Nothing may touch anything else."),
     "edge-vocab": (
         "Draw FOUR separate small studies in a row on the magenta background, "
         "well separated, all in cream and pale blue-grey painted metal: "

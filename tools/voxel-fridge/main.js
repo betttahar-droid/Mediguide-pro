@@ -40,13 +40,27 @@ const BG = '#dcd4c6';
 // split is the point — a second model imports the same module and gets the
 // identical look with no art work, and a style change lands on every object at
 // once. See style.js for the technique and where each constant was measured.
-import { STYLE, MATERIALS, buildPalette, tableBox, useRawColours } from './style.js';
+import { STYLE, MATERIALS, buildPalette, tableBox, useRawColours,
+         loadFittings, decal, screws } from './style.js';
 
 // Before any THREE.Color exists — see style.js. The authored hex is the
 // output pixel; nothing here wants a linear round trip.
 useRawColours(THREE);
 
+// The fittings atlas, and its own colours folded into the palette. Without the
+// merge the post pass would snap the hazard yellow and the rating plate's warm
+// grey to whatever cabinet colour sat nearest and the decals would come out as
+// smears.
+const kitMan = await (await fetch('/tools/voxel-fridge/fittings.json')).json();
+const kit = loadFittings(THREE,
+  await new THREE.TextureLoader().loadAsync('/tools/voxel-fridge/fittings.png'),
+  kitMan);
+
 const paletteRGB = buildPalette(THREE);
+for (const hex of kitMan.palette ?? []) {
+  const c = new THREE.Color(hex);
+  paletteRGB.push([c.r, c.g, c.b].map((v) => Math.round(v * 255)));
+}
 const paletteCount = paletteRGB.length;
 const paletteTexture = new THREE.DataTexture(
   new Uint8Array(paletteRGB.flatMap((c) => [...c, 255])), paletteCount, 1,
@@ -169,12 +183,11 @@ function buildFridge(H) {
   // interior directly, with a reflection drawn ON it. So the pane is gone and
   // the reflection is a staircase of small boxes, which is how pixel art draws
   // a diagonal and costs nothing here.
-  for (const [x0, z0, n] of [[G - 4.5, 70, 5], [G - 10.5, 66, 4]]) {
-    for (let i = 0; i < n; i++) {
-      add('glint', [x0 - i * 1.5, F - 2.4, z0 - i * 2.2],
-                   [x0 - i * 1.5 + 1.2, F - 2.2, z0 - i * 2.2 + 2.4]);
-    }
-  }
+  // The glass reflection is GONE. It was a staircase of small light boxes, and
+  // with the door otherwise bare it was the only thing on it; next to real
+  // fittings it reads as exactly what the noise pass read as — scattered marks
+  // that mean nothing. The reference's own streaks are barely visible, and a
+  // sticker on the glass carries the door far better.
   // ---- P14 handle ---------------------------------------------------------
   add('purple', [W - 3.5, F - 4.6, 41], [W - 1, F - 3.2, 63]);
   add('purple', [W - 3, F - 3.2, 42],   [W - 1.5, F - 2.2, 45]);
@@ -185,6 +198,42 @@ function buildFridge(H) {
   add('disp',  [-5.8, CF - 0.7, 88.6], [5.8, CF, 92.2]);
   add('lamp',  [-4.2, CF - 0.9, 89.8], [-2.7, CF - 0.6, 91.0]);
   add('digit', [-1.2, CF - 0.9, 89.8], [3.6, CF - 0.6, 91.0]);
+
+  // ---- FITTINGS ------------------------------------------------------------
+  // Every one of these is placed where the thing it represents would actually
+  // be, which is the whole point: a rating plate goes on the flank at eye
+  // height because that is where you read one, hinges go on the edge the door
+  // turns on, the biohazard sticker goes on the door of a vaccine fridge. They
+  // are quads of fixed WORLD size anchored to a face, so widening the cabinet
+  // moves them with their corner and never stretches them.
+  //
+  // NOTE these go beyond the fridge turnaround, which carries no fittings at
+  // all. They come from the prop kit in docs/reference, which is where the
+  // style's character lives — the turnaround is a clean orthographic drawing.
+  const T = STYLE.tint;
+  const L = -W - 0.05, R = W + 0.05;      // just proud of each flank
+  for (const [x, face] of [[L, 'left'], [R, 'right']]) {
+    // Screws at the corners of both flank panels — the one fitting the
+    // reference applies as a rule rather than a placement.
+    for (const cv of [34, 68]) {
+      for (const m of screws(THREE, kit, face, 0, cv, D, 16, x, 2.2, 1.2, T.side)) {
+        g.add(m);
+      }
+    }
+  }
+  // Rating plate and a paper label, on the left flank only: a real cabinet has
+  // one of each, not one per side.
+  g.add(decal(THREE, kit, 'ratingPlate', 'left', 1, 70, 7.5, L, T.side));
+  g.add(decal(THREE, kit, 'labelHolder', 'left', 1, 34, 8.0, L, T.side));
+  // Door: hinges on the side away from the handle, a biohazard sticker low on
+  // the glass where one gets stuck.
+  for (const z of [30, 72]) {
+    g.add(decal(THREE, kit, 'hinge', 'front', -(W - 2.6), z, 5.0, F - 1.6, T.front));
+  }
+  g.add(decal(THREE, kit, 'biohazard', 'front', -(G - 6), 30, 8.0, F - 2.7, T.front));
+  // Base block: the switch and thermostat live on the plant, next to the grille.
+  g.add(decal(THREE, kit, 'rocker', 'front', W - 5.5, 14, 4.0, F - 0.05, T.front));
+  g.add(decal(THREE, kit, 'dialA', 'front', W - 10.5, 14, 4.0, F - 0.05, T.front));
   return g;
 }
 
