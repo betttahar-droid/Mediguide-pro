@@ -22,202 +22,128 @@
 import * as THREE from 'three';
 
 const params = new URLSearchParams(location.search);
-const H = Number(params.get('w') ?? 17);
+const H = Number(params.get('w') ?? 16);   // BODY half-width; everything else
+                                           // is a measured fraction of it
 const VIEWS = { front: [0, 0], side: [90, 0], back: [180, 0], iso: [30, 18] };
 const [vYaw, vPitch] = VIEWS[params.get('view')] ?? VIEWS.iso;
 const yaw = Number(params.get('yaw') ?? vYaw) * Math.PI / 180;
 const pitch = Number(params.get('pitch') ?? vPitch) * Math.PI / 180;
 
-const BG = '#efebe4';
+// The reference sheet's own card ground. A cream ground against a cream
+// cabinet is what once let a measurement classify the door frame AS
+// background; this is warmer and greyer, and separates the silhouette.
+const BG = '#dcd4c6';
 
 // ---------------------------------------------------------------------------
-// FLAT COLOUR, NO TEXTURES AT ALL.
-//
-// Every texture problem this prototype has had — texel density against render
-// density, mip levels, which nine-slice zone a piece of detail may live in,
-// sRGB round-tripping, a patch's pixel size dictating a part's world size —
-// existed only because the detail was in a texture and the geometry was not.
-// The reference voxel kits do not have those problems because they do not have
-// textures: detail is geometry, colour is flat per surface.
-//
-// So detail is geometry here too. A recessed panel is a recessed BOX. That is
-// adaptable for free, because the border is four thin boxes that keep their
-// size while the middle grows, and it can never smear, because there is
-// nothing to sample. What remains of the pixel-art look is done by the post
-// pass, which was always the part carrying it.
-export const PALETTE = {
-  cream:    '#e9e3d4',
-  cream2:   '#d8d1bf',   // the crown's lower step, a panel's shadowed reveal
-  creamLit: '#f4efe2',   // a catch along a lit edge
-  flank:    '#c3ced2',
-  flank2:   '#aebac0',
-  teal:     '#35785f',
-  teal2:    '#2b6350',
-  cavity:   '#357a67',
-  shelf:    '#dbe9e4',
-  glass:    '#bcd8d2',
-  glint:    '#f2f8f6',
-  tan:      '#d9a95f',
-  tan2:     '#b8873f',
-  slot:     '#3f3a33',
-  purple:   '#5c4a70',
-  purple2:  '#48395a',
-  disp:     '#262b36',
-  digit:    '#74de96',
-  lamp:     '#e2894e',
-};
-// The part list's own names for the same colours, kept so a part says what it
-// IS rather than which swatch it happens to use.
-PALETTE.blueGrey = PALETTE.flank;
-PALETTE.plinth = PALETTE.purple;
-PALETTE.interior = PALETTE.cavity;
-PALETTE.grille = PALETTE.tan;
+// MATERIALS AND SHADING LIVE IN style.js, which knows nothing about fridges.
+// This file is now only GEOMETRY: a list of boxes with material names. That
+// split is the point — a second model imports the same module and gets the
+// identical look with no art work, and a style change lands on every object at
+// once. See style.js for the technique and where each constant was measured.
+import { STYLE, MATERIALS, buildPalette, tableBox, useRawColours } from './style.js';
 
-const VERT = /* glsl */ `
-varying vec3 vNrm;
-void main() {
-  vNrm = normal;
-  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-}
-`;
+// Before any THREE.Color exists — see style.js. The authored hex is the
+// output pixel; nothing here wants a linear round trip.
+useRawColours(THREE);
 
-const FRAG = /* glsl */ `
-precision highp float;
-uniform vec3 uColor;
-uniform float uOpacity;
-varying vec3 vNrm;
-void main() {
-  // Baked per-face value, exactly as the sheets paint it. This is the entire
-  // shading model and it is three lines, because with flat colour there is
-  // nothing else to compute.
-  float t = 0.86;
-  if (vNrm.y > 0.5)       t = 1.09;
-  else if (vNrm.y < -0.5) t = 0.74;
-  else if (vNrm.z < -0.5) t = 1.00;
-  else if (vNrm.z > 0.5)  t = 0.90;
-  gl_FragColor = vec4(uColor * t, uOpacity);
-}
-`;
-
-// The exact set of colours this object can produce: every palette entry at
-// every face tint. The post pass snaps to it, so the frame cannot contain a
-// value nobody chose. Derived rather than authored, because deriving it by
-// hand is how the grille lost its tan and went grey.
-const TINTS = [1.09, 1.00, 0.90, 0.86, 0.74];
-const paletteColours = [];
-for (const hex of Object.values(PALETTE)) {
-  const c = new THREE.Color(hex);
-  for (const t of TINTS) {
-    paletteColours.push(
-      Math.min(255, Math.round(c.r * 255 * t)),
-      Math.min(255, Math.round(c.g * 255 * t)),
-      Math.min(255, Math.round(c.b * 255 * t)), 255);
-  }
-}
-const paletteCount = paletteColours.length / 4;
+const paletteRGB = buildPalette(THREE);
+const paletteCount = paletteRGB.length;
 const paletteTexture = new THREE.DataTexture(
-  new Uint8Array(paletteColours), paletteCount, 1, THREE.RGBAFormat);
+  new Uint8Array(paletteRGB.flatMap((c) => [...c, 255])), paletteCount, 1,
+  THREE.RGBAFormat);
 paletteTexture.magFilter = paletteTexture.minFilter = THREE.NearestFilter;
 paletteTexture.needsUpdate = true;
+console.info(`palette: ${paletteCount} colours, ${Object.keys(MATERIALS).length} materials`);
 
 const MATS = new Map();
-function matFor(kind) {
-  if (!MATS.has(kind)) {
-    const hex = PALETTE[kind];
-    if (!hex) throw new Error(`no palette entry "${kind}"`);
-    const glassy = kind === 'glass';
-    MATS.set(kind, new THREE.ShaderMaterial({
-      vertexShader: VERT,
-      fragmentShader: FRAG,
-      transparent: glassy,
-      depthWrite: !glassy,
-      uniforms: {
-        uColor: { value: new THREE.Color(hex) },
-        uOpacity: { value: glassy ? 0.30 : 1 },
-      },
-    }));
-  }
-  return MATS.get(kind);
-}
-
-// ---------------------------------------------------------------------------
-// a box from table coords [x1,y1,z1]-[x2,y2,z2] (Blender, z-up, front = -y)
-function tableBox(kind, [x1, y1, z1], [x2, y2, z2]) {
-  const sx = x2 - x1, sy = z2 - z1, sz = y2 - y1; // Blender z → three y
-  const geo = new THREE.BoxGeometry(sx, sy, sz);
-  const mesh = new THREE.Mesh(geo, matFor(kind));
-  mesh.position.set((x1 + x2) / 2, (z1 + z2) / 2, (y1 + y2) / 2);
-  mesh.renderOrder = kind === 'glass' ? 10 : 0;
-  return mesh;
-}
 
 // ---------------------------------------------------------------------------
 function buildFridge(H) {
   const g = new THREE.Group();
-  const add = (kind, a, b) => g.add(tableBox(kind, a, b));
-  // MEASURED OFF THE DRAWN SHEET, not the coordinate table. The table's 44x96
-  // is 1:2.18; the reference's own FRONT view is 290x780 px = 1:2.7, its crown
-  // is 11% of the height and its glass 72% of the width. PARTS.md says the
-  // drawn views win where the two disagree, so the body is 2H = 32 against 96.
-  // MEASURED ACROSS THE SHEET'S FRONT VIEW, band by band. Its cream border is
-  // 15.5% of the width on EACH side, the teal door frame 4%, and the glass 61%
-  // between them. An earlier pass widened the glass to 74% and left a 4.7%
-  // cream strip, which is why the door sprawled and the frame vanished: the
-  // vertical proportions were already right and the whole error was here.
-  const W = H - 1;        // carcass / base half-width      (100%)
-  const S = W - 5;        // inside the flanks: cavity, shelves, door opening
-  const G = W - 6.5;      // glass half-width               (~61%)
+  const add = (kind, a, b) => g.add(tableBox(THREE, kind, a, b, MATS));
+  // MEASURED OFF THE DRAWN SHEET, band by band, against the sheet's own card
+  // ground. The front view's body is 240 px wide and 749 px tall (1:2.75), and
+  // across it: cream door border 21 px, teal door frame 5 px, glass 188 px,
+  // frame 5, border 21. As fractions of the body: border 8.75% a side, frame
+  // 2.1%, glass 78%. The crown runs 270 px = 1.125x the body.
+  //
+  // These replace hand-typed offsets that had the border at 15.5% and the glass
+  // at 61% — nearly double and two thirds respectively, which is why the door
+  // read as a narrow slot in a wide cream slab. The earlier note claiming a 74%
+  // glass "sprawled" was itself the mis-measurement: 78% is what the sheet says.
+  // Written as fractions rather than magic numbers so a re-measure is a one-line
+  // change and so every proportion survives a change of H.
+  const W = H;                 // body half-width — the 100% everything is of
+  const BORDER = W * 0.175;    // cream door border, each side
+  const FRAME = W * 0.042;     // teal door frame, each side
+  const S = W - BORDER;        // inside the border: cavity, shelves, opening
+  const G = S - FRAME;         // glass half-width (78% of the body)
+  const C = W * 1.13;          // crown half-width — it overhangs the body
+  const GR = W * 0.70;         // grille half-width (70% of the body, measured)
+  // Depth, from the SIDE view the same way: its body runs 230 px against the
+  // front's 240, so the cabinet is very nearly square in plan. It had been
+  // hard-coded at 14 against a half-width of 16 — 12% too shallow, which is the
+  // sort of error that only ever reads as "the iso view looks a bit off".
+  const D = W * 0.958;         // body half-depth
+  const F = -D;                // the body's FRONT face; everything on the door
+                               // is placed relative to it, so a depth change
+                               // moves the door with the cabinet
+  const CF = -(D + 0.5);       // the crown's front face — it overhangs too
 
   // ---- P01 feet: four corner blocks, outer faces flush with the base -------
   for (const sx of [-1, 1]) for (const sy of [-1, 1]) {
     const x1 = sx > 0 ? W - 6 : -W, x2 = sx > 0 ? W : -(W - 6);
-    const y1 = sy > 0 ? 9 : -14, y2 = sy > 0 ? 14 : -9;
+    const y1 = sy > 0 ? D - 5 : -D, y2 = sy > 0 ? D : -(D - 5);
     add('plinth', [x1, y1, -1.5], [x2, y2, 3.5]);
   }
-  add('plinth', [-(W - 1), -13, 0],   [W - 1, 13, 4]);      // P02 plinth strip
-  add('teal',   [-W, -14, 4],         [W, 14, 18]);         // P03 condenser base
+  add('plinth', [-(W - 1), -(D - 1), 0], [W - 1, D - 1, 4]); // P02 plinth strip
+  add('teal',   [-W, -D, 4],             [W, D, 18]);        // P03 condenser base
   // P04 grille — real louvres now, not a picture of louvres. The slot count
   // follows the width, so a wider base gets MORE slots at the same pitch: the
   // adaptive behaviour that used to need a tiling texture, done with a loop.
-  add('tan',  [-(W - 5), -15.2, 7.5], [W - 5, -14.0, 11.5]);
-  add('tan2', [-(W - 5), -15.4, 7.5], [W - 5, -15.2, 11.5]);
+  add('tan',  [-GR, F - 1.2, 7.5], [GR, F, 11.5]);
+  add('tan2', [-GR, F - 1.4, 7.5], [GR, F - 1.2, 11.5]);
   for (let z = 8.2; z < 11.2; z += 1.1) {
-    add('slot', [-(W - 6), -15.5, z], [W - 6, -15.1, z + 0.6]);
+    add('slot', [-(GR - 1), F - 1.5, z], [GR - 1, F - 1.1, z + 0.6]);
   }
   for (const sx of [-1, 1]) for (const sy of [-1, 1]) {     // P05 corner blocks
     const x1 = sx > 0 ? W - 3 : -W, x2 = sx > 0 ? W : -(W - 3);
-    const y1 = sy > 0 ? 10 : -14, y2 = sy > 0 ? 14 : -10;
+    const y1 = sy > 0 ? D - 4 : -D, y2 = sy > 0 ? D : -(D - 4);
     add('cream', [x1, y1, 13], [x2, y2, 18]);
   }
 
   // ---- P06 flanks, split at the carcass joint ------------------------------
   for (const sx of [-1, 1]) {
     const x1 = sx > 0 ? S : -W, x2 = sx > 0 ? W : -S;
-    add('blueGrey', [x1, -14, 18], [x2, 14, 50]);
-    add('blueGrey', [x1, -14, 52], [x2, 14, 84]);
+    add('blueGrey', [x1, -D, 18], [x2, D, 50]);
+    add('blueGrey', [x1, -D, 52], [x2, D, 84]);
     // The joint needs a rail. Left as an open 2-unit gap it showed the dark
     // cavity straight through, and SIDE and BACK both read a green stripe
     // across the flank.
-    add('cream',    [x1, -14.2, 50], [x2, 14.2, 52]);
+    add('cream',    [x1, -(D + 0.2), 50], [x2, D + 0.2, 52]);
   }
   // ---- P07 back, same joint -----------------------------------------------
-  add('blueGrey', [-W, 11, 18], [W, 14, 50]);
-  add('blueGrey', [-W, 11, 52], [W, 14, 84]);
-  add('cream',    [-W, 11, 50], [W, 14.2, 52]);
-  add('cream',    [-W, -14, 80], [W, 14, 84]);              // top run
+  add('blueGrey', [-W, D - 3, 18], [W, D, 50]);
+  add('blueGrey', [-W, D - 3, 52], [W, D, 84]);
+  add('cream',    [-W, D - 3, 50], [W, D + 0.2, 52]);
+  add('cream',    [-W, -D, 80],    [W, D, 84]);             // top run
 
   // ---- P09 cavity: five dark faces ----------------------------------------
-  add('interior', [-S, 8, 18],        [S, 11, 80]);
-  add('interior', [-S, -14, 18],      [-(S - 1.5), 8, 80]);
-  add('interior', [S - 1.5, -14, 18], [S, 8, 80]);
-  add('interior', [-S, -14, 18],      [S, 8, 20]);
-  add('interior', [-S, -14, 78],      [S, 8, 80]);
-  for (const z of [29, 41, 53, 65]) add('shelf', [-S, -10, z], [S, 1, z + 2.5]);  // P10
+  const BW = D - 6;                       // where the cavity's back wall stands
+  add('interior', [-S, BW, 18],        [S, D - 3, 80]);
+  add('interior', [-S, -D, 18],        [-(S - 1.5), BW, 80]);
+  add('interior', [S - 1.5, -D, 18],   [S, BW, 80]);
+  add('interior', [-S, -D, 18],        [S, BW, 20]);
+  add('interior', [-S, -D, 78],        [S, BW, 80]);
+  // Shelves run the FULL interior depth, as the reference's iso view draws
+  // them; they used to stop at the midline, which is invisible head-on and
+  // wrong from every other angle.
+  for (const z of [29, 41, 53, 65]) add('shelf', [-S, -(D - 1), z], [S, BW, z + 2.5]);
 
   // ---- P08 corner posts ---------------------------------------------------
   for (const sx of [-1, 1]) for (const sy of [-1, 1]) {
     const x1 = sx > 0 ? W - 2 : -W, x2 = sx > 0 ? W : -(W - 2);
-    const y1 = sy > 0 ? 12 : -14, y2 = sy > 0 ? 14 : -12;
+    const y1 = sy > 0 ? D - 2 : -D, y2 = sy > 0 ? D : -(D - 2);
     add('cream', [x1, y1, 18], [x2, y2, 84]);
   }
 
@@ -225,8 +151,8 @@ function buildFridge(H) {
   // BOTH crown pieces overhang the body, and their heights are close: a top
   // block narrower than the carcass and twice the lip's height read as a lid
   // resting on the cabinet rather than as its cap.
-  add('cream', [-H, -15, 84],           [H, 15, 88]);
-  add('cream', [-(H - 0.5), -14.5, 88], [H - 0.5, 14.5, 93]);
+  add('cream', [-C, -(D + 1), 84],   [C, D + 1, 88]);
+  add('cream', [-(C - 0.5), CF, 88], [C - 0.5, D + 0.5, 93]);
 
   // ---- P11/P12 door: a wide light between two NARROW borders ---------------
   const frame = (kind, xIn, xOut, zLo, zHi, y1, y2) => {
@@ -235,27 +161,30 @@ function buildFridge(H) {
     add(kind, [-xOut, y1, zHi - (xOut - xIn)], [xOut, y2, zHi]);
     add(kind, [-xOut, y1, zLo], [xOut, y2, zLo + (xOut - xIn)]);
   };
-  frame('cream', S, W, 20, 82, -15.5, -12);
-  frame('teal',  G, S, 22, 80, -16.5, -15.5);
+  frame('cream', S, W, 20, 82, F - 1.5, F + 2);
+  frame('frame', G, S, 22, 80, F - 2.5, F - 1.5);
   // P13 glass — NOT a transparent pane. Alpha blending produces colours that
   // are in no palette, so the snap sent them to whatever grey was nearest and
   // the door went dead. The sheet does not draw a pane either: you see the
   // interior directly, with a reflection drawn ON it. So the pane is gone and
   // the reflection is a staircase of small boxes, which is how pixel art draws
   // a diagonal and costs nothing here.
-  for (let i = 0; i < 9; i++) {
-    add('glint', [G - 5 - i * 1.6, -16.4, 66 - i * 2.4],
-                 [G - 3 - i * 1.6, -16.2, 69 - i * 2.4]);
+  for (const [x0, z0, n] of [[G - 4.5, 70, 5], [G - 10.5, 66, 4]]) {
+    for (let i = 0; i < n; i++) {
+      add('glint', [x0 - i * 1.5, F - 2.4, z0 - i * 2.2],
+                   [x0 - i * 1.5 + 1.2, F - 2.2, z0 - i * 2.2 + 2.4]);
+    }
   }
   // ---- P14 handle ---------------------------------------------------------
-  add('purple', [W - 3.5, -18.6, 41], [W - 1, -17.2, 63]);
-  add('purple', [W - 3, -17.2, 42],   [W - 1.5, -16.2, 45]);
-  add('purple', [W - 3, -17.2, 59],   [W - 1.5, -16.2, 62]);
+  add('purple', [W - 3.5, F - 4.6, 41], [W - 1, F - 3.2, 63]);
+  add('purple', [W - 3, F - 3.2, 42],   [W - 1.5, F - 2.2, 45]);
+  add('purple', [W - 3, F - 3.2, 59],   [W - 1.5, F - 2.2, 62]);
   // P16 display — geometry, not a decal. Exactly one, at the centre, at any
-  // width: the case a tiling texture fundamentally cannot express.
-  add('disp',  [-5.5, -15.7, 87.5], [5.5, -15.0, 91.5]);
-  add('lamp',  [-4.0, -15.9, 89.0], [-2.5, -15.6, 90.0]);
-  add('digit', [-1.0, -15.9, 89.0], [3.5, -15.6, 90.0]);
+  // width: the case a tiling texture fundamentally cannot express. It rides the
+  // CROWN's front face, which overhangs the body, so it moves with the cap.
+  add('disp',  [-5.8, CF - 0.7, 88.6], [5.8, CF, 92.2]);
+  add('lamp',  [-4.2, CF - 0.9, 89.8], [-2.7, CF - 0.6, 91.0]);
+  add('digit', [-1.2, CF - 0.9, 89.8], [3.6, CF - 0.6, 91.0]);
   return g;
 }
 
@@ -263,14 +192,19 @@ function buildFridge(H) {
 // One screen pixel per texel. viewH units tall at texelsPerUnit px per unit is
 // the only ratio at which a nearest-sampled pixel-art sheet stays crisp: above
 // it the sheet aliases, below it the sheet blurs.
-const viewH = 116, viewW = viewH * (0.56 + Math.max(0, (H - 17) * 0.030));
+const viewH = 116, viewW = viewH * (0.56 + Math.max(0, (H - 16) * 0.030));
 // Pixels per world unit. With no texture there is no texel density to match,
 // so this is a free choice: it sets how chunky the pixels are, nothing more.
 // The reference draws its 96-unit cabinet about 850 px tall, so 8 is its own.
 const PPU = Number(params.get('ppu') ?? 8);
 const Hpx = Math.round(viewH * PPU);
 const W = Math.round(viewW * PPU);
-const renderer = new THREE.WebGLRenderer({ antialias: false });
+// preserveDrawingBuffer, because this scene renders exactly ONCE at load and
+// never again — there is no animation loop to redraw it. Without it the buffer
+// is discarded at the first composite and both a screenshot and a readback come
+// back as a single flat colour, which is not a blank render but a blank READ,
+// and the two look identical from the outside.
+const renderer = new THREE.WebGLRenderer({ antialias: false, preserveDrawingBuffer: true });
 renderer.outputColorSpace = THREE.LinearSRGBColorSpace; // see atlas.colorSpace
 renderer.setSize(W, Hpx, false);
 renderer.domElement.style.width = W + 'px';

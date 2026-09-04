@@ -1,0 +1,147 @@
+{
+  "scale-ladder": {
+    "panels": [
+      {
+        "panel_px": 208,
+        "border_px": 45,
+        "bands": [
+          [
+            3,
+            "#440052"
+          ],
+          [
+            6,
+            "#37394a"
+          ],
+          [
+            9,
+            "#616b75"
+          ],
+          [
+            18,
+            "#545d66"
+          ],
+          [
+            9,
+            "#37394a"
+          ]
+        ]
+      },
+      {
+        "panel_px": 262,
+        "border_px": 40,
+        "bands": [
+          [
+            3,
+            "#440052"
+          ],
+          [
+            5,
+            "#37394a"
+          ],
+          [
+            1,
+            "#545d66"
+          ],
+          [
+            8,
+            "#616b75"
+          ],
+          [
+            14,
+            "#545d66"
+          ],
+          [
+            9,
+            "#37394a"
+          ]
+        ]
+      },
+      {
+        "panel_px": 486,
+        "border_px": 44,
+        "bands": [
+          [
+            3,
+            "#440052"
+          ],
+          [
+            6,
+            "#37394a"
+          ],
+          [
+            8,
+            "#616b75"
+          ],
+          [
+            18,
+            "#545d66"
+          ],
+          [
+            9,
+            "#37394a"
+          ]
+        ]
+      }
+    ],
+    "widths_px": [
+      45,
+      40,
+      44
+    ],
+    "widths_frac": [
+      0.2163,
+      0.1527,
+      0.0905
+    ],
+    "px_spread": 0.116,
+    "frac_spread": 0.821,
+    "verdict": "fixed",
+    "reading": "the border keeps its WIDTH as the panel grows, so borders are a world-space constant and belong in world units, not UV"
+  },
+  "face-tints": {
+    "faces_hex": {
+      "top": "#7fb372",
+      "left": "#5c8a51",
+      "right": "#43683d"
+    },
+    "ratio_to_left_face": {
+      "top": 1.35,
+      "left": 1.0,
+      "right": 0.746
+    }
+  },
+  "palette": {
+    "colours": [
+      "#835d72",
+      "#f3edd7",
+      "#1d141e",
+      "#bccdd4",
+      "#799a7b",
+      "#c6986c",
+      "#392825",
+      "#44494b",
+      "#65a36d",
+      "#347e7e",
+      "#508f7c",
+      "#c5a887",
+      "#9d6a7b",
+      "#681560"
+    ]
+  },
+  "surface-marks": {
+    "field_colours": [
+      "#84a1b3",
+      "#83a0b2",
+      "#84a1b1",
+      "#85a2b3",
+      "#86a0b3",
+      "#83a0b0",
+      "#a4c2d3"
+    ],
+    "field_share": 0.904,
+    "accent_share": 0.0,
+    "seams_across_one_row": 0,
+    "reading": "large panels are SUBDIVIDED by seams into flat sub-panels; the marks are seams, corner fasteners and a few tiny accents \u2014 the fields themselves stay flat"
+  }
+}
