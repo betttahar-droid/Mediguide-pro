@@ -206,6 +206,11 @@ export const MATERIALS = {
   interior: M({ bevel: 0, base: '#458574', lit: '#4c8978', shade: '#3b7565', edge: 0.16 }),
   shelf:    M({ bevel: 0, base: '#d7e7e2', lit: '#deebe6', shade: '#bed2cc', edge: 0.10 }),
   glint:    M({ bevel: 0, base: '#5c9c88', lit: '#6aa896', shade: '#4c8978', edge: 0 }),
+  // Sampled off docs/style-bible/props/home_fridge.png for the second prop.
+  // Adding a prop should cost a colour family and nothing else — no shader
+  // change, no new tile, no new rule.
+  mint:     M({ base: '#a5d6b6', lit: '#c5f3d4', shade: '#95baa7', surface: 'trim' }),
+  steel:    M({ base: '#c0ceeb', lit: '#d6e2f8', shade: '#a3b0cc', edge: 0.16 }),
   tan:      M({ base: '#d9a95f', lit: '#e8bc76', shade: '#c08c45', edge: 0.14, grain: 0.30 }),
   tan2:     M({ bevel: 0, base: '#c08c45', lit: '#d9a95f', shade: '#8e6529', edge: 0 }),
   slot:     M({ bevel: 0, base: '#3f3a33', lit: '#4a4439', shade: '#20242b', edge: 0 }),

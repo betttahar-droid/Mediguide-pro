@@ -48,6 +48,15 @@ PHASE 0  —  MEASURE THE REFERENCE.  Never read proportions by eye.
           docs/style-spec.json. Each sheet exists to answer one number; read
           them before trusting any of your own impressions.
 
+ [ ] 0.2b Generate a measurable reference for THIS prop — front and side, same
+          height, magenta ground, strictly orthographic:
+
+              python3 tools/authoring/prop_views.py --list
+              python3 tools/authoring/prop_views.py home_fridge
+
+          Add your subject to SUBJECTS in that file first. Describe the FORM,
+          not the mood: which masses, which proportions, where the openings are.
+
  [ ] 0.3  Measure the object's own reference band by band, against a ground
           that CANNOT be confused with the subject. Write down, as fractions of
           one driving dimension:
@@ -95,6 +104,11 @@ PHASE 1  —  PROPORTIONS AS FRACTIONS
 --------------------------------------------------------------------------------
 PHASE 2  —  GEOMETRY
 --------------------------------------------------------------------------------
+
+ [ ] 2.0  Put the prop in its own file under tools/voxel-fridge/models/,
+          exporting objLo, objHi, label and build(THREE, MATS, kit, H). Render
+          it with ?model=<key> after registering it in main.js. A model file
+          contains geometry and placement and nothing else.
 
  [ ] 2.1  Build the prop as a list of boxes with material names:
 
@@ -222,7 +236,9 @@ PHASE 6  —  THE ACCEPTANCE CHECKS
 
 Run all of these before calling a prop done.
 
- [ ] 6.1  RESIZE TEST. Render at 1x and at ~2x on each axis.
+ [ ] 6.1  RESIZE TEST. Render at 1x and at ~2x on each axis. Make sure the
+          prop's HEIGHT does not depend on its width, or ?w= scales it
+          uniformly and the test proves nothing.
              every border, outline, bolt, screw and decal is the SAME SIZE
              only COUNTS change: more slots, more seams, more sub-panels
              nothing stretches, smears or drifts off its corner
