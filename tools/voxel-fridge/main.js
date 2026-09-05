@@ -75,6 +75,11 @@ paletteTexture.magFilter = paletteTexture.minFilter = THREE.NearestFilter;
 paletteTexture.needsUpdate = true;
 console.info(`palette: ${paletteCount} colours, ${Object.keys(MATERIALS).length} materials`);
 
+// The object's vertical extent, for the baked shading ramp. Set BEFORE any
+// material is built, since materials bake it into their uniforms.
+STYLE.objLo = -2.5;
+STYLE.objHi = 93;
+
 const MATS = new Map();
 
 // ---------------------------------------------------------------------------
@@ -400,6 +405,7 @@ const post = new THREE.ShaderMaterial({
     tPalette: { value: paletteTexture },
     uPaletteSize: { value: carvedUrl ? 0 : paletteCount },
     uTexel: { value: new THREE.Vector2(1 / W, 1 / Hpx) },
+    uDither: { value: 0.055 },   // ordered-dither amplitude, ~one palette step
     uOutline: { value: 0.55 },   // how far an edge darkens its own colour
     uNormalEdge: { value: 0.20 },
     uDepthEdge: { value: 0.0012 },
@@ -412,8 +418,19 @@ const post = new THREE.ShaderMaterial({
     precision highp float;
     uniform sampler2D tColor, tNormal, tDepth, tPalette;
     uniform vec2 uTexel;
-    uniform float uPaletteSize, uOutline, uNormalEdge, uDepthEdge;
+    uniform float uPaletteSize, uOutline, uNormalEdge, uDepthEdge, uDither;
     varying vec2 vUv;
+
+    // ORDERED (BAYER) DITHER. The PlayStation's signature, and the piece that
+    // makes a tiny palette work: it fakes intermediate colours by alternating
+    // two real ones in a fixed 4x4 pattern. Note this is NOT the random
+    // speckle removed earlier - that was noise over flat fields and read as
+    // dirt. This is a regular pattern applied only where a value falls BETWEEN
+    // two palette entries, which now happens constantly because the baked
+    // vertical shading is a gradient. Without it that gradient snaps into hard
+    // horizontal bands.
+    float bayer2(vec2 a) { a = floor(a); return fract(a.x / 2.0 + a.y * a.y * 0.75); }
+    float bayer4(vec2 a) { return bayer2(0.5 * a) * 0.25 + bayer2(a); }
 
     void main() {
       vec3 c = texture2D(tColor, vUv).rgb;
@@ -435,6 +452,12 @@ const post = new THREE.ShaderMaterial({
       // black outline over a cream cabinet and a teal base reads as ink, where
       // pixel art shades its outline from the form it belongs to.
       c = mix(c, c * uOutline, edge);
+
+      // Nudge by the dither pattern BEFORE snapping, so a value sitting between
+      // two palette entries lands on one or the other depending on its position
+      // in the 4x4 cell — which is what produces the checkered transition
+      // instead of a hard edge.
+      c += (bayer4(gl_FragCoord.xy) - 0.47) * uDither;
 
       // Snap to the palette. Nearest in RGB is crude but correct for a palette
       // this small and this deliberately spaced. Size 0 passes through: a
@@ -469,4 +492,24 @@ if (usePost) {
 } else {
   renderer.render(scene, cam);
 }
+// POLY BUDGET, reported rather than assumed. The literature puts a simple prop
+// at 300-1500 triangles and a hero prop at 2-5k; a bevelled box costs 44 where
+// a plain one costs 12, so the bevel pass roughly quadrupled this and it is
+// worth knowing by how much rather than hoping.
+// Counted off the GEOMETRY, not renderer.info: info.render is reset by every
+// render call, and the last one here is the post-pass fullscreen quad, so it
+// reported the scene as 2 triangles.
+window.__stats = (() => {
+  let tris = 0, parts = 0, decals = 0;
+  scene.traverse((o) => {
+    const g = o.geometry;
+    if (!g) return;
+    const n = (g.index ? g.index.count : g.attributes.position.count) / 3;
+    tris += n;
+    if (o.material?.isShaderMaterial) parts++; else decals++;
+  });
+  return { triangles: tris, parts, decals };
+})();
+console.info(`geometry: ${window.__stats.triangles} triangles, `
+  + `${window.__stats.parts} parts + ${window.__stats.decals} decals`);
 window.__done = true;

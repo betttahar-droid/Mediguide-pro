@@ -129,6 +129,10 @@ export const STYLE = {
   // so a louvre slot keeps a hairline rather than turning inside out.
   bevel: 1.6,
 
+  // The baked vertical ramp: everything below objLo*..*objHi darkens toward
+  // aoFloor at the base. Set per object by the model before it builds.
+  objLo: 0, objHi: 100, aoFloor: 0.80,
+
   // NINE-SLICE, for the surface mask tiles.
   //   marginWorld  how many WORLD units the tile's authored border occupies.
   //                Fixed, so the border and its bolts stay native at any size.
@@ -154,6 +158,13 @@ export const STYLE = {
 //             value ramp, which is how this style shades a corner
 //     perf    a regular dot grid, for grilles and speaker cloth
 //   FORM
+//     bevel   chamfer width, or 0. THE SILHOUETTE RULE: "if it doesn't add to
+//             the silhouette, you don't need it." A bevelled box is 44
+//             triangles against a plain box's 12, so bevelling everything
+//             quadrupled the model to 2598 triangles - hero-prop budget for a
+//             prop that should sit at 300-1500. Interior walls, shelves,
+//             louvre slots and display glyphs never break the outline, so they
+//             pay the plain price.
 //     tileMid true only when the tile's middle carries content (a vent):
 //             it then repeats at a fixed world period instead of stretching
 //     surface a nine-slice tone-mask tile from surfaces.png. Its outer margin
@@ -189,18 +200,18 @@ export const MATERIALS = {
   cream:    M({ base: '#e9e3d4', lit: '#f7f2e6', shade: '#dcd6c6', surface: 'plate' }),
   blueGrey: M({ base: '#adb6ba', lit: '#b7c2c5', shade: '#a3adb2', surface: 'plateSeam' }),
   teal:     M({ base: '#377c62', lit: '#3f8a6d', shade: '#2e6752', surface: 'trim' }),
-  frame:    M({ base: '#35785f', lit: '#3a8368', shade: '#2e6752', edge: 0.14, surface: 'trim' }),
+  frame:    M({ bevel: 0, base: '#35785f', lit: '#3a8368', shade: '#2e6752', edge: 0.14, surface: 'trim' }),
   purple:   M({ base: '#5c4a70', lit: '#6b5780', shade: '#4a3e58', edge: 0.16 }),
   plinth:   M({ base: '#5c4a72', lit: '#6b5780', shade: '#4a3e58', edge: 0.16 }),
-  interior: M({ base: '#458574', lit: '#4c8978', shade: '#3b7565', edge: 0.16 }),
-  shelf:    M({ base: '#d7e7e2', lit: '#deebe6', shade: '#bed2cc', edge: 0.10 }),
-  glint:    M({ base: '#5c9c88', lit: '#6aa896', shade: '#4c8978', edge: 0 }),
+  interior: M({ bevel: 0, base: '#458574', lit: '#4c8978', shade: '#3b7565', edge: 0.16 }),
+  shelf:    M({ bevel: 0, base: '#d7e7e2', lit: '#deebe6', shade: '#bed2cc', edge: 0.10 }),
+  glint:    M({ bevel: 0, base: '#5c9c88', lit: '#6aa896', shade: '#4c8978', edge: 0 }),
   tan:      M({ base: '#d9a95f', lit: '#e8bc76', shade: '#c08c45', edge: 0.14, grain: 0.30 }),
-  tan2:     M({ base: '#c08c45', lit: '#d9a95f', shade: '#8e6529', edge: 0 }),
-  slot:     M({ base: '#3f3a33', lit: '#4a4439', shade: '#20242b', edge: 0 }),
-  disp:     M({ base: '#262b36', lit: '#333a48', shade: '#171b23', perf: 1.0, surface: 'recess' }),
-  digit:    M({ base: '#74de96', lit: '#9bf0b4', shade: '#4fb673', edge: 0 }),
-  lamp:     M({ base: '#e2894e', lit: '#f5a56d', shade: '#b96a37', edge: 0 }),
+  tan2:     M({ bevel: 0, base: '#c08c45', lit: '#d9a95f', shade: '#8e6529', edge: 0 }),
+  slot:     M({ bevel: 0, base: '#3f3a33', lit: '#4a4439', shade: '#20242b', edge: 0 }),
+  disp:     M({ bevel: 0, base: '#262b36', lit: '#333a48', shade: '#171b23', perf: 1.0, surface: 'recess' }),
+  digit:    M({ bevel: 0, base: '#74de96', lit: '#9bf0b4', shade: '#4fb673', edge: 0 }),
+  lamp:     M({ bevel: 0, base: '#e2894e', lit: '#f5a56d', shade: '#b96a37', edge: 0 }),
 };
 
 // Part names a model may use that map onto a material above.
@@ -216,8 +227,10 @@ export const ALIAS = {
 export const VERT = /* glsl */ `
 attribute vec3 aHalf;
 varying vec3 vLocal, vHalf, vNrm;
+varying float vWorldY;
 void main() {
   vLocal = position; vHalf = aHalf; vNrm = normal;
+  vWorldY = (modelMatrix * vec4(position, 1.0)).y;
   gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
 }
 `;
@@ -233,6 +246,8 @@ uniform float uHasMask, uMarginW, uMarginF, uPeriod, uTileMid;
 uniform float uOutline, uCatch, uInsetAt, uInsetLine, uSeamPitch, uSeamLine;
 uniform float uTop, uFront, uSide, uBack, uBottom;
 varying vec3 vLocal, vHalf, vNrm;
+varying float vWorldY;
+uniform float uObjLo, uObjHi, uAOFloor;
 
 float hash(vec2 p) {
   return fract(sin(dot(floor(p), vec2(127.1, 311.7))) * 43758.5453);
@@ -444,6 +459,17 @@ void main() {
   float tY = vNrm.y > 0.0 ? uTop : uBottom;
   float tZ = vNrm.z < 0.0 ? uFront : uBack;
   float t = (a.x * tX + a.y * tY + a.z * tZ) / max(0.001, a.x + a.y + a.z);
+
+  // BAKED VERTEX SHADING. The PlayStation had no lighting at all: it shaded
+  // with vertex colours, and the era's assets bake an ambient gradient into
+  // them. The reference kit does exactly this - the lower half of every car
+  // and dumpster is visibly darker than its top, with no light in the scene.
+  // A single vertical ramp over the whole object buys most of that, and it is
+  // per-vertex rather than per-face so it crosses part boundaries the way
+  // baked AO does.
+  float hgt = clamp((vWorldY - uObjLo) / max(1.0, uObjHi - uObjLo), 0.0, 1.0);
+  t *= mix(uAOFloor, 1.0, smoothstep(0.0, 0.55, hgt));
+
   gl_FragColor = vec4(c * t, 1.0);
 }
 `;
@@ -509,6 +535,7 @@ export function makeMaterial(THREE, kind) {
       uCatch: f(STYLE.catch),
       uInsetAt: f(STYLE.inset), uInsetLine: f(STYLE.insetLine),
       uSeamPitch: f(STYLE.seam), uSeamLine: f(STYLE.seamLine),
+      uObjLo: f(STYLE.objLo), uObjHi: f(STYLE.objHi), uAOFloor: f(STYLE.aoFloor),
       uTop: f(STYLE.tint.top), uFront: f(STYLE.tint.front),
       uSide: f(STYLE.tint.side), uBack: f(STYLE.tint.back),
       uBottom: f(STYLE.tint.bottom),
@@ -585,6 +612,11 @@ export function shapedBox(THREE, sx, sy, sz, bevel = 0, taperX = 0, taperZ = 0) 
       quad(P(-1, -1), P(1, -1), P(1, 1), P(-1, 1));
     }
   }
+  // With no bevel the edge quads and corner triangles collapse to zero area —
+  // but they are still emitted, still transformed, and still counted. Skipping
+  // them is what actually makes `bevel: 0` cheap: 12 triangles instead of 44.
+  // Without this the silhouette exemptions above changed nothing at all.
+  if (b > 1e-4) {
   for (let a = 0; a < 3; a++) {                      // 12 edge quads
     for (let c = a + 1; c < 3; c++) {
       const o = 3 - a - c;
@@ -596,6 +628,8 @@ export function shapedBox(THREE, sx, sy, sz, bevel = 0, taperX = 0, taperZ = 0) 
       }
     }
   }
+  }
+  if (b > 1e-4)
   for (const sx_ of [-1, 1]) for (const sy_ of [-1, 1]) for (const sz_ of [-1, 1]) {
     // Each corner vertex lies on ONE original face and is inset by the bevel
     // on the OTHER TWO axes -- which is also exactly how the face quads and

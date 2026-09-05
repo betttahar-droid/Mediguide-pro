@@ -17,7 +17,8 @@ const errs = [];
 page.on('pageerror', (e) => errs.push('pageerror: ' + e.message));
 page.on('console', (m) => {
   if (m.type() === 'error' && !m.text().includes('favicon')) errs.push('console: ' + m.text());
-  else if (m.text().startsWith('palette:')) console.log('   ' + m.text());
+  else if (m.text().startsWith('palette:') || m.text().startsWith('geometry:'))
+    console.log('   ' + m.text());
 });
 
 for (const q of shots) {

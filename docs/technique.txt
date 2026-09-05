@@ -493,7 +493,63 @@ MEASURE THE RIGHT REFERENCE
      (slots, seams, sub-panels) should change.
 
 --------------------------------------------------------------------------------
-7.  ONE-LINE SUMMARY
+7.  THE RETRO / PS1 CHECKLIST, AND WHAT THIS DOES ABOUT EACH
+--------------------------------------------------------------------------------
+
+Compiled from the PS1-style and low-poly-prop literature, checked against the
+reference kit. Marked [x] where this implementation does it, [ ] where it
+deliberately does not.
+
+GEOMETRY
+  [x] Chamfer / bevel every prominent edge          shapedBox(), ~1 texel wide
+  [x] Taper and simple deformation                  shapedBox(), base block
+  [x] Flat shading from the blockout on             no lights exist at all
+  [x] Silhouette rule: "if it doesn't add to the
+      silhouette, you don't need it"                interior walls, shelves,
+                                                    slots and glyphs are not
+                                                    bevelled - 2598 -> 1958 tris
+  [x] Poly budget stated and measured               simple prop 300-1500, hero
+                                                    2-5k; this sits at 1958 and
+                                                    is REPORTED on every render
+  [ ] Vertex jitter (snap verts to a coarse grid)   authentic, but it wobbles a
+                                                    static builder prop for no
+                                                    gain; easy to add later
+  [ ] Affine texture warping (no perspective
+      correction)                                   the signature PS1 artefact,
+                                                    but it fights a kit meant to
+                                                    read cleanly at any size
+
+TEXTURE
+  [x] Tiny textures - 64x64 or 128x128 per object   20-texel tiles, whole
+                                                    fittings atlas is 320x24
+  [x] Nearest filtering, no anti-aliasing           everywhere, plus the render
+                                                    is small and upscaled
+  [x] Pixel-aligned UVs                             the nine-slice runs on the
+                                                    same world texel grid as the
+                                                    geometry
+  [x] Hard palette limit (~100 per atlas, 8 per
+      chunk)                                        62 colours, derived not typed
+  [x] Bake the lighting into vertex colours -
+      the PS1 had NO lighting                       a vertical ambient ramp per
+                                                    vertex; the reference cars
+                                                    and dumpsters are visibly
+                                                    darker at the bottom
+  [x] Ordered (Bayer) dithering                     4x4, applied before the
+                                                    palette snap
+  [x] Bake AO / contact darkening rather than
+      compute it                                    same vertical ramp
+
+WHY DITHER IS NOT THE SPECKLE THAT WAS REMOVED EARLIER
+  They look superficially similar and are opposites. The speckle was random
+  values sprayed over FLAT fields, where it has nothing to express and reads as
+  dirt. Ordered dither is a fixed 4x4 pattern applied only where a value falls
+  BETWEEN two palette entries - which is exactly what the baked vertical ramp
+  produces. Without it that ramp snaps into hard horizontal bands. One is noise
+  standing in for detail; the other is a small palette expressing a gradient.
+
+
+--------------------------------------------------------------------------------
+8.  ONE-LINE SUMMARY
 --------------------------------------------------------------------------------
 
   Geometry carries structure; a per-face distance field in world units carries
