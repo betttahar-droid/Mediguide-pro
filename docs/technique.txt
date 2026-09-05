@@ -3,6 +3,10 @@ MODELLING AND TEXTURING TECHNIQUE
 Retro low-poly pixelated props that resize perfectly and reuse across models
 ================================================================================
 
+NOTE: docs/BUILDING-A-PROP.txt is the single self-contained handbook —
+this file's material plus the API, the recipes, the scripts and a skeleton
+model. Read that one if you are only going to read one.
+
 Reference implementation:  tools/voxel-fridge/style.js   (the technique)
                            tools/voxel-fridge/main.js    (one model using it)
 Authoring tools:           tools/authoring/style_bible.py

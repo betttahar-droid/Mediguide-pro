@@ -1,0 +1,1097 @@
+================================================================================
+BUILDING A PROP — the complete handbook
+Everything needed to make a new low-poly retro game prop in this kit, in one
+file, in the order you need it.
+================================================================================
+
+Companions: docs/technique.txt argues WHY the system is built this way and
+docs/making-a-prop.txt is the shorter checklist. THIS file is the one to follow
+if you are only going to read one. It repeats what it needs from both so that
+it stands alone.
+
+Worked examples, in the order they were built and in increasing difficulty:
+    tools/voxel-fridge/models/vaccineFridge.js    1958 tris
+    tools/voxel-fridge/models/homeFridge.js        994 tris  (rounded, 2 doors)
+    tools/voxel-fridge/models/medFreeze.js        5134 tris  (hollow, stocked)
+
+Read medFreeze.js alongside section 11. It is the most recent, it was built by
+following this file, and every comment in it says why a number is what it is.
+
+
+--------------------------------------------------------------------------------
+0.  HOW TO USE THIS FILE
+--------------------------------------------------------------------------------
+
+Work top to bottom. Do not skip phases in section 7 and do not start section 7
+before reading sections 1-6, which are short.
+
+THE THREE THINGS THAT GO WRONG MOST OFTEN, stated here because they cause more
+lost time than everything else in this document put together:
+
+  1. You put something INSIDE a solid part. It is then invisible, and the
+     symptom never looks like the cause. See recipes 8.3 and 8.4.
+  2. You wrote a size as a FRACTION when it should have been a fixed number of
+     world units. Invisible until you resize. See section 6.
+  3. You looked at the render instead of measuring it. See phases 0.3 and 6.7.
+
+If something looks wrong and you cannot say why, go to section 10 and match the
+SYMPTOM. Do not guess at the cause; none of these look like what they are.
+
+
+--------------------------------------------------------------------------------
+1.  THE ONE IDEA
+--------------------------------------------------------------------------------
+
+Everything in this kit follows from one choice about where detail lives.
+
+    DETAIL IS GEOMETRY AND PLACEMENT. IT IS NOT TEXTURE.
+
+A prop is a list of axis-aligned boxes with material names. A border is a box.
+A vent slat is a box. A screw is a small quad with an atlas tile on it, placed
+at a spot you chose. Nothing is unwrapped, nothing tiles, no texel density has
+to be reconciled with anything.
+
+This is what makes a prop RESIZE CORRECTLY, which is the whole point of the
+kit — the props sit in a builder where the player stretches them. When detail
+is texture, widening a part stretches its border. When detail is geometry, the
+border is a box that stays the size you made it while the panel behind it grows,
+and a repeating feature is a LOOP over the current size. The adaptability
+problem was not solved, it was deleted.
+
+Shading is baked, not lit. There are no lights in the scene. A face's normal
+picks a tint factor (section 5.4) and that is the entire lighting model.
+
+The only texture-like thing is the shader's edge marks, and even those are in
+WORLD UNITS: each fragment knows its distance to the edge of its own face, so a
+dark outline is 0.22 units wide on a part of any size. You do not have to think
+about this. It happens for you.
+
+Output is rendered small, snapped to a small palette, and given an ink pass at
+depth and normal discontinuities. That is what makes it read as pixel art rather
+than as a render of a blocky model.
+
+
+--------------------------------------------------------------------------------
+2.  HARD RULES — break one and the system stops working
+--------------------------------------------------------------------------------
+
+  R1  EVERY MARK IS A SIZE IN WORLD UNITS, never a fraction of a part and never
+      a UV. This is the entire resize property.
+  R2  A fixed-size feature GATES on whether the thing it sits on can carry it.
+      Two mounts at a fixed inset meet in the middle on a short handle.
+  R3  Colour lives in the material. Structure lives in the atlas. No colour ever
+      comes out of a surface texture.
+  R4  ONE GRID. Mask texels, decal sizes and geometry all sit on STYLE.texel.
+  R5  Decals mount to NAMED PLANES declared at the top of the model, and always
+      to the FRONTMOST surface the decal could overlap.
+  R6  Detail that MEANS something is a fitting. Detail that means nothing is
+      noise, and noise reads as dirt. Never scatter.
+  R7  Numbers come from measuring. Where you override a measurement on style
+      grounds, say so in a comment at that line.
+  R8  A MEASURED FRACTION IS NOT A PLACEMENT. Reading a part at 0.095 of the
+      width tells you where it is at the default size and nothing about what it
+      does when the size changes. See section 6.
+  R9  A material is named for a SUBSTANCE (steel, glass, boxPale), never for an
+      effect (glint, highlight). A material named for an effect stops being
+      reusable the moment a second object wants that effect.
+  R10 Never change the shared module to make one model work. If a model needs
+      something style.js does not have, it needs a MATERIAL, not a special case.
+
+
+--------------------------------------------------------------------------------
+3.  WHAT LIVES WHERE
+--------------------------------------------------------------------------------
+
+  tools/voxel-fridge/style.js        THE SHARED MODULE. Materials, shader,
+                                     palette, box builder, decals. Knows nothing
+                                     about any specific object. You add
+                                     materials here and nothing else.
+  tools/voxel-fridge/main.js         THE HARNESS. Camera, render targets, the
+                                     post pass, the model registry. You add one
+                                     import and one registry line here.
+  tools/voxel-fridge/models/*.js     ONE FILE PER PROP. Geometry and placement
+                                     only. This is where you work.
+  tools/voxel-fridge/fittings.png    the fittings atlas + its manifest
+  tools/voxel-fridge/fittings.json
+  tools/voxel-fridge/surfaces.png    the nine-slice surface masks + manifest
+  tools/voxel-fridge/surfaces.json
+  tools/voxel-fridge/shoot.mjs       screenshots + counts. Your feedback loop.
+  tools/authoring/measure.py         measures a sheet or a render, band by band
+  tools/authoring/prop_views.py      generates a measurable reference sheet
+  docs/style-bible/props/*.png       the reference sheets, one per prop
+
+Authoring tools are MANUAL. None of them is a build, CI or runtime dependency,
+none is ever called by the game, and the image tool's API key lives only in a
+gitignored .env. Do not wire any of them into anything.
+
+
+--------------------------------------------------------------------------------
+4.  THE COORDINATE SYSTEM
+--------------------------------------------------------------------------------
+
+4.1  TABLE COORDINATES — what you type
+
+    You write boxes as [x1, y1, z1] to [x2, y2, z2] in TABLE coordinates:
+
+        x   left / right     (+x is one side, see 4.3)
+        y   depth            -y is the FRONT of the object, +y the back
+        z   height           0 is normally the floor, +z is up
+
+    tableBox() converts to three.js (y-up) for you. You never write three.js
+    coordinates directly. Always give the SMALLER value first on each axis.
+
+4.2  THE VERTICAL FRACTION
+
+    Declare the object's extent once and convert measured fractions with a
+    helper, so a re-measure is a one-line change:
+
+        export const objLo = 0;
+        export const objHi = 58.3;
+        const TOT = objHi - objLo;
+        const z = (f) => f * TOT;        // 0.884 -> 51.5
+
+    objLo/objHi ALSO drive the shader's baked vertical shading ramp, so the two
+    can never disagree.
+
+4.3  THE FRONT CAMERA MIRRORS X — read this twice
+
+    ?view=front puts the camera at -z looking toward +z with up +y. In a
+    right-handed system its screen-right is world -x. So a front elevation
+    render is a MIRROR IMAGE of your table coordinates.
+
+    This is invisible on a symmetric prop. The first prop with a feature on one
+    side only is the first that can show it, and it shows up as "the render
+    disagrees with the reference" with no other clue.
+
+    Convert once, at the top of the model, and place everything through it:
+
+        const px = (f) => W - f * 2 * W;      // reference x fraction -> table x
+        const fromRefL = (off) => W - off;    // fixed offset from ref's LEFT
+        const fromRefR = (off) => -W + off;   // fixed offset from ref's RIGHT
+
+    The SIDE view is not mirrored. Depth fractions convert straight:
+
+        const py = (f) => -D + f * 2 * D;     // 0 at the front
+
+4.4  NAMED PLANES
+
+    Declare every mounting plane at the top, before any geometry, and build
+    both the geometry and the decals from the same constants:
+
+        const F = -D;                // carcass front face
+        const P_DOOR = F - 1.95;     // the door, standing proud of it
+        const P_GLASS = F - 0.5;     // the pane, recessed inside the door
+        const BACK = D - 1.4;        // interior back wall
+        const EPS = 0.08;            // decal stand-off
+
+    R5 exists because a hinge was once mounted on a border's plane while being
+    wide enough to reach over a frame that stood further forward — so half of
+    every hinge was genuinely behind a part. No offset fixes that. The decal was
+    in the wrong place.
+
+
+--------------------------------------------------------------------------------
+5.  THE API — exact signatures
+--------------------------------------------------------------------------------
+
+    import { STYLE, tableBox, decal, screws, capProfile } from '../style.js';
+
+5.1  A MODEL FILE MUST EXPORT
+
+        export const objLo = 0;        // number, world units
+        export const objHi = 58.3;     // number, world units
+        export const label = 'my prop';
+        export const aspect = 0.80;    // OPTIONAL. frame width / height.
+                                       // default 0.56. Raise it for a squat or
+                                       // deep prop or the iso view clips it.
+        export function build(THREE, MATS, kit, H) { ... return group; }
+
+    H is the body HALF-WIDTH, from ?w=, default 16. MATS is a Map the harness
+    reads afterwards to build the palette. kit is the fittings atlas.
+
+    Register in main.js:
+        import * as myProp from './models/myProp.js';
+        const MODELS = { vaccine: ..., home: ..., med: ..., mine: myProp };
+    then render with ?model=mine.
+
+5.2  BOXES
+
+        tableBox(THREE, kind, [x1,y1,z1], [x2,y2,z2], cache, opts) -> Mesh
+
+        kind    a material name from MATERIALS (section 5.5)
+        cache   the MATS map. Always pass it.
+        opts    { bevel, taperX, taperZ }
+          bevel   a NUMBER for a uniform chamfer, or [bx, by, bz] to chamfer
+                  each axis differently. Omit to use the material's default.
+                  0 = a plain box, 12 triangles. Bevelled = 44.
+                  [1.1, 0, 1.1] rounds the four vertical edges only.
+          taperX  narrows the TOP by this many world units on x. Positive
+          taperZ  narrows inward going up. Negative flares outward.
+
+        Wrap it once at the top of build():
+            const add = (kind, a, b, opts) =>
+              g.add(tableBox(THREE, kind, a, b, MATS, opts));
+
+    THE SILHOUETTE RULE for bevels: "if it does not add to the silhouette, you
+    do not need it." Interior walls, shelves, louvre slats, display glyphs and
+    label bands never break the outline, so they get bevel: 0 and pay 12
+    triangles instead of 44. Bevelling everything once quadrupled a model.
+
+    NEVER use one bevel number everywhere. A uniform chamfer on every edge
+    reads as a bar of soap. Ask what each part is.
+
+5.3  ROUNDING — capProfile
+
+        capProfile(add, kind, hx, hy, zBase, profile, opts)
+
+        profile   [[dz, inset], ...] — CUMULATIVE from zBase. Each entry is a
+                  height above zBase and how far the shape has drawn in by then.
+        hx, hy    the half-extents at zBase. If the part below TAPERS, pass its
+                  TAPERED top width, not its nominal width.
+
+    It emits each step as a FRUSTUM, not a box. This matters and is the single
+    hardest thing here to get right by intuition: a box slice has a flat TOP
+    FACE, and a stack of them shows that face as a horizontal ledge at every
+    step, so the "rounded" top reads as a pile of slabs. A frustum has no ledge.
+    Three angled facets read as round; three steps read as geometry.
+
+    Give the slices NO vertical bevel. Bevelled on all three axes a thin slice
+    is mostly chamfer and reads as a separate rounded bar.
+
+        // a soft shoulder, measured off the reference
+        capProfile(add, 'mintFlat', W - TAPER, D - TAPER, z(0.94),
+                   [[1.26, 0.61], [2.52, 1.33], [3.47, 3.02]],
+                   { bevel: [2.6, 0, 2.6] });
+
+        // a flat top with one small chamfer — also capProfile, one entry
+        capProfile(add, 'medFlat', W, D, z(0.986), [[z(0.014), 0.9]],
+                   { bevel: 0 });
+
+    Use a material with edge: 0 for the slices. The outline+catch rule is drawn
+    per box, which is right for a part and wrong for a slice of one surface:
+    three slices drew three rims and read as a ziggurat.
+
+5.4  FACE TINTS
+
+        STYLE.tint = { top: 1.090, front: 1.000, side: 0.858,
+                       back: 0.900, bottom: 0.740 }
+
+    Applied automatically to geometry. You need these only to tint a DECAL to
+    the face it sits on, so it darkens with that face instead of floating in
+    front of it at full brightness. Pass T.front, T.side, etc.
+
+5.5  MATERIALS
+
+    Existing families (add yours; do not repurpose one):
+
+      generic     steel  chrome  slot  disp  digit  lamp  tan  tan2  shelf
+      prop 1      cream  blueGrey  teal  frame  purple  plinth  interior  glint
+      prop 2      mint  mintFlat
+      prop 3      medBody  medFlat  medTrim  medDark  medGlass  medBlue
+                  boxPale  boxBlue  boxWarm  vial
+
+    To add a family, edit MATERIALS in style.js:
+
+        myBody: M({ base: '#a5b5aa', lit: '#c9d8d3', shade: '#808d88',
+                    surface: 'plate' }),
+        myFlat: M({ base: '#a5b5aa', lit: '#c9d8d3', shade: '#808d88',
+                    edge: 0 }),
+
+    Sample base/lit/shade off your reference sheet with measure.py. Do not pick
+    them by eye. Options:
+
+        base, lit, shade   the three tones
+        edge     outline+catch width, or 0 for trim too small to carry one
+        bevel    the family's default chamfer
+        surface  a nine-slice mask tile from surfaces.json:
+                 'plate' 'plateSeam' 'trim' 'recess' 'vent' 'vent2'
+        inset    the pressed-plate border. Do not set it AND surface — running
+                 both draws two pressed borders on top of each other
+        seam     subdivide large faces
+        grain    directional runs, for wood and brushed metal
+        perf     a regular dot grid, for grilles and speaker cloth
+        fleck, dither   OFF on every painted surface here. See R6.
+
+    Almost always you want two variants of each colour: one normal and one with
+    edge: 0 for slices and thin trim.
+
+5.6  DECALS
+
+        decal(THREE, kit, name, face, u, v, h, depth, tint, fit) -> Mesh
+
+        name   a tile from fittings.json:
+                 hinge  latch  vent  ratingPlate  biohazard  biohazard2
+                 labelHolder  rocker  dialA  dialB  readout  screwSlot
+                 screwCross  foot  hazardStripe
+        face   'front' 'back' 'left' 'right' 'top'
+        h      the decal's world HEIGHT. Width follows the tile's aspect, so a
+               fitting is never squashed. Size it in texels: tx(5) where
+               const tx = (n) => n * STYLE.texel;
+        depth  the coordinate along the face's normal — see the table below
+        tint   T.front / T.side / ... for the face it sits on
+        fit    { u: halfExtent, v: halfExtent } — nudges the decal inward until
+               it sits entirely on the face. ALWAYS PASS THIS near an edge.
+               It nudges rather than shrinks on purpose: a fitting is a fixed
+               world size, and scaling it to fit would silently break the one
+               property the whole system rests on.
+
+    WHICH AXIS IS WHICH, per face — get this wrong and the decal is somewhere
+    else entirely:
+
+        face            u is          v is       depth is
+        front / back    table x       height     table y
+        left / right    table y       height     table x
+        top             table x       table y    height
+
+        g.add(decal(THREE, kit, 'ratingPlate', 'left', py(0.235), z(0.087),
+                    tx(4), -W - EPS, T.side, { u: D - 1.0, v: TOT / 2 }));
+
+5.7  SCREWS — the one fitting applied as a RULE
+
+        screws(THREE, kit, face, cu, cv, halfU, halfV, depth,
+               inset=1.6, size=1.1, tint=1.0, name='screwCross') -> Mesh[]
+
+    Returns an ARRAY. Spread it: g.add(...screws(...)).
+    Puts one at each corner of a panel at a FIXED inset in world units, so a
+    bigger panel gets its screws in the same place relative to its corners.
+
+5.8  THE HARNESS URL
+
+        ?model=<name>   which model         ?view=front|side|back|iso
+        ?w=<n>          body half-width     ?yaw= ?pitch=   free camera
+        ?ppu=<n>        pixels per unit     ?bg=#rrggbb     clear colour
+        ?post=0         disable the palette snap and ink pass
+        ?solo=1         render ONE box, for isolating a geometry bug
+
+
+--------------------------------------------------------------------------------
+6.  THE THREE RESIZE KINDS — decide this for EVERY part before you type it
+--------------------------------------------------------------------------------
+
+Every part is exactly one of three kinds. Getting it wrong is invisible until
+you resize, and then it is obvious. Write the kind in a comment.
+
+  STRETCH  Fills the span. It IS a proportion of the object.
+           Written as a fraction of W.
+           Carcass, doors, plinth, back panel, a glass opening's HEIGHT.
+
+  ANCHOR   A FIXED WORLD SIZE at a FIXED DISTANCE from a named edge.
+           Written with fromRefL/fromRefR and a literal number of units.
+           NEVER as a fraction of W.
+           Handles, feet, badges, logos, displays, lamps, hinges, labels,
+           compressors, and every frame SECTION (see below).
+
+  REPEAT   A fixed size whose COUNT follows the span.
+           Written as a for-loop with a fixed pitch.
+           Vent slats, shelf rods, coil runs, stock on a shelf, screws down a
+           stile, seams, sub-panels.
+
+THE TEST: widen the prop and see what changed size that should not have.
+
+THE TRAP, and it has caught every prop in this kit at least once. You measure a
+door stile at 0.095 of the width. Writing `const G = W * 0.81` gives exactly the
+right answer at the default size and is WRONG, because a door frame is a pressed
+steel section: a wider cabinet gets a wider WINDOW, not a fatter frame. Write:
+
+        const STILE = 3.04;                       // fixed, measured at default
+        const G = Math.max(W * 0.5, W - STILE);   // clamped so it cannot invert
+
+Convert every measured fraction to a fixed offset ONCE, at the default width,
+and let the geometry use the offset. A fraction that survives into the geometry
+is a bug waiting for someone to drag a handle.
+
+Things that are ALMOST ALWAYS ANCHOR and are almost always written wrong first:
+handles, door stiles and frame sections, control-panel items, feet, badges,
+bought-in parts (compressors, fans, motors), label plates, gaps and grooves.
+
+
+--------------------------------------------------------------------------------
+7.  THE PROCEDURE
+--------------------------------------------------------------------------------
+
+PHASE 0 — GET A MEASURABLE REFERENCE, AND MEASURE IT
+....................................................
+
+0.1  If the user supplied reference images, put them in docs/reference/ (it is
+     gitignored — they are someone else's work). Measure those.
+
+0.2  If you have no measurable orthographic reference, generate one:
+
+         python3 tools/authoring/prop_views.py --list
+         # add your subject to SUBJECTS in that file, then
+         python3 tools/authoring/prop_views.py my_prop
+
+     It writes docs/style-bible/props/my_prop.png: a front and a side elevation
+     at the SAME height, on a PURE MAGENTA ground, strictly orthographic. All
+     three of those constraints exist because a nice illustration gets them
+     wrong. Measuring an earlier render against a cream ground classified a
+     cream door frame AS ground and reported a frame three times too thin.
+
+0.3  MEASURE IT. This is not optional and you cannot do it by eye.
+
+         python3 tools/authoring/measure.py docs/style-bible/props/my_prop.png
+
+     Prints, per drawing: the bounding box, the ratio, the width / drawing 0's
+     width (which is DEPTH / WIDTH), and a vertical band table — one row for
+     every change in width or mean colour, with z as a fraction of the height
+     measured from the floor.
+
+     Then cut across the interesting bands:
+
+         python3 tools/authoring/measure.py <img> --view 0 --no-bands \
+             --rows 0.95 0.62 0.20
+
+     Prints every colour change along that line with x as a fraction of the
+     width.
+
+0.4  WRITE THE MEASUREMENTS INTO A COMMENT BLOCK AT THE TOP OF THE MODEL FILE
+     before you write any geometry. Copy the format from medFreeze.js. This is
+     the record of what the object IS, and every later argument about a
+     proportion is settled by re-reading it instead of re-litigating it.
+
+     Record at minimum: overall ratio, depth/width, every vertical band, the
+     horizontal position of everything on the front, and everything on the side.
+
+0.5  SAMPLE THE COLOURS off the same tool's output and add material families to
+     style.js. Two variants per colour: normal, and one with edge: 0.
+
+VERIFY 0: you have a comment block of numbers, and colours in style.js. You
+have written no geometry.
+
+
+PHASE 1 — THE SKELETON
+......................
+
+1.1  Copy section 11 into tools/voxel-fridge/models/myProp.js.
+1.2  Set objLo, objHi (height = width x the measured ratio, at the DEFAULT
+     width — see 1.4), label, and aspect if the prop is squat or deep.
+1.3  Set D from the measured depth/width.
+1.4  HEIGHT IS INDEPENDENT OF WIDTH. Do not write `const HEIGHT = W * 3.95`.
+     That makes ?w= a uniform scale, which is not what a builder resize does,
+     and the whole acceptance test in phase 6 becomes vacuous. Set the height
+     once, from the ratio, at the default width. Then the two axes move
+     separately.
+1.5  Declare the named planes (4.4) and the resize helpers (4.3).
+1.6  Register in main.js and render an empty-ish model to prove the wiring:
+
+         npx vite --port 5173 &
+         CHROMIUM_PATH=/opt/pw-browsers/chromium \
+           node tools/voxel-fridge/shoot.mjs tools/voxel-fridge/views \
+           "model=mine&view=iso"
+
+VERIFY 1: it renders, the shoot output has no ERRORS line, and the triangle
+count is what you expect from the boxes you have written.
+
+
+PHASE 2 — THE MASSING
+.....................
+
+Build the big forms only. No details, no fittings, no stock.
+
+2.1  Decide for EACH part which of the three resize kinds it is (section 6) and
+     write the kind in a comment.
+2.2  IS IT HOLLOW? If you can see inside it, the carcass is a SHELL — flanks,
+     back, and runs above and below the opening — not a box. See recipe 8.3.
+2.3  Bevel per axis (5.2), never one number everywhere.
+2.4  Rounding is capProfile (5.3), never a stack of boxes.
+2.5  Poly budget, checked against the shoot output: a simple prop 300-1500
+     triangles, a hero prop 2000-5000. A bevelled box costs 44 and a plain one
+     12, so the bevel decisions in 2.3 are most of this number.
+
+VERIFY 2: render front, side and iso. Run measure.py on the FRONT RENDER and
+check the ratio and the band positions against your phase 0 comment block. Fix
+the geometry, not the reference.
+
+
+PHASE 3 — SUB-FORMS AND RECESSES
+................................
+
+Doors, drawers, plinths, vents, panels, openings. Use the recipes in section 8.
+
+REMEMBER: a recess is built PROUD (8.4) and a hollow is a liner (8.3).
+
+VERIFY 3: everything you added is visible in at least one view. Anything
+invisible is inside a solid part.
+
+
+PHASE 4 — FITTINGS AND SMALL DETAIL
+...................................
+
+Handles, badges, controls, labels, screws, stock, coils.
+
+4.1  Every one of these is ANCHOR or REPEAT. None is STRETCH.
+4.2  Give a fitting a SILHOUETTE. A handle is not a bar: it is a grip on two
+     mounts with a bright catch on its lit face and a dark return under it.
+     Five small boxes. The silhouette is what sells a fitting.
+4.3  Gate fixed-size features on whether the part can carry them (R2).
+4.4  Decals get `fit` (5.6) and mount to the frontmost plane (R5).
+4.5  DO NOT INVENT FITTINGS. If you think there is a hinge, check: count the
+     off-body pixels along both candidate edges. Equal counts mean outline and
+     shading, not a hinge. A pair of invented hinges once straddled a door edge
+     and looked broken, which was the correct reading.
+
+VERIFY 4: colour count 25-60 per view in the shoot output. Hundreds means the
+palette snap is off.
+
+
+PHASE 5 — THE FACES NOBODY DREW
+...............................
+
+The generated sheet gives you a front and a side. The back and the top are
+still bare, and in a builder the player rotates freely.
+
+5.1  If the user's reference set has a rear view, use it. A domestic appliance
+     back is the busiest face of the object: condenser coil, compressor, fan,
+     cable, brackets. Recipe 8.9.
+5.2  If nothing drew it, keep it plain and say so in a comment. Do not invent.
+
+VERIFY 5: render ?view=back.
+
+
+PHASE 6 — THE ACCEPTANCE CHECKS
+...............................
+
+Run all of them. Do not call a prop done until every one passes.
+
+ [ ] 6.1  RESIZE TEST. Render at the default width and at ~1.75x:
+              "model=mine&view=front"  and  "model=mine&view=front&w=28"
+          Both come out at the same pixels-per-unit, so equal pixels IS equal
+          world size.
+ [ ] 6.2  COLOUR COUNT 25-60 per view.
+ [ ] 6.3  TRIANGLE COUNT against the budget in 2.5.
+ [ ] 6.4  NO ERRORS in the shoot output.
+ [ ] 6.5  SIDE BY SIDE with the reference at matched height. Compare bands
+          numerically with measure.py, not by eye.
+ [ ] 6.6  npm test still passes:
+              npm run build && npx vite preview --port 4173 &
+              CHROMIUM_PATH=/opt/pw-browsers/chromium npm test
+ [ ] 6.7  MEASURE THE RESIZE TEST. DO NOT LOOK AT IT. Print the pixel sizes of
+          the anchored parts at both widths as two columns that must be equal:
+
+              w=16  handle 27px  feet 34px  display 116px  stiles 33px
+              w=28  handle 27px  feet 34px  display 116px  stiles 33px
+
+          The third prop in this kit passed 6.1 by eye at a glance and failed on
+          three parts. Each was written as a measured FRACTION, which is exactly
+          the form that hides the mistake. Script in section 12.3.
+
+
+--------------------------------------------------------------------------------
+8.  RECIPES — copy these
+--------------------------------------------------------------------------------
+
+8.1  THE HEADER OF EVERY MODEL
+
+        const W = H;                       // half-width, the 100%
+        const D = W * 0.867;               // half-depth, MEASURED
+        const TOT = objHi - objLo;
+        const z  = (f) => f * TOT;
+        const px = (f) => W - f * 2 * W;   // front is MIRRORED, see 4.3
+        const py = (f) => -D + f * 2 * D;  // side is not
+        const fromRefL = (off) => W - off;
+        const fromRefR = (off) => -W + off;
+        const tx = (n) => n * STYLE.texel;
+        const T = STYLE.tint;
+        const F = -D, EPS = 0.08;
+
+8.2  A SOLID CARCASS
+
+        add('myBody', [-W, -D, z(0.10)], [W, D, z(0.94)], { bevel: [1.1, 0, 1.1] });
+
+8.3  A HOLLOW CARCASS — a SHELL plus a LINER
+
+     THERE IS NO BOOLEAN SUBTRACT. If you can see inside, build the outside as
+     separate panels around the opening and the inside as thin liner panels.
+     Building either as one solid box hides everything behind it, and it renders
+     as a flat panel where the opening should be — which reads as a shading or
+     material fault and is neither.
+
+        const G = Math.max(W * 0.5, W - STILE);     // opening half-width
+        const CAV_LO = z(0.150), CAV_HI = z(0.830);
+        const CAR_LO = z(0.130), CAR_HI = z(0.986);
+        // the shell
+        add('myBody', [-W, -D, CAR_LO], [-G, D, CAR_HI], BOX);      // left flank
+        add('myBody', [ G, -D, CAR_LO], [ W, D, CAR_HI], BOX);      // right flank
+        add('myBody', [-W, D - 1.6, CAR_LO], [W, D, CAR_HI], BOX);  // back
+        add('myBody', [-W, -D, CAR_LO], [W, D, CAV_LO], BOX);       // under
+        add('myBody', [-W, -D, CAV_HI], [W, D, CAR_HI], BOX);       // over
+        // the liner: five THIN panels, never one thick one
+        const LIN = 0.7;
+        add('myDark',  [-G, BACK - LIN, CAV_LO], [G, BACK, CAV_HI], { bevel: 0 });
+        add('myGlass', [-G, F + 0.4, CAV_LO], [-G + LIN, BACK, CAV_HI], { bevel: 0 });
+        add('myGlass', [ G - LIN, F + 0.4, CAV_LO], [G, BACK, CAV_HI], { bevel: 0 });
+        add('myGlass', [-G, F + 0.4, CAV_LO], [G, BACK, CAV_LO + LIN], { bevel: 0 });
+        add('myGlass', [-G, F + 0.4, CAV_HI - LIN], [G, BACK, CAV_HI], { bevel: 0 });
+
+8.4  A RECESS — BUILT PROUD
+
+     Same reason: no subtract. A dark panel standing a HAIR off the surface,
+     lighter slats standing a hair off THAT, and a rim around both. The shading
+     does the rest. Keep the total stand-off small (well under half a unit) — it
+     is real geometry and shows on the silhouette in an orthographic elevation.
+
+        // on the FRONT face, at F
+        add('myDark', [-(W - 2.2), F - 0.9, z(0.051)], [W - 2.2, F - 0.4, z(0.107)],
+            { bevel: 0 });
+        // on a FLANK, at +-W. Note the min/max: box coords must be ordered.
+        for (const sx of [-1, 1]) {
+          const p = (o) => sx * (W + o);
+          const dk = [Math.min(p(0.02), p(0.16)), Math.max(p(0.02), p(0.16))];
+          add('myDark', [dk[0], VY1, VZ1], [dk[1], VY2, VZ2], { bevel: 0 });
+        }
+
+8.5  A LOUVRED VENT — REPEAT
+
+        for (let s = -(W - 3.4); s < W - 4.4; s += 2.4) {
+          add('myFlat', [s, F - 1.15, z(0.058)], [s + 1.1, F - 0.85, z(0.100)],
+              { bevel: 0 });
+        }
+
+     The pitch is fixed and the loop bound is the current size. A wider prop
+     gets MORE slats at the same pitch. That is the whole adaptive behaviour
+     that a tiling texture would have needed, done with a for-loop.
+
+8.6  A HANDLE — ANCHORED, with a silhouette
+
+        const H_OFF = 0.9;   // FIXED distance in from the door's edge
+        const H_W   = 1.4;   // FIXED width
+        const hx2 = fromRefL(H_OFF), hx1 = hx2 - H_W;
+        const ha = z(0.417), hb = z(0.619);
+        // mounts, WIDER than the grip so they read as separate pieces.
+        // m gates on the handle's own length — R2.
+        const m = Math.min(1.4, (hb - ha) * 0.18);
+        for (const zz of [ha + m, hb - m]) {
+          add('steel', [hx1 - 0.45, P_DOOR - 1.1, zz - 0.9],
+                       [hx2 + 0.45, P_DOOR + 0.2, zz + 0.9], { bevel: 0.3 });
+        }
+        add('steel',  [hx1, P_DOOR - 2.1, ha], [hx2, P_DOOR - 1.0, hb], { bevel: 0.45 });
+        add('chrome', [hx1 + 0.25, P_DOOR - 2.25, ha + 0.6],
+                      [hx1 + 0.75, P_DOOR - 2.05, hb - 0.6], { bevel: 0 });
+        add('slot',   [hx1 + 0.2, P_DOOR - 1.15, ha + 0.4],
+                      [hx2 - 0.2, P_DOOR - 1.0, hb - 0.4], { bevel: 0 });
+
+8.7  A WIRE SHELF — build wire as wire
+
+     The gaps between the rods are as much of the look as the rods.
+
+        add('shelf',  [-G + 0.5, SY0 - 0.55, sz], [G - 0.5, SY0 - 0.1, sz + 0.45], { bevel: 0 });
+        add('myTrim', [-G + 0.5, SY1 - 0.45, sz], [G - 0.5, SY1, sz + 0.45], { bevel: 0 });
+        for (let r = -G + 1.6; r < G - 1.4; r += 2.2) {
+          add('myTrim', [r, SY0 - 0.1, sz + 0.05], [r + 0.5, SY1 - 0.45, sz + 0.4], { bevel: 0 });
+        }
+
+8.8  CONTENTS ON A SHELF — REPEAT, measured then centred
+
+     Placing greedily from the left leaves everything that did not fit as one
+     wide gap at the right end, and a shelf a quarter empty reads as a modelling
+     accident. Measure the row first, then centre the leftover. This is still
+     REPEAT: the item sizes and the gap are fixed and only the COUNT follows.
+
+        const ITEM = [ /* [w, h, body, stripe, stripeH, stackOrNull] */ ];
+        const GAP = 0.7;
+        const pick = (i, seed) => ITEM[(i * 5 + seed * 3) % ITEM.length];
+        const widthOf = (s) => (s[0] === null ? VIALS * VPITCH : s[0]);
+        let n = 0, used = -GAP;
+        while (used + GAP + widthOf(pick(n, seed)) <= hi - lo) {
+          used += GAP + widthOf(pick(n, seed)); n++;
+        }
+        let x = lo + (hi - lo - used) / 2;
+        for (let i = 0; i < n; i++) { /* place pick(i, seed) at x; x += w + GAP */ }
+
+     Index the pattern, never randomise it. A seeded shuffle changes every item
+     every time the file is touched and then no render can be compared with the
+     one before it. Use (i * 5 + seed * 3) % len, not (i * 3 + ...), or only
+     half the table is ever reached.
+
+     GIVE EVERY ITEM A PRINTED MARK. A carton with a coloured label band, two
+     short dark rules and a lid seam reads as MEDICINE. The same box without
+     them reads as a grey block. Four extra flat boxes buy the whole difference.
+
+8.9  A MACHINE BACK — coil, compressor, fan, cable
+
+        const B = D + 0.15;                 // the plane it all stands on
+        // serpentine coil: ONE tube bent back on itself. REPEAT.
+        const CPITCH = 1.9, CT = 0.5;
+        add('myDark', [-(W-3), B-0.1, BLO-0.8], [W-3, B+0.5, BHI+0.8], { bevel: 0 });
+        let bend = 0;
+        for (let c = -(W - 4); c <= W - 4; c += CPITCH) {
+          add('steel', [c, B, BLO], [c + CT, B + 0.9, BHI], { bevel: 0 });
+          const rz = bend % 2 ? BHI - CT : BLO;      // alternate top / bottom
+          if (c + CPITCH <= W - 4)
+            add('steel', [c, B, rz], [c + CPITCH + CT, B + 0.9, rz + CT], { bevel: 0 });
+          bend++;
+        }
+        // compressor: ANCHOR, and it stands PROUD of the back panel (8.4)
+        add('slot', [KX-3.4, B, KZ], [KX+3.4, B+5, KZ+7], { bevel: [2.4, 0, 2.4] });
+        // fan: a dark well, two guard rings drawn as four bars each, a hub
+        // cable: a gland plus three segments stepping down and out of the
+        //        silhouette. A cable that leaves the silhouette says "plugged in".
+
+8.10  GLASS — THERE IS NO PANE, AND NO REFLECTION
+
+     Do not build a transparent sheet. Alpha blending produces colours that are
+     in no palette, the snap sends them to whatever grey is nearest, and the
+     door goes dead. The glass is an OPENING you see the interior through.
+
+     Do not build a reflection on it either. This was tried on two props, four
+     ways. Wide, it reads as a grey staircase standing inside the cabinet; thin,
+     as loose bars floating among the contents. The cause is structural, not
+     tonal: a reflection is a mark ON a surface, and with no pane it is a
+     floating quad that parallaxes off everything behind it the moment the
+     camera leaves a dead-on front view. Tuning the width or the tone does not
+     fix it. Leave the opening clean; a gasket lip and corner brackets around it
+     do the work of saying "glass".
+
+8.11  LEVELLING FEET
+
+     Pad, threaded stem, collar. A plain block reads as the cabinet continuing
+     to the floor; a stem reads as something the cabinet stands ON.
+
+        add('myDark', [x1, y1, 0], [x2, y2, z(0.010)],
+            { bevel: 0.5, taperX: 0.4, taperZ: 0.4 });         // pad
+        add('steel',  [cx-1.1, cy-1.1, z(0.009)], [cx+1.1, cy+1.1, z(0.021)],
+            { bevel: 0.35 });                                  // stem
+        add('myDark', [x1+0.4, y1+0.4, z(0.020)], [x2-0.4, y2-0.4, z(0.026)],
+            { bevel: 0.3 });                                   // collar
+
+8.12  TEXT AND LOGOS
+
+     At 20 texels across a face no glyph is legible. Draw what the reference
+     draws: MARKS. Two dark rules of different lengths read as type. A word you
+     cannot read reads as a smudge, and a real font reads as the wrong style.
+
+        add('myDark', [CX-2.6, cf, CZ-1.7], [CX-5.4, cf+0.05, CZ-1.2], { bevel: 0 });
+        add('myDark', [CX-2.6, cf, CZ-2.5], [CX-4.4, cf+0.05, CZ-2.0], { bevel: 0 });
+
+     A cross, a chevron or a simple mark IS buildable: two boxes. Keep it square
+     if the reference measures square.
+
+
+--------------------------------------------------------------------------------
+9.  THE FEEDBACK LOOP — the exact commands
+--------------------------------------------------------------------------------
+
+    # once, in the background
+    npx vite --port 5173 &
+
+    # render, with counts and errors. Use this constantly.
+    CHROMIUM_PATH=/opt/pw-browsers/chromium \
+      node tools/voxel-fridge/shoot.mjs tools/voxel-fridge/views \
+      "model=mine&view=iso" "model=mine&view=front" \
+      "model=mine&view=side" "model=mine&view=back"
+
+    # it prints, per shot:
+    #   palette: 68 colours from 16 of 29 material families
+    #   geometry: 5134 triangles, 332 parts + 15 decals
+    #   model-mine-view-iso  463x578  57 colours
+    #   ERRORS: ...
+
+    # measure the reference
+    python3 tools/authoring/measure.py docs/style-bible/props/my_prop.png
+    python3 tools/authoring/measure.py <img> --view 0 --no-bands --rows 0.62
+
+    # measure the render the same way
+    python3 tools/authoring/measure.py tools/voxel-fridge/views/model-mine-view-front.png
+
+    # full test suite
+    npm run build && npx vite preview --port 4173 &
+    CHROMIUM_PATH=/opt/pw-browsers/chromium npm test
+
+LOOK AT EVERY RENDER. Then MEASURE it. Both, every time.
+
+
+--------------------------------------------------------------------------------
+10.  TROUBLESHOOTING — symptom first, because none of these look like the cause
+--------------------------------------------------------------------------------
+
+THE OBJECT IS MISSING ENTIRELY, decals float on the background
+    The shader failed to compile, and a shader that fails to compile draws
+    NOTHING. Check the console. Two ways to cause it:
+      - a reserved GLSL word as a variable: `half` and `flat` both fail
+      - a BACKTICK inside a GLSL comment. It terminates the JS template
+        literal. This has happened three times.
+
+THE RENDER IS ONE FLAT COLOUR
+    preserveDrawingBuffer is off. The scene renders once and the buffer is
+    discarded at the first composite. That is a blank READ, not a blank render,
+    and the two look identical from outside.
+
+EVERY COLOUR IS UNIFORMLY ~14% DARKER THAN AUTHORED
+    Colour management is on. THREE.Color converts sRGB to linear and this
+    renderer writes linear straight out. Call useRawColours(THREE) before the
+    first Color exists. THIS READS AS AN ART PROBLEM, which is the dangerous
+    part: the tempting fix is to lighten the hex until it looks right, which
+    bakes a gamma error permanently into a correctly sampled palette.
+
+A HOLLOW PROP RENDERS SOLID — shelves, stock, an interior all missing
+    A cavity is FIVE THIN PANELS and the carcass around it is a SHELL. Recipe
+    8.3. There is no boolean subtract.
+
+A RECESSED PANEL IS INVISIBLE, or renders as a flat patch with no detail
+    Anything placed inside a solid part is inside it. Build it PROUD. Recipe
+    8.4. This is the same mistake as the one above and it will happen to you
+    more than once on the same model.
+
+SOMETHING RENDERS AS PARTS OF ITSELF WITH THE MIDDLE MISSING
+    Same again: the middle is buried in a solid part. Two pipes running down to
+    nothing is a compressor placed inside the carcass.
+
+A COLOUR COMES OUT AS A HUE FROM A COMPLETELY DIFFERENT MATERIAL
+    The palette is shared. buildPalette merges candidates until they fit under
+    the limit, so every family added to the kit raises the merge threshold and
+    pushes families into each other. Pass it the materials the SCENE used:
+    buildPalette(THREE, 64, [...MATS.keys()]). A dark grey-green vent came back
+    with purple slats this way, its own dark tones merged away in favour of
+    another prop's plinth.
+
+THE BACKGROUND IS THE WRONG COLOUR after the palette got smaller
+    The clear colour is a colour in the frame and a quantiser can only keep what
+    it is given. Put it in the palette.
+
+THE FRONT ELEVATION IS A MIRROR IMAGE OF THE REFERENCE
+    It is. See 4.3. Convert x fractions once, at the top of the model.
+
+BIG PALE SQUARES SMEARED ACROSS WHOLE FACES
+    A nine-slice margin is too small, so authored bolts sit in the STRETCHED
+    middle. The margin is the border along a centre line, then corner content
+    strictly inside it.
+
+A GRID OF FAINT SQUARES OVER A LARGE PANEL
+    A flat mask middle is tiling. Stretch it instead. Only tiles whose middle
+    carries content should repeat.
+
+SCATTERED FLAT BLOBS WHERE FITTINGS SHOULD BE
+    Atlas tiles are too big and minify to mush under NEAREST with no mipmaps.
+    Cut fittings at ~20 texels, the same grid as the model.
+
+DARK TRIANGULAR SPIKES ON THE SILHOUETTE
+    The shader's edge-distance marks are being drawn on bevel facets, where d
+    collapses to ~0. Gate them on max(abs(normal)) > 0.95.
+
+BEVEL FACETS ARE INVISIBLE even though the mesh has them
+    The tint is switched on the dominant normal, so a chamfer gets the same
+    value as its neighbour. Weight the tint by abs(normal) instead.
+
+A ROUNDED MODEL RENDERS AS A WIREFRAME BOX
+    The post pass is inking every bevel facet. In the normal buffer a 45-degree
+    chamfer differs from its neighbour by about 0.38 and a true corner by about
+    0.71, so a threshold of 0.20 catches both. Use 0.52. The bevel already IS
+    the edge treatment.
+
+HOLES AT SOME CORNERS, LOOSE TRIANGLES AT OTHERS
+    A corner triangle is inset on one axis instead of two. A bounds check cannot
+    see this — every vertex is still inside the box. Check WATERTIGHTNESS:
+    every edge used exactly twice, V - E + F = 2.
+
+A ROUNDED CAP READS AS A WEDDING CAKE or a stack of pipes
+    Four possible causes, and they compound:
+      - the cap starts at the nominal width of a TAPERED part below it
+      - capProfile is using the previous entry's inset, dropping the last step
+      - the slices are bevelled on all three axes, so each reads as a bar
+      - a per-box outline rule is drawing a rim on every slice: use edge: 0
+
+A ROUNDED TOP READS AS STACKED SLABS
+    A BOX slice has a flat top face, which is a horizontal ledge. Each slice
+    must be a FRUSTUM. See 5.3.
+
+`bevel: 0` CHANGED NOTHING
+    shapedBox still emits the edge and corner triangles; they collapse to zero
+    area but still cost. There is an early-out — check it survived.
+
+THE TRIANGLE COUNT SAYS 2
+    renderer.info is reset by every render call and the last one is the
+    post-pass fullscreen quad. Count off the geometry.
+
+SOMETHING GREW THAT SHOULD NOT HAVE WHEN THE PROP WAS WIDENED
+    It is written as a fraction and should be ANCHORED. Section 6.
+
+A FITTING HANGS OFF THE EDGE OF THE PART IT IS ON
+    Pass `fit`. A hinge anchored 2.6 units from a door edge is wider than 2.6
+    units. This is DIFFERENT from a decal sinking UNDER geometry, which is R5.
+
+A FITTING IS HALF BEHIND A PART
+    It is mounted to the wrong plane. R5: the frontmost surface it could
+    overlap. No offset or render order fixes a decal that is genuinely behind
+    something.
+
+A FITTING IS THE WRONG SHAPE, or is not in the reference at all
+    Do not stretch a tile to fit — that breaks the one property the system
+    rests on. Build it as geometry instead, or check whether it exists at all
+    (phase 4.5).
+
+A HIGHLIGHT ON A METAL PART COMES OUT THE WRONG COLOUR
+    The material is named for an effect, not a substance. R9.
+
+A HARD-BANDED GRADIENT
+    Ordered dither is off or too weak. It is what lets a small palette express
+    the baked vertical ramp.
+
+THE ISO VIEW CLIPS THE BACK OF THE PROP
+    Raise `export const aspect` (5.1). Framing is a property of the object.
+
+THE MEASUREMENT TOOL SAYS SOMETHING IMPLAUSIBLE
+    Believe it only when it shows its evidence. Make it print the bands, the
+    profile, the counts it decided from. Three margin definitions in a row were
+    confidently wrong here and each printed a clean-looking number.
+
+THE MEASUREMENT SAYS A PROFILE IS FLAT WHEN IT IS NOT
+    You compared each pixel to ONE background pixel, but the ordered dither
+    makes the background a SET of colours. Collect the ground from the margins.
+    measure.py already does this.
+
+
+--------------------------------------------------------------------------------
+11.  A COMPLETE SKELETON — copy this file and fill it in
+--------------------------------------------------------------------------------
+
+// MY PROP — one line saying what it is.
+//
+// MEASURED (front view NNN x NNN px, side view NNN x NNN px):
+//   overall ratio      1 : N.NNN
+//   depth / width      N.NNN
+//   VERTICAL (z as a fraction of the height, 0 at the floor)
+//     feet             0.000 .. 0.0NN
+//     ...
+//   HORIZONTAL (x as a fraction of the width, 0 at the reference's LEFT)
+//     ...
+//   SIDE VIEW (u as a fraction of the depth, 0 at the FRONT)
+//     ...
+import { STYLE, tableBox, decal, screws, capProfile } from '../style.js';
+
+export const objLo = 0;
+export const objHi = 58.3;      // width x the measured ratio, at the DEFAULT
+                                // width. Height never derives from W.
+export const label = 'my prop';
+export const aspect = 0.80;     // omit for a tall narrow prop (default 0.56)
+
+export function build(THREE, MATS, kit, H) {
+  const g = new THREE.Group();
+  const add = (kind, a, b, opts) => g.add(tableBox(THREE, kind, a, b, MATS, opts));
+  const tx = (n) => n * STYLE.texel;
+  const T = STYLE.tint;
+
+  // ---- resize kinds --------------------------------------------------------
+  // STRETCH: carcass, doors, plinth.        fractions of W
+  // ANCHOR:  handle, feet, badge, controls. fixed units via fromRefL/fromRefR
+  // REPEAT:  vent slats, shelf rods, stock. a loop at a fixed pitch
+  const W = H;
+  const D = W * 0.867;                 // MEASURED depth / width
+  const TOT = objHi - objLo;
+  const z  = (f) => f * TOT;
+  const px = (f) => W - f * 2 * W;     // the front camera MIRRORS x — see 4.3
+  const py = (f) => -D + f * 2 * D;
+  const fromRefL = (off) => W - off;
+  const fromRefR = (off) => -W + off;
+
+  // ---- named planes --------------------------------------------------------
+  const F = -D;
+  const P_DOOR = F - 1.95;
+  const P_GLASS = F - 0.5;
+  const BACK = D - 1.4;
+  const EPS = 0.08;
+
+  // ---- bevels, per axis ----------------------------------------------------
+  const BOX  = { bevel: [1.1, 0, 1.1] };
+  const SOFT = { bevel: [0.8, 0.5, 0.4] };
+
+  // ---- feet (ANCHOR) -------------------------------------------------------
+  // ---- plinth and its recess (STRETCH + REPEAT) ---------------------------
+  // ---- carcass: SHELL if hollow, box if not (STRETCH) ---------------------
+  // ---- top: capProfile, never stacked boxes -------------------------------
+  // ---- interior liner, shelves, contents (REPEAT) -------------------------
+  // ---- doors / panels (STRETCH, with ANCHORED frame sections) -------------
+  // ---- handle (ANCHOR) ----------------------------------------------------
+  // ---- controls (ANCHOR) --------------------------------------------------
+  // ---- flank vents (REPEAT) -----------------------------------------------
+  // ---- back: coil, compressor, fan, cable ---------------------------------
+  // ---- decals, with fit ---------------------------------------------------
+  // g.add(decal(THREE, kit, 'ratingPlate', 'left', py(0.235), z(0.087),
+  //             tx(4), -W - EPS, T.side, { u: D - 1.0, v: TOT / 2 }));
+
+  return g;
+}
+
+
+--------------------------------------------------------------------------------
+12.  THE SCRIPTS
+--------------------------------------------------------------------------------
+
+12.1  MEASURE A SHEET OR A RENDER
+
+      The maintained tool is tools/authoring/measure.py. Read its docstring.
+      If you are working outside this repo, this standalone version does the
+      essential job — bounding boxes, ratios, and a vertical band table:
+
+        from PIL import Image
+        im = Image.open(PATH).convert('RGB'); w, h = im.size; px = im.load()
+        c0 = px[0, 0]
+        if c0[0] > 200 and c0[2] > 200 and c0[1] < 80:      # magenta sheet
+            ground = lambda c: c[0] > 200 and c[2] > 200 and c[1] < 80
+        else:                                                # a render
+            s = {px[x, y] for y in range(h) for x in range(w)
+                 if x < 3 or x >= w-3 or y < 3 or y >= h-3}  # ground is a SET
+            ground = lambda c: c in s
+        obj = [[not ground(px[x, y]) for x in range(w)] for y in range(h)]
+        xs = [x for x in range(w) if any(obj[y][x] for y in range(h))]
+        # split xs on gaps > 1 to separate the front and side drawings, then
+        # for each, print one line per change in row width or mean colour, with
+        # z = 1 - (y - y0) / height so 0 is the floor.
+
+12.2  SCREENSHOT AND COUNT
+
+      tools/voxel-fridge/shoot.mjs. Playwright + Chromium, headless, swiftshader.
+      It exists because "it looks about right" is not evidence and a colour count
+      is. Per shot it prints the palette size, the triangle/part/decal counts off
+      the GEOMETRY (not renderer.info), the image size, the distinct colour count,
+      and any page, shader or console error.
+
+        CHROMIUM_PATH=/opt/pw-browsers/chromium \
+          node tools/voxel-fridge/shoot.mjs OUTDIR "model=mine&view=iso" ...
+
+12.3  THE RESIZE CHECK (phase 6.7)
+
+      Render the same view at two widths, then compare the pixel sizes of the
+      ANCHORED parts. Both renders are at the same pixels-per-unit, so equal
+      pixels IS equal world size, and nothing about it is a judgement call.
+
+        for p, lab in [('model-mine-view-front', 'w=16'),
+                       ('model-mine-view-front-w-28', 'w=28')]:
+            im, obj, x0, x1, y0, y1 = load(p)        # as in 12.1
+            h = y1 - y0 + 1
+            # the handle: the brightest run in the left quarter, at mid height
+            y = int(y1 - 0.52 * h)
+            seg = [x for x in range(x0, x0 + (x1 - x0) // 4)
+                   if mean(im[y][x]) > 150]
+            # the feet: separate runs of object at the bottom row
+            # a frame section: the longest DARK run across a clean band, and
+            #                  the distance from it to the body edge
+            print(lab, 'handle', seg[-1] - seg[0] + 1, 'px', ...)
+
+      Pick a clean band with nothing in front of it. Measuring a frame section
+      across a shelf full of stock gives a number that changes for reasons that
+      have nothing to do with the frame.
+
+12.4  GENERATE A MEASURABLE REFERENCE
+
+      tools/authoring/prop_views.py. Add your subject to SUBJECTS and run it.
+      Manual authoring tool; the key lives only in a gitignored .env and nothing
+      in the game ever calls it.
+
+
+--------------------------------------------------------------------------------
+13.  WHAT DOES NOT NEED DOING, and why — so you do not spend a pass on it
+--------------------------------------------------------------------------------
+
+  A GLASS PANE            Recipe 8.10. Alpha kills the palette snap.
+  A GLASS REFLECTION      Recipe 8.10. Tried four ways on two props.
+  PROCEDURAL NOISE / WEAR Sprayed over a cabinet at the measured 12-20% of
+                          texels it reads as grime, not character, because
+                          character is detail that MEANS something and a hash
+                          cannot mean anything. R6.
+  A UV UNWRAP             There is nothing to unwrap. Section 1.
+  A TILING TEXTURE        A for-loop over the current size does the job, and
+                          does it without a seam. Recipe 8.5.
+  HINGES YOU DID NOT SEE  Phase 4.5. Count the pixels before you build them.
+  LEGIBLE TEXT            Recipe 8.12. Draw marks.
+
+================================================================================
