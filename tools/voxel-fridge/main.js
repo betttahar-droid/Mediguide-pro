@@ -41,7 +41,7 @@ const BG = '#dcd4c6';
 // identical look with no art work, and a style change lands on every object at
 // once. See style.js for the technique and where each constant was measured.
 import { STYLE, MATERIALS, buildPalette, tableBox, useRawColours,
-         loadFittings, decal, screws } from './style.js';
+         loadFittings, decal, screws, loadSurfaces } from './style.js';
 
 // Before any THREE.Color exists — see style.js. The authored hex is the
 // output pixel; nothing here wants a linear round trip.
@@ -51,6 +51,12 @@ useRawColours(THREE);
 // merge the post pass would snap the hazard yellow and the rating plate's warm
 // grey to whatever cabinet colour sat nearest and the decals would come out as
 // smears.
+// The surface atlas must load BEFORE the first material is built: materials
+// bake the tile rect into their uniforms at construction.
+loadSurfaces(THREE,
+  await new THREE.TextureLoader().loadAsync('/tools/voxel-fridge/surfaces.png'),
+  await (await fetch('/tools/voxel-fridge/surfaces.json')).json());
+
 const kitMan = await (await fetch('/tools/voxel-fridge/fittings.json')).json();
 const kit = loadFittings(THREE,
   await new THREE.TextureLoader().loadAsync('/tools/voxel-fridge/fittings.png'),

@@ -1,0 +1,79 @@
+{
+ "size": [
+  296,
+  44
+ ],
+ "texels": 40,
+ "tiles": {
+  "plate": {
+   "rect": [
+    2,
+    2,
+    40,
+    40
+   ],
+   "margin": 0.125,
+   "marginTexels": 5
+  },
+  "plateSeam": {
+   "rect": [
+    44,
+    2,
+    40,
+    40
+   ],
+   "margin": 0.2,
+   "marginTexels": 8
+  },
+  "vent": {
+   "rect": [
+    86,
+    2,
+    40,
+    40
+   ],
+   "margin": 0.025,
+   "marginTexels": 1
+  },
+  "plate2": {
+   "rect": [
+    128,
+    2,
+    40,
+    40
+   ],
+   "margin": 0.125,
+   "marginTexels": 5
+  },
+  "trim": {
+   "rect": [
+    170,
+    2,
+    40,
+    40
+   ],
+   "margin": 0.1,
+   "marginTexels": 4
+  },
+  "vent2": {
+   "rect": [
+    212,
+    2,
+    40,
+    40
+   ],
+   "margin": 0.025,
+   "marginTexels": 1
+  },
+  "recess": {
+   "rect": [
+    254,
+    2,
+    40,
+    40
+   ],
+   "margin": 0.025,
+   "marginTexels": 1
+  }
+ }
+}

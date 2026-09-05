@@ -116,6 +116,17 @@ export const STYLE = {
   // pixelated 8 screen pixels per texel.
   texel: 1.0,
   ditherSpan: 5.0,   // how far the corner dither reaches in from a face edge
+
+  // NINE-SLICE, for the surface mask tiles.
+  //   marginWorld  how many WORLD units the tile's authored border occupies.
+  //                Fixed, so the border and its bolts stay native at any size.
+  //                Sized to the measured plate border: 5 of 40 texels over 2.6
+  //                units is ~0.52 units a texel, matching the object's own grid.
+  //   period       world length of one repeat of the tile's middle. 16 units
+  //                across the tile's ~30 remaining texels keeps that same
+  //                texel size, so margin and middle read as one grid.
+  marginWorld: 2.6,
+  period: 16.0,
 };
 
 // Colour families plus the rules each material runs. Sampled from the
@@ -129,6 +140,12 @@ export const STYLE = {
 //             value ramp, which is how this style shades a corner
 //     perf    a regular dot grid, for grilles and speaker cloth
 //   FORM
+//     surface a nine-slice tone-mask tile from surfaces.png. Its outer margin
+//             maps to a FIXED world width so the authored border and its bolts
+//             stay native at any part size, and only the middle tiles. This is
+//             the decal idea applied to the whole surface, and it replaces the
+//             procedural `inset` on any material that carries one — running
+//             both drew two pressed borders on top of each other.
 //     inset   the pressed-plate border, on faces big enough to hold one
 //     edge    outline+catch width, or 0 for trim too small to carry one
 //     seam    subdivide large faces with seams
@@ -148,14 +165,14 @@ export const STYLE = {
 // it appears, `perf` is what a speaker or a vent IS. Everything else moved into
 // the fittings atlas at the bottom of this file, where it can be placed.
 const D = { lit: null, shade: null, inset: 0, edge: 0.22, seam: 0,
-            fleck: 0, grain: 0, dither: 0, perf: 0 };
+            fleck: 0, grain: 0, dither: 0, perf: 0, surface: null };
 const M = (o) => ({ ...D, ...o });
 
 export const MATERIALS = {
-  cream:    M({ base: '#e9e3d4', lit: '#f7f2e6', shade: '#dcd6c6', inset: 1 }),
-  blueGrey: M({ base: '#adb6ba', lit: '#b7c2c5', shade: '#a3adb2', inset: 1 }),
-  teal:     M({ base: '#377c62', lit: '#3f8a6d', shade: '#2e6752', inset: 1 }),
-  frame:    M({ base: '#35785f', lit: '#3a8368', shade: '#2e6752', edge: 0.14 }),
+  cream:    M({ base: '#e9e3d4', lit: '#f7f2e6', shade: '#dcd6c6', surface: 'plate' }),
+  blueGrey: M({ base: '#adb6ba', lit: '#b7c2c5', shade: '#a3adb2', surface: 'plate2' }),
+  teal:     M({ base: '#377c62', lit: '#3f8a6d', shade: '#2e6752', surface: 'plateSeam' }),
+  frame:    M({ base: '#35785f', lit: '#3a8368', shade: '#2e6752', edge: 0.14, surface: 'trim' }),
   purple:   M({ base: '#5c4a70', lit: '#6b5780', shade: '#4a3e58', edge: 0.16 }),
   plinth:   M({ base: '#5c4a72', lit: '#6b5780', shade: '#4a3e58', edge: 0.16 }),
   interior: M({ base: '#458574', lit: '#4c8978', shade: '#3b7565', edge: 0.16 }),
@@ -164,7 +181,7 @@ export const MATERIALS = {
   tan:      M({ base: '#d9a95f', lit: '#e8bc76', shade: '#c08c45', edge: 0.14, grain: 0.30 }),
   tan2:     M({ base: '#c08c45', lit: '#d9a95f', shade: '#8e6529', edge: 0 }),
   slot:     M({ base: '#3f3a33', lit: '#4a4439', shade: '#20242b', edge: 0 }),
-  disp:     M({ base: '#262b36', lit: '#333a48', shade: '#171b23', perf: 1.0 }),
+  disp:     M({ base: '#262b36', lit: '#333a48', shade: '#171b23', perf: 1.0, surface: 'recess' }),
   digit:    M({ base: '#74de96', lit: '#9bf0b4', shade: '#4fb673', edge: 0 }),
   lamp:     M({ base: '#e2894e', lit: '#f5a56d', shade: '#b96a37', edge: 0 }),
 };
@@ -188,12 +205,44 @@ precision highp float;
 uniform vec3 uBase, uLit, uShade;
 uniform float uInset, uWear, uEdge, uSeam, uCell;
 uniform float uFleck, uGrain, uDither, uPerf, uTexel, uDitherSpan;
+uniform sampler2D uMask;
+uniform vec4 uTile;          // the tile's rect in the atlas, normalised
+uniform float uHasMask, uMarginW, uMarginF, uPeriod;
 uniform float uOutline, uCatch, uInsetAt, uInsetLine, uSeamPitch, uSeamLine;
 uniform float uTop, uFront, uSide, uBack, uBottom;
 varying vec3 vLocal, vHalf, vNrm;
 
 float hash(vec2 p) {
   return fract(sin(dot(floor(p), vec2(127.1, 311.7))) * 43758.5453);
+}
+
+// NINE-SLICE ALONG ONE AXIS: face position -> position within the tile.
+//
+// This is the decal idea applied to the whole surface. The outer mw WORLD
+// units of the face map onto the tile's outer mf fraction -- its authored
+// border, with the bolts in it — and the remainder tiles the middle at a fixed
+// world period. So the border keeps its width and its corners stay native
+// however the part grows, and only the flat middle repeats.
+//
+//   p      position along the face, in [-half, half]
+//   hf     the face's half-extent, world units
+//   mw     margin width in WORLD units (fixed: this is the resize property)
+//   mf     the same margin as a fraction of the tile, measured from the art
+//   period world length of one repeat of the tile's middle
+// NOTE half cannot be a parameter name: it is a RESERVED WORD in GLSL ES.
+// Using it made the whole shader fail to compile, and three then drew the
+// geometry not at all — the render came back as bare decals floating on the
+// background, which looks nothing like a shader error and cost a detour.
+float slice1(float p, float hf, float mw, float mf, float period) {
+  float L = 2.0 * hf;
+  float d = p + hf;                         // 0..L from the low edge
+  // A face too narrow to hold two margins has no middle left. Squeeze the
+  // whole tile onto it rather than letting the two margins overlap and fight,
+  // which mirrored the border back on itself and read as a smear.
+  if (L <= 2.0 * mw) return d / L;
+  if (d < mw)      return (d / mw) * mf;
+  if (d > L - mw)  return 1.0 - ((L - d) / mw) * mf;
+  return mf + fract((d - mw) / period) * (1.0 - 2.0 * mf);
 }
 
 void main() {
@@ -224,6 +273,23 @@ void main() {
   bool lit = (local.x < 0.0 || local.y > 0.0);   // the lit edges: top and left
 
   vec3 c = uBase;
+
+  // ==== SURFACE MASK ========================================================
+  // The atlas carries STRUCTURE, the material carries COLOUR. Each texel is one
+  // of three levels — shade / base / lit — so a single "plate" tile renders
+  // correctly on cream, teal and blue-grey alike, and no colour ever leaves the
+  // texture. That is what keeps the frame snappable to a locked palette, and it
+  // is the thing a colour atlas cannot do.
+  if (uHasMask > 0.5) {
+    vec2 t = vec2(slice1(local.x, half2.x, uMarginW, uMarginF, uPeriod),
+                  slice1(local.y, half2.y, uMarginW, uMarginF, uPeriod));
+    // Half-texel inset so nearest sampling cannot pick up the neighbouring
+    // tile across the atlas gutter.
+    vec2 auv = uTile.xy + clamp(t, 0.002, 0.998) * uTile.zw;
+    float m = texture2D(uMask, vec2(auv.x, 1.0 - auv.y)).r;
+    if (m < 0.4) c = uShade;
+    else if (m > 0.6) c = uLit;
+  }
 
   // ==== TEXTURE =============================================================
   // THE TEXEL GRID. Every pattern below is drawn on it and it is measured in
@@ -325,6 +391,27 @@ void main() {
 }
 `;
 
+// The surface atlas, set once at boot by loadSurfaces(). Held module-level so
+// materials can be built lazily without every call site threading it through.
+const SURF = { tex: null, man: null };
+
+export function loadSurfaces(THREE, tex, manifest) {
+  tex.magFilter = tex.minFilter = THREE.NearestFilter;
+  tex.colorSpace = THREE.NoColorSpace;   // it is a mask, not colour
+  tex.generateMipmaps = false;
+  tex.wrapS = tex.wrapT = THREE.ClampToEdgeWrapping;
+  SURF.tex = tex;
+  SURF.man = manifest;
+}
+
+// A tile's rect in the atlas, normalised, as the vec4 the shader reads.
+function tileRect(THREE, name) {
+  if (!name || !SURF.man) return new THREE.Vector4(0, 0, 0, 0);
+  const [w, h] = SURF.man.size;
+  const [rx, ry, rw, rh] = SURF.man.tiles[name].rect;
+  return new THREE.Vector4(rx / w, ry / h, rw / w, rh / h);
+}
+
 export function makeMaterial(THREE, kind) {
   const name = ALIAS[kind] ?? kind;
   const m = MATERIALS[name];
@@ -341,6 +428,11 @@ export function makeMaterial(THREE, kind) {
       uFleck: f(m.fleck), uGrain: f(m.grain),
       uDither: f(m.dither), uPerf: f(m.perf),
       uTexel: f(STYLE.texel), uDitherSpan: f(STYLE.ditherSpan),
+      uMask: f(SURF.tex), uTile: f(tileRect(THREE, m.surface)),
+      uHasMask: f(m.surface && SURF.man ? 1 : 0),
+      uMarginW: f(STYLE.marginWorld), uPeriod: f(STYLE.period),
+      uMarginF: f(m.surface && SURF.man
+        ? SURF.man.tiles[m.surface].margin : 0.12),
       uCell: f(STYLE.wearCell),
       uOutline: f(m.edge || STYLE.outline),
       uCatch: f(STYLE.catch),

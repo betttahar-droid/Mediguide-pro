@@ -154,6 +154,34 @@ SHEETS = {
         "of diagonal hazard stripes. "
         "Each fitting is small and chunky, a few dozen pixels across, drawn "
         "flat with hard pixel edges. Nothing may touch anything else."),
+    # SURFACE TILES for the nine-slice detail atlas. Authored in NEUTRAL GREY on
+    # purpose: the renderer reads them as a three-level tone mask (shade / base /
+    # lit) and substitutes each material's own family, so one "panel" tile
+    # renders correctly on cream, teal and blue-grey alike. Asking for colour
+    # here would tie every tile to one material and put the atlas back in charge
+    # of the palette, which is what broke the previous atlas attempt.
+    #
+    # Each panel's recessed border must sit exactly AT its own edge, because the
+    # nine-slice ring samples the outer texels: put the border there and it
+    # becomes the part's border at any size, with the flat middle tiling
+    # between. A panel floating inside a margin makes the ring sample margin.
+    "surfaces": (
+        "Draw FIVE separate square panels in a horizontal row on the magenta "
+        "background, well separated from each other. "
+        "Every panel is NEUTRAL MID-GREY painted metal — no colour at all — "
+        "drawn with exactly three flat greys: a mid-grey field, a darker grey "
+        "and a lighter grey. Chunky pixel art, hard edges. "
+        "Each panel's own recessed border sits exactly at that panel's outer "
+        "edge, with nothing outside it. The five panels are: "
+        "(1) a plain pressed panel with a recessed border and a small bolt just "
+        "inside each of its four corners; "
+        "(2) the same pressed panel but with a horizontal seam across its "
+        "middle and bolts at the seam ends; "
+        "(3) a panel whose middle is filled with evenly spaced horizontal vent "
+        "slots running edge to edge; "
+        "(4) a plain narrow trim panel with only a recessed border, no bolts; "
+        "(5) a panel with a shallow rectangular recess in the middle of it. "
+        "No text, no colour, no gradients."),
     "edge-vocab": (
         "Draw FOUR separate small studies in a row on the magenta background, "
         "well separated, all in cream and pale blue-grey painted metal: "
