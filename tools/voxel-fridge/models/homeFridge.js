@@ -71,7 +71,7 @@ export function build(THREE, MATS, kit, H) {
   // BEVELS ARE PER AXIS, not one number everywhere. A uniform chamfer rounds
   // every edge equally and the prop reads as a bar of soap; the reference has
   // soft vertical corners, a soft shoulder and a crisp base. [x, y, z]:
-  const ROUND = { bevel: [2.6, 0.8, 2.6] };      // soft sides, near-crisp top/base
+  const ROUND = { bevel: [2.6, 0, 2.6] };        // soft sides; the CAP rounds the top
   const DOOR_ROUND = { bevel: [2.2, 1.2, 0.6] }; // soft sides, softer top, flat face
 
   // The shoulder profile, MEASURED off the reference in world units above the
@@ -109,7 +109,7 @@ export function build(THREE, MATS, kit, H) {
   // read as a stepped cornice sitting on the fridge — a wedding cake. A tapered
   // part and anything stacked on it have to agree about where its top edge is.
   capProfile(add, 'mintFlat', W - TAPER, D - TAPER, z(0.94), SHOULDER,
-             { bevel: [0.9, 0, 0.9] });
+             { bevel: [2.6, 0, 2.6] });
 
   // ---- doors --------------------------------------------------------------
   // Both are slabs standing proud of the carcass, inset slightly at the sides

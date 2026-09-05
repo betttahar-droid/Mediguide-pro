@@ -167,10 +167,22 @@ PHASE 2  —  GEOMETRY
             - Each slice takes ITS OWN inset, so the silhouette passes through
               every measured point. Using the previous entry's shifts the whole
               profile down a step and never reaches the top width.
+            - EACH SLICE IS A FRUSTUM, NOT A BOX. This is the difference
+              between a rounded top and a pile of slabs, and it is the whole
+              trick: a box slice has a flat TOP FACE, which shows as a
+              horizontal ledge at every step. A frustum has none — its side is
+              one angled facet running from the inset below to the inset above,
+              so consecutive slices form a continuous surface broken only by a
+              change of angle. capProfile does this by setting each slice's
+              taper to the change in inset. Three angled facets read as round;
+              three steps read as geometry.
             - Slices get NO vertical bevel and a material with edge: 0. A
               1.26-unit slice bevelled on all axes is mostly chamfer and reads
               as a separate bar; and the outline rule drawn on each slice gives
-              a stack of three rims, which reads as a ziggurat.
+              a stack of three rims.
+            - The cap's HORIZONTAL bevel must match the body's, or the corner
+              radius jumps at the joint and the join shows a step. Let the cap
+              round the top and set the body's own top bevel to 0.
             - A cap on a TAPERED part must start at that part's tapered top
               width, not its nominal width, or every step overhangs the body.
 

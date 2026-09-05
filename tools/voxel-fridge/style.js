@@ -620,11 +620,13 @@ export function shapedBox(THREE, sx, sy, sz, bevel = 0, taperX = 0, taperZ = 0) 
   const h = [sx / 2, sy / 2, sz / 2];
   const size = [sx, sy, sz];
   const raw = Array.isArray(bevel) ? bevel : [bevel, bevel, bevel];
-  // A bevel cannot eat more than a third of the sides it cuts into, or opposite
-  // facets meet and the solid turns inside out. Clamped PER AXIS now, so a
-  // heavy shoulder on a tall box is not throttled by its thin depth.
-  const bv = raw.map((v, i) => Math.max(0, Math.min(v,
-    0.34 * Math.min(size[(i + 1) % 3], size[(i + 2) % 3]))));
+  // Each inset is bounded by ITS OWN axis: bv[i] moves vertices along axis i,
+  // so the only way to invert the solid is bv[i] >= size[i]/2. The clamp used
+  // to be 0.34 * the min of the OTHER two axes, which is the wrong axis
+  // entirely — it throttled a thin slice's horizontal bevel to 0.43 because the
+  // slice was thin VERTICALLY, so a stacked cap could not match the corner
+  // radius of the body it sat on and the join showed a step.
+  const bv = raw.map((v, i) => Math.max(0, Math.min(v, 0.45 * size[i])));
   const b = Math.max(...bv);
   const V = (a, va, bb, vb, c, vc) => {
     const q = [0, 0, 0]; q[a] = va; q[bb] = vb; q[c] = vc; return q;
@@ -735,11 +737,23 @@ export function shapedBox(THREE, sx, sy, sz, bevel = 0, taperX = 0, taperZ = 0) 
 // out looking like a pile of pipes. Flat top and bottom faces let them meet
 // flush, and the horizontal bevel alone rounds the corners.
 export function capProfile(add, kind, hx, hy, zBase, profile, opts = {}) {
-  let prevZ = 0;
+  let prevZ = 0, prevIn = 0;
   for (const [dz, inset] of profile) {
-    add(kind, [-(hx - inset), -(hy - inset), zBase + prevZ],
-              [hx - inset, hy - inset, zBase + dz], opts);
-    prevZ = dz;
+    // TAPERED, not stacked. A box slice has a flat TOP FACE, and a stack of
+    // them shows that face as a horizontal ledge at every step — which is why
+    // the first version read as a pile of slabs rather than a rounded top. A
+    // frustum has no ledge: its side is one angled facet running from the inset
+    // below it to the inset above, so consecutive slices form a continuous
+    // surface broken only by a slight change of angle. That is what a
+    // PlayStation-era rounded edge actually is — a few angled facets, not a few
+    // steps. Three of them read as round; three steps read as geometry.
+    //
+    // taperX is expressed in half-width, and shapedBox narrows the top by
+    // exactly that, so the amount is simply the change in inset.
+    add(kind, [-(hx - prevIn), -(hy - prevIn), zBase + prevZ],
+              [hx - prevIn, hy - prevIn, zBase + dz],
+              { ...opts, taperX: inset - prevIn, taperZ: inset - prevIn });
+    prevZ = dz; prevIn = inset;
   }
 }
 
