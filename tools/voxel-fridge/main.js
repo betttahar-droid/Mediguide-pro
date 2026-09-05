@@ -45,11 +45,13 @@ import { STYLE, MATERIALS, buildPalette, tableBox, useRawColours,
 import * as vaccineFridge from './models/vaccineFridge.js';
 import * as homeFridge from './models/homeFridge.js';
 import * as medFreeze from './models/medFreeze.js';
+import * as posTerminal from './models/posTerminal.js';
 
 // ?model=home / ?model=med render the second and third props. All three share
 // every material, every surface tile, every fitting and the whole shader; the
 // only difference between them is geometry and placement.
-const MODELS = { vaccine: vaccineFridge, home: homeFridge, med: medFreeze };
+const MODELS = { vaccine: vaccineFridge, home: homeFridge, med: medFreeze,
+                 pos: posTerminal };
 const MODEL = MODELS[params.get('model') ?? 'vaccine'] ?? vaccineFridge;
 
 // Before any THREE.Color exists — see style.js. The authored hex is the
@@ -218,7 +220,15 @@ const post = new THREE.ShaderMaterial({
     tPalette: { value: paletteTexture },
     uPaletteSize: { value: carvedUrl ? 0 : paletteCount },
     uTexel: { value: new THREE.Vector2(1 / W, 1 / Hpx) },
-    uDither: { value: 0.055 },   // ordered-dither amplitude, ~one palette step
+    // Ordered-dither amplitude, about one palette step. ?dither=0 turns it off,
+    // and THE RESIZE TEST NEEDS THAT: the Bayer pattern is keyed on
+    // gl_FragCoord, so two renders at different canvas widths get a different
+    // dither PHASE and up to a third of every flat field lands on the other of
+    // two neighbouring palette entries. Comparing them pixel for pixel then
+    // reports a systematic, column-shaped difference that has nothing whatever
+    // to do with the geometry — which is indistinguishable, by eye or by
+    // arithmetic, from a part that really did move.
+    uDither: { value: Number(params.get('dither') ?? 0.055) },
     uOutline: { value: 0.55 },   // how far an edge darkens its own colour
     // Raised from 0.20 once every form was bevelled. In the normal buffer a
     // 45-degree chamfer differs from its neighbour by about 0.38 and a true

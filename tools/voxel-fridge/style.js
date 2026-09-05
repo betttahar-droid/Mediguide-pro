@@ -225,6 +225,25 @@ export const MATERIALS = {
   boxBlue:  M({ base: '#5a7fb0', lit: '#7599c6', shade: '#42618a', edge: 0.10 }),
   boxWarm:  M({ base: '#d08a4a', lit: '#e5a468', shade: '#a56a35', edge: 0.10 }),
   vial:     M({ base: '#cfd8d6', lit: '#e8efec', shade: '#a3aeac', edge: 0.08 }),
+  // Sampled off docs/style-bible/props/pos_terminal.png for the fourth prop —
+  // yellowed office plastic, a warm tan trim, keycaps, and a dark CRT. Note it
+  // needs a SCREEN colour and the fridges needed a GLASS one: both are "dark
+  // rectangle you look into", and they are still separate families, because a
+  // CRT is warm-dark blue and a fridge interior is cold grey-green. Reusing one
+  // for the other is how a material starts drifting toward being an effect.
+  // NO `surface`. The nine-slice plate tile is a PRESSED STEEL PANEL — a
+  // recessed border with bolts at its corners — and on a moulded plastic case
+  // it read as brackets bolted to the sides of a monitor. A surface mask is a
+  // statement about how the part was MADE.
+  posCase:   M({ base: '#c8cfbd', lit: '#e8eedb', shade: '#a2a898' }),
+  posFlat:   M({ base: '#c8cfbd', lit: '#e8eedb', shade: '#a2a898', edge: 0 }),
+  posTrim:   M({ base: '#a29372', lit: '#c2b28d', shade: '#84775b', edge: 0.12 }),
+  posScreen: M({ base: '#232a3a', lit: '#2f394c', shade: '#151a26', edge: 0 }),
+  posGlare:  M({ base: '#39435a', lit: '#48546e', shade: '#2c3547', edge: 0 }),
+  posKey:    M({ base: '#d2c8a5', lit: '#ece2bd', shade: '#a89f83', edge: 0.08 }),
+  posKeyDk:  M({ base: '#a0947c', lit: '#bcae91', shade: '#7d7360', edge: 0.08 }),
+  posRead:   M({ base: '#30435f', lit: '#44597c', shade: '#1e2c42', edge: 0.10 }),
+  posFoot:   M({ base: '#354255', lit: '#485672', shade: '#232c3a', edge: 0.14 }),
   mintFlat: M({ base: '#a5d6b6', lit: '#c5f3d4', shade: '#95baa7', edge: 0 }),
   mint:     M({ base: '#a5d6b6', lit: '#c5f3d4', shade: '#95baa7', surface: 'trim' }),
   // Bright steel for a highlight ON steel. `glint` could not serve here: it was

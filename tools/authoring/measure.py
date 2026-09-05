@@ -36,26 +36,28 @@ except ImportError:
 
 
 def load(path):
+    """-> (px, obj, w, h, how). Ground is ALWAYS the border ring.
+
+    A magenta-only test looks safer and is not: a screenshot can carry one stray
+    row at the canvas edge, that row becomes "object", and the bounding box is
+    then the whole image with every measurement downstream quietly wrong. The
+    magenta test is kept as well, so a generated sheet still works if its ring
+    happens to clip the subject. Ordered dither is why the ground has to be a
+    SET rather than one value in the first place.
+    """
     im = Image.open(path).convert("RGB")
     w, h = im.size
     px = im.load()
+    ring = {px[x, y] for y in range(h) for x in range(w)
+            if x < 3 or x >= w - 3 or y < 3 or y >= h - 3}
     corner = px[0, 0]
     magenta = corner[0] > 200 and corner[2] > 200 and corner[1] < 80
-    if magenta:
-        def is_ground(c):
-            return c[0] > 200 and c[2] > 200 and c[1] < 80
-    else:
-        # the ground is a SET, because of the ordered dither
-        ground = set()
-        for y in range(h):
-            for x in range(w):
-                if x < 3 or x >= w - 3 or y < 3 or y >= h - 3:
-                    ground.add(px[x, y])
 
-        def is_ground(c):
-            return c in ground
+    def is_ground(c):
+        return c in ring or (magenta and c[0] > 200 and c[2] > 200 and c[1] < 80)
+
     obj = [[not is_ground(px[x, y]) for x in range(w)] for y in range(h)]
-    return px, obj, w, h, ("magenta" if magenta else "margin-sampled")
+    return px, obj, w, h, ("magenta + ring" if magenta else "ring")
 
 
 def views(obj, w, h):

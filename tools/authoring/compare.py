@@ -25,9 +25,16 @@ most likely to be skipped or faked. Both checks below are arithmetic.
           silhouettes, those strips must be IDENTICAL. A stretched frame
           section, a handle that scaled, a badge that drifted — all of them
           change the strip. Per-column difference counts are printed rather
-          than a verdict, because the ordered dither shifts with canvas width
-          and puts a thin scatter everywhere: a scatter of one or two per
-          column is the dither, a solid block of hundreds is an edge that moved.
+          than a verdict.
+
+          RENDER BOTH WITH ?dither=0. The Bayer pattern is keyed on
+          gl_FragCoord, so two renders at different canvas widths get a
+          different dither PHASE, and up to a third of every flat field lands
+          on the other of two neighbouring palette entries. That produces a
+          systematic, column-shaped difference indistinguishable from a part
+          that really moved — 35% of a strip on a prop whose geometry was
+          provably identical. With the dither off the same comparison came back
+          at 0.7%.
 
           CHOOSING --strip: it must cover the region that should be IDENTICAL
           and stop before any REPEAT region. Point it at a frame and it is
@@ -36,6 +43,14 @@ most likely to be skipped or faked. Both checks below are arithmetic.
           it reports a difference that is not a bug. A flagged column inside a
           repeating region means your strip is too wide, not that the model is
           wrong.
+
+          --zrange Z0 Z1 limits it to a height band. USE IT when a prop has
+          parts anchored to its CENTRE rather than to an edge: a till's monitor
+          is a bought-in part, so it is fixed-size and centred, and it
+          therefore moves AWAY from the edge as the base widens. The strips
+          then differ enormously and correctly. Restrict the check to the band
+          where the edge-anchored parts actually live (--zrange 0 0.30 for that
+          till's base) and measure the centred parts on their own.
 
           It cannot see a part anchored in the MIDDLE of a face. Nothing here
           can; measure those individually.
@@ -51,20 +66,27 @@ except ImportError:
 
 
 def load(path):
-    """-> (px, obj, x0, x1, y0, y1). Ground detection as in measure.py."""
+    """-> (px, obj, x0, x1, y0, y1).
+
+    THE GROUND IS ALWAYS COLLECTED FROM THE BORDER RING, magenta or not. A
+    magenta-only test looks safer and is not: a screenshot can carry one stray
+    row at the canvas edge (an off-by-one between the renderer's height and the
+    capture's), and that row is then "object", so the bounding box is the whole
+    image and every measurement downstream is quietly wrong. Whatever is in the
+    outer ring is ground by definition. The magenta test is kept as well, so a
+    generated sheet still works if its ring happens to clip the subject.
+    """
     im = Image.open(path).convert("RGB")
     w, h = im.size
     px = im.load()
+    ring = {px[x, y] for y in range(h) for x in range(w)
+            if x < 3 or x >= w - 3 or y < 3 or y >= h - 3}
     c = px[0, 0]
-    if c[0] > 200 and c[2] > 200 and c[1] < 80:
-        def bg(p):
-            return p[0] > 200 and p[2] > 200 and p[1] < 80
-    else:
-        ground = {px[x, y] for y in range(h) for x in range(w)
-                  if x < 3 or x >= w - 3 or y < 3 or y >= h - 3}
+    magenta = c[0] > 200 and c[2] > 200 and c[1] < 80
 
-        def bg(p):
-            return p in ground
+    def bg(p):
+        return p in ring or (magenta and p[0] > 200 and p[2] > 200 and p[1] < 80)
+
     obj = [[not bg(px[x, y]) for x in range(w)] for y in range(h)]
     xs = [x for x in range(w) if any(obj[y][x] for y in range(h))]
     ys = [y for y in range(h) if any(obj[y][x] for x in range(w))]
@@ -124,7 +146,7 @@ def bands(a_path, b_path, n):
     print("with measure.py --rows on BOTH images before changing anything.")
 
 
-def margins(a_path, b_path, strip):
+def margins(a_path, b_path, strip, zlo=0.0, zhi=1.0):
     pa, oa, ax0, ax1, ay0, ay1 = load(a_path)
     pb, ob, bx0, bx1, by0, by1 = load(b_path)
     ha, hb = ay1 - ay0 + 1, by1 - by0 + 1
@@ -133,15 +155,16 @@ def margins(a_path, b_path, strip):
         print("     SAME prop at two widths — if the height changed too, ?w= is a")
         print("     uniform scale and the test proves nothing. See phase 1.4.")
     rows = min(ha, hb)
+    r0, r1 = int(rows * zlo), int(rows * zhi)
     print(f"A {Path(a_path).name}  body {ax1-ax0+1} px")
     print(f"B {Path(b_path).name}  body {bx1-bx0+1} px")
-    print(f"comparing {strip}-px strips down each edge, {rows} rows, "
-          f"aligned on the silhouette\n")
+    print(f"comparing {strip}-px strips down each edge, rows z={zlo:.2f}..{zhi:.2f} "
+          f"({r1 - r0} of {rows}), aligned on the silhouette\n")
     for side in ("left", "right"):
         diffs = []
         for c in range(strip):
             n = 0
-            for r in range(rows):
+            for r in range(r0, r1):
                 if side == "left":
                     xa, xb = ax0 + c, bx0 + c
                 else:
@@ -150,12 +173,13 @@ def margins(a_path, b_path, strip):
                 if pa[xa, ya] != pb[xb, yb]:
                     n += 1
             diffs.append(n)
+        span = max(1, r1 - r0)
         total = sum(diffs)
-        heavy = [c for c, n in enumerate(diffs) if n > rows * 0.25]
+        heavy = [c for c, n in enumerate(diffs) if n > span * 0.25]
         print(f"{side.upper()} STRIP  {total} differing pixels "
-              f"({total / (strip * rows) * 100:.1f}% of the strip)")
-        bar = "".join("#" if n > rows * 0.25 else
-                      "+" if n > rows * 0.05 else
+              f"({total / (strip * span) * 100:.1f}% of the strip)")
+        bar = "".join("#" if n > span * 0.25 else
+                      "+" if n > span * 0.05 else
                       "." if n else " " for n in diffs)
         print(f"  col 0{' ' * max(0, strip - 12)}col {strip - 1}")
         print(f"  {bar}")
@@ -166,8 +190,7 @@ def margins(a_path, b_path, strip):
             print("  If they are inside a REPEAT region (contents, slats, seams)")
             print("  they SHOULD differ — narrow --strip until it stops there.")
         else:
-            print("  Scattered only — that is the ordered dither shifting with")
-            print("  canvas width. Nothing anchored to this edge changed.")
+            print("  Scattered only — nothing anchored to this edge changed.")
         print()
     print("Reminder: this cannot see a part anchored in the MIDDLE of a face.")
     print("Measure those individually — see BUILDING-A-PROP.txt phase 6.7.")
@@ -181,9 +204,12 @@ def main():
     ap.add_argument("--margins", action="store_true")
     ap.add_argument("-n", type=int, default=24, help="bands to sample")
     ap.add_argument("--strip", type=int, default=60, help="edge strip width, px")
+    ap.add_argument("--zrange", nargs=2, type=float, default=[0.0, 1.0],
+                    metavar=("Z0", "Z1"),
+                    help="limit --margins to this height band, 0 at the floor")
     x = ap.parse_args()
     if x.margins:
-        margins(x.a, x.b, x.strip)
+        margins(x.a, x.b, x.strip, x.zrange[0], x.zrange[1])
     else:
         bands(x.a, x.b, x.n)
 
