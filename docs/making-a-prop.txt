@@ -226,6 +226,22 @@ PHASE 5  —  FITTINGS (this is where character comes from)
           a SEAM. A hash over flat fields reads as dirt, because placement is
           the meaning and a hash cannot mean anything.
 
+ [ ] 5.0  MEASURE THE FITTINGS BEFORE PLACING ANY. Go back to the reference
+          and find, for each one: its position as a fraction of the body, its
+          size, and its ASPECT. Then check the atlas actually has a tile that
+          shape.
+
+          If nothing matches, do NOT stretch a tile to fit — that breaks the
+          one property the system rests on. Either generate a fitting of the
+          right shape, or build it as GEOMETRY. A plain chrome nameplate is
+          three boxes; a rating plate covered in small print is a decal.
+
+          And check the fitting EXISTS in the reference before placing it.
+          Two hinges were placed on a door whose reference has none: counting
+          off-body pixels along both door edges gave 6915 and 6744, equal, so
+          that is outline and shading. A hinge would make one edge markedly
+          busier than the other.
+
  [ ] 5.1b Give a fitting enough geometry to have character. A handle is not a
           box: the reference's is a grip on two stand-off mounts with a bright
           catch down its lit face. Make the mounts WIDER than the grip so they
@@ -339,6 +355,11 @@ Holes at some corners, loose triangles at others
 Bevel facets are invisible even though the mesh has them
     Face tints are switching on the dominant normal instead of weighting by it,
     so a 45-degree chamfer takes the same value as the face beside it.
+
+A fitting is the wrong shape, or is not in the reference at all
+    Phase 5.0. Measure position, size AND aspect before placing anything, and
+    verify the feature exists in the reference rather than assuming a fridge
+    "should" have hinges.
 
 A fitting hangs off the edge of the part it is on
     The decal has no `fit` bound. See phase 5.4b. This is not the same bug as a

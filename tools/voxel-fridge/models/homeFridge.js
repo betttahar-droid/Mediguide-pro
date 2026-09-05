@@ -156,24 +156,42 @@ export function build(THREE, MATS, kit, H) {
   handle(0.200, 0.560);
   handle(0.720, 0.815);
 
-  // ---- top cap ------------------------------------------------------------
-  add('mint', [-(W - 0.6), -(D - 0.6), z(0.965)], [W - 0.6, D - 0.6, z(1.0)],
-      { bevel: 2.0 });
+  // ---- top ----------------------------------------------------------------
+  // THERE IS NO TOP CAP. Measured across the reference, the body holds full
+  // width to z 0.94 and then curves in to 0.81 by the very top — a rounded
+  // SHOULDER, not a lid. The carcass bevel of 3.4 units already produces 0.79
+  // there, which is the measurement within a pixel. The separate narrower slab
+  // that used to sit here was inventing a lid the reference does not have, and
+  // it read as one.
+
+  // ---- badge --------------------------------------------------------------
+  // MEASURED: x 0.394..0.606 of the body (centred, 21% wide) and 4.8% of the
+  // height. That is an aspect of about 2.2; the fittings atlas's rating plate
+  // is 1.46 and could not make the shape without being stretched, which is the
+  // one thing a fitting must never be. A plain chrome nameplate is three boxes,
+  // so it is geometry. Centred, so its POSITION needs no anchoring; its SIZE is
+  // fixed, so a wider fridge gets the same badge.
+  const B_W = 0.21 * 2 * W, B_H = 0.048 * TOT;
+  const bz = z(0.870);
+  add('steel', [-B_W / 2, P_DOOR - 0.5, bz - B_H / 2],
+               [B_W / 2, P_DOOR, bz + B_H / 2], { bevel: 0.5 });
+  add('chrome', [-B_W / 2 + 0.6, P_DOOR - 0.8, bz - B_H / 2 + 0.5],
+                [B_W / 2 - 0.6, P_DOOR - 0.4, bz + B_H / 2 - 0.5], { bevel: 0.3 });
+  add('slot', [-B_W / 2 + 1.2, P_DOOR - 0.9, bz - 0.3],
+              [B_W / 2 - 1.2, P_DOOR - 0.85, bz + 0.3], { bevel: 0 });
 
   // ---- FITTINGS -----------------------------------------------------------
   // A badge on the upper door and a rating plate round the side, both mounted
   // on named planes rather than on numbers typed here.
-  // Every one is ANCHORED and clamped to the face it sits on. `fit` is that
-  // face's half-extent: without it a hinge anchored 2.2 units from the door's
-  // edge is wider than 2.2 units and hangs off into thin air.
-  const onDoor = { u: dIn };
-  g.add(decal(THREE, kit, 'ratingPlate', 'front', 0, z(0.812),
-              tx(2.2), P_DOOR - EPS, T.front, onDoor));
-  g.add(decal(THREE, kit, 'labelHolder', 'left', 2, z(0.45),
-              tx(5), -W - EPS, T.side, { u: D - 2 }));
-  for (const zz of [0.30, 0.76]) {
-    g.add(decal(THREE, kit, 'hinge', 'front', fromL(2.6), z(zz),
-                tx(3), P_DOOR - EPS, T.front, onDoor));
-  }
+  // NO HINGES ON THE FRONT. Checked rather than assumed: off-body pixels along
+  // the two door edges of the reference come to 6915 and 6744 — equal, which is
+  // outline and shading. A hinge would make one edge markedly busier than the
+  // other. There are none, and the pair I had placed were an invention that
+  // happened to straddle the door's edge and look broken.
+  //
+  // The rating plate goes round the side, where a real fridge carries one, and
+  // is clamped to that flank.
+  g.add(decal(THREE, kit, 'ratingPlate', 'left', 2, z(0.45),
+              tx(5), -W - EPS, T.side, { u: D - 2, v: TOT / 2 }));
   return g;
 }
