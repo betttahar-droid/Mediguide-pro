@@ -209,6 +209,11 @@ export const MATERIALS = {
   // Sampled off docs/style-bible/props/home_fridge.png for the second prop.
   // Adding a prop should cost a colour family and nothing else — no shader
   // change, no new tile, no new rule.
+  // Same colour family, no edge rule. The outline+catch is drawn on every box,
+  // which is right for a part and wrong for a SLICE OF ONE SURFACE: a stacked
+  // shoulder of three slices drew three rims and read as a ziggurat. Anything
+  // built from stacked slices wants this variant.
+  mintFlat: M({ base: '#a5d6b6', lit: '#c5f3d4', shade: '#95baa7', edge: 0 }),
   mint:     M({ base: '#a5d6b6', lit: '#c5f3d4', shade: '#95baa7', surface: 'trim' }),
   // Bright steel for a highlight ON steel. `glint` could not serve here: it was
   // repurposed to a GREEN for the other model's glass reflection, so a handle
@@ -605,11 +610,22 @@ export function buildPalette(THREE, limit = 64) {
 // convex solid centred on the origin. Enumerating 44 triangles by hand and
 // getting each one's vertex order right is a guaranteed source of invisible
 // inside-out faces, and the check costs nothing.
+// `bevel` is a NUMBER for a uniform chamfer, or [bx, by, bz] to chamfer each
+// axis by a different amount — which is what stops the bevel being a rule
+// applied everywhere without asking what the part is. [1.6, 0, 1.6] rounds the
+// four vertical edges and leaves the top and bottom crisp; [0.6, 3.4, 0.6]
+// does the opposite, which is the profile of a fridge with a rounded shoulder
+// and square sides. A single number everywhere reads as a soap bar.
 export function shapedBox(THREE, sx, sy, sz, bevel = 0, taperX = 0, taperZ = 0) {
   const h = [sx / 2, sy / 2, sz / 2];
-  // A bevel cannot eat more than a third of the smallest side, or opposite
-  // facets meet and the solid turns inside out. Small trim keeps a hairline.
-  const b = Math.max(0, Math.min(bevel, 0.34 * Math.min(sx, sy, sz)));
+  const size = [sx, sy, sz];
+  const raw = Array.isArray(bevel) ? bevel : [bevel, bevel, bevel];
+  // A bevel cannot eat more than a third of the sides it cuts into, or opposite
+  // facets meet and the solid turns inside out. Clamped PER AXIS now, so a
+  // heavy shoulder on a tall box is not throttled by its thin depth.
+  const bv = raw.map((v, i) => Math.max(0, Math.min(v,
+    0.34 * Math.min(size[(i + 1) % 3], size[(i + 2) % 3]))));
+  const b = Math.max(...bv);
   const V = (a, va, bb, vb, c, vc) => {
     const q = [0, 0, 0]; q[a] = va; q[bb] = vb; q[c] = vc; return q;
   };
@@ -619,7 +635,8 @@ export function shapedBox(THREE, sx, sy, sz, bevel = 0, taperX = 0, taperZ = 0) 
   for (let a = 0; a < 3; a++) {                      // 6 face quads
     const u = (a + 1) % 3, v = (a + 2) % 3;
     for (const s of [-1, 1]) {
-      const P = (su, sv) => V(a, s * h[a], u, su * (h[u] - b), v, sv * (h[v] - b));
+      const P = (su, sv) =>
+        V(a, s * h[a], u, su * (h[u] - bv[u]), v, sv * (h[v] - bv[v]));
       quad(P(-1, -1), P(1, -1), P(1, 1), P(-1, 1));
     }
   }
@@ -632,10 +649,11 @@ export function shapedBox(THREE, sx, sy, sz, bevel = 0, taperX = 0, taperZ = 0) 
     for (let c = a + 1; c < 3; c++) {
       const o = 3 - a - c;
       for (const sa of [-1, 1]) for (const sc of [-1, 1]) {
-        quad(V(a, sa * h[a], c, sc * (h[c] - b), o, h[o] - b),
-             V(a, sa * h[a], c, sc * (h[c] - b), o, -(h[o] - b)),
-             V(a, sa * (h[a] - b), c, sc * h[c], o, -(h[o] - b)),
-             V(a, sa * (h[a] - b), c, sc * h[c], o, h[o] - b));
+        if (bv[a] < 1e-4 && bv[c] < 1e-4) continue;   // no chamfer on this edge
+        quad(V(a, sa * h[a], c, sc * (h[c] - bv[c]), o, h[o] - bv[o]),
+             V(a, sa * h[a], c, sc * (h[c] - bv[c]), o, -(h[o] - bv[o])),
+             V(a, sa * (h[a] - bv[a]), c, sc * h[c], o, -(h[o] - bv[o])),
+             V(a, sa * (h[a] - bv[a]), c, sc * h[c], o, h[o] - bv[o]));
       }
     }
   }
@@ -650,9 +668,9 @@ export function shapedBox(THREE, sx, sy, sz, bevel = 0, taperX = 0, taperZ = 0) 
     // outside the silhouette at others. A vertex-bounds check cannot see that,
     // because every vertex is still inside the box; see the watertightness
     // check in the header note.
-    tris.push([[sx_ * h[0], sy_ * (h[1] - b), sz_ * (h[2] - b)],
-               [sx_ * (h[0] - b), sy_ * h[1], sz_ * (h[2] - b)],
-               [sx_ * (h[0] - b), sy_ * (h[1] - b), sz_ * h[2]]]);
+    tris.push([[sx_ * h[0], sy_ * (h[1] - bv[1]), sz_ * (h[2] - bv[2])],
+               [sx_ * (h[0] - bv[0]), sy_ * h[1], sz_ * (h[2] - bv[2])],
+               [sx_ * (h[0] - bv[0]), sy_ * (h[1] - bv[1]), sz_ * h[2]]]);
   }
 
   // Taper: narrow the top. Applied after the bevel so the two compose, and as a
@@ -687,6 +705,42 @@ export function shapedBox(THREE, sx, sy, sz, bevel = 0, taperX = 0, taperZ = 0) 
   geo.setAttribute('normal', new THREE.Float32BufferAttribute(nrm, 3));
   geo.setAttribute('aHalf', new THREE.Float32BufferAttribute(half, 3));
   return geo;
+}
+
+// PS1-STYLE ROUNDING: a curve is a few flat steps, not a smooth surface.
+//
+// A single 45-degree chamfer gives a straight diagonal cut. A rounded shoulder
+// like the reference fridge's needs the inset to grow non-linearly, and the era
+// did that the only way it could — with two or three flat facets. This emits
+// exactly that: a stack of slices, each inset by a measured amount.
+//
+// THE PROFILE IS MEASURED, NOT A FORMULA. The obvious move is a quarter circle,
+// and the reference's top is not one: measured off it, the inset runs 0, 0.61,
+// 1.33, 3.02 units over heights 0, 1.26, 2.52, 3.47 — nearly linear and then
+// rolling off hard at the very top. Any arc formula fitted to the endpoints
+// misses the middle by a third of the shoulder. So `profile` is a list of
+// [height above the base, inset each side] read straight off the reference.
+//
+// `add` is the model's own add(), so the slices land in its group with its
+// materials and every slice is a normal shapedBox — watertight, bevelled, and
+// carrying the surface mask like anything else.
+// Each entry is [height above the base, inset AT that height], and the slice
+// reaching that height is drawn at that inset — so the silhouette passes
+// through every measured point exactly. Using the PREVIOUS entry's inset (the
+// obvious-looking version) shifts the whole profile down one step and drops the
+// last one entirely, so the cap never reaches its measured top width.
+//
+// The slices carry NO vertical bevel. Bevelled on all three axes a 1.26-unit
+// slice is mostly chamfer and reads as a separate rounded bar; the stack came
+// out looking like a pile of pipes. Flat top and bottom faces let them meet
+// flush, and the horizontal bevel alone rounds the corners.
+export function capProfile(add, kind, hx, hy, zBase, profile, opts = {}) {
+  let prevZ = 0;
+  for (const [dz, inset] of profile) {
+    add(kind, [-(hx - inset), -(hy - inset), zBase + prevZ],
+              [hx - inset, hy - inset, zBase + dz], opts);
+    prevZ = dz;
+  }
 }
 
 // A box from table coords [x1,y1,z1]-[x2,y2,z2] (Blender z-up, front -y) into

@@ -20,7 +20,7 @@
 //   upper door         z 0.690 .. 0.846   (16%)
 //   top cap            z 0.846 .. 1.000
 //   handle             x 0.115 .. 0.208 of the width, on BOTH doors
-import { STYLE, tableBox, decal } from '../style.js';
+import { STYLE, tableBox, decal, capProfile } from '../style.js';
 
 export const objLo = 0;
 export const objHi = 63;
@@ -68,11 +68,16 @@ export function build(THREE, MATS, kit, H) {
   const P_BODY = F;
   const EPS = 0.1;
 
-  // THE ROUNDING IS THE WHOLE CHARACTER of a 1950s fridge, so the body and the
-  // doors carry a much heavier chamfer than the default. shapedBox clamps it to
-  // a third of the smallest side, so the thin door slabs stay sane on their own.
-  const ROUND = { bevel: 3.4 };
-  const DOOR_ROUND = { bevel: 2.6 };
+  // BEVELS ARE PER AXIS, not one number everywhere. A uniform chamfer rounds
+  // every edge equally and the prop reads as a bar of soap; the reference has
+  // soft vertical corners, a soft shoulder and a crisp base. [x, y, z]:
+  const ROUND = { bevel: [2.6, 0.8, 2.6] };      // soft sides, near-crisp top/base
+  const DOOR_ROUND = { bevel: [2.2, 1.2, 0.6] }; // soft sides, softer top, flat face
+
+  // The shoulder profile, MEASURED off the reference in world units above the
+  // point where the body stops being full width (z 0.94). Three flat steps, in
+  // the PS1 manner — see capProfile().
+  const SHOULDER = [[1.26, 0.61], [2.52, 1.33], [3.47, 3.02]];
 
   // ---- feet: four stubby blocks -------------------------------------------
   for (const sx of [-1, 1]) for (const sy of [-1, 1]) {
@@ -96,8 +101,15 @@ export function build(THREE, MATS, kit, H) {
   // ---- the carcass: ONE big rounded shell ---------------------------------
   // A retro fridge is one mass, not an assembly. The doors sit on the front of
   // it; everything else is this box.
-  add('mint', [-W, -D, z(0.10)], [W, D, z(1.0)],
-      { ...ROUND, taperX: 0.9, taperZ: 0.9 });
+  const TAPER = 0.9;
+  add('mint', [-W, -D, z(0.10)], [W, D, z(0.94)],
+      { ...ROUND, taperX: TAPER, taperZ: TAPER });
+  // The shoulder starts at the carcass's TAPERED top width, not at W. Starting
+  // it at W made every step overhang the body by the taper and the whole top
+  // read as a stepped cornice sitting on the fridge — a wedding cake. A tapered
+  // part and anything stacked on it have to agree about where its top edge is.
+  capProfile(add, 'mintFlat', W - TAPER, D - TAPER, z(0.94), SHOULDER,
+             { bevel: [0.9, 0, 0.9] });
 
   // ---- doors --------------------------------------------------------------
   // Both are slabs standing proud of the carcass, inset slightly at the sides

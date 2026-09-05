@@ -150,8 +150,29 @@ PHASE 2  —  GEOMETRY
           behaviour a tiling texture is usually asked for, and it cannot smear.
 
  [ ] 2.3  Bevel and taper — the kit never leaves a form a plain prism.
-             - bevel is on by default (STYLE.bevel, ~1 texel)
              - taper via opts: { taperX: 1.6, taperZ: 1.6 }
+             - bevel is a NUMBER for a uniform chamfer, or [bx, by, bz] to
+               chamfer each axis differently. USE THE ARRAY. One number
+               everywhere rounds every edge equally and the prop reads as a bar
+               of soap; [2.6, 0.8, 2.6] gives soft vertical corners and a
+               near-crisp top and base, which is a fridge.
+
+ [ ] 2.3b For anything that has to look ROUNDED rather than chamfered, use
+          capProfile() — PS1 rounds with two or three flat facets, not a
+          surface. Three rules, each learned the hard way:
+
+            - The profile is MEASURED off the reference, as [height, inset]
+              pairs. The obvious quarter-circle formula misses this reference's
+              shoulder by a third of its depth.
+            - Each slice takes ITS OWN inset, so the silhouette passes through
+              every measured point. Using the previous entry's shifts the whole
+              profile down a step and never reaches the top width.
+            - Slices get NO vertical bevel and a material with edge: 0. A
+              1.26-unit slice bevelled on all axes is mostly chamfer and reads
+              as a separate bar; and the outline rule drawn on each slice gives
+              a stack of three rims, which reads as a ziggurat.
+            - A cap on a TAPERED part must start at that part's tapered top
+              width, not its nominal width, or every step overhangs the body.
 
  [ ] 2.4  Apply the SILHOUETTE RULE: set `bevel: 0` on any material whose parts
           never break the outline — interior walls, shelves, slots, glyphs.
@@ -351,6 +372,12 @@ Holes at some corners, loose triangles at others
     A topology bug a vertex-bounds check cannot see. Check WATERTIGHTNESS: every
     edge shared by exactly two triangles. A correct bevelled box is 24 verts,
     66 edges, 44 triangles, V - E + F = 2.
+
+A rounded cap reads as a wedding cake or a stack of pipes
+    Three separate causes, all in phase 2.3b: the cap starting at the nominal
+    width of a tapered part instead of its tapered top; slices bevelled on the
+    vertical axis so each becomes a lozenge; or slices using a material whose
+    edge rule draws a rim on every one of them.
 
 Bevel facets are invisible even though the mesh has them
     Face tints are switching on the dominant normal instead of weighting by it,
