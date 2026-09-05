@@ -32,7 +32,21 @@ export function build(THREE, MATS, kit, H) {
   const tx = (n) => n * STYLE.texel;
   const T = STYLE.tint;
 
-  // ---- PHASE 1: proportions, as fractions of one driving dimension ---------
+  // ---- HOW EACH PART BEHAVES WHEN THE PROP RESIZES ------------------------
+  // Not everything scales, and getting this wrong is invisible until you widen
+  // the prop. Every part is exactly one of three kinds:
+  //
+  //   STRETCH  fills the span. The carcass, the doors, the plinth. Written as
+  //            fractions of W, because that IS what they are.
+  //   ANCHOR   a FIXED WORLD SIZE at a FIXED DISTANCE from a named edge.
+  //            Handles, feet, badges, controls, hinges. Written with the
+  //            helpers below and never as a fraction of W — a fraction makes a
+  //            handle grow with the cabinet, which is exactly the bug this
+  //            comment exists to prevent.
+  //   REPEAT   a fixed size whose COUNT follows the span. The vent slats.
+  //
+  // The tell for a mistake is: widen the prop and see what changed size that
+  // should not have.
   const W = H;                 // body half-width — the 100%
   const D = W * 1.003;         // half-depth: square in plan
   // HEIGHT IS INDEPENDENT OF WIDTH. Deriving it as W * 3.95 meant widening the
@@ -43,6 +57,10 @@ export function build(THREE, MATS, kit, H) {
   // the geometry and the shading ramp cannot disagree.
   const TOT = objHi - objLo;
   const z = (f) => f * TOT;    // a measured fraction -> world height
+
+  // ANCHOR helpers: a fixed distance in from an edge, never a fraction of it.
+  const fromR = (off) => W - off;
+  const fromL = (off) => -W + off;
 
   const F = -D;                // body front face
   // Mounting planes, named before any geometry exists and used to build it.
@@ -58,7 +76,8 @@ export function build(THREE, MATS, kit, H) {
 
   // ---- feet: four stubby blocks -------------------------------------------
   for (const sx of [-1, 1]) for (const sy of [-1, 1]) {
-    const x1 = sx > 0 ? W - 5 : -W + 1, x2 = sx > 0 ? W - 1 : -(W - 5);
+    // ANCHOR: a fixed 4x4 block a fixed 1 unit in from each corner.
+    const x1 = sx > 0 ? fromR(5) : fromL(1), x2 = sx > 0 ? fromR(1) : fromL(5);
     const y1 = sy > 0 ? D - 5 : -D + 1, y2 = sy > 0 ? D - 1 : -(D - 5);
     add('steel', [x1, y1, 0], [x2, y2, z(0.045)], { bevel: 1.0 });
   }
@@ -100,17 +119,39 @@ export function build(THREE, MATS, kit, H) {
       { bevel: 0 });
 
   // ---- handles: long slim verticals on the opening edge of each door -------
-  // Measured at x 0.115..0.208 of the width, which is 0.115*2W in from the left.
-  // Measured from the reference's LEFT edge; +x renders on the image left
-  // with this camera, so the measurement mirrors into positive x.
-  const hx2 = W - 0.115 * 2 * W, hx1 = W - 0.208 * 2 * W;
+  // ANCHORED, NOT SCALED. Measured at x 0.115..0.208 of the reference's width,
+  // which at the default half-width is 3.7 units in from the edge and 3.0 units
+  // wide. Both of those are now CONSTANTS: a wider fridge gets the same handle
+  // in the same place relative to its edge, not a wider handle. Written as
+  // fractions of W (as it was) the handle grew with the cabinet.
+  const H_OFF = 3.7;           // fixed distance in from the door's edge
+  const H_W = 3.0;             // fixed handle width
+  const hx2 = fromR(H_OFF), hx1 = hx2 - H_W;
+
+  // A handle with some character, not a bar. The reference's is a grip standing
+  // off the door on two mounts, with a bright face and a darker return under
+  // it — five small boxes, all at fixed world sizes.
   const handle = (zLo, zHi) => {
-    add('steel', [hx1, P_DOOR - 1.8, z(zLo)], [hx2, P_DOOR - 0.2, z(zHi)],
-        { bevel: 0.7 });
-    for (const zz of [zLo, zHi]) {          // the two mounts
-      add('steel', [hx1 + 0.4, P_DOOR - 0.4, z(zz) - 0.6],
-                   [hx2 - 0.4, P_DOOR, z(zz) + 0.6], { bevel: 0 });
+    const a = z(zLo), b = z(zHi);
+    // The mounts are WIDER than the grip, so they read as separate pieces
+    // rather than hiding behind it — the silhouette is what sells a fitting.
+    // The mount inset is fixed EXCEPT where the handle is too short to hold
+    // two of them — the freezer door's is a third the length of the fridge
+    // door's, and fixed insets made the two mounts meet in the middle and read
+    // as a lozenge. Same rule as everywhere else: a fixed-size feature gates on
+    // whether the thing it sits on can carry it.
+    const m = Math.min(1.4, (b - a) * 0.18);
+    for (const zz of [a + m, b - m]) {
+      add('steel', [hx1 - 0.5, P_DOOR - 1.4, zz - 1.0],
+                   [hx2 + 0.5, P_DOOR + 0.2, zz + 1.0], { bevel: 0.4 });
     }
+    // the grip, standing proud on them, with rounded ends
+    add('steel', [hx1, P_DOOR - 2.8, a], [hx2, P_DOOR - 1.2, b], { bevel: 0.8 });
+    // a bright chrome catch down its lit face, and a dark return underneath
+    add('chrome', [hx1 + 0.35, P_DOOR - 3.0, a + 0.8],
+                  [hx1 + 1.15, P_DOOR - 2.7, b - 0.8], { bevel: 0 });
+    add('slot', [hx1 + 0.3, P_DOOR - 1.35, a + 0.5],
+                [hx2 - 0.3, P_DOOR - 1.2, b - 0.5], { bevel: 0 });
   };
   handle(0.200, 0.560);
   handle(0.720, 0.815);
@@ -122,13 +163,17 @@ export function build(THREE, MATS, kit, H) {
   // ---- FITTINGS -----------------------------------------------------------
   // A badge on the upper door and a rating plate round the side, both mounted
   // on named planes rather than on numbers typed here.
-  g.add(decal(THREE, kit, 'ratingPlate', 'front', -W * 0.12, z(0.812),
-              tx(2.2), P_DOOR - EPS, T.front));
+  // Every one is ANCHORED and clamped to the face it sits on. `fit` is that
+  // face's half-extent: without it a hinge anchored 2.2 units from the door's
+  // edge is wider than 2.2 units and hangs off into thin air.
+  const onDoor = { u: dIn };
+  g.add(decal(THREE, kit, 'ratingPlate', 'front', 0, z(0.812),
+              tx(2.2), P_DOOR - EPS, T.front, onDoor));
   g.add(decal(THREE, kit, 'labelHolder', 'left', 2, z(0.45),
-              tx(5), -W - EPS, T.side));
-  g.add(decal(THREE, kit, 'hinge', 'front', -(W - 2.2), z(0.30),
-              tx(3), P_DOOR - EPS, T.front));
-  g.add(decal(THREE, kit, 'hinge', 'front', -(W - 2.2), z(0.76),
-              tx(3), P_DOOR - EPS, T.front));
+              tx(5), -W - EPS, T.side, { u: D - 2 }));
+  for (const zz of [0.30, 0.76]) {
+    g.add(decal(THREE, kit, 'hinge', 'front', fromL(2.6), z(zz),
+                tx(3), P_DOOR - EPS, T.front, onDoor));
+  }
   return g;
 }

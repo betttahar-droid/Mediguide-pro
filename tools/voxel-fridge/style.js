@@ -210,6 +210,12 @@ export const MATERIALS = {
   // Adding a prop should cost a colour family and nothing else — no shader
   // change, no new tile, no new rule.
   mint:     M({ base: '#a5d6b6', lit: '#c5f3d4', shade: '#95baa7', surface: 'trim' }),
+  // Bright steel for a highlight ON steel. `glint` could not serve here: it was
+  // repurposed to a GREEN for the other model's glass reflection, so a handle
+  // highlighted with it had a green stripe down its face that read as a hole
+  // through the handle. A material named for an effect rather than a substance
+  // stops being reusable the moment a second object wants the effect.
+  chrome:   M({ base: '#dde6f7', lit: '#f2f6fd', shade: '#bcc9e2', edge: 0.10 }),
   steel:    M({ base: '#c0ceeb', lit: '#d6e2f8', shade: '#a3b0cc', edge: 0.16 }),
   tan:      M({ base: '#d9a95f', lit: '#e8bc76', shade: '#c08c45', edge: 0.14, grain: 0.30 }),
   tan2:     M({ bevel: 0, base: '#c08c45', lit: '#d9a95f', shade: '#8e6529', edge: 0 }),
@@ -739,9 +745,24 @@ export function loadFittings(THREE, tex, manifest) {
 
 // One fitting, as its own quad. `h` is its world HEIGHT; the width follows the
 // tile's aspect so a fitting is never squashed.
-export function decal(THREE, kit, name, face, u, v, h, depth, tint = 1.0) {
+// `fit` is the face's half-extent in (u, v). Given it, the decal is nudged
+// inward until it sits entirely on the face. Without it a fitting placed near
+// an edge hangs off the geometry into thin air — a hinge anchored a fixed
+// distance from a door's edge is wider than that distance, so half of it
+// overhung the door and floated.
+//
+// It nudges rather than shrinks on purpose: a fitting is a FIXED WORLD SIZE, so
+// scaling it to fit would silently break the one property the whole system is
+// built on. If it genuinely cannot fit, it is placed flush and left overhanging,
+// because a visibly wrong decal is better than a quietly resized one.
+export function decal(THREE, kit, name, face, u, v, h, depth, tint = 1.0, fit = null) {
   const t = kit.man.tiles[name];
   if (!t) throw new Error(`no fitting "${name}"`);
+  if (fit) {
+    const hw = h * t.aspect / 2, hh = h / 2;
+    if (fit.u != null) u = Math.max(-fit.u + hw, Math.min(fit.u - hw, u));
+    if (fit.v != null) v = Math.max(-fit.v + hh, Math.min(fit.v - hh, v));
+  }
   const [rx, ry, rw, rh] = t.rect;
   const [aw, ah] = kit.man.size;
   const geo = new THREE.PlaneGeometry(h * t.aspect, h);
