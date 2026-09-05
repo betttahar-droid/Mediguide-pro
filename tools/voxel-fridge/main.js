@@ -330,4 +330,56 @@ window.__stats = (() => {
 })();
 console.info(`geometry: ${window.__stats.triangles} triangles, `
   + `${window.__stats.parts} parts + ${window.__stats.decals} decals`);
+
+// ---------------------------------------------------------------------------
+// BURIED PARTS — the single most repeated mistake in this project, made
+// mechanical instead of remembered.
+//
+// There is no boolean subtract here, so a box placed inside another box is
+// simply invisible. It has happened on every prop and three times on one of
+// them: a solid cavity that hid four shelves of stock, a vent recessed INTO a
+// flank, and a compressor placed inside the carcass that rendered as two pipes
+// running down to nothing. None of those symptoms looks anything like its
+// cause, and each cost a render cycle to find by eye.
+//
+// A pair of axis-aligned boxes is trivial to test, and the CORRECT pattern in
+// this kit is to build a recess PROUD, which is never contained — so the false
+// positive rate is low by construction. Reported, never thrown: a part may be
+// deliberately hidden, and this prints evidence rather than a verdict.
+window.__buried = (() => {
+  const boxes = [];
+  scene.traverse((o) => {
+    const t = o.userData?.table;
+    if (t) boxes.push({ name: o.name, t, tapered: !!o.userData.tapered });
+  });
+  const inside = (a, b, eps) =>
+    a[0] >= b[0] - eps && a[1] >= b[1] - eps && a[2] >= b[2] - eps &&
+    a[3] <= b[3] + eps && a[4] <= b[4] + eps && a[5] <= b[5] + eps;
+  const vol = (t) => (t[3] - t[0]) * (t[4] - t[1]) * (t[5] - t[2]);
+  const out = [];
+  for (const a of boxes) {
+    for (const b of boxes) {
+      if (a === b || vol(b) <= vol(a) || b.tapered) continue;
+      if (!inside(a.t, b.t, 0.02)) continue;
+      // clearance on the tightest axis: 0 means a face is flush (z-fighting,
+      // probably survivable), > 0 means genuinely sealed inside.
+      const clear = Math.min(
+        a.t[0] - b.t[0], a.t[1] - b.t[1], a.t[2] - b.t[2],
+        b.t[3] - a.t[3], b.t[4] - a.t[4], b.t[5] - a.t[5]);
+      out.push({ part: a.name, inside: b.name, clearance: +clear.toFixed(2),
+                 at: a.t.map((v) => +v.toFixed(1)) });
+      break;
+    }
+  }
+  return out;
+})();
+if (window.__buried.length) {
+  console.info(`buried: ${window.__buried.length} part(s) fully inside another`);
+  for (const b of window.__buried.slice(0, 20)) {
+    console.info(`buried:   ${b.part} inside ${b.inside}`
+      + ` (clearance ${b.clearance}) at [${b.at.slice(0, 3)}]..[${b.at.slice(3)}]`);
+  }
+} else {
+  console.info('buried: none');
+}
 window.__done = true;

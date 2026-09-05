@@ -347,25 +347,33 @@ export function build(THREE, MATS, kit, H) {
   // The dark inner lip. MEASURED as a 4 px black line at x 0.081..0.095 and
   // 0.905..0.919 — the gasket, and the single thing that makes the glass read
   // as set INTO a frame rather than painted onto the front of one.
-  const lip = 0.6;
-  add('medDark', [-G - lip, P_GLASS, CAV_LO - lip], [-G, P_GLASS + 0.4, CAV_HI + lip],
-      { bevel: 0 });
-  add('medDark', [G, P_GLASS, CAV_LO - lip], [G + lip, P_GLASS + 0.4, CAV_HI + lip],
-      { bevel: 0 });
-  add('medDark', [-G - lip, P_GLASS, CAV_LO - lip], [G + lip, P_GLASS + 0.4, CAV_LO],
-      { bevel: 0 });
-  add('medDark', [-G - lip, P_GLASS, CAV_HI], [G + lip, P_GLASS + 0.4, CAV_HI + lip],
-      { bevel: 0 });
+  //
+  // IT MOUNTS TO THE DOOR'S FRONT PLANE, not to P_GLASS. Placed at P_GLASS it
+  // sat 1.45 units behind the stile's front face and 0.6 units inside its inner
+  // edge — which is to say entirely within the stile, drawing nothing. R5 says
+  // the frontmost surface a decal could overlap; the same rule governs a piece
+  // of geometry that rims an opening in a part that stands proud.
+  const lip = 0.6, gf = P_DOOR - 0.15;
+  const rim = (x1, z1, x2, z2) =>
+    add('medDark', [x1, gf, z1], [x2, P_DOOR + 0.2, z2], { bevel: 0 });
+  rim(-G - lip, CAV_LO - lip, -G, CAV_HI + lip);
+  rim(G, CAV_LO - lip, G + lip, CAV_HI + lip);
+  rim(-G - lip, CAV_LO - lip, G + lip, CAV_LO);
+  rim(-G - lip, CAV_HI, G + lip, CAV_HI + lip);
   // Four corner brackets on the door frame — the joint where a pressed section
   // is welded, and the one detail the reference draws at every corner of the
   // opening. ANCHORED at a fixed size to the corner they belong to.
   for (const sx of [-1, 1]) for (const sz of [-1, 1]) {
     const cx = sx * (G + lip), cz = sz > 0 ? CAV_HI + lip : CAV_LO - lip;
     const arm = 3.2, th = 0.9;
-    add('medTrim', [cx, P_GLASS - 0.15, cz], [cx - sx * arm, P_GLASS + 0.3, cz - sz * th],
-        { bevel: 0 });
-    add('medTrim', [cx, P_GLASS - 0.15, cz], [cx - sx * th, P_GLASS + 0.3, cz - sz * arm],
-        { bevel: 0 });
+    // ORDERED PAIRS. Written as [cx, ...]..[cx - sx*arm, ...] these inverted on
+    // whichever corner had sx or sz negative, which silently clamps the bevel
+    // to zero and would have hidden a real mistake in the next edit.
+    const ord = (a, b) => [Math.min(a, b), Math.max(a, b)];
+    const [ax1, ax2] = ord(cx, cx - sx * arm), [tx1, tx2] = ord(cx, cx - sx * th);
+    const [az1, az2] = ord(cz, cz - sz * arm), [tz1, tz2] = ord(cz, cz - sz * th);
+    add('medTrim', [ax1, gf - 0.15, tz1], [ax2, P_DOOR + 0.2, tz2], { bevel: 0 });
+    add('medTrim', [tx1, gf - 0.15, az1], [tx2, P_DOOR + 0.2, az2], { bevel: 0 });
   }
   // Screws down both stiles, at a fixed pitch. REPEAT along the height, which
   // does not change with ?w=, so the count here is constant — but written as a
@@ -416,8 +424,11 @@ export function build(THREE, MATS, kit, H) {
   // a bright catch down its lit face and a dark return under it
   add('chrome', [hx1 + 0.25, P_DOOR - 2.25, ha + 0.6],
                 [hx1 + 0.75, P_DOOR - 2.05, hb - 0.6], { bevel: 0 });
-  add('slot', [hx1 + 0.2, P_DOOR - 1.15, ha + 0.4],
-              [hx2 - 0.2, P_DOOR - 1.0, hb - 0.4], { bevel: 0 });
+  // The dark return reads as the GAP between the grip and the door, so it has
+  // to be WIDER than the grip and BEHIND it. Written narrower it was entirely
+  // inside the grip's own box and drew nothing at all.
+  add('slot', [hx1 - 0.2, P_DOOR - 1.0, ha + 0.4],
+              [hx2 + 0.2, P_DOOR - 0.7, hb - 0.4], { bevel: 0 });
 
   // ---- separator groove and control band ----------------------------------
   add('medDark', [-dIn, P_DOOR + 0.3, z(0.884)], [dIn, F + 0.6, z(0.897)],
@@ -443,9 +454,9 @@ export function build(THREE, MATS, kit, H) {
   // right of the cross, at a size where no glyph is legible — so it is drawn the
   // way the reference draws it, as marks, and not as text nobody can read. Two
   // rules of different lengths, which is what type looks like at 20 texels.
-  add('medDark', [CX - 2.6, cf, CZ - 1.7], [CX - 5.4, cf + 0.05, CZ - 1.2],
+  add('medDark', [CX - 5.4, cf, CZ - 1.7], [CX - 2.6, cf + 0.05, CZ - 1.2],
       { bevel: 0 });
-  add('medDark', [CX - 2.6, cf, CZ - 2.5], [CX - 4.4, cf + 0.05, CZ - 2.0],
+  add('medDark', [CX - 4.4, cf, CZ - 2.5], [CX - 2.6, cf + 0.05, CZ - 2.0],
       { bevel: 0 });
   // Two small button pips between the logo and the readout. A control band with
   // a display and nothing to press is a panel, not a controller.
@@ -496,21 +507,28 @@ export function build(THREE, MATS, kit, H) {
   // is faked the way the plinth vent and the condenser grille on the other two
   // props are: a dark panel standing a hair off the surface, lighter slats
   // standing a hair off THAT, and a rim around both. The shading does the rest.
+  // THREE DEPTHS, EACH STRICTLY IN FRONT OF THE LAST, and each written as an
+  // ordered pair. Getting this wrong is silent twice over: `sl[1] - 0.15` on a
+  // 0.14-wide band inverted the slats AND left them behind the dark panel, so
+  // every slat on both flanks was buried and the grille rendered as a flat dark
+  // patch. Neither the inversion nor the burial is visible in the source.
   for (const sx of [-1, 1]) {
-    const p = (o) => sx * (W + o);
-    const dk = [Math.min(p(0.02), p(0.16)), Math.max(p(0.02), p(0.16))];
-    const sl = [Math.min(p(0.12), p(0.26)), Math.max(p(0.12), p(0.26))];
+    const span = (o1, o2) => {         // an ordered [min, max] pair on x
+      const a = sx * (W + o1), b = sx * (W + o2);
+      return [Math.min(a, b), Math.max(a, b)];
+    };
+    const dk = span(0.00, 0.10);       // the sunk panel
+    const sl = span(0.10, 0.22);       // slats, in front of it
+    const rm = span(0.10, 0.30);       // rim, in front of them
     add('medDark', [dk[0], VY1, VZ1], [dk[1], VY2, VZ2], { bevel: 0 });
-    // the rim, standing out level with the slats so the panel reads as sunk
     for (const [a, b] of [[VY1, VY1 + 0.8], [VY2 - 0.8, VY2]]) {
-      add('medFlat', [sl[0], a, VZ1], [sl[1], b, VZ2], { bevel: 0 });
+      add('medFlat', [rm[0], a, VZ1], [rm[1], b, VZ2], { bevel: 0 });
     }
     for (const [a, b] of [[VZ1, VZ1 + 0.7], [VZ2 - 0.7, VZ2]]) {
-      add('medFlat', [sl[0], VY1, a], [sl[1], VY2, b], { bevel: 0 });
+      add('medFlat', [rm[0], VY1, a], [rm[1], VY2, b], { bevel: 0 });
     }
-    // the slats
     for (let s = VZ1 + 1.5; s < VZ2 - 1.2; s += PITCH) {
-      add('medFlat', [sl[0], VY1 + 1.0, s], [sl[1] - 0.15, VY2 - 1.0, s + 0.55],
+      add('medFlat', [sl[0], VY1 + 1.0, s], [sl[1], VY2 - 1.0, s + 0.55],
           { bevel: 0 });
     }
     // Screws at the panel's corners — the one fitting the style bible applies
@@ -518,7 +536,7 @@ export function build(THREE, MATS, kit, H) {
     g.add(...screws(THREE, kit, sx > 0 ? 'right' : 'left',
                     (VY1 + VY2) / 2, (VZ1 + VZ2) / 2,
                     (VY2 - VY1) / 2, (VZ2 - VZ1) / 2,
-                    sx * (W + 0.28 + EPS), 1.4, 1.0, T.side));
+                    sx * (W + 0.32 + EPS), 1.4, 1.0, T.side));
   }
 
   // ---- the back: condenser, compressor, fan and cable ----------------------

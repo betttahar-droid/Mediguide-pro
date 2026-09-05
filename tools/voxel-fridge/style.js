@@ -790,6 +790,20 @@ export function capProfile(add, kind, hx, hy, zBase, profile, opts = {}) {
 // A box from table coords [x1,y1,z1]-[x2,y2,z2] (Blender z-up, front -y) into
 // three (y-up, front -z). aHalf carries the half-extents the shader needs.
 export function tableBox(THREE, kind, [x1, y1, z1], [x2, y2, z2], cache, opts = {}) {
+  // COORDINATES ARE SORTED, LOUDLY. Given max before min the box still drew:
+  // the winding is computed per triangle, so a negative extent just mirrors it
+  // and looks correct. But the bevel clamp is Math.min(v, 0.45 * size), and on
+  // a negative size that clamps to 0 — so the part silently loses its chamfer
+  // and nothing else changes. That is the worst shape a bug can have, and it
+  // happens constantly in loops of the form sx * (W + o), where sx = -1 swaps
+  // the order. Sorting removes the class; the warning stops it being invisible.
+  if (x2 < x1 || y2 < y1 || z2 < z1) {
+    console.warn(`tableBox("${kind}"): coordinates out of order`
+      + ` [${x1},${y1},${z1}]..[${x2},${y2},${z2}] — sorted. Give min first.`);
+    [x1, x2] = [Math.min(x1, x2), Math.max(x1, x2)];
+    [y1, y2] = [Math.min(y1, y2), Math.max(y1, y2)];
+    [z1, z2] = [Math.min(z1, z2), Math.max(z1, z2)];
+  }
   const sx = x2 - x1, sy = z2 - z1, sz = y2 - y1;
   const name = ALIAS[kind] ?? kind;
   const m = MATERIALS[name] ?? {};
@@ -799,6 +813,15 @@ export function tableBox(THREE, kind, [x1, y1, z1], [x2, y2, z2], cache, opts = 
   if (cache && !cache.has(name)) cache.set(name, makeMaterial(THREE, kind));
   const mesh = new THREE.Mesh(geo, cache ? cache.get(name) : makeMaterial(THREE, kind));
   mesh.position.set((x1 + x2) / 2, (z1 + z2) / 2, (y1 + y2) / 2);
+  // Named and given its table-space bounds, so the buried-part check in
+  // main.js can report WHICH box is inside WHICH in terms you typed.
+  mesh.name = name;
+  mesh.userData.table = [x1, y1, z1, x2, y2, z2];
+  // A TAPERED part's bounding box overstates its solid: it is the widest
+  // cross-section, and the part narrows away from it. The buried check must not
+  // treat one as a container, or every corner block sitting on a tapered base
+  // is reported as sealed inside it when it is standing proud of the slope.
+  mesh.userData.tapered = !!(opts.taperX || opts.taperZ);
   return mesh;
 }
 

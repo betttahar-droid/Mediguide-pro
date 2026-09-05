@@ -162,8 +162,11 @@ export function build(THREE, MATS, kit, H) {
     // a bright chrome catch down its lit face, and a dark return underneath
     add('chrome', [hx1 + 0.35, P_DOOR - 3.0, a + 0.8],
                   [hx1 + 1.15, P_DOOR - 2.7, b - 0.8], { bevel: 0 });
-    add('slot', [hx1 + 0.3, P_DOOR - 1.35, a + 0.5],
-                [hx2 - 0.3, P_DOOR - 1.2, b - 0.5], { bevel: 0 });
+    // WIDER than the grip and BEHIND it. Written narrower than the grip it was
+    // entirely inside the grip's own box and drew nothing — the buried-part
+    // check in main.js found this in a prop that had been finished for weeks.
+    add('slot', [hx1 - 0.3, P_DOOR - 1.2, a + 0.5],
+                [hx2 + 0.3, P_DOOR - 0.9, b - 0.5], { bevel: 0 });
   };
   handle(0.200, 0.560);
   handle(0.720, 0.815);

@@ -18,6 +18,27 @@ Read medFreeze.js alongside section 11. It is the most recent, it was built by
 following this file, and every comment in it says why a number is what it is.
 
 
+CONTENTS
+     0  How to use this file                        7  The procedure, phase by phase
+     1  The one idea                                8  Recipes — copy these
+     2  Hard rules R1-R10                           9  The feedback loop, verbatim
+     3  What lives where                           10  Troubleshooting, symptom first
+     4  The coordinate system                      11  A complete skeleton
+     5  The API — exact signatures                 12  The scripts
+     6  The three resize kinds                     13  What does NOT need doing
+                                                   14  The image model and texturing
+
+   Looking for                            Go to
+     "how do I make a hollow thing"        8.3
+     "my part is invisible"                10, then 8.3 / 8.4
+     "which of the three kinds is this"    6, and the table in 6.1
+     "how do I place a screw / label"      5.6, 5.7
+     "how do I round a top"                5.3, 8.x
+     "how do I prompt the image model"     14.2, 14.3
+     "how do I know when I am done"        6.9 in section 7, and phase 6
+     "what command do I run"               9
+
+
 --------------------------------------------------------------------------------
 0.  HOW TO USE THIS FILE
 --------------------------------------------------------------------------------
@@ -122,6 +143,7 @@ than as a render of a blocky model.
   tools/voxel-fridge/surfaces.json
   tools/voxel-fridge/shoot.mjs       screenshots + counts. Your feedback loop.
   tools/authoring/measure.py         measures a sheet or a render, band by band
+  tools/authoring/compare.py         render vs reference, and the resize check
   tools/authoring/prop_views.py      generates a measurable reference sheet
   tools/authoring/style_bible.py     generates AND measures the style sheets
   tools/authoring/concept_sheet.py   the ONE place that calls the image API
@@ -181,6 +203,15 @@ gitignored .env. Do not wire any of them into anything.
         const px = (f) => W - f * 2 * W;      // reference x fraction -> table x
         const fromRefL = (off) => W - off;    // fixed offset from ref's LEFT
         const fromRefR = (off) => -W + off;   // fixed offset from ref's RIGHT
+
+    px() CONVERTS A POSITION. NEVER USE IT FOR A SIZE.
+    px(0.951) - px(0.751) is a NEGATIVE number, because px() decreases as the
+    fraction increases. Worse, whatever you do with it scales with W, so a
+    "width" computed that way stretches when the prop is widened — which is R8
+    arriving by the back door. Convert a measured SIZE to a fixed number of
+    units once, by hand, at the default width:
+
+        display width = (0.951 - 0.751) * 32 = 6.4 units   <- write 6.4
 
     The SIDE view is not mirrored. Depth fractions convert straight:
 
@@ -402,6 +433,30 @@ you resize, and then it is obvious. Write the kind in a comment.
 
 THE TEST: widen the prop and see what changed size that should not have.
 
+6.1  IF YOU CANNOT DECIDE, USE THIS TABLE. It is not exhaustive and it does not
+     need to be — nearly every part of a man-made object is on it.
+
+       ANCHOR  handle, grip, knob, lever, pedal      badge, logo, nameplate
+               foot, castor, levelling screw         label, rating plate, sticker
+               hinge, latch, lock, catch             lamp, LED, indicator
+               display, readout, keypad, button      gasket, seam, groove, gap
+               DOOR STILE / FRAME SECTION / RAIL     bought-in parts: compressor,
+               kick plinth HEIGHT                    fan, motor, pump, castor
+       STRETCH carcass, body, shell                  door leaf, drawer front
+               back panel, worktop, plinth WIDTH     an opening's overall size
+               anything you would describe as "the whole front"
+       REPEAT  vent slat, louvre, grille bar         shelf rod, wire, tine
+               screw run, bolt row, rivet line       stock, contents, produce
+               seam, sub-panel, corrugation          coil run, fin, tube
+
+     THE MECHANICAL RULE, when the table does not have it: could you buy this
+     part on its own, in a box, in one size? Then it is ANCHOR. Handles, feet,
+     compressors, lamps and hinges are all bought in one size and bolted on.
+     A carcass is not.
+
+     THE SECOND RULE: a FRAME is anchored, the thing it frames stretches. A
+     wider window gets a wider pane, not a fatter frame.
+
 THE TRAP, and it has caught every prop in this kit at least once. You measure a
 door stile at 0.095 of the width. Writing `const G = W * 0.81` gives exactly the
 right answer at the default size and is WRONG, because a door frame is a pressed
@@ -583,6 +638,11 @@ Run all of them. Do not call a prop done until every one passes.
  [ ] 6.6  npm test still passes:
               npm run build && npx vite preview --port 4173 &
               CHROMIUM_PATH=/opt/pw-browsers/chromium npm test
+ [ ] 6.6b BURIED PARTS: the shoot output says `buried: none`. If it names
+          parts, each one is drawing nothing at all — see 8.3, 8.4 and 10.
+ [ ] 6.6c NO `WARN tableBox(...) coordinates out of order` lines. They are
+          auto-sorted so nothing looks broken, but the next edit to that line
+          will be reasoning about the wrong pair.
  [ ] 6.7  MEASURE THE RESIZE TEST. DO NOT LOOK AT IT. Print the pixel sizes of
           the anchored parts at both widths as two columns that must be equal:
 
@@ -591,7 +651,37 @@ Run all of them. Do not call a prop done until every one passes.
 
           The third prop in this kit passed 6.1 by eye at a glance and failed on
           three parts. Each was written as a measured FRACTION, which is exactly
-          the form that hides the mistake. Script in section 12.3.
+          the form that hides the mistake.
+
+          THE MECHANICAL VERSION, which needs no judgement at all:
+
+              python3 tools/authoring/compare.py --margins \
+                  views/model-mine-view-front.png \
+                  views/model-mine-view-front-w-28.png --strip 34
+
+          Everything anchored to an edge lives in a fixed strip along it, so
+          those strips must be IDENTICAL. It prints a per-column difference
+          bar. Validated against a deliberately reintroduced bug: 26% of the
+          strip differing with a door stile written as a fraction of W, against
+          0.8% with it written as a fixed number of units. See 12.3.
+
+
+WHAT DONE LOOKS LIKE
+....................
+
+Not "it looks good". All of these at once:
+
+    shoot output    no ERRORS, no WARN, `buried: none`
+    colours         25-60 per view
+    triangles       inside the budget you set in 2.5
+    proportions     compare.py --bands vs the reference: ratio within ~2%,
+                    no band flagged that you cannot explain
+    resize          compare.py --margins: scattered only, both strips
+    tests           npm test green
+    views           front, side, back and iso all rendered and looked at
+
+If you cannot produce those eight lines, you are not done, however good the
+iso view looks.
 
 
 --------------------------------------------------------------------------------
@@ -802,7 +892,19 @@ Run all of them. Do not call a prop done until every one passes.
     #   palette: 68 colours from 16 of 29 material families
     #   geometry: 5134 triangles, 332 parts + 15 decals
     #   model-mine-view-iso  463x578  57 colours
+    #   buried: none                  <- or a list of parts drawing nothing
+    #   WARN tableBox(...)             <- coordinates given max-before-min
     #   ERRORS: ...
+
+    # does the render match the reference? ARITHMETIC, not judgement.
+    python3 tools/authoring/compare.py --bands \
+      docs/style-bible/props/my_prop.png \
+      tools/voxel-fridge/views/model-mine-view-front.png
+
+    # did anything anchored move or grow when widened? (phase 6.7)
+    python3 tools/authoring/compare.py --margins \
+      tools/voxel-fridge/views/model-mine-view-front.png \
+      tools/voxel-fridge/views/model-mine-view-front-w-28.png --strip 34
 
     # measure the reference
     python3 tools/authoring/measure.py docs/style-bible/props/my_prop.png
@@ -840,6 +942,28 @@ EVERY COLOUR IS UNIFORMLY ~14% DARKER THAN AUTHORED
     first Color exists. THIS READS AS AN ART PROBLEM, which is the dangerous
     part: the tempting fix is to lighten the hex until it looks right, which
     bakes a gamma error permanently into a correctly sampled palette.
+
+THE SHOOT OUTPUT SAYS `buried: N part(s) fully inside another`
+    Each named part is drawing nothing at all. It is inside a solid box, and
+    there is no boolean subtract here. Recipes 8.3 and 8.4. The report gives
+    the material name, the container and the table coordinates you typed.
+    A clearance of 0 means a face is flush — that survives, badly, as
+    z-fighting. Anything above 0 is sealed in and invisible.
+
+    Run it on a model you believe is finished. This check was added after the
+    fact and immediately found three bugs in a prop that had already shipped:
+    twenty vent slats behind their own backing panel, a handle's dark return
+    inside the handle, and the gasket rim around a glass opening buried in the
+    door stile. All three had been looked at, in four views, and passed.
+
+THE SHOOT OUTPUT SAYS `WARN tableBox(...): coordinates out of order`
+    You gave max before min on some axis. It is sorted for you, so nothing
+    looks broken — but before the sort it was silently fatal in one specific
+    way: the bevel clamp is Math.min(v, 0.45 * size), and on a negative size
+    that clamps to zero, so the part lost its chamfer and nothing else changed.
+    It happens constantly in loops of the form `sx * (W + o)`, where sx = -1
+    swaps the order. Fix the source line anyway: the next edit to it will be
+    reasoning about the wrong pair.
 
 A HOLLOW PROP RENDERS SOLID — shelves, stock, an interior all missing
     A cavity is FIVE THIN PANELS and the carcass around it is a SHELL. Recipe
@@ -921,7 +1045,20 @@ THE TRIANGLE COUNT SAYS 2
     post-pass fullscreen quad. Count off the geometry.
 
 SOMETHING GREW THAT SHOULD NOT HAVE WHEN THE PROP WAS WIDENED
-    It is written as a fraction and should be ANCHORED. Section 6.
+    It is written as a fraction and should be ANCHORED. Section 6, and the
+    lookup table in 6.1. Find it with compare.py --margins (12.3).
+
+A WIDTH COMES OUT NEGATIVE, OR A PART STRETCHES THAT USED px()
+    px() converts a POSITION and decreases as its argument grows, so
+    px(0.951) - px(0.751) is negative and scales with W. Never size anything
+    with it. Section 4.3.
+
+THE SHOOT RUN DIED WITH A BARE TimeoutError
+    The page threw before it finished, and the real message was collected but
+    never printed. shoot.mjs now prints what the page said and carries on to
+    the next shot. If it says "No page error was reported", the model is stuck
+    in a loop — check any `while` whose bound depends on a value that can be
+    zero or negative.
 
 A FITTING HANGS OFF THE EDGE OF THE PART IT IS ON
     Pass `fit`. A hinge anchored 2.6 units from a door edge is wider than 2.6
@@ -1066,28 +1203,43 @@ export function build(THREE, MATS, kit, H) {
         CHROMIUM_PATH=/opt/pw-browsers/chromium \
           node tools/voxel-fridge/shoot.mjs OUTDIR "model=mine&view=iso" ...
 
-12.3  THE RESIZE CHECK (phase 6.7)
+12.3  COMPARE TWO IMAGES — tools/authoring/compare.py
 
-      Render the same view at two widths, then compare the pixel sizes of the
-      ANCHORED parts. Both renders are at the same pixels-per-unit, so equal
-      pixels IS equal world size, and nothing about it is a judgement call.
+      Two checks that turn "compare numerically, not by eye" from an
+      instruction you can skip into a command that answers.
 
-        for p, lab in [('model-mine-view-front', 'w=16'),
-                       ('model-mine-view-front-w-28', 'w=28')]:
-            im, obj, x0, x1, y0, y1 = load(p)        # as in 12.1
-            h = y1 - y0 + 1
-            # the handle: the brightest run in the left quarter, at mid height
-            y = int(y1 - 0.52 * h)
-            seg = [x for x in range(x0, x0 + (x1 - x0) // 4)
-                   if mean(im[y][x]) > 150]
-            # the feet: separate runs of object at the bottom row
-            # a frame section: the longest DARK run across a clean band, and
-            #                  the distance from it to the body edge
-            print(lab, 'handle', seg[-1] - seg[0] + 1, 'px', ...)
+      --bands REFERENCE RENDER
+          Walks up both silhouettes and prints, at each height, how wide each
+          is AS A FRACTION OF ITS OWN BODY WIDTH — so the two images need not
+          be the same pixel size. Same object, same proportions, same numbers.
+          Flags any band differing by more than 3% and names the height to go
+          and measure with measure.py --rows.
 
-      Pick a clean band with nothing in front of it. Measuring a frame section
-      across a shelf full of stock gives a number that changes for reasons that
-      have nothing to do with the frame.
+      --margins NARROW WIDE --strip N
+          The resize test. Everything ANCHORED to an edge lives in a fixed
+          strip along that edge, so with the two silhouettes aligned those
+          strips must be identical. Prints a per-column difference bar:
+
+              LEFT STRIP  135 differing pixels (0.8% of the strip)
+                ..    .  .  .    .   . .. .  ..  .
+                Scattered only — that is the ordered dither
+
+              LEFT STRIP  4140 differing pixels (26.0% of the strip)
+                     ..  ++++#############
+                COLUMNS 21..33 differ on most rows.
+
+          Validated by deliberately reintroducing a real bug: a door stile
+          written as W * 0.81 instead of a fixed 3.04 units gives the second
+          reading on BOTH strips, against 0.8% and 0.1% when it is correct.
+          A check that has never been shown to fail is not a check.
+
+          CHOOSE --strip so it covers the frame and STOPS BEFORE any REPEAT
+          region. Run it 56 px deep on a glass-fronted cabinet and it reaches
+          the shelves, where more stock at the wider size is CORRECT, and it
+          reports a difference that is not a bug.
+
+          It cannot see a part anchored in the MIDDLE of a face. Nothing
+          mechanical can; measure those individually.
 
 12.4  GENERATE A MEASURABLE REFERENCE
 

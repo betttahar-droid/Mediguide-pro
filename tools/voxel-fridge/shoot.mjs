@@ -17,7 +17,9 @@ const errs = [];
 page.on('pageerror', (e) => errs.push('pageerror: ' + e.message));
 page.on('console', (m) => {
   if (m.type() === 'error' && !m.text().includes('favicon')) errs.push('console: ' + m.text());
-  else if (m.text().startsWith('palette:') || m.text().startsWith('geometry:'))
+  else if (m.type() === 'warning') console.log('   WARN ' + m.text());
+  else if (m.text().startsWith('palette:') || m.text().startsWith('geometry:')
+           || m.text().startsWith('buried:'))
     console.log('   ' + m.text());
 });
 
@@ -25,7 +27,16 @@ for (const q of shots) {
   const name = q.replace(/[^a-z0-9]+/gi, '-') || 'default';
   await page.goto(`http://localhost:5173/tools/voxel-fridge/index.html?${q}`,
                   { waitUntil: 'load' });
-  await page.waitForFunction(() => globalThis.__done === true, null, { timeout: 20000 });
+  // Print what the page said BEFORE giving up. A timeout here almost always
+  // means the model threw, and the useful message is already in `errs` — the
+  // bare TimeoutError that used to surface instead told you nothing at all.
+  try {
+    await page.waitForFunction(() => globalThis.__done === true, null, { timeout: 20000 });
+  } catch (e) {
+    console.log(`${name}: never finished.`
+      + (errs.length ? '\n  ' + errs.join('\n  ') : ' No page error was reported.'));
+    continue;
+  }
   const canvas = await page.$('canvas');
   await canvas.screenshot({ path: `${out}/${name}.png` });
 
