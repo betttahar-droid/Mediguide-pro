@@ -7,6 +7,7 @@ Reference implementation:  tools/voxel-fridge/style.js   (the technique)
                            tools/voxel-fridge/main.js    (one model using it)
 Authoring tools:           tools/authoring/style_bible.py
                            tools/authoring/cut_fittings.py
+                           tools/authoring/cut_surfaces.py
 
 --------------------------------------------------------------------------------
 0.  THE PROBLEM
@@ -93,7 +94,8 @@ careful about.
 A model is a list of axis-aligned boxes with material names. Nothing else.
 The look is assembled in five layers, in this order:
 
-  1. GEOMETRY        boxes, sized from measured fractions
+  1. GEOMETRY        BEVELLED, sometimes TAPERED boxes, sized from measured
+                     fractions
   2. FACE TINT       one flat value per face direction (the whole lighting model)
   3. MATERIAL RULES  outline / catch / inset / seam / grain / perf, all in
                      world units, keyed off d
@@ -103,8 +105,36 @@ The look is assembled in five layers, in this order:
 
 --- 3.1  GEOMETRY ------------------------------------------------------------
 
-Boxes only. Every dimension is written as a MEASURED FRACTION of one driving
-dimension, never as a typed offset:
+NOT PLAIN BOXES. A study of the reference kit says the one thing it never does
+is leave a form a plain prism:
+
+    its dumpster TAPERS inward toward the base
+    its lid SLOPES
+    its prominent vertical corner is cut by a narrow angled FACET
+    its rim OVERHANGS with an angled underside
+
+Axis-aligned boxes read as neat; the kit reads as modelled. Two cheap moves
+close almost all of that gap:
+
+  BEVEL   a 45-degree facet cutting every edge, one chamfer wide (~1 texel).
+          44 triangles for a fully bevelled box: 6 face quads, 12 edge quads,
+          8 corner triangles. Squarely inside the reference's own budget - a
+          whole door in that kit is 138 triangles.
+  TAPER   the top narrowed relative to the bottom, in world units. Applied as
+          a vertex transform after the bevel so the two compose.
+
+TWO RULES THAT ARE NOT OPTIONAL:
+
+  * The bevel must be clamped to about a third of the smallest side, or
+    opposite facets meet and the solid turns inside out. Small trim then keeps
+    a hairline instead of exploding.
+  * TAPER INWARD (narrower at the top) on any part carrying a decal. Tapered
+    the other way, the face leans out over its own base plane and anything
+    mounted on that plane ends up inside the solid. A tapered part and a flat
+    mounting plane only coexist in that direction.
+
+Beyond the bevel and taper, boxes only. Every dimension is written as a
+MEASURED FRACTION of one driving dimension, never as a typed offset:
 
     const W      = H;            // body half-width — the 100%
     const BORDER = W * 0.175;    // cream door border, each side
@@ -199,6 +229,16 @@ HOW A DECAL STAYS RESIZABLE
     the model's. So there is still no unwrap to stretch and no texel density
     to reconcile with the body.
 
+MOUNT DECALS TO A NAMED PLANE, NOT TO A TYPED NUMBER
+    Decals sinking under geometry is not a z-fighting problem and no offset or
+    render order fixes it. A hinge placed on the door border's plane was wide
+    enough to reach over the door opening, where the frame stands a unit
+    FURTHER FORWARD - half of every hinge was genuinely behind a part. Give
+    each mounting surface a named constant, build the geometry from the same
+    constant so the two cannot drift, and mount a decal on the FRONTMOST
+    surface it could overlap. It then stands proud of the other, which is what
+    a real hinge does anyway.
+
 SCREWS ARE A RULE, NOT A PLACEMENT
     The reference puts them on every panel it draws, always the same size,
     always the same world inset from the corner. So they are generated:
@@ -212,6 +252,53 @@ WHAT STAYS PROCEDURAL
     Only what is a property of the MATERIAL rather than of the object:
     `grain` runs along brushed metal wherever it appears; `perf` is what a
     vent or a speaker IS. Everything else is a placed fitting.
+
+
+--- 3.4b  SURFACE MASKS: the decal idea applied to the whole surface ---------
+
+Detail on the base colour comes from an atlas, nine-sliced with fixed margins.
+
+THE TILES ARE TONE MASKS, NOT COLOUR. Each texel is one of three levels:
+
+      0 = draw this texel in the material's SHADE tone
+    128 = leave it the material's BASE colour
+    255 = draw it in the material's LIT tone
+
+So the atlas carries STRUCTURE and the material carries COLOUR. One "plate"
+tile renders correctly on cream, teal and blue-grey alike, and the frame can
+still snap to a locked palette because no colour ever leaves the texture. A
+colour atlas can do neither: it ties every tile to one material and puts the
+atlas in charge of the palette.
+
+MARGINS ARE MEASURED AND HELD IN WORLD UNITS. The outer N units of a face map
+onto the tile's authored border; the rest is the middle. Getting the margin
+right is the whole thing, and it is subtler than it sounds - the margin must
+contain everything that must not stretch, which is the border AND the corner
+bolts just inside it. Three definitions failed before one worked:
+
+  "distance to the first flat texel"  stopped inside the border line and left
+      the bolts in the STRETCHED middle, smearing them across whole faces as
+      big pale squares;
+  "the outermost column with content" saturated at once - every column crosses
+      the top and bottom borders;
+  "the outermost L-band with content" saturated for the same reason - band k
+      always includes (k,0) and (0,k), which lie ON those borders.
+
+What works: measure the border along a centre line, then look for corner
+content strictly inside it, requiring a real SHARE of a band so one stray
+texel from downscaling cannot saturate the scan.
+
+THE MIDDLE STRETCHES, IT DOES NOT TILE - unless it is content. Tiling a middle
+that is one flat tone is all cost and no benefit: invisible where the tone is
+uniform, a grid of faint squares everywhere it is not. Stretching a flat region
+cannot produce an artefact. A vent is the exception; its middle IS content, so
+it repeats at a fixed world period and a taller vent gets MORE slots. The
+cutter classifies each tile from the art rather than being told.
+
+ONE GRID. The margin and period are derived from each tile's own texel counts
+times the world texel size, so mask detail can never be finer than the model's
+own pixels. Hand-set, they drifted to about half the model's texel size and the
+surface came out finer than the geometry it sat on.
 
 
 --- 3.5  POST PASS -----------------------------------------------------------
@@ -344,6 +431,39 @@ A SWATCH IS NOT AN OBJECT
   Texture swatches measure 12-20% of texels off the base tone. Applying that
   measurement at OBJECT level put noise on every face. The measurement was
   right; the level it was applied at was wrong.
+
+RESERVED WORDS IN GLSL, AND BACKTICKS IN SHADER COMMENTS
+  `half` and `flat` are both reserved in GLSL ES and will not parse as
+  identifiers. A shader that fails to compile draws NOTHING, so the symptom is
+  an object that has vanished - which looks like a geometry or camera bug and
+  sends you looking in the wrong file entirely.
+  Separately: the shaders are JS template literals, so a backtick anywhere
+  inside them, INCLUDING inside a // comment, terminates the string. The
+  symptom is a JS "Unexpected identifier" naming a word from a comment. Both
+  of these cost real time more than once.
+
+A BOUNDS CHECK CANNOT SEE A TOPOLOGY BUG
+  The bevelled box's corner triangles were built by insetting each vertex on
+  ONE axis instead of the two that aren't its face normal. Every vertex was
+  still inside the box, so a vertex-bounds check passed cleanly while the mesh
+  had holes at some corners and loose triangles floating outside the silhouette
+  at others. Check WATERTIGHTNESS instead: every edge shared by exactly two
+  triangles. A correct bevelled box is 24 verts, 66 edges, 44 triangles,
+  V - E + F = 2.
+
+A DISTANCE-TO-EDGE RULE IS MEANINGLESS ON A BEVEL FACET
+  Every fragment on a chamfer sits at the box's extreme, so d collapses to ~0
+  and the whole facet takes the outline colour - the corner facets then read as
+  dark triangular spikes on the silhouette, which looks exactly like broken
+  geometry and is not. Gate every edge-distance mark on whether the face is
+  axis-aligned: max(|n|) is 1 on a box face and about 0.707 on a 45-degree
+  bevel.
+
+FACE TINTS MUST BE WEIGHTED, NOT SWITCHED, ONCE BEVELS EXIST
+  A hard switch on the dominant normal gives a 45-degree chamfer the same value
+  as the face beside it, so the new facets exist in the mesh and are invisible
+  in the image. Weight by |n| instead: an axis face still gets exactly its own
+  tint, and a chamfer gets the blend of the two it sits between.
 
 MEASURE THE RIGHT REFERENCE
   Deriving the texture question from a smooth-shaded turnaround produced

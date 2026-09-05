@@ -80,7 +80,7 @@ const MATS = new Map();
 // ---------------------------------------------------------------------------
 function buildFridge(H) {
   const g = new THREE.Group();
-  const add = (kind, a, b) => g.add(tableBox(THREE, kind, a, b, MATS));
+  const add = (kind, a, b, opts) => g.add(tableBox(THREE, kind, a, b, MATS, opts));
   // MEASURED OFF THE DRAWN SHEET, band by band, against the sheet's own card
   // ground. The front view's body is 240 px wide and 749 px tall (1:2.75), and
   // across it: cream door border 21 px, teal door frame 5 px, glass 188 px,
@@ -118,6 +118,24 @@ function buildFridge(H) {
                                // moves the door with the cabinet
   const CF = -(D + 0.5);       // the crown's front face — it overhangs too
 
+  // NAMED MOUNTING PLANES. Every decal is placed on one of these rather than on
+  // a number typed at the call site, and the geometry below is built from the
+  // same constants, so the two cannot drift apart.
+  //
+  // This fixes decals sinking under geometry. A hinge was placed on the cream
+  // border's plane, but it is wide enough to reach over the door opening, where
+  // the teal frame stands 1 unit FURTHER FORWARD — so half of every hinge was
+  // genuinely behind a part, not z-fighting with it. No offset or render order
+  // could have fixed that; the decal was simply in the wrong place.
+  //
+  // The rule: a decal mounts to the FRONTMOST surface it could overlap. Where
+  // two planes are in play, take the forward one and accept that the decal
+  // stands proud of the other — which is what a real hinge does anyway.
+  const P_BORDER = F - 1.5;    // cream door border, front plane
+  const P_DOOR = F - 2.5;      // teal door frame — the frontmost door surface
+  const P_BASE = F;            // base block front
+  const EPS = 0.08;
+
   // ---- P01 feet: four corner blocks, outer faces flush with the base -------
   for (const sx of [-1, 1]) for (const sy of [-1, 1]) {
     const x1 = sx > 0 ? W - 8 : -W, x2 = sx > 0 ? W : -(W - 8);
@@ -125,7 +143,17 @@ function buildFridge(H) {
     add('plinth', [x1, y1, -2.5], [x2, y2, 4.0]);
   }
   add('plinth', [-(W - 1), -(D - 1), 0], [W - 1, D - 1, 4]); // P02 plinth strip
-  add('teal',   [-W, -D, 4],             [W, D, 18]);        // P03 condenser base
+  // The base block TAPERS inward toward its foot, as the reference dumpster's
+  // body does. A prism here read as a plinth; a taper reads as a moulded shell.
+  add('teal',   [-W, -D, 4],             [W, D, 18],
+      { taperX: 1.6, taperZ: 1.6 });                            // P03 condenser base
+  // Tapered NARROWER AT THE TOP, so the block flares out to its foot. The sign
+  // is not cosmetic: with the taper the other way the front face leaned out
+  // over its own base plane, and the switch and dial mounted on that plane
+  // ended up inside the solid. Tapering inward keeps the mounting plane the
+  // widest cross-section, so anything mounted on it is in front of the whole
+  // part at every height. A tapered part and a flat mounting plane only
+  // coexist in that direction.
   // P04 grille — real louvres now, not a picture of louvres. The slot count
   // follows the width, so a wider base gets MORE slots at the same pitch: the
   // adaptive behaviour that used to need a tiling texture, done with a loop.
@@ -186,7 +214,7 @@ function buildFridge(H) {
   // BOTH crown pieces overhang the body, and their heights are close: a top
   // block narrower than the carcass and twice the lip's height read as a lid
   // resting on the cabinet rather than as its cap.
-  add('cream', [-C, -(D + 1), 84],   [C, D + 1, 88]);
+  add('cream', [-C, -(D + 1), 84],   [C, D + 1, 88], { taperX: -1.2, taperZ: -1.2 });
   add('cream', [-(C - 0.5), CF, 88], [C - 0.5, D + 0.5, 93]);
 
   // ---- P11/P12 door: a wide light between two NARROW borders ---------------
@@ -196,8 +224,8 @@ function buildFridge(H) {
     add(kind, [-xOut, y1, zHi - (xOut - xIn)], [xOut, y2, zHi]);
     add(kind, [-xOut, y1, zLo], [xOut, y2, zLo + (xOut - xIn)]);
   };
-  frame('cream', S, W, 20, 82, F - 1.5, F + 2);
-  frame('frame', G, S, 22, 80, F - 2.5, F - 1.5);
+  frame('cream', S, W, 20, 82, P_BORDER, F + 2);
+  frame('frame', G, S, 22, 80, P_DOOR, P_BORDER);
   // P13 glass — NOT a transparent pane. Alpha blending produces colours that
   // are in no palette, so the snap sent them to whatever grey was nearest and
   // the door went dead. The sheet does not draw a pane either: you see the
@@ -237,7 +265,7 @@ function buildFridge(H) {
   // units they were fractions of a texel across — the screws were under one
   // texel wide, which is why they minified to featureless blobs.
   const tx = (n) => n * STYLE.texel;
-  const L = -W - 0.05, R = W + 0.05;      // just proud of each flank
+  const L = -W - EPS, R = W + EPS;        // just proud of each flank
   for (const [x, face] of [[L, 'left'], [R, 'right']]) {
     // Screws at the corners of both flank panels — the one fitting the
     // reference applies as a rule rather than a placement.
@@ -254,15 +282,15 @@ function buildFridge(H) {
   // Door: hinges on the side away from the handle, a biohazard sticker low on
   // the glass where one gets stuck.
   for (const z of [30, 72]) {
-    g.add(decal(THREE, kit, 'hinge', 'front', -(W - 3.4), z, tx(5), F - 1.6, T.front));
+    g.add(decal(THREE, kit, 'hinge', 'front', -(W - 3.4), z, tx(5), P_DOOR - EPS, T.front));
   }
   // Between two shelves, not across one. At its old size and height it
   // straddled the bottom shelf and read as an object inside the cabinet
   // rather than a sticker on the door.
-  g.add(decal(THREE, kit, 'biohazard', 'front', -(G - 6), 47, tx(5), F - 2.7, T.front));
+  g.add(decal(THREE, kit, 'biohazard', 'front', -(G - 6), 47, tx(5), P_DOOR - EPS, T.front));
   // Base block: the switch and thermostat live on the plant, next to the grille.
-  g.add(decal(THREE, kit, 'rocker', 'front', W - 6.0, 14, tx(3), F - 0.05, T.front));
-  g.add(decal(THREE, kit, 'dialA', 'front', W - 11.5, 14, tx(3), F - 0.05, T.front));
+  g.add(decal(THREE, kit, 'rocker', 'front', W - 6.0, 14, tx(3), P_BASE - EPS, T.front));
+  g.add(decal(THREE, kit, 'dialA', 'front', W - 11.5, 14, tx(3), P_BASE - EPS, T.front));
   return g;
 }
 
@@ -319,6 +347,12 @@ if (carvedUrl) {
     g.add(mesh);
   }
   console.info(`carved: ${data.boxes.length} boxes, ${mats.size} colours, grid ${gw}x${gd}x${gh}`);
+  scene.add(g);
+} else if (params.get('solo')) {
+  // ?solo=1 renders ONE shaped box, for isolating a geometry bug from a scene
+  // of ninety of them.
+  const g = new THREE.Group();
+  g.add(tableBox(THREE, 'plinth', [-8, -7, 40], [8, 7, 54], MATS));
   scene.add(g);
 } else {
   scene.add(buildFridge(H));

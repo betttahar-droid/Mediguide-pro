@@ -123,6 +123,12 @@ export const STYLE = {
   texel: 1.6,
   ditherSpan: 5.0,   // how far the corner dither reaches in from a face edge
 
+  // Default chamfer on every edge, in world units — one texel. The reference
+  // kit never leaves a form a plain prism; this is the cheapest move that stops
+  // one reading as a box. shapedBox clamps it to a third of the smallest side,
+  // so a louvre slot keeps a hairline rather than turning inside out.
+  bevel: 1.6,
+
   // NINE-SLICE, for the surface mask tiles.
   //   marginWorld  how many WORLD units the tile's authored border occupies.
   //                Fixed, so the border and its bolts stay native at any size.
@@ -176,7 +182,7 @@ export const STYLE = {
 // the fittings atlas at the bottom of this file, where it can be placed.
 const D = { lit: null, shade: null, inset: 0, edge: 0.22, seam: 0,
             fleck: 0, grain: 0, dither: 0, perf: 0, surface: null,
-            tileMid: false };
+            tileMid: false, bevel: undefined };
 const M = (o) => ({ ...D, ...o });
 
 export const MATERIALS = {
@@ -202,6 +208,11 @@ export const ALIAS = {
   grille: 'tan', flank: 'blueGrey', cavity: 'interior', glass: 'glint',
 };
 
+// NOTE FOR ANY EDIT BELOW: the two shaders are JS TEMPLATE LITERALS, so a
+// backtick anywhere inside them — including inside a // comment — terminates
+// the string and the file stops parsing. This has bitten three times; the
+// symptom is a JS "Unexpected identifier" naming a word from a comment, which
+// points nowhere near the real cause. Use plain quotes in shader comments.
 export const VERT = /* glsl */ `
 attribute vec3 aHalf;
 varying vec3 vLocal, vHalf, vNrm;
@@ -297,6 +308,20 @@ void main() {
   float lim = min(half2.x, half2.y);
   bool lit = (local.x < 0.0 || local.y > 0.0);   // the lit edges: top and left
 
+  // IS THIS AN AXIS FACE, OR A CHAMFER FACET? max(|n|) is 1 on a box face and
+  // about 0.707 on a 45-degree bevel. It matters because every mark below keys
+  // off distance-to-the-edge-of-the-face, and on a chamfer every fragment IS at
+  // the box's extreme — d collapses to ~0, so the whole facet was painted the
+  // outline colour. The corner facets then read as dark triangular spikes
+  // sticking out of the silhouette, which looks exactly like broken geometry
+  // and is not: the mesh was fine, the shading rule simply did not apply there.
+  // A bevel facet wants nothing but its blended tint.
+  // (Named axisFace, not flat: 'flat' is an interpolation qualifier in GLSL
+  // and will not parse as an identifier -- the same class of collision as
+  // 'half' earlier, and just as silent, since a shader that fails to compile
+  // draws nothing rather than complaining in the picture.)
+  bool axisFace = max(a.x, max(a.y, a.z)) > 0.95;
+
   vec3 c = uBase;
 
   // ==== SURFACE MASK ========================================================
@@ -305,7 +330,7 @@ void main() {
   // correctly on cream, teal and blue-grey alike, and no colour ever leaves the
   // texture. That is what keeps the frame snappable to a locked palette, and it
   // is the thing a colour atlas cannot do.
-  if (uHasMask > 0.5) {
+  if (axisFace && uHasMask > 0.5) {
     vec2 t = vec2(slice1(local.x, half2.x, uMarginW, uMarginF, uPeriod),
                   slice1(local.y, half2.y, uMarginW, uMarginF, uPeriod));
     // Half-texel inset so nearest sampling cannot pick up the neighbouring
@@ -374,7 +399,7 @@ void main() {
   // Each seam is a dark line with a light catch under it, which is how the
   // edge-vocab sheet draws a horizontal joint. The seam count follows the size,
   // so a wider panel gets more sub-panels of the SAME size.
-  if (uSeam > 0.5) {
+  if (axisFace && uSeam > 0.5) {
     vec2 n = floor(half2 / uSeamPitch);          // sub-panels along each axis
     for (int ax = 0; ax < 2; ax++) {
       float span = ax == 0 ? half2.x : half2.y;
@@ -391,7 +416,7 @@ void main() {
 
   // The pressed-plate border. It needs room for the border AND a field inside
   // it, or it is just a second outline.
-  if (uInset > 0.5 && lim > uInsetAt + 1.0) {
+  if (axisFace && uInset > 0.5 && lim > uInsetAt + 1.0) {
     if (d > uInsetAt && d < uInsetAt + uInsetLine) c = uShade;
     else if (d > uInsetAt + uInsetLine && d < uInsetAt + uInsetLine * 2.0 && lit) c = uLit;
   }
@@ -401,17 +426,24 @@ void main() {
   // instead of being eaten by its own border.
   float o = min(uOutline, lim * 0.34);
   float k = min(uCatch, lim * 0.34);
-  if (uEdge > 0.0) {
+  if (axisFace && uEdge > 0.0) {
     if (d < o + k && d > o && lit) c = uLit;
     if (d < o) c = uShade;
   }
 
   // Baked per-face value — the whole shading model.
-  float t = uSide;
-  if (vNrm.y > 0.5)       t = uTop;
-  else if (vNrm.y < -0.5) t = uBottom;
-  else if (vNrm.z < -0.5) t = uFront;
-  else if (vNrm.z > 0.5)  t = uBack;
+  //
+  // WEIGHTED BY THE NORMAL rather than switched on it. A hard switch was fine
+  // while every face was axis-aligned, but a 45-degree chamfer has |z| = 0.707,
+  // so it tripped the same branch as the front face and came out the identical
+  // value — the new facets existed in the mesh and were invisible in the image.
+  // Weighting by |n| gives an axis face exactly its own tint (the other two
+  // weights are zero) and a chamfer the blend of the two it sits between, which
+  // is what makes an angled facet read at all.
+  float tX = uSide;
+  float tY = vNrm.y > 0.0 ? uTop : uBottom;
+  float tZ = vNrm.z < 0.0 ? uFront : uBack;
+  float t = (a.x * tX + a.y * tY + a.z * tZ) / max(0.001, a.x + a.y + a.z);
   gl_FragColor = vec4(c * t, 1.0);
 }
 `;
@@ -514,18 +546,113 @@ export function buildPalette(THREE, limit = 64) {
   return kept;
 }
 
+// ---------------------------------------------------------------------------
+// SHAPED BOXES: bevel and taper.
+//
+// A study of the reference kit says the one thing it never does is leave a form
+// as a plain prism. Its dumpster tapers inward toward the base, its lid slopes,
+// its prominent vertical corner is cut by a narrow angled facet, and its rim
+// overhangs with an angled underside. Everything here had been axis-aligned
+// boxes, which is why it read as neat rather than as modelled.
+//
+//   bevel  a 45-degree facet cutting every edge, one chamfer wide
+//   taper  the top narrowed relative to the bottom, in world units
+//
+// 44 triangles for a fully bevelled box: 6 face quads, 12 edge quads, 8 corner
+// triangles. That is squarely in the reference's own budget - a whole door in
+// that kit is 138.
+//
+// WINDING IS COMPUTED, NOT REASONED. Every triangle's normal is taken from its
+// own cross product and flipped if it points inward, which is unambiguous for a
+// convex solid centred on the origin. Enumerating 44 triangles by hand and
+// getting each one's vertex order right is a guaranteed source of invisible
+// inside-out faces, and the check costs nothing.
+export function shapedBox(THREE, sx, sy, sz, bevel = 0, taperX = 0, taperZ = 0) {
+  const h = [sx / 2, sy / 2, sz / 2];
+  // A bevel cannot eat more than a third of the smallest side, or opposite
+  // facets meet and the solid turns inside out. Small trim keeps a hairline.
+  const b = Math.max(0, Math.min(bevel, 0.34 * Math.min(sx, sy, sz)));
+  const V = (a, va, bb, vb, c, vc) => {
+    const q = [0, 0, 0]; q[a] = va; q[bb] = vb; q[c] = vc; return q;
+  };
+  const tris = [];
+  const quad = (p, q, r, t) => { tris.push([p, q, r], [p, r, t]); };
+
+  for (let a = 0; a < 3; a++) {                      // 6 face quads
+    const u = (a + 1) % 3, v = (a + 2) % 3;
+    for (const s of [-1, 1]) {
+      const P = (su, sv) => V(a, s * h[a], u, su * (h[u] - b), v, sv * (h[v] - b));
+      quad(P(-1, -1), P(1, -1), P(1, 1), P(-1, 1));
+    }
+  }
+  for (let a = 0; a < 3; a++) {                      // 12 edge quads
+    for (let c = a + 1; c < 3; c++) {
+      const o = 3 - a - c;
+      for (const sa of [-1, 1]) for (const sc of [-1, 1]) {
+        quad(V(a, sa * h[a], c, sc * (h[c] - b), o, h[o] - b),
+             V(a, sa * h[a], c, sc * (h[c] - b), o, -(h[o] - b)),
+             V(a, sa * (h[a] - b), c, sc * h[c], o, -(h[o] - b)),
+             V(a, sa * (h[a] - b), c, sc * h[c], o, h[o] - b));
+      }
+    }
+  }
+  for (const sx_ of [-1, 1]) for (const sy_ of [-1, 1]) for (const sz_ of [-1, 1]) {
+    // Each corner vertex lies on ONE original face and is inset by the bevel
+    // on the OTHER TWO axes -- which is also exactly how the face quads and
+    // edge quads name their corners, so the three meet. Insetting only one axis
+    // per vertex (the obvious-looking version) puts these triangles somewhere
+    // no other face reaches: holes at some corners, loose triangles floating
+    // outside the silhouette at others. A vertex-bounds check cannot see that,
+    // because every vertex is still inside the box; see the watertightness
+    // check in the header note.
+    tris.push([[sx_ * h[0], sy_ * (h[1] - b), sz_ * (h[2] - b)],
+               [sx_ * (h[0] - b), sy_ * h[1], sz_ * (h[2] - b)],
+               [sx_ * (h[0] - b), sy_ * (h[1] - b), sz_ * h[2]]]);
+  }
+
+  // Taper: narrow the top. Applied after the bevel so the two compose, and as a
+  // vertex transform so no triangle has to know about it.
+  const shape = (p) => {
+    if (!taperX && !taperZ) return p;
+    const t = (p[1] / h[1] + 1) * 0.5;               // 0 at the base, 1 at the top
+    return [p[0] * (1 - (taperX / sx) * t * 2), p[1], p[2] * (1 - (taperZ / sz) * t * 2)];
+  };
+
+  const pos = [], nrm = [], half = [];
+  const sub = (u, v) => [u[0] - v[0], u[1] - v[1], u[2] - v[2]];
+  for (let [p, q, r] of tris) {
+    [p, q, r] = [shape(p), shape(q), shape(r)];
+    const e1 = sub(q, p), e2 = sub(r, p);
+    let n = [e1[1] * e2[2] - e1[2] * e2[1],
+             e1[2] * e2[0] - e1[0] * e2[2],
+             e1[0] * e2[1] - e1[1] * e2[0]];
+    const len = Math.hypot(...n) || 1;
+    n = n.map((v) => v / len);
+    const mid = [(p[0] + q[0] + r[0]) / 3, (p[1] + q[1] + r[1]) / 3, (p[2] + q[2] + r[2]) / 3];
+    if (n[0] * mid[0] + n[1] * mid[1] + n[2] * mid[2] < 0) {
+      [q, r] = [r, q];
+      n = n.map((v) => -v);
+    }
+    for (const vtx of [p, q, r]) {
+      pos.push(...vtx); nrm.push(...n); half.push(h[0], h[1], h[2]);
+    }
+  }
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  geo.setAttribute('normal', new THREE.Float32BufferAttribute(nrm, 3));
+  geo.setAttribute('aHalf', new THREE.Float32BufferAttribute(half, 3));
+  return geo;
+}
+
 // A box from table coords [x1,y1,z1]-[x2,y2,z2] (Blender z-up, front -y) into
 // three (y-up, front -z). aHalf carries the half-extents the shader needs.
-export function tableBox(THREE, kind, [x1, y1, z1], [x2, y2, z2], cache) {
+export function tableBox(THREE, kind, [x1, y1, z1], [x2, y2, z2], cache, opts = {}) {
   const sx = x2 - x1, sy = z2 - z1, sz = y2 - y1;
-  const geo = new THREE.BoxGeometry(sx, sy, sz);
-  const n = geo.attributes.position.count;
-  const half = new Float32Array(n * 3);
-  for (let i = 0; i < n; i++) {
-    half[i * 3] = sx / 2; half[i * 3 + 1] = sy / 2; half[i * 3 + 2] = sz / 2;
-  }
-  geo.setAttribute('aHalf', new THREE.BufferAttribute(half, 3));
   const name = ALIAS[kind] ?? kind;
+  const m = MATERIALS[name] ?? {};
+  const geo = shapedBox(THREE, sx, sy, sz,
+    opts.bevel ?? m.bevel ?? STYLE.bevel,
+    opts.taperX ?? 0, opts.taperZ ?? 0);
   if (cache && !cache.has(name)) cache.set(name, makeMaterial(THREE, kind));
   const mesh = new THREE.Mesh(geo, cache ? cache.get(name) : makeMaterial(THREE, kind));
   mesh.position.set((x1 + x2) / 2, (z1 + z2) / 2, (y1 + y2) / 2);
