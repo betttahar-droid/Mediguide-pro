@@ -58,6 +58,24 @@ SUBJECTS = {
         "white rating label low on the side panel; a large square louvred vent "
         "grille low down on the right side panel; a recessed dark kick plinth "
         "at the bottom on four small feet"),
+    # A pharmacy till computer, from docs/reference/03-retro-computers — the
+    # chunky voxel monitors in that sheet are exactly this object's ancestors.
+    # Deliberately UNLIKE the three fridges: wide rather than tall, an assembly
+    # of several small masses rather than one cabinet, and its biggest feature
+    # is a dark recessed rectangle rather than an opening. It exercises the
+    # parts of the system the cabinets never touch.
+    "pos_terminal": (
+        "a chunky retro pharmacy point-of-sale computer terminal, WIDER than "
+        "it is tall, in pale grey-cream moulded plastic yellowed with age. It "
+        "has: a deep boxy monitor with a very thick square bezel and a large "
+        "dark recessed screen, standing on a short square neck; a wide flat "
+        "base plinth under the neck that the monitor slightly overhangs; a row "
+        "of small ventilation slots along the top of the monitor; a small dark "
+        "power button and a tiny green indicator lamp low on the bezel; a slim "
+        "raised keypad panel of small square keys on the base in front of the "
+        "monitor; a horizontal receipt printer slot with a short paper tail on "
+        "the base beside the keypad; a short stalk carrying a small angled "
+        "card reader with a dark display; small rubber feet under the base"),
     "home_fridge": (
         "a chunky retro 1950s domestic refrigerator with two solid doors — a "
         "short freezer door on top and a taller fridge door below, separated by "
@@ -81,10 +99,26 @@ STYLE = (
     "No text, no labels, no dimensions, no annotations, no watermark."
 )
 
+# THE SIDE VIEW IS THE HARD ONE, and it fails silently. Asked for "its LEFT
+# SIDE elevation" on a terminal with a screen, the model drew the monitor from
+# BEHIND on a base drawn from the side — a coherent-looking picture in two
+# different projections, from which the depth measures to a plausible number
+# that is not the object's depth. A wrong drawing that measures cleanly is
+# worse than an obviously wrong one.
+#
+# So the right-hand view is now specified by what must NOT be visible in it,
+# which is the only form of the instruction the model cannot half-satisfy.
 LAYOUT = (
     "Draw the SAME object TWICE, side by side on the magenta background, well "
     "separated: on the LEFT its FRONT elevation seen dead on, on the RIGHT its "
     "LEFT SIDE elevation seen dead on. "
+    "The RIGHT drawing is the object turned exactly 90 degrees, so you are "
+    "looking straight at its left flank. In that drawing you must NOT be able "
+    "to see the front of the object at all: no screen, no door, no controls, "
+    "no front panel, no keypad face — only the flat side of the object, its "
+    "depth from front to back, and whatever is mounted on that flank. Both "
+    "drawings show the WHOLE object, and every part visible in the front view "
+    "must also appear in the side view, seen edge-on. "
     "Both drawings must be EXACTLY THE SAME HEIGHT and must line up "
     "horizontally, so the side view's width can be read as the object's depth. "
     "Nothing else in the image."
@@ -95,6 +129,8 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("name", nargs="?")
     ap.add_argument("--list", action="store_true")
+    ap.add_argument("--like", nargs="*", default=[],
+                    help="approved prop sheets to add as style references")
     args = ap.parse_args()
     if args.list or not args.name:
         print("subjects:", ", ".join(sorted(SUBJECTS)))
@@ -104,8 +140,21 @@ def main():
 
     OUT.mkdir(parents=True, exist_ok=True)
     refs = sorted(REFS.glob("crop-*.png")) or sorted(REFS.glob("*.png"))
+    # --like feeds an ALREADY APPROVED prop sheet back in as an extra style
+    # reference. docs/reference/ is where the style came FROM; the sheets in
+    # docs/style-bible/props/ are where it has GOT TO, and after three props
+    # those are not the same thing — the palette, the texel size and the
+    # presentation have all been settled since. A new prop should match the
+    # latter. This is concept_sheet.py's own rule ("feed the approved sheets
+    # back in for every module after") applied to a per-prop reference.
+    for name in args.like:
+        sheet = OUT / f"{name}.png"
+        if not sheet.exists():
+            sys.exit(f"no approved sheet {sheet.relative_to(ROOT)}; try --list")
+        refs.append(sheet)
     prompt = f"{STYLE}\n\nSubject: {SUBJECTS[args.name]}.\n\n{LAYOUT}"
-    print(f"generating {args.name} (style refs: {len(refs)}) ...", flush=True)
+    print(f"generating {args.name} — style refs: "
+          + ", ".join(r.name for r in refs), flush=True)
     out = generate_image(prompt, OUT / f"{args.name}.png", load_key(), refs=refs)
     print(f"wrote {Path(out).relative_to(ROOT)}")
     print("next: measure it band by band before writing any geometry "
