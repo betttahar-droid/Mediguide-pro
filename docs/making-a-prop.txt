@@ -1,0 +1,317 @@
+================================================================================
+MAKING A PROP
+The step-by-step recipe that produced the vaccine fridge, in the order to do it
+================================================================================
+
+Companion to docs/technique.txt. That file explains WHY the system is built the
+way it is; this one is the procedure to follow and the checks to pass. Work the
+phases in order. Every phase ends with a VERIFY step — do not carry on past a
+failed one, because almost every expensive mistake in this project was a wrong
+number that survived three more phases before it showed up as "something looks
+a bit off".
+
+Worked example throughout: tools/voxel-fridge/main.js (the fridge).
+Everything reusable lives in tools/voxel-fridge/style.js and knows nothing
+about fridges.
+
+
+--------------------------------------------------------------------------------
+SETUP (once)
+--------------------------------------------------------------------------------
+
+        cp .env.example .env          # put your GEMINI_API_KEY in it; it is
+      gitignored
+    npm install
+    npm run dev                   # serves the prototype on :5173
+
+Screenshots (this is the main feedback loop — use it constantly):
+
+    CHROMIUM_PATH=/opt/pw-browsers/chromium \
+            node tools/voxel-fridge/shoot.mjs OUTDIR "view=front" "view=iso"
+        "view=side"
+
+It prints the palette size, the triangle count and any shader or page error, and
+writes one PNG per view. A shader that fails to compile draws NOTHING, so
+"the object vanished" is usually an error in that output, not a camera problem.
+
+
+--------------------------------------------------------------------------------
+PHASE 0  —  MEASURE THE REFERENCE.  Never read proportions by eye.
+--------------------------------------------------------------------------------
+
+ [ ] 0.1  Put the reference images in docs/reference/ (gitignored — they are
+          someone else's work).
+
+ [ ] 0.2  If the style itself is new or unclear, regenerate the style bible:
+
+              python3 tools/authoring/style_bible.py
+
+          It generates sheets from docs/reference/ and MEASURES them into
+          docs/style-spec.json. Each sheet exists to answer one number; read
+          them before trusting any of your own impressions.
+
+ [ ] 0.3  Measure the object's own reference band by band, against a ground
+          that CANNOT be confused with the subject. Write down, as fractions of
+          one driving dimension:
+             overall ratio (h/w), and depth as a fraction of width
+             every horizontal band: where each feature starts and ends
+             every vertical band: border widths, frame widths, openings
+             the crown/overhang, as a multiple of the body
+
+ VERIFY   Each measurement is a number you can point at. If any of them is
+          "about a sixth", go back and measure it.
+
+          >> The door border was typed at 15.5% and measured at 8.75%. The body
+             was 12% too shallow. Both survived several passes because they only
+             ever read as "slightly off".
+
+
+--------------------------------------------------------------------------------
+PHASE 1  —  PROPORTIONS AS FRACTIONS
+--------------------------------------------------------------------------------
+
+ [ ] 1.1  Pick ONE driving dimension (the fridge uses body half-width W = H).
+
+ [ ] 1.2  Write every other dimension as a fraction of it. Never a typed offset.
+
+              const W      = H;            // the 100% everything is of
+              const BORDER = W * 0.24;     // door border, each side
+              const D      = W * 0.958;    // half-depth
+              const C      = W * 1.16;     // crown overhang
+
+ [ ] 1.3  Name every MOUNTING PLANE now, before any geometry exists, and build
+          the geometry from those same constants:
+
+              const P_BORDER = F - 1.5;    // door border front plane
+              const P_DOOR   = F - 2.5;    // frontmost door surface
+              const P_BASE   = F;          // base block front
+
+ VERIFY   Changing H alone rescales the whole prop correctly.
+
+          >> If a measurement and the kit's style disagree, pick deliberately
+             and SAY SO IN A COMMENT. The fridge's border is 0.24 against a
+             measured 0.175 because the kit is heavier than the drawing. That
+             is a legitimate override; a silent one is not.
+
+
+--------------------------------------------------------------------------------
+PHASE 2  —  GEOMETRY
+--------------------------------------------------------------------------------
+
+ [ ] 2.1  Build the prop as a list of boxes with material names:
+
+              const add = (kind, a, b, opts) =>
+                g.add(tableBox(THREE, kind, a, b, MATS, opts));
+              add('cream', [x1, y1, z1], [x2, y2, z2]);
+
+          Coordinates are the reference's own table space (Blender z-up,
+          front -y); tableBox maps them into three.
+
+ [ ] 2.2  Put STRUCTURE in geometry, not texture. Anything that should multiply
+          as the prop grows is a loop:
+
+              for (let z = 8.2; z < 11.2; z += 1.1) add('slot', ...);
+
+          A wider base then gets MORE slots at the same pitch. This is the
+          behaviour a tiling texture is usually asked for, and it cannot smear.
+
+ [ ] 2.3  Bevel and taper — the kit never leaves a form a plain prism.
+             - bevel is on by default (STYLE.bevel, ~1 texel)
+             - taper via opts: { taperX: 1.6, taperZ: 1.6 }
+
+ [ ] 2.4  Apply the SILHOUETTE RULE: set `bevel: 0` on any material whose parts
+          never break the outline — interior walls, shelves, slots, glyphs.
+
+ [ ] 2.5  TAPER INWARD (narrower at the top) on anything carrying a decal.
+
+ VERIFY   Render and read the printed triangle count.
+             simple prop   300 – 1500
+             hero prop     2000 – 5000
+          The fridge sits at 1958 with 58 parts. If you are far over, phase 2.4
+          is where the fat is: a bevelled box is 44 triangles, a plain one 12.
+
+          >> Tapered the wrong way, a face leans out over its own base plane and
+             anything mounted on that plane ends up INSIDE the solid.
+
+
+--------------------------------------------------------------------------------
+PHASE 3  —  MATERIALS
+--------------------------------------------------------------------------------
+
+ [ ] 3.1  Sample colours FROM THE REFERENCE. Do not pick them.
+
+ [ ] 3.2  Add each as a family in style.js, base/lit/shade close together:
+
+              cream: M({ base: '#e9e3d4', lit: '#f7f2e6', shade: '#dcd6c6',
+                         surface: 'plate' }),
+
+          Keep the three tones near each other. The reference's flank is 81% ONE
+          value with a border 3% darker; the big value steps in that image are
+          FACE TINTS, not marks within a face.
+
+ [ ] 3.3  Set the object's vertical extent for the baked shading ramp, BEFORE
+          any material is constructed (materials bake it into their uniforms):
+
+              STYLE.objLo = -2.5;
+              STYLE.objHi = 93;
+
+ VERIFY   Sample your render and compare the dominant colours against the
+          reference's dominant colours. They should match within a few units.
+
+          >> If EVERYTHING is uniformly darker than authored, it is not the art:
+             it is colour management. See TROUBLESHOOTING.
+
+
+--------------------------------------------------------------------------------
+PHASE 4  —  SURFACE MASKS (detail on the base colour)
+--------------------------------------------------------------------------------
+
+ [ ] 4.1  If the existing tiles suit, just name one per material
+          (`surface: 'plate'`). Otherwise regenerate and re-cut:
+
+              python3 tools/authoring/style_bible.py surfaces
+              python3 tools/authoring/cut_surfaces.py
+
+ [ ] 4.2  Read what the cutter prints. It reports, per tile, the border it
+          found, the corner-band profile it decided from, and whether the tile
+          stretches or tiles its middle. A margin at the cap for a plainly
+          plain tile means the scan is wrong — fix it before building on it.
+
+ [ ] 4.3  Materials carrying a mask should drop the procedural `inset`. The
+          tile's own border IS the pressed plate; running both draws two.
+
+ VERIFY   Render at normal size and at ~2x. The border and its corner bolts
+          must be the SAME SIZE in both; only the middle may change.
+
+
+--------------------------------------------------------------------------------
+PHASE 5  —  FITTINGS (this is where character comes from)
+--------------------------------------------------------------------------------
+
+ [ ] 5.1  Do not add surface noise. If a face looks empty it wants a FITTING or
+          a SEAM. A hash over flat fields reads as dirt, because placement is
+          the meaning and a hash cannot mean anything.
+
+ [ ] 5.2  Place each fitting where the real thing would be — a vent where air
+          moves, a rating plate at reading height, hinges on the side the door
+          turns on, a label where you would read one.
+
+              g.add(decal(THREE, kit, 'ratingPlate', 'left', 1, 70,
+                          tx(7), L, T.side));
+
+  [ ] 5.3  Size fittings in TEXELS, not raw world units:  const tx = n => n *
+   STYLE.texel;
+          Sized in fractions of a texel they minify to featureless blobs.
+
+ [ ] 5.4  Mount every decal on a NAMED PLANE from phase 1.3, and always the
+          FRONTMOST surface it could overlap.
+
+ [ ] 5.5  Screws are a RULE, not a placement — use screws(), which puts them at
+          panel corners at a fixed world inset.
+
+ [ ] 5.6  Fold any new atlas's own colours into the palette, or the post pass
+          snaps them to the nearest body colour and they smear.
+
+ VERIFY   Every fitting is fully visible from front, side and iso. A decal that
+          is half missing is not z-fighting — it is behind a part. See 5.4.
+
+
+--------------------------------------------------------------------------------
+PHASE 6  —  THE ACCEPTANCE CHECKS
+--------------------------------------------------------------------------------
+
+Run all of these before calling a prop done.
+
+ [ ] 6.1  RESIZE TEST. Render at 1x and at ~2x on each axis.
+             every border, outline, bolt, screw and decal is the SAME SIZE
+             only COUNTS change: more slots, more seams, more sub-panels
+             nothing stretches, smears or drifts off its corner
+
+ [ ] 6.2  COLOUR COUNT. 25–60 per view. Hundreds means the palette snap is off.
+
+ [ ] 6.3  TRIANGLE COUNT, against the budget in phase 2.
+
+ [ ] 6.4  NO ERRORS in the shoot output — shader, page or console.
+
+ [ ] 6.5  SIDE BY SIDE with the reference at matched height. Compare dominant
+          colours numerically, not by eye.
+
+ [ ] 6.6  npm test still passes (needs `npm run preview` running).
+
+
+--------------------------------------------------------------------------------
+TROUBLESHOOTING — symptom first, because none of these look like their cause
+--------------------------------------------------------------------------------
+
+The object is missing entirely, decals float on the background
+    The shader failed to compile; three then draws nothing. Check the shoot
+    output for GLSL errors. `half` and `flat` are RESERVED WORDS in GLSL ES.
+
+"Unexpected identifier" naming a word from a shader comment
+    A backtick inside a GLSL comment. The shaders are JS template literals, so
+    a backtick anywhere in them — comments included — ends the string. Use
+    plain quotes in shader comments. This has bitten three times.
+
+Every colour is uniformly ~14% darker than authored
+    Colour management. THREE.Color converts sRGB to linear and this renderer
+    writes linear straight out. Call useRawColours(THREE) BEFORE the first
+    Color exists. Do NOT lighten the hex values to compensate — that bakes the
+    error into a correctly sampled palette.
+
+Big pale squares smeared across whole faces
+    The nine-slice margin is too small, so the tile's corner bolts fall in the
+    STRETCHED middle. Re-cut; check the cutter's band profile.
+
+A grid of faint squares over a large panel
+    The mask's middle is tiling when it should stretch. A flat middle must
+    stretch; only content (a vent) tiles.
+
+Scattered flat blobs where fittings should be
+    Decals minified far below their source resolution with NEAREST and no
+    mipmaps, so each samples one arbitrary texel. Cut the atlas to ~20 texels
+    and size placements in texels.
+
+Dark triangular spikes on the silhouette
+    Not broken geometry. Distance-to-edge collapses to ~0 on a bevel facet, so
+    the facet takes the outline colour. Gate edge marks on max(|n|) > 0.95.
+
+Holes at some corners, loose triangles at others
+    A topology bug a vertex-bounds check cannot see. Check WATERTIGHTNESS: every
+    edge shared by exactly two triangles. A correct bevelled box is 24 verts,
+    66 edges, 44 triangles, V - E + F = 2.
+
+Bevel facets are invisible even though the mesh has them
+    Face tints are switching on the dominant normal instead of weighting by it,
+    so a 45-degree chamfer takes the same value as the face beside it.
+
+A hard-banded gradient
+    Ordered dither is off or too weak. It is what lets a small palette express
+    the baked vertical ramp.
+
+Setting `bevel: 0` changed nothing
+    shapedBox still emits the edge and corner triangles; they collapse to zero
+    area but still cost. There is an early-out — check it survived.
+
+The measurement tool says something implausible
+    Believe the tool only when it shows its evidence. Make it print the bands,
+    the profile, the counts it decided from. Three margin definitions in a row
+    were confidently wrong here, and each printed a clean-looking number.
+
+
+--------------------------------------------------------------------------------
+INVARIANTS — break any of these and the system stops working
+--------------------------------------------------------------------------------
+
+  1. EVERY MARK IS MEASURED IN WORLD UNITS, never in UV or as a fraction of a
+     part. This is the entire resize property.
+  2. Every mark GATES on whether its face is big enough to carry it.
+  3. The atlas carries STRUCTURE; the material carries COLOUR. No colour ever
+     leaves a surface texture.
+  4. ONE GRID: mask texels, decal sizes and geometry all sit on STYLE.texel.
+  5. Decals mount to NAMED PLANES, and always the frontmost overlapping one.
+  6. Detail that MEANS something is a fitting. Detail that means nothing is
+     noise, and noise reads as dirt.
+  7. Numbers come from measuring, not from looking. Where you override a
+     measurement on style grounds, say so in a comment.
+
+================================================================================
