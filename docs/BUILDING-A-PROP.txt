@@ -677,6 +677,10 @@ Run all of them. Do not call a prop done until every one passes.
  [ ] 6.6  npm test still passes:
               npm run build && npx vite preview --port 4173 &
               CHROMIUM_PATH=/opt/pw-browsers/chromium npm test
+ [ ] 6.5c WATERTIGHT: node tools/voxel-fridge/watertight.mjs, after ANY change
+          to shapedBox. A bounds check cannot see a topology bug — every vertex
+          of a broken box is still inside the box. This found a degenerate
+          corner triangle in the per-face bevel work on its first run.
  [ ] 6.6b BURIED PARTS: the shoot output says `buried: none`. If it names
           parts, each one is drawing nothing at all — see 8.3, 8.4 and 10.
  [ ] 6.6c NO `WARN tableBox(...) coordinates out of order` lines. They are
@@ -1029,6 +1033,20 @@ A DARK PANEL READS AS A STICKER RATHER THAN A SCREEN
     It is flat and the reference's is not. Measure it (6.5b) before adding
     anything: a CRT comes back as an ordered checker at about half a texel,
     a painted panel comes back flat, and the difference is a number.
+
+THE PROP LOOKS RIGHT FROM THE FRONT AND WRONG FROM ANYWHERE ELSE
+    You only ever compared the front. Run --overlay --view 1 against the
+    reference's SIDE elevation. The till scored 98.65% on the front and 94.16%
+    on the side, and the whole deficit was one part: a keyboard wedge built as
+    a flat deck plus a symmetric taper, which put a solid block across the rear
+    that the reference does not have. Every prop here has a side view on its
+    sheet and it costs one command to check.
+
+THE BEVEL LOOKS UNIFORM EVEN THOUGH EVERY PART HAS ITS OWN NUMBER
+    Because one number per AXIS cuts both ends of it. Use the six-element
+    per-face form (5.2). Measure the reference's profile first: a base whose
+    front is vertical at the floor and chamfered at the deck is [.., 0, top,
+    front, ..], and no amount of tuning a per-axis number produces it.
 
 A HOLLOW PROP RENDERS SOLID — shelves, stock, an interior all missing
     A cavity is FIVE THIN PANELS and the carcass around it is a SHELL. Recipe

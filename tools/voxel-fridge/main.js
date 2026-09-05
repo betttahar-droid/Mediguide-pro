@@ -360,7 +360,8 @@ window.__buried = (() => {
   const boxes = [];
   scene.traverse((o) => {
     const t = o.userData?.table;
-    if (t) boxes.push({ name: o.name, t, tapered: !!o.userData.tapered });
+    if (t) boxes.push({ name: o.name, t, tapered: !!o.userData.tapered,
+                       shrink: o.userData.shrink || 0 });
   });
   const inside = (a, b, eps) =>
     a[0] >= b[0] - eps && a[1] >= b[1] - eps && a[2] >= b[2] - eps &&
@@ -370,12 +371,16 @@ window.__buried = (() => {
   for (const a of boxes) {
     for (const b of boxes) {
       if (a === b || vol(b) <= vol(a) || b.tapered) continue;
-      if (!inside(a.t, b.t, 0.02)) continue;
+      // shrink the container by its own chamfer before testing
+      const k = b.shrink;
+      const bt = [b.t[0] + k, b.t[1] + k, b.t[2] + k,
+                  b.t[3] - k, b.t[4] - k, b.t[5] - k];
+      if (!inside(a.t, bt, 0.02)) continue;
       // clearance on the tightest axis: 0 means a face is flush (z-fighting,
       // probably survivable), > 0 means genuinely sealed inside.
       const clear = Math.min(
-        a.t[0] - b.t[0], a.t[1] - b.t[1], a.t[2] - b.t[2],
-        b.t[3] - a.t[3], b.t[4] - a.t[4], b.t[5] - a.t[5]);
+        a.t[0] - bt[0], a.t[1] - bt[1], a.t[2] - bt[2],
+        bt[3] - a.t[3], bt[4] - a.t[4], bt[5] - a.t[5]);
       out.push({ part: a.name, inside: b.name, clearance: +clear.toFixed(2),
                  at: a.t.map((v) => +v.toFixed(1)) });
       break;

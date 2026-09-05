@@ -697,15 +697,36 @@ export function buildPalette(THREE, limit = 64, only = null) {
 export function shapedBox(THREE, sx, sy, sz, bevel = 0, taperX = 0, taperZ = 0) {
   const h = [sx / 2, sy / 2, sz / 2];
   const size = [sx, sy, sz];
-  const raw = Array.isArray(bevel) ? bevel : [bevel, bevel, bevel];
+  // BEVEL PER FACE, NOT PER AXIS. `bv[i]` used to be one number per axis and it
+  // was applied to BOTH ENDS of that axis, so a box could not have a crisp
+  // bottom and a soft top — which is what a moulded case actually has, and what
+  // the reference draws. The measured cost of not having it: the till's base
+  // carries a 1.3-unit chamfer on its top-front edge in the reference and a
+  // sharp corner at the floor, and one number per axis pushed the whole front
+  // face back 1.3 units. That reads, correctly, as "the bevel is uniform".
+  //
+  //   0.8                    every edge
+  //   [x, y, z]              per axis, both ends      (still supported)
+  //   [x-, x+, y-, y+, z-, z+]  per FACE
+  //
+  // Axis order is shapedBox's own: 0 = table x, 1 = HEIGHT, 2 = DEPTH, and on
+  // axis 2 the minus end is the FRONT.
+  const raw6 = Array.isArray(bevel)
+    ? (bevel.length === 6 ? bevel
+       : [bevel[0], bevel[0], bevel[1], bevel[1], bevel[2], bevel[2]])
+    : [bevel, bevel, bevel, bevel, bevel, bevel];
   // Each inset is bounded by ITS OWN axis: bv[i] moves vertices along axis i,
   // so the only way to invert the solid is bv[i] >= size[i]/2. The clamp used
   // to be 0.34 * the min of the OTHER two axes, which is the wrong axis
   // entirely — it throttled a thin slice's horizontal bevel to 0.43 because the
   // slice was thin VERTICALLY, so a stacked cap could not match the corner
   // radius of the body it sat on and the join showed a step.
-  const bv = raw.map((v, i) => Math.max(0, Math.min(v, 0.45 * size[i])));
-  const b = Math.max(...bv);
+  // Each end is clamped to 0.45 of its own axis, so the two ends together can
+  // never exceed 0.9 of it and the solid cannot invert.
+  const bv6 = raw6.map((v, i) => Math.max(0, Math.min(v, 0.45 * size[i >> 1])));
+  // bs(axis, sign): the inset at one END of one axis. -1 is the low end.
+  const bs = (a, sgn) => bv6[a * 2 + (sgn > 0 ? 1 : 0)];
+  const b = Math.max(...bv6);
   const V = (a, va, bb, vb, c, vc) => {
     const q = [0, 0, 0]; q[a] = va; q[bb] = vb; q[c] = vc; return q;
   };
@@ -716,7 +737,7 @@ export function shapedBox(THREE, sx, sy, sz, bevel = 0, taperX = 0, taperZ = 0) 
     const u = (a + 1) % 3, v = (a + 2) % 3;
     for (const s of [-1, 1]) {
       const P = (su, sv) =>
-        V(a, s * h[a], u, su * (h[u] - bv[u]), v, sv * (h[v] - bv[v]));
+        V(a, s * h[a], u, su * (h[u] - bs(u, su)), v, sv * (h[v] - bs(v, sv)));
       quad(P(-1, -1), P(1, -1), P(1, 1), P(-1, 1));
     }
   }
@@ -729,11 +750,14 @@ export function shapedBox(THREE, sx, sy, sz, bevel = 0, taperX = 0, taperZ = 0) 
     for (let c = a + 1; c < 3; c++) {
       const o = 3 - a - c;
       for (const sa of [-1, 1]) for (const sc of [-1, 1]) {
-        if (bv[a] < 1e-4 && bv[c] < 1e-4) continue;   // no chamfer on this edge
-        quad(V(a, sa * h[a], c, sc * (h[c] - bv[c]), o, h[o] - bv[o]),
-             V(a, sa * h[a], c, sc * (h[c] - bv[c]), o, -(h[o] - bv[o])),
-             V(a, sa * (h[a] - bv[a]), c, sc * h[c], o, -(h[o] - bv[o])),
-             V(a, sa * (h[a] - bv[a]), c, sc * h[c], o, h[o] - bv[o]));
+        // no chamfer on THIS edge — now a per-end test, so one edge of a box
+        // can be chamfered while the opposite one stays sharp
+        if (bs(a, sa) < 1e-4 && bs(c, sc) < 1e-4) continue;
+        const oHi = h[o] - bs(o, 1), oLo = -(h[o] - bs(o, -1));
+        quad(V(a, sa * h[a], c, sc * (h[c] - bs(c, sc)), o, oHi),
+             V(a, sa * h[a], c, sc * (h[c] - bs(c, sc)), o, oLo),
+             V(a, sa * (h[a] - bs(a, sa)), c, sc * h[c], o, oLo),
+             V(a, sa * (h[a] - bs(a, sa)), c, sc * h[c], o, oHi));
       }
     }
   }
@@ -748,9 +772,16 @@ export function shapedBox(THREE, sx, sy, sz, bevel = 0, taperX = 0, taperZ = 0) 
     // outside the silhouette at others. A vertex-bounds check cannot see that,
     // because every vertex is still inside the box; see the watertightness
     // check in the header note.
-    tris.push([[sx_ * h[0], sy_ * (h[1] - bv[1]), sz_ * (h[2] - bv[2])],
-               [sx_ * (h[0] - bv[0]), sy_ * h[1], sz_ * (h[2] - bv[2])],
-               [sx_ * (h[0] - bv[0]), sy_ * (h[1] - bv[1]), sz_ * h[2]]]);
+    const b0 = bs(0, sx_), b1 = bs(1, sy_), b2 = bs(2, sz_);
+    // A CORNER TRIANGLE NEEDS TWO CHAMFERED EDGES MEETING. With only one of the
+    // three insets non-zero the triangle's second and third vertices coincide —
+    // a degenerate face that still contributes edges, so the mesh stops being
+    // manifold while every vertex is still perfectly in bounds. Caught by
+    // tools/voxel-fridge/watertight.mjs on its first run, and by nothing else.
+    if ((b0 > 1e-4) + (b1 > 1e-4) + (b2 > 1e-4) < 2) continue;
+    tris.push([[sx_ * h[0], sy_ * (h[1] - b1), sz_ * (h[2] - b2)],
+               [sx_ * (h[0] - b0), sy_ * h[1], sz_ * (h[2] - b2)],
+               [sx_ * (h[0] - b0), sy_ * (h[1] - b1), sz_ * h[2]]]);
   }
 
   // Taper: narrow the top. Applied after the bevel so the two compose, and as a
@@ -870,6 +901,15 @@ export function tableBox(THREE, kind, [x1, y1, z1], [x2, y2, z2], cache, opts = 
   // treat one as a container, or every corner block sitting on a tapered base
   // is reported as sealed inside it when it is standing proud of the slope.
   mesh.userData.tapered = !!(opts.taperX || opts.taperZ);
+  // The largest inset on each axis, so the buried check can shrink this box to
+  // the volume it ACTUALLY fills. A bevel cuts the solid back from its bounding
+  // box near every chamfered face, so a part sitting in a chamfer is visible
+  // while its bbox is inside the container's — which the check reported as
+  // buried when a paper tail was placed in a base's chamfered front.
+  const bvv = Array.isArray(opts.bevel ?? m.bevel ?? STYLE.bevel)
+    ? (opts.bevel ?? m.bevel ?? STYLE.bevel) : null;
+  const bmax = bvv ? Math.max(...bvv) : (opts.bevel ?? m.bevel ?? STYLE.bevel);
+  mesh.userData.shrink = Math.max(0, bmax || 0);
   return mesh;
 }
 

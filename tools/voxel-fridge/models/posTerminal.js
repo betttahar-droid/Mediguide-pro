@@ -157,44 +157,66 @@ export function build(THREE, MATS, kit, H) {
   }
 
   // ---- base ---------------------------------------------------------------
-  // bottom lip, inset all round so the plinth above reads as overhanging it
-  // The lip ends at z 0.056, not the 0.078 first written. Measured: the
-  // reference reads 0.021..0.848 at z 0.054 and 0.000..0.867 at z 0.062, so the
-  // step is just under 0.06 — and putting it at 0.078 left a 3% notch in the
-  // silhouette at exactly the height the overlay flagged, on both edges.
+  // REBUILT FROM THE SIDE PROFILE, which had never been compared. The front
+  // view scored 98.65% IoU while the side scored 94.16%, and the whole deficit
+  // was here: the reference's base is a KEYBOARD WEDGE whose front edge climbs
+  // steadily from u 0.013 at z 0.13 to u 0.373 at z 0.23, and whose back drops
+  // from u 0.969 to 0.819 above z 0.29. It was built as one flat deck and one
+  // symmetric taper, which put a solid block of material across the whole rear
+  // of the prop that the reference does not have.
+  //
+  //   REFERENCE SIDE PROFILE (u = depth fraction, 0 at the FRONT)
+  //     z 0.06 .. 0.12   0.000 .. 0.969     full
+  //     z 0.13           0.013 .. 0.969
+  //     z 0.15           0.042 .. 0.969
+  //     z 0.17           0.061 .. 0.969     end of the plinth's top chamfer
+  //     z 0.19           0.161 .. 0.969     front-most is now a KEY
+  //     z 0.21           0.229 .. 0.958
+  //     z 0.22           0.275..0.327 + 0.373..0.919   a key, then the riser
+  //     z 0.25           0.373 .. 0.919
+  //     z 0.27           0.419 .. 0.906
+  //     z 0.29           0.445 .. 0.819
+  //     z 0.33           0.498 .. 0.819
+  const uy = (u) => py(u);            // a side-sheet fraction -> world y
+
+  // the bottom lip, inset all round so the plinth above reads as overhanging it
   add('posCase', [-(W - 0.78), -(D - 0.78), z(0.023)], [W - 0.78, D - 0.78, z(0.056)],
       CRISP);
-  add('posCase', [-W, -D, z(0.056)], [W, D, z(0.145)], CASE);
 
-  // THE WEDGE. The side view's top edge runs from u 0.002 at z 0.13 back to
-  // u 0.232 at z 0.214 and on to u 0.44 by z 0.29 — a keyboard deck sloping up
-  // to a riser that carries the monitor. Built as a low deck plus one tapered
-  // riser rather than as a true slope, because tableBox has no slope and three
-  // stacked steps would read as steps. The taper is symmetric and the real
-  // wedge recedes about 2 units more at the front than at the back; at 0.05 of
-  // the depth that is under the outline width, and it is a deliberate
-  // simplification rather than a measurement.
-  // NO SEPARATE DECK BOX. There was one, z 0.145..0.180, and it swallowed the
-  // bottom 40% of every keycap — the keys were sitting IN the deck rather than
-  // ON it, which in the front view read as a row of tan lozenges rather than as
-  // a keyboard. The plinth's top face at z 0.145 IS the deck; the keys sit on
-  // it and the riser rises from it.
-  // TWO STAGES, because the reference holds full width to z 0.214 and only then
-  // draws in. Tapered from z 0.145 the whole way, the base was 9% narrow at
-  // z 0.194 — which compare.py --bands reported and which reads, if you look at
-  // it at all, as "the base is a bit small".
-  // BEHIND THE KEYBOARD ONLY. Spanning the full depth it enclosed the whole
-  // keyboard — ten keys and their step, all drawing nothing.
+  // THE PLINTH, AND THE POINT OF PER-FACE BEVELS. The reference's base front is
+  // a dead vertical face at u 0.000 from z 0.06 to 0.13, and only then chamfers
+  // back to u 0.061 by z 0.17. One bevel number per AXIS cuts both ends of that
+  // axis, so a 1.3-unit depth bevel pushed the ENTIRE front face back 1.3 units
+  // — which is what "the bevel is uniform" looks like when you measure it.
   //
-  // INSETS AND TAPERS ARE FIXED, not fractions. The riser is part of the base
-  // and its OVERALL size stretches with it, but the moulding step at its edge
-  // is a fixed 0.7 units on any size of till. Written through px() the step
-  // grew from 0.71 to 1.24 units at ?w=28 — 53% of the left edge strip,
-  // reported by compare.py --margins, and completely invisible by eye.
-  add('posCase', [-(W - 0.49), -7.90, z(0.145)], [W - 0.71, D - 0.14, z(0.214)],
-      CRISP);
-  add('posCase', [-(W - 0.90), -8.34, z(0.214)], [W - 1.09, D - 0.43, z(0.292)],
-      { ...CRISP, taperX: 2.81, taperZ: 4.93 });
+  //   [x-, x+, bottom, top, front, back]
+  //
+  // Bottom 0 and front 2.0 gives exactly the reference's profile: full depth at
+  // the floor, a 2.0-unit chamfer running up to the deck. The chamfer between
+  // two faces is set by BOTH their insets, so the top-front chamfer is 2.0 deep
+  // and 1.7 tall and the bottom-front edge stays sharp.
+  add('posCase', [-W, -D, z(0.056)], [W, D, z(0.175)],
+      // The reference's front profile is not a straight chamfer — 0.013 at
+      // z 0.13, 0.042 at 0.15, 0.061 at 0.17, decelerating — so no single
+      // linear chamfer fits it. Pushed to the clamp (2.3/2.6) it matched that
+      // one band better and cost more on the front elevation than it gained on
+      // the side, so 1.7/2.0 stands and the deviation is here in writing.
+      { bevel: [1.3, 1.3, 0, 1.7, 2.0, 1.3] });
+
+  // THE RISER, in three steps rather than one symmetric taper. The reference's
+  // wedge recedes far more at the FRONT than at the back and taperZ can only
+  // narrow both ends equally; three boxes following the measured profile cost
+  // 24 triangles more and are the difference between a wedge and a block.
+  // Insets from the base's own edges are FIXED world units (see the resize
+  // note above), and each step is crisp underneath and soft on top so they
+  // stack without a visible rim at every joint.
+  const STEP = { bevel: [1.0, 1.0, 0, 1.0, 1.4, 1.0] };
+  add('posCase', [-(W - 0.5), uy(0.330), z(0.175)], [W - 0.9, uy(0.940), z(0.222)],
+      STEP);
+  add('posCase', [-(W - 2.0), uy(0.373), z(0.222)], [W - 2.4, uy(0.919), z(0.268)],
+      STEP);
+  add('posCase', [-(W - 3.7), uy(0.430), z(0.268)], [W - 4.1, uy(0.880), z(0.292)],
+      STEP);
 
   // ---- neck ---------------------------------------------------------------
   // Crisp. CASE chamfered the neck's bottom into the base, which the reference
@@ -213,7 +235,12 @@ export function build(THREE, MATS, kit, H) {
   // The consequence is worth naming: after this change the edge-strip resize
   // test cannot validate the monitor, because it is anchored to the CENTRE and
   // the strips are cut from the edges. compare.py --centre exists for that.
-  const MY0 = -10.57, MY1 = 15.15;    // its front and back faces
+  // MY0 IS THE BODY'S FRONT, AND IT IS BEHIND THE FLARE'S. The side profile
+  // reads u 0.164 at z 0.39 and 0.179 from z 0.44 up — the tube's bezel stands
+  // proud at the bottom and the case runs back above it, which is what a CRT
+  // does. Built at 0.164 for the whole height the body was forward of its own
+  // flare, and the overlay showed it as a tall blue strip down the front edge.
+  const MY0 = -10.09, MY1 = 15.15;    // its front and back faces
   const mb = (kind, hx, y0, y1, za, zb, o) =>
     add(kind, [MCX - hx, y0, z(za)], [MCX + hx, y1, z(zb)], o);
 
@@ -223,10 +250,17 @@ export function build(THREE, MATS, kit, H) {
   // needed. One linear step put it 6% wide across the middle of the band.
   // Down to z 0.336, not 0.344: the reference holds the flare's bottom width
   // for one more band before the neck takes over.
-  mb('posCase', 0.337 * U, -10.21, 13.70, 0.336, 0.362,
-     { bevel: 0, taperX: -0.0105 * U, taperZ: -0.16 });
-  mb('posCase', 0.3475 * U, -10.38, 13.86, 0.362, 0.375,
+  // THE UNDERSIDE IS NOT SOLID. At z 0.344 the reference reads TWO runs —
+  // 0.251..0.430 and 0.513..0.819 — a front lip and the neck, with the tube's
+  // underside recessed between them. Built as one slab it filled that gap and
+  // ran 0.087 of the depth too far back, the worst single error on the prop.
+  mb('posCase', 0.337 * U, uy(0.251), uy(0.430), 0.336, 0.360,
+     { bevel: 0, taperX: -0.0105 * U });
+  mb('posCase', 0.3475 * U, uy(0.170), uy(0.907), 0.360, 0.375,
      { bevel: 0, taperX: -0.054 * U, taperZ: -0.72 });
+  // and the bezel's bottom rim, which stands proud of the case above it: the
+  // profile reads u 0.164 up to z 0.41 and 0.179 from z 0.44 on.
+  mb('posCase', MHW - 0.6, uy(0.164), MY0, 0.375, 0.415, { bevel: [0.8, 0.8, 0, 0.8, 0, 0] });
   // NO BOTTOM CHAMFER. CASE bevels y as well, and a y-bevel cuts the top AND
   // the bottom — so the body pulled in just above the flare and the two met at
   // a waist. Visible in the overlay as a notch, invisible at a glance.
@@ -320,14 +354,21 @@ export function build(THREE, MATS, kit, H) {
   // FRACTION grows in the other direction just as surely — the same mistake,
   // and the edge-strip check cannot see it because it never leaves the front
   // elevation. Offsets are from the base's front face.
-  add('posCase', [kx2 - KN * KEY_P - 0.7, F + 4.5, z(0.145)],
-                 [kx2 + 0.7, F + 7.7, z(0.160)], { bevel: 0.35 });
+  // THREE TIERS, stepping UP and BACK, because that is what the side view
+  // shows: the front-most point of the whole prop at z 0.19 is a key at
+  // u 0.161, at z 0.21 a key at 0.229, and at z 0.22 a key at 0.275..0.327 with
+  // a gap behind it before the riser starts at 0.373. Two flat rows could not
+  // produce that profile at any height.
+  const wedge = { bevel: [0.8, 0.8, 0, 0.8, 1.0, 0.6] };
+  add('posCase', [kx2 - KN * KEY_P - 0.7, uy(0.205), z(0.175)],
+                 [kx2 + 0.7, uy(0.332), z(0.196)], wedge);
   const ROW = [
-    { y0: 0.058, y1: 0.133, lo: 0.145, hi: 0.186 },
-    { y0: 0.148, y1: 0.223, lo: 0.160, hi: 0.201 },
+    { u0: 0.152, u1: 0.208, lo: 0.175, hi: 0.205 },
+    { u0: 0.216, u1: 0.272, lo: 0.188, hi: 0.218 },
+    { u0: 0.268, u1: 0.324, lo: 0.196, hi: 0.226 },
   ];
   for (const r of ROW) {
-    const ky1 = F + r.y0, ky2 = F + r.y1;
+    const ky1 = uy(r.u0), ky2 = uy(r.u1);
     for (let k = 0; k < KN; k++) {
       const s = kx2 - (k + 1) * KEY_P;
       // The reference's right-hand group is darker — a numeric or function
@@ -364,11 +405,25 @@ export function build(THREE, MATS, kit, H) {
   const R = -W;                 // the base's -x edge (reference RIGHT)
   const pbox = (kind, xa, xb, y0, y1, za, zb, o) =>
     add(kind, [R + xa, F - y1, z(za)], [R + xb, F - y0, z(zb)], o);
-  pbox('posCase', 0.069 * U, PRN_B, 0.0, 0.45, 0.140, 0.200, { bevel: 0.4 });
-  pbox('posScreen', 0.079 * U, 0.274 * U, 0.4, 0.75, 0.168, 0.190, { bevel: 0 });
+  // FLUSH, NOT PROUD. At 0.45 units proud the housing became the front-most
+  // point of the whole prop, which shifted the side view's bounding box and so
+  // shifted every depth measurement of every other part by 0.017 of the depth.
+  // The reference's printer is a recess in the base's front face, not a box on
+  // it, so only the paper leaves the silhouette.
+  // AND IT SITS IN THE CHAMFER. The base's front face is chamfered back over
+  // z 0.135..0.175, so a printer at the nominal front plane stands proud of it
+  // — the side profile read u 0.004 where the reference reads 0.055. Set back
+  // to the middle of the chamfer.
+  pbox('posCase', 0.069 * U, PRN_B, -1.30, -1.05, 0.140, 0.200, { bevel: 0.4 });
+  pbox('posScreen', 0.079 * U, 0.274 * U, -1.10, -0.85, 0.168, 0.190, { bevel: 0 });
   // The tail leaves the silhouette, which is what says the thing is loaded.
-  pbox('boxPale', 0.115 * U, 0.245 * U, 0.7, 1.05, 0.128, 0.172, { bevel: 0 });
-  pbox('posTrim', 0.115 * U, 0.245 * U, 1.05, 1.15, 0.128, 0.136, { bevel: 0 });
+  // The tail lives in the chamfer band too. Recessed to the printer's own plane
+  // it was inside the plinth and drew nothing; brought forward to the nominal
+  // front face it would stand proud of the base and set the side view's
+  // bounding box, which is the fault it was moved back to fix. z 0.140..0.172
+  // is where the chamfer has opened far enough for it to show.
+  pbox('boxPale', 0.115 * U, 0.245 * U, -1.05, -0.70, 0.140, 0.172, { bevel: 0 });
+  pbox('posTrim', 0.115 * U, 0.245 * U, -0.80, -0.62, 0.140, 0.148, { bevel: 0 });
 
   // ---- card reader on its stalk (ANCHOR) ----------------------------------
   // An outrigger, and the reason this prop's sheet is wider than its base. It
@@ -389,7 +444,14 @@ export function build(THREE, MATS, kit, H) {
   // z 0.236..0.351, not 0.330. A plain transcription slip from the measurement
   // block at the top of this file, and the overlay found it as a red band where
   // the reference's reader head stands and ours does not.
-  rbox('posCase', -5.20, 1.46, 1.28, 5.56, 0.236, 0.351, CASE);
+  // IT IS TILTED. The front view puts the head at z 0.236..0.351, but the side
+  // view shows it reaching u 0.919 at z 0.23 and nothing beyond 0.819 by z 0.29
+  // — a reader angled back towards the operator. Two steps say that; one box
+  // says a slab, and put a solid block across the rear of the side silhouette.
+  rbox('posCase', -5.20, 1.46, 1.78, 5.56, 0.236, 0.290,
+       { bevel: [1.3, 1.3, 0, 0.6, 1.0, 1.0] });
+  rbox('posCase', -5.20, 1.46, 3.95, 5.56, 0.290, 0.351,
+       { bevel: [1.3, 1.3, 0, 1.0, 1.0, 1.0] });
   rbox('posRead', -4.61, 0.86, 5.49, 5.72, 0.252, 0.318, { bevel: 0 });
   rbox('posTrim', -1.53, 0.53, 5.79, 5.92, 0.258, 0.268, { bevel: 0 });
   // its own little keypad, three pips, so it reads as a reader and not a box

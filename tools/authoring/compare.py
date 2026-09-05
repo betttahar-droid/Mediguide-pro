@@ -102,14 +102,15 @@ def load(path):
     return px, obj, xs[0], xs[-1], ys[0], ys[-1]
 
 
-def first_drawing(obj, x0, x1, h):
-    """A reference sheet holds a front AND a side view. Take the first."""
+def first_drawing(obj, x0, x1, h, which=0):
+    """A reference sheet holds a front AND a side view. Pick one (0 = front)."""
     cols = [x for x in range(x0, x1 + 1) if any(obj[y][x] for y in range(h))]
-    start = cols[0]
+    runs, start = [], cols[0]
     for a, b in zip(cols, cols[1:]):
         if b - a > 1:
-            return start, a
-    return start, cols[-1]
+            runs.append((start, a)); start = b
+    runs.append((start, cols[-1]))
+    return runs[min(which, len(runs) - 1)]
 
 
 def widths(obj, box, n):
@@ -125,10 +126,10 @@ def widths(obj, box, n):
     return [(zf, w, w / widest) for zf, w in out]
 
 
-def bands(a_path, b_path, n):
+def bands(a_path, b_path, n, va=0):
     pa, oa, ax0, ax1, ay0, ay1 = load(a_path)
     pb, ob, bx0, bx1, by0, by1 = load(b_path)
-    ax0, ax1 = first_drawing(oa, ax0, ax1, len(oa))
+    ax0, ax1 = first_drawing(oa, ax0, ax1, len(oa), va)
     bx0, bx1 = first_drawing(ob, bx0, bx1, len(ob))
     ra = (ay1 - ay0 + 1) / (ax1 - ax0 + 1)
     rb = (by1 - by0 + 1) / (bx1 - bx0 + 1)
@@ -153,7 +154,7 @@ def bands(a_path, b_path, n):
     print("with measure.py --rows on BOTH images before changing anything.")
 
 
-def overlay(a_path, b_path, out_path, n):
+def overlay(a_path, b_path, out_path, n, va=0):
     """Silhouette OVERLAP, which is what --bands cannot see.
 
     --bands measures the WIDTH of each row. Two shapes can match on every row
@@ -164,7 +165,7 @@ def overlay(a_path, b_path, out_path, n):
     """
     pa, oa, ax0, ax1, ay0, ay1 = load(a_path)
     pb, ob, bx0, bx1, by0, by1 = load(b_path)
-    ax0, ax1 = first_drawing(oa, ax0, ax1, len(oa))
+    ax0, ax1 = first_drawing(oa, ax0, ax1, len(oa), va)
     bx0, bx1 = first_drawing(ob, bx0, bx1, len(ob))
     aw, ah = ax1 - ax0 + 1, ay1 - ay0 + 1
     bw, bh = bx1 - bx0 + 1, by1 - by0 + 1
@@ -278,16 +279,18 @@ def main():
                     help="silhouette overlap + edge deltas; writes a diff image")
     ap.add_argument("-n", type=int, default=24, help="bands to sample")
     ap.add_argument("--strip", type=int, default=60, help="edge strip width, px")
+    ap.add_argument("--view", type=int, default=0,
+                    help="which drawing of A to use: 0 front, 1 side")
     ap.add_argument("--zrange", nargs=2, type=float, default=[0.0, 1.0],
                     metavar=("Z0", "Z1"),
                     help="limit --margins to this height band, 0 at the floor")
     x = ap.parse_args()
     if x.overlay:
-        overlay(x.a, x.b, x.overlay, x.n)
+        overlay(x.a, x.b, x.overlay, x.n, x.view)
     elif x.margins:
         margins(x.a, x.b, x.strip, x.zrange[0], x.zrange[1])
     else:
-        bands(x.a, x.b, x.n)
+        bands(x.a, x.b, x.n, x.view)
 
 
 if __name__ == "__main__":
