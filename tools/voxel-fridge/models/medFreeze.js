@@ -116,10 +116,21 @@ export function build(THREE, MATS, kit, H) {
   // reference's feet are 68 px across the pair on a 346 px body — they do not
   // grow with the cabinet, and writing them as a fraction of W is exactly the
   // bug the handle had on the previous prop.
+  // Each one is a LEVELLING foot, not a block: a wide pad on the floor, a
+  // narrower threaded stem above it, and a collar where the stem meets the
+  // skirt. Three boxes instead of one, and the silhouette is the whole reason —
+  // a plain block reads as the cabinet continuing to the floor, where a stem
+  // reads as something the cabinet stands ON.
   for (const sx of [-1, 1]) for (const sy of [-1, 1]) {
     const x1 = sx > 0 ? W - 5.7 : -W + 1.2, x2 = sx > 0 ? W - 1.2 : -W + 5.7;
     const y1 = sy > 0 ? D - 5.7 : -D + 1.2, y2 = sy > 0 ? D - 1.2 : -(D - 5.7);
-    add('medDark', [x1, y1, 0], [x2, y2, z(0.024)], { bevel: 0.5 });
+    const cx = (x1 + x2) / 2, cy = (y1 + y2) / 2;
+    add('medDark', [x1, y1, 0], [x2, y2, z(0.010)],
+        { bevel: 0.5, taperX: 0.4, taperZ: 0.4 });          // pad
+    add('steel', [cx - 1.1, cy - 1.1, z(0.009)], [cx + 1.1, cy + 1.1, z(0.021)],
+        { bevel: 0.35 });                                   // stem
+    add('medDark', [x1 + 0.4, y1 + 0.4, z(0.020)], [x2 - 0.4, y2 - 0.4, z(0.026)],
+        { bevel: 0.3 });                                    // collar
   }
 
   // ---- base skirt, plinth recess and the bright lip above it ---------------
@@ -133,6 +144,16 @@ export function build(THREE, MATS, kit, H) {
       { bevel: 0 });
   // and its own bottom sill, which is what stops the recess reading as a hole
   add('medFlat', [-(W - 2.2), F - 1.0, z(0.046)], [W - 2.2, F - 0.4, z(0.053)],
+      { bevel: 0 });
+  // REAL LOUVRES in it, not a picture of louvres: slats at a fixed 2.4-unit
+  // pitch, so a wider cabinet gets MORE of them rather than wider ones. Standing
+  // proud of the dark panel behind them, because a recess is built proud here.
+  for (let s = -(W - 3.4); s < W - 4.4; s += 2.4) {
+    add('medFlat', [s, F - 1.15, z(0.058)], [s + 1.1, F - 0.85, z(0.100)],
+        { bevel: 0 });
+  }
+  // a bright top edge to the recess, which is what makes it read as an undercut
+  add('medTrim', [-(W - 2.2), F - 1.0, z(0.103)], [W - 2.2, F - 0.4, z(0.109)],
       { bevel: 0 });
   // The bright lip. MEASURED at #d4dedc against a body of #a5b5aa — nearly the
   // material's own lit tone, so it is medTrim rather than a separate colour.
@@ -199,14 +220,19 @@ export function build(THREE, MATS, kit, H) {
   // The pattern is indexed rather than random: a seeded shuffle would change
   // every box every time the file is touched, and then no render could be
   // compared with the one before it.
+  // [width, height, body, stripe, stripe height, stackedOn]
+  // `stackedOn` is a second, smaller carton sitting on top of the first — a real
+  // stock fridge is never one neat row of equal boxes, and a stack costs three
+  // more boxes and buys most of the difference between "stock" and "blocks".
   const ITEM = [
-    // [width, height, body, stripe, stripe height]
-    [4.6, 4.4, 'boxPale', 'boxBlue', 0.9],
-    [4.0, 5.4, 'boxBlue', 'boxPale', 1.1],
-    [5.4, 3.2, 'boxPale', 'boxWarm', 0.8],
-    [3.4, 3.8, 'boxWarm', 'boxPale', 0.7],
-    [4.8, 4.0, 'boxPale', 'medDark', 0.6],
+    [4.6, 4.4, 'boxPale', 'boxBlue', 0.9, [3.2, 1.8, 'boxWarm']],
+    [4.0, 5.4, 'boxBlue', 'boxPale', 1.1, null],
+    [5.4, 3.2, 'boxPale', 'boxWarm', 0.8, [4.0, 2.4, 'boxPale']],
+    [3.4, 3.8, 'boxWarm', 'boxPale', 0.7, null],
+    [4.8, 4.0, 'boxPale', 'medDark', 0.6, [2.6, 2.0, 'boxBlue']],
     [null], // vial cluster, handled below
+    [3.0, 5.8, 'boxBlue', 'boxPale', 0.8, null],
+    [5.0, 2.6, 'boxWarm', 'medDark', 0.5, [3.4, 3.0, 'boxPale']],
   ];
   const GAP = 0.7;               // fixed gap between items, in world units
   const VIALS = 4, VPITCH = 1.5; // a vial cluster is itself a fixed size
@@ -232,41 +258,76 @@ export function build(THREE, MATS, kit, H) {
       if (spec[0] === null) {
         // A cluster of vials: four small cylinders-as-boxes with a darker cap.
         // Same REPEAT rule one level down — the cluster is a fixed size.
+        // A rack of vials: a dark tray, the vials standing in it, each with a
+        // pale body, a coloured cap and a bright crimp under the cap.
+        add('medDark', [x - 0.3, SY0 + 0.9, base],
+                       [x + VIALS * VPITCH - 0.2, SY0 + 2.5, base + 0.8],
+            { bevel: 0 });
         for (let v = 0; v < VIALS; v++) {
           const vx = x + v * VPITCH;
-          add('vial', [vx, SY0 + 1.2, base], [vx + 1.0, SY0 + 2.2, base + 3.0],
+          const cap = ['boxWarm', 'boxBlue', 'boxPale', 'boxWarm'][v % 4];
+          add('vial', [vx, SY0 + 1.2, base + 0.7], [vx + 1.0, SY0 + 2.2, base + 3.2],
               { bevel: 0 });
-          add('medDark', [vx, SY0 + 1.2, base + 3.0],
-                         [vx + 1.0, SY0 + 2.2, base + 3.5], { bevel: 0 });
+          add('chrome', [vx, SY0 + 1.2, base + 3.2],
+                        [vx + 1.0, SY0 + 2.2, base + 3.5], { bevel: 0 });
+          add(cap, [vx + 0.1, SY0 + 1.3, base + 3.5],
+                   [vx + 0.9, SY0 + 2.1, base + 3.9], { bevel: 0 });
         }
         x += VIALS * VPITCH + GAP;
       } else {
-        const [w, h, body, stripe, sh] = spec;
+        const [w, h, body, stripe, sh, stack] = spec;
         const back = SY0 + 1.0 + (i % 2) * 1.4;   // a little depth variation
-        add(body, [x, back, base], [x + w, Math.min(back + 5.2, SY1), base + h],
+        const front = back - 0.15, dep = Math.min(back + 5.2, SY1);
+        add(body, [x, back, base], [x + w, dep, base + h], { bevel: 0 });
+        // The printed label. This is the whole reason the stock reads as
+        // MEDICINE and not as grey blocks: every carton on the reference carries
+        // a printed panel, and a band of a second colour with two short rules
+        // under it is enough to say so at this size.
+        add(stripe, [x + 0.5, front, base + h * 0.55],
+                    [x + w - 0.5, front + 0.05, base + h * 0.55 + sh], { bevel: 0 });
+        add('medDark', [x + 0.5, front, base + h * 0.34],
+                       [x + w - 1.6, front + 0.05, base + h * 0.34 + 0.3],
             { bevel: 0 });
-        // The label band. This is the whole reason the stock reads as MEDICINE
-        // and not as grey blocks: every box on the reference carries a printed
-        // stripe, and one flat band of a second colour is enough to say so.
-        add(stripe, [x + 0.5, back - 0.15, base + h * 0.55],
-                    [x + w - 0.5, back - 0.1, base + h * 0.55 + sh], { bevel: 0 });
-        add('medDark', [x + 0.5, back - 0.15, base + h * 0.30],
-                       [x + w - 1.6, back - 0.1, base + h * 0.30 + 0.35],
+        add('medDark', [x + 0.5, front, base + h * 0.20],
+                       [x + w - 2.4, front + 0.05, base + h * 0.20 + 0.3],
             { bevel: 0 });
+        // the lid seam, along the top — a carton has one and it costs one box
+        add('medDark', [x + 0.35, front, base + h - 0.35],
+                       [x + w - 0.35, front + 0.05, base + h - 0.2], { bevel: 0 });
+        if (stack) {
+          const [sw, sh2, sbody] = stack;
+          const sx0 = x + (w - sw) / 2;
+          add(sbody, [sx0, back + 0.6, base + h], [sx0 + sw, dep - 0.6, base + h + sh2],
+              { bevel: 0 });
+          add('medDark', [sx0 + 0.4, back + 0.45, base + h + sh2 * 0.45],
+                         [sx0 + sw - 0.4, back + 0.5, base + h + sh2 * 0.45 + 0.3],
+              { bevel: 0 });
+        }
         x += w + GAP;
       }
     }
   };
 
   for (let s = 0; s < SHELF.length; s++) {
-    // The shelf itself: a thin wire tray, so it is FLAT — a bevel on a 0.4-unit
-    // slab is mostly chamfer and reads as a rounded bar.
-    add('medTrim', [-G + 0.5, SY0 - 0.4, z(SHELF[s])],
-                   [G - 0.5, SY1, z(SHELF[s]) + 0.4], { bevel: 0 });
-    // its front edge rail, a shade brighter, which is what makes the shelves
-    // read as separate planes through the glass rather than as pale stripes
-    add('shelf', [-G + 0.5, SY0 - 0.55, z(SHELF[s])],
-                 [G - 0.5, SY0 - 0.4, z(SHELF[s]) + 0.4], { bevel: 0 });
+    const sz = z(SHELF[s]);
+    // A WIRE TRAY, built as wire. It was one pale slab, which read as a shelf
+    // but not as THIS shelf: a vaccine fridge's shelves are welded rod, and the
+    // gaps between the rods are as much of the look as the rods. Front and back
+    // rails, side stiles, and longitudinal rods at a fixed 2.2-unit pitch —
+    // REPEAT again, so a wider cabinet gets more rods and not fatter ones.
+    add('shelf', [-G + 0.5, SY0 - 0.55, sz], [G - 0.5, SY0 - 0.1, sz + 0.45],
+        { bevel: 0 });                                        // front rail
+    add('medTrim', [-G + 0.5, SY1 - 0.45, sz], [G - 0.5, SY1, sz + 0.45],
+        { bevel: 0 });                                        // back rail
+    for (const sx of [-1, 1]) {
+      const a = sx * (G - 0.5), b = sx * (G - 1.0);
+      add('medTrim', [Math.min(a, b), SY0 - 0.55, sz], [Math.max(a, b), SY1, sz + 0.45],
+          { bevel: 0 });                                      // side stiles
+    }
+    for (let r = -G + 1.6; r < G - 1.4; r += 2.2) {
+      add('medTrim', [r, SY0 - 0.1, sz + 0.05], [r + 0.5, SY1 - 0.45, sz + 0.4],
+          { bevel: 0 });                                      // rods
+    }
     stockRow(SHELF[s], s);
   }
 
@@ -295,6 +356,45 @@ export function build(THREE, MATS, kit, H) {
       { bevel: 0 });
   add('medDark', [-G - lip, P_GLASS, CAV_HI], [G + lip, P_GLASS + 0.4, CAV_HI + lip],
       { bevel: 0 });
+  // Four corner brackets on the door frame — the joint where a pressed section
+  // is welded, and the one detail the reference draws at every corner of the
+  // opening. ANCHORED at a fixed size to the corner they belong to.
+  for (const sx of [-1, 1]) for (const sz of [-1, 1]) {
+    const cx = sx * (G + lip), cz = sz > 0 ? CAV_HI + lip : CAV_LO - lip;
+    const arm = 3.2, th = 0.9;
+    add('medTrim', [cx, P_GLASS - 0.15, cz], [cx - sx * arm, P_GLASS + 0.3, cz - sz * th],
+        { bevel: 0 });
+    add('medTrim', [cx, P_GLASS - 0.15, cz], [cx - sx * th, P_GLASS + 0.3, cz - sz * arm],
+        { bevel: 0 });
+  }
+  // Screws down both stiles, at a fixed pitch. REPEAT along the height, which
+  // does not change with ?w=, so the count here is constant — but written as a
+  // loop so it stays right if the height is ever re-measured.
+  for (const sx of [-1, 1]) {
+    for (let s = DOOR_LO + 6; s < DOOR_HI - 5; s += 14) {
+      g.add(decal(THREE, kit, 'screwCross', 'front',
+                  sx * (G + STILE / 2), s, 1.0, P_DOOR - EPS, T.front));
+    }
+  }
+
+  // ---- the glass: NO REFLECTION, and this is the second prop to conclude it --
+  // The reference draws a broad diagonal streak across the pane and it was
+  // built here as a stepped ribbon, twice: once wide (it read as a grey
+  // staircase standing inside the cabinet) and once as two hairlines (they read
+  // as two loose bars floating among the stock). Neither is a shading problem
+  // and no amount of tuning the width or the tone fixes either.
+  //
+  // The cause is structural. There is NO PANE — the glass is an opening you see
+  // the interior through, because an alpha-blended sheet produces colours that
+  // are in no palette and the snap kills them. A reflection is a mark ON a
+  // surface, so with no surface it is a floating quad, and the moment the
+  // camera leaves a dead-on orthographic front view it parallaxes off the
+  // things behind it and reads as debris in the cabinet.
+  //
+  // vaccineFridge.js deleted its glass reflection for what looked like a taste
+  // reason ("scattered marks that mean nothing"). It was not taste. Kept here as
+  // the reason rather than the mark, so the third prop does not spend another
+  // pass rediscovering it.
 
   // ---- handle -------------------------------------------------------------
   // ANCHORED, NOT SCALED — the lesson from the retro fridge, applied first
@@ -339,6 +439,23 @@ export function build(THREE, MATS, kit, H) {
   const CX = fromRefL(3.6), CZ = z(0.945), CR = 1.85, CA = 0.62;
   add('medBlue', [CX - CR, cf, CZ - CA], [CX + CR, P_DOOR, CZ + CA], { bevel: 0 });
   add('medBlue', [CX - CA, cf, CZ - CR], [CX + CA, P_DOOR, CZ + CR], { bevel: 0 });
+  // The wordmark beside it. The reference draws a short run of dark marks to the
+  // right of the cross, at a size where no glyph is legible — so it is drawn the
+  // way the reference draws it, as marks, and not as text nobody can read. Two
+  // rules of different lengths, which is what type looks like at 20 texels.
+  add('medDark', [CX - 2.6, cf, CZ - 1.7], [CX - 5.4, cf + 0.05, CZ - 1.2],
+      { bevel: 0 });
+  add('medDark', [CX - 2.6, cf, CZ - 2.5], [CX - 4.4, cf + 0.05, CZ - 2.0],
+      { bevel: 0 });
+  // Two small button pips between the logo and the readout. A control band with
+  // a display and nothing to press is a panel, not a controller.
+  for (const b of [0, 1]) {
+    const bx = fromRefR(14.2 + b * 2.6);
+    add('medDark', [bx - 0.9, cf, CZ - 0.9], [bx + 0.9, P_DOOR, CZ + 0.9],
+        { bevel: 0 });
+    add('medTrim', [bx - 0.55, cf - 0.2, CZ - 0.55], [bx + 0.55, P_DOOR, CZ + 0.55],
+        { bevel: 0 });
+  }
 
   // The indicator lamp, MEASURED at x 0.671..0.714, z 0.937..0.960 — 1.4 units
   // square. 'digit' is the kit's green; a lamp material named for an EFFECT is
@@ -403,6 +520,102 @@ export function build(THREE, MATS, kit, H) {
                     (VY2 - VY1) / 2, (VZ2 - VZ1) / 2,
                     sx * (W + 0.28 + EPS), 1.4, 1.0, T.side));
   }
+
+  // ---- the back: condenser, compressor, fan and cable ----------------------
+  // The generated elevation sheet only carries a front and a side, so the back
+  // was bare. The uploaded reference set has a rear view and it is the busiest
+  // face of the object: a full-height condenser coil, a drum compressor at the
+  // bottom, a fan grille beside it, and the mains cable coming out low down.
+  // Nothing here is invented, and nothing here is guessed from the front.
+  //
+  // It matters more than a back face usually would: this prop stands in a
+  // builder where the player rotates freely and can put a fridge against no
+  // wall at all.
+  const B = D + 0.15;          // the plane everything on the back stands on
+  const BLO = z(0.36), BHI = z(0.94);
+
+  // The condenser: a serpentine coil, which is ONE tube bent back on itself —
+  // vertical runs at a fixed pitch joined alternately at the top and the bottom.
+  // REPEAT, so a wider cabinet gets more runs of the same tube. Drawn as
+  // geometry rather than as a texture for the usual reason: a coil is a
+  // silhouette, and the gaps between the runs are half of what makes it read.
+  const CPITCH = 1.9, CT = 0.5;
+  add('medDark', [-(W - 3.0), B - 0.1, BLO - 0.8], [W - 3.0, B + 0.5, BHI + 0.8],
+      { bevel: 0 });                                   // the backing plate
+  let bend = 0;
+  for (let c = -(W - 4.0); c <= W - 4.0; c += CPITCH) {
+    add('steel', [c, B, BLO], [c + CT, B + 0.9, BHI], { bevel: 0 });
+    // the return bend, alternating top and bottom, which is what makes it one
+    // tube rather than a row of bars
+    const rz = bend % 2 ? BHI - CT : BLO;
+    if (c + CPITCH <= W - 4.0) {
+      add('steel', [c, B, rz], [c + CPITCH + CT, B + 0.9, rz + CT], { bevel: 0 });
+    }
+    bend++;
+  }
+  // the two straps that hold the coil to the cabinet
+  for (const s of [BLO + 4, BHI - 4]) {
+    add('medFlat', [-(W - 2.6), B - 0.15, s], [W - 2.6, B + 0.35, s + 0.9],
+        { bevel: 0 });
+  }
+
+  // The compressor: a drum on a mount, low and off-centre, ANCHORED — it is a
+  // bought-in part and does not change size with the cabinet.
+  // IT STANDS PROUD OF THE BACK PANEL. Placed at y = D - 5 it was inside the
+  // carcass, which is solid, so the back view came back showing two pipes
+  // running down to nothing. Third time this exact mistake has appeared on this
+  // prop and it has never once looked like what it is.
+  const KX = fromRefR(9.5), KZ = z(0.090);
+  add('medDark', [KX - 4.4, B - 0.2, KZ - 0.9], [KX + 4.4, B + 5.6, KZ],
+      { bevel: 0.4 });                                  // mount plate
+  add('slot', [KX - 3.4, B, KZ], [KX + 3.4, B + 5.0, KZ + 7.0],
+      { bevel: [2.4, 0, 2.4] });                        // the drum itself
+  add('medDark', [KX - 3.0, B + 0.3, KZ + 7.0], [KX + 3.0, B + 4.7, KZ + 8.0],
+      { bevel: [1.6, 0, 1.6] });                        // its cap
+  add('steel', [KX - 1.1, B + 4.8, KZ + 3.4], [KX + 1.1, B + 6.0, KZ + 4.8],
+      { bevel: 0.3 });                                  // the terminal box
+  // the two pipes leaving it for the coil
+  add('steel', [KX - 2.6, B + 0.2, KZ + 7.6], [KX - 2.1, B + 0.7, BLO],
+      { bevel: 0 });
+  add('steel', [KX + 2.1, B + 0.2, KZ + 7.6], [KX + 2.6, B + 0.7, BLO - 2.4],
+      { bevel: 0 });
+
+  // The fan, on the other side of the compressor: a recessed dark well with a
+  // ring guard around it and four spokes. Built proud, like every other recess
+  // on this prop.
+  const FX = fromRefL(9.5), FZ = z(0.115), FR = 5.2;
+  add('medDark', [FX - FR, B - 0.1, FZ - FR], [FX + FR, B + 0.4, FZ + FR],
+      { bevel: [1.8, 0, 1.8] });
+  for (const r of [FR - 0.6, FR - 2.4]) {              // two guard rings
+    add('medFlat', [FX - r, B + 0.3, FZ - r], [FX + r, B + 0.7, FZ - r + 0.5],
+        { bevel: 0 });
+    add('medFlat', [FX - r, B + 0.3, FZ + r - 0.5], [FX + r, B + 0.7, FZ + r],
+        { bevel: 0 });
+    add('medFlat', [FX - r, B + 0.3, FZ - r], [FX - r + 0.5, B + 0.7, FZ + r],
+        { bevel: 0 });
+    add('medFlat', [FX + r - 0.5, B + 0.3, FZ - r], [FX + r, B + 0.7, FZ + r],
+        { bevel: 0 });
+  }
+  add('medFlat', [FX - FR + 0.6, B + 0.35, FZ - 0.3],  // spokes, as a cross
+                 [FX + FR - 0.6, B + 0.75, FZ + 0.3], { bevel: 0 });
+  add('medFlat', [FX - 0.3, B + 0.35, FZ - FR + 0.6],
+                 [FX + 0.3, B + 0.75, FZ + FR - 0.6], { bevel: 0 });
+  add('steel', [FX - 1.2, B + 0.4, FZ - 1.2], [FX + 1.2, B + 1.0, FZ + 1.2],
+      { bevel: 0.5 });                                  // the hub
+
+  // The mains cable: a gland on the back panel and a lead running down and out
+  // to the floor. Drawn as three segments, because pixel art draws a curve as
+  // steps and because a cable that leaves the silhouette is what says the thing
+  // is plugged in.
+  const EX = fromRefR(3.2);
+  add('medDark', [EX - 1.1, D - 0.6, z(0.20)], [EX + 1.1, B + 0.6, z(0.235)],
+      { bevel: 0.3 });                                  // the gland
+  add('slot', [EX - 0.4, B, z(0.055)], [EX + 0.4, B + 0.5, z(0.21)],
+      { bevel: 0 });
+  add('slot', [EX - 0.4, B, z(0.030)], [EX + 0.4, B + 2.6, z(0.055)],
+      { bevel: 0 });
+  add('slot', [EX - 0.4, B + 2.2, z(0.006)], [EX + 0.4, B + 5.4, z(0.030)],
+      { bevel: 0 });
 
   // ---- rating plate -------------------------------------------------------
   // MEASURED on the side view at u 0.130..0.340, z 0.055..0.118 — 3.7 units
