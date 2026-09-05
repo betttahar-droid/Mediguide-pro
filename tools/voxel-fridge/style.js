@@ -896,6 +896,15 @@ export function tableBox(THREE, kind, [x1, y1, z1], [x2, y2, z2], cache, opts = 
   // main.js can report WHICH box is inside WHICH in terms you typed.
   mesh.name = name;
   mesh.userData.table = [x1, y1, z1, x2, y2, z2];
+  // WHAT THIS PART IS, AND WHAT IT IS BOLTED TO. A model is an assembly, not a
+  // pile of boxes that happen to overlap: every part rests on, screws to, or
+  // slots into another one (or the floor). Saying so in the call means the
+  // join-check in main.js can prove the part actually touches what it claims to
+  // — a part that floats is a part whose position came from a silhouette rather
+  // than from the thing it mounts to, and that is exactly the mistake that
+  // reads as "wrong" long after the outline matches.
+  mesh.userData.part = opts.part ?? null;
+  mesh.userData.mount = opts.mount ?? null;
   // A TAPERED part's bounding box overstates its solid: it is the widest
   // cross-section, and the part narrows away from it. The buried check must not
   // treat one as a container, or every corner block sitting on a tapered base

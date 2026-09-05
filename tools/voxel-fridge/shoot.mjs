@@ -19,7 +19,7 @@ page.on('console', (m) => {
   if (m.type() === 'error' && !m.text().includes('favicon')) errs.push('console: ' + m.text());
   else if (m.type() === 'warning') console.log('   WARN ' + m.text());
   else if (m.text().startsWith('palette:') || m.text().startsWith('geometry:')
-           || m.text().startsWith('buried:'))
+           || m.text().startsWith('buried:') || m.text().startsWith('joins:'))
     console.log('   ' + m.text());
 });
 

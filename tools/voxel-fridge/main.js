@@ -397,4 +397,78 @@ if (window.__buried.length) {
 } else {
   console.info('buried: none');
 }
+
+// ---------------------------------------------------------------------------
+// JOINS — does the assembly make mechanical sense?
+//
+// The buried check asks "can this part be seen". This one asks the question
+// underneath it: "is this part attached to anything". A prop built by nudging
+// boxes until the silhouette matches will pass every visual check and still be
+// a pile of parts hanging in space — a keyboard deck that stops 0.3 units above
+// the plinth it is supposedly moulded into, a foot that does not reach the
+// floor, a bracket bolted to a face that has since moved. From the one camera
+// angle you were fitting, none of that is visible.
+//
+// So every part declares { part: 'its own name', mount: 'what it sits on' }
+// ('floor' for the parts that touch the ground), and this walks the assembly:
+//
+//   FLOATING   the part's bounding box does not touch its mount's
+//   UNKNOWN    it names a mount no part declares
+//   LOOSE      it declares nothing at all
+//
+// Bounding boxes, so a chamfer can open a small gap where the solids meet: the
+// tolerance below is the largest inset of either part plus a hair. Reported,
+// never thrown — same as buried.
+window.__joins = (() => {
+  const parts = [];
+  scene.traverse((o) => {
+    const t = o.userData?.table;
+    if (t) parts.push({ mat: o.name, t, part: o.userData.part,
+                        mount: o.userData.mount, shrink: o.userData.shrink || 0 });
+  });
+  const named = new Map();
+  for (const p of parts) if (p.part) {
+    // several boxes may share one part name (a riser in three steps, a row of
+    // keycaps): the mount is satisfied by touching ANY of them.
+    if (!named.has(p.part)) named.set(p.part, []);
+    named.get(p.part).push(p);
+  }
+  // separation on the worst axis: <= 0 means the boxes touch or overlap
+  const gap = (a, b) => Math.max(
+    Math.max(a.t[0] - b.t[3], b.t[0] - a.t[3]),
+    Math.max(a.t[1] - b.t[4], b.t[1] - a.t[4]),
+    Math.max(a.t[2] - b.t[5], b.t[2] - a.t[5]));
+  const out = { loose: 0, unknown: [], floating: [] };
+  for (const a of parts) {
+    if (!a.mount) { out.loose++; continue; }
+    if (a.mount === 'floor') {
+      if (a.t[2] > 0.02 + a.shrink)
+        out.floating.push({ part: a.part, mount: 'floor',
+                            gap: +a.t[2].toFixed(2) });
+      continue;
+    }
+    const hosts = named.get(a.mount);
+    if (!hosts) { out.unknown.push({ part: a.part, mount: a.mount }); continue; }
+    let best = Infinity;
+    for (const h of hosts) {
+      if (h === a) continue;
+      best = Math.min(best, gap(a, h) - 0.02 - Math.max(a.shrink, h.shrink));
+    }
+    if (best > 0)
+      out.floating.push({ part: a.part, mount: a.mount, gap: +best.toFixed(2) });
+  }
+  return out;
+})();
+{
+  const j = window.__joins;
+  if (!j.loose && !j.unknown.length && !j.floating.length) {
+    console.info('joins: every part is mounted and touching');
+  } else {
+    if (j.loose) console.info(`joins: ${j.loose} part(s) declare no mount`);
+    for (const u of j.unknown)
+      console.info(`joins:   "${u.part}" mounts to "${u.mount}", which nothing declares`);
+    for (const f of j.floating)
+      console.info(`joins:   "${f.part}" floats ${f.gap} above/off "${f.mount}"`);
+  }
+}
 window.__done = true;

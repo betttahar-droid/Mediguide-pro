@@ -46,7 +46,7 @@ CONTENTS
 Work top to bottom. Do not skip phases in section 7 and do not start section 7
 before reading sections 1-6, which are short.
 
-THE THREE THINGS THAT GO WRONG MOST OFTEN, stated here because they cause more
+THE FOUR THINGS THAT GO WRONG MOST OFTEN, stated here because they cause more
 lost time than everything else in this document put together:
 
   1. You put something INSIDE a solid part. It is then invisible, and the
@@ -54,6 +54,9 @@ lost time than everything else in this document put together:
   2. You wrote a size as a FRACTION when it should have been a fixed number of
      world units. Invisible until you resize. See section 6.
   3. You looked at the render instead of measuring it. See phases 0.3 and 6.7.
+  4. You placed a part by matching a picture instead of by attaching it to the
+     part underneath it. It then floats, or hides inside its neighbour, and no
+     elevation shows it. See section 4.5.
 
 If something looks wrong and you cannot say why, go to section 10 and match the
 SYMPTOM. Do not guess at the cause; none of these look like what they are.
@@ -233,6 +236,56 @@ gitignored .env. Do not wire any of them into anything.
     every hinge was genuinely behind a part. No offset fixes that. The decal was
     in the wrong place.
 
+4.5  MOUNTS — BUILD THE ASSEMBLY, NOT THE OUTLINE
+
+    A prop is a machine somebody could take apart, not a pile of boxes that
+    happen to overlap. Before you type a part, answer two questions:
+
+        WHAT IS IT?          a foot, a plinth, a keyboard deck, a bezel rim
+        WHAT IS IT ON?       the floor, the foot, the plinth, the case
+
+    Then say so in the call, and let the harness check you:
+
+        const at = (part, mount, o = {}) => ({ ...o, part, mount });
+
+        add('posFoot',  [..], [.., ZP.footTop],   at('foot',  'floor', {..}));
+        add('posCase',  [.., ZP.footTop], [..],   at('shell', 'foot',  {..}));
+        add('posCase',  [.., ZP.shellTop],[..],   at('plinth','shell', {..}));
+
+    main.js walks those declarations and prints one line — `joins: every part
+    is mounted and touching`, or the parts that FLOAT, name a mount that does
+    not exist, or declare nothing at all. Several boxes may share one part name
+    (a riser in three steps, a row of keycaps); touching any of them counts.
+
+    THREE RULES FALL OUT OF THIS, and they matter more than any measurement:
+
+    1. A JOINT IS A NAMED PLANE, USED FROM BOTH SIDES. The top of the plinth
+       and the bottom of the deck are not two numbers that agree — they are one
+       constant, ZP.plinthTop, written once. Numbers that merely agree drift
+       apart the first time you correct one of them.
+
+    2. A PART THAT STANDS PROUD STILL REACHES BACK IN. A switch on a moulding,
+       a glare mark on glass, a slot in a vent face: the visible depth is what
+       you measured, and behind it the part must run into the thing it is
+       mounted on. There is no boolean subtract here, so a detail that stops
+       dead on its own front face is a sticker floating in space. The buried
+       half costs nothing anyone sees.
+
+    3. THE MOUNT DECIDES THE POSITION, THE REFERENCE ONLY CONFIRMS IT. If a
+       part's coordinates came from nudging it until an overlay went quiet, you
+       have fitted a picture, not built an object — and it will be wrong from
+       every angle you were not looking at.
+
+    THIS IS NOT THEORY. The pos terminal reached 99% silhouette match while
+    containing: a power switch sunk 0.14 units INSIDE the bezel it was meant to
+    be mounted in (invisible, in a dead-on front elevation, because the bezel is
+    in front of it); a glare mark hanging 0.04 off the glass; a bezel rim held
+    0.15 in front of the case with nothing joining the two; a card slot floating
+    0.07 off the reader's face; and twenty-eight vent fins standing 0.45 units
+    off the front of the cap they vent. Every one of those passed the overlay,
+    the buried check and four rendered views. The join-check found all five on
+    its first run.
+
 
 --------------------------------------------------------------------------------
 5.  THE API — exact signatures
@@ -264,7 +317,7 @@ gitignored .env. Do not wire any of them into anything.
 
         kind    a material name from MATERIALS (section 5.5)
         cache   the MATS map. Always pass it.
-        opts    { bevel, taperX, taperZ }
+        opts    { bevel, taperX, taperZ, part, mount }
           bevel   a NUMBER for a uniform chamfer, [bx, by, bz] per AXIS, or
                   [x-, x+, y-, y+, z-, z+] PER FACE. Omit for the material's
                   default. 0 = a plain box, 12 triangles. Bevelled = 44.
@@ -289,6 +342,10 @@ gitignored .env. Do not wire any of them into anything.
                   node tools/voxel-fridge/watertight.mjs (phase 6.5c).
           taperX  narrows the TOP by this many world units on x. Positive
           taperZ  narrows inward going up. Negative flares outward.
+          part    what this box IS ('plinth', 'bezel-rim'). Several boxes may
+                  share one name — a riser in three steps is one part.
+          mount   what it is bolted to: another part's name, or 'floor'.
+                  main.js proves the two actually touch. See 4.5.
 
         Wrap it once at the top of build():
             const add = (kind, a, b, opts) =>
@@ -586,6 +643,14 @@ PHASE 2 — THE MASSING
 
 Build the big forms only. No details, no fittings, no stock.
 
+2.0  WRITE THE ASSEMBLY ORDER DOWN FIRST, in a comment, floor upward:
+
+         floor -> feet -> shell -> plinth -> deck -> keycaps
+                                          -> riser -> neck -> case -> bezel
+
+     Then build in that order and give every add() its { part, mount } (4.5).
+     A part you cannot name a mount for is a part you have not understood yet;
+     stop and work out what carries it before typing coordinates.
 2.1  Decide for EACH part which of the three resize kinds it is (section 6) and
      write the kind in a comment.
 2.2  IS IT HOLLOW? If you can see inside it, the carcass is a SHELL — flanks,
@@ -701,6 +766,12 @@ Run all of them. Do not call a prop done until every one passes.
           corner triangle in the per-face bevel work on its first run.
  [ ] 6.6b BURIED PARTS: the shoot output says `buried: none`. If it names
           parts, each one is drawing nothing at all — see 8.3, 8.4 and 10.
+ [ ] 6.6d JOINS: the shoot output says `joins: every part is mounted and
+          touching`. This is the assembly check (4.5) and it sees what no
+          elevation can: a part hanging in space, or one hidden inside the part
+          it is supposedly mounted ON. Run it on a prop you believe is
+          finished — it found five such faults in a prop already matching its
+          reference to 99% of the silhouette.
  [ ] 6.6c NO `WARN tableBox(...) coordinates out of order` lines. They are
           auto-sorted so nothing looks broken, but the next edit to that line
           will be reasoning about the wrong pair.
@@ -732,7 +803,8 @@ WHAT DONE LOOKS LIKE
 
 Not "it looks good". All of these at once:
 
-    shoot output    no ERRORS, no WARN, `buried: none`
+    shoot output    no ERRORS, no WARN, `buried: none`, and
+                    `joins: every part is mounted and touching`
     colours         25-60 per view
     triangles       inside the budget you set in 2.5
     proportions     compare.py --bands vs the reference: ratio within ~2%,
@@ -954,6 +1026,7 @@ iso view looks.
     #   geometry: 5134 triangles, 332 parts + 15 decals
     #   model-mine-view-iso  463x578  57 colours
     #   buried: none                  <- or a list of parts drawing nothing
+    #   joins: every part is mounted and touching   <- or the ones that float
     #   WARN tableBox(...)             <- coordinates given max-before-min
     #   ERRORS: ...
 
@@ -1025,6 +1098,24 @@ THE SHOOT OUTPUT SAYS `buried: N part(s) fully inside another`
     twenty vent slats behind their own backing panel, a handle's dark return
     inside the handle, and the gasket rim around a glass opening buried in the
     door stile. All three had been looked at, in four views, and passed.
+
+THE SHOOT OUTPUT SAYS `joins: "x" floats N above/off "y"`
+    Part x is not touching the part it says it is bolted to. Either the mount
+    is wrong (it is really carried by something else — say so) or the part was
+    positioned from a picture and never attached to anything. Do not close the
+    gap by moving the part until the number goes to zero: work out which face
+    carries it, then write that face as a named plane (4.4) and build from it.
+
+    A detail that stands PROUD of a surface must still reach back into it — a
+    switch into its moulding, a glare mark into the glass, a vent slot into the
+    face it vents. See 4.5 rule 2. The gap is usually small (0.04 to 0.45) and
+    always invisible in the elevation you were fitting.
+
+THE SHOOT OUTPUT SAYS `joins: N part(s) declare no mount`
+    Informational, not an error: the three fridges predate this check and
+    declare nothing. On a prop you are building now it means you skipped phase
+    2.0 — go back and say what each part is and what carries it, because that
+    is the design, and the coordinates are only its consequence.
 
 THE SHOOT OUTPUT SAYS `WARN tableBox(...): coordinates out of order`
     You gave max before min on some axis. It is sorted for you, so nothing
@@ -1225,6 +1316,8 @@ export function build(THREE, MATS, kit, H) {
   const add = (kind, a, b, opts) => g.add(tableBox(THREE, kind, a, b, MATS, opts));
   const tx = (n) => n * STYLE.texel;
   const T = STYLE.tint;
+  // every part says WHAT IT IS and WHAT IT IS BOLTED TO — see 4.5
+  const at = (part, mount, o = {}) => ({ ...o, part, mount });
 
   // ---- resize kinds --------------------------------------------------------
   // STRETCH: carcass, doors, plinth.        fractions of W
@@ -1239,12 +1332,23 @@ export function build(THREE, MATS, kit, H) {
   const fromRefL = (off) => W - off;
   const fromRefR = (off) => -W + off;
 
-  // ---- named planes --------------------------------------------------------
+  // ---- named planes: the JOINTS, each used from both sides (4.4, 4.5) ------
   const F = -D;
   const P_DOOR = F - 1.95;
   const P_GLASS = F - 0.5;
   const BACK = D - 1.4;
   const EPS = 0.08;
+  const ZP = {                          // where each part stops and the next
+    floor:     0,                       // one starts. Written once, used twice.
+    footTop:   z(0.023),
+    plinthTop: z(0.145),
+    // ...
+  };
+
+  // ---- the assembly, floor upward (phase 2.0) -----------------------------
+  //   floor -> feet -> plinth -> carcass -> top
+  //                           -> doors -> handle -> badge
+  //   add('kind', [.., ZP.footTop], [..], at('plinth', 'foot', BOX));
 
   // ---- bevels, per axis ----------------------------------------------------
   const BOX  = { bevel: [1.1, 0, 1.1] };
