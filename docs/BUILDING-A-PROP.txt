@@ -640,8 +640,40 @@ Run all of them. Do not call a prop done until every one passes.
  [ ] 6.2  COLOUR COUNT 25-60 per view.
  [ ] 6.3  TRIANGLE COUNT against the budget in 2.5.
  [ ] 6.4  NO ERRORS in the shoot output.
- [ ] 6.5  SIDE BY SIDE with the reference at matched height. Compare bands
-          numerically with measure.py, not by eye.
+ [ ] 6.5  SILHOUETTE OVERLAY against the reference:
+
+              python3 tools/authoring/compare.py --overlay diff.png \
+                  docs/style-bible/props/my_prop.png \
+                  views/model-mine-view-front.png
+
+          NOT --bands on its own. --bands measures each row's WIDTH, and two
+          shapes can match on every row width and be nothing alike: shift a
+          feature sideways, or move a notch from one side to the other, and the
+          widths are identical. The till scored every band within 1.1% and the
+          overlay then found a reader stalk stopping in mid-air, a monitor
+          bottom ending early, a chamfer the reference does not have, and a
+          0.6% error in the base-width denominator that had shifted every
+          hand-converted constant in the file.
+
+          Aim for IoU above 98%, then read the diff image: red is
+          reference-only, blue is render-only. ATTRIBUTE what is left before
+          chasing it — re-render with ?post=0 to remove the ink pass (it adds
+          about a pixel all round) and at ?ppu=24 to rule out quantisation. If
+          the number does not move, the residual is real geometry, and the
+          honest answer may be that it is a deliberate simplification.
+
+ [ ] 6.5b TEXTURE, measured rather than chosen:
+
+              python3 tools/authoring/measure.py <sheet> --view 0 --no-bands \
+                  --texture X0 X1 Z0 Z1 "label"
+
+          Prints a region's off-dominant fraction and an ORDER score. Under
+          about 6% off, the region is FLAT and any pattern you put on it is an
+          invention — the weathered vaccine fridge's flank measures 4.8%, which
+          is the number behind every field in this kit being flat. Above that,
+          an order score over 0.85 is an ordered CHECKER with a pitch (the
+          till's CRT: 50.8% off, order 0.89, pitch 7px); under 0.7 it is
+          unordered noise, which R6 says not to reproduce.
  [ ] 6.6  npm test still passes:
               npm run build && npx vite preview --port 4173 &
               CHROMIUM_PATH=/opt/pw-browsers/chromium npm test
