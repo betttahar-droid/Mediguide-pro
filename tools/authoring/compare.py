@@ -25,7 +25,10 @@ most likely to be skipped or faked. Both checks below are arithmetic.
           two shapes can match on every row width and be nothing alike — shift
           a feature sideways, or move a notch from one side to the other, and
           the widths are identical. Writes a diff image: red is reference-only,
-          blue is render-only, grey is both.
+          blue is render-only, grey is both — and RANKS the disagreements as
+          blobs, biggest first, with the band each one lives in, so a
+          correction loop always works the largest error rather than the most
+          eye-catching one.
 
 --margins is the resize test. Everything ANCHORED to an edge lives in a fixed
           strip along that edge, so if the two renders are aligned on their
@@ -187,12 +190,50 @@ def overlay(a_path, b_path, out_path, n, va=0):
             else:
                 dp[x, y] = (245, 245, 245)
     diff.save(out_path)
+
+    # THE DISAGREEMENTS, RANKED. Reading them off the diff image by eye is the
+    # same judgement call this whole tool exists to remove, and it does not
+    # scale to a loop: after the third pass the remaining errors are small,
+    # numerous, and no longer obvious. Flood-fill the mismatch into blobs and
+    # print the biggest, each with the band it lives in, so the next fix is
+    # always the largest one left rather than the one that catches the eye.
+    seen = [[False] * aw for _ in range(ah)]
+    blobs = []
+    for y0_ in range(ah):
+        for x0_ in range(aw):
+            if seen[y0_][x0_] or dp[x0_, y0_] == (70, 70, 70) or dp[x0_, y0_] == (245, 245, 245):
+                continue
+            col = dp[x0_, y0_]
+            stack, cells = [(x0_, y0_)], []
+            seen[y0_][x0_] = True
+            while stack:
+                cx, cy = stack.pop()
+                cells.append((cx, cy))
+                for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                    nx, ny = cx + dx, cy + dy
+                    if 0 <= nx < aw and 0 <= ny < ah and not seen[ny][nx] \
+                       and dp[nx, ny] == col:
+                        seen[ny][nx] = True
+                        stack.append((nx, ny))
+            if len(cells) >= 60:
+                xs_ = [c[0] for c in cells]; ys_ = [c[1] for c in cells]
+                blobs.append((len(cells), col, min(xs_), max(xs_), min(ys_), max(ys_)))
+    blobs.sort(reverse=True)
+
     print(f"A {Path(a_path).name}  {aw} x {ah}")
     print(f"B {Path(b_path).name}  {bw} x {bh}  (scaled onto A)")
     print(f"\nSILHOUETTE IoU  {inter / max(1, union) * 100:.2f}%")
     print(f"  reference only (red)   {aonly:6d} px  {aonly / max(1, union) * 100:5.2f}%")
     print(f"  render only    (blue)  {bonly:6d} px  {bonly / max(1, union) * 100:5.2f}%")
     print(f"  written to {out_path}")
+    if blobs:
+        print("\nLARGEST DISAGREEMENTS, biggest first"
+              " (x and z as fractions of A's own box)")
+        for n_, col, x0_, x1_, y0_, y1_ in blobs[:10]:
+            who = "REFERENCE only" if col == (230, 40, 40) else "render only   "
+            print(f"  {n_:6d} px  {who}"
+                  f"  x {x0_/aw:.3f}..{x1_/aw:.3f}"
+                  f"  z {1-y1_/ah:.3f}..{1-y0_/ah:.3f}")
 
     # EDGES SEPARATELY. A width match with both edges wrong by the same amount
     # is a shape that has SLID, and --bands scores it perfect.
