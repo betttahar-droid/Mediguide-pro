@@ -37,6 +37,11 @@ lost time than everything else in this document put together:
 If something looks wrong and you cannot say why, go to section 10 and match the
 SYMPTOM. Do not guess at the cause; none of these look like what they are.
 
+If you need to GENERATE something — a reference sheet to measure, a fitting,
+a surface tile — that is section 14, and read it before you write a prompt.
+The image model has exactly three jobs here and prompting it for anything
+else wastes a pass.
+
 
 --------------------------------------------------------------------------------
 1.  THE ONE IDEA
@@ -118,7 +123,15 @@ than as a render of a blocky model.
   tools/voxel-fridge/shoot.mjs       screenshots + counts. Your feedback loop.
   tools/authoring/measure.py         measures a sheet or a render, band by band
   tools/authoring/prop_views.py      generates a measurable reference sheet
+  tools/authoring/style_bible.py     generates AND measures the style sheets
+  tools/authoring/concept_sheet.py   the ONE place that calls the image API
+  tools/authoring/cut_fittings.py    sheet -> alpha-keyed decal atlas
+  tools/authoring/cut_surfaces.py    sheet -> nine-slice tone-mask atlas
   docs/style-bible/props/*.png       the reference sheets, one per prop
+  docs/reference/                    the user's own references. GITIGNORED.
+
+How all four generating tools are prompted, and how their output is cut into
+the two atlases, is section 14.
 
 Authoring tools are MANUAL. None of them is a build, CI or runtime dependency,
 none is ever called by the game, and the image tool's API key lives only in a
@@ -305,6 +318,7 @@ gitignored .env. Do not wire any of them into anything.
         bevel    the family's default chamfer
         surface  a nine-slice mask tile from surfaces.json:
                  'plate' 'plateSeam' 'trim' 'recess' 'vent' 'vent2'
+                 To make a NEW one, see 14.5b and 14.6.
         inset    the pressed-plate border. Do not set it AND surface — running
                  both draws two pressed borders on top of each other
         seam     subdivide large faces
@@ -319,7 +333,7 @@ gitignored .env. Do not wire any of them into anything.
 
         decal(THREE, kit, name, face, u, v, h, depth, tint, fit) -> Mesh
 
-        name   a tile from fittings.json:
+        name   a tile from fittings.json (to add one, see 14.5a and 14.6):
                  hinge  latch  vent  ratingPlate  biohazard  biohazard2
                  labelHolder  rocker  dialA  dialB  readout  screwSlot
                  screwCross  foot  hazardStripe
@@ -420,6 +434,10 @@ PHASE 0 — GET A MEASURABLE REFERENCE, AND MEASURE IT
          python3 tools/authoring/prop_views.py --list
          # add your subject to SUBJECTS in that file, then
          python3 tools/authoring/prop_views.py my_prop
+
+     READ SECTION 14 BEFORE WRITING THAT SUBJECT LINE. Describe the FORM —
+     which masses, which proportions, where the openings are — not the mood.
+     The five rules in 14.3 are what make the result measurable at all.
 
      It writes docs/style-bible/props/my_prop.png: a front and a side elevation
      at the SAME height, on a PURE MAGENTA ground, strictly orthographic. All
@@ -1093,5 +1111,287 @@ export function build(THREE, MATS, kit, H) {
                           does it without a seam. Recipe 8.5.
   HINGES YOU DID NOT SEE  Phase 4.5. Count the pixels before you build them.
   LEGIBLE TEXT            Recipe 8.12. Draw marks.
+
+--------------------------------------------------------------------------------
+14.  THE IMAGE MODEL — how to prompt it, and where its output goes
+--------------------------------------------------------------------------------
+
+14.0  WHAT IT IS FOR, AND WHAT IT IS NOT FOR
+
+    The image model (Gemini "Nano Banana", model id `gemini-3.1-flash-image`)
+    does exactly three jobs in this project:
+
+      A  STYLE BIBLE SHEETS   images designed backwards from ONE NUMBER each,
+                              which you then MEASURE. See 14.4.
+      B  A PROP REFERENCE     the measurable front+side elevation phase 0.2
+                              generates.
+      C  ATLAS SOURCE ART     the fittings sheet and the surface tone-mask
+                              sheet, which are then cut deterministically.
+
+    IT NEVER PRODUCES A TEXTURE THE GAME SAMPLES AS COLOUR. That is R3 and it
+    is the whole reason the atlases work: the fittings atlas is alpha-keyed
+    decal shapes, the surfaces atlas is a THREE-LEVEL TONE MASK, and colour
+    comes from the material in every case.
+
+    Everything downstream of the model is deterministic Python plus your eyes
+    on numbers. If you find yourself LOOKING at a generated image and typing a
+    proportion you read off it, stop — that is the failure mode this whole
+    pipeline was built to remove.
+
+    THE OUTPUT CARRIES an invisible SynthID watermark and C2PA credentials.
+    Fine for reference you never ship. Know it is there.
+
+14.1  THE ONE PLACE THAT TALKS TO THE API
+
+        from concept_sheet import generate_image, load_key
+        generate_image(prompt, out_path, key, refs=[...])
+
+    Every tool here — concept sheets, prop views, style bible, atlas art —
+    is a prompt and an output path handed to that one function, so there is
+    one timeout, one response shape to get wrong, and one place to fix it.
+    Do not add a second caller.
+
+    It sends the reference images FIRST as inline_data parts, then the text,
+    with generationConfig.responseModalities = ["IMAGE"].
+
+14.2  PROMPT ANATOMY — four blocks, always in this order
+
+        1. REFERENCE IMAGES        inline, first, several at once
+        2. REF_INSTRUCTION         "these are the STYLE REFERENCE ... "
+        3. STYLE                   identical for every sheet in a set
+        4. SUBJECT + LAYOUT        the one thing this sheet is for
+
+    Block 2, verbatim, and note the last sentence — without it the model draws
+    the reference's subject instead of yours:
+
+        "The images above are the STYLE REFERENCE. Match their rendering style
+         exactly: the same hard-edged blocky forms, the same dense pixel-art
+         surface detail on flat faces, the same texel size, the same muted
+         palette with small saturated accents. Do not copy their subject
+         matter."
+
+    WHY THE STYLE BLOCK IS IDENTICAL EVERY TIME. Consistency across a catalogue
+    comes from that prefix not drifting. Reword it per subject and the objects
+    stop belonging to each other, one sheet at a time, and you will not notice
+    until you put six of them side by side.
+
+    WHY SEVERAL REFERENCE IMAGES AT ONCE. One image gives you one object's
+    quirks. A set gives you the style underneath them. Put them in
+    docs/reference/ (gitignored — they are someone else's work) and pass them
+    all.
+
+14.3  THE FIVE RULES THAT MAKE A SHEET MEASURABLE
+
+    A sheet is not meant to be pretty. It is meant to be MEASURABLE, and that
+    forces things a nice illustration gets wrong. State all five, every time:
+
+      1  PURE MAGENTA #ff00ff GROUND, completely flat, everywhere that is not
+         the object.
+         Non-negotiable. Measuring an earlier render against a cream ground
+         silently classified a cream door frame AS ground and reported a frame
+         three times thinner than it is. A ground that cannot be confused with
+         any palette colour makes the silhouette unambiguous.
+
+      2  STRICT ORTHOGRAPHIC. "no perspective, no foreshortening, no vanishing
+         point, no drop shadow, no ground plane, no reflection."
+         The whole point is reading fractions of width and height off pixels.
+
+      3  FRONT AND SIDE, SIDE BY SIDE, AT EXACTLY THE SAME HEIGHT, so the side
+         view's width reads as the object's DEPTH as a fraction of its width.
+         Say "must be EXACTLY THE SAME HEIGHT and must line up horizontally".
+
+      4  NO TEXT. "No text, no labels, no dimensions, no annotations, no
+         watermark." A model asked for a technical elevation will annotate it.
+
+      5  CLEAR GROUND BETWEEN ISLANDS, for any sheet that gets cut up:
+         "with clear magenta space between every one of them", and
+         "Nothing may touch anything else."
+         The cutter finds tiles as connected islands. Two fittings touching
+         become one fitting.
+
+    And describe the FORM, not the mood: which masses, which proportions, where
+    the openings are. "Grimy and industrial" yields nothing you can measure.
+
+    The exact blocks used for a prop reference are in tools/authoring/
+    prop_views.py — STYLE and LAYOUT. Copy them; do not re-word them.
+
+14.4  DESIGN EACH SHEET BACKWARDS FROM THE NUMBER IT MUST YIELD
+
+    This is the rule that separates this from "generate a style sheet". Every
+    earlier pass generated an image, LOOKED at it and typed numbers into a
+    build function, and every one of those passes got something wrong — a
+    border at 15.5% against a measured 8.75%, a body 12% too shallow, a speckle
+    invented outright. The image was never the problem. Reading it by eye was.
+
+    So before you write a prompt, write down the number the sheet has to yield.
+    The existing ones (python3 tools/authoring/style_bible.py <name>):
+
+      scale-ladder    the same panel small, medium and large. If the border is
+                      the same number of PIXELS at all three sizes, borders are
+                      FIXED and belong in world units; if the same FRACTION,
+                      they are relative and belong in UV. THIS ONE MEASUREMENT
+                      DECIDES HOW THE WHOLE MATERIAL SYSTEM IS BUILT, and it is
+                      invisible to the eye on any single panel. (Answer here:
+                      45, 40 and 44 px on panels 208, 262 and 486 px wide — an
+                      11% spread in width against an 82% spread in fraction. So:
+                      fixed, world units, which is R1.)
+      face-tints      one colour on the top, front and side of a cube. The
+                      ratios are the entire lighting model. (5.4)
+      palette         the flat colours, for the snap.
+      surface-marks   a big empty panel: what fraction of it is NOT the base
+                      colour. Settles arguments about speckle with a number
+                      instead of taste.
+      texture-swatches / texel-ladder / character-ab / edge-vocab
+                      material variation, texel size, what "character" actually
+                      consists of, and how corners and seams are drawn.
+      fittings        source art for the decal atlas.        See 14.5a.
+      surfaces        source art for the nine-slice masks.   See 14.5b.
+
+    A sheet you cannot state a number for is a sheet you do not need.
+
+14.5  THE TWO SHEETS THAT ACTUALLY BECOME TEXTURE
+
+    (a) THE FITTINGS SHEET — alpha-keyed decal shapes
+
+        "Draw a set of TWELVE small separate pixel-art fittings for a retro
+         pharmacy refrigerator, arranged in a loose grid on the magenta
+         background with clear magenta space between every one of them, each
+         drawn straight on with no perspective: a hinge, a latch, a small vent
+         of horizontal slots, a rating plate, a warning label, a paper label in
+         a holder, a rocker switch, a dial, a small digital readout, a screw
+         head, a rubber foot, and a short strip of diagonal hazard stripes.
+         Each fitting is small and chunky, a few dozen pixels across, drawn
+         flat with hard pixel edges. Nothing may touch anything else."
+
+        "straight on with no perspective" matters: a decal is a flat quad and a
+        fitting drawn at three-quarters will read as tilted on every face.
+
+    (b) THE SURFACE SHEET — three-level tone masks
+
+        This is the one with the non-obvious constraints, and each of them is
+        load-bearing. The prompt asks for:
+
+        NEUTRAL MID-GREY, NO COLOUR AT ALL, EXACTLY THREE FLAT GREYS.
+            The renderer reads the tile as a tone mask —
+                  0 = draw this texel in the material's SHADE tone
+                128 = leave it the material's BASE colour
+                255 = draw it in the material's LIT tone
+            — and substitutes each material's own family. So ONE "plate" tile
+            renders correctly on cream, on teal and on blue-grey. Ask for colour
+            and every tile is tied to one material and the ATLAS is in charge of
+            the palette, which is exactly what sank the earlier atlas attempt.
+            This is R3, and it is why the sheet looks so dull.
+
+        ABOUT TWENTY CHUNKY SQUARE PIXELS ACROSS THE WHOLE PANEL, "huge and
+        obvious, like a PlayStation 1 texture", "every mark is one or two of
+        those huge pixels thick — no thin lines, no fine detail, no small dots".
+            At 40 texels a tile carried marks FINER THAN THE MODEL'S OWN PIXEL
+            GRID, which is precisely the look this style does not have. Say
+            "blocky, heavy and rugged, not neat" — a model asked for pixel art
+            will otherwise give you neat modern pixel art.
+
+        EACH PANEL'S BORDER SITS EXACTLY AT THAT PANEL'S OUTER EDGE, with
+        nothing outside it, TWO chunky pixels thick.
+            The nine-slice ring samples the OUTER texels. Put the border there
+            and it becomes the PART's border at any size, with the flat middle
+            tiling between — that is the resize property. A panel floating
+            inside a margin makes the ring sample the margin, and the part gets
+            a blank border.
+
+        Ask for five: a plain pressed panel with a chunky border and one big
+        bolt just inside each corner; the same with a thick horizontal seam
+        across its middle; one whose middle is thick horizontal vent slots
+        running edge to edge; a plain bordered panel with nothing else; and one
+        with a big shallow rectangular recess in its middle.
+
+14.6  CUTTING — the deterministic half
+
+        python3 tools/authoring/cut_fittings.py     -> fittings.png + .json
+        python3 tools/authoring/cut_surfaces.py     -> surfaces.png + .json
+
+    NOTHING GUESSES A GRID. Tiles are FOUND as connected islands, not assumed,
+    because a generator lays them out however it likes and a hard-coded 4x4
+    silently mis-slices the moment it does not. Both cutters PRINT A GRID MAP.
+    CHECK IT against the NAMES list before you use the atlas — the surfaces
+    generator drew SEVEN panels when five were asked for, and a hard-coded
+    count would have mis-named every one.
+
+    Both cut to 20 texels on the longest side (MAXTEX / TEXELS), the same grid
+    as the model. See 14.5b and the "scattered flat blobs" entry in section 10.
+
+    cut_surfaces additionally:
+      - builds the three-level mask by splitting around the MEDIAN by a
+        fraction of the tile's own p10-p90 spread. Quartiles with a fixed slack
+        were too crude at this resolution: on a tile that is mostly field with
+        a thin border, the upper quartile lands inside the field and the mask
+        came back with ZERO lit texels on one tile and zero shade on another —
+        the border simply vanished.
+      - MEASURES each tile's nine-slice margin rather than declaring it, and
+        auto-detects full-bleed tiles (whose middle is content, so they must
+        REPEAT at a fixed world period instead of stretching).
+
+14.7  THE TRAPS — every one of these printed a clean-looking number while wrong
+
+    FLOOD FILL PARITY. Stepping the fill by 2 preserves parity, so a shape can
+        only ever reach half its own pixels: 15 fittings were counted as 68.
+        Step by 1.
+
+    MAGENTA FRINGE. Distance-keying the background leaves an anti-aliased
+        fringe, and you cannot key that fringe by distance either, because the
+        fitting's own dark outline blended toward magenta lands near #3a1a3a —
+        too dark for a naive hue test to separate from the ground. Key by HUE
+        and then erode only fringe pixels that are ADJACENT to real background.
+
+    MEDIAN CUT ALLOCATES BY AREA. Asked for 8 colours on a mostly-magenta
+        sheet it spent 7 of them on magenta. Flatten the background out first.
+
+    GRID-SNAPPING COLOURS. Two values 16 apart straddle a 16-grid boundary and
+        survive as two near-identical palette entries. Merge greedily by
+        distance instead.
+
+    THE NINE-SLICE MARGIN, three confidently wrong definitions in a row:
+        "the first flat texel" left the authored bolts in the STRETCHED middle,
+            and they smeared into pale squares across whole flanks;
+        a column scan saturates, because it crosses the perpendicular borders;
+        an L-band scan saturates for the same reason.
+        CORRECT: the border thickness measured along a CENTRE LINE, then corner
+        content strictly inside it, requiring at least 25% of a band.
+
+    FLAT MIDDLES MUST STRETCH, NOT TILE. A uniform middle that tiles is
+        invisible where it is uniform and a grid of seams where it is not.
+        Only tiles whose middle carries content should repeat, and they
+        self-classify.
+
+    The general lesson, and it is worth more than the specifics: A TOOL THAT
+    PRINTS A VERDICT CAN BE CONFIDENTLY WRONG AND LOOK CLEAN DOING IT. Make
+    every one of these print the bands, the runs and the counts it decided
+    from. That is why measure.py (12.1) prints evidence and never an answer.
+
+14.8  WHEN TO REACH FOR IT AT ALL
+
+    USE IT FOR
+      - a measurable prop reference you do not already have          (phase 0.2)
+      - a style number you keep re-arguing: build a sheet that answers it (14.4)
+      - new fittings, or new surface tiles                              (14.5)
+
+    DO NOT USE IT FOR
+      - the model's colours. Sample those off the sheet with measure.py.
+      - proportions. Measure them.
+      - anything the game loads at runtime. Ever.
+      - "make it look better". That is a geometry decision — section 1. No
+        generated image will fix a prop whose masses are wrong, and reaching
+        for one is how three passes were spent on texture before anybody
+        measured the door.
+
+14.9  THE SECURITY CONTRACT — do not weaken any of this
+
+      - GEMINI_API_KEY lives ONLY in .env, which is gitignored and chmod 600.
+        .env.example is the committed template, with an empty key.
+        Verify with:   git check-ignore -v .env
+      - docs/reference/ is gitignored. Those are other people's images, kept
+        locally to feed the model, never committed.
+      - EVERY TOOL IN tools/authoring/ IS MANUAL. None is a build, CI or
+        runtime dependency. The game never calls one and never reads the key.
+        Do not wire any of them into npm scripts, a hook, or a test.
 
 ================================================================================
