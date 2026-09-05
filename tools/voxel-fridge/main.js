@@ -93,12 +93,20 @@ function buildFridge(H) {
   // glass "sprawled" was itself the mis-measurement: 78% is what the sheet says.
   // Written as fractions rather than magic numbers so a re-measure is a one-line
   // change and so every proportion survives a change of H.
+  // CHUNKIER THAN THE TURNAROUND, deliberately. The measured fractions below
+  // came off the fridge sheet, which is a clean orthographic drawing with thin
+  // frames. The prop kit this is actually meant to sit in is heavier: a whole
+  // door in 138 triangles and a 64x32 texture, forms that are a handful of big
+  // blocks with thick edges and stepped corners. So the door border is widened
+  // from a measured 0.175 to 0.24 and the trim thickened to match. This is a
+  // STYLE CHOICE overriding a measurement, which is worth flagging rather than
+  // burying: the sheet is no longer the authority on proportion, the kit is.
   const W = H;                 // body half-width — the 100% everything is of
-  const BORDER = W * 0.175;    // cream door border, each side
-  const FRAME = W * 0.042;     // teal door frame, each side
+  const BORDER = W * 0.24;     // cream door border, each side (was 0.175)
+  const FRAME = W * 0.055;     // teal door frame, each side (was 0.042)
   const S = W - BORDER;        // inside the border: cavity, shelves, opening
   const G = S - FRAME;         // glass half-width (78% of the body)
-  const C = W * 1.13;          // crown half-width — it overhangs the body
+  const C = W * 1.16;          // crown half-width — it overhangs the body
   const GR = W * 0.70;         // grille half-width (70% of the body, measured)
   // Depth, from the SIDE view the same way: its body runs 230 px against the
   // front's 240, so the cabinet is very nearly square in plan. It had been
@@ -112,9 +120,9 @@ function buildFridge(H) {
 
   // ---- P01 feet: four corner blocks, outer faces flush with the base -------
   for (const sx of [-1, 1]) for (const sy of [-1, 1]) {
-    const x1 = sx > 0 ? W - 6 : -W, x2 = sx > 0 ? W : -(W - 6);
-    const y1 = sy > 0 ? D - 5 : -D, y2 = sy > 0 ? D : -(D - 5);
-    add('plinth', [x1, y1, -1.5], [x2, y2, 3.5]);
+    const x1 = sx > 0 ? W - 8 : -W, x2 = sx > 0 ? W : -(W - 8);
+    const y1 = sy > 0 ? D - 7 : -D, y2 = sy > 0 ? D : -(D - 7);
+    add('plinth', [x1, y1, -2.5], [x2, y2, 4.0]);
   }
   add('plinth', [-(W - 1), -(D - 1), 0], [W - 1, D - 1, 4]); // P02 plinth strip
   add('teal',   [-W, -D, 4],             [W, D, 18]);        // P03 condenser base
@@ -160,11 +168,18 @@ function buildFridge(H) {
   // wrong from every other angle.
   for (const z of [29, 41, 53, 65]) add('shelf', [-S, -(D - 1), z], [S, BW, z + 2.5]);
 
-  // ---- P08 corner posts ---------------------------------------------------
+  // ---- P08 corner posts, now a STEP rather than a single square post -------
+  // The reference kit's corners do not meet sharp: each one steps back once, so
+  // the silhouette reads as chunky and slightly crude instead of machined. Two
+  // nested boxes at each corner is the cheapest way to get that at this scale —
+  // it is a voxel chamfer, and at 20 texels across a face it is exactly as much
+  // corner as the style can resolve.
   for (const sx of [-1, 1]) for (const sy of [-1, 1]) {
-    const x1 = sx > 0 ? W - 2 : -W, x2 = sx > 0 ? W : -(W - 2);
-    const y1 = sy > 0 ? D - 2 : -D, y2 = sy > 0 ? D : -(D - 2);
-    add('cream', [x1, y1, 18], [x2, y2, 84]);
+    for (const [inx, iny, zLo, zHi] of [[3.2, 3.2, 18, 84], [5.4, 1.6, 18, 84]]) {
+      const x1 = sx > 0 ? W - inx : -W, x2 = sx > 0 ? W : -(W - inx);
+      const y1 = sy > 0 ? D - iny : -D, y2 = sy > 0 ? D : -(D - iny);
+      add('cream', [x1, y1, zLo], [x2, y2, zHi]);
+    }
   }
 
   // ---- P15 crown: 11% of height, a lip and one block ----------------------
@@ -217,29 +232,37 @@ function buildFridge(H) {
   // all. They come from the prop kit in docs/reference, which is where the
   // style's character lives — the turnaround is a clean orthographic drawing.
   const T = STYLE.tint;
+  // Fitting sizes are given in TEXELS and converted, so every decal lands on
+  // the same pixel grid as the surfaces and the geometry. Sized in raw world
+  // units they were fractions of a texel across — the screws were under one
+  // texel wide, which is why they minified to featureless blobs.
+  const tx = (n) => n * STYLE.texel;
   const L = -W - 0.05, R = W + 0.05;      // just proud of each flank
   for (const [x, face] of [[L, 'left'], [R, 'right']]) {
     // Screws at the corners of both flank panels — the one fitting the
     // reference applies as a rule rather than a placement.
     for (const cv of [34, 68]) {
-      for (const m of screws(THREE, kit, face, 0, cv, D, 16, x, 2.2, 1.2, T.side)) {
+      for (const m of screws(THREE, kit, face, 0, cv, D, 16, x, tx(3), tx(2), T.side)) {
         g.add(m);
       }
     }
   }
   // Rating plate and a paper label, on the left flank only: a real cabinet has
   // one of each, not one per side.
-  g.add(decal(THREE, kit, 'ratingPlate', 'left', 1, 70, 7.5, L, T.side));
-  g.add(decal(THREE, kit, 'labelHolder', 'left', 1, 34, 8.0, L, T.side));
+  g.add(decal(THREE, kit, 'ratingPlate', 'left', 1, 70, tx(7), L, T.side));
+  g.add(decal(THREE, kit, 'labelHolder', 'left', 1, 34, tx(6), L, T.side));
   // Door: hinges on the side away from the handle, a biohazard sticker low on
   // the glass where one gets stuck.
   for (const z of [30, 72]) {
-    g.add(decal(THREE, kit, 'hinge', 'front', -(W - 2.6), z, 5.0, F - 1.6, T.front));
+    g.add(decal(THREE, kit, 'hinge', 'front', -(W - 3.4), z, tx(5), F - 1.6, T.front));
   }
-  g.add(decal(THREE, kit, 'biohazard', 'front', -(G - 6), 30, 8.0, F - 2.7, T.front));
+  // Between two shelves, not across one. At its old size and height it
+  // straddled the bottom shelf and read as an object inside the cabinet
+  // rather than a sticker on the door.
+  g.add(decal(THREE, kit, 'biohazard', 'front', -(G - 6), 47, tx(5), F - 2.7, T.front));
   // Base block: the switch and thermostat live on the plant, next to the grille.
-  g.add(decal(THREE, kit, 'rocker', 'front', W - 5.5, 14, 4.0, F - 0.05, T.front));
-  g.add(decal(THREE, kit, 'dialA', 'front', W - 10.5, 14, 4.0, F - 0.05, T.front));
+  g.add(decal(THREE, kit, 'rocker', 'front', W - 6.0, 14, tx(3), F - 0.05, T.front));
+  g.add(decal(THREE, kit, 'dialA', 'front', W - 11.5, 14, tx(3), F - 0.05, T.front));
   return g;
 }
 

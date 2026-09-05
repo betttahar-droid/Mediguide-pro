@@ -170,18 +170,22 @@ SHEETS = {
         "background, well separated from each other. "
         "Every panel is NEUTRAL MID-GREY painted metal — no colour at all — "
         "drawn with exactly three flat greys: a mid-grey field, a darker grey "
-        "and a lighter grey. Chunky pixel art, hard edges. "
-        "Each panel's own recessed border sits exactly at that panel's outer "
-        "edge, with nothing outside it. The five panels are: "
-        "(1) a plain pressed panel with a recessed border and a small bolt just "
+        "and a lighter grey. "
+        "CRITICAL: draw each panel as VERY LOW RESOLUTION pixel art, only about "
+        "TWENTY chunky square pixels across the whole panel. The pixels must be "
+        "huge and obvious, like a PlayStation 1 texture. Every mark is one or "
+        "two of those huge pixels thick — no thin lines, no fine detail, no "
+        "small dots. Blocky, heavy and rugged, not neat. "
+        "Each panel's border sits exactly at that panel's outer edge, with "
+        "nothing outside it, and is TWO chunky pixels thick. The five are: "
+        "(1) a plain pressed panel with a chunky border and one big bolt just "
         "inside each of its four corners; "
-        "(2) the same pressed panel but with a horizontal seam across its "
-        "middle and bolts at the seam ends; "
-        "(3) a panel whose middle is filled with evenly spaced horizontal vent "
+        "(2) the same panel but with a thick horizontal seam across its middle; "
+        "(3) a panel whose middle is filled with a few thick horizontal vent "
         "slots running edge to edge; "
-        "(4) a plain narrow trim panel with only a recessed border, no bolts; "
-        "(5) a panel with a shallow rectangular recess in the middle of it. "
-        "No text, no colour, no gradients."),
+        "(4) a plain panel with only a chunky border and nothing else; "
+        "(5) a panel with one big shallow rectangular recess in its middle. "
+        "No text, no colour, no gradients, no anti-aliasing."),
     "edge-vocab": (
         "Draw FOUR separate small studies in a row on the magenta background, "
         "well separated, all in cream and pale blue-grey painted metal: "
@@ -199,6 +203,18 @@ REF_INSTRUCTION = (
     "exactly — the same flat shading, the same edge treatment, the same colour "
     "relationships. Do NOT copy their subject matter, and do NOT draw any of "
     "their objects. Draw only what the instruction below asks for."
+    "\n\n"
+    # The target sits further toward the chunky end of that reference set than
+    # the first pass assumed. A published prop in this style states its own
+    # budget: 138 triangles and a 64x32 pixel texture for an entire door. That
+    # is the constraint to draw to — an object is a handful of big boxes and its
+    # whole surface is a few hundred pixels, so any mark thinner than one of
+    # those huge pixels simply cannot exist.
+    "ADDITIONALLY, push everything toward the CHUNKY, RUGGED, LOW-BUDGET end of "
+    "that style: PlayStation 1 era game art. Very few, very large forms. "
+    "Extremely low texture resolution with big obvious square pixels. Heavy, "
+    "solid, slightly crude shapes rather than neat precise ones. Thick marks "
+    "only. Nothing delicate, nothing thin, nothing finely detailed."
 )
 
 

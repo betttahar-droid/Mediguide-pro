@@ -35,6 +35,14 @@ SRC = ROOT / "docs" / "style-bible" / "fittings.png"
 OUT_PNG = ROOT / "tools" / "voxel-fridge" / "fittings.png"
 OUT_JSON = ROOT / "tools" / "voxel-fridge" / "fittings.json"
 
+# Longest side of any fitting, in texels. The generator draws them at a couple
+# of hundred pixels; placed at a few world units they were being minified ~13x
+# with NEAREST and no mipmaps, so each one sampled a single arbitrary texel and
+# rendered as a flat blob — the "pale squares" scattered over the flanks were
+# screws. Cutting them to the same budget the surfaces use keeps them chunky and
+# means a decal is never sampled below the resolution it was authored at.
+MAXTEX = 20
+
 # Row-major, matching the order the sheet was asked for. Checked against the
 # image rather than trusted: cut_fittings prints a grid map so a mismatch is
 # visible immediately instead of showing up as a hinge where a dial should be.
@@ -140,7 +148,12 @@ def main():
     tiles = []
     for i, (x0, y0, x1, y1) in enumerate(flat):
         name = NAMES[i] if i < len(NAMES) else f"tile{i}"
-        tiles.append((name, im.crop((max(0, x0), max(0, y0), x1, y1))))
+        t = im.crop((max(0, x0), max(0, y0), x1, y1))
+        k = MAXTEX / max(t.width, t.height)
+        if k < 1:
+            t = t.resize((max(1, round(t.width * k)), max(1, round(t.height * k))),
+                         Image.NEAREST)
+        tiles.append((name, t))
 
     W = sum(t.width + 2 for _, t in tiles) + 2
     H = max(t.height for _, t in tiles) + 4
@@ -195,7 +208,10 @@ def main():
     seen = Counter(c[:3] for c in atlas.getdata() if c[3] > 128)
     keep = []
     for c, n in seen.most_common():
-        if n < 30:
+        # The threshold scales with the atlas: at 20-texel tiles a colour
+        # owning 30 pixels is a large region, and a fixed 30 cut the palette
+        # from 17 colours to 3 the moment the tiles were downscaled.
+        if n < max(3, atlas.width * atlas.height // 900):
             break
         if all(sum(abs(a - b) for a, b in zip(c, k)) > 44 for k in keep):
             keep.append(c)

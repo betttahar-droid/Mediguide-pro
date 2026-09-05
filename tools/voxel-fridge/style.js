@@ -114,7 +114,13 @@ export const STYLE = {
   // this cabinet's flank is ~30 units, so one unit per texel puts it on the
   // same grid. At the prototype's 8 px/unit that is a chunky, unmistakably
   // pixelated 8 screen pixels per texel.
-  texel: 1.0,
+  // Raised from 1.0. A published prop in this style states its budget outright:
+  // 138 triangles and a 64x32 pixel texture for an entire door. At one unit per
+  // texel this cabinet's front carried 32 texels; at 1.6 it carries 20, which is
+  // the scale that actually reads as PlayStation-era rather than as neat modern
+  // pixel art. The mask atlas is cut to the same grid, so mask detail can never
+  // be finer than the model's own pixels again.
+  texel: 1.6,
   ditherSpan: 5.0,   // how far the corner dither reaches in from a face edge
 
   // NINE-SLICE, for the surface mask tiles.
@@ -125,8 +131,10 @@ export const STYLE = {
   //   period       world length of one repeat of the tile's middle. 16 units
   //                across the tile's ~30 remaining texels keeps that same
   //                texel size, so margin and middle read as one grid.
-  marginWorld: 2.6,
-  period: 16.0,
+  // Derived per tile from its OWN measured margin, in cut_surfaces.json, times
+  // `texel` below — see marginFor(). Held as a fallback only.
+  marginWorld: 3.0,
+  period: 24.0,
 };
 
 // Colour families plus the rules each material runs. Sampled from the
@@ -140,6 +148,8 @@ export const STYLE = {
 //             value ramp, which is how this style shades a corner
 //     perf    a regular dot grid, for grilles and speaker cloth
 //   FORM
+//     tileMid true only when the tile's middle carries content (a vent):
+//             it then repeats at a fixed world period instead of stretching
 //     surface a nine-slice tone-mask tile from surfaces.png. Its outer margin
 //             maps to a FIXED world width so the authored border and its bolts
 //             stay native at any part size, and only the middle tiles. This is
@@ -165,13 +175,14 @@ export const STYLE = {
 // it appears, `perf` is what a speaker or a vent IS. Everything else moved into
 // the fittings atlas at the bottom of this file, where it can be placed.
 const D = { lit: null, shade: null, inset: 0, edge: 0.22, seam: 0,
-            fleck: 0, grain: 0, dither: 0, perf: 0, surface: null };
+            fleck: 0, grain: 0, dither: 0, perf: 0, surface: null,
+            tileMid: false };
 const M = (o) => ({ ...D, ...o });
 
 export const MATERIALS = {
   cream:    M({ base: '#e9e3d4', lit: '#f7f2e6', shade: '#dcd6c6', surface: 'plate' }),
-  blueGrey: M({ base: '#adb6ba', lit: '#b7c2c5', shade: '#a3adb2', surface: 'plate2' }),
-  teal:     M({ base: '#377c62', lit: '#3f8a6d', shade: '#2e6752', surface: 'plateSeam' }),
+  blueGrey: M({ base: '#adb6ba', lit: '#b7c2c5', shade: '#a3adb2', surface: 'plateSeam' }),
+  teal:     M({ base: '#377c62', lit: '#3f8a6d', shade: '#2e6752', surface: 'trim' }),
   frame:    M({ base: '#35785f', lit: '#3a8368', shade: '#2e6752', edge: 0.14, surface: 'trim' }),
   purple:   M({ base: '#5c4a70', lit: '#6b5780', shade: '#4a3e58', edge: 0.16 }),
   plinth:   M({ base: '#5c4a72', lit: '#6b5780', shade: '#4a3e58', edge: 0.16 }),
@@ -207,7 +218,7 @@ uniform float uInset, uWear, uEdge, uSeam, uCell;
 uniform float uFleck, uGrain, uDither, uPerf, uTexel, uDitherSpan;
 uniform sampler2D uMask;
 uniform vec4 uTile;          // the tile's rect in the atlas, normalised
-uniform float uHasMask, uMarginW, uMarginF, uPeriod;
+uniform float uHasMask, uMarginW, uMarginF, uPeriod, uTileMid;
 uniform float uOutline, uCatch, uInsetAt, uInsetLine, uSeamPitch, uSeamLine;
 uniform float uTop, uFront, uSide, uBack, uBottom;
 varying vec3 vLocal, vHalf, vNrm;
@@ -242,7 +253,21 @@ float slice1(float p, float hf, float mw, float mf, float period) {
   if (L <= 2.0 * mw) return d / L;
   if (d < mw)      return (d / mw) * mf;
   if (d > L - mw)  return 1.0 - ((L - d) / mw) * mf;
-  return mf + fract((d - mw) / period) * (1.0 - 2.0 * mf);
+  float inner = (d - mw) / (L - 2.0 * mw);        // 0..1 across the middle
+  // STRETCH the middle by default, tile it only when it has content.
+  //
+  // Tiling a middle that is one flat tone is all cost and no benefit: the
+  // repeat is invisible where the tone is uniform and shows as a grid of faint
+  // squares everywhere it is not, which is exactly what covered the flanks.
+  // Stretching a flat region cannot produce an artefact — there is nothing in
+  // it to distort — and the border, which is the part that must not stretch,
+  // is already held fixed by the margin. That is the classic UI nine-slice
+  // bargain and it applies here for the same reason.
+  //
+  // A vent is the exception: its middle IS content, so it repeats at a fixed
+  // world period and a taller vent gets MORE slots, never longer ones.
+  if (uTileMid > 0.5) inner = fract((d - mw) / period);
+  return mf + inner * (1.0 - 2.0 * mf);
 }
 
 void main() {
@@ -405,6 +430,19 @@ export function loadSurfaces(THREE, tex, manifest) {
 }
 
 // A tile's rect in the atlas, normalised, as the vec4 the shader reads.
+// The tile's nine-slice margin in WORLD units, and the world period of one
+// repeat of its middle — both derived from the tile's own texel counts so the
+// mask always renders at exactly STYLE.texel per texel. Hand-setting these
+// let the mask drift to roughly half the model's texel size, which is how the
+// surface ended up finer than the geometry it sat on.
+function sliceOf(name) {
+  const t = SURF.man && name ? SURF.man.tiles[name] : null;
+  if (!t) return { m: STYLE.marginWorld, p: STYLE.period };
+  const n = SURF.man.texels;
+  return { m: t.marginTexels * STYLE.texel,
+           p: Math.max(STYLE.texel, (n - 2 * t.marginTexels) * STYLE.texel) };
+}
+
 function tileRect(THREE, name) {
   if (!name || !SURF.man) return new THREE.Vector4(0, 0, 0, 0);
   const [w, h] = SURF.man.size;
@@ -430,7 +468,8 @@ export function makeMaterial(THREE, kind) {
       uTexel: f(STYLE.texel), uDitherSpan: f(STYLE.ditherSpan),
       uMask: f(SURF.tex), uTile: f(tileRect(THREE, m.surface)),
       uHasMask: f(m.surface && SURF.man ? 1 : 0),
-      uMarginW: f(STYLE.marginWorld), uPeriod: f(STYLE.period),
+      uMarginW: f(sliceOf(m.surface).m), uPeriod: f(sliceOf(m.surface).p),
+      uTileMid: f(m.tileMid ? 1 : 0),
       uMarginF: f(m.surface && SURF.man
         ? SURF.man.tiles[m.surface].margin : 0.12),
       uCell: f(STYLE.wearCell),
