@@ -44,11 +44,12 @@ import { STYLE, MATERIALS, buildPalette, tableBox, useRawColours,
          loadFittings, loadSurfaces } from './style.js';
 import * as vaccineFridge from './models/vaccineFridge.js';
 import * as homeFridge from './models/homeFridge.js';
+import * as medFreeze from './models/medFreeze.js';
 
-// ?model=home renders the second prop. Both share every material, every
-// surface tile, every fitting and the whole shader; the only difference
-// between them is geometry and placement.
-const MODELS = { vaccine: vaccineFridge, home: homeFridge };
+// ?model=home / ?model=med render the second and third props. All three share
+// every material, every surface tile, every fitting and the whole shader; the
+// only difference between them is geometry and placement.
+const MODELS = { vaccine: vaccineFridge, home: homeFridge, med: medFreeze };
 const MODEL = MODELS[params.get('model') ?? 'vaccine'] ?? vaccineFridge;
 
 // Before any THREE.Color exists — see style.js. The authored hex is the
@@ -70,24 +71,14 @@ const kit = loadFittings(THREE,
   await new THREE.TextureLoader().loadAsync('/tools/voxel-fridge/fittings.png'),
   kitMan);
 
-const paletteRGB = buildPalette(THREE);
-for (const hex of kitMan.palette ?? []) {
-  const c = new THREE.Color(hex);
-  paletteRGB.push([c.r, c.g, c.b].map((v) => Math.round(v * 255)));
-}
-const paletteCount = paletteRGB.length;
-const paletteTexture = new THREE.DataTexture(
-  new Uint8Array(paletteRGB.flatMap((c) => [...c, 255])), paletteCount, 1,
-  THREE.RGBAFormat);
-paletteTexture.magFilter = paletteTexture.minFilter = THREE.NearestFilter;
-paletteTexture.needsUpdate = true;
-console.info(`palette: ${paletteCount} colours, ${Object.keys(MATERIALS).length} materials`);
-
 // The object's vertical extent, for the baked shading ramp. Set BEFORE any
 // material is built, since materials bake it into their uniforms.
 STYLE.objLo = MODEL.objLo;
 STYLE.objHi = MODEL.objHi;
 
+// MATS is filled as the model is built, and it is the record of which material
+// families this object actually uses — which is what the palette is built from,
+// further down, AFTER the scene exists. See buildPalette().
 const MATS = new Map();
 
 // ---------------------------------------------------------------------------
@@ -96,7 +87,13 @@ const MATS = new Map();
 // One screen pixel per texel. viewH units tall at texelsPerUnit px per unit is
 // the only ratio at which a nearest-sampled pixel-art sheet stays crisp: above
 // it the sheet aliases, below it the sheet blurs.
-const viewH = (MODEL.objHi - MODEL.objLo) * 1.24, viewW = viewH * (0.56 + Math.max(0, (H - 16) * 0.030));
+// A model declares its own frame aspect. The first two props are tall and
+// narrow and 0.56 framed them; the third is squatter and deeper, and at 0.56 an
+// iso view cut its back flank — including the vent grille, which is the one
+// feature only that view shows. Framing is a property of the object, so it
+// belongs to the model rather than to a constant that fitted the first one.
+const viewH = (MODEL.objHi - MODEL.objLo) * 1.24;
+const viewW = viewH * ((MODEL.aspect ?? 0.56) + Math.max(0, (H - 16) * 0.030));
 // Pixels per world unit. With no texture there is no texel density to match,
 // so this is a free choice: it sets how chunky the pixels are, nothing more.
 // The reference draws its 96-unit cabinet about 850 px tall, so 8 is its own.
@@ -155,6 +152,28 @@ if (carvedUrl) {
 } else {
   scene.add(MODEL.build(THREE, MATS, kit, H));
 }
+
+// ---------------------------------------------------------------------------
+// THE PALETTE, built now that the scene exists — from the materials this model
+// actually used, not from every family in the kit. See buildPalette().
+const paletteRGB = buildPalette(THREE, 64, [...MATS.keys()]);
+// The fittings atlas's own colours, and the CLEAR COLOUR. The ground is a
+// colour in the frame like any other, and once the palette stopped containing
+// every family in the kit it stopped containing anything near the cream card —
+// so the background snapped to whichever body tone was nearest and the object
+// sat on a ground made of itself. A quantiser can only keep what it is given.
+for (const hex of [...(kitMan.palette ?? []), params.get('bg') ?? BG]) {
+  const c = new THREE.Color(hex);
+  paletteRGB.push([c.r, c.g, c.b].map((v) => Math.round(v * 255)));
+}
+const paletteCount = paletteRGB.length;
+const paletteTexture = new THREE.DataTexture(
+  new Uint8Array(paletteRGB.flatMap((c) => [...c, 255])), paletteCount, 1,
+  THREE.RGBAFormat);
+paletteTexture.magFilter = paletteTexture.minFilter = THREE.NearestFilter;
+paletteTexture.needsUpdate = true;
+console.info(`palette: ${paletteCount} colours from ${MATS.size} of `
+  + `${Object.keys(MATERIALS).length} material families`);
 
 // Frame the model by its own height rather than the first one's.
 const target = new THREE.Vector3(0, (MODEL.objLo + MODEL.objHi) / 2, 0);

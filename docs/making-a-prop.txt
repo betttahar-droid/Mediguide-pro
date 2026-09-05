@@ -343,6 +343,21 @@ Run all of these before calling a prop done.
 
  [ ] 6.6  npm test still passes (needs `npm run preview` running).
 
+ [ ] 6.7  MEASURE THE RENDER, DO NOT LOOK AT IT. Run the same band scan over
+          the 1x and 2x front elevations that phase 0.3 ran over the reference,
+          and print the pixel sizes of the anchored parts side by side. The
+          third prop passed 6.1 by eye at a glance and failed it on three
+          parts — the door stile, the display and the control band's spacing
+          all grew with the cabinet, and each was written as a measured
+          FRACTION, which is exactly the form that hides the mistake. The check
+          that caught it is two columns of numbers that have to be equal:
+
+              w=16  handle 27 px  feet 34 px  display 60 px  stile 32 px
+              w=28  handle 27 px  feet 34 px  display 60 px  stile 32 px
+
+          Both renders are at the same pixels-per-unit, so equal pixels IS
+          equal world size, and nothing about it is a judgement call.
+
 
 --------------------------------------------------------------------------------
 TROUBLESHOOTING — symptom first, because none of these look like their cause
@@ -423,6 +438,38 @@ Setting `bevel: 0` changed nothing
     shapedBox still emits the edge and corner triangles; they collapse to zero
     area but still cost. There is an early-out — check it survived.
 
+A hollow prop renders solid — shelves, stock, an interior all missing
+    A cavity is FIVE THIN PANELS, not one thick one, and the carcass around it
+    is a SHELL, not a box with things placed inside it. There is no boolean
+    subtract here. Both mistakes render as a flat panel where the opening
+    should be, which reads as a shading or material fault and is neither.
+
+A recessed panel is invisible, or renders as a flat patch with no detail
+    Anything placed INSIDE a solid part is inside it. A recess is built PROUD:
+    a dark panel a hair off the surface, its slats or bolts a hair off that,
+    and a rim around them. The shading does the rest of the work. Keep the
+    total stand-off small — it is real geometry and it shows on the silhouette
+    in an orthographic elevation.
+
+A colour comes out as a hue from a completely different material
+    The palette is global. buildPalette merges candidates until they fit under
+    the limit, so every family added to the kit raises the merge threshold and
+    pushes families into each other. Pass it the materials the SCENE actually
+    used. A dark grey-green vent came back with purple slats this way: its own
+    dark tones had been merged away and the nearest survivor was another
+    prop's plinth. Nothing was wrong with the material or the geometry.
+
+The background is the wrong colour after the palette got smaller
+    The clear colour is a colour in the frame and the quantiser can only keep
+    what it is given. Put it in the palette.
+
+The front elevation is a mirror image of the reference
+    It is. The front camera sits at -z looking toward +z with up +y, so its
+    screen-right is world -x. This is invisible on a symmetric prop, so the
+    first prop with a one-sided feature is the first that can show it. Convert
+    the reference's x fractions ONCE, at the top of the model, and place
+    everything through that helper.
+
 The measurement tool says something implausible
     Believe the tool only when it shows its evidence. Make it print the bands,
     the profile, the counts it decided from. Three margin definitions in a row
@@ -444,5 +491,31 @@ INVARIANTS — break any of these and the system stops working
      noise, and noise reads as dirt.
   7. Numbers come from measuring, not from looking. Where you override a
      measurement on style grounds, say so in a comment.
+  8. A MEASURED FRACTION IS NOT A PLACEMENT. Reading a part at 0.095 of the
+     width tells you where it is at the DEFAULT size and nothing about what it
+     does when the size changes. Convert it to a fixed offset unless the part
+     is genuinely a proportion of the span. Every resize bug so far has been
+     a fraction that was never asked which of the three kinds it was.
+
+--------------------------------------------------------------------------------
+DOES THE GUIDE WORK?  —  the third prop
+--------------------------------------------------------------------------------
+
+tools/voxel-fridge/models/medFreeze.js was built by following this file start
+to finish, as a test of the file rather than of the technique. Result:
+
+  WHAT HELD.  No shader change, no new atlas, no new geometry primitive, no
+  change to any existing material. The only addition to style.js was ten
+  material families and one optional argument. capProfile(), shapedBox()'s
+  per-axis bevels, decal()'s fit clamping and screws() all took a different
+  measurement without alteration. 2290 triangles, 48 colours, three views.
+
+  WHAT THE GUIDE MISSED, and is now in it: phase 6.7 (measure the resize test
+  instead of looking at it) and five troubleshooting entries above — the solid
+  cavity, the buried recess, the crowded palette, the un-palettised ground and
+  the mirrored front camera. Four of the five are failures of the HARNESS or
+  the shared module rather than of the model, which is the part worth noting:
+  a guide written from two props described how to author a model and said
+  nothing about how the things underneath it fail as the kit grows.
 
 ================================================================================

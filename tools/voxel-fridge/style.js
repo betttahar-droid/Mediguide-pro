@@ -213,6 +213,18 @@ export const MATERIALS = {
   // which is right for a part and wrong for a SLICE OF ONE SURFACE: a stacked
   // shoulder of three slices drew three rims and read as a ziggurat. Anything
   // built from stacked slices wants this variant.
+  // Sampled off docs/style-bible/props/med_freeze.png for the third prop —
+  // a weathered clinical steel family, plus the stock colours its shelves need.
+  medBody:  M({ base: '#a5b5aa', lit: '#c9d8d3', shade: '#808d88', surface: 'plate' }),
+  medFlat:  M({ base: '#a5b5aa', lit: '#c9d8d3', shade: '#808d88', edge: 0 }),
+  medTrim:  M({ base: '#c9d8d3', lit: '#e2ece8', shade: '#a5b5aa', edge: 0.12 }),
+  medDark:  M({ base: '#556363', lit: '#687a7a', shade: '#3d4848', edge: 0.14 }),
+  medGlass: M({ base: '#687a7a', lit: '#808d88', shade: '#4c5a5a', edge: 0 }),
+  medBlue:  M({ base: '#3f6fa8', lit: '#5b8bc4', shade: '#2c5081', edge: 0 }),
+  boxPale:  M({ base: '#dfe4e0', lit: '#f2f5f2', shade: '#bcc4c0', edge: 0.10 }),
+  boxBlue:  M({ base: '#5a7fb0', lit: '#7599c6', shade: '#42618a', edge: 0.10 }),
+  boxWarm:  M({ base: '#d08a4a', lit: '#e5a468', shade: '#a56a35', edge: 0.10 }),
+  vial:     M({ base: '#cfd8d6', lit: '#e8efec', shade: '#a3aeac', edge: 0.08 }),
   mintFlat: M({ base: '#a5d6b6', lit: '#c5f3d4', shade: '#95baa7', edge: 0 }),
   mint:     M({ base: '#a5d6b6', lit: '#c5f3d4', shade: '#95baa7', surface: 'trim' }),
   // Bright steel for a highlight ON steel. `glint` could not serve here: it was
@@ -564,10 +576,28 @@ export function makeMaterial(THREE, kind) {
 // typing a palette by hand is how the atlas grille once lost its tan and went
 // grey. The post pass snaps to this, so a frame cannot hold a value nobody
 // chose; the thinning also keeps it inside the snap loop's bound.
-export function buildPalette(THREE, limit = 64) {
+// `only` is the list of material names the scene ACTUALLY uses. Pass it.
+//
+// Without it the palette is built from every family in MATERIALS, and the merge
+// below then has to squeeze all of them under the limit — so the threshold
+// climbs and colours from families that never appear together get collapsed
+// into one another. The symptom is specific and does not look like a palette
+// problem at all: the third prop's dark grey-green vent came back with PURPLE
+// slats, because its own dark tones had been merged away and the nearest
+// surviving entry was a shade of the first prop's purple plinth. Nothing was
+// wrong with the material, the geometry or the shading.
+//
+// This is the cost of a shared style module and it grows with every prop added:
+// a global palette is not a style, it is a collision space. Snapping against the
+// colours this object actually contains keeps each prop's palette small — which
+// is the whole point of quantising — and keeps it stable as the kit grows.
+export function buildPalette(THREE, limit = 64, only = null) {
   const tints = Object.values(STYLE.tint);
   const cand = [];
-  for (const m of Object.values(MATERIALS)) {
+  const src = only
+    ? only.map((n) => MATERIALS[ALIAS[n] ?? n]).filter(Boolean)
+    : Object.values(MATERIALS);
+  for (const m of src) {
     for (const hex of [m.base, m.lit ?? m.base, m.shade ?? m.base]) {
       const c = new THREE.Color(hex);
       for (const t of tints) {

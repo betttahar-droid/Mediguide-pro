@@ -42,6 +42,22 @@ SUBJECTS = {
     # glass, two compartments instead of one, heavy rounded corners instead of
     # square ones. It exercises the parts of the system the first prop did not —
     # strong bevels, a taper, a door split, long handles.
+    # A commercial upright vaccine fridge, from a reference set of four
+    # isometric pixel-art views. Grittier than the other two: heavily weathered
+    # steel, a full-height glass door with stock behind it, industrial labels,
+    # and a big square vent low on the flank.
+    "med_freeze": (
+        "a tall single-door commercial vaccine refrigerator, about twice as "
+        "tall as it is wide, in weathered pale grey-green painted steel with "
+        "dark grimy mottling over it. It has: a full-height glass door taking "
+        "most of the front, showing four wire shelves of small vaccine boxes "
+        "and vials inside; a slim vertical steel handle on the door's left "
+        "edge; a control band across the top of the front carrying a small "
+        "blue medical-cross logo at the left, a tiny green indicator lamp, and "
+        "a dark rectangular digital temperature display at the right; a small "
+        "white rating label low on the side panel; a large square louvred vent "
+        "grille low down on the right side panel; a recessed dark kick plinth "
+        "at the bottom on four small feet"),
     "home_fridge": (
         "a chunky retro 1950s domestic refrigerator with two solid doors — a "
         "short freezer door on top and a taller fridge door below, separated by "
