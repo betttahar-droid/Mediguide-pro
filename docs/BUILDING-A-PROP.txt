@@ -355,7 +355,14 @@ gitignored .env. Do not wire any of them into anything.
         seam     subdivide large faces
         grain    directional runs, for wood and brushed metal
         perf     a regular dot grid, for grilles and speaker cloth
-        fleck, dither   OFF on every painted surface here. See R6.
+        checker  an ORDERED two-tone grid at `checkerCell` world units, no
+                 falloff, no randomness — a CRT mask, a woven mesh, a halftone.
+                 Distinct from `dither`, which is randomised and thins away
+                 from the face edge. Use it only where --texture measures an
+                 order score above 0.85; the till's screen comes back 50.8% off
+                 at 0.89, the same prop's case 8.5% at 0.53.
+        fleck, dither   OFF on every painted surface here. See R6, and 6.5b for
+                 the measurement that keeps it that way.
 
     Almost always you want two variants of each colour: one normal and one with
     edge: 0 for slices and thin trim.
@@ -906,6 +913,15 @@ iso view looks.
       tools/voxel-fridge/views/model-mine-view-front.png \
       tools/voxel-fridge/views/model-mine-view-front-w-28.png --strip 34
 
+    # silhouette overlap + a diff image (phase 6.5)
+    python3 tools/authoring/compare.py --overlay diff.png \
+      docs/style-bible/props/my_prop.png \
+      tools/voxel-fridge/views/model-mine-view-front.png
+
+    # what KIND of texture a region carries (phase 6.5b)
+    python3 tools/authoring/measure.py <sheet> --view 0 --no-bands \
+      --texture 0.16 0.71 0.47 0.85 "screen"
+
     # measure the reference
     python3 tools/authoring/measure.py docs/style-bible/props/my_prop.png
     python3 tools/authoring/measure.py <img> --view 0 --no-bands --rows 0.62
@@ -964,6 +980,23 @@ THE SHOOT OUTPUT SAYS `WARN tableBox(...): coordinates out of order`
     It happens constantly in loops of the form `sx * (W + o)`, where sx = -1
     swaps the order. Fix the source line anyway: the next edit to it will be
     reasoning about the wrong pair.
+
+THE PROP MATCHES ON EVERY BAND AND STILL LOOKS OFF
+    --bands only measures row WIDTHS. Run --overlay. A feature shifted
+    sideways, a notch moved from one side to the other, a chamfer in the wrong
+    place — all score perfect on widths.
+
+A SILHOUETTE IS UNIFORMLY SHIFTED, BOTH EDGES BY THE SAME AMOUNT
+    A width error and a centre error together. Almost always the DENOMINATOR:
+    the fraction you divided by to convert the sheet into world units. Measure
+    the driving dimension at several heights, not one — this prop's base reads
+    0.005 at its bottom lip and 0.000 at the plinth, and taking the first made
+    every hand-converted constant in the file 0.6% small.
+
+A DARK PANEL READS AS A STICKER RATHER THAN A SCREEN
+    It is flat and the reference's is not. Measure it (6.5b) before adding
+    anything: a CRT comes back as an ordered checker at about half a texel,
+    a painted panel comes back flat, and the difference is a number.
 
 A HOLLOW PROP RENDERS SOLID — shelves, stock, an interior all missing
     A cavity is FIVE THIN PANELS and the carcass around it is a SHELL. Recipe

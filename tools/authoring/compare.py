@@ -20,6 +20,13 @@ most likely to be skipped or faked. Both checks below are arithmetic.
           A band that differs by more than a couple of percent is a real
           proportion error, and it names the height to go and look at.
 
+--overlay  scales B onto A and compares the MASKS, then reports the left and
+          right edges separately. --bands only measures each row's WIDTH, and
+          two shapes can match on every row width and be nothing alike — shift
+          a feature sideways, or move a notch from one side to the other, and
+          the widths are identical. Writes a diff image: red is reference-only,
+          blue is render-only, grey is both.
+
 --margins is the resize test. Everything ANCHORED to an edge lives in a fixed
           strip along that edge, so if the two renders are aligned on their
           silhouettes, those strips must be IDENTICAL. A stretched frame
@@ -146,6 +153,71 @@ def bands(a_path, b_path, n):
     print("with measure.py --rows on BOTH images before changing anything.")
 
 
+def overlay(a_path, b_path, out_path, n):
+    """Silhouette OVERLAP, which is what --bands cannot see.
+
+    --bands measures the WIDTH of each row. Two shapes can match on every row
+    width and be nothing alike: shift a feature sideways, or move a notch from
+    one side to the other, and the widths are identical. This scales B onto A's
+    bounding box and compares the masks pixel for pixel, then reports where they
+    disagree in terms of the LEFT and RIGHT edges separately.
+    """
+    pa, oa, ax0, ax1, ay0, ay1 = load(a_path)
+    pb, ob, bx0, bx1, by0, by1 = load(b_path)
+    ax0, ax1 = first_drawing(oa, ax0, ax1, len(oa))
+    bx0, bx1 = first_drawing(ob, bx0, bx1, len(ob))
+    aw, ah = ax1 - ax0 + 1, ay1 - ay0 + 1
+    bw, bh = bx1 - bx0 + 1, by1 - by0 + 1
+
+    inter = union = aonly = bonly = 0
+    diff = Image.new("RGB", (aw, ah))
+    dp = diff.load()
+    for y in range(ah):
+        sy = by0 + min(bh - 1, int(y * bh / ah))
+        for x in range(aw):
+            sx = bx0 + min(bw - 1, int(x * bw / aw))
+            A, B = oa[ay0 + y][ax0 + x], ob[sy][sx]
+            if A and B:
+                inter += 1; union += 1; dp[x, y] = (70, 70, 70)
+            elif A:
+                aonly += 1; union += 1; dp[x, y] = (230, 40, 40)      # reference only
+            elif B:
+                bonly += 1; union += 1; dp[x, y] = (40, 110, 230)     # render only
+            else:
+                dp[x, y] = (245, 245, 245)
+    diff.save(out_path)
+    print(f"A {Path(a_path).name}  {aw} x {ah}")
+    print(f"B {Path(b_path).name}  {bw} x {bh}  (scaled onto A)")
+    print(f"\nSILHOUETTE IoU  {inter / max(1, union) * 100:.2f}%")
+    print(f"  reference only (red)   {aonly:6d} px  {aonly / max(1, union) * 100:5.2f}%")
+    print(f"  render only    (blue)  {bonly:6d} px  {bonly / max(1, union) * 100:5.2f}%")
+    print(f"  written to {out_path}")
+
+    # EDGES SEPARATELY. A width match with both edges wrong by the same amount
+    # is a shape that has SLID, and --bands scores it perfect.
+    print("\n   z      A left  B left   dL   |  A right B right   dR")
+    worst = (0, 0.0, "")
+    for i in range(n):
+        zf = 1 - (i + 0.5) / n
+        ya = ay1 - int(zf * ah)
+        yb = by1 - int(zf * bh)
+        ra = [x for x in range(ax0, ax1 + 1) if oa[ya][x]]
+        rb = [x for x in range(bx0, bx1 + 1) if ob[yb][x]]
+        if not ra or not rb:
+            continue
+        al, ar = (ra[0] - ax0) / aw, (ra[-1] - ax0) / aw
+        bl, br = (rb[0] - bx0) / bw, (rb[-1] - bx0) / bw
+        dl, dr = bl - al, br - ar
+        flag = "  <<<" if max(abs(dl), abs(dr)) > 0.02 else ""
+        print(f"  {zf:.3f}   {al:6.3f}  {bl:6.3f}  {dl:+6.3f}  |  "
+              f"{ar:6.3f}  {br:6.3f}  {dr:+6.3f}{flag}")
+        for d, side in ((dl, "left"), (dr, "right")):
+            if abs(d) > abs(worst[1]):
+                worst = (zf, d, side)
+    print(f"\nworst edge: z={worst[0]:.3f}, {worst[2]} edge off by {worst[1]:+.3f}")
+    print("Rows marked <<< have an EDGE more than 2% of the width out of place.")
+
+
 def margins(a_path, b_path, strip, zlo=0.0, zhi=1.0):
     pa, oa, ax0, ax1, ay0, ay1 = load(a_path)
     pb, ob, bx0, bx1, by0, by1 = load(b_path)
@@ -202,13 +274,17 @@ def main():
     ap.add_argument("b")
     ap.add_argument("--bands", action="store_true")
     ap.add_argument("--margins", action="store_true")
+    ap.add_argument("--overlay", metavar="OUT.png",
+                    help="silhouette overlap + edge deltas; writes a diff image")
     ap.add_argument("-n", type=int, default=24, help="bands to sample")
     ap.add_argument("--strip", type=int, default=60, help="edge strip width, px")
     ap.add_argument("--zrange", nargs=2, type=float, default=[0.0, 1.0],
                     metavar=("Z0", "Z1"),
                     help="limit --margins to this height band, 0 at the floor")
     x = ap.parse_args()
-    if x.margins:
+    if x.overlay:
+        overlay(x.a, x.b, x.overlay, x.n)
+    elif x.margins:
         margins(x.a, x.b, x.strip, x.zrange[0], x.zrange[1])
     else:
         bands(x.a, x.b, x.n)

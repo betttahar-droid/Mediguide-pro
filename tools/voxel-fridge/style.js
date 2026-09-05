@@ -157,6 +157,16 @@ export const STYLE = {
 //     dither  a checkerboard that thins away from the face edge: the retro
 //             value ramp, which is how this style shades a corner
 //     perf    a regular dot grid, for grilles and speaker cloth
+//     checker an ORDERED two-tone grid at `checkerCell` world units, with no
+//             edge falloff and no randomness — a CRT shadow mask, a woven
+//             mesh, a halftone. Distinct from `dither`, which is a RANDOMISED
+//             checker that thins away from the face edge to fake a gradient.
+//             Measured, not guessed: tools/authoring/measure.py --texture
+//             reports a region's off-dominant fraction and an order score, and
+//             the pos_terminal screen comes back 50.8% off at order 0.89 with a
+//             pitch of 7 sheet pixels, against 4.8% at order 0.50 on the
+//             weathered fridge's flank — which is the number that says one gets
+//             a pattern and the other stays flat.
 //   FORM
 //     bevel   chamfer width, or 0. THE SILHOUETTE RULE: "if it doesn't add to
 //             the silhouette, you don't need it." A bevelled box is 44
@@ -193,7 +203,7 @@ export const STYLE = {
 // the fittings atlas at the bottom of this file, where it can be placed.
 const D = { lit: null, shade: null, inset: 0, edge: 0.22, seam: 0,
             fleck: 0, grain: 0, dither: 0, perf: 0, surface: null,
-            tileMid: false, bevel: undefined };
+            checker: 0, checkerCell: 0, tileMid: false, bevel: undefined };
 const M = (o) => ({ ...D, ...o });
 
 export const MATERIALS = {
@@ -238,7 +248,12 @@ export const MATERIALS = {
   posCase:   M({ base: '#c8cfbd', lit: '#e8eedb', shade: '#a2a898' }),
   posFlat:   M({ base: '#c8cfbd', lit: '#e8eedb', shade: '#a2a898', edge: 0 }),
   posTrim:   M({ base: '#a29372', lit: '#c2b28d', shade: '#84775b', edge: 0.12 }),
-  posScreen: M({ base: '#232a3a', lit: '#2f394c', shade: '#151a26', edge: 0 }),
+  // MEASURED as a two-tone ordered checker, both tones sampled off the sheet:
+  // #2c3343 and #111727, at a 7-pixel pitch on a 617-pixel-wide drawing, which
+  // is 0.42 world units. Flat, it read as a dark rectangle; this is what makes
+  // it read as a tube.
+  posScreen: M({ base: '#2c3343', lit: '#3a4457', shade: '#111727', edge: 0,
+                 checker: 1, checkerCell: 0.42 }),
   posGlare:  M({ base: '#39435a', lit: '#48546e', shade: '#2c3547', edge: 0 }),
   posKey:    M({ base: '#d2c8a5', lit: '#ece2bd', shade: '#a89f83', edge: 0.08 }),
   posKeyDk:  M({ base: '#a0947c', lit: '#bcae91', shade: '#7d7360', edge: 0.08 }),
@@ -287,6 +302,7 @@ precision highp float;
 uniform vec3 uBase, uLit, uShade;
 uniform float uInset, uWear, uEdge, uSeam, uCell;
 uniform float uFleck, uGrain, uDither, uPerf, uTexel, uDitherSpan;
+uniform float uChecker, uCheckerCell;
 uniform sampler2D uMask;
 uniform vec4 uTile;          // the tile's rect in the atlas, normalised
 uniform float uHasMask, uMarginW, uMarginF, uPeriod, uTileMid;
@@ -444,6 +460,18 @@ void main() {
     if (mod(tex.x + tex.y, 2.0) < 0.5 && hash(tex + 19.7) < zone * 0.9) c = uShade;
   }
 
+  // CHECKER — an ordered two-tone grid, no falloff, no randomness. Its cell is
+  // in WORLD UNITS like everything else, so it does not stretch and a bigger
+  // screen gets MORE cells. It is deliberately allowed to be FINER than the
+  // texel grid: the reference draws the CRT's mask at about a quarter of a
+  // texel, which is true of the real thing — a shadow mask is finer than the
+  // pixel art of the case around it — so the model states the cell size
+  // explicitly rather than inheriting one grid for everything.
+  if (uChecker > 0.5) {
+    vec2 ck = floor(local / uCheckerCell);
+    if (mod(ck.x + ck.y, 2.0) < 0.5) c = uShade;
+  }
+
   // PERFORATION — a regular dot grid, for grilles and speaker cloth.
   if (uPerf > 0.0) {
     vec2 f = abs(fract(local / uPerf) - 0.5);
@@ -570,6 +598,7 @@ export function makeMaterial(THREE, kind) {
       uInset: f(m.inset), uWear: f(0), uEdge: f(m.edge), uSeam: f(m.seam),
       uFleck: f(m.fleck), uGrain: f(m.grain),
       uDither: f(m.dither), uPerf: f(m.perf),
+      uChecker: f(m.checker), uCheckerCell: f(m.checkerCell || STYLE.texel),
       uTexel: f(STYLE.texel), uDitherSpan: f(STYLE.ditherSpan),
       uMask: f(SURF.tex), uTile: f(tileRect(THREE, m.surface)),
       uHasMask: f(m.surface && SURF.man ? 1 : 0),

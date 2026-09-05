@@ -83,7 +83,13 @@ export function build(THREE, MATS, kit, H) {
   // SHEET FRACTION -> WORLD. Two different denominators, converted once here.
   // px() also applies the front camera's x mirror (BUILDING-A-PROP 4.3), so
   // fractions read from the LEFT of the reference land on table +x.
-  const SW = 0.854, CXF = 0.432;      // base width / centre, FRONT sheet
+  // 0.859, not 0.854. The base's own left edge reads 0.005 in the band where
+  // the bottom lip is inset and 0.000 at the plinth; taking the first made the
+  // denominator 0.6% small, which put EVERY hand-converted constant 0.6% out
+  // and showed in the silhouette overlay as a uniform 0.007 shift on both
+  // edges of the monitor at once. A width error and a centre error together
+  // look like a part that has slid, and --bands scores it perfect.
+  const SW = 0.859, CXF = 0.4295;     // base width / centre, FRONT sheet
   const SD = 0.967, CYF = 0.4855;     // base depth / centre, SIDE sheet
   const px = (f) => -((f - CXF) * 2 * W / SW);
   const py = (f) => (f - CYF) * 2 * D / SD;
@@ -110,13 +116,27 @@ export function build(THREE, MATS, kit, H) {
   // through wx() grows with the prop, and compare.py --margins caught exactly
   // that: 56% of the left edge strip differing at ?w=28, because the keycaps
   // were written as wx(0.045). A keycap is the size a finger is, on any till.
-  const KEY_P = 2.07, KEY_W = 1.69;                 // keycap pitch and width
-  const VENT_P = 0.96, VENT_W = 0.41;               // slot pitch and width
-  const BTN_A = 5.13, BTN_W = 2.02, LAMP_W = 0.67;  // in from the monitor edge
-  const PRN_B = 10.64;                              // in from the base edge
-  const KEY_IN = 3.22;                              // first key, in from the edge
+  // DERIVED FROM THE SHEET FRACTION, NOT HAND-CONVERTED. U is world units per
+  // unit of sheet fraction AT THE DEFAULT WIDTH — note the literal 32, not
+  // 2 * W, which is what keeps these fixed while the prop resizes. Writing the
+  // arithmetic out means the measured fraction stays visible in the source and
+  // cannot drift from SW when SW is re-measured, which is exactly what happened
+  // when they were typed as decimals.
+  const U = 32 / SW;
+  const KEY_P = 0.0553 * U, KEY_W = 0.045 * U;      // keycap pitch and width
+  const VENT_P = 0.0255 * U, VENT_W = 0.011 * U;    // slot pitch and width
+  const BTN_A = 0.137 * U, BTN_W = 0.054 * U;       // in from the monitor edge
+  const LAMP_W = 0.018 * U;
+  const PRN_B = 0.284 * U;                          // in from the base edge
+  const KEY_IN = 0.086 * U;                         // first key, in from the edge
   const KEY_DARK = 5;                               // function block, fixed count
+  const MHW = 0.401 * U;                            // monitor half-width
+  const MCX = -(0.4355 - CXF) * U;                  // its centre, off the base's
 
+  // THE MONITOR IS NOT CENTRED ON THE BASE. The reference's monitor spans
+  // x 0.034..0.836 (centre 0.4355) against a base centred at 0.432 — a 0.12
+  // unit offset, trivially small and trivially free to honour, which the
+  // silhouette overlay picks up as a 0.007 shift on both the neck and the case.
   // ---- named planes -------------------------------------------------------
   const F = -D;                 // the base's front face
   const EPS = 0.08;
@@ -138,9 +158,13 @@ export function build(THREE, MATS, kit, H) {
 
   // ---- base ---------------------------------------------------------------
   // bottom lip, inset all round so the plinth above reads as overhanging it
-  add('posCase', [-(W - 0.6), -(D - 0.6), z(0.023)], [W - 0.6, D - 0.6, z(0.078)],
+  // The lip ends at z 0.056, not the 0.078 first written. Measured: the
+  // reference reads 0.021..0.848 at z 0.054 and 0.000..0.867 at z 0.062, so the
+  // step is just under 0.06 — and putting it at 0.078 left a 3% notch in the
+  // silhouette at exactly the height the overlay flagged, on both edges.
+  add('posCase', [-(W - 0.78), -(D - 0.78), z(0.023)], [W - 0.78, D - 0.78, z(0.056)],
       CRISP);
-  add('posCase', [-W, -D, z(0.078)], [W, D, z(0.145)], CASE);
+  add('posCase', [-W, -D, z(0.056)], [W, D, z(0.145)], CASE);
 
   // THE WEDGE. The side view's top edge runs from u 0.002 at z 0.13 back to
   // u 0.232 at z 0.214 and on to u 0.44 by z 0.29 — a keyboard deck sloping up
@@ -173,7 +197,10 @@ export function build(THREE, MATS, kit, H) {
       { ...CRISP, taperX: 2.81, taperZ: 4.93 });
 
   // ---- neck ---------------------------------------------------------------
-  add('posCase', [-5.08, -1.17, z(0.292)], [5.08, 11.00, z(0.366)], CASE);
+  // Crisp. CASE chamfered the neck's bottom into the base, which the reference
+  // draws as a straight 0.300..0.571 column all the way down.
+  add('posCase', [MCX - 0.1355 * U, -1.17, z(0.292)], [MCX + 0.1355 * U, 11.00, z(0.366)],
+      { bevel: [0.9, 0, 0.9] });
 
   // ---- monitor (ANCHOR — the whole assembly) ------------------------------
   // A MONITOR IS A BOUGHT-IN PART. Section 6's rule: could you buy it on its
@@ -186,29 +213,33 @@ export function build(THREE, MATS, kit, H) {
   // The consequence is worth naming: after this change the edge-strip resize
   // test cannot validate the monitor, because it is anchored to the CENTRE and
   // the strips are cut from the edges. compare.py --centre exists for that.
-  const MHW = 15.03;                  // monitor half-width
   const MY0 = -10.57, MY1 = 15.15;    // its front and back faces
   const mb = (kind, hx, y0, y1, za, zb, o) =>
-    add(kind, [-hx, y0, z(za)], [hx, y1, z(zb)], o);
+    add(kind, [MCX - hx, y0, z(za)], [MCX + hx, y1, z(zb)], o);
 
   // The bottom FLARES, and it is CONCAVE: 12.63 half-width at z 0.344, still
   // 13.02 at z 0.362, and 15.03 by z 0.375 — most of the widening in the last
   // third. A negative taper is a flare, the one direction the fridges never
   // needed. One linear step put it 6% wide across the middle of the band.
-  mb('posCase', 12.63, -10.21, 13.70, 0.344, 0.362,
-     { bevel: 0, taperX: -0.39, taperZ: -0.16 });
-  mb('posCase', 13.02, -10.38, 13.86, 0.362, 0.375,
-     { bevel: 0, taperX: -2.02, taperZ: -0.72 });
-  mb('posCase', MHW, MY0, MY1, 0.375, 0.944, CASE);
+  // Down to z 0.336, not 0.344: the reference holds the flare's bottom width
+  // for one more band before the neck takes over.
+  mb('posCase', 0.337 * U, -10.21, 13.70, 0.336, 0.362,
+     { bevel: 0, taperX: -0.0105 * U, taperZ: -0.16 });
+  mb('posCase', 0.3475 * U, -10.38, 13.86, 0.362, 0.375,
+     { bevel: 0, taperX: -0.054 * U, taperZ: -0.72 });
+  // NO BOTTOM CHAMFER. CASE bevels y as well, and a y-bevel cuts the top AND
+  // the bottom — so the body pulled in just above the flare and the two met at
+  // a waist. Visible in the overlay as a notch, invisible at a glance.
+  mb('posCase', MHW, MY0, MY1, 0.375, 0.944, { bevel: [1.3, 0, 1.3] });
   // The CRT hump on the back. Only the side view has it, and it is most of what
   // makes the silhouette read as a monitor rather than a box.
-  mb('posCase', 12.93, MY1, 16.79, 0.450, 0.884, { bevel: [1.6, 1.6, 0] });
+  mb('posCase', 0.345 * U, MY1, 16.79, 0.450, 0.884, { bevel: [1.6, 1.6, 0] });
 
   // The top chamfer, MEASURED in four steps and built as frusta — the same
   // rounding as a fridge shoulder, a different profile. Written out rather than
   // handed to capProfile() because the monitor is not centred in DEPTH (it sits
   // 2.3 units back) and capProfile centres on the origin.
-  const CAP = [[0.944, 0.00], [0.962, 0.79], [0.979, 1.57], [1.000, 2.36]];
+  const CAP = [[0.944, 0], [0.962, 0.021 * U], [0.979, 0.042 * U], [1.000, 0.063 * U]];
   for (let i = 0; i < CAP.length - 1; i++) {
     const [z0, i0] = CAP[i], [z1, i1] = CAP[i + 1];
     mb('posFlat', MHW - i0, MY0 + i0 * 0.55, MY1 - i0 * 0.55, z0, z1,
@@ -226,21 +257,23 @@ export function build(THREE, MATS, kit, H) {
   // a hollow is bars or panels, never a block, and a recess is built proud.
   const RY = [MY0 - 0.5, MY0 - 0.1];      // the ring's own plane
   const SY = [MY0 - 0.35, MY0 - 0.15];    // the screen, sunk inside it
-  const RHW = 12.16, RT = 0.56;           // ring half-width and bar thickness
+  const RHW = 0.3245 * U, RT = 0.015 * U; // ring half-width and bar thickness
   const bar = (x1, x2, za, zb) =>
     add('posTrim', [x1, RY[0], z(za)], [x2, RY[1], z(zb)], { bevel: 0 });
   bar(-RHW, -RHW + RT, 0.432, 0.885);
   bar(RHW - RT, RHW, 0.432, 0.885);
   bar(-RHW, RHW, 0.432, 0.447);
   bar(-RHW, RHW, 0.870, 0.885);
-  add('posScreen', [-11.60, SY[0], z(0.447)], [11.60, SY[1], z(0.870)], { bevel: 0 });
+  add('posScreen', [MCX - 0.3095 * U, SY[0], z(0.447)],
+                   [MCX + 0.3095 * U, SY[1], z(0.870)], { bevel: 0 });
   // ONE soft glare, two thin blocks stepped across. A square reads as a sticker
   // stuck to the tube. A stepped diagonal is not worth attempting on glass you
   // see THROUGH (BUILDING-A-PROP 8.10) — but a CRT is opaque, so this is simply
   // a mark on a surface, and it stands proud of the screen like any other mark.
-  for (const [ga, gb, za, zb] of [[9.59, 10.64, 0.760, 0.845],
-                                  [8.84, 9.59, 0.795, 0.862]]) {
-    add('posGlare', [ga, SY[0] - 0.12, z(za)], [gb, SY[0] - 0.04, z(zb)],
+  for (const [ga, gb, za, zb] of [[0.2815, 0.2815 + 0.028, 0.760, 0.845],
+                                  [0.2615, 0.2815, 0.795, 0.862]]) {
+    add('posGlare', [MCX + ga * U, SY[0] - 0.12, z(za)],
+                    [MCX + gb * U, SY[0] - 0.04, z(zb)],
         { bevel: 0 });
   }
 
@@ -257,7 +290,8 @@ export function build(THREE, MATS, kit, H) {
   // ---- vent slots (REPEAT) ------------------------------------------------
   // MEASURED at a pitch of 0.0255 of the sheet — 0.96 world units — running
   // x 0.073 to 0.79. The count follows the case; the slot never changes size.
-  for (let s = -13.43; s < 13.43 - VENT_W; s += VENT_P) {
+  const VX = 0.3585 * U;
+  for (let s = MCX - VX; s < MCX + VX - VENT_W; s += VENT_P) {
     add('posScreen', [s, MY0 - 0.1, z(0.965)], [s + VENT_W, MY0 + 0.3, z(0.985)],
         { bevel: 0 });
   }
@@ -330,11 +364,11 @@ export function build(THREE, MATS, kit, H) {
   const R = -W;                 // the base's -x edge (reference RIGHT)
   const pbox = (kind, xa, xb, y0, y1, za, zb, o) =>
     add(kind, [R + xa, F - y1, z(za)], [R + xb, F - y0, z(zb)], o);
-  pbox('posCase', 2.59, 10.64, 0.0, 0.45, 0.140, 0.200, { bevel: 0.4 });
-  pbox('posScreen', 2.96, 10.27, 0.4, 0.75, 0.168, 0.190, { bevel: 0 });
+  pbox('posCase', 0.069 * U, PRN_B, 0.0, 0.45, 0.140, 0.200, { bevel: 0.4 });
+  pbox('posScreen', 0.079 * U, 0.274 * U, 0.4, 0.75, 0.168, 0.190, { bevel: 0 });
   // The tail leaves the silhouette, which is what says the thing is loaded.
-  pbox('boxPale', 4.31, 9.18, 0.7, 1.05, 0.128, 0.172, { bevel: 0 });
-  pbox('posTrim', 4.31, 9.18, 1.05, 1.15, 0.128, 0.136, { bevel: 0 });
+  pbox('boxPale', 0.115 * U, 0.245 * U, 0.7, 1.05, 0.128, 0.172, { bevel: 0 });
+  pbox('posTrim', 0.115 * U, 0.245 * U, 1.05, 1.15, 0.128, 0.136, { bevel: 0 });
 
   // ---- card reader on its stalk (ANCHOR) ----------------------------------
   // An outrigger, and the reason this prop's sheet is wider than its base. It
@@ -352,7 +386,10 @@ export function build(THREE, MATS, kit, H) {
     add(kind, [R + xa, BK - yb, z(za)], [R + xb, BK - ya, z(zb)], o);
   rbox('posCase', -3.03, -0.04, 2.53, 4.31, 0.078, 0.150, { bevel: 0.5 });
   rbox('posCase', -2.85, -0.68, 2.74, 4.15, 0.150, 0.245, { bevel: 0.5 });
-  rbox('posCase', -5.20, 1.46, 1.28, 5.56, 0.236, 0.330, CASE);
+  // z 0.236..0.351, not 0.330. A plain transcription slip from the measurement
+  // block at the top of this file, and the overlay found it as a red band where
+  // the reference's reader head stands and ours does not.
+  rbox('posCase', -5.20, 1.46, 1.28, 5.56, 0.236, 0.351, CASE);
   rbox('posRead', -4.61, 0.86, 5.49, 5.72, 0.252, 0.318, { bevel: 0 });
   rbox('posTrim', -1.53, 0.53, 5.79, 5.92, 0.258, 0.268, { bevel: 0 });
   // its own little keypad, three pips, so it reads as a reader and not a box

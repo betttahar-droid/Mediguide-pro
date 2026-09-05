@@ -25,8 +25,14 @@ page.on('console', (m) => {
 
 for (const q of shots) {
   const name = q.replace(/[^a-z0-9]+/gi, '-') || 'default';
-  await page.goto(`http://localhost:5173/tools/voxel-fridge/index.html?${q}`,
-                  { waitUntil: 'load' });
+  try {
+    await page.goto(`http://localhost:5173/tools/voxel-fridge/index.html?${q}`,
+                    { waitUntil: 'load' });
+  } catch (e) {
+    console.log(`${name}: could not load the page. Is the dev server running?`
+      + `\n  npx vite --port 5173 &\n  ${e.message.split('\n')[0]}`);
+    continue;
+  }
   // Print what the page said BEFORE giving up. A timeout here almost always
   // means the model threw, and the useful message is already in `errs` — the
   // bare TimeoutError that used to surface instead told you nothing at all.
