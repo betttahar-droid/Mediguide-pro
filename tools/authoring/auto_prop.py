@@ -101,6 +101,11 @@ def glm(messages, model, key, max_tokens=12000, temperature=0.3, effort="low"):
             d = json.loads(r.read())
     except urllib.error.HTTPError as e:
         raise SystemExit(f"{model}: HTTP {e.code} {e.read()[:400].decode(errors='replace')}")
+    if not d.get("choices"):
+        # An OpenRouter error comes back 200 with an "error" body and no
+        # choices; indexing it raised KeyError and hid the reason.
+        raise SystemExit(f"{model}: no choices in reply -- "
+                         f"{json.dumps(d)[:400]}")
     ch = d["choices"][0]
     msg = ch.get("message", {})
     text = msg.get("content") or ""
