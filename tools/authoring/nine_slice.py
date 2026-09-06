@@ -99,8 +99,14 @@ def bands(path, quantile=0.35, min_frac=0.08):
         k = max(1, n // 60)
         sm = [sum(diff[max(0, i - k):i + k + 1]) / len(diff[max(0, i - k):i + k + 1])
               for i in range(len(diff))]
+        # THE THRESHOLD NEEDS AN ABSOLUTE FLOOR. A quantile is relative, so a
+        # background with its parts already removed -- almost entirely plain
+        # panel -- gets the same verdict as a busy one: the cut lands far down
+        # its own distribution and only a sliver clears it. On a 0..255 scale
+        # a row differing from its neighbour by under ~3 is uniform whatever
+        # the rest of the image does, so take whichever is larger.
         srt = sorted(sm)
-        thresh = srt[int(quantile * (len(srt) - 1))]
+        thresh = max(srt[int(quantile * (len(srt) - 1))], 3.0)
         span, a, b = _runs(sm, thresh)
         if span < min_frac * n:            # nothing uniform enough to trust
             return None

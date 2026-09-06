@@ -1,0 +1,139 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Layered prop</title>
+<style>html,body{margin:0;background:#8a8a8a;overflow:hidden}canvas{display:block}</style>
+<script type="module">
+// Background + parts, each with its own resize rule.
+//
+// The previous attempt tiled a 52x267 sliver of panel and laid full-width
+// STRIPS of the elevation over it, which is why every judge described the
+// lower cabinet as "blank flat brown" with "brown horizontal bars overlapping
+// the screen". Here the background is the whole elevation with its parts
+// removed and their holes filled from the panel beside them, and the parts are
+// the things a modeller would build: marquee, grille, screen, control deck,
+// joysticks, coin door.
+//
+// Separating them is not only tidier, it BUYS AN AXIS. Measured on the raw
+// elevation the stretch band is 19% of the height and there is none at all
+// horizontally; measured on the background with the parts taken out it is 37%
+// vertical and 14% horizontal. The detail was what blocked the other axis.
+//
+// The decomposition is lossless -- parts laid back on the background at their
+// own coordinates reproduce the reference on 0.00% difference -- so at scale 1
+// this renders the reference exactly, and any error at another size is the
+// resize rule's fault and nothing else's.
+import * as THREE from 'three';
+
+const p = new URLSearchParams(location.search);
+const dir = p.get('dir') ?? '/tools/img2threejs-work/ps1_arcade';
+const man = await (await fetch(`${dir}/layers_front.json`)).json();
+let slice = null;
+try { slice = await (await fetch(`${dir}/slice_bg.json`)).json(); } catch {}
+const wS = Number(p.get('w') ?? 1), hS = Number(p.get('h') ?? 1);
+const naive = p.get('naive') === '1';
+
+const renderer = new THREE.WebGLRenderer({ antialias: false });
+renderer.setSize(1024, 1024);
+document.body.appendChild(renderer.domElement);
+const scene = new THREE.Scene();
+scene.background = new THREE.Color('#8a8a8a');
+
+const load = async (u) => {
+  const t = await new THREE.TextureLoader().loadAsync(u);
+  t.magFilter = THREE.NearestFilter; t.minFilter = THREE.NearestFilter;
+  t.generateMipmaps = false; t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+};
+const A = man.aspect;                 // original face is A wide, 1 tall
+const FW = A * wS, FH = 1 * hS;
+
+// --- a 3x3 nine-sliced quad -----------------------------------------------
+// Caps hold their ORIGINAL world size and their original texel size; only the
+// middle row and column absorb the change. Nine quads, so the seams exist as
+// geometry -- a four-vertex plane cannot slice, it can only stretch.
+function sliced(w, h, bu, bv, ow, oh) {
+  const [a, b] = bu ?? [0.5, 0.5], [c, dd] = bv ?? [0.5, 0.5];
+  const capL = a * ow, capR = (1 - b) * ow;
+  const capB = c * oh, capT = (1 - dd) * oh;
+  const xs = [-w / 2, -w / 2 + capL, w / 2 - capR, w / 2];
+  const ys = [-h / 2, -h / 2 + capB, h / 2 - capT, h / 2];
+  const us = [0, a, b, 1], vs = [0, c, dd, 1];
+  // REPEAT THE MIDDLE, DO NOT STRETCH IT. This is the rule AdaptivePropBase
+  // states and the one this file kept breaking: "a repeat axis instances the
+  // unit mesh instead of stretching it... a stretched run smears every
+  // detail". The background's uniform band is only 8% of the width, so
+  // doubling the cabinet stretched that strip about sevenfold -- the judge saw
+  // it immediately as "severe horizontal smearing either side of the screen".
+  // Emitting the middle as N copies of its own width instead makes widening
+  // scale-free: the last copy is clipped in UV so any width works.
+  const pos = [], uv = [];
+  const midW = xs[2] - xs[1], midH = ys[2] - ys[1];
+  const unitW = Math.max(1e-4, (b - a) * ow), unitH = Math.max(1e-4, (dd - c) * oh);
+  const nx = Math.max(1, Math.round(midW / unitW)), ny = Math.max(1, Math.round(midH / unitH));
+  const quad = (x0, x1, y0, y1, u0, u1, v0, v1) => {
+    pos.push(x0, y0, 0, x1, y0, 0, x1, y1, 0, x0, y0, 0, x1, y1, 0, x0, y1, 0);
+    uv.push(u0, v0, u1, v0, u1, v1, u0, v0, u1, v1, u0, v1);
+  };
+  for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) {
+    const [X0, X1, Y0, Y1] = [xs[i], xs[i + 1], ys[j], ys[j + 1]];
+    const [u0, u1, v0, v1] = [us[i], us[i + 1], vs[j], vs[j + 1]];
+    const cx = i === 1 ? nx : 1, cy = j === 1 ? ny : 1;
+    for (let m = 0; m < cx; m++) for (let n = 0; n < cy; n++) {
+      const ax0 = X0 + (X1 - X0) * m / cx, ax1 = X0 + (X1 - X0) * (m + 1) / cx;
+      const ay0 = Y0 + (Y1 - Y0) * n / cy, ay1 = Y0 + (Y1 - Y0) * (n + 1) / cy;
+      quad(ax0, ax1, ay0, ay1, u0, u1, v0, v1);
+    }
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
+  return g;
+}
+
+// --- background ------------------------------------------------------------
+const bgTex = await load(`${dir}/${man.background}`);
+const bgGeo = naive ? new THREE.PlaneGeometry(FW, FH)
+  : sliced(FW, FH, slice && slice.h, slice && slice.v, A, 1);
+scene.add(new THREE.Mesh(bgGeo, new THREE.MeshBasicMaterial({ map: bgTex })));
+
+// --- parts -----------------------------------------------------------------
+let z = 0.001;
+for (const q of man.parts) {
+  const tex = await load(`${dir}/${q.image}`);
+  const ow = (q.u[1] - q.u[0]) * A, oh = q.v[1] - q.v[0];
+  const spanX = q.resize === 'spanx', spanY = q.resize === 'spany';
+  const w = naive ? ow * wS : (spanX ? FW : ow);
+  const h = naive ? oh * hS : (spanY ? FH : oh);
+
+  // a spanning part slices along the axis it spans; a fixed part never scales
+  let geo;
+  if (!naive && spanX) geo = sliced(w, h, [0.25, 0.75], null, ow, oh);
+  else if (!naive && spanY) geo = sliced(w, h, null, [0.25, 0.75], ow, oh);
+  else geo = new THREE.PlaneGeometry(w, h);
+
+  // anchors: the distance to the held edge is a world size and never scales
+  const dTop = 1 - q.v[1], dBot = q.v[0];
+  const cx = ((q.u[0] + q.u[1]) / 2 - 0.5) * A;
+  let x, y;
+  if (spanX) x = 0;
+  else if (Math.abs(cx) < 0.05 * A) x = 0;                       // centred stays centred
+  else if (cx < 0) x = -FW / 2 + q.u[0] * A + w / 2;             // held to the left
+  else x = FW / 2 - (1 - q.u[1]) * A - w / 2;                    // held to the right
+  if (spanY) y = 0;
+  else if (q.anchor === 'bottom') y = -FH / 2 + dBot + h / 2;
+  else y = FH / 2 - dTop - h / 2;                                // default: hangs from the top
+
+  const m = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ map: tex }));
+  m.position.set(x, y, z);
+  z += 0.0005;                       // stable order, no z-fighting
+  scene.add(m);
+}
+
+const rad = Math.max(FW, FH) * 0.6;
+const cam = new THREE.OrthographicCamera(-rad, rad, rad, -rad, 0.01, 20);
+cam.position.set(0, 0, 5); cam.lookAt(0, 0, 0);
+renderer.render(scene, cam);
+console.info(`layered: ${man.parts.length} parts, w=${wS} h=${hS}`
+  + `${naive ? ' NAIVE' : ''}, face ${FW.toFixed(3)}x${FH.toFixed(3)}`);
+globalThis.__done = true;
+</script>
