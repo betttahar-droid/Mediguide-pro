@@ -49,8 +49,27 @@ import nano_views  # noqa: E402  -- for STYLE, so the house style stays one stri
 STYLE = nano_views.STYLE
 
 OR_ENDPOINT = "https://openrouter.ai/api/v1/chat/completions"
-AUTHOR_MODEL = "z-ai/glm-5.3"          # text: writes the brief
-CRITIC_MODEL = "z-ai/glm-5.3-flash"    # vision: reads the render back
+# BENCHMARKED ON THIS TASK, not chosen. Six models authored the same measured
+# arcade reference. The match scores landed between 24.0% and 27.3%, so the
+# MODEL IS NOT THE BOTTLENECK -- but the cost spread across that 3-point band
+# is 38x, and on the run that produced these numbers plain glm-5.3 returned
+# invalid JSON while costing 20x more than the flash variant that worked.
+#
+#   model                    match  parts     cost  secs  match/cent
+#   google/gemini-2.5-flash  27.30%    31  $0.0218    39      12.5
+#   minimax/minimax-m2.5     27.29%    22  $0.0222   185      12.3
+#   moonshotai/kimi-k2.5     27.25%    36  $0.0421   849       6.5
+#   qwen/qwen3-max           24.54%    23  $0.0070    16      35.1
+#   z-ai/glm-5.3-flash       24.04%    25  $0.0011    62     227.0
+#   z-ai/glm-5.3             invalid JSON
+#
+# For the critic, gpt-5.2 is the one worth paying for: on the same render it
+# named five specific faults -- including a stepped profile we had missed and
+# a black square we had ADDED -- where glm-5.3-flash named three and
+# kimi-k2.5 named three bare ones for 58x the price and 43x the latency.
+AUTHOR_MODEL = "z-ai/glm-5.3-flash"    # cheapest of the cluster, and has vision
+CRITIC_MODEL = "z-ai/glm-5.3-flash"    # per-round reviewer
+FINAL_CRITIC = "openai/gpt-5.2"        # 9s, ~1 cent, much the most specific
 
 ORDER = ["front", "side", "back", "top"]
 
