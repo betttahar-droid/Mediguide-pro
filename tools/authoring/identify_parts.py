@@ -52,12 +52,17 @@ For each part give:
   "box"    [x0, y0, x1, y1] as fractions of the image, 0,0 at the TOP-LEFT.
            Approximate is fine, it will be refined by measurement.
   "resize" how it must behave when the prop is made larger:
-             "fixed"  keeps its real size and stays put (a coin door, a
-                      button, a badge)
-             "spanx"  runs the full width and should stretch across, keeping
-                      its height (a marquee, a control deck, a top rail)
-             "spany"  runs the full height and should stretch down, keeping
-                      its width (a corner post, a side rail)
+             "fixed"         keeps its real size and stays put (a coin door,
+                             a button, a badge, a screen)
+             "spanx_repeat"  runs the full width and its middle REPEATS when
+                             widened -- right for a control deck, where a
+                             wider cabinet means more button clusters
+             "spanx_center"  runs the full width but its middle must stay ONE
+                             size, centred, with the ends extending -- right
+                             for a marquee, where you want one title and not
+                             three copies of it
+             "spany_repeat" / "spany_center"  the same for the vertical axis
+                             (a side rail repeats; a badge on a post centres)
   "anchor" which edge it holds to: "top", "bottom", "left", "right", or
            "center" if it belongs to the middle of the face
 

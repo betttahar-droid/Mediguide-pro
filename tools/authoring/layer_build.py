@@ -62,25 +62,45 @@ def fill_from_panel(ob, boxes):
             if not covered[x][y]:
                 tally[src[x, y]] += 1
     base = tally.most_common(1)[0][0] if tally else (128, 128, 128)
-    tol = 110
+    tol = 70
 
     def is_panel(c):
         return sum(abs(a - b) for a, b in zip(c, base)) < tol
 
+    # FILL FROM A CLEAN PATCH, NOT FROM THE NEAREST ROW. Copying a hole's own
+    # column meant the screen's coloured border was the nearest "panel" pixel
+    # for the whole screen region, and the background came out with blue and
+    # green streaks running down it plus a grey band where the coin door had
+    # been. Invisible at scale 1 under the parts; the moment the background
+    # repeated it was all the judge could see, four rounds running.
+    #
+    # Take one rectangle that is genuinely panel and tile it, mirrored, over
+    # every hole. A patch of panel always looks like panel.
+    best, bw, bh = None, 0, 0
+    for y0 in range(0, H, 4):
+        for x0 in range(0, W, 4):
+            if covered[x0][y0] or not is_panel(src[x0, y0]):
+                continue
+            x1 = x0
+            while x1 + 1 < W and not covered[x1 + 1][y0] and is_panel(src[x1 + 1, y0]):
+                x1 += 1
+            y1 = y0
+            while y1 + 1 < H and all(not covered[x][y1 + 1] and is_panel(src[x, y1 + 1])
+                                     for x in range(x0, x1 + 1, 3)):
+                y1 += 1
+            if (x1 - x0) * (y1 - y0) > bw * bh:
+                best, bw, bh = (x0, y0), x1 - x0 + 1, y1 - y0 + 1
+    if best is None:
+        return out
+    ox, oy = best
     for x in range(W):
-        clean = [y for y in range(H) if not covered[x][y] and is_panel(src[x, y])]
-        if not clean:                      # this column is all trim or all part
-            clean = [y for y in range(H) if not covered[x][y]]
-        if not clean:
-            continue
         for y in range(H):
-            # ONLY the holes. Also repainting trim that no part covers scrubbed
-            # detail the decomposition is supposed to keep, and recomposition
-            # went from 0.00% to 7.04% different. Fill what the parts took out,
-            # and take the fill from panel.
-            if covered[x][y]:
-                near = min(clean, key=lambda c: abs(c - y))
-                px[x, y] = src[x, near]
+            if not covered[x][y]:
+                continue           # only the holes; trim outside them is real
+            u, v = x % (2 * bw), y % (2 * bh)
+            u = u if u < bw else 2 * bw - 1 - u        # mirror so joins reflect
+            v = v if v < bh else 2 * bh - 1 - v
+            px[x, y] = src[ox + min(u, bw - 1), oy + min(v, bh - 1)]
     return out
 
 
@@ -129,8 +149,18 @@ def main():
     tot = (W // 2) * (H // 2)
     check.save(d / f"_recomposed_{args.face}.png")
 
+    # carry the background mode forward: the loop sets it between rebuilds and
+    # regenerating this file would otherwise silently discard the judge's fix
+    prev = d / f"layers_{args.face}.json"
+    mode = "mirror"
+    if prev.exists():
+        try:
+            mode = json.loads(prev.read_text()).get("background_mode", mode)
+        except Exception:
+            pass
     man2 = {"face": args.face, "size": [W, H], "aspect": round(W / H, 5),
-            "background": f"bg_{args.face}.png", "parts": out}
+            "background": f"bg_{args.face}.png", "background_mode": mode,
+            "parts": out}
     (d / f"layers_{args.face}.json").write_text(json.dumps(man2, indent=1))
     print(f"{args.face}: {W}x{H}, {len(out)} parts, background written")
     print(f"  recomposition differs from the reference on "
