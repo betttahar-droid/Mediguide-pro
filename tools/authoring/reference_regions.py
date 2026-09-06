@@ -100,6 +100,46 @@ def regions(path, colours=10, min_frac=0.004, step=2):
     return out, box, (W, H)
 
 
+def accents(path, min_px=200, thresh=60):
+    """Rescue the small saturated colours that area filters throw away.
+
+    The arcade reference has a red joystick ball, a yellow button and a red
+    button. None survives: the generator's anti-aliasing smears each across
+    hundreds of near-identical shades -- 1776 distinct "reds" at about thirty
+    pixels apiece -- so no single one clears a quantiser or an area threshold,
+    and the palette came back with no red and no yellow in it. The match then
+    scored 100% against a target that had lost them.
+
+    Saturated accents are the cheapest identity an object has, and
+    reference-gap.md fault 1 is the same lesson from the other end: colour that
+    drains out between the sheet and the render. So select by CHROMA rather
+    than by area -- bright and far from grey -- then cluster the shades and
+    keep any cluster with enough pixels behind it.
+    """
+    im = Image.open(path).convert("RGB")
+    box, bg = object_box(im)
+    ob = im.crop(box)
+    px = ob.load()
+    chroma = Counter()
+    for x in range(ob.width):
+        for y in range(ob.height):
+            c = px[x, y]
+            if sum(abs(a - b) for a, b in zip(c, bg)) < 40:
+                continue
+            mx, mn = max(c), min(c)
+            if mx > 110 and (mx - mn) > 70:
+                chroma[c] += 1
+    seeds = []
+    for c, n in chroma.most_common():
+        hit = next((s for s in seeds if sum(abs(a - b) for a, b in zip(s[0], c)) < thresh),
+                   None)
+        if hit is None:
+            seeds.append([c, n])
+        else:
+            hit[1] += n
+    return ["#%02x%02x%02x" % c for c, n in seeds if n >= min_px]
+
+
 def depth_profile(path, bands=12, step=2):
     """Side elevation -> how DEEP the object is at each height.
 
