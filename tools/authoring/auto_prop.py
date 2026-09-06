@@ -90,13 +90,33 @@ OR_ENDPOINT = "https://openrouter.ai/api/v1/chat/completions"
 #   z-ai/glm-5.3-flash       24.04%    25  $0.0011    62     227.0
 #   z-ai/glm-5.3             invalid JSON
 #
-# For the critic, gpt-5.2 is the one worth paying for: on the same render it
-# named five specific faults -- including a stepped profile we had missed and
-# a black square we had ADDED -- where glm-5.3-flash named three and
-# kimi-k2.5 named three bare ones for 58x the price and 43x the latency.
+# THE CRITIC, RE-BENCHMARKED. The first run said gpt-5.2 and was unfair: the
+# anthropic models 400'd on the `reasoning` field and gemini was graded on
+# formatting rather than sight. Fixing both and rerunning eight vision models
+# on one reference/render pair reverses the answer.
+#
+#   model                     secs     cost  faults  notes
+#   z-ai/glm-5.3-flash          11  $0.0002    7     all correct, and the only
+#                                                    one to name the ROOT CAUSE
+#                                                    (a UV/placement misplacement)
+#   anthropic/claude-opus-5     20  $0.0381    7     strong, one hallucination
+#   openai/gpt-5.2               7  $0.0077    5     good, one hallucination
+#   anthropic/claude-sonnet-5    6  $0.0069    5     clean, all correct
+#   qwen/qwen3-vl-235b           5  $0.0006    5     caught the band seams
+#                                                    exactly, invented a
+#                                                    missing marquee
+#   anthropic/claude-haiku-4.5   4  $0.0029    4     vaguest, one misread
+#   z-ai/glm-4.6v               44  $0.0024    4     thin
+#   google/gemini-2.5-flash    142        -    0     prose, never JSON, twice
+#
+# glm-5.3-flash wins on accuracy AND costs 1/190th of opus, so CRITIC_MODEL
+# below is already the right default and there is no premium tier worth
+# buying. Note every model above hallucinated at least once except sonnet and
+# glm-5.3-flash -- a judge's fault is a CLAIM, and project_score.py should
+# confirm it before the loop spends a round on it.
 AUTHOR_MODEL = "z-ai/glm-5.3-flash"    # cheapest of the cluster, and has vision
-CRITIC_MODEL = "z-ai/glm-5.3-flash"    # per-round reviewer
-FINAL_CRITIC = "openai/gpt-5.2"        # 9s, ~1 cent, much the most specific
+CRITIC_MODEL = "z-ai/glm-5.3-flash"    # best judge measured, at 1/190th of opus
+SECOND_OPINION = "anthropic/claude-sonnet-5"   # clean and hallucination-free
 
 ORDER = ["front", "side", "back", "top"]
 
