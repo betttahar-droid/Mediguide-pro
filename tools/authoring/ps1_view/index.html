@@ -29,10 +29,56 @@ document.body.appendChild(renderer.domElement);
 const scene = new THREE.Scene();
 scene.background = new THREE.Color('#8a8a8a');
 
+// --- nine-slice: grow only where the artwork is already uniform ------------
+// AdaptivePropBase calls "length authored as a stretch axis" a CRITICAL
+// failure, and it is right: scaling drags detail with it, so a two-texel trim
+// line becomes a smear and a marquee stretched to twice the width stops being
+// readable. nine_slice.py measures where the elevation is uniform ALONG the
+// stretch axis -- a run of rows identical to their neighbours -- because
+// padding such a band with more copies of itself is invisible by definition.
+//
+// The same map drives the geometry and the UVs, which is what keeps the mesh
+// and its texture locked together at any size. Without the inverse applied to
+// the UVs the texture would slide across a mesh that had moved underneath it.
+let slice = null;
+try { slice = await (await fetch(`${dir}/slice.json`)).json(); } catch { /* optional */ }
+const hScale = Number(p.get('h') ?? 1);
+const naive = p.get('naive') === '1';
+
+function sliceMap(band, scale) {
+  // fwd: original 0..1 -> resized 0..total. inv: resized -> original.
+  if (!band || naive || scale === 1) {
+    return { fwd: (v) => v * scale, inv: (t) => t / scale, total: scale, band: null };
+  }
+  const [a, b] = band;
+  const old = b - a;
+  // A NINE-SLICE HAS A FLOOR. All the change goes into the uniform band, so
+  // the prop cannot shrink past the point where that band reaches zero: here
+  // the band is 19.5% of the height, so 0.805 is as short as this cabinet
+  // gets before the marquee and the screen would have to give way. Asking for
+  // less than that used to fall through to a plain scale and silently distort
+  // -- h=0.7 came back with the screen 43% off its aspect. Clamp and say so.
+  const minScale = 1 - old + 1e-4;
+  if (scale < minScale) {
+    console.warn(`nine-slice: h=${scale} is below the floor of ${minScale.toFixed(3)} `
+      + `(uniform band is ${(100 * old).toFixed(1)}% of height); clamping`);
+    scale = minScale;
+  }
+  const grown = old + (scale - 1);
+  const total = 1 + (scale - 1);
+  return {
+    total,
+    band: [a, b],
+    fwd: (v) => (v <= a ? v : v >= b ? v + (grown - old) : a + (v - a) * (grown / old)),
+    inv: (t) => (t <= a ? t : t >= a + grown ? t - (grown - old) : a + (t - a) * (old / grown)),
+  };
+}
+const vmap = sliceMap(slice && slice.v, hScale);
+
 // --- geometry: extrude the side profile across the measured width ----------
 const shape = new THREE.Shape();
 model.profile.forEach(([u, v], i) => {
-  const y = u * model.depth, z = v;                 // depth, height
+  const y = u * model.depth, z = vmap.fwd(v);       // depth, height (nine-sliced)
   i ? shape.lineTo(y, z) : shape.moveTo(y, z);
 });
 shape.closePath();
@@ -40,11 +86,18 @@ const geo = new THREE.ExtrudeGeometry(shape, {
   depth: model.width, bevelEnabled: false, steps: 1,
 }).toNonIndexed();
 // The shape lives in XY as (depth, height) and extrudes along +Z as width.
-// Rotating about Y by -90 sends width to X and leaves height on Y, which is
-// the orientation everything downstream assumes. Rotating about X instead --
-// as this did at first -- swaps height into depth and the prop renders lying
+// Rotating about Y sends width to X and leaves height on Y. Rotating about X
+// instead -- as this did at first -- swaps height into depth and lays the prop
 // on its back.
-geo.rotateY(-Math.PI / 2);
+//
+// THE SIGN MATTERS AND -90 IS WRONG. In a LEFT SIDE elevation the object's
+// front points LEFT, so profile u=0 is the front face. rotateY(-90) maps
+// shape-x to +z, which puts the front at LOW z facing AWAY from a camera at
+// +Z -- so the head-on view was the BACK of the mesh wearing the FRONT
+// texture. It reads correctly head-on and is wrong from every other angle.
+// +90 maps shape-x to -z, so the front ends up facing +Z as everything else
+// assumes.
+geo.rotateY(Math.PI / 2);
 geo.computeBoundingBox();
 const c = new THREE.Vector3();
 geo.boundingBox.getCenter(c);
@@ -76,9 +129,16 @@ for (let t = 0; t < pos.count; t += 3) {
     const i = t + k;
     const x = pos.getX(i), y = pos.getY(i), z = pos.getZ(i);
     let u, v;
-    if (kind === 'side') { u = (z - bb.min.z) / size.z; v = (y - bb.min.y) / size.y; }
+    // height runs through the INVERSE slice map, so a texel that belongs to a
+    // fixed cap keeps its size while the uniform band takes the whole stretch
+    // (y - min)/size is 0..1 across the RESIZED mesh, but inv() is defined on
+    // the resized coordinate 0..total. Feeding it the normalised value made
+    // the lookup wrong by the scale factor, which is why a stretched cabinet
+    // came back showing nothing but its coin door.
+    const ty = vmap.inv(((y - bb.min.y) / size.y) * vmap.total);
+    if (kind === 'side') { u = (z - bb.min.z) / size.z; v = ty; }
     else if (kind === 'top') { u = (x - bb.min.x) / size.x; v = (z - bb.min.z) / size.z; }
-    else { u = (x - bb.min.x) / size.x; v = (y - bb.min.y) / size.y; }
+    else { u = (x - bb.min.x) / size.x; v = ty; }
     if (kind === 'back') u = 1 - u;               // back is seen mirrored
     uv[i * 2] = u; uv[i * 2 + 1] = v;
   }
@@ -135,6 +195,7 @@ cam.lookAt(0, 0, 0);
 renderer.render(scene, cam);
 
 console.info(`ps1: ${geo.attributes.position.count / 3} triangles, `
-  + `${model.profile.length} profile corners, 4 textures`);
+  + `${model.profile.length} profile corners, 4 textures, `
+  + `h=${hScale}${naive ? ' NAIVE' : (vmap.band ? ` sliced ${vmap.band}` : ' unsliced')}`);
 globalThis.__done = true;
 </script>
