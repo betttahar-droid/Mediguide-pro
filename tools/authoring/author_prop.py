@@ -43,6 +43,7 @@ material strips, accent slots and 9-slice attributes a real module needs.
 """
 import argparse
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -94,12 +95,66 @@ def validate(spec):
         if any(mn[i] < 0 for i in range(3)) or mx[0] > W or mx[1] > D or mx[2] > H:
             bad.append(f"{name}: outside grid {mn}->{mx}")
             continue
-        if b.get("palette") not in PALETTE:
-            bad.append(f"{name}: unknown palette {b.get('palette')!r}")
+        hexv = b.get("hex")
+        if isinstance(hexv, str) and re.fullmatch(r"#[0-9a-fA-F]{6}", hexv or ""):
+            colour, tag = hexv.lower(), hexv.lower()
+        elif b.get("palette") in PALETTE:
+            colour, tag = PALETTE[b["palette"]], b["palette"]
+        else:
+            bad.append(f"{name}: no usable colour "
+                       f"(palette={b.get('palette')!r} hex={hexv!r})")
             continue
-        good.append({"min": mn, "max": mx, "colour": PALETTE[b["palette"]],
-                     "name": name, "palette": b["palette"]})
+        good.append({"min": mn, "max": mx, "colour": colour,
+                     "name": name, "palette": tag})
     return good, bad
+
+
+def author_from_reference(asset, grid, ref, key):
+    """Extrude a MEASURED reference into 3D. No pixels reach the model.
+
+    The front elevation supplies x and z for every part and its colour; the
+    side supplies y as a depth-per-height profile. That is the whole geometry
+    problem stated in numbers, which is the form S14.0 permits -- the objection
+    was ever to reading proportions OFF an image, not to measuring one.
+    """
+    rects, prof, palette = ref["regions"], ref["profile"], ref["palette"]
+    ask = f"""Build a 3D part list for a low-poly "{asset}" on a {grid} voxel grid.
+
+You are given the object's own FRONT ELEVATION, already measured into coloured
+rectangles, and its DEPTH PROFILE measured from the side. Do not invent
+proportions -- these ARE the proportions. Your job is to give each rectangle a
+depth and assemble them.
+
+FRONT RECTANGLES. x and z are fractions of the object's own bounding box,
+x left-to-right, z up from the floor. Colour is the reference's own.
+{json.dumps(rects, indent=1)}
+
+DEPTH PROFILE from the side, floor first. y is a fraction of the object's
+depth, y=0 the front face. Where the profile narrows, the object is stepped --
+a control panel shelf, a recessed base, a leaning screen.
+{json.dumps(prof, indent=1)}
+
+PALETTE. Use ONLY these hex values, which are the reference's own colours:
+{json.dumps(palette, indent=1)}
+
+HOW TO BUILD IT.
+- Convert each fraction to a voxel index: x_voxels = round(x * W), and so on
+  for z with H and y with D. Round, do not guess.
+- Every front rectangle becomes at least one box, keeping its x, z and colour.
+- Choose each box's y extent from the depth profile at that height. A part
+  that reads as surface detail (a trim strip, a screen, a button) is shallow
+  and sits at the FRONT, y starting at 0. The body is deep.
+- Add the parts the front cannot show -- a back panel, a top cap -- using the
+  profile for their depth.
+- Merge rectangles that are obviously one part; drop ones that are outline
+  fragments. Aim for 22 to 40 boxes.
+
+{GRID_RULES}
+
+Reply with JSON only: {{"grid": [W,D,H], "boxes": [{{"name","min","max","hex"}}]}}
+where "hex" is one of the palette values above."""
+    return as_json(glm([{"role": "user", "content": ask}], AUTHOR_MODEL, key,
+                       max_tokens=30000))
 
 
 def author(asset, grid, key, faults=None, previous=None):
@@ -162,18 +217,35 @@ def main():
     ap.add_argument("--rounds", type=int, default=2)
     ap.add_argument("--out", default=None)
     ap.add_argument("--port", type=int, default=5173)
+    ap.add_argument("--reference", default=None,
+                    help="directory holding front.png and side.png to measure "
+                         "and extrude, instead of authoring from the noun alone")
     args = ap.parse_args()
 
-    import re
     out = Path(args.out or (ROOT / "tools" / "img2threejs-work" /
                             ("authored_" + re.sub(r"\W+", "_", args.asset.lower()))))
     out.mkdir(parents=True, exist_ok=True)
     key = _openrouter_key()
 
+    ref = None
+    if args.reference:
+        from reference_regions import regions, depth_profile
+        rd = Path(args.reference)
+        rects, _, _ = regions(rd / "front.png")
+        rects = [r for r in rects if r["fill"] >= 0.80]
+        prof = depth_profile(rd / "side.png")
+        pal = sorted({r["colour"] for r in rects})
+        ref = {"regions": rects, "profile": prof, "palette": pal}
+        print(f"reference: {len(rects)} rectangles, {len(prof)} depth bands, "
+              f"{len(pal)} colours {pal}")
+
     spec, faults, prev = None, None, None
     for rnd in range(args.rounds):
         print(f"\n=== round {rnd}: {AUTHOR_MODEL} authoring ===", flush=True)
-        spec = author(args.asset, args.grid, key, faults, prev)
+        if ref is not None and faults is None:
+            spec = author_from_reference(args.asset, args.grid, ref, key)
+        else:
+            spec = author(args.asset, args.grid, key, faults, prev)
         boxes, bad = validate(spec)
         print(f"  {len(spec.get('boxes', []))} boxes -> {len(boxes)} valid")
         for m in bad:
