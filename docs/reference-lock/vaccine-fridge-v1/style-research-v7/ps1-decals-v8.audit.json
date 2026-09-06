@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 8,
+  "status": "PASS",
+  "checks": {
+    "styleVersionEight": true,
+    "fourPixelGeometryThreshold": true,
+    "smallDetailPolicyIsDecals": true,
+    "tenCoarseMacroProfileRings": true,
+    "smallV7GeometryRemoved": true,
+    "sixReplacementFittingDecals": true,
+    "replacementDetailsCarryDecalPolicy": true,
+    "replacementDetailsRemainFixedScale": true,
+    "macroHullVertexCountReduced": true,
+    "nearestSamplerWithoutMipmaps": true,
+    "renderExists": true
+  },
+  "metrics": {
+    "baselineHullVertices": 204,
+    "v8HullVertices": 136,
+    "hullVertexReduction": 0.3333,
+    "macroProfileRings": 10,
+    "replacementDecals": 6,
+    "samplers": [
+      {
+        "magFilter": 9728,
+        "minFilter": 9728
+      }
+    ]
+  }
+}

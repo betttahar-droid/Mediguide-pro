@@ -1,0 +1,7 @@
+{
+  "source": "vaccine-fridge-source-true.glb",
+  "generated": "vaccine-fridge-voxel-1door.glb",
+  "meanAbsoluteChannelError": 0.0,
+  "differentPixels": 0,
+  "totalPixels": 327680
+}

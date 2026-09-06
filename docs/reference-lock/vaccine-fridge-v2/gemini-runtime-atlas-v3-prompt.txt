@@ -1,0 +1,9 @@
+Create a clean production PIXEL TEXTURE ATLAS for the exact vaccine fridge in image 1, using image 2 only as a semantic texture-decomposition guide. Image 1 always controls the design, colors, wear character and identifying details. Output only a square atlas canvas: no title, no labels, no arrows, no dimension text, no mockup, no rendered fridge and no surrounding explanation.
+
+Use an exact 4 by 4 grid of equal square cells with straight boundaries and 32 output-pixel transparent gutters between cells. Keep every motif fully inside its cell. Cell order, left-to-right then top-to-bottom:
+row 1: quiet seamless cream enamel tile; quiet seamless blue-gray steel tile; quiet seamless deep-teal paint tile; dark-green glass tile with no reflection.
+row 2: cream protected corner and two edge strips; steel protected corner and two edge strips; teal protected corner and two edge strips; the single fixed staircase diagonal glass reflection on transparent background.
+row 3: ochre grille left end cap; seamless ochre grille horizontal middle; ochre grille right end cap; purple handle front with separate cap pixels on transparent background.
+row 4: exact dark-plum digital display reading 4C with orange indicator on transparent background; tiny hinge and bolt decals on transparent background; pale steel shelf top and front-lip bands; cream crown top and edge bands.
+
+Use genuinely hard square low-resolution pixels with nearest-neighbour edges, a small palette sampled from image 1, and three flat baked face-value steps. No gradients, antialiasing, blur, photographic noise, bevel lighting, cast shadows, new symbols, new ornament, checkerboard simulation or watermark-like text. Wear must be sparse and source-faithful. The seamless tiles must join perfectly on opposite edges. This is source material for deterministic cropping and palette quantization, not a presentation sheet.

@@ -1,0 +1,206 @@
+{
+  "schemaVersion": 12,
+  "source": "docs/reference-lock/vaccine-fridge-v1/handbook-v12/surface-masks-v12-source-guided.png",
+  "sourceSha256": "98aea0eae66e266c5d3dff97b92a0eac0e2e720b59fa44b8bfc1be682e6822ba",
+  "atlas": "public/textures/vaccine-fridge-surfaces-v12.png",
+  "atlasSizePx": [
+    100,
+    20
+  ],
+  "toneLevels": [
+    0,
+    128,
+    255
+  ],
+  "tiles": [
+    {
+      "name": "plate",
+      "sourceBoundsPx": [
+        20,
+        62,
+        323,
+        482
+      ],
+      "sourceRatio": 0.7214,
+      "atlasRectPx": [
+        0,
+        0,
+        20,
+        20
+      ],
+      "marginPx": 2,
+      "centerBorderPx": {
+        "left": 2,
+        "right": 1,
+        "top": 2,
+        "bottom": 1
+      },
+      "middleContentShare": 0.0664,
+      "middleMode": "stretch",
+      "toneCounts": {
+        "0": 95,
+        "128": 266,
+        "255": 39
+      },
+      "cutLevels": {
+        "p10": 50.35,
+        "median": 128.0,
+        "p90": 129.34,
+        "slack": 12.64
+      }
+    },
+    {
+      "name": "plateSeam",
+      "sourceBoundsPx": [
+        359,
+        62,
+        665,
+        482
+      ],
+      "sourceRatio": 0.7286,
+      "atlasRectPx": [
+        20,
+        0,
+        20,
+        20
+      ],
+      "marginPx": 2,
+      "centerBorderPx": {
+        "left": 1,
+        "right": 1,
+        "top": 2,
+        "bottom": 1
+      },
+      "middleContentShare": 0.1797,
+      "middleMode": "stretch",
+      "toneCounts": {
+        "0": 121,
+        "128": 227,
+        "255": 52
+      },
+      "cutLevels": {
+        "p10": 49.2,
+        "median": 127.0,
+        "p90": 151.0,
+        "slack": 16.29
+      }
+    },
+    {
+      "name": "vent",
+      "sourceBoundsPx": [
+        701,
+        62,
+        1004,
+        482
+      ],
+      "sourceRatio": 0.7214,
+      "atlasRectPx": [
+        40,
+        0,
+        20,
+        20
+      ],
+      "marginPx": 3,
+      "centerBorderPx": {
+        "left": 2,
+        "right": 2,
+        "top": 3,
+        "bottom": 1
+      },
+      "middleContentShare": 0.2857,
+      "middleMode": "repeat",
+      "toneCounts": {
+        "0": 138,
+        "128": 197,
+        "255": 65
+      },
+      "cutLevels": {
+        "p10": 49.2,
+        "median": 125.0,
+        "p90": 159.79,
+        "slack": 17.69
+      }
+    },
+    {
+      "name": "trim",
+      "sourceBoundsPx": [
+        20,
+        542,
+        324,
+        963
+      ],
+      "sourceRatio": 0.7221,
+      "atlasRectPx": [
+        60,
+        0,
+        20,
+        20
+      ],
+      "marginPx": 2,
+      "centerBorderPx": {
+        "left": 2,
+        "right": 1,
+        "top": 0,
+        "bottom": 1
+      },
+      "middleContentShare": 0.0,
+      "middleMode": "stretch",
+      "toneCounts": {
+        "0": 60,
+        "128": 322,
+        "255": 18
+      },
+      "cutLevels": {
+        "p10": 47.49,
+        "median": 127.0,
+        "p90": 128.0,
+        "slack": 12.88
+      }
+    },
+    {
+      "name": "recess",
+      "sourceBoundsPx": [
+        359,
+        542,
+        665,
+        963
+      ],
+      "sourceRatio": 0.7268,
+      "atlasRectPx": [
+        80,
+        0,
+        20,
+        20
+      ],
+      "marginPx": 4,
+      "centerBorderPx": {
+        "left": 2,
+        "right": 4,
+        "top": 0,
+        "bottom": 1
+      },
+      "middleContentShare": 0.0,
+      "middleMode": "stretch",
+      "toneCounts": {
+        "0": 105,
+        "128": 234,
+        "255": 61
+      },
+      "cutLevels": {
+        "p10": 47.56,
+        "median": 127.0,
+        "p90": 159.94,
+        "slack": 17.98
+      }
+    }
+  ],
+  "checks": {
+    "islandCount": true,
+    "sourceRatiosConsistent": true,
+    "normalizedLogicalSize": [
+      20,
+      20
+    ],
+    "allThreeTone": true
+  }
+}

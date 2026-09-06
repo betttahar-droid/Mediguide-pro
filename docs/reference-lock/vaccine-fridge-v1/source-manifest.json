@@ -1,0 +1,88 @@
+{
+  "authority": "docs/concept/vaccine-fridge-turnaround-v1.png",
+  "sha256": "8fface4d547894f3025cc69724a666b521d130db64dcb91e637d0c4abac855c4",
+  "sourceSizePx": [
+    1536,
+    1024
+  ],
+  "pixelsPerUnit": 32,
+  "views": {
+    "front": {
+      "sourceCropPx": [
+        32,
+        58,
+        390,
+        886
+      ],
+      "localBackgroundRgb": [
+        244,
+        238,
+        234
+      ],
+      "candidateObjectBoundsPx": [
+        21,
+        43,
+        333,
+        816
+      ]
+    },
+    "side": {
+      "sourceCropPx": [
+        408,
+        58,
+        735,
+        886
+      ],
+      "localBackgroundRgb": [
+        244,
+        239,
+        234
+      ],
+      "candidateObjectBoundsPx": [
+        19,
+        45,
+        315,
+        816
+      ]
+    },
+    "back": {
+      "sourceCropPx": [
+        765,
+        58,
+        1112,
+        886
+      ],
+      "localBackgroundRgb": [
+        244,
+        239,
+        234
+      ],
+      "candidateObjectBoundsPx": [
+        24,
+        45,
+        324,
+        816
+      ]
+    },
+    "iso": {
+      "sourceCropPx": [
+        1125,
+        45,
+        1536,
+        906
+      ],
+      "localBackgroundRgb": [
+        245,
+        238,
+        234
+      ],
+      "candidateObjectBoundsPx": [
+        30,
+        32,
+        411,
+        861
+      ]
+    }
+  },
+  "status": "candidate masks; geometry is not approved until overlays pass"
+}

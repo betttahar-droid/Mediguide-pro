@@ -1,0 +1,190 @@
+{
+  "status": "PASS",
+  "rigidPartsMatch": true,
+  "fixedFittingsMatch": true,
+  "records": [
+    {
+      "query": "view=iso&surfaces=0&fittings=0&bg=magenta",
+      "output": "C:\\Users\\mansour\\Documents\\Modular builder\\Mediguide-pro\\docs\\reference-lock\\semantic-freezer-v2\\paintover-inputs\\view-iso-surfaces-0-fittings-0-bg-magenta.png",
+      "ready": true,
+      "view": "iso",
+      "diagnostic": "",
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "triangles": 2436,
+      "parts": 75,
+      "decals": 0,
+      "shelfCount": 4,
+      "rigidPartSizes": [
+        [
+          "handle_catch",
+          [
+            0.4,
+            0.2,
+            17.6
+          ]
+        ],
+        [
+          "handle_grip",
+          [
+            2.5,
+            1.1,
+            19
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_return",
+          [
+            2.35,
+            0.15,
+            18
+          ]
+        ]
+      ],
+      "fixedFittingSizes": [],
+      "errors": [],
+      "paletteSize": 32
+    },
+    {
+      "query": "view=side&surfaces=0&fittings=0&bg=magenta",
+      "output": "C:\\Users\\mansour\\Documents\\Modular builder\\Mediguide-pro\\docs\\reference-lock\\semantic-freezer-v2\\paintover-inputs\\view-side-surfaces-0-fittings-0-bg-magenta.png",
+      "ready": true,
+      "view": "side",
+      "diagnostic": "",
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "triangles": 2436,
+      "parts": 75,
+      "decals": 0,
+      "shelfCount": 4,
+      "rigidPartSizes": [
+        [
+          "handle_catch",
+          [
+            0.4,
+            0.2,
+            17.6
+          ]
+        ],
+        [
+          "handle_grip",
+          [
+            2.5,
+            1.1,
+            19
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_return",
+          [
+            2.35,
+            0.15,
+            18
+          ]
+        ]
+      ],
+      "fixedFittingSizes": [],
+      "errors": [],
+      "paletteSize": 14
+    },
+    {
+      "query": "view=backIso&surfaces=0&fittings=0&bg=magenta",
+      "output": "C:\\Users\\mansour\\Documents\\Modular builder\\Mediguide-pro\\docs\\reference-lock\\semantic-freezer-v2\\paintover-inputs\\view-backIso-surfaces-0-fittings-0-bg-magenta.png",
+      "ready": true,
+      "view": "backIso",
+      "diagnostic": "",
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "triangles": 2436,
+      "parts": 75,
+      "decals": 0,
+      "shelfCount": 4,
+      "rigidPartSizes": [
+        [
+          "handle_catch",
+          [
+            0.4,
+            0.2,
+            17.6
+          ]
+        ],
+        [
+          "handle_grip",
+          [
+            2.5,
+            1.1,
+            19
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_return",
+          [
+            2.35,
+            0.15,
+            18
+          ]
+        ]
+      ],
+      "fixedFittingSizes": [],
+      "errors": [],
+      "paletteSize": 16
+    }
+  ]
+}

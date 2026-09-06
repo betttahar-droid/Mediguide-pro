@@ -1,0 +1,4861 @@
+{
+  "status": "PASS",
+  "rigidPartsMatch": true,
+  "fixedFittingsMatch": true,
+  "records": [
+    {
+      "query": "texture=v6&view=front",
+      "output": "C:\\Users\\mansour\\Documents\\Modular builder\\Mediguide-pro\\docs\\reference-lock\\semantic-freezer-v6\\runtime\\texture-v6-view-front.png",
+      "ready": true,
+      "view": "front",
+      "diagnostic": "",
+      "textureVersion": "v6",
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "diagnosticLegend": null,
+      "camera": {
+        "yaw": -36,
+        "elevation": 2.5,
+        "autoFit": true
+      },
+      "triangles": 2550,
+      "parts": 104,
+      "decals": 30,
+      "shelfCount": 4,
+      "rigidPartSizes": [
+        [
+          "handle_catch",
+          [
+            0.4,
+            0.2,
+            17.6
+          ]
+        ],
+        [
+          "handle_grip",
+          [
+            2.5,
+            1.1,
+            19
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_return",
+          [
+            2.35,
+            0.15,
+            18
+          ]
+        ]
+      ],
+      "fixedFittingSizes": [
+        [
+          "decal_cartonBooster",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonCovid",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonCovid",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonFlu",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonMmr",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonMmr",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_compressorPlate",
+          [
+            6.2,
+            5.2
+          ]
+        ],
+        [
+          "decal_condenserField",
+          [
+            38.828,
+            71.169
+          ]
+        ],
+        [
+          "decal_digitalStatus",
+          [
+            13,
+            5.8
+          ]
+        ],
+        [
+          "decal_fanGrille",
+          [
+            12,
+            12
+          ]
+        ],
+        [
+          "decal_frontBaseWear",
+          [
+            24,
+            8
+          ]
+        ],
+        [
+          "decal_medicalIdentity",
+          [
+            13,
+            8
+          ]
+        ],
+        [
+          "decal_rearDoNot",
+          [
+            16,
+            4.571
+          ]
+        ],
+        [
+          "decal_rearWarning",
+          [
+            16,
+            6.026
+          ]
+        ],
+        [
+          "decal_sideBottomWear",
+          [
+            14,
+            9
+          ]
+        ],
+        [
+          "decal_sideBottomWear",
+          [
+            14,
+            9
+          ]
+        ],
+        [
+          "decal_sideRating",
+          [
+            8,
+            5.3
+          ]
+        ],
+        [
+          "decal_sideTopWear",
+          [
+            14,
+            9
+          ]
+        ],
+        [
+          "decal_sideVentPanel",
+          [
+            21.431,
+            24.512
+          ]
+        ],
+        [
+          "decal_vialCovid",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialCovid",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialCovid",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialFlu",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialFlu",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialFlu",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialMmr",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialMmr",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialMmr",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialPolio",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialPolio",
+          [
+            2.8,
+            4.1
+          ]
+        ]
+      ],
+      "correspondenceIds": [
+        "digitalStatus",
+        "fanGrille",
+        "front_control_band",
+        "front_door_opening",
+        "medicalIdentity",
+        "rearDoNot",
+        "rearWarning",
+        "rear_condenser_field",
+        "rear_machine_bay",
+        "sideRating",
+        "side_bottom_wear",
+        "side_lower_column_seed",
+        "side_lower_panel",
+        "side_panel_row_seed",
+        "side_upper_column_seed",
+        "side_upper_panel",
+        "side_vent"
+      ],
+      "correspondenceFeatureCount": 17,
+      "fittingPlacements": [
+        {
+          "id": "medicalIdentity",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            13.295,
+            96.575
+          ],
+          "sizeTexels": [
+            13,
+            8
+          ],
+          "planeTexels": -22.75,
+          "renderOrder": 8
+        },
+        {
+          "id": "digitalStatus",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -14.142,
+            97.46
+          ],
+          "sizeTexels": [
+            13,
+            5.8
+          ],
+          "planeTexels": -22.75,
+          "renderOrder": 8
+        },
+        {
+          "id": "sideRating",
+          "face": "left",
+          "layer": "label",
+          "centerTexels": [
+            -13.412,
+            95.684
+          ],
+          "sizeTexels": [
+            8,
+            5.3
+          ],
+          "planeTexels": -22.22,
+          "renderOrder": 8
+        },
+        {
+          "id": "rearWarning",
+          "face": "back",
+          "layer": "label",
+          "centerTexels": [
+            -0.163,
+            71.784
+          ],
+          "sizeTexels": [
+            16,
+            6.026
+          ],
+          "planeTexels": 22.95,
+          "renderOrder": 8
+        },
+        {
+          "id": "rearDoNot",
+          "face": "back",
+          "layer": "label",
+          "centerTexels": [
+            -0.098,
+            36.731
+          ],
+          "sizeTexels": [
+            16,
+            4.571
+          ],
+          "planeTexels": 22.95,
+          "renderOrder": 8
+        },
+        {
+          "id": "frontBaseWear",
+          "face": "front",
+          "layer": "wear",
+          "centerTexels": [
+            0,
+            5
+          ],
+          "sizeTexels": [
+            24,
+            8
+          ],
+          "planeTexels": -22.75,
+          "renderOrder": 10
+        },
+        {
+          "id": "sideBottomWear",
+          "face": "left",
+          "layer": "wear",
+          "centerTexels": [
+            -13.5,
+            7
+          ],
+          "sizeTexels": [
+            14,
+            9
+          ],
+          "planeTexels": -22.24,
+          "renderOrder": 10
+        },
+        {
+          "id": "sideBottomWear",
+          "face": "left",
+          "layer": "wear",
+          "centerTexels": [
+            13.5,
+            7
+          ],
+          "sizeTexels": [
+            14,
+            9
+          ],
+          "planeTexels": -22.25,
+          "renderOrder": 10
+        },
+        {
+          "id": "sideTopWear",
+          "face": "left",
+          "layer": "wear",
+          "centerTexels": [
+            13.5,
+            95
+          ],
+          "sizeTexels": [
+            14,
+            9
+          ],
+          "planeTexels": -22.26,
+          "renderOrder": 10
+        },
+        {
+          "id": "sideVentPanel",
+          "face": "left",
+          "layer": "structural-graphic",
+          "centerTexels": [
+            8.986999999999998,
+            16.095
+          ],
+          "sizeTexels": [
+            21.431,
+            24.512
+          ],
+          "planeTexels": -22.5,
+          "renderOrder": 7
+        },
+        {
+          "id": "condenserField",
+          "face": "back",
+          "layer": "structural-graphic",
+          "centerTexels": [
+            0.638,
+            61.339
+          ],
+          "sizeTexels": [
+            38.828,
+            71.169
+          ],
+          "planeTexels": 22.72,
+          "renderOrder": 7
+        },
+        {
+          "id": "fanGrille",
+          "face": "back",
+          "layer": "mechanical-detail",
+          "centerTexels": [
+            -11.737,
+            13.071
+          ],
+          "sizeTexels": [
+            12,
+            12
+          ],
+          "planeTexels": 24.2,
+          "renderOrder": 9
+        },
+        {
+          "id": "compressorPlate",
+          "face": "back",
+          "layer": "label",
+          "centerTexels": [
+            3.1,
+            9.9
+          ],
+          "sizeTexels": [
+            6.2,
+            5.2
+          ],
+          "planeTexels": 26.36,
+          "renderOrder": 8
+        },
+        {
+          "id": "cartonCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -12,
+            69.46000000000001
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8
+        },
+        {
+          "id": "cartonMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -4,
+            69.46000000000001
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8
+        },
+        {
+          "id": "cartonFlu",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            5,
+            69.46000000000001
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8
+        },
+        {
+          "id": "cartonBooster",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            12,
+            69.46000000000001
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -12,
+            50.71
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -6,
+            50.71
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialFlu",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            0,
+            50.71
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialPolio",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            6,
+            50.71
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            12,
+            50.71
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -12,
+            33.45
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialFlu",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -6,
+            33.45
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialPolio",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            0,
+            33.45
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            6,
+            33.45
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            12,
+            33.45
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8
+        },
+        {
+          "id": "cartonCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -10,
+            18.96
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8
+        },
+        {
+          "id": "cartonMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            0,
+            19.46
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialFlu",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            10,
+            17.5225
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8
+        }
+      ],
+      "semanticSupports": [
+        {
+          "id": "condenserField",
+          "sizeTexels": [
+            38.828,
+            71.169
+          ],
+          "mesh": "rear_condenser_support"
+        },
+        {
+          "id": "fanGrille",
+          "sizeTexels": [
+            14,
+            15
+          ],
+          "mesh": "rear_fan_housing"
+        },
+        {
+          "id": "rearMachineBay",
+          "sizeTexels": [
+            38.828,
+            22.747
+          ],
+          "mesh": "rear_machine_bay_back"
+        },
+        {
+          "id": "sideVentPanel",
+          "sizeTexels": [
+            21.431,
+            24.512
+          ],
+          "mesh": "side_vent_support"
+        }
+      ],
+      "adaptiveSurfaceCounts": [
+        [
+          "side_panel_column",
+          2
+        ],
+        [
+          "side_panel_row",
+          1
+        ]
+      ],
+      "repeatedStructureCounts": [
+        [
+          "rear_coil_run",
+          0
+        ],
+        [
+          "rear_coil_rail",
+          0
+        ],
+        [
+          "shelf",
+          4
+        ]
+      ],
+      "errors": [],
+      "paletteSize": 914
+    },
+    {
+      "query": "texture=v6&view=iso",
+      "output": "C:\\Users\\mansour\\Documents\\Modular builder\\Mediguide-pro\\docs\\reference-lock\\semantic-freezer-v6\\runtime\\texture-v6-view-iso.png",
+      "ready": true,
+      "view": "iso",
+      "diagnostic": "",
+      "textureVersion": "v6",
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "diagnosticLegend": null,
+      "camera": {
+        "yaw": -36,
+        "elevation": 2.5,
+        "autoFit": true
+      },
+      "triangles": 2550,
+      "parts": 104,
+      "decals": 30,
+      "shelfCount": 4,
+      "rigidPartSizes": [
+        [
+          "handle_catch",
+          [
+            0.4,
+            0.2,
+            17.6
+          ]
+        ],
+        [
+          "handle_grip",
+          [
+            2.5,
+            1.1,
+            19
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_return",
+          [
+            2.35,
+            0.15,
+            18
+          ]
+        ]
+      ],
+      "fixedFittingSizes": [
+        [
+          "decal_cartonBooster",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonCovid",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonCovid",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonFlu",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonMmr",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonMmr",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_compressorPlate",
+          [
+            6.2,
+            5.2
+          ]
+        ],
+        [
+          "decal_condenserField",
+          [
+            38.828,
+            71.169
+          ]
+        ],
+        [
+          "decal_digitalStatus",
+          [
+            13,
+            5.8
+          ]
+        ],
+        [
+          "decal_fanGrille",
+          [
+            12,
+            12
+          ]
+        ],
+        [
+          "decal_frontBaseWear",
+          [
+            24,
+            8
+          ]
+        ],
+        [
+          "decal_medicalIdentity",
+          [
+            13,
+            8
+          ]
+        ],
+        [
+          "decal_rearDoNot",
+          [
+            16,
+            4.571
+          ]
+        ],
+        [
+          "decal_rearWarning",
+          [
+            16,
+            6.026
+          ]
+        ],
+        [
+          "decal_sideBottomWear",
+          [
+            14,
+            9
+          ]
+        ],
+        [
+          "decal_sideBottomWear",
+          [
+            14,
+            9
+          ]
+        ],
+        [
+          "decal_sideRating",
+          [
+            8,
+            5.3
+          ]
+        ],
+        [
+          "decal_sideTopWear",
+          [
+            14,
+            9
+          ]
+        ],
+        [
+          "decal_sideVentPanel",
+          [
+            21.431,
+            24.512
+          ]
+        ],
+        [
+          "decal_vialCovid",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialCovid",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialCovid",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialFlu",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialFlu",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialFlu",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialMmr",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialMmr",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialMmr",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialPolio",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialPolio",
+          [
+            2.8,
+            4.1
+          ]
+        ]
+      ],
+      "correspondenceIds": [
+        "digitalStatus",
+        "fanGrille",
+        "front_control_band",
+        "front_door_opening",
+        "medicalIdentity",
+        "rearDoNot",
+        "rearWarning",
+        "rear_condenser_field",
+        "rear_machine_bay",
+        "sideRating",
+        "side_bottom_wear",
+        "side_lower_column_seed",
+        "side_lower_panel",
+        "side_panel_row_seed",
+        "side_upper_column_seed",
+        "side_upper_panel",
+        "side_vent"
+      ],
+      "correspondenceFeatureCount": 17,
+      "fittingPlacements": [
+        {
+          "id": "medicalIdentity",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            13.295,
+            96.575
+          ],
+          "sizeTexels": [
+            13,
+            8
+          ],
+          "planeTexels": -22.75,
+          "renderOrder": 8
+        },
+        {
+          "id": "digitalStatus",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -14.142,
+            97.46
+          ],
+          "sizeTexels": [
+            13,
+            5.8
+          ],
+          "planeTexels": -22.75,
+          "renderOrder": 8
+        },
+        {
+          "id": "sideRating",
+          "face": "left",
+          "layer": "label",
+          "centerTexels": [
+            -13.412,
+            95.684
+          ],
+          "sizeTexels": [
+            8,
+            5.3
+          ],
+          "planeTexels": -22.22,
+          "renderOrder": 8
+        },
+        {
+          "id": "rearWarning",
+          "face": "back",
+          "layer": "label",
+          "centerTexels": [
+            -0.163,
+            71.784
+          ],
+          "sizeTexels": [
+            16,
+            6.026
+          ],
+          "planeTexels": 22.95,
+          "renderOrder": 8
+        },
+        {
+          "id": "rearDoNot",
+          "face": "back",
+          "layer": "label",
+          "centerTexels": [
+            -0.098,
+            36.731
+          ],
+          "sizeTexels": [
+            16,
+            4.571
+          ],
+          "planeTexels": 22.95,
+          "renderOrder": 8
+        },
+        {
+          "id": "frontBaseWear",
+          "face": "front",
+          "layer": "wear",
+          "centerTexels": [
+            0,
+            5
+          ],
+          "sizeTexels": [
+            24,
+            8
+          ],
+          "planeTexels": -22.75,
+          "renderOrder": 10
+        },
+        {
+          "id": "sideBottomWear",
+          "face": "left",
+          "layer": "wear",
+          "centerTexels": [
+            -13.5,
+            7
+          ],
+          "sizeTexels": [
+            14,
+            9
+          ],
+          "planeTexels": -22.24,
+          "renderOrder": 10
+        },
+        {
+          "id": "sideBottomWear",
+          "face": "left",
+          "layer": "wear",
+          "centerTexels": [
+            13.5,
+            7
+          ],
+          "sizeTexels": [
+            14,
+            9
+          ],
+          "planeTexels": -22.25,
+          "renderOrder": 10
+        },
+        {
+          "id": "sideTopWear",
+          "face": "left",
+          "layer": "wear",
+          "centerTexels": [
+            13.5,
+            95
+          ],
+          "sizeTexels": [
+            14,
+            9
+          ],
+          "planeTexels": -22.26,
+          "renderOrder": 10
+        },
+        {
+          "id": "sideVentPanel",
+          "face": "left",
+          "layer": "structural-graphic",
+          "centerTexels": [
+            8.986999999999998,
+            16.095
+          ],
+          "sizeTexels": [
+            21.431,
+            24.512
+          ],
+          "planeTexels": -22.5,
+          "renderOrder": 7
+        },
+        {
+          "id": "condenserField",
+          "face": "back",
+          "layer": "structural-graphic",
+          "centerTexels": [
+            0.638,
+            61.339
+          ],
+          "sizeTexels": [
+            38.828,
+            71.169
+          ],
+          "planeTexels": 22.72,
+          "renderOrder": 7
+        },
+        {
+          "id": "fanGrille",
+          "face": "back",
+          "layer": "mechanical-detail",
+          "centerTexels": [
+            -11.737,
+            13.071
+          ],
+          "sizeTexels": [
+            12,
+            12
+          ],
+          "planeTexels": 24.2,
+          "renderOrder": 9
+        },
+        {
+          "id": "compressorPlate",
+          "face": "back",
+          "layer": "label",
+          "centerTexels": [
+            3.1,
+            9.9
+          ],
+          "sizeTexels": [
+            6.2,
+            5.2
+          ],
+          "planeTexels": 26.36,
+          "renderOrder": 8
+        },
+        {
+          "id": "cartonCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -12,
+            69.46000000000001
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8
+        },
+        {
+          "id": "cartonMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -4,
+            69.46000000000001
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8
+        },
+        {
+          "id": "cartonFlu",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            5,
+            69.46000000000001
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8
+        },
+        {
+          "id": "cartonBooster",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            12,
+            69.46000000000001
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -12,
+            50.71
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -6,
+            50.71
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialFlu",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            0,
+            50.71
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialPolio",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            6,
+            50.71
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            12,
+            50.71
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -12,
+            33.45
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialFlu",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -6,
+            33.45
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialPolio",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            0,
+            33.45
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            6,
+            33.45
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            12,
+            33.45
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8
+        },
+        {
+          "id": "cartonCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -10,
+            18.96
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8
+        },
+        {
+          "id": "cartonMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            0,
+            19.46
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialFlu",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            10,
+            17.5225
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8
+        }
+      ],
+      "semanticSupports": [
+        {
+          "id": "condenserField",
+          "sizeTexels": [
+            38.828,
+            71.169
+          ],
+          "mesh": "rear_condenser_support"
+        },
+        {
+          "id": "fanGrille",
+          "sizeTexels": [
+            14,
+            15
+          ],
+          "mesh": "rear_fan_housing"
+        },
+        {
+          "id": "rearMachineBay",
+          "sizeTexels": [
+            38.828,
+            22.747
+          ],
+          "mesh": "rear_machine_bay_back"
+        },
+        {
+          "id": "sideVentPanel",
+          "sizeTexels": [
+            21.431,
+            24.512
+          ],
+          "mesh": "side_vent_support"
+        }
+      ],
+      "adaptiveSurfaceCounts": [
+        [
+          "side_panel_column",
+          2
+        ],
+        [
+          "side_panel_row",
+          1
+        ]
+      ],
+      "repeatedStructureCounts": [
+        [
+          "rear_coil_run",
+          0
+        ],
+        [
+          "rear_coil_rail",
+          0
+        ],
+        [
+          "shelf",
+          4
+        ]
+      ],
+      "errors": [],
+      "paletteSize": 1200
+    },
+    {
+      "query": "texture=v6&view=side",
+      "output": "C:\\Users\\mansour\\Documents\\Modular builder\\Mediguide-pro\\docs\\reference-lock\\semantic-freezer-v6\\runtime\\texture-v6-view-side.png",
+      "ready": true,
+      "view": "side",
+      "diagnostic": "",
+      "textureVersion": "v6",
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "diagnosticLegend": null,
+      "camera": {
+        "yaw": -36,
+        "elevation": 2.5,
+        "autoFit": true
+      },
+      "triangles": 2550,
+      "parts": 104,
+      "decals": 30,
+      "shelfCount": 4,
+      "rigidPartSizes": [
+        [
+          "handle_catch",
+          [
+            0.4,
+            0.2,
+            17.6
+          ]
+        ],
+        [
+          "handle_grip",
+          [
+            2.5,
+            1.1,
+            19
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_return",
+          [
+            2.35,
+            0.15,
+            18
+          ]
+        ]
+      ],
+      "fixedFittingSizes": [
+        [
+          "decal_cartonBooster",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonCovid",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonCovid",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonFlu",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonMmr",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonMmr",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_compressorPlate",
+          [
+            6.2,
+            5.2
+          ]
+        ],
+        [
+          "decal_condenserField",
+          [
+            38.828,
+            71.169
+          ]
+        ],
+        [
+          "decal_digitalStatus",
+          [
+            13,
+            5.8
+          ]
+        ],
+        [
+          "decal_fanGrille",
+          [
+            12,
+            12
+          ]
+        ],
+        [
+          "decal_frontBaseWear",
+          [
+            24,
+            8
+          ]
+        ],
+        [
+          "decal_medicalIdentity",
+          [
+            13,
+            8
+          ]
+        ],
+        [
+          "decal_rearDoNot",
+          [
+            16,
+            4.571
+          ]
+        ],
+        [
+          "decal_rearWarning",
+          [
+            16,
+            6.026
+          ]
+        ],
+        [
+          "decal_sideBottomWear",
+          [
+            14,
+            9
+          ]
+        ],
+        [
+          "decal_sideBottomWear",
+          [
+            14,
+            9
+          ]
+        ],
+        [
+          "decal_sideRating",
+          [
+            8,
+            5.3
+          ]
+        ],
+        [
+          "decal_sideTopWear",
+          [
+            14,
+            9
+          ]
+        ],
+        [
+          "decal_sideVentPanel",
+          [
+            21.431,
+            24.512
+          ]
+        ],
+        [
+          "decal_vialCovid",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialCovid",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialCovid",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialFlu",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialFlu",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialFlu",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialMmr",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialMmr",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialMmr",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialPolio",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialPolio",
+          [
+            2.8,
+            4.1
+          ]
+        ]
+      ],
+      "correspondenceIds": [
+        "digitalStatus",
+        "fanGrille",
+        "front_control_band",
+        "front_door_opening",
+        "medicalIdentity",
+        "rearDoNot",
+        "rearWarning",
+        "rear_condenser_field",
+        "rear_machine_bay",
+        "sideRating",
+        "side_bottom_wear",
+        "side_lower_column_seed",
+        "side_lower_panel",
+        "side_panel_row_seed",
+        "side_upper_column_seed",
+        "side_upper_panel",
+        "side_vent"
+      ],
+      "correspondenceFeatureCount": 17,
+      "fittingPlacements": [
+        {
+          "id": "medicalIdentity",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            13.295,
+            96.575
+          ],
+          "sizeTexels": [
+            13,
+            8
+          ],
+          "planeTexels": -22.75,
+          "renderOrder": 8
+        },
+        {
+          "id": "digitalStatus",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -14.142,
+            97.46
+          ],
+          "sizeTexels": [
+            13,
+            5.8
+          ],
+          "planeTexels": -22.75,
+          "renderOrder": 8
+        },
+        {
+          "id": "sideRating",
+          "face": "left",
+          "layer": "label",
+          "centerTexels": [
+            -13.412,
+            95.684
+          ],
+          "sizeTexels": [
+            8,
+            5.3
+          ],
+          "planeTexels": -22.22,
+          "renderOrder": 8
+        },
+        {
+          "id": "rearWarning",
+          "face": "back",
+          "layer": "label",
+          "centerTexels": [
+            -0.163,
+            71.784
+          ],
+          "sizeTexels": [
+            16,
+            6.026
+          ],
+          "planeTexels": 22.95,
+          "renderOrder": 8
+        },
+        {
+          "id": "rearDoNot",
+          "face": "back",
+          "layer": "label",
+          "centerTexels": [
+            -0.098,
+            36.731
+          ],
+          "sizeTexels": [
+            16,
+            4.571
+          ],
+          "planeTexels": 22.95,
+          "renderOrder": 8
+        },
+        {
+          "id": "frontBaseWear",
+          "face": "front",
+          "layer": "wear",
+          "centerTexels": [
+            0,
+            5
+          ],
+          "sizeTexels": [
+            24,
+            8
+          ],
+          "planeTexels": -22.75,
+          "renderOrder": 10
+        },
+        {
+          "id": "sideBottomWear",
+          "face": "left",
+          "layer": "wear",
+          "centerTexels": [
+            -13.5,
+            7
+          ],
+          "sizeTexels": [
+            14,
+            9
+          ],
+          "planeTexels": -22.24,
+          "renderOrder": 10
+        },
+        {
+          "id": "sideBottomWear",
+          "face": "left",
+          "layer": "wear",
+          "centerTexels": [
+            13.5,
+            7
+          ],
+          "sizeTexels": [
+            14,
+            9
+          ],
+          "planeTexels": -22.25,
+          "renderOrder": 10
+        },
+        {
+          "id": "sideTopWear",
+          "face": "left",
+          "layer": "wear",
+          "centerTexels": [
+            13.5,
+            95
+          ],
+          "sizeTexels": [
+            14,
+            9
+          ],
+          "planeTexels": -22.26,
+          "renderOrder": 10
+        },
+        {
+          "id": "sideVentPanel",
+          "face": "left",
+          "layer": "structural-graphic",
+          "centerTexels": [
+            8.986999999999998,
+            16.095
+          ],
+          "sizeTexels": [
+            21.431,
+            24.512
+          ],
+          "planeTexels": -22.5,
+          "renderOrder": 7
+        },
+        {
+          "id": "condenserField",
+          "face": "back",
+          "layer": "structural-graphic",
+          "centerTexels": [
+            0.638,
+            61.339
+          ],
+          "sizeTexels": [
+            38.828,
+            71.169
+          ],
+          "planeTexels": 22.72,
+          "renderOrder": 7
+        },
+        {
+          "id": "fanGrille",
+          "face": "back",
+          "layer": "mechanical-detail",
+          "centerTexels": [
+            -11.737,
+            13.071
+          ],
+          "sizeTexels": [
+            12,
+            12
+          ],
+          "planeTexels": 24.2,
+          "renderOrder": 9
+        },
+        {
+          "id": "compressorPlate",
+          "face": "back",
+          "layer": "label",
+          "centerTexels": [
+            3.1,
+            9.9
+          ],
+          "sizeTexels": [
+            6.2,
+            5.2
+          ],
+          "planeTexels": 26.36,
+          "renderOrder": 8
+        },
+        {
+          "id": "cartonCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -12,
+            69.46000000000001
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8
+        },
+        {
+          "id": "cartonMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -4,
+            69.46000000000001
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8
+        },
+        {
+          "id": "cartonFlu",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            5,
+            69.46000000000001
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8
+        },
+        {
+          "id": "cartonBooster",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            12,
+            69.46000000000001
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -12,
+            50.71
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -6,
+            50.71
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialFlu",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            0,
+            50.71
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialPolio",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            6,
+            50.71
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            12,
+            50.71
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -12,
+            33.45
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialFlu",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -6,
+            33.45
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialPolio",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            0,
+            33.45
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            6,
+            33.45
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            12,
+            33.45
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8
+        },
+        {
+          "id": "cartonCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -10,
+            18.96
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8
+        },
+        {
+          "id": "cartonMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            0,
+            19.46
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialFlu",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            10,
+            17.5225
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8
+        }
+      ],
+      "semanticSupports": [
+        {
+          "id": "condenserField",
+          "sizeTexels": [
+            38.828,
+            71.169
+          ],
+          "mesh": "rear_condenser_support"
+        },
+        {
+          "id": "fanGrille",
+          "sizeTexels": [
+            14,
+            15
+          ],
+          "mesh": "rear_fan_housing"
+        },
+        {
+          "id": "rearMachineBay",
+          "sizeTexels": [
+            38.828,
+            22.747
+          ],
+          "mesh": "rear_machine_bay_back"
+        },
+        {
+          "id": "sideVentPanel",
+          "sizeTexels": [
+            21.431,
+            24.512
+          ],
+          "mesh": "side_vent_support"
+        }
+      ],
+      "adaptiveSurfaceCounts": [
+        [
+          "side_panel_column",
+          2
+        ],
+        [
+          "side_panel_row",
+          1
+        ]
+      ],
+      "repeatedStructureCounts": [
+        [
+          "rear_coil_run",
+          0
+        ],
+        [
+          "rear_coil_rail",
+          0
+        ],
+        [
+          "shelf",
+          4
+        ]
+      ],
+      "errors": [],
+      "paletteSize": 282
+    },
+    {
+      "query": "texture=v6&view=backIso",
+      "output": "C:\\Users\\mansour\\Documents\\Modular builder\\Mediguide-pro\\docs\\reference-lock\\semantic-freezer-v6\\runtime\\texture-v6-view-backIso.png",
+      "ready": true,
+      "view": "backIso",
+      "diagnostic": "",
+      "textureVersion": "v6",
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "diagnosticLegend": null,
+      "camera": {
+        "yaw": -36,
+        "elevation": 2.5,
+        "autoFit": true
+      },
+      "triangles": 2550,
+      "parts": 104,
+      "decals": 30,
+      "shelfCount": 4,
+      "rigidPartSizes": [
+        [
+          "handle_catch",
+          [
+            0.4,
+            0.2,
+            17.6
+          ]
+        ],
+        [
+          "handle_grip",
+          [
+            2.5,
+            1.1,
+            19
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_return",
+          [
+            2.35,
+            0.15,
+            18
+          ]
+        ]
+      ],
+      "fixedFittingSizes": [
+        [
+          "decal_cartonBooster",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonCovid",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonCovid",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonFlu",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonMmr",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonMmr",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_compressorPlate",
+          [
+            6.2,
+            5.2
+          ]
+        ],
+        [
+          "decal_condenserField",
+          [
+            38.828,
+            71.169
+          ]
+        ],
+        [
+          "decal_digitalStatus",
+          [
+            13,
+            5.8
+          ]
+        ],
+        [
+          "decal_fanGrille",
+          [
+            12,
+            12
+          ]
+        ],
+        [
+          "decal_frontBaseWear",
+          [
+            24,
+            8
+          ]
+        ],
+        [
+          "decal_medicalIdentity",
+          [
+            13,
+            8
+          ]
+        ],
+        [
+          "decal_rearDoNot",
+          [
+            16,
+            4.571
+          ]
+        ],
+        [
+          "decal_rearWarning",
+          [
+            16,
+            6.026
+          ]
+        ],
+        [
+          "decal_sideBottomWear",
+          [
+            14,
+            9
+          ]
+        ],
+        [
+          "decal_sideBottomWear",
+          [
+            14,
+            9
+          ]
+        ],
+        [
+          "decal_sideRating",
+          [
+            8,
+            5.3
+          ]
+        ],
+        [
+          "decal_sideTopWear",
+          [
+            14,
+            9
+          ]
+        ],
+        [
+          "decal_sideVentPanel",
+          [
+            21.431,
+            24.512
+          ]
+        ],
+        [
+          "decal_vialCovid",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialCovid",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialCovid",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialFlu",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialFlu",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialFlu",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialMmr",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialMmr",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialMmr",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialPolio",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialPolio",
+          [
+            2.8,
+            4.1
+          ]
+        ]
+      ],
+      "correspondenceIds": [
+        "digitalStatus",
+        "fanGrille",
+        "front_control_band",
+        "front_door_opening",
+        "medicalIdentity",
+        "rearDoNot",
+        "rearWarning",
+        "rear_condenser_field",
+        "rear_machine_bay",
+        "sideRating",
+        "side_bottom_wear",
+        "side_lower_column_seed",
+        "side_lower_panel",
+        "side_panel_row_seed",
+        "side_upper_column_seed",
+        "side_upper_panel",
+        "side_vent"
+      ],
+      "correspondenceFeatureCount": 17,
+      "fittingPlacements": [
+        {
+          "id": "medicalIdentity",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            13.295,
+            96.575
+          ],
+          "sizeTexels": [
+            13,
+            8
+          ],
+          "planeTexels": -22.75,
+          "renderOrder": 8
+        },
+        {
+          "id": "digitalStatus",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -14.142,
+            97.46
+          ],
+          "sizeTexels": [
+            13,
+            5.8
+          ],
+          "planeTexels": -22.75,
+          "renderOrder": 8
+        },
+        {
+          "id": "sideRating",
+          "face": "left",
+          "layer": "label",
+          "centerTexels": [
+            -13.412,
+            95.684
+          ],
+          "sizeTexels": [
+            8,
+            5.3
+          ],
+          "planeTexels": -22.22,
+          "renderOrder": 8
+        },
+        {
+          "id": "rearWarning",
+          "face": "back",
+          "layer": "label",
+          "centerTexels": [
+            -0.163,
+            71.784
+          ],
+          "sizeTexels": [
+            16,
+            6.026
+          ],
+          "planeTexels": 22.95,
+          "renderOrder": 8
+        },
+        {
+          "id": "rearDoNot",
+          "face": "back",
+          "layer": "label",
+          "centerTexels": [
+            -0.098,
+            36.731
+          ],
+          "sizeTexels": [
+            16,
+            4.571
+          ],
+          "planeTexels": 22.95,
+          "renderOrder": 8
+        },
+        {
+          "id": "frontBaseWear",
+          "face": "front",
+          "layer": "wear",
+          "centerTexels": [
+            0,
+            5
+          ],
+          "sizeTexels": [
+            24,
+            8
+          ],
+          "planeTexels": -22.75,
+          "renderOrder": 10
+        },
+        {
+          "id": "sideBottomWear",
+          "face": "left",
+          "layer": "wear",
+          "centerTexels": [
+            -13.5,
+            7
+          ],
+          "sizeTexels": [
+            14,
+            9
+          ],
+          "planeTexels": -22.24,
+          "renderOrder": 10
+        },
+        {
+          "id": "sideBottomWear",
+          "face": "left",
+          "layer": "wear",
+          "centerTexels": [
+            13.5,
+            7
+          ],
+          "sizeTexels": [
+            14,
+            9
+          ],
+          "planeTexels": -22.25,
+          "renderOrder": 10
+        },
+        {
+          "id": "sideTopWear",
+          "face": "left",
+          "layer": "wear",
+          "centerTexels": [
+            13.5,
+            95
+          ],
+          "sizeTexels": [
+            14,
+            9
+          ],
+          "planeTexels": -22.26,
+          "renderOrder": 10
+        },
+        {
+          "id": "sideVentPanel",
+          "face": "left",
+          "layer": "structural-graphic",
+          "centerTexels": [
+            8.986999999999998,
+            16.095
+          ],
+          "sizeTexels": [
+            21.431,
+            24.512
+          ],
+          "planeTexels": -22.5,
+          "renderOrder": 7
+        },
+        {
+          "id": "condenserField",
+          "face": "back",
+          "layer": "structural-graphic",
+          "centerTexels": [
+            0.638,
+            61.339
+          ],
+          "sizeTexels": [
+            38.828,
+            71.169
+          ],
+          "planeTexels": 22.72,
+          "renderOrder": 7
+        },
+        {
+          "id": "fanGrille",
+          "face": "back",
+          "layer": "mechanical-detail",
+          "centerTexels": [
+            -11.737,
+            13.071
+          ],
+          "sizeTexels": [
+            12,
+            12
+          ],
+          "planeTexels": 24.2,
+          "renderOrder": 9
+        },
+        {
+          "id": "compressorPlate",
+          "face": "back",
+          "layer": "label",
+          "centerTexels": [
+            3.1,
+            9.9
+          ],
+          "sizeTexels": [
+            6.2,
+            5.2
+          ],
+          "planeTexels": 26.36,
+          "renderOrder": 8
+        },
+        {
+          "id": "cartonCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -12,
+            69.46000000000001
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8
+        },
+        {
+          "id": "cartonMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -4,
+            69.46000000000001
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8
+        },
+        {
+          "id": "cartonFlu",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            5,
+            69.46000000000001
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8
+        },
+        {
+          "id": "cartonBooster",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            12,
+            69.46000000000001
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -12,
+            50.71
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -6,
+            50.71
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialFlu",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            0,
+            50.71
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialPolio",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            6,
+            50.71
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            12,
+            50.71
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -12,
+            33.45
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialFlu",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -6,
+            33.45
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialPolio",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            0,
+            33.45
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            6,
+            33.45
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            12,
+            33.45
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8
+        },
+        {
+          "id": "cartonCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -10,
+            18.96
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8
+        },
+        {
+          "id": "cartonMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            0,
+            19.46
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialFlu",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            10,
+            17.5225
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8
+        }
+      ],
+      "semanticSupports": [
+        {
+          "id": "condenserField",
+          "sizeTexels": [
+            38.828,
+            71.169
+          ],
+          "mesh": "rear_condenser_support"
+        },
+        {
+          "id": "fanGrille",
+          "sizeTexels": [
+            14,
+            15
+          ],
+          "mesh": "rear_fan_housing"
+        },
+        {
+          "id": "rearMachineBay",
+          "sizeTexels": [
+            38.828,
+            22.747
+          ],
+          "mesh": "rear_machine_bay_back"
+        },
+        {
+          "id": "sideVentPanel",
+          "sizeTexels": [
+            21.431,
+            24.512
+          ],
+          "mesh": "side_vent_support"
+        }
+      ],
+      "adaptiveSurfaceCounts": [
+        [
+          "side_panel_column",
+          2
+        ],
+        [
+          "side_panel_row",
+          1
+        ]
+      ],
+      "repeatedStructureCounts": [
+        [
+          "rear_coil_run",
+          0
+        ],
+        [
+          "rear_coil_rail",
+          0
+        ],
+        [
+          "shelf",
+          4
+        ]
+      ],
+      "errors": [],
+      "paletteSize": 438
+    },
+    {
+      "query": "texture=v6&view=side&sy=1.5",
+      "output": "C:\\Users\\mansour\\Documents\\Modular builder\\Mediguide-pro\\docs\\reference-lock\\semantic-freezer-v6\\runtime\\texture-v6-view-side-sy-1_5.png",
+      "ready": true,
+      "view": "side",
+      "diagnostic": "",
+      "textureVersion": "v6",
+      "scale": [
+        1,
+        1.5,
+        1
+      ],
+      "diagnosticLegend": null,
+      "camera": {
+        "yaw": -36,
+        "elevation": 2.5,
+        "autoFit": true
+      },
+      "triangles": 2552,
+      "parts": 105,
+      "decals": 30,
+      "shelfCount": 4,
+      "rigidPartSizes": [
+        [
+          "handle_catch",
+          [
+            0.4,
+            0.2,
+            17.6
+          ]
+        ],
+        [
+          "handle_grip",
+          [
+            2.5,
+            1.1,
+            19
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_return",
+          [
+            2.35,
+            0.15,
+            18
+          ]
+        ]
+      ],
+      "fixedFittingSizes": [
+        [
+          "decal_cartonBooster",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonCovid",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonCovid",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonFlu",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonMmr",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonMmr",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_compressorPlate",
+          [
+            6.2,
+            5.2
+          ]
+        ],
+        [
+          "decal_condenserField",
+          [
+            38.828,
+            71.169
+          ]
+        ],
+        [
+          "decal_digitalStatus",
+          [
+            13,
+            5.8
+          ]
+        ],
+        [
+          "decal_fanGrille",
+          [
+            12,
+            12
+          ]
+        ],
+        [
+          "decal_frontBaseWear",
+          [
+            24,
+            8
+          ]
+        ],
+        [
+          "decal_medicalIdentity",
+          [
+            13,
+            8
+          ]
+        ],
+        [
+          "decal_rearDoNot",
+          [
+            16,
+            4.571
+          ]
+        ],
+        [
+          "decal_rearWarning",
+          [
+            16,
+            6.026
+          ]
+        ],
+        [
+          "decal_sideBottomWear",
+          [
+            14,
+            9
+          ]
+        ],
+        [
+          "decal_sideBottomWear",
+          [
+            14,
+            9
+          ]
+        ],
+        [
+          "decal_sideRating",
+          [
+            8,
+            5.3
+          ]
+        ],
+        [
+          "decal_sideTopWear",
+          [
+            14,
+            9
+          ]
+        ],
+        [
+          "decal_sideVentPanel",
+          [
+            21.431,
+            24.512
+          ]
+        ],
+        [
+          "decal_vialCovid",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialCovid",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialCovid",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialFlu",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialFlu",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialFlu",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialMmr",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialMmr",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialMmr",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialPolio",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialPolio",
+          [
+            2.8,
+            4.1
+          ]
+        ]
+      ],
+      "correspondenceIds": [
+        "digitalStatus",
+        "fanGrille",
+        "front_control_band",
+        "front_door_opening",
+        "medicalIdentity",
+        "rearDoNot",
+        "rearWarning",
+        "rear_condenser_field",
+        "rear_machine_bay",
+        "sideRating",
+        "side_bottom_wear",
+        "side_lower_column_seed",
+        "side_lower_panel",
+        "side_panel_row_seed",
+        "side_upper_column_seed",
+        "side_upper_panel",
+        "side_vent"
+      ],
+      "correspondenceFeatureCount": 17,
+      "fittingPlacements": [
+        {
+          "id": "medicalIdentity",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            13.295,
+            96.575
+          ],
+          "sizeTexels": [
+            13,
+            8
+          ],
+          "planeTexels": -33.5,
+          "renderOrder": 8
+        },
+        {
+          "id": "digitalStatus",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -14.142,
+            97.46
+          ],
+          "sizeTexels": [
+            13,
+            5.8
+          ],
+          "planeTexels": -33.5,
+          "renderOrder": 8
+        },
+        {
+          "id": "sideRating",
+          "face": "left",
+          "layer": "label",
+          "centerTexels": [
+            -24.162,
+            95.684
+          ],
+          "sizeTexels": [
+            8,
+            5.3
+          ],
+          "planeTexels": -22.22,
+          "renderOrder": 8
+        },
+        {
+          "id": "rearWarning",
+          "face": "back",
+          "layer": "label",
+          "centerTexels": [
+            -0.163,
+            71.784
+          ],
+          "sizeTexels": [
+            16,
+            6.026
+          ],
+          "planeTexels": 33.7,
+          "renderOrder": 8
+        },
+        {
+          "id": "rearDoNot",
+          "face": "back",
+          "layer": "label",
+          "centerTexels": [
+            -0.098,
+            36.731
+          ],
+          "sizeTexels": [
+            16,
+            4.571
+          ],
+          "planeTexels": 33.7,
+          "renderOrder": 8
+        },
+        {
+          "id": "frontBaseWear",
+          "face": "front",
+          "layer": "wear",
+          "centerTexels": [
+            0,
+            5
+          ],
+          "sizeTexels": [
+            24,
+            8
+          ],
+          "planeTexels": -33.5,
+          "renderOrder": 10
+        },
+        {
+          "id": "sideBottomWear",
+          "face": "left",
+          "layer": "wear",
+          "centerTexels": [
+            -24.25,
+            7
+          ],
+          "sizeTexels": [
+            14,
+            9
+          ],
+          "planeTexels": -22.24,
+          "renderOrder": 10
+        },
+        {
+          "id": "sideBottomWear",
+          "face": "left",
+          "layer": "wear",
+          "centerTexels": [
+            24.25,
+            7
+          ],
+          "sizeTexels": [
+            14,
+            9
+          ],
+          "planeTexels": -22.25,
+          "renderOrder": 10
+        },
+        {
+          "id": "sideTopWear",
+          "face": "left",
+          "layer": "wear",
+          "centerTexels": [
+            24.25,
+            95
+          ],
+          "sizeTexels": [
+            14,
+            9
+          ],
+          "planeTexels": -22.26,
+          "renderOrder": 10
+        },
+        {
+          "id": "sideVentPanel",
+          "face": "left",
+          "layer": "structural-graphic",
+          "centerTexels": [
+            -1.7630000000000017,
+            16.095
+          ],
+          "sizeTexels": [
+            21.431,
+            24.512
+          ],
+          "planeTexels": -22.5,
+          "renderOrder": 7
+        },
+        {
+          "id": "condenserField",
+          "face": "back",
+          "layer": "structural-graphic",
+          "centerTexels": [
+            0.638,
+            61.339
+          ],
+          "sizeTexels": [
+            38.828,
+            71.169
+          ],
+          "planeTexels": 33.47,
+          "renderOrder": 7
+        },
+        {
+          "id": "fanGrille",
+          "face": "back",
+          "layer": "mechanical-detail",
+          "centerTexels": [
+            -11.737,
+            13.071
+          ],
+          "sizeTexels": [
+            12,
+            12
+          ],
+          "planeTexels": 34.95,
+          "renderOrder": 9
+        },
+        {
+          "id": "compressorPlate",
+          "face": "back",
+          "layer": "label",
+          "centerTexels": [
+            3.1,
+            9.9
+          ],
+          "sizeTexels": [
+            6.2,
+            5.2
+          ],
+          "planeTexels": 37.11,
+          "renderOrder": 8
+        },
+        {
+          "id": "cartonCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -12,
+            69.46000000000001
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -29.43,
+          "renderOrder": 8
+        },
+        {
+          "id": "cartonMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -4,
+            69.46000000000001
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -29.43,
+          "renderOrder": 8
+        },
+        {
+          "id": "cartonFlu",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            5,
+            69.46000000000001
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -29.43,
+          "renderOrder": 8
+        },
+        {
+          "id": "cartonBooster",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            12,
+            69.46000000000001
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -29.43,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -12,
+            50.71
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -29.13,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -6,
+            50.71
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -29.13,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialFlu",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            0,
+            50.71
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -29.13,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialPolio",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            6,
+            50.71
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -29.13,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            12,
+            50.71
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -29.13,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -12,
+            33.45
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -29.13,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialFlu",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -6,
+            33.45
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -29.13,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialPolio",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            0,
+            33.45
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -29.13,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            6,
+            33.45
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -29.13,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            12,
+            33.45
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -29.13,
+          "renderOrder": 8
+        },
+        {
+          "id": "cartonCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -10,
+            18.96
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -29.43,
+          "renderOrder": 8
+        },
+        {
+          "id": "cartonMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            0,
+            19.46
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -29.43,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialFlu",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            10,
+            17.5225
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -29.13,
+          "renderOrder": 8
+        }
+      ],
+      "semanticSupports": [
+        {
+          "id": "condenserField",
+          "sizeTexels": [
+            38.828,
+            71.169
+          ],
+          "mesh": "rear_condenser_support"
+        },
+        {
+          "id": "fanGrille",
+          "sizeTexels": [
+            14,
+            15
+          ],
+          "mesh": "rear_fan_housing"
+        },
+        {
+          "id": "rearMachineBay",
+          "sizeTexels": [
+            38.828,
+            22.747
+          ],
+          "mesh": "rear_machine_bay_back"
+        },
+        {
+          "id": "sideVentPanel",
+          "sizeTexels": [
+            21.431,
+            24.512
+          ],
+          "mesh": "side_vent_support"
+        }
+      ],
+      "adaptiveSurfaceCounts": [
+        [
+          "side_panel_column",
+          3
+        ],
+        [
+          "side_panel_row",
+          1
+        ]
+      ],
+      "repeatedStructureCounts": [
+        [
+          "rear_coil_run",
+          0
+        ],
+        [
+          "rear_coil_rail",
+          0
+        ],
+        [
+          "shelf",
+          4
+        ]
+      ],
+      "errors": [],
+      "paletteSize": 250
+    },
+    {
+      "query": "texture=v6&view=iso&sz=1.3",
+      "output": "C:\\Users\\mansour\\Documents\\Modular builder\\Mediguide-pro\\docs\\reference-lock\\semantic-freezer-v6\\runtime\\texture-v6-view-iso-sz-1_3.png",
+      "ready": true,
+      "view": "iso",
+      "diagnostic": "",
+      "textureVersion": "v6",
+      "scale": [
+        1,
+        1,
+        1.3
+      ],
+      "diagnosticLegend": null,
+      "camera": {
+        "yaw": -36,
+        "elevation": 2.5,
+        "autoFit": true
+      },
+      "triangles": 2564,
+      "parts": 106,
+      "decals": 30,
+      "shelfCount": 5,
+      "rigidPartSizes": [
+        [
+          "handle_catch",
+          [
+            0.4,
+            0.2,
+            17.6
+          ]
+        ],
+        [
+          "handle_grip",
+          [
+            2.5,
+            1.1,
+            19
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_return",
+          [
+            2.35,
+            0.15,
+            18
+          ]
+        ]
+      ],
+      "fixedFittingSizes": [
+        [
+          "decal_cartonBooster",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonCovid",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonCovid",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonFlu",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonMmr",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonMmr",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_compressorPlate",
+          [
+            6.2,
+            5.2
+          ]
+        ],
+        [
+          "decal_condenserField",
+          [
+            38.828,
+            71.169
+          ]
+        ],
+        [
+          "decal_digitalStatus",
+          [
+            13,
+            5.8
+          ]
+        ],
+        [
+          "decal_fanGrille",
+          [
+            12,
+            12
+          ]
+        ],
+        [
+          "decal_frontBaseWear",
+          [
+            24,
+            8
+          ]
+        ],
+        [
+          "decal_medicalIdentity",
+          [
+            13,
+            8
+          ]
+        ],
+        [
+          "decal_rearDoNot",
+          [
+            16,
+            4.571
+          ]
+        ],
+        [
+          "decal_rearWarning",
+          [
+            16,
+            6.026
+          ]
+        ],
+        [
+          "decal_sideBottomWear",
+          [
+            14,
+            9
+          ]
+        ],
+        [
+          "decal_sideBottomWear",
+          [
+            14,
+            9
+          ]
+        ],
+        [
+          "decal_sideRating",
+          [
+            8,
+            5.3
+          ]
+        ],
+        [
+          "decal_sideTopWear",
+          [
+            14,
+            9
+          ]
+        ],
+        [
+          "decal_sideVentPanel",
+          [
+            21.431,
+            24.512
+          ]
+        ],
+        [
+          "decal_vialCovid",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialCovid",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialCovid",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialFlu",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialFlu",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialFlu",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialMmr",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialMmr",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialMmr",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialPolio",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialPolio",
+          [
+            2.8,
+            4.1
+          ]
+        ]
+      ],
+      "correspondenceIds": [
+        "digitalStatus",
+        "fanGrille",
+        "front_control_band",
+        "front_door_opening",
+        "medicalIdentity",
+        "rearDoNot",
+        "rearWarning",
+        "rear_condenser_field",
+        "rear_machine_bay",
+        "sideRating",
+        "side_bottom_wear",
+        "side_lower_column_seed",
+        "side_lower_panel",
+        "side_panel_row_seed",
+        "side_upper_column_seed",
+        "side_upper_panel",
+        "side_vent"
+      ],
+      "correspondenceFeatureCount": 17,
+      "fittingPlacements": [
+        {
+          "id": "medicalIdentity",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            13.295,
+            127.77500000000002
+          ],
+          "sizeTexels": [
+            13,
+            8
+          ],
+          "planeTexels": -22.75,
+          "renderOrder": 8
+        },
+        {
+          "id": "digitalStatus",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -14.142,
+            128.66000000000003
+          ],
+          "sizeTexels": [
+            13,
+            5.8
+          ],
+          "planeTexels": -22.75,
+          "renderOrder": 8
+        },
+        {
+          "id": "sideRating",
+          "face": "left",
+          "layer": "label",
+          "centerTexels": [
+            -13.412,
+            95.684
+          ],
+          "sizeTexels": [
+            8,
+            5.3
+          ],
+          "planeTexels": -22.22,
+          "renderOrder": 8
+        },
+        {
+          "id": "rearWarning",
+          "face": "back",
+          "layer": "label",
+          "centerTexels": [
+            -0.163,
+            71.784
+          ],
+          "sizeTexels": [
+            16,
+            6.026
+          ],
+          "planeTexels": 22.95,
+          "renderOrder": 8
+        },
+        {
+          "id": "rearDoNot",
+          "face": "back",
+          "layer": "label",
+          "centerTexels": [
+            -0.098,
+            36.731
+          ],
+          "sizeTexels": [
+            16,
+            4.571
+          ],
+          "planeTexels": 22.95,
+          "renderOrder": 8
+        },
+        {
+          "id": "frontBaseWear",
+          "face": "front",
+          "layer": "wear",
+          "centerTexels": [
+            0,
+            5
+          ],
+          "sizeTexels": [
+            24,
+            8
+          ],
+          "planeTexels": -22.75,
+          "renderOrder": 10
+        },
+        {
+          "id": "sideBottomWear",
+          "face": "left",
+          "layer": "wear",
+          "centerTexels": [
+            -13.5,
+            7
+          ],
+          "sizeTexels": [
+            14,
+            9
+          ],
+          "planeTexels": -22.24,
+          "renderOrder": 10
+        },
+        {
+          "id": "sideBottomWear",
+          "face": "left",
+          "layer": "wear",
+          "centerTexels": [
+            13.5,
+            7
+          ],
+          "sizeTexels": [
+            14,
+            9
+          ],
+          "planeTexels": -22.25,
+          "renderOrder": 10
+        },
+        {
+          "id": "sideTopWear",
+          "face": "left",
+          "layer": "wear",
+          "centerTexels": [
+            13.5,
+            126.20000000000002
+          ],
+          "sizeTexels": [
+            14,
+            9
+          ],
+          "planeTexels": -22.26,
+          "renderOrder": 10
+        },
+        {
+          "id": "sideVentPanel",
+          "face": "left",
+          "layer": "structural-graphic",
+          "centerTexels": [
+            8.986999999999998,
+            16.095
+          ],
+          "sizeTexels": [
+            21.431,
+            24.512
+          ],
+          "planeTexels": -22.5,
+          "renderOrder": 7
+        },
+        {
+          "id": "condenserField",
+          "face": "back",
+          "layer": "structural-graphic",
+          "centerTexels": [
+            0.638,
+            61.339
+          ],
+          "sizeTexels": [
+            38.828,
+            71.169
+          ],
+          "planeTexels": 22.72,
+          "renderOrder": 7
+        },
+        {
+          "id": "fanGrille",
+          "face": "back",
+          "layer": "mechanical-detail",
+          "centerTexels": [
+            -11.737,
+            13.071
+          ],
+          "sizeTexels": [
+            12,
+            12
+          ],
+          "planeTexels": 24.2,
+          "renderOrder": 9
+        },
+        {
+          "id": "compressorPlate",
+          "face": "back",
+          "layer": "label",
+          "centerTexels": [
+            3.1,
+            9.9
+          ],
+          "sizeTexels": [
+            6.2,
+            5.2
+          ],
+          "planeTexels": 26.36,
+          "renderOrder": 8
+        },
+        {
+          "id": "cartonCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -12,
+            73.048
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8
+        },
+        {
+          "id": "cartonMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -4,
+            73.048
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8
+        },
+        {
+          "id": "cartonFlu",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            5,
+            73.048
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8
+        },
+        {
+          "id": "cartonBooster",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            12,
+            73.048
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -12,
+            54.298
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -6,
+            54.298
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialFlu",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            0,
+            54.298
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialPolio",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            6,
+            54.298
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            12,
+            54.298
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -12,
+            37.038000000000004
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialFlu",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -6,
+            37.038000000000004
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialPolio",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            0,
+            37.038000000000004
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            6,
+            37.038000000000004
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            12,
+            37.038000000000004
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8
+        },
+        {
+          "id": "cartonCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -10,
+            22.548000000000002
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8
+        },
+        {
+          "id": "cartonMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            0,
+            23.048000000000002
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8
+        },
+        {
+          "id": "vialFlu",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            10,
+            21.110500000000002
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8
+        }
+      ],
+      "semanticSupports": [
+        {
+          "id": "condenserField",
+          "sizeTexels": [
+            38.828,
+            71.169
+          ],
+          "mesh": "rear_condenser_support"
+        },
+        {
+          "id": "fanGrille",
+          "sizeTexels": [
+            14,
+            15
+          ],
+          "mesh": "rear_fan_housing"
+        },
+        {
+          "id": "rearMachineBay",
+          "sizeTexels": [
+            38.828,
+            22.747
+          ],
+          "mesh": "rear_machine_bay_back"
+        },
+        {
+          "id": "sideVentPanel",
+          "sizeTexels": [
+            21.431,
+            24.512
+          ],
+          "mesh": "side_vent_support"
+        }
+      ],
+      "adaptiveSurfaceCounts": [
+        [
+          "side_panel_column",
+          2
+        ],
+        [
+          "side_panel_row",
+          2
+        ]
+      ],
+      "repeatedStructureCounts": [
+        [
+          "rear_coil_run",
+          0
+        ],
+        [
+          "rear_coil_rail",
+          0
+        ],
+        [
+          "shelf",
+          5
+        ]
+      ],
+      "errors": [],
+      "paletteSize": 990
+    }
+  ]
+}

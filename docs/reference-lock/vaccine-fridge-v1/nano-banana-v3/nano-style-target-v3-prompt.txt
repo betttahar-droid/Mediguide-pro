@@ -1,0 +1,20 @@
+Use case: style-transfer.
+Asset type: production appearance target for a scalable low-poly voxel prop.
+
+Images 1-5 are the ONLY texture-style authority. Image 6 is the ONLY fridge design and palette authority. Image 7 is the current Blender render and therefore the edit target. Change its surface treatment only. Preserve Image 7's geometry, dimensions, camera, object pose, shelf count, empty interior, handle, display, grille, glass, silhouette, and black background exactly.
+
+Correct the material treatment to match Images 1-5 at the refrigerator's actual logical grid of roughly 39 pixels wide by 96 pixels tall. The reference style is crisp low-resolution voxel pixel art: mostly quiet flat faces, strong face-aware value steps, narrow panel seams, and sparse deliberate clusters. Use many small readable details instead of a few large cloudy patches.
+
+Pixel-scale contract:
+- all surface pixels are hard squares with nearest-neighbour edges;
+- ordinary marks are 1 logical pixel; small clusters are 2x2 or 2x3; no material patch may exceed 4x4 logical pixels;
+- use a restrained 6-10 color palette across each material family;
+- top-facing planes are one flat value step lighter, right-facing planes one flat value step darker;
+- add thin 1-pixel paired highlight/shadow seams around panels and shelf lips;
+- keep broad centers quiet, with sparse tiny chips, fasteners and short scratches at corners and exposed edges;
+- preserve the exact cream, blue-gray steel, deep teal, purple, ochre and dark-green identity from Image 6;
+- keep glass readable with one narrow staircase highlight, not a smooth reflection.
+
+Avoid large camouflage blobs, watercolor mottling, photographic dirt, gradients, blur, antialiasing, smooth plastic, outline-only cartoon rendering, dense noise, excessive rust, text other than the existing display, extra geometry, or a redesigned fridge.
+
+Output exactly one clean isometric render of the corrected fridge on the same black background. No comparison panel, labels, arrows, border, caption, watermark, or extra objects.

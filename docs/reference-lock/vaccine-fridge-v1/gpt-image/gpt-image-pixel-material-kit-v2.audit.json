@@ -1,0 +1,188 @@
+{
+  "schemaVersion": 2,
+  "sourceBoard": "docs/reference-lock/vaccine-fridge-v1/gpt-image/gpt-image-pixel-material-kit-v2.png",
+  "generatedAtlas": "public/textures/vaccine-fridge-adaptive-gpt-v2.png",
+  "boardSizePx": [
+    1254,
+    1254
+  ],
+  "cellBoundsPx": {
+    "columns": [
+      [
+        18,
+        310
+      ],
+      [
+        326,
+        616
+      ],
+      [
+        633,
+        923
+      ],
+      [
+        941,
+        1232
+      ]
+    ],
+    "rows": [
+      [
+        18,
+        311
+      ],
+      [
+        327,
+        621
+      ],
+      [
+        636,
+        930
+      ],
+      [
+        946,
+        1240
+      ]
+    ]
+  },
+  "accepted": [
+    {
+      "cell": 1,
+      "role": "cream",
+      "contentBoundsPx": [
+        42,
+        42,
+        286,
+        287
+      ],
+      "output": "public/textures/vaccine-fridge-gpt-cream-tile-v2.png",
+      "seamGate": "pass"
+    },
+    {
+      "cell": 2,
+      "role": "steel",
+      "contentBoundsPx": [
+        350,
+        42,
+        592,
+        287
+      ],
+      "output": "public/textures/vaccine-fridge-gpt-steel-tile-v2.png",
+      "seamGate": "pass"
+    },
+    {
+      "cell": 3,
+      "role": "teal",
+      "contentBoundsPx": [
+        657,
+        42,
+        899,
+        287
+      ],
+      "output": "public/textures/vaccine-fridge-gpt-teal-tile-v2.png",
+      "seamGate": "pass"
+    },
+    {
+      "cell": 4,
+      "role": "glass",
+      "contentBoundsPx": [
+        965,
+        42,
+        1208,
+        287
+      ],
+      "output": "public/textures/vaccine-fridge-gpt-glass-tile-v2.png",
+      "seamGate": "pass"
+    }
+  ],
+  "derivedPanelTile": "public/textures/vaccine-fridge-gpt-steel-panel-tile-v2.png",
+  "acceptedSprites": [
+    {
+      "cell": 9,
+      "role": "cream-corner",
+      "sizePx": [
+        8,
+        8
+      ],
+      "output": "public/textures/vaccine-fridge-gpt-cream-corner-v2.png",
+      "alphaGate": "pass"
+    },
+    {
+      "cell": 10,
+      "role": "steel-corner",
+      "sizePx": [
+        8,
+        8
+      ],
+      "output": "public/textures/vaccine-fridge-gpt-steel-corner-v2.png",
+      "alphaGate": "pass"
+    },
+    {
+      "cell": 11,
+      "role": "teal-corner",
+      "sizePx": [
+        8,
+        8
+      ],
+      "output": "public/textures/vaccine-fridge-gpt-teal-corner-v2.png",
+      "alphaGate": "pass"
+    },
+    {
+      "cell": 12,
+      "role": "bolt",
+      "sizePx": [
+        4,
+        4
+      ],
+      "output": "public/textures/vaccine-fridge-gpt-bolt-v2.png",
+      "alphaGate": "pass"
+    },
+    {
+      "cell": 13,
+      "role": "glass-reflection",
+      "sizePx": [
+        8,
+        16
+      ],
+      "output": "public/textures/vaccine-fridge-gpt-glass-reflection-v2.png",
+      "alphaGate": "pass"
+    },
+    {
+      "cell": 14,
+      "role": "shelf-band",
+      "sizePx": [
+        16,
+        4
+      ],
+      "output": "public/textures/vaccine-fridge-gpt-shelf-band-v2.png",
+      "alphaGate": "pass"
+    },
+    {
+      "cell": 15,
+      "role": "steel-patch",
+      "sizePx": [
+        16,
+        8
+      ],
+      "output": "public/textures/vaccine-fridge-gpt-steel-patch-v2.png",
+      "alphaGate": "pass"
+    },
+    {
+      "cell": 16,
+      "role": "teal-patch",
+      "sizePx": [
+        16,
+        8
+      ],
+      "output": "public/textures/vaccine-fridge-gpt-teal-patch-v2.png",
+      "alphaGate": "pass"
+    }
+  ],
+  "identityDecalsExcludedFromGeneration": [
+    "grille",
+    "display"
+  ],
+  "fallbackDecals": {
+    "grille": "public/textures/vaccine-fridge-grille.png",
+    "display": "public/textures/vaccine-fridge-display.png"
+  }
+}

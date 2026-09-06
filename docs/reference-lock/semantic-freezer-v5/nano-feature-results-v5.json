@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 5,
+  "model": "gemini-3.1-flash-image",
+  "generatedAt": "2026-09-06T08:07:52.781961+00:00",
+  "features": {
+    "medicalIdentity": {
+      "status": "generated",
+      "output": "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/medicalIdentity/nano-output.png",
+      "sizePx": [
+        1376,
+        768
+      ]
+    },
+    "digitalStatus": {
+      "status": "generated",
+      "output": "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/digitalStatus/nano-output.png",
+      "sizePx": [
+        1024,
+        1024
+      ]
+    },
+    "rearWarning": {
+      "status": "generated",
+      "output": "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/rearWarning/nano-output.png",
+      "sizePx": [
+        1376,
+        768
+      ]
+    },
+    "rearDoNot": {
+      "status": "generated",
+      "output": "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/rearDoNot/nano-output.png",
+      "sizePx": [
+        1376,
+        768
+      ]
+    },
+    "fanGrille": {
+      "status": "generated",
+      "output": "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/fanGrille/nano-output.png",
+      "sizePx": [
+        1024,
+        1024
+      ]
+    }
+  }
+}

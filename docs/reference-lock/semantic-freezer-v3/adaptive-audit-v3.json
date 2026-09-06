@@ -1,0 +1,119 @@
+{
+  "status": "PASS",
+  "checks": {
+    "allRuntimeRecordsClean": true,
+    "fixedFittingsInvariantEveryAxis": true,
+    "rigidHandleInvariantEveryAxis": true,
+    "widthAddsRearRails": true,
+    "depthAddsPanelColumns": true,
+    "heightAddsPanelRows": true,
+    "heightAddsShelves": true,
+    "heightAddsRearRuns": true
+  },
+  "counts": {
+    "normal": {
+      "surface": [
+        [
+          "side_panel_column",
+          1
+        ],
+        [
+          "side_panel_row",
+          2
+        ]
+      ],
+      "structure": [
+        [
+          "rear_coil_run",
+          8
+        ],
+        [
+          "rear_coil_rail",
+          8
+        ],
+        [
+          "shelf",
+          4
+        ]
+      ]
+    },
+    "width1.45": {
+      "surface": [
+        [
+          "side_panel_column",
+          1
+        ],
+        [
+          "side_panel_row",
+          2
+        ]
+      ],
+      "structure": [
+        [
+          "rear_coil_run",
+          8
+        ],
+        [
+          "rear_coil_rail",
+          13
+        ],
+        [
+          "shelf",
+          4
+        ]
+      ]
+    },
+    "depth1.5": {
+      "surface": [
+        [
+          "side_panel_column",
+          2
+        ],
+        [
+          "side_panel_row",
+          2
+        ]
+      ],
+      "structure": [
+        [
+          "rear_coil_run",
+          8
+        ],
+        [
+          "rear_coil_rail",
+          8
+        ],
+        [
+          "shelf",
+          4
+        ]
+      ]
+    },
+    "height1.3": {
+      "surface": [
+        [
+          "side_panel_column",
+          1
+        ],
+        [
+          "side_panel_row",
+          3
+        ]
+      ],
+      "structure": [
+        [
+          "rear_coil_run",
+          13
+        ],
+        [
+          "rear_coil_rail",
+          8
+        ],
+        [
+          "shelf",
+          5
+        ]
+      ]
+    }
+  }
+}

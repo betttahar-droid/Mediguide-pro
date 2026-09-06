@@ -1,0 +1,17 @@
+{
+  "iso": {
+    "status": "missing",
+    "approved": false,
+    "path": "docs/reference-lock/semantic-freezer-v4/paintovers/iso-paintover-nano.png"
+  },
+  "side": {
+    "status": "missing",
+    "approved": false,
+    "path": "docs/reference-lock/semantic-freezer-v4/paintovers/side-paintover-nano.png"
+  },
+  "back": {
+    "status": "missing",
+    "approved": false,
+    "path": "docs/reference-lock/semantic-freezer-v4/paintovers/back-paintover-nano.png"
+  }
+}

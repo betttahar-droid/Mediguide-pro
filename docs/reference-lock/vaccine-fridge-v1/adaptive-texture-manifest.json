@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 3,
+  "authoritySha256": "8fface4d547894f3025cc69724a666b521d130db64dcb91e637d0c4abac855c4",
+  "sourceAtlas": "public/textures/vaccine-fridge-source-atlas.png",
+  "adaptiveAtlas": "public/textures/vaccine-fridge-adaptive-source-atlas.png",
+  "exportedMaterialMode": "embedded_nano_microtiles",
+  "legacyAtlas": "public/textures/vaccine-fridge-adaptive-gpt-v2.png",
+  "nanoAudit": "docs/reference-lock/vaccine-fridge-v1/nano-banana-v5/nano-reference-material-primitives-v5.audit.json",
+  "generatedMaterialTiles": {
+    "cream": "public/textures/vaccine-fridge-nano-cream-microtile-v5.png",
+    "steel": "public/textures/vaccine-fridge-nano-steel-microtile-v5.png",
+    "teal": "public/textures/vaccine-fridge-nano-teal-microtile-v5.png",
+    "glass": "public/textures/vaccine-fridge-nano-glass-microtile-v5.png"
+  },
+  "generatedPanelTile": "public/textures/vaccine-fridge-nano-steel-panel-microtile-v5.png",
+  "logicalTexelPolicy": {
+    "ordinaryMaterials": {
+      "tilePx": [
+        16,
+        16
+      ],
+      "worldPeriodPx": [
+        16,
+        16
+      ]
+    },
+    "largePanels": {
+      "tilePx": [
+        32,
+        32
+      ],
+      "worldPeriodPx": [
+        32,
+        32
+      ]
+    },
+    "accentClusterMaxPx": 2,
+    "sampling": "nearest_no_mipmaps"
+  },
+  "fixedDecals": {
+    "display": {
+      "path": "public/textures/vaccine-fridge-display.png",
+      "sourceRectPx": [
+        17,
+        4,
+        13,
+        4
+      ],
+      "placementPx": [
+        -2.5,
+        10.5,
+        88,
+        92
+      ],
+      "policy": "FIXED_CENTER_1TO1"
+    },
+    "grille": {
+      "path": "public/textures/vaccine-fridge-grille.png",
+      "sourceRectPx": [
+        7,
+        80,
+        26,
+        11
+      ],
+      "placementPx": [
+        -13,
+        13,
+        5,
+        16
+      ],
+      "policy": "FIXED_PER_BAY_1TO1"
+    }
+  },
+  "rules": {
+    "doorBay": "repeat complete 32px source bay",
+    "endCaps": "translate only; never scale",
+    "fixedDetails": "separate image surface at one source pixel per model pixel",
+    "crownAndTop": "fixed geometry borders plus Nano cream field at one texel per model pixel",
+    "sideAndBack": "sparse Nano steel field repeats every 32 model pixels; fixed seams and fasteners never scale",
+    "generatedIdentityDetails": "reject and fall back to locked source crop"
+  }
+}

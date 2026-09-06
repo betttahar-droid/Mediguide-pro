@@ -7,6 +7,11 @@ import { createAdaptiveMaterial as build, makeDeformUniforms } from './AdaptiveM
 import { createNormalDepthMaterial as buildNormalDepth } from './NormalDepthMaterial.js';
 import { createOutlinePass as buildOutline } from './OutlinePass.js';
 import { makeToonRamp } from '../art/ramps.js';
+import {
+  analyticFaceMetrics,
+  createAnalyticBoxMaterial as buildAnalyticBox,
+  updateAnalyticBoxScale,
+} from './AnalyticBoxMaterial.js';
 
 /** Every live material, so shared look-dev uniforms can be driven from the UI. */
 const live = new Set();
@@ -28,6 +33,8 @@ export function createAdaptiveMaterial(opts = {}) {
 
 export const createNormalDepthMaterial = buildNormalDepth;
 export const createOutlinePass = buildOutline;
+export const createAnalyticBoxMaterial = buildAnalyticBox;
+export { analyticFaceMetrics, updateAnalyticBoxScale };
 export { makeDeformUniforms };
 
 /** Uniforms the look-dev UI is allowed to drive across every material at once. */

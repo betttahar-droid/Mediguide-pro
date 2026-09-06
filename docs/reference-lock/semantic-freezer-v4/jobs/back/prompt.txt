@@ -1,0 +1,28 @@
+Use case: precise-object-edit
+Asset type: geometry-locked surface paintover for evidence extraction; never an atlas or final model.
+
+INPUT CONTRACT — obey image roles exactly:
+- Image 1 RAW TARGET is the only editable raster. Its camera, framing, silhouette, depth ordering, openings, shelves, contents, handle, vents, condenser, machinery, panel divisions, and every part boundary are immutable.
+- Image 2 MATCHING AUTHORITY is direct visual evidence for colors, labels, wear placement, pixel density, and material language.
+- Images 3–4 CROSS-VIEW AUTHORITIES may resolve material identity only. Do not copy their camera, silhouette, or hidden structure.
+- Image 5 PART-ID identifies immutable physical parts. Never merge colors across different IDs and never invent an ID.
+- Image 6 FACE-NORMAL encodes face orientation. Painted marks must remain on one physically valid face and may not cross a normal discontinuity.
+- Image 7 LINEAR DEPTH encodes occlusion. Never paint through an occluder or move a boundary to expose hidden material.
+- Image 8 ANCHOR-ID divides each visible face into fixed corner/edge/center regions. Preserve meaningful fittings at their evidenced anchor.
+
+PAINTING TASK:
+Paint only the visible surfaces in Image 1 using evidence from the authority images. Match the authority's retro PS1-era pixel-textured material language: crisp small square texels, quantized cool grey-green enamel, blue-grey service panels, dark construction seams, deliberate clustered edge wear, sparse one-to-four-pixel catches, and readable fixed labels where directly evidenced. Large faces need restrained material response, not random dirt.
+
+HARD LOCKS:
+- Preserve Image 1 pixel dimensions and every object boundary within one pixel.
+- Preserve pure flat #FF00FF outside the object, with no shadow, halo, scenery, caption, legend, watermark, or antialiasing.
+- Paint only existing surfaces. Do not add, remove, move, resize, round, straighten, or reinterpret geometry.
+- Do not invent vents, screws, handles, hinges, labels, products, cables, panel seams, or mechanical structure.
+- Do not bake perspective changes, new illumination, cast shadows, ambient occlusion, or soft gradients.
+- Existing repeated depth-bearing parts remain geometry; only their surface material may be painted.
+- If evidence is absent or conflicts between views, leave that region as the raw target color.
+
+OUTPUT:
+Return exactly one geometry-locked paintover of Image 1, same view and framing, on pure #FF00FF. No atlas and no alternate view.
+
+VIEW SCOPE: Paint rear machinery, condenser, roof, and right service side.

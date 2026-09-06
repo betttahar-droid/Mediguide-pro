@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "checks": {
+    "evidenceCompilerPasses": true,
+    "allRuntimeRecordsClean": true,
+    "allRuntimeRecordsUseV4": true,
+    "fixedFittingsInvariantEveryAxis": true,
+    "rigidHandleInvariantEveryAxis": true,
+    "widthAddsRearRails": true,
+    "depthAddsPanelColumns": true,
+    "heightAddsPanelRows": true,
+    "heightAddsShelves": true,
+    "heightAddsRearRuns": true
+  }
+}

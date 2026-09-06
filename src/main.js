@@ -25,8 +25,12 @@ validateRegistry();
 
 // ---------------------------------------------------------------- renderer
 const canvas = document.getElementById('app');
-const renderer = new WebGLRenderer({ canvas, antialias: true });
-renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+// The game is authored as low-resolution pixel art. MSAA and retina-resolution
+// rendering soften the one-texel marks and tiny stepped silhouettes that give
+// the furniture its character, so keep the 3D buffer deliberately crisp. The
+// HTML UI remains normal-resolution because only the WebGL canvas is affected.
+const renderer = new WebGLRenderer({ canvas, antialias: false });
+renderer.setPixelRatio(1);
 renderer.outputColorSpace = SRGBColorSpace;
 // no filmic curve — ACES desaturates exactly the limited palette we chose
 renderer.toneMapping = NoToneMapping;
@@ -285,6 +289,95 @@ app.makeAdaptiveProp = (opts) => {
   scene.add(prop.group);
   return prop;
 };
+
+// Production architecture proof: strict pixel-grid GLB + adaptive sockets.
+app.spawnProductionFridge = async (at = [0, 0, 0], scaleX = 1) => {
+  const { loadProductionFridge } = await import('./production/fridgeArchitecture.js');
+  const built = await loadProductionFridge();
+  built.root.position.set(...at);
+  built.root.userData.setAdaptiveScale(scaleX, 1, 1);
+  scene.add(built.root);
+  return built.root;
+};
+
+// Voxel-derived adaptive proof. Door-count variants are cached GLBs built by
+// inserting complete 32 px bays; no mesh or texture is conventionally scaled.
+app.spawnVoxelFridge = async (doors = 1, at = [0, 0, 0]) => {
+  const { loadVoxelFridge } = await import('./production/voxelFridge.js');
+  const root = await loadVoxelFridge(doors);
+  root.position.set(...at);
+  scene.add(root);
+  return root;
+};
+
+app.previewVoxelFridges = async () => {
+  // Keep this preview deterministic and unobstructed even in the seeded room.
+  scene.getObjectsByProperty('name', 'voxel_fridge_preview').forEach((node) => node.removeFromParent());
+  placed.forEach((module) => { module.group.visible = false; });
+  if (app.ghost?.group) app.ghost.group.visible = false;
+  const { loadVoxelFridge } = await import('./production/voxelFridge.js');
+  const [one, two, three] = await Promise.all([
+    loadVoxelFridge(1), loadVoxelFridge(2), loadVoxelFridge(3),
+  ]);
+  one.name = two.name = three.name = 'voxel_fridge_preview';
+  one.position.set(-2.8, 0, 0);
+  two.position.set(0, 0, 0);
+  three.position.set(3.4, 0, 0);
+  scene.add(one, two, three);
+  camera.position.set(7.2, 3.8, 8.4);
+  controls.target.set(0.8, 1.45, 0);
+  controls.update();
+  return { one, two, three };
+};
+
+// Runtime material A/B: identical geometry, camera and decals. The left model
+// retains the reference-measured v5 tile; the right replaces only its broad
+// steel side panel with the UV-less analytic material pilot.
+app.previewAnalyticFridgeComparison = async () => {
+  scene.getObjectsByProperty('name', 'fridge_analytic_comparison').forEach((node) => node.removeFromParent());
+  placed.forEach((module) => { module.group.visible = false; });
+  if (app.ghost?.group) app.ghost.group.visible = false;
+  const { loadVoxelFridge } = await import('./production/voxelFridge.js');
+  const [control, analytic] = await Promise.all([
+    loadVoxelFridge(1, { analyticSidePanel: false }),
+    loadVoxelFridge(1, { analyticSidePanel: true }),
+  ]);
+  control.name = analytic.name = 'fridge_analytic_comparison';
+  control.position.set(-1.25, 0, 0);
+  analytic.position.set(1.25, 0, 0);
+  scene.add(control, analytic);
+  camera.position.set(5.1, 2.9, 6.1);
+  controls.target.set(0, 1.4, 0);
+  controls.update();
+  return { control, analytic };
+};
+
+app.previewStrictSdfFridge = async () => {
+  scene.getObjectsByProperty('name', 'strict_sdf_comparison').forEach((node) => node.removeFromParent());
+  placed.forEach((module) => { module.group.visible = false; });
+  if (app.ghost?.group) app.ghost.group.visible = false;
+  const [{ loadVoxelFridge }, { generateStrictSdfFridge }] = await Promise.all([
+    import('./production/voxelFridge.js'),
+    import('./production/strictSdfFridge.js'),
+  ]);
+  const control = await loadVoxelFridge(1, { analyticSidePanel: false });
+  const strict = generateStrictSdfFridge(38.75 / 32, 96 / 32, 36.75 / 32);
+  control.name = strict.name = 'strict_sdf_comparison';
+  control.position.set(-1.2, 0, 0);
+  strict.position.set(1.2, 0, 0);
+  scene.add(control, strict);
+  camera.position.set(5.1, 3.0, 6.4);
+  controls.target.set(0, 1.4, 0);
+  controls.update();
+  return { control, strict };
+};
+
+if (new URLSearchParams(location.search).get('preview') === 'fridge-analytic') {
+  app.previewAnalyticFridgeComparison();
+}
+if (new URLSearchParams(location.search).get('preview') === 'fridge-strict') {
+  app.previewStrictSdfFridge();
+}
 
 globalThis.__app = app; // handle for the smoke test and for poking at the scene
 

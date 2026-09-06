@@ -1,0 +1,92 @@
+{
+  "status": "PASS",
+  "records": {
+    "front_iso": {
+      "authority": {
+        "bboxPx": [
+          273,
+          60,
+          804,
+          941
+        ],
+        "hardEdgeDensity": 0.2268,
+        "strongEdgeDensity": 0.0941,
+        "top5ColorShare": 0.3371,
+        "largestColorShare": 0.0808
+      },
+      "renderV4": {
+        "bboxPx": [
+          116,
+          60,
+          522,
+          740
+        ],
+        "hardEdgeDensity": 0.1062,
+        "strongEdgeDensity": 0.0395,
+        "top5ColorShare": 0.4214,
+        "largestColorShare": 0.1632
+      },
+      "hardEdgeRatio": 0.468,
+      "top5ShareDelta": 0.084,
+      "status": "PASS"
+    },
+    "right_side": {
+      "authority": {
+        "bboxPx": [
+          326,
+          115,
+          689,
+          935
+        ],
+        "hardEdgeDensity": 0.1119,
+        "strongEdgeDensity": 0.0386,
+        "top5ColorShare": 0.2408,
+        "largestColorShare": 0.0566
+      },
+      "renderV4": {
+        "bboxPx": [
+          162,
+          66,
+          538,
+          734
+        ],
+        "hardEdgeDensity": 0.0486,
+        "strongEdgeDensity": 0.0142,
+        "top5ColorShare": 0.5937,
+        "largestColorShare": 0.2261
+      },
+      "hardEdgeRatio": 0.434,
+      "top5ShareDelta": 0.353,
+      "status": "PASS"
+    },
+    "back_iso": {
+      "authority": {
+        "bboxPx": [
+          205,
+          60,
+          873,
+          948
+        ],
+        "hardEdgeDensity": 0.2281,
+        "strongEdgeDensity": 0.1119,
+        "top5ColorShare": 0.2301,
+        "largestColorShare": 0.055
+      },
+      "renderV4": {
+        "bboxPx": [
+          134,
+          60,
+          544,
+          740
+        ],
+        "hardEdgeDensity": 0.1036,
+        "strongEdgeDensity": 0.0296,
+        "top5ColorShare": 0.4748,
+        "largestColorShare": 0.1812
+      },
+      "hardEdgeRatio": 0.454,
+      "top5ShareDelta": 0.245,
+      "status": "PASS"
+    }
+  }
+}

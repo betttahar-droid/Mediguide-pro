@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "scope": "hybrid pilot on nano_tile_side_panel only",
+  "coordinateSystem": "canonical model units; 32 logical pixels per unit",
+  "surfaceUvPolicy": "none",
+  "decalUvPolicy": "local UVs allowed only on isolated fixed-size fittings",
+  "palette": {
+    "steelBase": "#617a80",
+    "steelShadow": "#4a5d62",
+    "steelHighlight": "#76949c",
+    "steelOutline": "#38474a"
+  },
+  "tints": {
+    "top": 1.09,
+    "front": 1.0,
+    "side": 0.858,
+    "back": 0.9,
+    "bottom": 0.74
+  },
+  "materialRules": {
+    "outlineWorldUnits": 0.03125,
+    "catchWorldUnits": 0.0625,
+    "insetWorldUnits": 0.125,
+    "seamWidthWorldUnits": 0.0234375,
+    "smallFaceGatePaddingWorldUnits": 0.03125
+  },
+  "scaleContract": {
+    "surfaceBands": "remain fixed in world units under non-uniform object scaling",
+    "center": "receives all added area",
+    "identityDecals": "existing nearest-neighbour fixed-size display and grille remain unchanged"
+  }
+}

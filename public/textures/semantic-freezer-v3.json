@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 3,
+  "generator": "hybrid evidence + explicit scale-class compiler",
+  "artSource": "semantic-freezer-v2 reviewed geometry-aligned paintovers",
+  "atlases": {
+    "microfields": "semantic-freezer-microfields-v2.png",
+    "fittings": "semantic-freezer-fittings-v2.png",
+    "semanticFaces": "semantic-freezer-faces-v1.png"
+  },
+  "scaleClasses": {
+    "expand": [
+      "base_color_field",
+      "solid_seam_length",
+      "panel_center"
+    ],
+    "repeat": [
+      "enamel",
+      "sideMetal",
+      "darkCavity",
+      "shelfMetal",
+      "medicinePaper",
+      "medicineTan",
+      "bottleAmber",
+      "coilMetal"
+    ],
+    "fixed": [
+      "medicalIdentity",
+      "digitalStatus",
+      "sideRating",
+      "rearWarning",
+      "rearDoNot",
+      "fanGrille",
+      "cartonCovid",
+      "cartonMmr",
+      "cartonFlu",
+      "cartonBooster",
+      "vialCovid",
+      "vialMmr",
+      "vialFlu",
+      "vialPolio",
+      "sideBottomWear",
+      "sideTopWear",
+      "frontBaseWear",
+      "sdf_outline",
+      "sdf_catch",
+      "sdf_inset",
+      "handle_assembly"
+    ],
+    "count-adaptive": [
+      "side_panel_row",
+      "side_panel_column",
+      "shelf",
+      "rear_coil_run",
+      "rear_coil_rail"
+    ]
+  },
+  "rules": {
+    "coordinates": "face-local coordinates multiplied by model-matrix axis lengths, then divided by world texel size",
+    "fixedAnchors": "distance from named face corner or semantic mounting plane; never normalized UV position",
+    "panelCenters": "base color expands; only reviewed microfields repeat",
+    "seams": "fixed 0.5-0.55 texel thickness; count derives from available face span",
+    "smallFaces": "gate SDF roles; preserve high-priority fittings; omit low-priority wear",
+    "lighting": "fixed face-normal tint remains separate from authored color"
+  },
+  "evidence": {
+    "measuredGeometry": "direct",
+    "visibleAuthorityStyle": "direct",
+    "alignedPaintovers": "reconstructed",
+    "inventedHiddenStructure": "excluded"
+  },
+  "checks": {
+    "allMicrofieldsClassified": true,
+    "allFittingsClassified": true,
+    "fourScaleClassesPresent": true,
+    "hiddenInventionExcluded": true
+  }
+}

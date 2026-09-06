@@ -1,0 +1,22 @@
+Use case: stylized-concept.
+Asset type: source motifs for a deterministic retro pixel-art 3D material/decal compiler.
+
+Images 1-4 are the supplied still-image style authorities. Image 5 is a three-frame sample from the supplied animated style authority. Study their chunky mechanical pixel clusters, stepped corner highlights, dark seam caps, blocky glass reflections, restrained panel markings, and limited material ramps. Image 6 defines the vaccine refrigerator design. Image 7 is the accepted refrigerator geometry; preserve it and generate surface motifs only.
+
+Output exactly one square 4-column by 4-row source board. The entire unused background must be perfectly uniform pure magenta #FF00FF: no cell borders, labels, shadows, texture, checkerboard, writing, guide lines, or watermark. Every equal cell contains exactly one isolated, connected, hard-edged pixel motif centered with a wide magenta margin. Each motif should occupy roughly 35-55% of its cell so it remains readable after reduction to 16x16 logical pixels.
+
+Cells left-to-right, top-to-bottom:
+1 steel top-left stepped highlight; steel bottom-right shadow corner; steel short double panel seam; steel compact square fastener.
+2 cream enamel top-left corner catch; cream enamel bottom-right notch; cream crown double seam; cream short edge interruption.
+3 deep-teal door top-left stair reflection; deep-teal door bottom-right recessed corner; blue-green glass diagonal staircase glint; pale-steel shelf end-cap cluster.
+4 blue-gray side-service triple dash; pale-blue side-panel catch pair; warm-ochre grille corner cap; restrained purple handle end-cap.
+
+Mandatory style constraints:
+- true nearest-neighbour square pixels; absolutely no antialiasing, gradients, blur or soft shadows;
+- only 2-4 flat colors per motif, sampled in spirit from the reference families;
+- connected rectangular clusters, typically 2-8 logical pixels long and 1-3 pixels thick;
+- deliberate asymmetry and stair steps; broad empty centers;
+- no random speckles, dirt, rust, scratches, clouds, material panels, complete appliances, fake depth, text or logos;
+- the motif alone sits on magenta; never paint a rectangular base tile behind it.
+
+The compiler will key out magenta, quantize the result to locked cream/steel/teal/glass/ochre/purple palettes, enforce margins, and reject disconnected noise. Silhouette clarity is more important than illustration detail.

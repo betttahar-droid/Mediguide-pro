@@ -1,0 +1,150 @@
+{
+  "schemaVersion": 3,
+  "authorityImage": "docs/concept/vaccine-fridge-turnaround-v1.png",
+  "authoritySha256": "8fface4d547894f3025cc69724a666b521d130db64dcb91e637d0c4abac855c4",
+  "pixelsPerUnit": 32,
+  "modelGridPx": {
+    "totalHeight": 96,
+    "frontOverallWidth": 38.75,
+    "sideOverallDepth": 36.75,
+    "mainCarcassWidth": 36.625,
+    "mainCarcassDepth": 32.5,
+    "handleOverallDepth": 36.75
+  },
+  "verticalBandsPx": {
+    "feet": [0, 1.125],
+    "plinthRail": [1.125, 3.25],
+    "condenserBase": [3.25, 19],
+    "mainCarcass": [19, 87],
+    "crownFascia": [87, 94],
+    "crownRoof": [94, 96]
+  },
+  "frontFeaturesPx": {
+    "doorOuter": [-15, 15, 22, 82],
+    "glass": [-12, 12, 27, 79],
+    "handle": [-18, -15, 43, 62],
+    "grille": [-13, 13, 5, 16],
+    "display": [-2.5, 10.5, 88, 92],
+    "shelvesZ": [36, 48, 60, 72]
+  },
+  "sourceRingsPx": [
+    [3.25, 38.50, -15.2, 17.0], [4.50, 37.50, -15.2, 17.1],
+    [14.40, 37.60, -15.2, 17.2], [15.65, 38.25, -15.2, 17.2],
+    [16.90, 38.10, -15.2, 17.2], [17.50, 37.10, -15.2, 17.2],
+    [18.15, 36.10, -15.2, 17.2], [18.75, 35.50, -15.2, 17.2],
+    [20.60, 36.625, -15.2, 17.2], [86.45, 36.75, -15.2, 14.8],
+    [87.70, 38.25, -15.8, 16.2], [92.50, 38.25, -15.8, 16.2],
+    [93.25, 36.625, -14.8, 15.7], [94.50, 34.125, -13.2, 14.3],
+    [95.875, 31.40, -13.2, 14.3]
+  ],
+  "materials": {
+    "cream": [0.86, 0.79, 0.66, 1.0],
+    "steel": [0.38, 0.48, 0.50, 1.0],
+    "teal": [0.05, 0.25, 0.23, 1.0],
+    "plum": [0.09, 0.035, 0.12, 1.0],
+    "glass": [0.018, 0.075, 0.07, 0.22],
+    "interior": [0.012, 0.065, 0.06, 1.0],
+    "shelfLip": [0.62, 0.68, 0.68, 1.0]
+  },
+  "parts": [
+    {"name": "cream_frame_left", "boundsPx": [-18, -15.2, 20, -15, -14.8, 87], "material": "cream", "role": "front_carcass_frame"},
+    {"name": "cream_frame_right", "boundsPx": [15, -15.2, 20, 18, -14.8, 87], "material": "cream", "role": "front_carcass_frame"},
+    {"name": "cream_corner_right", "boundsPx": [17.2, -15.6, 20, 18.3, -12.9, 87], "material": "cream", "role": "front_side_corner"},
+    {"name": "cream_frame_bottom", "boundsPx": [-15, -15.2, 20, 15, -14.8, 22], "material": "cream", "role": "front_carcass_frame"},
+    {"name": "cream_frame_top", "boundsPx": [-15, -15.2, 82, 15, -14.8, 87], "material": "cream", "role": "front_carcass_frame"},
+    {"name": "door_rail_left", "boundsPx": [-15, -15.5, 22, -12, -15.2, 82], "material": "teal", "role": "door_outer_frame"},
+    {"name": "door_rail_right", "boundsPx": [12, -15.5, 22, 15, -15.2, 82], "material": "teal", "role": "door_outer_frame"},
+    {"name": "door_rail_bottom", "boundsPx": [-12, -15.5, 22, 12, -15.2, 27], "material": "teal", "role": "door_outer_frame"},
+    {"name": "door_rail_top", "boundsPx": [-12, -15.5, 79, 12, -15.2, 82], "material": "teal", "role": "door_outer_frame"},
+    {"name": "cavity_back", "boundsPx": [-12, 7.5, 27, 12, 7.8, 79], "material": "interior", "role": "interior_back"},
+    {"name": "cavity_left", "boundsPx": [-12, -15.1, 27, -11.5, 7.8, 79], "material": "teal", "role": "interior_wall"},
+    {"name": "cavity_right", "boundsPx": [11.5, -15.1, 27, 12, 7.8, 79], "material": "teal", "role": "interior_wall"},
+    {"name": "cavity_floor", "boundsPx": [-12, -15.1, 27, 12, 7.8, 27.5], "material": "teal", "role": "interior_wall"},
+    {"name": "cavity_ceiling", "boundsPx": [-12, -15.1, 78.5, 12, 7.8, 79], "material": "teal", "role": "interior_wall"},
+    {"name": "front_glass", "boundsPx": [-12, -15.82, 27, 12, -15.72, 79], "material": "glass", "role": "door_glass"},
+    {"name": "handle_grip", "boundsPx": [-18, -19.2, 45, -15.5, -17.8, 60], "material": "plum", "role": "handle_grip"},
+    {"name": "handle_mount_top", "boundsPx": [-18, -18.8, 59.5, -15, -15.5, 62], "material": "plum", "role": "handle_mount"},
+    {"name": "handle_mount_bottom", "boundsPx": [-18, -18.8, 43, -15, -15.5, 45.5], "material": "plum", "role": "handle_mount"},
+    {"name": "condenser_front_panel", "boundsPx": [-16, -15.5, 3.25, 16, -14.7, 19], "material": "teal", "role": "condenser_front_panel"},
+    {"name": "base_corner_left", "boundsPx": [-19, -15.6, 3.25, -16, -14.7, 20.6], "material": "cream", "role": "base_corner_post"},
+    {"name": "base_corner_right", "boundsPx": [16, -15.6, 3.25, 19, -14.7, 20.6], "material": "cream", "role": "base_corner_post"},
+    {"name": "side_base_panel_right", "boundsPx": [18.3, -14.7, 3.25, 19, 17.2, 19], "material": "teal", "role": "side_condenser_panel"},
+    {"name": "grille_recess", "boundsPx": [-14, -15.65, 5, 14, -15.52, 17], "material": "teal", "role": "condenser_front"},
+    {"name": "crown_fascia", "boundsPx": [-19.125, -15.8, 87.7, 19.125, -14.3, 93.25], "material": "cream", "role": "crown_fascia"},
+    {"name": "crown_roof", "boundsPx": [-15.70, -13.75, 94.5, 15.70, 13.75, 96], "material": "cream", "role": "crown_roof"},
+    {"name": "plinth_rail", "boundsPx": [-19.25, -15.8, 1.125, 19.25, 18.2, 3.25], "material": "plum", "role": "plinth_rail"},
+    {"name": "foot_left", "boundsPx": [-19.375, -15.8, 0, -12.0, 18.2, 1.125], "material": "plum", "role": "foot"},
+    {"name": "foot_right", "boundsPx": [11.75, -15.8, 0, 19.375, 18.2, 1.125], "material": "plum", "role": "foot"},
+    {"name": "back_service_recess", "boundsPx": [-14, 15.7, 5, 14, 16.5, 16], "material": "teal", "role": "back_service_recess"}
+  ],
+  "shelfTemplate": {
+    "elevationsPx": [36, 48, 60, 72],
+    "bodyBoundsPx": [-11.5, -15.0, 0, 11.5, 7.4, 1.5],
+    "lipBoundsPx": [-11.5, -15.78, 0, 11.5, -15.40, 1.65],
+    "bodyMaterial": "steel",
+    "lipMaterial": "shelfLip"
+  },
+  "imageSurfaces": [
+    {"name": "glass_reflection", "texture": "glassReflection", "pointsPx": [[-12, -15.94, 27], [12, -15.94, 27], [12, -15.94, 79], [-12, -15.94, 79]], "texturePolicy": "FIXED_DECAL"},
+    {"name": "source_top_surface", "texture": "top", "pointsPx": [[-15.70, -13.75, 96.02], [15.70, -13.75, 96.02], [15.70, 13.75, 96.02], [-15.70, 13.75, 96.02]], "texturePolicy": "FIXED_CORNER"}
+  ],
+  "socketsPx": {
+    "socket_display": [4, -18.4, 90],
+    "socket_handle": [-16.5, -20.4, 52.5],
+    "socket_door_center": [0, -18.4, 52],
+    "socket_grille": [0, -18.4, 11]
+  },
+  "adaptive": {
+    "doorBayWidthPx": 32,
+    "policy": "insert_complete_door_bays",
+    "sourceDoorBayBoundsPx": [-16, 16],
+    "partRules": {
+      "perBay": [
+        "door_rail_left", "door_rail_right", "door_rail_bottom", "door_rail_top",
+        "cavity_back", "cavity_left", "cavity_right", "cavity_floor", "cavity_ceiling",
+        "front_glass", "handle_grip", "handle_mount_top", "handle_mount_bottom", "grille_recess"
+      ],
+      "anchorLeft": ["cream_frame_left", "base_corner_left", "foot_left"],
+      "anchorRight": ["cream_frame_right", "cream_corner_right", "base_corner_right", "side_base_panel_right", "foot_right"],
+      "spanWidth": [
+        "cream_frame_bottom", "cream_frame_top", "condenser_front_panel", "crown_fascia",
+        "crown_roof", "plinth_rail", "back_service_recess"
+      ]
+    },
+    "imageSurfaceRules": {
+      "perBay": ["glass_reflection"],
+      "spanWidth": ["source_top_surface"]
+    },
+    "fixedCenterFeatures": ["display"],
+    "sourceAtlasSegments": {
+      "frontOriginPx": [0, 0],
+      "frontSizePx": [39, 96],
+      "backOriginPx": [78, 0],
+      "backSizePx": [37, 96],
+      "fixedDisplayRectPx": [17, 4, 13, 4]
+    },
+    "fixedScaleClasses": ["FIXED_CORNER", "FIXED_DECAL"],
+    "repeatClasses": ["TILE_X", "TILE_Y", "REPEATABLE_CENTER"]
+  },
+  "geometryWhitelist": [
+    "load-bearing carcass",
+    "crown roof and fascia",
+    "condenser base and plinth",
+    "front recess, door frame, glass, shelves, handle, grille recess",
+    "back lower service recess"
+  ],
+  "textureOnly": [
+    "rust",
+    "paint chips",
+    "white corner wear",
+    "baked highlights and shadows",
+    "panel seams",
+    "flush bolt heads"
+  ],
+  "notes": [
+    "All dimensions are integer model pixels. Divide by 32 for Blender units.",
+    "The source is AI-authored and its views are not perfectly projectively consistent; the front view controls width/height and the side view controls depth.",
+    "No unsupported detail may be promoted from texture to geometry.",
+    "This file is the sole production geometry and assembly specification; generated correction sheets are advisory until measurements are explicitly accepted here."
+  ]
+}

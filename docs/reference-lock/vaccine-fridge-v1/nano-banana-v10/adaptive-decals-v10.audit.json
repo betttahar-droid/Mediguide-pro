@@ -1,0 +1,416 @@
+{
+  "schemaVersion": 10,
+  "model": "gemini-3.1-flash-image (Nano Banana 2)",
+  "sourceSha256": "ace75394e952f0acb7694b998ca47cd2919dc8b5c39417252b276d4c6e4e6c33",
+  "output": "public/textures/vaccine-fridge-nano-adaptive-decals-v10.png",
+  "atlasSizePx": [
+    96,
+    96
+  ],
+  "checks": {
+    "allCellsCompiled": true,
+    "allMarginsAtLeast3": true
+  },
+  "decals": [
+    {
+      "name": "steel_top_left",
+      "role": "steel",
+      "atlasRectPx": [
+        4,
+        4,
+        16,
+        16
+      ],
+      "sourceComponents": 1,
+      "sourceBounds": [
+        10,
+        10,
+        246,
+        246
+      ],
+      "compiledBounds": [
+        4,
+        4,
+        12,
+        12
+      ],
+      "internalMarginPx": 4,
+      "coverage": 0.25
+    },
+    {
+      "name": "steel_bottom_right",
+      "role": "steel",
+      "atlasRectPx": [
+        28,
+        4,
+        16,
+        16
+      ],
+      "sourceComponents": 1,
+      "sourceBounds": [
+        10,
+        10,
+        246,
+        246
+      ],
+      "compiledBounds": [
+        4,
+        4,
+        12,
+        12
+      ],
+      "internalMarginPx": 4,
+      "coverage": 0.25
+    },
+    {
+      "name": "steel_horizontal_seam",
+      "role": "steel",
+      "atlasRectPx": [
+        52,
+        4,
+        16,
+        16
+      ],
+      "sourceComponents": 1,
+      "sourceBounds": [
+        20,
+        92,
+        236,
+        164
+      ],
+      "compiledBounds": [
+        3,
+        6,
+        13,
+        9
+      ],
+      "internalMarginPx": 3,
+      "coverage": 0.1172
+    },
+    {
+      "name": "steel_vertical_seam",
+      "role": "steel",
+      "atlasRectPx": [
+        76,
+        4,
+        16,
+        16
+      ],
+      "sourceComponents": 1,
+      "sourceBounds": [
+        92,
+        10,
+        164,
+        246
+      ],
+      "compiledBounds": [
+        6,
+        3,
+        9,
+        13
+      ],
+      "internalMarginPx": 3,
+      "coverage": 0.1172
+    },
+    {
+      "name": "steel_fastener_pair",
+      "role": "steel",
+      "atlasRectPx": [
+        4,
+        28,
+        16,
+        16
+      ],
+      "sourceComponents": 1,
+      "sourceBounds": [
+        30,
+        92,
+        226,
+        164
+      ],
+      "compiledBounds": [
+        3,
+        6,
+        12,
+        9
+      ],
+      "internalMarginPx": 3,
+      "coverage": 0.082
+    },
+    {
+      "name": "cream_corner_catch",
+      "role": "cream",
+      "atlasRectPx": [
+        28,
+        28,
+        16,
+        16
+      ],
+      "sourceComponents": 1,
+      "sourceBounds": [
+        50,
+        40,
+        206,
+        216
+      ],
+      "compiledBounds": [
+        4,
+        4,
+        11,
+        12
+      ],
+      "internalMarginPx": 4,
+      "coverage": 0.1445
+    },
+    {
+      "name": "cream_pressed_seam",
+      "role": "cream",
+      "atlasRectPx": [
+        52,
+        28,
+        16,
+        16
+      ],
+      "sourceComponents": 1,
+      "sourceBounds": [
+        20,
+        102,
+        236,
+        154
+      ],
+      "compiledBounds": [
+        3,
+        7,
+        13,
+        9
+      ],
+      "internalMarginPx": 3,
+      "coverage": 0.0312
+    },
+    {
+      "name": "teal_recessed_patch",
+      "role": "teal",
+      "atlasRectPx": [
+        76,
+        28,
+        16,
+        16
+      ],
+      "sourceComponents": 1,
+      "sourceBounds": [
+        30,
+        50,
+        227,
+        206
+      ],
+      "compiledBounds": [
+        3,
+        4,
+        12,
+        11
+      ],
+      "internalMarginPx": 3,
+      "coverage": 0.2461
+    },
+    {
+      "name": "teal_mechanical_seam",
+      "role": "teal",
+      "atlasRectPx": [
+        4,
+        52,
+        16,
+        16
+      ],
+      "sourceComponents": 1,
+      "sourceBounds": [
+        91,
+        19,
+        164,
+        237
+      ],
+      "compiledBounds": [
+        7,
+        6,
+        8,
+        10
+      ],
+      "internalMarginPx": 6,
+      "coverage": 0.0156
+    },
+    {
+      "name": "glass_stair_glint",
+      "role": "glass",
+      "atlasRectPx": [
+        28,
+        52,
+        16,
+        16
+      ],
+      "sourceComponents": 1,
+      "sourceBounds": [
+        50,
+        50,
+        206,
+        206
+      ],
+      "compiledBounds": [
+        5,
+        5,
+        11,
+        11
+      ],
+      "internalMarginPx": 5,
+      "coverage": 0.0625
+    },
+    {
+      "name": "shelf_end_cap",
+      "role": "steel",
+      "atlasRectPx": [
+        52,
+        52,
+        16,
+        16
+      ],
+      "sourceComponents": 1,
+      "sourceBounds": [
+        40,
+        51,
+        216,
+        204
+      ],
+      "compiledBounds": [
+        4,
+        5,
+        11,
+        11
+      ],
+      "internalMarginPx": 4,
+      "coverage": 0.1172
+    },
+    {
+      "name": "grille_bracket",
+      "role": "ochre",
+      "atlasRectPx": [
+        76,
+        52,
+        16,
+        16
+      ],
+      "sourceComponents": 1,
+      "sourceBounds": [
+        51,
+        51,
+        206,
+        206
+      ],
+      "compiledBounds": [
+        4,
+        4,
+        12,
+        12
+      ],
+      "internalMarginPx": 4,
+      "coverage": 0.1211
+    },
+    {
+      "name": "handle_end_cap",
+      "role": "plum",
+      "atlasRectPx": [
+        4,
+        76,
+        16,
+        16
+      ],
+      "sourceComponents": 1,
+      "sourceBounds": [
+        51,
+        72,
+        205,
+        185
+      ],
+      "compiledBounds": [
+        4,
+        5,
+        12,
+        11
+      ],
+      "internalMarginPx": 4,
+      "coverage": 0.1406
+    },
+    {
+      "name": "caution_bars",
+      "role": "ochre",
+      "atlasRectPx": [
+        28,
+        76,
+        16,
+        16
+      ],
+      "sourceComponents": 1,
+      "sourceBounds": [
+        60,
+        71,
+        195,
+        185
+      ],
+      "compiledBounds": [
+        4,
+        5,
+        11,
+        11
+      ],
+      "internalMarginPx": 4,
+      "coverage": 0.1641
+    },
+    {
+      "name": "control_status_glyph",
+      "role": "steel",
+      "atlasRectPx": [
+        52,
+        76,
+        16,
+        16
+      ],
+      "sourceComponents": 1,
+      "sourceBounds": [
+        40,
+        71,
+        216,
+        185
+      ],
+      "compiledBounds": [
+        4,
+        5,
+        12,
+        10
+      ],
+      "internalMarginPx": 4,
+      "coverage": 0.0977
+    },
+    {
+      "name": "vent_notch",
+      "role": "dark",
+      "atlasRectPx": [
+        76,
+        76,
+        16,
+        16
+      ],
+      "sourceComponents": 15,
+      "sourceBounds": [
+        122,
+        102,
+        134,
+        154
+      ],
+      "compiledBounds": [
+        7,
+        5,
+        8,
+        11
+      ],
+      "internalMarginPx": 5,
+      "coverage": 0.0234
+    }
+  ]
+}

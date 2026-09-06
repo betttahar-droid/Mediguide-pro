@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "sourceBoard": "docs/reference-lock/vaccine-fridge-v1/gpt-image/gpt-image-semantic-texture-board-v1.png",
+  "generatedAtlas": "public/textures/vaccine-fridge-adaptive-gpt-v1.png",
+  "boardSizePx": [
+    1254,
+    1254
+  ],
+  "gridLinesPx": {
+    "x": [
+      15,
+      321,
+      626,
+      931,
+      1237
+    ],
+    "y": [
+      15,
+      321,
+      626,
+      932,
+      1238
+    ]
+  },
+  "accepted": [
+    {
+      "cell": 1,
+      "role": "cream",
+      "contentBoundsPx": [
+        51,
+        51,
+        288,
+        289
+      ],
+      "output": "public/textures/vaccine-fridge-gpt-cream-tile-v1.png",
+      "seamGate": "pass"
+    },
+    {
+      "cell": 2,
+      "role": "steel",
+      "contentBoundsPx": [
+        356,
+        51,
+        593,
+        289
+      ],
+      "output": "public/textures/vaccine-fridge-gpt-steel-tile-v1.png",
+      "seamGate": "pass"
+    },
+    {
+      "cell": 3,
+      "role": "teal",
+      "contentBoundsPx": [
+        660,
+        50,
+        898,
+        289
+      ],
+      "output": "public/textures/vaccine-fridge-gpt-teal-tile-v1.png",
+      "seamGate": "pass"
+    },
+    {
+      "cell": 4,
+      "role": "glass",
+      "contentBoundsPx": [
+        965,
+        50,
+        1205,
+        291
+      ],
+      "output": "public/textures/vaccine-fridge-gpt-glass-tile-v1.png",
+      "seamGate": "pass"
+    }
+  ],
+  "rejected": [
+    {
+      "cell": 8,
+      "role": "grille",
+      "reason": "GPT produced three slot rows; authority requires four"
+    },
+    {
+      "cell": 9,
+      "role": "display",
+      "reason": "GPT changed the identity-critical segmented glyphs"
+    }
+  ],
+  "fallbackDecals": {
+    "grille": "public/textures/vaccine-fridge-grille.png",
+    "display": "public/textures/vaccine-fridge-display.png"
+  }
+}

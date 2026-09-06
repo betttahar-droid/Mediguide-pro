@@ -1,0 +1,394 @@
+{
+  "schemaVersion": 1,
+  "generator": "Nano Banana 2 / gemini-3.1-flash-image via concept_sheet.py",
+  "sources": {
+    "faces": "docs/reference-lock/semantic-freezer-v1/semantic-freezer-faces-source.png",
+    "fittings": "docs/reference-lock/semantic-freezer-v1/semantic-freezer-fittings-source.png",
+    "faceSha256": "bbd0f31a478b23a65397aa006e190616f628510cab58a7dcd44cad8bfac75c1f",
+    "fittingSha256": "8a8922e4a91742a3a860b2ba7c65544b4ca1bc62a3fe5961954ff9508fbd8345"
+  },
+  "profiles": [
+    {
+      "name": "roofTop",
+      "sourceBoundsPx": [
+        36,
+        31,
+        495,
+        326
+      ],
+      "atlasRectPx": [
+        0,
+        0,
+        32,
+        32
+      ],
+      "marginTexels": 4,
+      "repeatMiddle": [
+        0,
+        0
+      ],
+      "toneCounts": {
+        "32": 0,
+        "96": 28,
+        "128": 974,
+        "192": 6,
+        "240": 16
+      }
+    },
+    {
+      "name": "crownFront",
+      "sourceBoundsPx": [
+        528,
+        34,
+        836,
+        157
+      ],
+      "atlasRectPx": [
+        32,
+        0,
+        32,
+        32
+      ],
+      "marginTexels": 4,
+      "repeatMiddle": [
+        1,
+        0
+      ],
+      "toneCounts": {
+        "32": 80,
+        "96": 312,
+        "128": 581,
+        "192": 51,
+        "240": 0
+      }
+    },
+    {
+      "name": "cabinetSide",
+      "sourceBoundsPx": [
+        529,
+        191,
+        836,
+        496
+      ],
+      "atlasRectPx": [
+        64,
+        0,
+        32,
+        32
+      ],
+      "marginTexels": 4,
+      "repeatMiddle": [
+        0,
+        0
+      ],
+      "toneCounts": {
+        "32": 9,
+        "96": 141,
+        "128": 846,
+        "192": 15,
+        "240": 13
+      }
+    },
+    {
+      "name": "doorFrame",
+      "sourceBoundsPx": [
+        869,
+        34,
+        989,
+        495
+      ],
+      "atlasRectPx": [
+        96,
+        0,
+        32,
+        32
+      ],
+      "marginTexels": 4,
+      "repeatMiddle": [
+        0,
+        0
+      ],
+      "toneCounts": {
+        "32": 6,
+        "96": 218,
+        "128": 583,
+        "192": 188,
+        "240": 29
+      }
+    },
+    {
+      "name": "shelfTop",
+      "sourceBoundsPx": [
+        36,
+        528,
+        495,
+        746
+      ],
+      "atlasRectPx": [
+        128,
+        0,
+        32,
+        32
+      ],
+      "marginTexels": 3,
+      "repeatMiddle": [
+        1,
+        1
+      ],
+      "toneCounts": {
+        "32": 2,
+        "96": 73,
+        "128": 19,
+        "192": 789,
+        "240": 141
+      }
+    },
+    {
+      "name": "shelfLip",
+      "sourceBoundsPx": [
+        529,
+        569,
+        989,
+        683
+      ],
+      "atlasRectPx": [
+        160,
+        0,
+        32,
+        32
+      ],
+      "marginTexels": 3,
+      "repeatMiddle": [
+        1,
+        0
+      ],
+      "toneCounts": {
+        "32": 38,
+        "96": 265,
+        "128": 378,
+        "192": 283,
+        "240": 60
+      }
+    },
+    {
+      "name": "baseFront",
+      "sourceBoundsPx": [
+        36,
+        789,
+        495,
+        992
+      ],
+      "atlasRectPx": [
+        192,
+        0,
+        32,
+        32
+      ],
+      "marginTexels": 4,
+      "repeatMiddle": [
+        0,
+        0
+      ],
+      "toneCounts": {
+        "32": 0,
+        "96": 157,
+        "128": 867,
+        "192": 0,
+        "240": 0
+      }
+    },
+    {
+      "name": "ventField",
+      "sourceBoundsPx": [
+        530,
+        726,
+        989,
+        992
+      ],
+      "atlasRectPx": [
+        224,
+        0,
+        32,
+        32
+      ],
+      "marginTexels": 3,
+      "repeatMiddle": [
+        1,
+        1
+      ],
+      "toneCounts": {
+        "32": 591,
+        "96": 210,
+        "128": 39,
+        "192": 174,
+        "240": 10
+      }
+    }
+  ],
+  "fittings": [
+    {
+      "name": "medicalBadge",
+      "sourceBoundsPx": [
+        20,
+        20,
+        297,
+        310
+      ],
+      "atlasRectPx": [
+        0,
+        0,
+        32,
+        32
+      ],
+      "opaqueTexels": 1020
+    },
+    {
+      "name": "digitalStatus",
+      "sourceBoundsPx": [
+        318,
+        62,
+        694,
+        205
+      ],
+      "atlasRectPx": [
+        32,
+        0,
+        32,
+        32
+      ],
+      "opaqueTexels": 1017
+    },
+    {
+      "name": "statusStrip",
+      "sourceBoundsPx": [
+        716,
+        81,
+        1006,
+        174
+      ],
+      "atlasRectPx": [
+        64,
+        0,
+        32,
+        32
+      ],
+      "opaqueTexels": 1009
+    },
+    {
+      "name": "sideRating",
+      "sourceBoundsPx": [
+        716,
+        266,
+        1002,
+        497
+      ],
+      "atlasRectPx": [
+        96,
+        0,
+        32,
+        32
+      ],
+      "opaqueTexels": 986
+    },
+    {
+      "name": "rearWarning",
+      "sourceBoundsPx": [
+        20,
+        533,
+        299,
+        731
+      ],
+      "atlasRectPx": [
+        128,
+        0,
+        32,
+        32
+      ],
+      "opaqueTexels": 984
+    },
+    {
+      "name": "cartonLabel",
+      "sourceBoundsPx": [
+        318,
+        531,
+        501,
+        738
+      ],
+      "atlasRectPx": [
+        160,
+        0,
+        32,
+        32
+      ],
+      "opaqueTexels": 920
+    },
+    {
+      "name": "vialLabel",
+      "sourceBoundsPx": [
+        317,
+        814,
+        498,
+        989
+      ],
+      "atlasRectPx": [
+        192,
+        0,
+        32,
+        32
+      ],
+      "opaqueTexels": 740
+    },
+    {
+      "name": "fanGrille",
+      "sourceBoundsPx": [
+        537,
+        527,
+        990,
+        1000
+      ],
+      "atlasRectPx": [
+        224,
+        0,
+        32,
+        32
+      ],
+      "opaqueTexels": 721
+    }
+  ],
+  "rejectedSourceRegions": [
+    {
+      "boundsPx": [
+        20,
+        345,
+        298,
+        486
+      ],
+      "reason": "duplicate rating/warning vocabulary"
+    },
+    {
+      "boundsPx": [
+        318,
+        340,
+        694,
+        493
+      ],
+      "reason": "duplicate status strip"
+    },
+    {
+      "boundsPx": [
+        89,
+        794,
+        227,
+        988
+      ],
+      "reason": "bottle illustration; geometry already supplies bottle"
+    }
+  ],
+  "checks": {
+    "eightFaceRoles": true,
+    "eightFittings": true,
+    "allFacesIndexed": true,
+    "generationLayoutAccepted": false,
+    "reviewedSelectionCompiled": true
+  }
+}

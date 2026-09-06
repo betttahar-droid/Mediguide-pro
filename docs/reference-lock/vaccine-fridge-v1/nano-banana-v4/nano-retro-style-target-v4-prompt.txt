@@ -1,0 +1,21 @@
+Use case: style-transfer.
+Asset type: final retro pixel-art appearance target for a scalable voxel game prop.
+
+Images 1-5 are the ONLY texture-style authority. Image 6 is the ONLY fridge design authority. Image 7 is the accepted v3 Blender render and the edit target. Preserve Image 7's exact geometry, proportions, camera, pose, shelf count, empty interior, handle, display, grille, glass, silhouette, and black background. Change only rendering and surface treatment.
+
+Push the accepted direction distinctly further toward handcrafted RETRO VOXEL PIXEL ART. It must look like a deliberately low-resolution game sprite rendered from a 3D model, not like a smooth modern 3D render with texture noise.
+
+Retro style contract:
+- use a strict 12-16 color master palette for the whole object;
+- use hard square pixels and chunky 2x2 screen-pixel clusters with absolutely no smooth gradients or soft material transitions;
+- convert lighting into three discrete value bands: bright top/left, mid front, dark right/bottom;
+- give important panel boundaries paired one-pixel highlight and shadow lines;
+- use staircase diagonals and stepped corners rather than smooth diagonal antialiasing;
+- add sparse purposeful 1-pixel bolts, 2-pixel chips, short scratches, tiny corner notches, shelf-lip bands, glass reflection steps, and grille accents;
+- keep broad centers calm; detail density should be highest at edges, recesses, joints and corners;
+- strengthen dark teal/plum outlines and the warm cream/ochre contrast while preserving the design palette;
+- retain the exact existing display and grille identity.
+
+Every visible texture mark must align to one consistent logical pixel grid. Individual details must stay small; do not replace them with large cloudy material patches. Avoid photorealism, smooth bevel shading, ambient-occlusion fog, tiny high-frequency noise, watercolor mottling, dense polka dots, rounded geometry, extra parts, text, labels, borders or comparison layouts.
+
+Output exactly one clean isometric fridge render on the same black background, filling the same frame. No caption, arrows, watermark, UI or extra objects.

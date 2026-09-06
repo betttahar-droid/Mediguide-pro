@@ -22,9 +22,13 @@ __pycache__/
 
 # Working state for a tools/setup/install-skills.sh skill run. Scratch, not art.
 tools/img2threejs-work/
+work/prop-factory-studio/
 
 # scratch probes written next to the real harnesses
 test/.*.mjs
 
 # stray output from running test/portraits.mjs with a URL in the path argument
 http:/
+
+# Stray PowerShell module cache written into the repo root.
+Microsoft/

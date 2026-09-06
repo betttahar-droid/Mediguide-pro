@@ -1,0 +1,19 @@
+Use case: precise-object-edit
+Asset type: geometry-locked texture paintover used as the visual authority for a procedural decal compiler
+
+Images 1-5 are the sole STYLE authorities. Image 6 is the EDIT TARGET (front view) and defines the exact canvas, camera, silhouette, proportions, geometry, shelf count, handle shape, part positions, and background. Image 7 is a companion geometry view for understanding only.
+
+Change ONLY the surface treatment of Image 6. Return exactly one front-view image. Preserve Image 6 pixel-for-pixel wherever no deliberate surface mark is needed. Do not change the silhouette, camera, object scale or position, crown, roof, frame thickness, opening, shelves, base, plinth, handle, background, or number of parts.
+
+Texture the existing surfaces in the reference's chunky retro PS1/pixel-art style:
+- cream enamel: restrained stepped corner catches and short pressed seams aligned with actual frame and roof edges;
+- blue-grey cabinet: two or three purposeful service-panel joints on the visible side, short crown seams, and fixed fastener groups only where panels meet;
+- deep-teal base: a readable warm-ochre ventilation grille, one service-panel break, and a tiny caution plate beside the grille;
+- dark glass/cavity: two broad blue-green stair-step reflections that stay inside the opening and never cover shelf readability;
+- shelves: pale front-lip accents and darker underside end caps aligned to each real shelf;
+- top control zone: one dark display, a small row of status lamps, and compact edge seams;
+- purple handle: one pale vertical catch and dark end caps, fitted exactly within the existing handle geometry.
+
+Texture density must match Images 1-5: bold clustered marks separated by large quiet areas. Every mark must explain construction, material, contact, reflection, ventilation, or controls. No random dirt or generic scatter.
+
+Mandatory invariants: hard square pixels; nearest-neighbour look; limited 25-40 colour appearance; no antialiasing, gradients, blur, bloom, smooth noise, text, logos, extra props, cast shadows, environment lighting, geometry edits, added protrusions, missing shelves, or changed background. Do not redraw the object. Paint only onto the existing faces of Image 6.

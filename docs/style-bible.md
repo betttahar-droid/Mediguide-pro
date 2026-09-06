@@ -1,5 +1,31 @@
 # Style bible
 
+## Mandatory external-reference gate
+
+No module is approved from its code, part list, or an isolated beauty render.
+Before judging or integrating an asset, compare its current Blender viewport or
+game portrait side by side with current Pinterest references for **low-poly,
+low-resolution, retro pixelated 3D game assets** of the same object class.
+
+The comparison must explicitly check silhouette complexity, polygon economy,
+texel/pixel scale, palette size, face-value steps, bevel width, proportion
+exaggeration, and whether identifying details remain readable at gameplay
+distance. A model that reads as a smooth modern miniature fails even if its
+geometry is technically low-poly. Record both what matches and what still fails;
+do not approve by resemblance from memory.
+
+For adaptive modules, the gate includes every structural threshold—for example,
+one-door, double-door, and 2+1 fridge variants. Labels, screens, handles, vents,
+packages, and lettering must be rebuilt or re-anchored at a fixed pixel scale,
+never stretched with the carcass.
+
+Pixelation belongs in low-resolution, nearest-filtered textures—not in clouds of
+tiny cubes pretending to be pixels. Geometry defines only the bulky silhouette,
+real openings, frames, doors, shelves, handles, and other functional depth. A
+glass-fronted cabinet must be physically ordered as door → empty cavity →
+shelves → optional stock; stock is a separate later population layer and is
+never attached to the outside face of the glass.
+
 §11.1 step 1. Every texture and every module's proportions are judged against
 this page. It is deliberately short: a fixed palette, a fixed light, a fixed
 camera, and a small set of rules read off reference.

@@ -1,0 +1,512 @@
+{
+  "schemaVersion": 7,
+  "method": "24-color median-cut before run/edge measurement to suppress JPEG noise",
+  "references": [
+    {
+      "path": "C:\\Users\\mansour\\Downloads\\inspo 1.jpg",
+      "frameCount": 1,
+      "samples": [
+        {
+          "frame": 0,
+          "sizePx": [
+            1200,
+            675
+          ],
+          "quantizedPaletteSize": 24,
+          "topPalette": [
+            {
+              "hex": "#252733",
+              "share": 0.5178
+            },
+            {
+              "hex": "#b0b5bb",
+              "share": 0.0388
+            },
+            {
+              "hex": "#9b9ea6",
+              "share": 0.0349
+            },
+            {
+              "hex": "#464249",
+              "share": 0.0334
+            },
+            {
+              "hex": "#bdc2c8",
+              "share": 0.0308
+            },
+            {
+              "hex": "#616069",
+              "share": 0.0296
+            },
+            {
+              "hex": "#33343a",
+              "share": 0.0262
+            },
+            {
+              "hex": "#8a929d",
+              "share": 0.0257
+            },
+            {
+              "hex": "#d8d8db",
+              "share": 0.0256
+            },
+            {
+              "hex": "#9d6d59",
+              "share": 0.0253
+            },
+            {
+              "hex": "#d9dcdf",
+              "share": 0.0248
+            },
+            {
+              "hex": "#6e707b",
+              "share": 0.0243
+            }
+          ],
+          "runLengthPx": {
+            "horizontalMedian": 3,
+            "horizontalP75": 7,
+            "verticalMedian": 4,
+            "verticalP75": 8
+          },
+          "hardTransitionDensity": {
+            "horizontal": 0.161,
+            "vertical": 0.1542
+          }
+        }
+      ]
+    },
+    {
+      "path": "C:\\Users\\mansour\\Downloads\\inspo 4.jpg",
+      "frameCount": 1,
+      "samples": [
+        {
+          "frame": 0,
+          "sizePx": [
+            1198,
+            726
+          ],
+          "quantizedPaletteSize": 24,
+          "topPalette": [
+            {
+              "hex": "#18191d",
+              "share": 0.6813
+            },
+            {
+              "hex": "#cbd0e0",
+              "share": 0.0268
+            },
+            {
+              "hex": "#3c5443",
+              "share": 0.0265
+            },
+            {
+              "hex": "#373e3d",
+              "share": 0.0198
+            },
+            {
+              "hex": "#80858b",
+              "share": 0.0196
+            },
+            {
+              "hex": "#2c2f31",
+              "share": 0.0188
+            },
+            {
+              "hex": "#565859",
+              "share": 0.0185
+            },
+            {
+              "hex": "#9da1af",
+              "share": 0.0181
+            },
+            {
+              "hex": "#b0b5c3",
+              "share": 0.018
+            },
+            {
+              "hex": "#77747f",
+              "share": 0.0167
+            },
+            {
+              "hex": "#576a5b",
+              "share": 0.0161
+            },
+            {
+              "hex": "#dadfe8",
+              "share": 0.015
+            }
+          ],
+          "runLengthPx": {
+            "horizontalMedian": 3,
+            "horizontalP75": 5,
+            "verticalMedian": 3,
+            "verticalP75": 6
+          },
+          "hardTransitionDensity": {
+            "horizontal": 0.1201,
+            "vertical": 0.1152
+          }
+        }
+      ]
+    },
+    {
+      "path": "C:\\Users\\mansour\\Downloads\\big inspo 3.jpg",
+      "frameCount": 1,
+      "samples": [
+        {
+          "frame": 0,
+          "sizePx": [
+            736,
+            414
+          ],
+          "quantizedPaletteSize": 24,
+          "topPalette": [
+            {
+              "hex": "#111217",
+              "share": 0.3668
+            },
+            {
+              "hex": "#495253",
+              "share": 0.0452
+            },
+            {
+              "hex": "#0b0c10",
+              "share": 0.0408
+            },
+            {
+              "hex": "#522a2c",
+              "share": 0.0401
+            },
+            {
+              "hex": "#0f0f15",
+              "share": 0.0389
+            },
+            {
+              "hex": "#2d343c",
+              "share": 0.0382
+            },
+            {
+              "hex": "#101116",
+              "share": 0.0369
+            },
+            {
+              "hex": "#a43736",
+              "share": 0.0361
+            },
+            {
+              "hex": "#252830",
+              "share": 0.033
+            },
+            {
+              "hex": "#0c0e14",
+              "share": 0.0313
+            },
+            {
+              "hex": "#1a1b22",
+              "share": 0.0309
+            },
+            {
+              "hex": "#d1d3c2",
+              "share": 0.0278
+            }
+          ],
+          "runLengthPx": {
+            "horizontalMedian": 3,
+            "horizontalP75": 5,
+            "verticalMedian": 3,
+            "verticalP75": 5
+          },
+          "hardTransitionDensity": {
+            "horizontal": 0.2819,
+            "vertical": 0.3037
+          }
+        }
+      ]
+    },
+    {
+      "path": "C:\\Users\\mansour\\Downloads\\inspo 3.gif",
+      "frameCount": 422,
+      "samples": [
+        {
+          "frame": 0,
+          "sizePx": [
+            500,
+            500
+          ],
+          "quantizedPaletteSize": 24,
+          "topPalette": [
+            {
+              "hex": "#5c5c5c",
+              "share": 0.6995
+            },
+            {
+              "hex": "#dad2c9",
+              "share": 0.0591
+            },
+            {
+              "hex": "#afa8a0",
+              "share": 0.0424
+            },
+            {
+              "hex": "#e7e2dd",
+              "share": 0.0315
+            },
+            {
+              "hex": "#212f3c",
+              "share": 0.0268
+            },
+            {
+              "hex": "#bd7a45",
+              "share": 0.0246
+            },
+            {
+              "hex": "#cd8a52",
+              "share": 0.0225
+            },
+            {
+              "hex": "#d7995f",
+              "share": 0.014
+            },
+            {
+              "hex": "#4d4d4d",
+              "share": 0.0133
+            },
+            {
+              "hex": "#a1c3d8",
+              "share": 0.0108
+            },
+            {
+              "hex": "#9f978e",
+              "share": 0.0101
+            },
+            {
+              "hex": "#2d3c4a",
+              "share": 0.0076
+            }
+          ],
+          "runLengthPx": {
+            "horizontalMedian": 5,
+            "horizontalP75": 10,
+            "verticalMedian": 5,
+            "verticalP75": 11
+          },
+          "hardTransitionDensity": {
+            "horizontal": 0.044,
+            "vertical": 0.0333
+          }
+        },
+        {
+          "frame": 211,
+          "sizePx": [
+            500,
+            500
+          ],
+          "quantizedPaletteSize": 24,
+          "topPalette": [
+            {
+              "hex": "#5c5c5c",
+              "share": 0.7007
+            },
+            {
+              "hex": "#dad2c9",
+              "share": 0.0534
+            },
+            {
+              "hex": "#afa8a0",
+              "share": 0.0379
+            },
+            {
+              "hex": "#e7e2dd",
+              "share": 0.0298
+            },
+            {
+              "hex": "#212f3c",
+              "share": 0.0249
+            },
+            {
+              "hex": "#ffffff",
+              "share": 0.0246
+            },
+            {
+              "hex": "#bd7a45",
+              "share": 0.0233
+            },
+            {
+              "hex": "#cd8a52",
+              "share": 0.0221
+            },
+            {
+              "hex": "#d7995f",
+              "share": 0.0138
+            },
+            {
+              "hex": "#4d4d4d",
+              "share": 0.0133
+            },
+            {
+              "hex": "#a1c3d8",
+              "share": 0.0108
+            },
+            {
+              "hex": "#9f978e",
+              "share": 0.0095
+            }
+          ],
+          "runLengthPx": {
+            "horizontalMedian": 5,
+            "horizontalP75": 9,
+            "verticalMedian": 5,
+            "verticalP75": 11
+          },
+          "hardTransitionDensity": {
+            "horizontal": 0.0577,
+            "vertical": 0.04
+          }
+        },
+        {
+          "frame": 421,
+          "sizePx": [
+            500,
+            500
+          ],
+          "quantizedPaletteSize": 24,
+          "topPalette": [
+            {
+              "hex": "#5c5c5c",
+              "share": 0.7034
+            },
+            {
+              "hex": "#dad2c9",
+              "share": 0.0536
+            },
+            {
+              "hex": "#afa8a0",
+              "share": 0.0383
+            },
+            {
+              "hex": "#e7e2dd",
+              "share": 0.0304
+            },
+            {
+              "hex": "#212f3c",
+              "share": 0.0247
+            },
+            {
+              "hex": "#ffffff",
+              "share": 0.0239
+            },
+            {
+              "hex": "#bd7a45",
+              "share": 0.0233
+            },
+            {
+              "hex": "#cd8a52",
+              "share": 0.0217
+            },
+            {
+              "hex": "#4d4d4d",
+              "share": 0.0133
+            },
+            {
+              "hex": "#d7995f",
+              "share": 0.0118
+            },
+            {
+              "hex": "#a1c3d8",
+              "share": 0.0103
+            },
+            {
+              "hex": "#9f978e",
+              "share": 0.0097
+            }
+          ],
+          "runLengthPx": {
+            "horizontalMedian": 5,
+            "horizontalP75": 9,
+            "verticalMedian": 5,
+            "verticalP75": 11
+          },
+          "hardTransitionDensity": {
+            "horizontal": 0.057,
+            "vertical": 0.0398
+          }
+        }
+      ]
+    },
+    {
+      "path": "C:\\Users\\mansour\\Downloads\\inspo 2.jpg",
+      "frameCount": 1,
+      "samples": [
+        {
+          "frame": 0,
+          "sizePx": [
+            735,
+            698
+          ],
+          "quantizedPaletteSize": 24,
+          "topPalette": [
+            {
+              "hex": "#111217",
+              "share": 0.355
+            },
+            {
+              "hex": "#60676f",
+              "share": 0.0614
+            },
+            {
+              "hex": "#45484f",
+              "share": 0.0504
+            },
+            {
+              "hex": "#252a2d",
+              "share": 0.0484
+            },
+            {
+              "hex": "#535d64",
+              "share": 0.0462
+            },
+            {
+              "hex": "#111117",
+              "share": 0.0459
+            },
+            {
+              "hex": "#0d0f14",
+              "share": 0.0428
+            },
+            {
+              "hex": "#0f1015",
+              "share": 0.0413
+            },
+            {
+              "hex": "#313c41",
+              "share": 0.0348
+            },
+            {
+              "hex": "#93918a",
+              "share": 0.0295
+            },
+            {
+              "hex": "#dad9d5",
+              "share": 0.0272
+            },
+            {
+              "hex": "#6e837b",
+              "share": 0.0268
+            }
+          ],
+          "runLengthPx": {
+            "horizontalMedian": 3,
+            "horizontalP75": 7,
+            "verticalMedian": 3,
+            "verticalP75": 8
+          },
+          "hardTransitionDensity": {
+            "horizontal": 0.2067,
+            "vertical": 0.1955
+          }
+        }
+      ]
+    }
+  ]
+}

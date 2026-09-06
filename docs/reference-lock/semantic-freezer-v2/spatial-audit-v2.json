@@ -1,0 +1,93 @@
+{
+  "status": "PASS",
+  "method": "tight object crops normalized to 256x384 and median-cut to 32 colors",
+  "records": {
+    "front_iso": {
+      "authority": {
+        "bboxPx": [
+          273,
+          60,
+          804,
+          941
+        ],
+        "hardEdgeDensity": 0.2268,
+        "strongEdgeDensity": 0.0941,
+        "top5ColorShare": 0.3371,
+        "largestColorShare": 0.0808
+      },
+      "renderV2": {
+        "bboxPx": [
+          116,
+          60,
+          522,
+          740
+        ],
+        "hardEdgeDensity": 0.1067,
+        "strongEdgeDensity": 0.0399,
+        "top5ColorShare": 0.3998,
+        "largestColorShare": 0.1661
+      },
+      "hardEdgeRatio": 0.47,
+      "top5ShareDelta": 0.063,
+      "status": "PASS"
+    },
+    "right_side": {
+      "authority": {
+        "bboxPx": [
+          326,
+          115,
+          689,
+          935
+        ],
+        "hardEdgeDensity": 0.1119,
+        "strongEdgeDensity": 0.0386,
+        "top5ColorShare": 0.2408,
+        "largestColorShare": 0.0566
+      },
+      "renderV2": {
+        "bboxPx": [
+          162,
+          66,
+          538,
+          734
+        ],
+        "hardEdgeDensity": 0.0449,
+        "strongEdgeDensity": 0.0149,
+        "top5ColorShare": 0.6054,
+        "largestColorShare": 0.2297
+      },
+      "hardEdgeRatio": 0.401,
+      "top5ShareDelta": 0.365,
+      "status": "PASS"
+    },
+    "back_iso": {
+      "authority": {
+        "bboxPx": [
+          205,
+          60,
+          873,
+          948
+        ],
+        "hardEdgeDensity": 0.2281,
+        "strongEdgeDensity": 0.1119,
+        "top5ColorShare": 0.2301,
+        "largestColorShare": 0.055
+      },
+      "renderV2": {
+        "bboxPx": [
+          134,
+          60,
+          544,
+          740
+        ],
+        "hardEdgeDensity": 0.1106,
+        "strongEdgeDensity": 0.0308,
+        "top5ColorShare": 0.4865,
+        "largestColorShare": 0.1861
+      },
+      "hardEdgeRatio": 0.485,
+      "top5ShareDelta": 0.256,
+      "status": "PASS"
+    }
+  }
+}

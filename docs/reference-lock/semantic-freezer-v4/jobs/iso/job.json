@@ -1,0 +1,82 @@
+{
+  "id": "semantic-freezer-v4-iso",
+  "view": "iso",
+  "renderView": "iso",
+  "prompt": "docs/reference-lock/semantic-freezer-v4/jobs/iso/prompt.txt",
+  "inputsInOrder": [
+    {
+      "role": "raw-target",
+      "path": "docs/reference-lock/semantic-freezer-v4/jobs/iso/inputs/raw.png",
+      "sizePx": [
+        1024,
+        1024
+      ],
+      "sha256": "9357fc42197804c4b3c7517d4abc872c1f727842521d18b0bb4831ea1574830b"
+    },
+    {
+      "role": "matching-authority",
+      "path": "docs/reference-lock/semantic-freezer-v4/authority/ref_front_view.png",
+      "sizePx": [
+        1024,
+        1024
+      ],
+      "sha256": "0d86e266debaa9f0f4bd19760f9d45fe6cafc7add9d8f40131f678bfb0300a36"
+    },
+    {
+      "role": "cross-view-authority-a",
+      "path": "docs/reference-lock/semantic-freezer-v4/authority/ref_right_side_view.png",
+      "sizePx": [
+        1024,
+        1024
+      ],
+      "sha256": "c5f452efd67f716e9768f9716bc7687b4daacd1a142248c782ad026e8a5a3e38"
+    },
+    {
+      "role": "cross-view-authority-b",
+      "path": "docs/reference-lock/semantic-freezer-v4/authority/ref_back_view.png",
+      "sizePx": [
+        1024,
+        1024
+      ],
+      "sha256": "1055f39aad4d41b05cdae8393813f65cae9ecf3bb6958269b236a044ae34c85a"
+    },
+    {
+      "role": "part-id",
+      "path": "docs/reference-lock/semantic-freezer-v4/jobs/iso/inputs/part-id.png",
+      "sizePx": [
+        1024,
+        1024
+      ],
+      "sha256": "19eb83529adc6167ba8c411658b14010ed0ebeafd7b38724ccb7d26f5711ad33"
+    },
+    {
+      "role": "face-normal",
+      "path": "docs/reference-lock/semantic-freezer-v4/jobs/iso/inputs/face-normal.png",
+      "sizePx": [
+        1024,
+        1024
+      ],
+      "sha256": "4ae1ce56a3dddab99e3e1525ad707cdd1c7bc807a5429d125c4a87f7c9f89eee"
+    },
+    {
+      "role": "linear-depth",
+      "path": "docs/reference-lock/semantic-freezer-v4/jobs/iso/inputs/depth.png",
+      "sizePx": [
+        1024,
+        1024
+      ],
+      "sha256": "59c4f09898a5414f65d3392eeadf493ee3814b5b6325dbd630f317a60dab9eec"
+    },
+    {
+      "role": "anchor-id",
+      "path": "docs/reference-lock/semantic-freezer-v4/jobs/iso/inputs/anchor-id.png",
+      "sizePx": [
+        1024,
+        1024
+      ],
+      "sha256": "1cd898dbbc0013d06c18cfdbbde50eba181a9fdeed61cadc0954814dcce13780"
+    }
+  ],
+  "output": "docs/reference-lock/semantic-freezer-v4/paintovers/iso-paintover-nano.png",
+  "approval": "pending"
+}

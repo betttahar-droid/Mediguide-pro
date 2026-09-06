@@ -1,0 +1,14 @@
+Use case: stylized-concept.
+Asset type: production pixel-material and decal source sheet for a scalable low-poly voxel prop.
+Input image 1 is the locked visual/style authority. Input image 2 is the current clean but overly flat model render. Create a richer material-detail kit that restores the authority's chunky pixelated low-poly character without redrawing the refrigerator and without any identity text.
+
+Create a perfectly flat, orthographic 4 by 4 grid of sixteen equal cells on white, with thin dark grid lines and generous empty gutters. No perspective, no refrigerator silhouette, no labels, no letters, no numbers, no cast shadows, no photorealism. Every mark must use hard square pixel clusters at a visibly low resolution, with 5-7 deliberate tones per material, broad 2x2-to-8x8 clusters, and no fine speckle noise.
+
+Cells left-to-right, top-to-bottom:
+1 richly pixelated seamless warm cream enamel tile with broad ivory, beige, and pale peach clusters; 2 richly pixelated seamless cool blue-gray painted steel tile with broad slate/cyan-gray clusters; 3 richly pixelated seamless deep teal enamel tile with broad dark and turquoise clusters; 4 richly pixelated dark teal glass tile with restrained blocky depth variation;
+5 cream beveled edge highlight strip, straight horizontal and fully isolated; 6 blue-gray beveled edge highlight strip; 7 teal beveled edge shadow/highlight strip; 8 plum-purple beveled handle material strip;
+9 cream outer corner highlight/wear decal, L-shaped and isolated; 10 blue-gray outer corner highlight/wear decal; 11 teal outer corner highlight/wear decal; 12 small square blue-gray fastener/bolt decal centered with blank surroundings;
+13 pale cyan stepped diagonal glass reflection decal; 14 shelf-front pixel highlight band; 15 subtle rectangular blue-gray panel patch/seam decal; 16 subtle deep-teal panel patch/seam decal.
+
+Cells 1-4 must be seamless in both directions with exactly matching opposite edges. Cells 5-16 must be isolated transparent-style sprites on white with large clean gutters and no cell-boundary contact. Match the authority palette, contrast, stepped highlights, chunky clusters, and hand-authored game-prop feeling. Avoid gradients, blur, antialiasing, scratches, random dots, dirt noise, rust, text, symbols, grille slots, display glyphs, and invented hardware.
+

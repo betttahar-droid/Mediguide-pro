@@ -1,0 +1,16 @@
+The supplied image vaccine-fridge-turnaround-v1 is the ONLY design and color authority. Do not redesign it and do not borrow generic fridge details. Produce a production SEMANTIC PIXEL-TEXTURE DECOMPOSITION for this exact fridge. This is a flat texture-authoring sheet, not a beauty render.
+
+Reconstruct the visible texture character exactly: warm ivory enamel, blue-gray steel side panels, deep desaturated teal door/cavity/condenser, dark green glass, pale shelf steel, aubergine-purple handle and plinth, ochre-gold grille, dark plum seams, mint display digits reading 4C, and the small orange display indicator. Use hard square low-resolution pixels, nearest-neighbour edges, restrained baked value bands, no antialiasing, no photographic noise, and no smooth gradients.
+
+Lay out separate large, flat, front-facing islands for:
+1 cream frame vertical edge, horizontal edge, protected outer corner, and quiet tileable centre;
+2 steel side-panel protected top corner, protected bottom corner, vertical edge strip, horizontal seam strip, and quiet tileable centre;
+3 teal door rail, teal condenser edge, teal quiet tileable centre;
+4 glass base tile plus the single fixed staircase-shaped diagonal reflection seen in the authority;
+5 exact fixed display, exact purple handle front/side/caps, exact ochre grille end caps plus a horizontally tileable middle strip;
+6 fixed tiny bolt/hinge pixels and separate transparent wear/chip decals sampled in character and placement from the authority;
+7 shelf top, shelf front lip, cream crown top, and crown edge bands.
+
+Every island must explicitly belong to one of four runtime classes: FIXED_CORNER, TILE_X, TILE_Y, or FIXED_DECAL. Protected corners must keep their original texel size. Repeatable centers must be seamless. Fixed decals must have transparent backgrounds. Keep wear sparse, asymmetric, and concentrated where the authority shows it; do not invent rust, dents, ornaments, extra bolts, extra panel seams, or extra labels. Important: all silhouette-changing detail belongs to geometry and must not be painted into this sheet.
+
+Show a compact palette and a 1-pixel padding recommendation outside the islands, but do not place labels inside texture artwork. Make the islands large enough to downsample to an actual low-resolution atlas without losing individual pixels.

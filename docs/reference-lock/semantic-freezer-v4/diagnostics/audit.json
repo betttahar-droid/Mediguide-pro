@@ -1,0 +1,2968 @@
+{
+  "status": "PASS",
+  "rigidPartsMatch": true,
+  "fixedFittingsMatch": true,
+  "records": [
+    {
+      "query": "view=iso&texture=v3&surfaces=0&fittings=0&bg=magenta&fit=1",
+      "output": "C:\\Users\\mansour\\Documents\\Modular builder\\Mediguide-pro\\docs\\reference-lock\\semantic-freezer-v4\\diagnostics\\view-iso-texture-v3-surfaces-0-fittings-0-bg-magenta-fit-1.png",
+      "ready": true,
+      "view": "iso",
+      "diagnostic": "",
+      "textureVersion": "v3",
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "diagnosticLegend": null,
+      "camera": {
+        "yaw": -36,
+        "elevation": 2.5,
+        "autoFit": true
+      },
+      "triangles": 2442,
+      "parts": 78,
+      "decals": 0,
+      "shelfCount": 4,
+      "rigidPartSizes": [
+        [
+          "handle_catch",
+          [
+            0.4,
+            0.2,
+            17.6
+          ]
+        ],
+        [
+          "handle_grip",
+          [
+            2.5,
+            1.1,
+            19
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_return",
+          [
+            2.35,
+            0.15,
+            18
+          ]
+        ]
+      ],
+      "fixedFittingSizes": [],
+      "adaptiveSurfaceCounts": [
+        [
+          "side_panel_column",
+          1
+        ],
+        [
+          "side_panel_row",
+          2
+        ]
+      ],
+      "repeatedStructureCounts": [
+        [
+          "rear_coil_run",
+          8
+        ],
+        [
+          "rear_coil_rail",
+          8
+        ],
+        [
+          "shelf",
+          4
+        ]
+      ],
+      "errors": [],
+      "paletteSize": 94
+    },
+    {
+      "query": "view=iso&texture=v3&surfaces=0&fittings=0&bg=magenta&fit=1&diagnostic=part-id",
+      "output": "C:\\Users\\mansour\\Documents\\Modular builder\\Mediguide-pro\\docs\\reference-lock\\semantic-freezer-v4\\diagnostics\\view-iso-texture-v3-surfaces-0-fittings-0-bg-magenta-fit-1-diagnostic-part-id.png",
+      "ready": true,
+      "view": "iso",
+      "diagnostic": "part-id",
+      "textureVersion": "v3",
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "diagnosticLegend": [
+        {
+          "id": 1,
+          "name": "shell_left",
+          "kind": "freezerSide",
+          "color": "#d44949"
+        },
+        {
+          "id": 2,
+          "name": "shell_right",
+          "kind": "freezerSide",
+          "color": "#4972d4"
+        },
+        {
+          "id": 3,
+          "name": "shell_back",
+          "kind": "freezerSide",
+          "color": "#9ad449"
+        },
+        {
+          "id": 4,
+          "name": "roof",
+          "kind": "freezerEnamel",
+          "color": "#d449c3"
+        },
+        {
+          "id": 5,
+          "name": "control_crown",
+          "kind": "freezerEnamel",
+          "color": "#49d4bd"
+        },
+        {
+          "id": 6,
+          "name": "cavity_back",
+          "kind": "freezerCavity",
+          "color": "#d49549"
+        },
+        {
+          "id": 7,
+          "name": "front_plinth",
+          "kind": "freezerSide",
+          "color": "#6c49d4"
+        },
+        {
+          "id": 8,
+          "name": "frame_left",
+          "kind": "freezerEnamel",
+          "color": "#4fd449"
+        },
+        {
+          "id": 9,
+          "name": "frame_right",
+          "kind": "freezerEnamel",
+          "color": "#d44978"
+        },
+        {
+          "id": 10,
+          "name": "frame_top",
+          "kind": "freezerEnamel",
+          "color": "#49a0d4"
+        },
+        {
+          "id": 11,
+          "name": "frame_bottom",
+          "kind": "freezerEnamel",
+          "color": "#c9d449"
+        },
+        {
+          "id": 12,
+          "name": "rail_left",
+          "kind": "medicalBlue",
+          "color": "#b749d4"
+        },
+        {
+          "id": 13,
+          "name": "rail_right",
+          "kind": "medicalBlue",
+          "color": "#49d48f"
+        },
+        {
+          "id": 14,
+          "name": "rail_top",
+          "kind": "medicalBlue",
+          "color": "#d46649"
+        },
+        {
+          "id": 15,
+          "name": "rail_bottom",
+          "kind": "medicalBlue",
+          "color": "#4955d4"
+        },
+        {
+          "id": 16,
+          "name": "shelf",
+          "kind": "freezerShelf",
+          "color": "#7ed449"
+        },
+        {
+          "id": 17,
+          "name": "shelf",
+          "kind": "freezerShelf",
+          "color": "#d449a6"
+        },
+        {
+          "id": 18,
+          "name": "shelf",
+          "kind": "freezerShelf",
+          "color": "#49cfd4"
+        },
+        {
+          "id": 19,
+          "name": "shelf",
+          "kind": "freezerShelf",
+          "color": "#d4b149"
+        },
+        {
+          "id": 20,
+          "name": "handle_mount",
+          "kind": "capGrey",
+          "color": "#8949d4"
+        },
+        {
+          "id": 21,
+          "name": "handle_mount",
+          "kind": "capGrey",
+          "color": "#49d460"
+        },
+        {
+          "id": 22,
+          "name": "handle_grip",
+          "kind": "freezerEnamel",
+          "color": "#d4495b"
+        },
+        {
+          "id": 23,
+          "name": "handle_catch",
+          "kind": "coil",
+          "color": "#4984d4"
+        },
+        {
+          "id": 24,
+          "name": "handle_return",
+          "kind": "coil",
+          "color": "#acd449"
+        },
+        {
+          "id": 25,
+          "name": "side_vent_panel",
+          "kind": "coil",
+          "color": "#d449d4"
+        },
+        {
+          "id": 26,
+          "name": "adaptive_side_panel_row",
+          "kind": null,
+          "color": "#49d4ab"
+        },
+        {
+          "id": 27,
+          "name": "adaptive_side_panel_row",
+          "kind": null,
+          "color": "#d48349"
+        },
+        {
+          "id": 28,
+          "name": "adaptive_side_panel_column",
+          "kind": null,
+          "color": "#5a49d4"
+        },
+        {
+          "id": 29,
+          "name": "rear_coil_run",
+          "kind": "coilBar",
+          "color": "#61d449"
+        },
+        {
+          "id": 30,
+          "name": "rear_coil_run",
+          "kind": "coilBar",
+          "color": "#d4498a"
+        },
+        {
+          "id": 31,
+          "name": "rear_coil_run",
+          "kind": "coilBar",
+          "color": "#49b2d4"
+        },
+        {
+          "id": 32,
+          "name": "rear_coil_run",
+          "kind": "coilBar",
+          "color": "#d4ce49"
+        },
+        {
+          "id": 33,
+          "name": "rear_coil_run",
+          "kind": "coilBar",
+          "color": "#a549d4"
+        },
+        {
+          "id": 34,
+          "name": "rear_coil_run",
+          "kind": "coilBar",
+          "color": "#49d47d"
+        },
+        {
+          "id": 35,
+          "name": "rear_coil_run",
+          "kind": "coilBar",
+          "color": "#d45449"
+        },
+        {
+          "id": 36,
+          "name": "rear_coil_run",
+          "kind": "coilBar",
+          "color": "#4967d4"
+        },
+        {
+          "id": 37,
+          "name": "rear_coil_rail",
+          "kind": "coilBar",
+          "color": "#8fd449"
+        },
+        {
+          "id": 38,
+          "name": "rear_coil_rail",
+          "kind": "coilBar",
+          "color": "#d449b8"
+        },
+        {
+          "id": 39,
+          "name": "rear_coil_rail",
+          "kind": "coilBar",
+          "color": "#49d4c8"
+        },
+        {
+          "id": 40,
+          "name": "rear_coil_rail",
+          "kind": "coilBar",
+          "color": "#d49f49"
+        },
+        {
+          "id": 41,
+          "name": "rear_coil_rail",
+          "kind": "coilBar",
+          "color": "#7749d4"
+        },
+        {
+          "id": 42,
+          "name": "rear_coil_rail",
+          "kind": "coilBar",
+          "color": "#49d44e"
+        },
+        {
+          "id": 43,
+          "name": "rear_coil_rail",
+          "kind": "coilBar",
+          "color": "#d4496d"
+        },
+        {
+          "id": 44,
+          "name": "rear_coil_rail",
+          "kind": "coilBar",
+          "color": "#4995d4"
+        },
+        {
+          "id": 45,
+          "name": "rear_machine_bay",
+          "kind": "coil",
+          "color": "#bed449"
+        },
+        {
+          "id": 46,
+          "name": "rear_fan",
+          "kind": "capGrey",
+          "color": "#c249d4"
+        },
+        {
+          "id": 47,
+          "name": "compressor",
+          "kind": "coil",
+          "color": "#49d49a"
+        },
+        {
+          "id": 48,
+          "name": "copper_pipe",
+          "kind": "copper",
+          "color": "#d47149"
+        },
+        {
+          "id": 49,
+          "name": "foot",
+          "kind": "coil",
+          "color": "#494ad4"
+        },
+        {
+          "id": 50,
+          "name": "foot",
+          "kind": "coil",
+          "color": "#73d449"
+        },
+        {
+          "id": 51,
+          "name": "medicine_carton",
+          "kind": "medicineTan",
+          "color": "#d4499b"
+        },
+        {
+          "id": 52,
+          "name": "medicine_carton",
+          "kind": "medicinePaper",
+          "color": "#49c4d4"
+        },
+        {
+          "id": 53,
+          "name": "medicine_carton",
+          "kind": "medicineCool",
+          "color": "#d4bc49"
+        },
+        {
+          "id": 54,
+          "name": "medicine_carton",
+          "kind": "medicinePaper",
+          "color": "#9449d4"
+        },
+        {
+          "id": 55,
+          "name": "medicine_vial",
+          "kind": "bottleAmber",
+          "color": "#49d46b"
+        },
+        {
+          "id": 56,
+          "name": "vial_cap",
+          "kind": "capRed",
+          "color": "#d44950"
+        },
+        {
+          "id": 57,
+          "name": "medicine_vial",
+          "kind": "bottleWhite",
+          "color": "#4979d4"
+        },
+        {
+          "id": 58,
+          "name": "vial_cap",
+          "kind": "capBlue",
+          "color": "#a1d449"
+        },
+        {
+          "id": 59,
+          "name": "medicine_vial",
+          "kind": "bottleAmber",
+          "color": "#d449ca"
+        },
+        {
+          "id": 60,
+          "name": "vial_cap",
+          "kind": "capGreen",
+          "color": "#49d4b6"
+        },
+        {
+          "id": 61,
+          "name": "medicine_vial",
+          "kind": "bottleWhite",
+          "color": "#d48e49"
+        },
+        {
+          "id": 62,
+          "name": "vial_cap",
+          "kind": "capRed",
+          "color": "#6549d4"
+        },
+        {
+          "id": 63,
+          "name": "medicine_vial",
+          "kind": "bottleAmber",
+          "color": "#56d449"
+        },
+        {
+          "id": 64,
+          "name": "vial_cap",
+          "kind": "capBlue",
+          "color": "#d4497f"
+        },
+        {
+          "id": 65,
+          "name": "medicine_vial",
+          "kind": "bottleWhite",
+          "color": "#49a7d4"
+        },
+        {
+          "id": 66,
+          "name": "vial_cap",
+          "kind": "capBlue",
+          "color": "#d0d449"
+        },
+        {
+          "id": 67,
+          "name": "medicine_vial",
+          "kind": "bottleAmber",
+          "color": "#b049d4"
+        },
+        {
+          "id": 68,
+          "name": "vial_cap",
+          "kind": "capGreen",
+          "color": "#49d488"
+        },
+        {
+          "id": 69,
+          "name": "medicine_vial",
+          "kind": "bottleWhite",
+          "color": "#d45f49"
+        },
+        {
+          "id": 70,
+          "name": "vial_cap",
+          "kind": "capRed",
+          "color": "#495cd4"
+        },
+        {
+          "id": 71,
+          "name": "medicine_vial",
+          "kind": "bottleAmber",
+          "color": "#84d449"
+        },
+        {
+          "id": 72,
+          "name": "vial_cap",
+          "kind": "capBlue",
+          "color": "#d449ad"
+        },
+        {
+          "id": 73,
+          "name": "medicine_vial",
+          "kind": "bottleWhite",
+          "color": "#49d4d3"
+        },
+        {
+          "id": 74,
+          "name": "vial_cap",
+          "kind": "capGreen",
+          "color": "#d4aa49"
+        },
+        {
+          "id": 75,
+          "name": "medicine_carton",
+          "kind": "medicineTan",
+          "color": "#8249d4"
+        },
+        {
+          "id": 76,
+          "name": "medicine_carton",
+          "kind": "medicinePaper",
+          "color": "#49d459"
+        },
+        {
+          "id": 77,
+          "name": "medicine_vial",
+          "kind": "bottleWhite",
+          "color": "#d44962"
+        },
+        {
+          "id": 78,
+          "name": "vial_cap",
+          "kind": "capGrey",
+          "color": "#498ad4"
+        }
+      ],
+      "camera": {
+        "yaw": -36,
+        "elevation": 2.5,
+        "autoFit": true
+      },
+      "triangles": 2442,
+      "parts": 78,
+      "decals": 0,
+      "shelfCount": 4,
+      "rigidPartSizes": [
+        [
+          "handle_catch",
+          [
+            0.4,
+            0.2,
+            17.6
+          ]
+        ],
+        [
+          "handle_grip",
+          [
+            2.5,
+            1.1,
+            19
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_return",
+          [
+            2.35,
+            0.15,
+            18
+          ]
+        ]
+      ],
+      "fixedFittingSizes": [],
+      "adaptiveSurfaceCounts": [
+        [
+          "side_panel_column",
+          1
+        ],
+        [
+          "side_panel_row",
+          2
+        ]
+      ],
+      "repeatedStructureCounts": [
+        [
+          "rear_coil_run",
+          8
+        ],
+        [
+          "rear_coil_rail",
+          8
+        ],
+        [
+          "shelf",
+          4
+        ]
+      ],
+      "errors": [],
+      "paletteSize": 60
+    },
+    {
+      "query": "view=iso&texture=v3&surfaces=0&fittings=0&bg=magenta&fit=1&diagnostic=face-normal",
+      "output": "C:\\Users\\mansour\\Documents\\Modular builder\\Mediguide-pro\\docs\\reference-lock\\semantic-freezer-v4\\diagnostics\\view-iso-texture-v3-surfaces-0-fittings-0-bg-magenta-fit-1-diagnostic-face-normal.png",
+      "ready": true,
+      "view": "iso",
+      "diagnostic": "face-normal",
+      "textureVersion": "v3",
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "diagnosticLegend": {
+        "encoding": "rgb = world_normal * 0.5 + 0.5",
+        "axes": {
+          "right": "#ff8080",
+          "left": "#008080",
+          "top": "#80ff80",
+          "bottom": "#800080",
+          "back": "#8080ff",
+          "front": "#808000"
+        }
+      },
+      "camera": {
+        "yaw": -36,
+        "elevation": 2.5,
+        "autoFit": true
+      },
+      "triangles": 2442,
+      "parts": 78,
+      "decals": 0,
+      "shelfCount": 4,
+      "rigidPartSizes": [
+        [
+          "handle_catch",
+          [
+            0.4,
+            0.2,
+            17.6
+          ]
+        ],
+        [
+          "handle_grip",
+          [
+            2.5,
+            1.1,
+            19
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_return",
+          [
+            2.35,
+            0.15,
+            18
+          ]
+        ]
+      ],
+      "fixedFittingSizes": [],
+      "adaptiveSurfaceCounts": [
+        [
+          "side_panel_column",
+          1
+        ],
+        [
+          "side_panel_row",
+          2
+        ]
+      ],
+      "repeatedStructureCounts": [
+        [
+          "rear_coil_run",
+          8
+        ],
+        [
+          "rear_coil_rail",
+          8
+        ],
+        [
+          "shelf",
+          4
+        ]
+      ],
+      "errors": [],
+      "paletteSize": 247
+    },
+    {
+      "query": "view=iso&texture=v3&surfaces=0&fittings=0&bg=magenta&fit=1&diagnostic=linear-depth",
+      "output": "C:\\Users\\mansour\\Documents\\Modular builder\\Mediguide-pro\\docs\\reference-lock\\semantic-freezer-v4\\diagnostics\\view-iso-texture-v3-surfaces-0-fittings-0-bg-magenta-fit-1-diagnostic-linear-depth.png",
+      "ready": true,
+      "view": "iso",
+      "diagnostic": "linear-depth",
+      "textureVersion": "v3",
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "diagnosticLegend": {
+        "encoding": "black = camera near; white = camera far; orthographic linear clip depth"
+      },
+      "camera": {
+        "yaw": -36,
+        "elevation": 2.5,
+        "autoFit": true
+      },
+      "triangles": 2442,
+      "parts": 78,
+      "decals": 0,
+      "shelfCount": 4,
+      "rigidPartSizes": [
+        [
+          "handle_catch",
+          [
+            0.4,
+            0.2,
+            17.6
+          ]
+        ],
+        [
+          "handle_grip",
+          [
+            2.5,
+            1.1,
+            19
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_return",
+          [
+            2.35,
+            0.15,
+            18
+          ]
+        ]
+      ],
+      "fixedFittingSizes": [],
+      "adaptiveSurfaceCounts": [
+        [
+          "side_panel_column",
+          1
+        ],
+        [
+          "side_panel_row",
+          2
+        ]
+      ],
+      "repeatedStructureCounts": [
+        [
+          "rear_coil_run",
+          8
+        ],
+        [
+          "rear_coil_rail",
+          8
+        ],
+        [
+          "shelf",
+          4
+        ]
+      ],
+      "errors": [],
+      "paletteSize": 18
+    },
+    {
+      "query": "view=iso&texture=v3&surfaces=0&fittings=0&bg=magenta&fit=1&diagnostic=anchor-id",
+      "output": "C:\\Users\\mansour\\Documents\\Modular builder\\Mediguide-pro\\docs\\reference-lock\\semantic-freezer-v4\\diagnostics\\view-iso-texture-v3-surfaces-0-fittings-0-bg-magenta-fit-1-diagnostic-anchor-id.png",
+      "ready": true,
+      "view": "iso",
+      "diagnostic": "anchor-id",
+      "textureVersion": "v3",
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "diagnosticLegend": [
+        {
+          "id": 1,
+          "name": "bottom-left",
+          "color": "#e53935"
+        },
+        {
+          "id": 2,
+          "name": "bottom-center",
+          "color": "#fb8c00"
+        },
+        {
+          "id": 3,
+          "name": "bottom-right",
+          "color": "#fdd835"
+        },
+        {
+          "id": 4,
+          "name": "middle-left",
+          "color": "#43a047"
+        },
+        {
+          "id": 5,
+          "name": "center",
+          "color": "#00acc1"
+        },
+        {
+          "id": 6,
+          "name": "middle-right",
+          "color": "#1e88e5"
+        },
+        {
+          "id": 7,
+          "name": "top-left",
+          "color": "#5e35b1"
+        },
+        {
+          "id": 8,
+          "name": "top-center",
+          "color": "#8e24aa"
+        },
+        {
+          "id": 9,
+          "name": "top-right",
+          "color": "#d81b60"
+        }
+      ],
+      "camera": {
+        "yaw": -36,
+        "elevation": 2.5,
+        "autoFit": true
+      },
+      "triangles": 2442,
+      "parts": 78,
+      "decals": 0,
+      "shelfCount": 4,
+      "rigidPartSizes": [
+        [
+          "handle_catch",
+          [
+            0.4,
+            0.2,
+            17.6
+          ]
+        ],
+        [
+          "handle_grip",
+          [
+            2.5,
+            1.1,
+            19
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_return",
+          [
+            2.35,
+            0.15,
+            18
+          ]
+        ]
+      ],
+      "fixedFittingSizes": [],
+      "adaptiveSurfaceCounts": [
+        [
+          "side_panel_column",
+          1
+        ],
+        [
+          "side_panel_row",
+          2
+        ]
+      ],
+      "repeatedStructureCounts": [
+        [
+          "rear_coil_run",
+          8
+        ],
+        [
+          "rear_coil_rail",
+          8
+        ],
+        [
+          "shelf",
+          4
+        ]
+      ],
+      "errors": [],
+      "paletteSize": 19
+    },
+    {
+      "query": "view=side&texture=v3&surfaces=0&fittings=0&bg=magenta&fit=1",
+      "output": "C:\\Users\\mansour\\Documents\\Modular builder\\Mediguide-pro\\docs\\reference-lock\\semantic-freezer-v4\\diagnostics\\view-side-texture-v3-surfaces-0-fittings-0-bg-magenta-fit-1.png",
+      "ready": true,
+      "view": "side",
+      "diagnostic": "",
+      "textureVersion": "v3",
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "diagnosticLegend": null,
+      "camera": {
+        "yaw": -36,
+        "elevation": 2.5,
+        "autoFit": true
+      },
+      "triangles": 2442,
+      "parts": 78,
+      "decals": 0,
+      "shelfCount": 4,
+      "rigidPartSizes": [
+        [
+          "handle_catch",
+          [
+            0.4,
+            0.2,
+            17.6
+          ]
+        ],
+        [
+          "handle_grip",
+          [
+            2.5,
+            1.1,
+            19
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_return",
+          [
+            2.35,
+            0.15,
+            18
+          ]
+        ]
+      ],
+      "fixedFittingSizes": [],
+      "adaptiveSurfaceCounts": [
+        [
+          "side_panel_column",
+          1
+        ],
+        [
+          "side_panel_row",
+          2
+        ]
+      ],
+      "repeatedStructureCounts": [
+        [
+          "rear_coil_run",
+          8
+        ],
+        [
+          "rear_coil_rail",
+          8
+        ],
+        [
+          "shelf",
+          4
+        ]
+      ],
+      "errors": [],
+      "paletteSize": 28
+    },
+    {
+      "query": "view=side&texture=v3&surfaces=0&fittings=0&bg=magenta&fit=1&diagnostic=part-id",
+      "output": "C:\\Users\\mansour\\Documents\\Modular builder\\Mediguide-pro\\docs\\reference-lock\\semantic-freezer-v4\\diagnostics\\view-side-texture-v3-surfaces-0-fittings-0-bg-magenta-fit-1-diagnostic-part-id.png",
+      "ready": true,
+      "view": "side",
+      "diagnostic": "part-id",
+      "textureVersion": "v3",
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "diagnosticLegend": [
+        {
+          "id": 1,
+          "name": "shell_left",
+          "kind": "freezerSide",
+          "color": "#d44949"
+        },
+        {
+          "id": 2,
+          "name": "shell_right",
+          "kind": "freezerSide",
+          "color": "#4972d4"
+        },
+        {
+          "id": 3,
+          "name": "shell_back",
+          "kind": "freezerSide",
+          "color": "#9ad449"
+        },
+        {
+          "id": 4,
+          "name": "roof",
+          "kind": "freezerEnamel",
+          "color": "#d449c3"
+        },
+        {
+          "id": 5,
+          "name": "control_crown",
+          "kind": "freezerEnamel",
+          "color": "#49d4bd"
+        },
+        {
+          "id": 6,
+          "name": "cavity_back",
+          "kind": "freezerCavity",
+          "color": "#d49549"
+        },
+        {
+          "id": 7,
+          "name": "front_plinth",
+          "kind": "freezerSide",
+          "color": "#6c49d4"
+        },
+        {
+          "id": 8,
+          "name": "frame_left",
+          "kind": "freezerEnamel",
+          "color": "#4fd449"
+        },
+        {
+          "id": 9,
+          "name": "frame_right",
+          "kind": "freezerEnamel",
+          "color": "#d44978"
+        },
+        {
+          "id": 10,
+          "name": "frame_top",
+          "kind": "freezerEnamel",
+          "color": "#49a0d4"
+        },
+        {
+          "id": 11,
+          "name": "frame_bottom",
+          "kind": "freezerEnamel",
+          "color": "#c9d449"
+        },
+        {
+          "id": 12,
+          "name": "rail_left",
+          "kind": "medicalBlue",
+          "color": "#b749d4"
+        },
+        {
+          "id": 13,
+          "name": "rail_right",
+          "kind": "medicalBlue",
+          "color": "#49d48f"
+        },
+        {
+          "id": 14,
+          "name": "rail_top",
+          "kind": "medicalBlue",
+          "color": "#d46649"
+        },
+        {
+          "id": 15,
+          "name": "rail_bottom",
+          "kind": "medicalBlue",
+          "color": "#4955d4"
+        },
+        {
+          "id": 16,
+          "name": "shelf",
+          "kind": "freezerShelf",
+          "color": "#7ed449"
+        },
+        {
+          "id": 17,
+          "name": "shelf",
+          "kind": "freezerShelf",
+          "color": "#d449a6"
+        },
+        {
+          "id": 18,
+          "name": "shelf",
+          "kind": "freezerShelf",
+          "color": "#49cfd4"
+        },
+        {
+          "id": 19,
+          "name": "shelf",
+          "kind": "freezerShelf",
+          "color": "#d4b149"
+        },
+        {
+          "id": 20,
+          "name": "handle_mount",
+          "kind": "capGrey",
+          "color": "#8949d4"
+        },
+        {
+          "id": 21,
+          "name": "handle_mount",
+          "kind": "capGrey",
+          "color": "#49d460"
+        },
+        {
+          "id": 22,
+          "name": "handle_grip",
+          "kind": "freezerEnamel",
+          "color": "#d4495b"
+        },
+        {
+          "id": 23,
+          "name": "handle_catch",
+          "kind": "coil",
+          "color": "#4984d4"
+        },
+        {
+          "id": 24,
+          "name": "handle_return",
+          "kind": "coil",
+          "color": "#acd449"
+        },
+        {
+          "id": 25,
+          "name": "side_vent_panel",
+          "kind": "coil",
+          "color": "#d449d4"
+        },
+        {
+          "id": 26,
+          "name": "adaptive_side_panel_row",
+          "kind": null,
+          "color": "#49d4ab"
+        },
+        {
+          "id": 27,
+          "name": "adaptive_side_panel_row",
+          "kind": null,
+          "color": "#d48349"
+        },
+        {
+          "id": 28,
+          "name": "adaptive_side_panel_column",
+          "kind": null,
+          "color": "#5a49d4"
+        },
+        {
+          "id": 29,
+          "name": "rear_coil_run",
+          "kind": "coilBar",
+          "color": "#61d449"
+        },
+        {
+          "id": 30,
+          "name": "rear_coil_run",
+          "kind": "coilBar",
+          "color": "#d4498a"
+        },
+        {
+          "id": 31,
+          "name": "rear_coil_run",
+          "kind": "coilBar",
+          "color": "#49b2d4"
+        },
+        {
+          "id": 32,
+          "name": "rear_coil_run",
+          "kind": "coilBar",
+          "color": "#d4ce49"
+        },
+        {
+          "id": 33,
+          "name": "rear_coil_run",
+          "kind": "coilBar",
+          "color": "#a549d4"
+        },
+        {
+          "id": 34,
+          "name": "rear_coil_run",
+          "kind": "coilBar",
+          "color": "#49d47d"
+        },
+        {
+          "id": 35,
+          "name": "rear_coil_run",
+          "kind": "coilBar",
+          "color": "#d45449"
+        },
+        {
+          "id": 36,
+          "name": "rear_coil_run",
+          "kind": "coilBar",
+          "color": "#4967d4"
+        },
+        {
+          "id": 37,
+          "name": "rear_coil_rail",
+          "kind": "coilBar",
+          "color": "#8fd449"
+        },
+        {
+          "id": 38,
+          "name": "rear_coil_rail",
+          "kind": "coilBar",
+          "color": "#d449b8"
+        },
+        {
+          "id": 39,
+          "name": "rear_coil_rail",
+          "kind": "coilBar",
+          "color": "#49d4c8"
+        },
+        {
+          "id": 40,
+          "name": "rear_coil_rail",
+          "kind": "coilBar",
+          "color": "#d49f49"
+        },
+        {
+          "id": 41,
+          "name": "rear_coil_rail",
+          "kind": "coilBar",
+          "color": "#7749d4"
+        },
+        {
+          "id": 42,
+          "name": "rear_coil_rail",
+          "kind": "coilBar",
+          "color": "#49d44e"
+        },
+        {
+          "id": 43,
+          "name": "rear_coil_rail",
+          "kind": "coilBar",
+          "color": "#d4496d"
+        },
+        {
+          "id": 44,
+          "name": "rear_coil_rail",
+          "kind": "coilBar",
+          "color": "#4995d4"
+        },
+        {
+          "id": 45,
+          "name": "rear_machine_bay",
+          "kind": "coil",
+          "color": "#bed449"
+        },
+        {
+          "id": 46,
+          "name": "rear_fan",
+          "kind": "capGrey",
+          "color": "#c249d4"
+        },
+        {
+          "id": 47,
+          "name": "compressor",
+          "kind": "coil",
+          "color": "#49d49a"
+        },
+        {
+          "id": 48,
+          "name": "copper_pipe",
+          "kind": "copper",
+          "color": "#d47149"
+        },
+        {
+          "id": 49,
+          "name": "foot",
+          "kind": "coil",
+          "color": "#494ad4"
+        },
+        {
+          "id": 50,
+          "name": "foot",
+          "kind": "coil",
+          "color": "#73d449"
+        },
+        {
+          "id": 51,
+          "name": "medicine_carton",
+          "kind": "medicineTan",
+          "color": "#d4499b"
+        },
+        {
+          "id": 52,
+          "name": "medicine_carton",
+          "kind": "medicinePaper",
+          "color": "#49c4d4"
+        },
+        {
+          "id": 53,
+          "name": "medicine_carton",
+          "kind": "medicineCool",
+          "color": "#d4bc49"
+        },
+        {
+          "id": 54,
+          "name": "medicine_carton",
+          "kind": "medicinePaper",
+          "color": "#9449d4"
+        },
+        {
+          "id": 55,
+          "name": "medicine_vial",
+          "kind": "bottleAmber",
+          "color": "#49d46b"
+        },
+        {
+          "id": 56,
+          "name": "vial_cap",
+          "kind": "capRed",
+          "color": "#d44950"
+        },
+        {
+          "id": 57,
+          "name": "medicine_vial",
+          "kind": "bottleWhite",
+          "color": "#4979d4"
+        },
+        {
+          "id": 58,
+          "name": "vial_cap",
+          "kind": "capBlue",
+          "color": "#a1d449"
+        },
+        {
+          "id": 59,
+          "name": "medicine_vial",
+          "kind": "bottleAmber",
+          "color": "#d449ca"
+        },
+        {
+          "id": 60,
+          "name": "vial_cap",
+          "kind": "capGreen",
+          "color": "#49d4b6"
+        },
+        {
+          "id": 61,
+          "name": "medicine_vial",
+          "kind": "bottleWhite",
+          "color": "#d48e49"
+        },
+        {
+          "id": 62,
+          "name": "vial_cap",
+          "kind": "capRed",
+          "color": "#6549d4"
+        },
+        {
+          "id": 63,
+          "name": "medicine_vial",
+          "kind": "bottleAmber",
+          "color": "#56d449"
+        },
+        {
+          "id": 64,
+          "name": "vial_cap",
+          "kind": "capBlue",
+          "color": "#d4497f"
+        },
+        {
+          "id": 65,
+          "name": "medicine_vial",
+          "kind": "bottleWhite",
+          "color": "#49a7d4"
+        },
+        {
+          "id": 66,
+          "name": "vial_cap",
+          "kind": "capBlue",
+          "color": "#d0d449"
+        },
+        {
+          "id": 67,
+          "name": "medicine_vial",
+          "kind": "bottleAmber",
+          "color": "#b049d4"
+        },
+        {
+          "id": 68,
+          "name": "vial_cap",
+          "kind": "capGreen",
+          "color": "#49d488"
+        },
+        {
+          "id": 69,
+          "name": "medicine_vial",
+          "kind": "bottleWhite",
+          "color": "#d45f49"
+        },
+        {
+          "id": 70,
+          "name": "vial_cap",
+          "kind": "capRed",
+          "color": "#495cd4"
+        },
+        {
+          "id": 71,
+          "name": "medicine_vial",
+          "kind": "bottleAmber",
+          "color": "#84d449"
+        },
+        {
+          "id": 72,
+          "name": "vial_cap",
+          "kind": "capBlue",
+          "color": "#d449ad"
+        },
+        {
+          "id": 73,
+          "name": "medicine_vial",
+          "kind": "bottleWhite",
+          "color": "#49d4d3"
+        },
+        {
+          "id": 74,
+          "name": "vial_cap",
+          "kind": "capGreen",
+          "color": "#d4aa49"
+        },
+        {
+          "id": 75,
+          "name": "medicine_carton",
+          "kind": "medicineTan",
+          "color": "#8249d4"
+        },
+        {
+          "id": 76,
+          "name": "medicine_carton",
+          "kind": "medicinePaper",
+          "color": "#49d459"
+        },
+        {
+          "id": 77,
+          "name": "medicine_vial",
+          "kind": "bottleWhite",
+          "color": "#d44962"
+        },
+        {
+          "id": 78,
+          "name": "vial_cap",
+          "kind": "capGrey",
+          "color": "#498ad4"
+        }
+      ],
+      "camera": {
+        "yaw": -36,
+        "elevation": 2.5,
+        "autoFit": true
+      },
+      "triangles": 2442,
+      "parts": 78,
+      "decals": 0,
+      "shelfCount": 4,
+      "rigidPartSizes": [
+        [
+          "handle_catch",
+          [
+            0.4,
+            0.2,
+            17.6
+          ]
+        ],
+        [
+          "handle_grip",
+          [
+            2.5,
+            1.1,
+            19
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_return",
+          [
+            2.35,
+            0.15,
+            18
+          ]
+        ]
+      ],
+      "fixedFittingSizes": [],
+      "adaptiveSurfaceCounts": [
+        [
+          "side_panel_column",
+          1
+        ],
+        [
+          "side_panel_row",
+          2
+        ]
+      ],
+      "repeatedStructureCounts": [
+        [
+          "rear_coil_run",
+          8
+        ],
+        [
+          "rear_coil_rail",
+          8
+        ],
+        [
+          "shelf",
+          4
+        ]
+      ],
+      "errors": [],
+      "paletteSize": 31
+    },
+    {
+      "query": "view=side&texture=v3&surfaces=0&fittings=0&bg=magenta&fit=1&diagnostic=face-normal",
+      "output": "C:\\Users\\mansour\\Documents\\Modular builder\\Mediguide-pro\\docs\\reference-lock\\semantic-freezer-v4\\diagnostics\\view-side-texture-v3-surfaces-0-fittings-0-bg-magenta-fit-1-diagnostic-face-normal.png",
+      "ready": true,
+      "view": "side",
+      "diagnostic": "face-normal",
+      "textureVersion": "v3",
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "diagnosticLegend": {
+        "encoding": "rgb = world_normal * 0.5 + 0.5",
+        "axes": {
+          "right": "#ff8080",
+          "left": "#008080",
+          "top": "#80ff80",
+          "bottom": "#800080",
+          "back": "#8080ff",
+          "front": "#808000"
+        }
+      },
+      "camera": {
+        "yaw": -36,
+        "elevation": 2.5,
+        "autoFit": true
+      },
+      "triangles": 2442,
+      "parts": 78,
+      "decals": 0,
+      "shelfCount": 4,
+      "rigidPartSizes": [
+        [
+          "handle_catch",
+          [
+            0.4,
+            0.2,
+            17.6
+          ]
+        ],
+        [
+          "handle_grip",
+          [
+            2.5,
+            1.1,
+            19
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_return",
+          [
+            2.35,
+            0.15,
+            18
+          ]
+        ]
+      ],
+      "fixedFittingSizes": [],
+      "adaptiveSurfaceCounts": [
+        [
+          "side_panel_column",
+          1
+        ],
+        [
+          "side_panel_row",
+          2
+        ]
+      ],
+      "repeatedStructureCounts": [
+        [
+          "rear_coil_run",
+          8
+        ],
+        [
+          "rear_coil_rail",
+          8
+        ],
+        [
+          "shelf",
+          4
+        ]
+      ],
+      "errors": [],
+      "paletteSize": 86
+    },
+    {
+      "query": "view=side&texture=v3&surfaces=0&fittings=0&bg=magenta&fit=1&diagnostic=linear-depth",
+      "output": "C:\\Users\\mansour\\Documents\\Modular builder\\Mediguide-pro\\docs\\reference-lock\\semantic-freezer-v4\\diagnostics\\view-side-texture-v3-surfaces-0-fittings-0-bg-magenta-fit-1-diagnostic-linear-depth.png",
+      "ready": true,
+      "view": "side",
+      "diagnostic": "linear-depth",
+      "textureVersion": "v3",
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "diagnosticLegend": {
+        "encoding": "black = camera near; white = camera far; orthographic linear clip depth"
+      },
+      "camera": {
+        "yaw": -36,
+        "elevation": 2.5,
+        "autoFit": true
+      },
+      "triangles": 2442,
+      "parts": 78,
+      "decals": 0,
+      "shelfCount": 4,
+      "rigidPartSizes": [
+        [
+          "handle_catch",
+          [
+            0.4,
+            0.2,
+            17.6
+          ]
+        ],
+        [
+          "handle_grip",
+          [
+            2.5,
+            1.1,
+            19
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_return",
+          [
+            2.35,
+            0.15,
+            18
+          ]
+        ]
+      ],
+      "fixedFittingSizes": [],
+      "adaptiveSurfaceCounts": [
+        [
+          "side_panel_column",
+          1
+        ],
+        [
+          "side_panel_row",
+          2
+        ]
+      ],
+      "repeatedStructureCounts": [
+        [
+          "rear_coil_run",
+          8
+        ],
+        [
+          "rear_coil_rail",
+          8
+        ],
+        [
+          "shelf",
+          4
+        ]
+      ],
+      "errors": [],
+      "paletteSize": 7
+    },
+    {
+      "query": "view=side&texture=v3&surfaces=0&fittings=0&bg=magenta&fit=1&diagnostic=anchor-id",
+      "output": "C:\\Users\\mansour\\Documents\\Modular builder\\Mediguide-pro\\docs\\reference-lock\\semantic-freezer-v4\\diagnostics\\view-side-texture-v3-surfaces-0-fittings-0-bg-magenta-fit-1-diagnostic-anchor-id.png",
+      "ready": true,
+      "view": "side",
+      "diagnostic": "anchor-id",
+      "textureVersion": "v3",
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "diagnosticLegend": [
+        {
+          "id": 1,
+          "name": "bottom-left",
+          "color": "#e53935"
+        },
+        {
+          "id": 2,
+          "name": "bottom-center",
+          "color": "#fb8c00"
+        },
+        {
+          "id": 3,
+          "name": "bottom-right",
+          "color": "#fdd835"
+        },
+        {
+          "id": 4,
+          "name": "middle-left",
+          "color": "#43a047"
+        },
+        {
+          "id": 5,
+          "name": "center",
+          "color": "#00acc1"
+        },
+        {
+          "id": 6,
+          "name": "middle-right",
+          "color": "#1e88e5"
+        },
+        {
+          "id": 7,
+          "name": "top-left",
+          "color": "#5e35b1"
+        },
+        {
+          "id": 8,
+          "name": "top-center",
+          "color": "#8e24aa"
+        },
+        {
+          "id": 9,
+          "name": "top-right",
+          "color": "#d81b60"
+        }
+      ],
+      "camera": {
+        "yaw": -36,
+        "elevation": 2.5,
+        "autoFit": true
+      },
+      "triangles": 2442,
+      "parts": 78,
+      "decals": 0,
+      "shelfCount": 4,
+      "rigidPartSizes": [
+        [
+          "handle_catch",
+          [
+            0.4,
+            0.2,
+            17.6
+          ]
+        ],
+        [
+          "handle_grip",
+          [
+            2.5,
+            1.1,
+            19
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_return",
+          [
+            2.35,
+            0.15,
+            18
+          ]
+        ]
+      ],
+      "fixedFittingSizes": [],
+      "adaptiveSurfaceCounts": [
+        [
+          "side_panel_column",
+          1
+        ],
+        [
+          "side_panel_row",
+          2
+        ]
+      ],
+      "repeatedStructureCounts": [
+        [
+          "rear_coil_run",
+          8
+        ],
+        [
+          "rear_coil_rail",
+          8
+        ],
+        [
+          "shelf",
+          4
+        ]
+      ],
+      "errors": [],
+      "paletteSize": 19
+    },
+    {
+      "query": "view=backIso&texture=v3&surfaces=0&fittings=0&bg=magenta&fit=1",
+      "output": "C:\\Users\\mansour\\Documents\\Modular builder\\Mediguide-pro\\docs\\reference-lock\\semantic-freezer-v4\\diagnostics\\view-backIso-texture-v3-surfaces-0-fittings-0-bg-magenta-fit-1.png",
+      "ready": true,
+      "view": "backIso",
+      "diagnostic": "",
+      "textureVersion": "v3",
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "diagnosticLegend": null,
+      "camera": {
+        "yaw": -36,
+        "elevation": 2.5,
+        "autoFit": true
+      },
+      "triangles": 2442,
+      "parts": 78,
+      "decals": 0,
+      "shelfCount": 4,
+      "rigidPartSizes": [
+        [
+          "handle_catch",
+          [
+            0.4,
+            0.2,
+            17.6
+          ]
+        ],
+        [
+          "handle_grip",
+          [
+            2.5,
+            1.1,
+            19
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_return",
+          [
+            2.35,
+            0.15,
+            18
+          ]
+        ]
+      ],
+      "fixedFittingSizes": [],
+      "adaptiveSurfaceCounts": [
+        [
+          "side_panel_column",
+          1
+        ],
+        [
+          "side_panel_row",
+          2
+        ]
+      ],
+      "repeatedStructureCounts": [
+        [
+          "rear_coil_run",
+          8
+        ],
+        [
+          "rear_coil_rail",
+          8
+        ],
+        [
+          "shelf",
+          4
+        ]
+      ],
+      "errors": [],
+      "paletteSize": 97
+    },
+    {
+      "query": "view=backIso&texture=v3&surfaces=0&fittings=0&bg=magenta&fit=1&diagnostic=part-id",
+      "output": "C:\\Users\\mansour\\Documents\\Modular builder\\Mediguide-pro\\docs\\reference-lock\\semantic-freezer-v4\\diagnostics\\view-backIso-texture-v3-surfaces-0-fittings-0-bg-magenta-fit-1-diagnostic-part-id.png",
+      "ready": true,
+      "view": "backIso",
+      "diagnostic": "part-id",
+      "textureVersion": "v3",
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "diagnosticLegend": [
+        {
+          "id": 1,
+          "name": "shell_left",
+          "kind": "freezerSide",
+          "color": "#d44949"
+        },
+        {
+          "id": 2,
+          "name": "shell_right",
+          "kind": "freezerSide",
+          "color": "#4972d4"
+        },
+        {
+          "id": 3,
+          "name": "shell_back",
+          "kind": "freezerSide",
+          "color": "#9ad449"
+        },
+        {
+          "id": 4,
+          "name": "roof",
+          "kind": "freezerEnamel",
+          "color": "#d449c3"
+        },
+        {
+          "id": 5,
+          "name": "control_crown",
+          "kind": "freezerEnamel",
+          "color": "#49d4bd"
+        },
+        {
+          "id": 6,
+          "name": "cavity_back",
+          "kind": "freezerCavity",
+          "color": "#d49549"
+        },
+        {
+          "id": 7,
+          "name": "front_plinth",
+          "kind": "freezerSide",
+          "color": "#6c49d4"
+        },
+        {
+          "id": 8,
+          "name": "frame_left",
+          "kind": "freezerEnamel",
+          "color": "#4fd449"
+        },
+        {
+          "id": 9,
+          "name": "frame_right",
+          "kind": "freezerEnamel",
+          "color": "#d44978"
+        },
+        {
+          "id": 10,
+          "name": "frame_top",
+          "kind": "freezerEnamel",
+          "color": "#49a0d4"
+        },
+        {
+          "id": 11,
+          "name": "frame_bottom",
+          "kind": "freezerEnamel",
+          "color": "#c9d449"
+        },
+        {
+          "id": 12,
+          "name": "rail_left",
+          "kind": "medicalBlue",
+          "color": "#b749d4"
+        },
+        {
+          "id": 13,
+          "name": "rail_right",
+          "kind": "medicalBlue",
+          "color": "#49d48f"
+        },
+        {
+          "id": 14,
+          "name": "rail_top",
+          "kind": "medicalBlue",
+          "color": "#d46649"
+        },
+        {
+          "id": 15,
+          "name": "rail_bottom",
+          "kind": "medicalBlue",
+          "color": "#4955d4"
+        },
+        {
+          "id": 16,
+          "name": "shelf",
+          "kind": "freezerShelf",
+          "color": "#7ed449"
+        },
+        {
+          "id": 17,
+          "name": "shelf",
+          "kind": "freezerShelf",
+          "color": "#d449a6"
+        },
+        {
+          "id": 18,
+          "name": "shelf",
+          "kind": "freezerShelf",
+          "color": "#49cfd4"
+        },
+        {
+          "id": 19,
+          "name": "shelf",
+          "kind": "freezerShelf",
+          "color": "#d4b149"
+        },
+        {
+          "id": 20,
+          "name": "handle_mount",
+          "kind": "capGrey",
+          "color": "#8949d4"
+        },
+        {
+          "id": 21,
+          "name": "handle_mount",
+          "kind": "capGrey",
+          "color": "#49d460"
+        },
+        {
+          "id": 22,
+          "name": "handle_grip",
+          "kind": "freezerEnamel",
+          "color": "#d4495b"
+        },
+        {
+          "id": 23,
+          "name": "handle_catch",
+          "kind": "coil",
+          "color": "#4984d4"
+        },
+        {
+          "id": 24,
+          "name": "handle_return",
+          "kind": "coil",
+          "color": "#acd449"
+        },
+        {
+          "id": 25,
+          "name": "side_vent_panel",
+          "kind": "coil",
+          "color": "#d449d4"
+        },
+        {
+          "id": 26,
+          "name": "adaptive_side_panel_row",
+          "kind": null,
+          "color": "#49d4ab"
+        },
+        {
+          "id": 27,
+          "name": "adaptive_side_panel_row",
+          "kind": null,
+          "color": "#d48349"
+        },
+        {
+          "id": 28,
+          "name": "adaptive_side_panel_column",
+          "kind": null,
+          "color": "#5a49d4"
+        },
+        {
+          "id": 29,
+          "name": "rear_coil_run",
+          "kind": "coilBar",
+          "color": "#61d449"
+        },
+        {
+          "id": 30,
+          "name": "rear_coil_run",
+          "kind": "coilBar",
+          "color": "#d4498a"
+        },
+        {
+          "id": 31,
+          "name": "rear_coil_run",
+          "kind": "coilBar",
+          "color": "#49b2d4"
+        },
+        {
+          "id": 32,
+          "name": "rear_coil_run",
+          "kind": "coilBar",
+          "color": "#d4ce49"
+        },
+        {
+          "id": 33,
+          "name": "rear_coil_run",
+          "kind": "coilBar",
+          "color": "#a549d4"
+        },
+        {
+          "id": 34,
+          "name": "rear_coil_run",
+          "kind": "coilBar",
+          "color": "#49d47d"
+        },
+        {
+          "id": 35,
+          "name": "rear_coil_run",
+          "kind": "coilBar",
+          "color": "#d45449"
+        },
+        {
+          "id": 36,
+          "name": "rear_coil_run",
+          "kind": "coilBar",
+          "color": "#4967d4"
+        },
+        {
+          "id": 37,
+          "name": "rear_coil_rail",
+          "kind": "coilBar",
+          "color": "#8fd449"
+        },
+        {
+          "id": 38,
+          "name": "rear_coil_rail",
+          "kind": "coilBar",
+          "color": "#d449b8"
+        },
+        {
+          "id": 39,
+          "name": "rear_coil_rail",
+          "kind": "coilBar",
+          "color": "#49d4c8"
+        },
+        {
+          "id": 40,
+          "name": "rear_coil_rail",
+          "kind": "coilBar",
+          "color": "#d49f49"
+        },
+        {
+          "id": 41,
+          "name": "rear_coil_rail",
+          "kind": "coilBar",
+          "color": "#7749d4"
+        },
+        {
+          "id": 42,
+          "name": "rear_coil_rail",
+          "kind": "coilBar",
+          "color": "#49d44e"
+        },
+        {
+          "id": 43,
+          "name": "rear_coil_rail",
+          "kind": "coilBar",
+          "color": "#d4496d"
+        },
+        {
+          "id": 44,
+          "name": "rear_coil_rail",
+          "kind": "coilBar",
+          "color": "#4995d4"
+        },
+        {
+          "id": 45,
+          "name": "rear_machine_bay",
+          "kind": "coil",
+          "color": "#bed449"
+        },
+        {
+          "id": 46,
+          "name": "rear_fan",
+          "kind": "capGrey",
+          "color": "#c249d4"
+        },
+        {
+          "id": 47,
+          "name": "compressor",
+          "kind": "coil",
+          "color": "#49d49a"
+        },
+        {
+          "id": 48,
+          "name": "copper_pipe",
+          "kind": "copper",
+          "color": "#d47149"
+        },
+        {
+          "id": 49,
+          "name": "foot",
+          "kind": "coil",
+          "color": "#494ad4"
+        },
+        {
+          "id": 50,
+          "name": "foot",
+          "kind": "coil",
+          "color": "#73d449"
+        },
+        {
+          "id": 51,
+          "name": "medicine_carton",
+          "kind": "medicineTan",
+          "color": "#d4499b"
+        },
+        {
+          "id": 52,
+          "name": "medicine_carton",
+          "kind": "medicinePaper",
+          "color": "#49c4d4"
+        },
+        {
+          "id": 53,
+          "name": "medicine_carton",
+          "kind": "medicineCool",
+          "color": "#d4bc49"
+        },
+        {
+          "id": 54,
+          "name": "medicine_carton",
+          "kind": "medicinePaper",
+          "color": "#9449d4"
+        },
+        {
+          "id": 55,
+          "name": "medicine_vial",
+          "kind": "bottleAmber",
+          "color": "#49d46b"
+        },
+        {
+          "id": 56,
+          "name": "vial_cap",
+          "kind": "capRed",
+          "color": "#d44950"
+        },
+        {
+          "id": 57,
+          "name": "medicine_vial",
+          "kind": "bottleWhite",
+          "color": "#4979d4"
+        },
+        {
+          "id": 58,
+          "name": "vial_cap",
+          "kind": "capBlue",
+          "color": "#a1d449"
+        },
+        {
+          "id": 59,
+          "name": "medicine_vial",
+          "kind": "bottleAmber",
+          "color": "#d449ca"
+        },
+        {
+          "id": 60,
+          "name": "vial_cap",
+          "kind": "capGreen",
+          "color": "#49d4b6"
+        },
+        {
+          "id": 61,
+          "name": "medicine_vial",
+          "kind": "bottleWhite",
+          "color": "#d48e49"
+        },
+        {
+          "id": 62,
+          "name": "vial_cap",
+          "kind": "capRed",
+          "color": "#6549d4"
+        },
+        {
+          "id": 63,
+          "name": "medicine_vial",
+          "kind": "bottleAmber",
+          "color": "#56d449"
+        },
+        {
+          "id": 64,
+          "name": "vial_cap",
+          "kind": "capBlue",
+          "color": "#d4497f"
+        },
+        {
+          "id": 65,
+          "name": "medicine_vial",
+          "kind": "bottleWhite",
+          "color": "#49a7d4"
+        },
+        {
+          "id": 66,
+          "name": "vial_cap",
+          "kind": "capBlue",
+          "color": "#d0d449"
+        },
+        {
+          "id": 67,
+          "name": "medicine_vial",
+          "kind": "bottleAmber",
+          "color": "#b049d4"
+        },
+        {
+          "id": 68,
+          "name": "vial_cap",
+          "kind": "capGreen",
+          "color": "#49d488"
+        },
+        {
+          "id": 69,
+          "name": "medicine_vial",
+          "kind": "bottleWhite",
+          "color": "#d45f49"
+        },
+        {
+          "id": 70,
+          "name": "vial_cap",
+          "kind": "capRed",
+          "color": "#495cd4"
+        },
+        {
+          "id": 71,
+          "name": "medicine_vial",
+          "kind": "bottleAmber",
+          "color": "#84d449"
+        },
+        {
+          "id": 72,
+          "name": "vial_cap",
+          "kind": "capBlue",
+          "color": "#d449ad"
+        },
+        {
+          "id": 73,
+          "name": "medicine_vial",
+          "kind": "bottleWhite",
+          "color": "#49d4d3"
+        },
+        {
+          "id": 74,
+          "name": "vial_cap",
+          "kind": "capGreen",
+          "color": "#d4aa49"
+        },
+        {
+          "id": 75,
+          "name": "medicine_carton",
+          "kind": "medicineTan",
+          "color": "#8249d4"
+        },
+        {
+          "id": 76,
+          "name": "medicine_carton",
+          "kind": "medicinePaper",
+          "color": "#49d459"
+        },
+        {
+          "id": 77,
+          "name": "medicine_vial",
+          "kind": "bottleWhite",
+          "color": "#d44962"
+        },
+        {
+          "id": 78,
+          "name": "vial_cap",
+          "kind": "capGrey",
+          "color": "#498ad4"
+        }
+      ],
+      "camera": {
+        "yaw": -36,
+        "elevation": 2.5,
+        "autoFit": true
+      },
+      "triangles": 2442,
+      "parts": 78,
+      "decals": 0,
+      "shelfCount": 4,
+      "rigidPartSizes": [
+        [
+          "handle_catch",
+          [
+            0.4,
+            0.2,
+            17.6
+          ]
+        ],
+        [
+          "handle_grip",
+          [
+            2.5,
+            1.1,
+            19
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_return",
+          [
+            2.35,
+            0.15,
+            18
+          ]
+        ]
+      ],
+      "fixedFittingSizes": [],
+      "adaptiveSurfaceCounts": [
+        [
+          "side_panel_column",
+          1
+        ],
+        [
+          "side_panel_row",
+          2
+        ]
+      ],
+      "repeatedStructureCounts": [
+        [
+          "rear_coil_run",
+          8
+        ],
+        [
+          "rear_coil_rail",
+          8
+        ],
+        [
+          "shelf",
+          4
+        ]
+      ],
+      "errors": [],
+      "paletteSize": 32
+    },
+    {
+      "query": "view=backIso&texture=v3&surfaces=0&fittings=0&bg=magenta&fit=1&diagnostic=face-normal",
+      "output": "C:\\Users\\mansour\\Documents\\Modular builder\\Mediguide-pro\\docs\\reference-lock\\semantic-freezer-v4\\diagnostics\\view-backIso-texture-v3-surfaces-0-fittings-0-bg-magenta-fit-1-diagnostic-face-normal.png",
+      "ready": true,
+      "view": "backIso",
+      "diagnostic": "face-normal",
+      "textureVersion": "v3",
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "diagnosticLegend": {
+        "encoding": "rgb = world_normal * 0.5 + 0.5",
+        "axes": {
+          "right": "#ff8080",
+          "left": "#008080",
+          "top": "#80ff80",
+          "bottom": "#800080",
+          "back": "#8080ff",
+          "front": "#808000"
+        }
+      },
+      "camera": {
+        "yaw": -36,
+        "elevation": 2.5,
+        "autoFit": true
+      },
+      "triangles": 2442,
+      "parts": 78,
+      "decals": 0,
+      "shelfCount": 4,
+      "rigidPartSizes": [
+        [
+          "handle_catch",
+          [
+            0.4,
+            0.2,
+            17.6
+          ]
+        ],
+        [
+          "handle_grip",
+          [
+            2.5,
+            1.1,
+            19
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_return",
+          [
+            2.35,
+            0.15,
+            18
+          ]
+        ]
+      ],
+      "fixedFittingSizes": [],
+      "adaptiveSurfaceCounts": [
+        [
+          "side_panel_column",
+          1
+        ],
+        [
+          "side_panel_row",
+          2
+        ]
+      ],
+      "repeatedStructureCounts": [
+        [
+          "rear_coil_run",
+          8
+        ],
+        [
+          "rear_coil_rail",
+          8
+        ],
+        [
+          "shelf",
+          4
+        ]
+      ],
+      "errors": [],
+      "paletteSize": 463
+    },
+    {
+      "query": "view=backIso&texture=v3&surfaces=0&fittings=0&bg=magenta&fit=1&diagnostic=linear-depth",
+      "output": "C:\\Users\\mansour\\Documents\\Modular builder\\Mediguide-pro\\docs\\reference-lock\\semantic-freezer-v4\\diagnostics\\view-backIso-texture-v3-surfaces-0-fittings-0-bg-magenta-fit-1-diagnostic-linear-depth.png",
+      "ready": true,
+      "view": "backIso",
+      "diagnostic": "linear-depth",
+      "textureVersion": "v3",
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "diagnosticLegend": {
+        "encoding": "black = camera near; white = camera far; orthographic linear clip depth"
+      },
+      "camera": {
+        "yaw": -36,
+        "elevation": 2.5,
+        "autoFit": true
+      },
+      "triangles": 2442,
+      "parts": 78,
+      "decals": 0,
+      "shelfCount": 4,
+      "rigidPartSizes": [
+        [
+          "handle_catch",
+          [
+            0.4,
+            0.2,
+            17.6
+          ]
+        ],
+        [
+          "handle_grip",
+          [
+            2.5,
+            1.1,
+            19
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_return",
+          [
+            2.35,
+            0.15,
+            18
+          ]
+        ]
+      ],
+      "fixedFittingSizes": [],
+      "adaptiveSurfaceCounts": [
+        [
+          "side_panel_column",
+          1
+        ],
+        [
+          "side_panel_row",
+          2
+        ]
+      ],
+      "repeatedStructureCounts": [
+        [
+          "rear_coil_run",
+          8
+        ],
+        [
+          "rear_coil_rail",
+          8
+        ],
+        [
+          "shelf",
+          4
+        ]
+      ],
+      "errors": [],
+      "paletteSize": 18
+    },
+    {
+      "query": "view=backIso&texture=v3&surfaces=0&fittings=0&bg=magenta&fit=1&diagnostic=anchor-id",
+      "output": "C:\\Users\\mansour\\Documents\\Modular builder\\Mediguide-pro\\docs\\reference-lock\\semantic-freezer-v4\\diagnostics\\view-backIso-texture-v3-surfaces-0-fittings-0-bg-magenta-fit-1-diagnostic-anchor-id.png",
+      "ready": true,
+      "view": "backIso",
+      "diagnostic": "anchor-id",
+      "textureVersion": "v3",
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "diagnosticLegend": [
+        {
+          "id": 1,
+          "name": "bottom-left",
+          "color": "#e53935"
+        },
+        {
+          "id": 2,
+          "name": "bottom-center",
+          "color": "#fb8c00"
+        },
+        {
+          "id": 3,
+          "name": "bottom-right",
+          "color": "#fdd835"
+        },
+        {
+          "id": 4,
+          "name": "middle-left",
+          "color": "#43a047"
+        },
+        {
+          "id": 5,
+          "name": "center",
+          "color": "#00acc1"
+        },
+        {
+          "id": 6,
+          "name": "middle-right",
+          "color": "#1e88e5"
+        },
+        {
+          "id": 7,
+          "name": "top-left",
+          "color": "#5e35b1"
+        },
+        {
+          "id": 8,
+          "name": "top-center",
+          "color": "#8e24aa"
+        },
+        {
+          "id": 9,
+          "name": "top-right",
+          "color": "#d81b60"
+        }
+      ],
+      "camera": {
+        "yaw": -36,
+        "elevation": 2.5,
+        "autoFit": true
+      },
+      "triangles": 2442,
+      "parts": 78,
+      "decals": 0,
+      "shelfCount": 4,
+      "rigidPartSizes": [
+        [
+          "handle_catch",
+          [
+            0.4,
+            0.2,
+            17.6
+          ]
+        ],
+        [
+          "handle_grip",
+          [
+            2.5,
+            1.1,
+            19
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_return",
+          [
+            2.35,
+            0.15,
+            18
+          ]
+        ]
+      ],
+      "fixedFittingSizes": [],
+      "adaptiveSurfaceCounts": [
+        [
+          "side_panel_column",
+          1
+        ],
+        [
+          "side_panel_row",
+          2
+        ]
+      ],
+      "repeatedStructureCounts": [
+        [
+          "rear_coil_run",
+          8
+        ],
+        [
+          "rear_coil_rail",
+          8
+        ],
+        [
+          "shelf",
+          4
+        ]
+      ],
+      "errors": [],
+      "paletteSize": 19
+    }
+  ]
+}

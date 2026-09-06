@@ -1,0 +1,32 @@
+20:53:00 | INFO: Data are loaded, start creating Blender stuff
+20:53:00 | INFO: Blender create Mesh node back_service_recess_mesh
+20:53:00 | INFO: Blender create Mesh node crown_fascia_mesh
+20:53:00 | INFO: Blender create Mesh node crown_roof_mesh
+20:53:00 | INFO: Blender create Mesh node foot_left_mesh
+20:53:00 | INFO: Blender create Mesh node foot_right_mesh
+20:53:00 | INFO: Blender create Mesh node front_cream_frame_mesh
+20:53:00 | INFO: Blender create Mesh node front_door_recess_mesh
+20:53:00 | INFO: Blender create Mesh node front_glass_mesh
+20:53:00 | INFO: Blender create Mesh node grille_recess_mesh
+20:53:00 | INFO: Blender create Mesh node handle_mesh
+20:53:00 | INFO: Blender create Mesh node plinth_rail_mesh
+20:53:00 | INFO: Blender create Mesh node shelf_36_mesh
+20:53:00 | INFO: Blender create Mesh node shelf_48_mesh
+20:53:00 | INFO: Blender create Mesh node shelf_60_mesh
+20:53:00 | INFO: Blender create Mesh node shelf_72_mesh
+20:53:00 | INFO: Blender create Mesh node source_hull_mesh
+20:53:00 | INFO: Blender create Mesh node source_skin_back_mesh
+20:53:00 | INFO: Blender create Mesh node source_skin_front_mesh
+20:53:00 | INFO: Blender create Mesh node source_skin_side_right_mesh
+20:53:00 | INFO: glTF import finished in 0.03s
+Blender 4.4.3 (hash 802179c51ccc built 2025-04-29 15:39:58)
+Fra:1 Mem:53.35M (Peak 53.35M) | Time:00:00.63 | Rendering 1 / 64 samples
+Fra:1 Mem:53.35M (Peak 53.35M) | Time:00:00.85 | Rendering 25 / 64 samples
+Fra:1 Mem:53.35M (Peak 53.35M) | Time:00:01.05 | Rendering 50 / 64 samples
+Fra:1 Mem:53.35M (Peak 53.35M) | Time:00:01.16 | Rendering 64 / 64 samples
+Saved: 'C:\Users\mansour\Documents\Modular builder\Mediguide-pro\docs\reference-lock\vaccine-fridge-v1\source-true-preview.png'
+Time: 00:01.43 (Saving: 00:00.23)
+
+C:\Users\mansour\Documents\Modular builder\Mediguide-pro\docs\reference-lock\vaccine-fridge-v1\source-true-preview.png
+
+Blender quit

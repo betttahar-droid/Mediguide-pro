@@ -1,0 +1,16 @@
+Use case: stylized-concept.
+Asset type: retro voxel microtexture source for a deterministic compiler.
+
+Images 1-5 are the ONLY texture-style authority. Image 6 is the fridge palette/design authority. Image 7 is the accepted retro appearance target. Output only a square source bitmap, never a render or explanatory sheet.
+
+Create an exact 4 columns by 4 rows arrangement of equal touching cells with invisible boundaries. No gutters, grid lines, labels, text, arrows, frames, checkerboard or surrounding background. Each cell represents an enlarged EXACT 16x16 LOGICAL PIXEL motif. Draw only equal hard square blocks; never add detail smaller than one logical block.
+
+Cells left-to-right, top-to-bottom:
+row 1: warm-ivory enamel quiet microtile; blue-gray steel quiet microtile; deep-teal enamel quiet microtile; dark-green glass quiet microtile.
+row 2: cream top/left highlight and bottom/right shadow corner; steel corner band; teal recessed-frame corner; staircase glass reflection.
+row 3: sparse cream chips and one fastener; steel scratch/bolt cluster; teal chips/notches; pale-steel shelf highlight/shadow lip.
+row 4: cream crown trim; paired steel panel seam; paired teal door trim; ochre grille bar with dark-plum slot.
+
+Use one strict retro palette with three discrete face values per material. Texture marks are one logical pixel, with occasional two-pixel pairs and no connected cluster larger than 2x2. Keep row-1 centers mostly flat: at most six accent pixels in each 16x16 tile. Opposite edges in row 1 must use the same base color. Use stronger contrast than the previous sheet, but no gradients, blur, antialiasing, photographic noise, dithering clouds, repeated polka dots, whole objects, handles, displays, letters, logos or watermarks.
+
+The bitmap itself must be the artwork. Exact 16x16 logical scale and clean cells are more important than decorative complexity.

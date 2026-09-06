@@ -1,0 +1,23 @@
+Use case: stylized-concept.
+Asset type: source bitmap for a deterministic voxel-material compiler.
+
+Images 1-5 are the ONLY texture-style authority. Image 6 is the ONLY fridge palette/design authority. Image 7 is the approved Nano Banana appearance target. Produce only a square texture-source bitmap. This is not a render, not a texture explanation, and not a presentation board.
+
+Draw an exact 4 columns by 4 rows arrangement of equal square cells. Cells touch with straight invisible boundaries: no gutters, grid lines, frames, labels, letters, numbers, arrows, captions, checkerboard, or background outside the cells. Every cell is an enlarged nearest-neighbour view of an EXACT 8x8 LOGICAL PIXEL motif: precisely eight equal square blocks across and eight down. Never draw finer subpixels inside a block.
+
+Cell order, left-to-right and then top-to-bottom:
+row 1: seamless warm-ivory enamel microtile; seamless blue-gray steel microtile; seamless deep-teal enamel microtile; seamless dark-green glass microtile.
+row 2: cream face-aware edge/corner band; steel face-aware edge/corner band; teal face-aware edge/corner band; glass staircase-reflection motif.
+row 3: cream tiny chip cluster; steel tiny bolt/scratch cluster; teal tiny chip cluster; pale-steel shelf-lip band.
+row 4: cream crown edge band; steel panel-seam band; teal door-recess band; ochre grille bar with dark-plum slot.
+
+Style contract from Images 1-5:
+- crisp hard square pixels, limited palette, no antialiasing, blur, smooth gradients, photographic noise or bevel rendering;
+- ordinary details occupy one logical pixel, clusters at most 2x3 pixels, never broad cloudy patches;
+- row-1 microtiles have quiet centers and low-frequency sparse variation, but clearly readable contrast;
+- opposite edges of row-1 cells use matching colors so they can repeat;
+- bands use one-pixel highlight next to one-pixel shadow;
+- wear is sparse, asymmetric, and limited to exposed corners;
+- no whole object, no fridge silhouette, no handles, no display glyph, no logo, no products, no text, no watermark.
+
+The bitmap itself must be the artwork. Exact cell placement and exact 8x8 logical block size matter more than decorative richness.

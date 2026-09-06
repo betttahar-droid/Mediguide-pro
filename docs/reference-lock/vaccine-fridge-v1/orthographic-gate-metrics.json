@@ -1,0 +1,20 @@
+{
+  "front": {
+    "referencePixels": 227711,
+    "candidatePixels": 229183,
+    "intersectionOverUnion": 0.9879304193461368,
+    "differentPixels": 2774
+  },
+  "side": {
+    "referencePixels": 199695,
+    "candidatePixels": 199807,
+    "intersectionOverUnion": 0.9614295042689722,
+    "differentPixels": 7856
+  },
+  "back": {
+    "referencePixels": 214265,
+    "candidatePixels": 227626,
+    "intersectionOverUnion": 0.9408424104005622,
+    "differentPixels": 13469
+  }
+}

@@ -1,0 +1,26 @@
+Use case: stylized-concept
+Asset type: source decal atlas derived from approved geometry-aware texture paintovers
+
+Images 1 and 2 are the approved texture PAINTOVER authorities for this exact vaccine fridge. They define which surface marks make sense and how the retro pixel style treats those functions. Image 3 is a SPATIAL GUIDE ONLY. Do not copy its grey frames or crosshairs.
+
+Generate exactly one square 4-column by 4-row atlas board on a perfectly uniform pure-magenta #FF00FF background. No grid, captions, labels, text, frames, crosshairs, shadows, full appliance, or watermark. Each cell contains exactly one isolated straight-on decal centered with a wide magenta margin. Do not draw perspective panels or complete material tiles. Extract and regularize only the specific functional marks seen in the paintovers.
+
+Cells left-to-right, top-to-bottom:
+1 cream frame top-left stepped corner fitting
+2 cream frame bottom-right stepped corner fitting
+3 cream short pressed horizontal seam
+4 cream roof/crown corner cap
+5 blue-grey side access-panel horizontal seam with two end fasteners
+6 blue-grey connected fastener pair
+7 deep-teal base access-panel seam
+8 deep-teal base corner cap
+9 blue-green wide diagonal staircase glass reflection
+10 blue-green compact staircase glass glint
+11 pale shelf front-lip highlight segment
+12 purple-and-steel shelf end cap
+13 dark control display bezel with a quiet empty center; no text
+14 purple handle vertical highlight with dark end caps
+15 warm-ochre ventilation grille module with six horizontal openings
+16 tiny amber caution plate made from abstract bars; absolutely no readable text
+
+Mandatory style: match the paintovers' exact chunky PS1/pixel-art language; hard square nearest-neighbour pixels; 2-4 flat colours per decal; orthogonal clusters and stair steps; deliberate asymmetry; no gradients, antialiasing, blur, glow, dirt, scratches, rust, random speckle, letters, logos, fake 3D thickness, or rectangular backing tile except where the functional fitting itself is a plate. Every motif must stay entirely within the central 50% of its cell so the compiler can create a safe gutter.

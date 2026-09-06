@@ -1,0 +1,284 @@
+{
+  "schemaVersion": 13,
+  "generator": "Nano Banana 2 / gemini-3.1-flash-image via concept_sheet.py",
+  "source": "docs/reference-lock/vaccine-fridge-v1/semantic-v13/semantic-faces-v13-source.png",
+  "sourceSha256": "8aeeb5a1977d567f1e164a74eb7b69c6a54d930bfc50badb2bca4f628c067f34",
+  "atlas": "public/textures/vaccine-fridge-semantic-faces-v13.png",
+  "atlasSizePx": [
+    256,
+    32
+  ],
+  "logicalTileSizePx": [
+    32,
+    32
+  ],
+  "toneLevels": [
+    32,
+    96,
+    128,
+    192,
+    240
+  ],
+  "profiles": [
+    {
+      "name": "roofTop",
+      "sourceBoundsPx": [
+        41,
+        40,
+        328,
+        318
+      ],
+      "atlasRectPx": [
+        0,
+        0,
+        32,
+        32
+      ],
+      "marginTexels": 4,
+      "repeatMiddle": [
+        0,
+        0
+      ],
+      "toneCounts": {
+        "32": 4,
+        "96": 155,
+        "128": 849,
+        "192": 1,
+        "240": 15
+      },
+      "quietShare": 0.8291
+    },
+    {
+      "name": "crownFront",
+      "sourceBoundsPx": [
+        369,
+        41,
+        665,
+        318
+      ],
+      "atlasRectPx": [
+        32,
+        0,
+        32,
+        32
+      ],
+      "marginTexels": 4,
+      "repeatMiddle": [
+        1,
+        0
+      ],
+      "toneCounts": {
+        "32": 0,
+        "96": 108,
+        "128": 826,
+        "192": 84,
+        "240": 6
+      },
+      "quietShare": 0.8066
+    },
+    {
+      "name": "cabinetSide",
+      "sourceBoundsPx": [
+        706,
+        40,
+        984,
+        318
+      ],
+      "atlasRectPx": [
+        64,
+        0,
+        32,
+        32
+      ],
+      "marginTexels": 4,
+      "repeatMiddle": [
+        0,
+        0
+      ],
+      "toneCounts": {
+        "32": 36,
+        "96": 89,
+        "128": 899,
+        "192": 0,
+        "240": 0
+      },
+      "quietShare": 0.8779
+    },
+    {
+      "name": "doorFrame",
+      "sourceBoundsPx": [
+        41,
+        368,
+        328,
+        676
+      ],
+      "atlasRectPx": [
+        96,
+        0,
+        32,
+        32
+      ],
+      "marginTexels": 4,
+      "repeatMiddle": [
+        0,
+        0
+      ],
+      "toneCounts": {
+        "32": 9,
+        "96": 8,
+        "128": 785,
+        "192": 222,
+        "240": 0
+      },
+      "quietShare": 0.7666
+    },
+    {
+      "name": "shelfTop",
+      "sourceBoundsPx": [
+        379,
+        369,
+        655,
+        676
+      ],
+      "atlasRectPx": [
+        128,
+        0,
+        32,
+        32
+      ],
+      "marginTexels": 3,
+      "repeatMiddle": [
+        1,
+        1
+      ],
+      "toneCounts": {
+        "32": 0,
+        "96": 85,
+        "128": 920,
+        "192": 12,
+        "240": 7
+      },
+      "quietShare": 0.8984
+    },
+    {
+      "name": "shelfLip",
+      "sourceBoundsPx": [
+        696,
+        358,
+        983,
+        676
+      ],
+      "atlasRectPx": [
+        160,
+        0,
+        32,
+        32
+      ],
+      "marginTexels": 3,
+      "repeatMiddle": [
+        1,
+        0
+      ],
+      "toneCounts": {
+        "32": 1,
+        "96": 62,
+        "128": 872,
+        "192": 89,
+        "240": 0
+      },
+      "quietShare": 0.8516
+    },
+    {
+      "name": "baseFront",
+      "sourceBoundsPx": [
+        41,
+        778,
+        328,
+        983
+      ],
+      "atlasRectPx": [
+        192,
+        0,
+        32,
+        32
+      ],
+      "marginTexels": 4,
+      "repeatMiddle": [
+        0,
+        0
+      ],
+      "toneCounts": {
+        "32": 0,
+        "96": 149,
+        "128": 860,
+        "192": 15,
+        "240": 0
+      },
+      "quietShare": 0.8398
+    },
+    {
+      "name": "ventField",
+      "sourceBoundsPx": [
+        696,
+        778,
+        984,
+        983
+      ],
+      "atlasRectPx": [
+        224,
+        0,
+        32,
+        32
+      ],
+      "marginTexels": 3,
+      "repeatMiddle": [
+        1,
+        1
+      ],
+      "toneCounts": {
+        "32": 449,
+        "96": 243,
+        "128": 268,
+        "192": 33,
+        "240": 31
+      },
+      "quietShare": 0.2617
+    }
+  ],
+  "rejectedSourceRegions": [
+    {
+      "boundsPx": [
+        379,
+        727,
+        655,
+        983
+      ],
+      "reason": "unrequested extra quiet cell"
+    },
+    {
+      "boundsPx": [
+        41,
+        727,
+        328,
+        768
+      ],
+      "reason": "detached decorative bar outside baseFront"
+    },
+    {
+      "boundsPx": [
+        696,
+        717,
+        983,
+        768
+      ],
+      "reason": "detached decorative bar outside ventField"
+    }
+  ],
+  "checks": {
+    "requestedProfileCount": true,
+    "allIndexed": true,
+    "allHaveBase": true,
+    "generationLayoutAccepted": false,
+    "reviewedSelectionCompiled": true
+  }
+}

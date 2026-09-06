@@ -1,0 +1,268 @@
+{
+  "schemaVersion": 1,
+  "asset": {
+    "id": "semantic-freezer-v7",
+    "label": "Semantic Medical Freezer V7"
+  },
+  "implementationTarget": "tools/semantic-freezer/main.js",
+  "texelWorldSize": 0.03125,
+  "dimensions": {
+    "width": 44,
+    "depth": 43,
+    "height": 104
+  },
+  "references": {
+    "headerTop": {
+      "axis": "height",
+      "factor": 0.971
+    }
+  },
+  "faceBasis": {
+    "front": {
+      "u": "-x",
+      "v": "+z"
+    },
+    "back": {
+      "u": "+x",
+      "v": "+z"
+    },
+    "left": {
+      "u": "+depth",
+      "v": "+z"
+    },
+    "right": {
+      "u": "-depth",
+      "v": "+z"
+    },
+    "top": {
+      "u": "+x",
+      "v": "+depth"
+    }
+  },
+  "scaleCases": [
+    {
+      "id": "base",
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "view": "back"
+    },
+    {
+      "id": "depth",
+      "scale": [
+        1,
+        1.5,
+        1
+      ],
+      "view": "side"
+    },
+    {
+      "id": "width",
+      "scale": [
+        1.45,
+        1,
+        1
+      ],
+      "view": "back"
+    },
+    {
+      "id": "height",
+      "scale": [
+        1,
+        1,
+        1.3
+      ],
+      "view": "back"
+    }
+  ],
+  "layers": {
+    "order": [
+      "material-field",
+      "structural-graphic",
+      "mechanical-detail",
+      "panel-mark",
+      "label",
+      "wear"
+    ],
+    "renderOrder": {
+      "material-field": 5,
+      "structural-graphic": 7,
+      "mechanical-detail": 9,
+      "panel-mark": 7,
+      "label": 8,
+      "wear": 10
+    }
+  },
+  "runtime": {
+    "rendererScript": "tools/semantic-freezer/shoot.mjs",
+    "outputDir": "docs/reference-lock/semantic-freezer-v7/factory-runtime",
+    "queryDefaults": {
+      "texture": "v7",
+      "fit": 0
+    }
+  },
+  "visualAudit": {
+    "orthographicWidth": 2.7,
+    "orthographicHeight": 3.3,
+    "zoom": 0.83,
+    "targetHeightFactor": 0.49,
+    "darkThreshold": 105,
+    "pitchTolerancePixels": 1.25
+  },
+  "adaptiveFields": [
+    {
+      "id": "condenserField",
+      "face": "back",
+      "layer": "structural-graphic",
+      "horizontal": {
+        "leftMarginTexels": 3.224,
+        "rightMarginTexels": 1.948
+      },
+      "vertical": {
+        "bottomTexels": 25.754,
+        "topReference": "headerTop",
+        "topMarginTexels": 4.076
+      },
+      "minimumSizeTexels": [
+        20,
+        28
+      ],
+      "visualProbe": {
+        "uScanAtVTexels": 85,
+        "vScanAtUOffsetTexels": 1.3
+      },
+      "repeat": {
+        "uPitchTexels": 2.45,
+        "vPitchTexels": 8.2,
+        "uLineWidthTexels": 0.52,
+        "vLineWidthTexels": 0.72
+      }
+    }
+  ],
+  "fixedFittings": [
+    {
+      "id": "sideVentPanel",
+      "face": "left",
+      "layer": "structural-graphic",
+      "sizeTexels": [
+        21.431,
+        24.512
+      ],
+      "uAnchor": {
+        "edge": "back",
+        "offsetTexels": 12.513
+      },
+      "zAnchor": {
+        "edge": "bottom",
+        "centerTexels": 16.095
+      }
+    },
+    {
+      "id": "sideRating",
+      "face": "left",
+      "layer": "label",
+      "sizeTexels": [
+        8,
+        5.3
+      ],
+      "uAnchor": {
+        "edge": "front",
+        "offsetTexels": 8.088
+      },
+      "zAnchor": {
+        "reference": "headerTop",
+        "edge": "top",
+        "offsetTexels": 5.3
+      }
+    },
+    {
+      "id": "rearWarning",
+      "face": "back",
+      "layer": "label",
+      "sizeTexels": [
+        16,
+        6.026
+      ],
+      "uAnchor": {
+        "field": "condenserField",
+        "edge": "center",
+        "offsetTexels": -0.801
+      },
+      "zAnchor": {
+        "field": "condenserField",
+        "edge": "top",
+        "offsetTexels": 25.14
+      }
+    },
+    {
+      "id": "rearDoNot",
+      "face": "back",
+      "layer": "label",
+      "sizeTexels": [
+        16,
+        4.571
+      ],
+      "uAnchor": {
+        "field": "condenserField",
+        "edge": "center",
+        "offsetTexels": -0.736
+      },
+      "zAnchor": {
+        "field": "condenserField",
+        "edge": "bottom",
+        "offsetTexels": 10.977
+      }
+    },
+    {
+      "id": "fanGrille",
+      "face": "back",
+      "layer": "mechanical-detail",
+      "sizeTexels": [
+        12,
+        12
+      ],
+      "uAnchor": {
+        "edge": "center",
+        "offsetTexels": -11.737
+      },
+      "zAnchor": {
+        "edge": "bottom",
+        "centerTexels": 13.071
+      }
+    }
+  ],
+  "fixedGeometryRoles": [
+    "handle_catch",
+    "handle_grip",
+    "handle_mount",
+    "handle_return"
+  ],
+  "correspondenceIds": [
+    "digitalStatus",
+    "fanGrille",
+    "front_control_band",
+    "front_door_opening",
+    "medicalIdentity",
+    "rearDoNot",
+    "rearWarning",
+    "rear_condenser_field",
+    "rear_machine_bay",
+    "sideRating",
+    "side_bottom_wear",
+    "side_lower_column_seed",
+    "side_lower_panel",
+    "side_panel_row_seed",
+    "side_upper_column_seed",
+    "side_upper_panel",
+    "side_vent"
+  ],
+  "overlapRules": [
+    {
+      "face": "left",
+      "frontmost": "sideVentPanel",
+      "behind": "sideBottomWear"
+    }
+  ]
+}

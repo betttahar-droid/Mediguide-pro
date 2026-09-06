@@ -1,0 +1,11 @@
+Use case: stylized-concept
+Asset type: production 3D modeling correction reference
+Input images: Image 1 is the locked design and proportion authority. Image 2 is the current 3D render with blue circles marking defective assemblies; the blue markup is diagnostic only and must not appear.
+Primary request: Produce one clean front-right isometric view of the exact single-door vaccine refrigerator from Image 1. Correct the circled defects from Image 2 while preserving the identity, proportions, colors, pixel-art language, and all uncircled design features.
+Required corrections: make the cream crown/roof corner a clean continuous stepped hard-surface assembly with no torn or painted-on patch; make the right front vertical cream pilaster straight, consistently thick, flush and continuous from crown to condenser base; make the lower-right cream corner block structurally coherent and aligned; make all four shelf front lips straight, level, equal thickness and cleanly seated inside the cavity; make the plum handle a purposeful mounted handle with visible short top and bottom attachment brackets rather than a floating slab; reproduce the gold condenser grille as a crisp rectangular inset with straight evenly spaced horizontal slats and vertical dividers.
+Style/medium: polished low-poly voxel/pixel-art 3D product render, orthographic camera, nearest-neighbour pixel texture character, hard planar geometry, no smooth sculpting.
+Composition/framing: single complete object, centered, full silhouette visible, front-right three-quarter isometric angle matching Image 1.
+Lighting/mood: neutral studio lighting that clearly reveals construction and part boundaries.
+Color palette: preserve the cream enamel, desaturated steel-blue side, deep teal interior/base, plum feet/handle, and warm gold grille from Image 1.
+Constraints: Image 1 controls the object; keep one door, four shelves, one display, exact major proportions and the same front-right orientation. Make every corrected component physically plausible and separable for 3D modeling.
+Avoid: no blue circles, no labels, no text outside the existing tiny display, no extra doors, no added ornament, no invented vents, no floating parts, no melting/warping, no photorealism, no background props, no watermark.

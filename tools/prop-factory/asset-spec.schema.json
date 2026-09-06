@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mediguide.local/schemas/adaptive-prop-v1.json",
+  "title": "Adaptive retro prop specification",
+  "type": "object",
+  "required": ["schemaVersion", "asset", "texelWorldSize", "dimensions", "scaleCases", "layers"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "asset": {
+      "type": "object",
+      "required": ["id", "label"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+        "label": { "type": "string", "minLength": 1 }
+      }
+    },
+    "texelWorldSize": { "type": "number", "exclusiveMinimum": 0 },
+    "dimensions": {
+      "type": "object",
+      "required": ["width", "depth", "height"],
+      "properties": {
+        "width": { "type": "number", "exclusiveMinimum": 0 },
+        "depth": { "type": "number", "exclusiveMinimum": 0 },
+        "height": { "type": "number", "exclusiveMinimum": 0 }
+      }
+    },
+    "scaleCases": {
+      "type": "array",
+      "minItems": 4,
+      "items": {
+        "type": "object",
+        "required": ["id", "scale", "view"],
+        "properties": {
+          "id": { "type": "string" },
+          "scale": {
+            "type": "array", "minItems": 3, "maxItems": 3,
+            "items": { "type": "number", "exclusiveMinimum": 0 }
+          },
+          "view": { "enum": ["front", "side", "back", "iso", "backIso"] }
+        }
+      }
+    },
+    "adaptiveFields": { "type": "array" },
+    "fixedFittings": { "type": "array" },
+    "fixedGeometryRoles": { "type": "array", "items": { "type": "string" } },
+    "correspondenceIds": { "type": "array", "items": { "type": "string" } },
+    "overlapRules": { "type": "array" }
+  }
+}

@@ -1,0 +1,195 @@
+{
+  "status": "PASS",
+  "rigidPartsMatch": true,
+  "fixedFittingsMatch": true,
+  "records": [
+    {
+      "query": "texture=v5&view=backIso&surfaces=0&fittings=0",
+      "output": "C:\\Users\\mansour\\Documents\\Modular builder\\Mediguide-pro\\docs\\reference-lock\\semantic-freezer-v5\\investigation\\texture-v5-view-backIso-surfaces-0-fittings-0.png",
+      "ready": true,
+      "view": "backIso",
+      "diagnostic": "",
+      "textureVersion": "v5",
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "diagnosticLegend": null,
+      "camera": {
+        "yaw": -36,
+        "elevation": 2.5,
+        "autoFit": true
+      },
+      "triangles": 2442,
+      "parts": 78,
+      "decals": 0,
+      "shelfCount": 4,
+      "rigidPartSizes": [
+        [
+          "handle_catch",
+          [
+            0.4,
+            0.2,
+            17.6
+          ]
+        ],
+        [
+          "handle_grip",
+          [
+            2.5,
+            1.1,
+            19
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_return",
+          [
+            2.35,
+            0.15,
+            18
+          ]
+        ]
+      ],
+      "fixedFittingSizes": [],
+      "correspondenceIds": [],
+      "correspondenceFeatureCount": 17,
+      "adaptiveSurfaceCounts": [
+        [
+          "side_panel_column",
+          2
+        ],
+        [
+          "side_panel_row",
+          1
+        ]
+      ],
+      "repeatedStructureCounts": [
+        [
+          "rear_coil_run",
+          8
+        ],
+        [
+          "rear_coil_rail",
+          8
+        ],
+        [
+          "shelf",
+          4
+        ]
+      ],
+      "errors": [],
+      "paletteSize": 97
+    },
+    {
+      "query": "texture=v5&view=side&surfaces=0&fittings=0",
+      "output": "C:\\Users\\mansour\\Documents\\Modular builder\\Mediguide-pro\\docs\\reference-lock\\semantic-freezer-v5\\investigation\\texture-v5-view-side-surfaces-0-fittings-0.png",
+      "ready": true,
+      "view": "side",
+      "diagnostic": "",
+      "textureVersion": "v5",
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "diagnosticLegend": null,
+      "camera": {
+        "yaw": -36,
+        "elevation": 2.5,
+        "autoFit": true
+      },
+      "triangles": 2442,
+      "parts": 78,
+      "decals": 0,
+      "shelfCount": 4,
+      "rigidPartSizes": [
+        [
+          "handle_catch",
+          [
+            0.4,
+            0.2,
+            17.6
+          ]
+        ],
+        [
+          "handle_grip",
+          [
+            2.5,
+            1.1,
+            19
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_return",
+          [
+            2.35,
+            0.15,
+            18
+          ]
+        ]
+      ],
+      "fixedFittingSizes": [],
+      "correspondenceIds": [],
+      "correspondenceFeatureCount": 17,
+      "adaptiveSurfaceCounts": [
+        [
+          "side_panel_column",
+          2
+        ],
+        [
+          "side_panel_row",
+          1
+        ]
+      ],
+      "repeatedStructureCounts": [
+        [
+          "rear_coil_run",
+          8
+        ],
+        [
+          "rear_coil_rail",
+          8
+        ],
+        [
+          "shelf",
+          4
+        ]
+      ],
+      "errors": [],
+      "paletteSize": 28
+    }
+  ]
+}

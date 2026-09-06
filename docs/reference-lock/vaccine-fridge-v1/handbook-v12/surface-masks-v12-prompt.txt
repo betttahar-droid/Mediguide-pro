@@ -1,0 +1,16 @@
+Asset type: source sheet for UV-less nine-slice surface tone masks. The complete output canvas itself must be square. The final input image is a SPATIAL GUIDE ONLY: use its first five equal square safe zones and leave the sixth zone completely empty. Do not copy its grey outlines or white crosshairs.
+
+Draw exactly FIVE separate SQUARE panels: three across the top row and two in the first two zones of the bottom row. Leave the bottom-right sixth zone empty magenta. All five panels must have exactly the same width and height and must fit inside the guide's equal safe zones. Leave wide clear pure-magenta #FF00FF channels between panels and around the outer canvas. Nothing may touch anything else. Each panel is straight-on and strictly orthographic: no perspective, no foreshortening, no vanishing point, no shadow, no ground plane, no reflection.
+
+The five panels, left to right:
+1. a plain pressed panel with a chunky border and one large square bolt just inside each corner;
+2. the same pressed panel with one thick horizontal seam across its middle;
+3. a bordered panel whose middle contains thick horizontal ventilation slots running edge to edge;
+4. a plain bordered panel with nothing in its middle;
+5. a bordered panel with one large shallow rectangular recess in its middle.
+
+These are TONE MASKS, not coloured materials. Use NO COLOUR AT ALL and EXACTLY THREE flat neutral greys: #303030 for shade marks, #808080 for untouched base, and #E0E0E0 for highlight marks. The unused ground is exactly #FF00FF.
+
+Each panel should look about twenty huge chunky square pixels across, like a rugged PlayStation 1 texture enlarged with nearest-neighbour scaling. Every mark is one or two of those huge pixels thick. No thin lines, fine detail, small dots, antialiasing, gradients, blur, texture noise, scratches, dirt, labels, text, annotations, cell borders, or watermark.
+
+On every panel the authored border must sit exactly at that panel's outer edge with nothing outside it, and must be two chunky pixels thick. Bolts remain strictly inside the border. Keep the middle broad and quiet except where the requested seam, vent slots, or recess belongs.

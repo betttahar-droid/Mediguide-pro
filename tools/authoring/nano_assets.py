@@ -52,9 +52,31 @@ ATLAS_PROMPT = (
     "shading, no lighting, sharp retro game texture."
 )
 
+FRIDGE_DETAIL_PROMPT = (
+    "A production texture-detail reference sheet for the approved upright pharmacy "
+    "vaccine fridge. Preserve the exact tall proportions, layered crown, cream outer "
+    "frame, teal inset glass door, steel side panels, condenser base and empty shelves "
+    "shown in the supplied fridge references. Show enlarged orthographic crops of the "
+    "steel side panel, cream frame, teal door rail, glass, condenser grille and digital "
+    "readout. Paint the character entirely as crisp low-resolution pixel art: fixed-size "
+    "corner bolts, white chipped-paint and grunge clusters concentrated at exposed metal "
+    "corners, short scratches, dark/light paired seams, sparse edge wear, three flat baked "
+    "face-value steps, and one controlled staircase reflection on glass. Keep panel centres "
+    "quiet. Also show how each texture divides into fixed corner cells, repeatable edge "
+    "strips, a repeatable blank centre and fixed-size decal islands so a wider one-, two- "
+    "or three-door fridge gains texels without stretching any detail. Nearest-neighbour "
+    "texels, no gradients, no blur, no antialiasing, no random noise, no photorealism, "
+    "no products, no people, no logos and no watermark. This is a texture authoring guide, "
+    "not a scene or user interface."
+)
+
 ASSETS = {
     "shape": (SHAPE_PROMPT, ROOT / "docs" / "concept" / "shape-reference.png"),
     "atlas": (ATLAS_PROMPT, ROOT / "public" / "textures" / "nano-atlas.png"),
+    "fridge_detail": (
+        FRIDGE_DETAIL_PROMPT,
+        ROOT / "docs" / "concept" / "vaccine-fridge-nano-texture-guide.png",
+    ),
 }
 
 

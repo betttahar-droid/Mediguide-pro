@@ -1,0 +1,301 @@
+{
+  "schemaVersion": 3,
+  "generator": "gemini-3.1-flash-image (Nano Banana 2)",
+  "sourceBoard": "docs/reference-lock/vaccine-fridge-v1/nano-banana-v3/nano-microtexture-kit-v3.jpg",
+  "sourceSha256": "4aaa8d9ce2e5e9c844ee05965ab0691338a81ca10e54adebc9826a936f3db86b",
+  "sourceSizePx": [
+    1024,
+    1024
+  ],
+  "cellLayout": [
+    4,
+    4
+  ],
+  "compilerPolicy": "nano palette and motif scores; deterministic 16px logical grid; one-model-pixel accents; base-color periodic perimeter",
+  "materials": [
+    {
+      "role": "cream",
+      "sourceCell": [
+        0,
+        0
+      ],
+      "output": "public/textures/vaccine-fridge-nano-cream-microtile-v3.png",
+      "logicalSizePx": [
+        16,
+        16
+      ],
+      "worldPeriodPx": [
+        16,
+        16
+      ],
+      "periodicEdges": true,
+      "largestAccentClusterPx": 1,
+      "faceVariants": {
+        "top": "public/textures/vaccine-fridge-nano-cream-top-microtile-v3.png",
+        "side": "public/textures/vaccine-fridge-nano-cream-side-microtile-v3.png"
+      },
+      "faceValueFactors": {
+        "top": 1.06,
+        "side": 0.9
+      },
+      "paletteRgb": [
+        [
+          238,
+          231,
+          205
+        ],
+        [
+          222,
+          212,
+          185
+        ],
+        [
+          245,
+          241,
+          221
+        ]
+      ],
+      "darkCells": [
+        [
+          14,
+          12
+        ],
+        [
+          7,
+          13
+        ],
+        [
+          1,
+          3
+        ]
+      ],
+      "brightCells": [
+        [
+          13,
+          3
+        ]
+      ]
+    },
+    {
+      "role": "steel",
+      "sourceCell": [
+        1,
+        0
+      ],
+      "output": "public/textures/vaccine-fridge-nano-steel-microtile-v3.png",
+      "logicalSizePx": [
+        16,
+        16
+      ],
+      "worldPeriodPx": [
+        16,
+        16
+      ],
+      "periodicEdges": true,
+      "largestAccentClusterPx": 1,
+      "faceVariants": {
+        "top": "public/textures/vaccine-fridge-nano-steel-top-microtile-v3.png",
+        "side": "public/textures/vaccine-fridge-nano-steel-side-microtile-v3.png"
+      },
+      "faceValueFactors": {
+        "top": 1.08,
+        "side": 0.84
+      },
+      "paletteRgb": [
+        [
+          109,
+          128,
+          142
+        ],
+        [
+          93,
+          112,
+          124
+        ],
+        [
+          137,
+          156,
+          169
+        ]
+      ],
+      "darkCells": [
+        [
+          3,
+          12
+        ],
+        [
+          14,
+          1
+        ],
+        [
+          14,
+          6
+        ]
+      ],
+      "brightCells": [
+        [
+          9,
+          14
+        ]
+      ]
+    },
+    {
+      "role": "teal",
+      "sourceCell": [
+        2,
+        0
+      ],
+      "output": "public/textures/vaccine-fridge-nano-teal-microtile-v3.png",
+      "logicalSizePx": [
+        16,
+        16
+      ],
+      "worldPeriodPx": [
+        16,
+        16
+      ],
+      "periodicEdges": true,
+      "largestAccentClusterPx": 1,
+      "faceVariants": {
+        "top": "public/textures/vaccine-fridge-nano-teal-top-microtile-v3.png",
+        "side": "public/textures/vaccine-fridge-nano-teal-side-microtile-v3.png"
+      },
+      "faceValueFactors": {
+        "top": 1.06,
+        "side": 0.84
+      },
+      "paletteRgb": [
+        [
+          28,
+          94,
+          90
+        ],
+        [
+          24,
+          84,
+          80
+        ],
+        [
+          42,
+          117,
+          111
+        ]
+      ],
+      "darkCells": [
+        [
+          14,
+          6
+        ],
+        [
+          1,
+          7
+        ],
+        [
+          14,
+          12
+        ]
+      ],
+      "brightCells": [
+        [
+          1,
+          9
+        ]
+      ]
+    },
+    {
+      "role": "glass",
+      "sourceCell": [
+        3,
+        0
+      ],
+      "output": "public/textures/vaccine-fridge-nano-glass-microtile-v3.png",
+      "logicalSizePx": [
+        16,
+        16
+      ],
+      "worldPeriodPx": [
+        16,
+        16
+      ],
+      "periodicEdges": true,
+      "largestAccentClusterPx": 1,
+      "faceVariants": {
+        "top": "public/textures/vaccine-fridge-nano-glass-top-microtile-v3.png",
+        "side": "public/textures/vaccine-fridge-nano-glass-side-microtile-v3.png"
+      },
+      "faceValueFactors": {
+        "top": 1.04,
+        "side": 0.88
+      },
+      "paletteRgb": [
+        [
+          35,
+          69,
+          53
+        ],
+        [
+          21,
+          53,
+          40
+        ],
+        [
+          58,
+          100,
+          81
+        ]
+      ],
+      "darkCells": [
+        [
+          14,
+          12
+        ]
+      ],
+      "brightCells": [
+        [
+          8,
+          9
+        ]
+      ]
+    }
+  ],
+  "panelTile": {
+    "output": "public/textures/vaccine-fridge-nano-steel-panel-microtile-v3.png",
+    "logicalSizePx": [
+      32,
+      32
+    ],
+    "worldPeriodPx": [
+      32,
+      32
+    ],
+    "periodicEdges": true,
+    "accentCount": 2
+  },
+  "identityDecals": {
+    "policy": "locked authority only",
+    "display": "public/textures/vaccine-fridge-display.png",
+    "grille": "public/textures/vaccine-fridge-grille.png"
+  },
+  "styleReferences": [
+    {
+      "path": "docs/reference-lock/vaccine-fridge-v1/style-references/big-inspo-3.jpg",
+      "sha256": "4dd0ba120f9c482118c2441f1089c92f62a9d8d8a68f8b979699471a0402fe19"
+    },
+    {
+      "path": "docs/reference-lock/vaccine-fridge-v1/style-references/inspo-1.jpg",
+      "sha256": "6d94a90dcb7f1e5148636d6c85c43e0b090f0ea78d47fac877f49950b698085b"
+    },
+    {
+      "path": "docs/reference-lock/vaccine-fridge-v1/style-references/inspo-2.jpg",
+      "sha256": "b461f2ff63eca51362ebafed7c72859d624319191382f96877432efbe96ec6a4"
+    },
+    {
+      "path": "docs/reference-lock/vaccine-fridge-v1/style-references/inspo-3.gif",
+      "sha256": "70bdce7f4321d0799f59d80aa6b3833801747a81fd12abd4b9eb48899a6ca35c"
+    },
+    {
+      "path": "docs/reference-lock/vaccine-fridge-v1/style-references/inspo-4.jpg",
+      "sha256": "7a553386dcd6bde5f4c51a704bda5c536736228d8dc00b326bec72c5a2f2ee12"
+    }
+  ]
+}

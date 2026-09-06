@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "asset": { "id": "new-prop", "label": "New Prop" },
+  "implementationTarget": "model.js",
+  "texelWorldSize": 0.03125,
+  "dimensions": { "width": 40, "depth": 32, "height": 64 },
+  "references": { "bodyTop": { "axis": "height", "factor": 1.0 } },
+  "faceBasis": {
+    "front": { "u": "-x", "v": "+z" },
+    "back": { "u": "+x", "v": "+z" },
+    "left": { "u": "+depth", "v": "+z" },
+    "right": { "u": "-depth", "v": "+z" },
+    "top": { "u": "+x", "v": "+depth" }
+  },
+  "scaleCases": [
+    { "id": "base", "scale": [1, 1, 1], "view": "iso" },
+    { "id": "width", "scale": [1.45, 1, 1], "view": "back" },
+    { "id": "depth", "scale": [1, 1.5, 1], "view": "side" },
+    { "id": "height", "scale": [1, 1, 1.3], "view": "back" }
+  ],
+  "layers": {
+    "order": ["material-field", "structural-graphic", "panel-mark", "label", "wear"],
+    "renderOrder": { "material-field": 5, "structural-graphic": 7, "panel-mark": 7, "label": 8, "wear": 10 }
+  },
+  "runtime": {
+    "rendererScript": "SET_RENDERER_SCRIPT",
+    "outputDir": "docs/reference-lock/new-prop/audit-runtime",
+    "queryDefaults": { "fit": 0 }
+  },
+  "adaptiveFields": [],
+  "fixedFittings": [],
+  "fixedGeometryRoles": [],
+  "correspondenceIds": [],
+  "overlapRules": []
+}

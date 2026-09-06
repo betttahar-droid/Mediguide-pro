@@ -1,0 +1,10 @@
+Use case: precise-object-edit
+Asset type: one rectified pixel-art fitting for a procedural 3D prop.
+Feature ID: rearWarning
+
+Image 1 is the immutable rectified TARGET. Paint only its existing non-magenta feature island.
+Image 2 is the binary EDIT MASK: white may change, black is locked.
+Image 3 is direct SOURCE EVIDENCE from the original reference.
+Image 4 is the full rectified FACE CONTEXT.
+
+Preserve Image 1 dimensions, silhouette, margins, pixel grid, feature position and orientation exactly. Reconstruct the source feature front-on with crisp PS1-era square texels. Preserve directly evidenced wording, panel divisions, colors and wear placement. Do not add surrounding geometry or new marks. Pure #FF00FF outside the feature. No antialiasing, blur, gradients, shadows, caption, legend or watermark. If evidence is unclear, retain Image 1 rather than inventing.

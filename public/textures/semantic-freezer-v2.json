@@ -1,0 +1,526 @@
+{
+  "schemaVersion": 2,
+  "authoring": "geometry-locked paintovers; built-in GPT image editor after Nano 429",
+  "sources": {
+    "iso": {
+      "path": "docs/reference-lock/semantic-freezer-v2/paintovers/iso-paintover-gpt.png",
+      "sha256": "924b453cad793cfa01923d5796b0ce308dc92d2d465604c5d47813fcfb4ecdd8"
+    },
+    "side": {
+      "path": "docs/reference-lock/semantic-freezer-v2/paintovers/side-paintover-gpt.png",
+      "sha256": "04f2c6f4073b4b19148069125260a5219d7c45efc1628ba2c3f080787e8b937c"
+    },
+    "back": {
+      "path": "docs/reference-lock/semantic-freezer-v2/paintovers/back-paintover-gpt.png",
+      "sha256": "3253288e5e333efdc8e1b70dfab88bd6562b5123e54b13ebcad043a2c12e966d"
+    }
+  },
+  "microAtlasSizePx": [
+    512,
+    64
+  ],
+  "fittingAtlasSizePx": [
+    256,
+    64
+  ],
+  "microfields": [
+    {
+      "name": "enamel",
+      "source": "iso",
+      "sourceBoundsPx": [
+        395,
+        230,
+        445,
+        280
+      ],
+      "atlasRectPx": [
+        0,
+        0,
+        64,
+        64
+      ],
+      "paletteSize": 8,
+      "largestColorShare": 0.2334
+    },
+    {
+      "name": "sideMetal",
+      "source": "side",
+      "sourceBoundsPx": [
+        610,
+        180,
+        750,
+        330
+      ],
+      "atlasRectPx": [
+        64,
+        0,
+        64,
+        64
+      ],
+      "paletteSize": 14,
+      "largestColorShare": 0.1045
+    },
+    {
+      "name": "darkCavity",
+      "source": "iso",
+      "sourceBoundsPx": [
+        305,
+        330,
+        585,
+        410
+      ],
+      "atlasRectPx": [
+        128,
+        0,
+        64,
+        64
+      ],
+      "paletteSize": 10,
+      "largestColorShare": 0.1367
+    },
+    {
+      "name": "shelfMetal",
+      "source": "iso",
+      "sourceBoundsPx": [
+        300,
+        500,
+        620,
+        548
+      ],
+      "atlasRectPx": [
+        192,
+        0,
+        64,
+        64
+      ],
+      "paletteSize": 12,
+      "largestColorShare": 0.1279
+    },
+    {
+      "name": "medicinePaper",
+      "source": "iso",
+      "sourceBoundsPx": [
+        370,
+        430,
+        405,
+        505
+      ],
+      "atlasRectPx": [
+        256,
+        0,
+        64,
+        64
+      ],
+      "paletteSize": 10,
+      "largestColorShare": 0.1426
+    },
+    {
+      "name": "medicineTan",
+      "source": "iso",
+      "sourceBoundsPx": [
+        550,
+        430,
+        610,
+        520
+      ],
+      "atlasRectPx": [
+        320,
+        0,
+        64,
+        64
+      ],
+      "paletteSize": 10,
+      "largestColorShare": 0.1787
+    },
+    {
+      "name": "bottleAmber",
+      "source": "iso",
+      "sourceBoundsPx": [
+        315,
+        590,
+        350,
+        675
+      ],
+      "atlasRectPx": [
+        384,
+        0,
+        64,
+        64
+      ],
+      "paletteSize": 10,
+      "largestColorShare": 0.1436
+    },
+    {
+      "name": "coilMetal",
+      "source": "back",
+      "sourceBoundsPx": [
+        565,
+        360,
+        830,
+        430
+      ],
+      "atlasRectPx": [
+        448,
+        0,
+        64,
+        64
+      ],
+      "paletteSize": 12,
+      "largestColorShare": 0.1157
+    }
+  ],
+  "fittings": [
+    {
+      "name": "medicalIdentity",
+      "source": "iso",
+      "sourceBoundsPx": [
+        244,
+        170,
+        390,
+        286
+      ],
+      "atlasRectPx": [
+        0,
+        0,
+        32,
+        24
+      ],
+      "logicalSourceSizePx": [
+        32,
+        24
+      ]
+    },
+    {
+      "name": "digitalStatus",
+      "source": "iso",
+      "sourceBoundsPx": [
+        514,
+        188,
+        642,
+        302
+      ],
+      "atlasRectPx": [
+        40,
+        0,
+        36,
+        16
+      ],
+      "logicalSourceSizePx": [
+        36,
+        16
+      ]
+    },
+    {
+      "name": "sideRating",
+      "source": "side",
+      "sourceBoundsPx": [
+        395,
+        314,
+        510,
+        384
+      ],
+      "atlasRectPx": [
+        84,
+        0,
+        18,
+        12
+      ],
+      "logicalSourceSizePx": [
+        18,
+        12
+      ]
+    },
+    {
+      "name": "rearWarning",
+      "source": "back",
+      "sourceBoundsPx": [
+        578,
+        520,
+        836,
+        610
+      ],
+      "atlasRectPx": [
+        110,
+        0,
+        36,
+        14
+      ],
+      "logicalSourceSizePx": [
+        36,
+        14
+      ]
+    },
+    {
+      "name": "rearDoNot",
+      "source": "back",
+      "sourceBoundsPx": [
+        582,
+        846,
+        829,
+        915
+      ],
+      "atlasRectPx": [
+        154,
+        0,
+        32,
+        10
+      ],
+      "logicalSourceSizePx": [
+        32,
+        10
+      ]
+    },
+    {
+      "name": "fanGrille",
+      "source": "back",
+      "sourceBoundsPx": [
+        365,
+        990,
+        535,
+        1195
+      ],
+      "atlasRectPx": [
+        192,
+        0,
+        28,
+        28
+      ],
+      "logicalSourceSizePx": [
+        28,
+        28
+      ]
+    },
+    {
+      "name": "cartonCovid",
+      "source": "iso",
+      "sourceBoundsPx": [
+        311,
+        418,
+        392,
+        532
+      ],
+      "atlasRectPx": [
+        0,
+        32,
+        16,
+        20
+      ],
+      "logicalSourceSizePx": [
+        16,
+        20
+      ]
+    },
+    {
+      "name": "cartonMmr",
+      "source": "iso",
+      "sourceBoundsPx": [
+        400,
+        418,
+        476,
+        532
+      ],
+      "atlasRectPx": [
+        20,
+        32,
+        16,
+        20
+      ],
+      "logicalSourceSizePx": [
+        16,
+        20
+      ]
+    },
+    {
+      "name": "cartonFlu",
+      "source": "iso",
+      "sourceBoundsPx": [
+        478,
+        418,
+        555,
+        532
+      ],
+      "atlasRectPx": [
+        40,
+        32,
+        16,
+        20
+      ],
+      "logicalSourceSizePx": [
+        16,
+        20
+      ]
+    },
+    {
+      "name": "cartonBooster",
+      "source": "iso",
+      "sourceBoundsPx": [
+        478,
+        638,
+        575,
+        735
+      ],
+      "atlasRectPx": [
+        60,
+        32,
+        16,
+        20
+      ],
+      "logicalSourceSizePx": [
+        16,
+        20
+      ]
+    },
+    {
+      "name": "vialCovid",
+      "source": "iso",
+      "sourceBoundsPx": [
+        313,
+        610,
+        357,
+        686
+      ],
+      "atlasRectPx": [
+        84,
+        32,
+        10,
+        14
+      ],
+      "logicalSourceSizePx": [
+        10,
+        14
+      ]
+    },
+    {
+      "name": "vialMmr",
+      "source": "iso",
+      "sourceBoundsPx": [
+        365,
+        610,
+        409,
+        686
+      ],
+      "atlasRectPx": [
+        98,
+        32,
+        10,
+        14
+      ],
+      "logicalSourceSizePx": [
+        10,
+        14
+      ]
+    },
+    {
+      "name": "vialFlu",
+      "source": "iso",
+      "sourceBoundsPx": [
+        415,
+        610,
+        460,
+        686
+      ],
+      "atlasRectPx": [
+        112,
+        32,
+        10,
+        14
+      ],
+      "logicalSourceSizePx": [
+        10,
+        14
+      ]
+    },
+    {
+      "name": "vialPolio",
+      "source": "iso",
+      "sourceBoundsPx": [
+        313,
+        792,
+        360,
+        885
+      ],
+      "atlasRectPx": [
+        126,
+        32,
+        10,
+        14
+      ],
+      "logicalSourceSizePx": [
+        10,
+        14
+      ]
+    },
+    {
+      "name": "sideBottomWear",
+      "source": "side",
+      "sourceBoundsPx": [
+        340,
+        1090,
+        500,
+        1240
+      ],
+      "atlasRectPx": [
+        150,
+        32,
+        28,
+        18
+      ],
+      "logicalSourceSizePx": [
+        28,
+        18
+      ],
+      "semantic": "transparent fixed-size corner wear",
+      "opaqueShare": 0.248
+    },
+    {
+      "name": "sideTopWear",
+      "source": "side",
+      "sourceBoundsPx": [
+        650,
+        180,
+        760,
+        295
+      ],
+      "atlasRectPx": [
+        182,
+        32,
+        28,
+        18
+      ],
+      "logicalSourceSizePx": [
+        28,
+        18
+      ],
+      "semantic": "transparent fixed-size corner wear",
+      "opaqueShare": 0.1131
+    },
+    {
+      "name": "frontBaseWear",
+      "source": "iso",
+      "sourceBoundsPx": [
+        250,
+        1170,
+        580,
+        1240
+      ],
+      "atlasRectPx": [
+        214,
+        32,
+        32,
+        12
+      ],
+      "logicalSourceSizePx": [
+        32,
+        12
+      ],
+      "semantic": "transparent fixed-size corner wear",
+      "opaqueShare": 0.1432
+    }
+  ],
+  "rules": {
+    "microfields": "repeat in fixed world texels with alternating mirror phase",
+    "edges": "fixed semantic role margins",
+    "panelSeams": "proportional band anchors",
+    "fittings": "fixed world size on named front/side/back planes"
+  }
+}

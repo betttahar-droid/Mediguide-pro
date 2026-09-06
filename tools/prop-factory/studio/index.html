@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Prop Factory Studio</title>
+  <link rel="stylesheet" href="./studio.css" />
+</head>
+<body>
+  <main class="app-shell">
+    <aside class="project-rail">
+      <header class="brand">
+        <div class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></div>
+        <div><strong>Prop Factory</strong><small>Local studio</small></div>
+      </header>
+      <button class="new-button" id="newProject"><span>＋</span> New prop</button>
+      <div class="rail-label">Projects</div>
+      <nav class="project-list" id="projectList" aria-label="Generated props"></nav>
+      <footer class="local-status" id="localStatus" data-online="false">
+        <span class="status-dot"></span><div><strong>Checking Ollama</strong><small>localhost:11434</small></div>
+      </footer>
+    </aside>
+
+    <section class="workspace">
+      <header class="workspace-bar">
+        <div><span class="eyebrow">Workspace</span><h1 id="workspaceTitle">New adaptive prop</h1></div>
+        <div class="workspace-actions">
+          <a class="quiet-button" id="downloadSpec" hidden download>Download spec</a>
+          <span class="revision-badge" id="revisionBadge">Draft</span>
+        </div>
+      </header>
+      <div class="stage-wrap" id="stageWrap">
+        <iframe id="preview" title="Generated 3D prop preview" hidden></iframe>
+        <div class="empty-stage" id="emptyStage">
+          <div class="empty-object" aria-hidden="true"><span></span><span></span><span></span></div>
+          <h2>Your prop will appear here</h2>
+          <p>Describe an object, optionally attach references, then let the local models create a scalable first pass.</p>
+        </div>
+        <div class="stage-progress" id="stageProgress" hidden>
+          <div class="progress-orbit"><span></span><span></span><span></span></div>
+          <strong id="progressTitle">Reading the request</strong><small id="progressMessage">Preparing a local generation job</small>
+          <div class="progress-track"><i id="progressBar"></i></div>
+        </div>
+        <div class="stage-error" id="stageError" hidden><strong>Generation stopped</strong><p id="errorMessage"></p></div>
+      </div>
+      <footer class="scale-dock" id="scaleDock" hidden>
+        <div class="scale-title"><span>Scale test</span><button id="resetScale">Reset</button></div>
+        <label><span>X · width</span><input type="range" id="scaleX" min="0.7" max="1.6" value="1" step="0.05"><output>1.00×</output></label>
+        <label><span>Y · depth</span><input type="range" id="scaleY" min="0.7" max="1.6" value="1" step="0.05"><output>1.00×</output></label>
+        <label><span>Z · height</span><input type="range" id="scaleZ" min="0.7" max="1.6" value="1" step="0.05"><output>1.00×</output></label>
+      </footer>
+    </section>
+
+    <aside class="control-panel">
+      <section class="panel-section intro-section">
+        <span class="eyebrow">Ask your local models</span>
+        <h2>What should we make?</h2>
+        <p>One request becomes a measured, scalable prop recipe. Revisions preserve the current model.</p>
+      </section>
+
+      <section class="panel-section model-grid">
+        <label><span>Builder model</span><select id="codeModel"><option>Loading…</option></select></label>
+        <label><span>Vision model</span><select id="visionModel"><option>Loading…</option></select></label>
+      </section>
+
+      <section class="panel-section composer-section">
+        <div class="prompt-presets" id="promptPresets">
+          <button>Medical cabinet</button><button>Retro terminal</button><button>Industrial crate</button>
+        </div>
+        <label class="prompt-box"><span class="sr-only">Prop request</span><textarea id="prompt" rows="6" placeholder="Make a compact vaccine refrigerator with a glass door, fixed side vent, rear condenser and chunky PS1-era proportions."></textarea><small><kbd>Ctrl</kbd><kbd>Enter</kbd> to generate</small></label>
+        <label class="drop-zone" id="dropZone">
+          <input id="references" type="file" accept="image/png,image/jpeg,image/webp,image/gif" multiple />
+          <span class="drop-icon">↥</span><span><strong>Add references</strong><small>Drop or choose up to 5 images</small></span>
+        </label>
+        <div class="reference-strip" id="referenceStrip"></div>
+        <button class="generate-button" id="generate"><span id="generateLabel">Generate prop</span><i>→</i></button>
+      </section>
+
+      <section class="panel-section process-section" id="processSection" hidden>
+        <div class="section-heading"><h3>Build process</h3><span id="processStatus">Running</span></div>
+        <ol class="phase-list" id="phaseList">
+          <li data-phase="analyzing"><i></i><span>Reference evidence</span></li>
+          <li data-phase="planning"><i></i><span>Adaptive specification</span></li>
+          <li data-phase="validating"><i></i><span>Contract validation</span></li>
+          <li data-phase="complete"><i></i><span>Visual review</span></li>
+        </ol>
+      </section>
+
+      <section class="panel-section audit-section" id="auditSection" hidden>
+        <div class="section-heading"><h3>Deterministic audit</h3><span class="pass-pill" id="auditStatus">PASS</span></div>
+        <div class="audit-grid" id="auditGrid"></div>
+      </section>
+    </aside>
+  </main>
+  <div class="toast" id="toast" role="status"></div>
+  <script type="module" src="./studio.js"></script>
+</body>
+</html>

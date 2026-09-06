@@ -1,0 +1,78 @@
+{
+  "status": "PASS",
+  "checks": {
+    "compilerContractPasses": true,
+    "allCorrespondencesConsumed": true,
+    "runtimeUnitBoundarySane": true,
+    "baseCondenserMeasuredExtent": true,
+    "widthExpansionChangesOnlyExtent": true,
+    "heightExpansionChangesOnlyExtent": true,
+    "condenserPitchNeverScales": true,
+    "condenserLineWidthNeverScales": true,
+    "condenserCountsGrow": true,
+    "condenserMarginsStayFixed": true,
+    "condenserUsesSemanticProceduralField": true,
+    "sideVentBackAnchorFixed": true,
+    "sideVentMovesWithRearEdge": true,
+    "sideRatingFrontAnchorFixed": true,
+    "rearWarningTracksPanelTopAndCenter": true,
+    "rearDoNotTracksPanelBottom": true,
+    "fixedDecalsRemainFixed": true,
+    "handleAndFixedGeometryRemainFixed": true,
+    "rearLabelsLayerAboveField": true,
+    "ventOwnsOverlapInsteadOfWear": true,
+    "faceOrientationContractComplete": true,
+    "noDirectionFlippingOrCheckerMirroring": true,
+    "fixedCameraPixelPitchStable": true,
+    "shaderPitchMatchesContract": true,
+    "noMagentaKeyLeak": true,
+    "runtimeClean": true
+  },
+  "evidence": {
+    "ventBackOffsets": [
+      12.513,
+      12.512999999999998
+    ],
+    "condenserSizes": {
+      "base": [
+        38.828,
+        71.154
+      ],
+      "width": [
+        58.628,
+        71.154
+      ],
+      "height": [
+        38.828,
+        101.4492
+      ]
+    },
+    "repeatCounts": {
+      "base": [
+        15,
+        8
+      ],
+      "width": [
+        23,
+        8
+      ],
+      "height": [
+        15,
+        12
+      ]
+    },
+    "pixelPitch": {
+      "base": {
+        "row": 186,
+        "runs": 17,
+        "medianPitchPixels": 15.0
+      },
+      "width": {
+        "row": 186,
+        "runs": 25,
+        "medianPitchPixels": 15.0
+      }
+    },
+    "magentaPixels": 0
+  }
+}

@@ -1,0 +1,1492 @@
+{
+  "schemaVersion": 5,
+  "policy": {
+    "placementOwner": "deterministic correspondence compiler",
+    "nanoRole": "masked pixel reconstruction only",
+    "wholeViewGeneration": false,
+    "unsupportedFeatures": "excluded"
+  },
+  "registrations": {
+    "front": {
+      "authority": "docs/reference-lock/semantic-freezer-v5/authority/ref_front_view.png",
+      "authoritySha256": "0d86e266debaa9f0f4bd19760f9d45fe6cafc7add9d8f40131f678bfb0300a36",
+      "sourceQuadPx": [
+        [
+          285,
+          166
+        ],
+        [
+          285,
+          800
+        ],
+        [
+          625,
+          895
+        ],
+        [
+          625,
+          257
+        ]
+      ],
+      "facePlate": "docs/reference-lock/semantic-freezer-v5/face-plates/front.png",
+      "facePlateSizePx": [
+        176,
+        416
+      ],
+      "worldSizeTexels": [
+        44,
+        104
+      ],
+      "renderView": "iso"
+    },
+    "side": {
+      "authority": "docs/reference-lock/semantic-freezer-v5/authority/ref_right_side_view.png",
+      "authoritySha256": "c5f452efd67f716e9768f9716bc7687b4daacd1a142248c782ad026e8a5a3e38",
+      "sourceQuadPx": [
+        [
+          376,
+          226
+        ],
+        [
+          376,
+          910
+        ],
+        [
+          687,
+          910
+        ],
+        [
+          687,
+          226
+        ]
+      ],
+      "facePlate": "docs/reference-lock/semantic-freezer-v5/face-plates/side.png",
+      "facePlateSizePx": [
+        172,
+        404
+      ],
+      "worldSizeTexels": [
+        43,
+        101
+      ],
+      "renderView": "side"
+    },
+    "back": {
+      "authority": "docs/reference-lock/semantic-freezer-v5/authority/ref_back_view.png",
+      "authoritySha256": "1055f39aad4d41b05cdae8393813f65cae9ecf3bb6958269b236a044ae34c85a",
+      "sourceQuadPx": [
+        [
+          285,
+          257
+        ],
+        [
+          285,
+          800
+        ],
+        [
+          625,
+          895
+        ],
+        [
+          625,
+          354
+        ]
+      ],
+      "facePlate": "docs/reference-lock/semantic-freezer-v5/face-plates/back.png",
+      "facePlateSizePx": [
+        176,
+        404
+      ],
+      "worldSizeTexels": [
+        44,
+        101
+      ],
+      "renderView": "backIso"
+    },
+    "roof": {
+      "authority": "docs/reference-lock/semantic-freezer-v5/authority/ref_front_view.png",
+      "authoritySha256": "0d86e266debaa9f0f4bd19760f9d45fe6cafc7add9d8f40131f678bfb0300a36",
+      "sourceQuadPx": [
+        [
+          464,
+          59
+        ],
+        [
+          285,
+          166
+        ],
+        [
+          625,
+          257
+        ],
+        [
+          804,
+          169
+        ]
+      ],
+      "facePlate": "docs/reference-lock/semantic-freezer-v5/face-plates/roof.png",
+      "facePlateSizePx": [
+        176,
+        172
+      ],
+      "worldSizeTexels": [
+        44,
+        43
+      ],
+      "renderView": "iso"
+    }
+  },
+  "correspondences": [
+    {
+      "id": "front_control_band",
+      "face": "front",
+      "part": "control_crown",
+      "referenceView": "ref_front_view.png",
+      "referencePolygonPx": [
+        [
+          285,
+          166
+        ],
+        [
+          285,
+          255
+        ],
+        [
+          625,
+          354
+        ],
+        [
+          625,
+          257
+        ]
+      ],
+      "facePlatePolygonPx": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          58.397
+        ],
+        [
+          176.0,
+          63.248
+        ],
+        [
+          176.0,
+          0.0
+        ]
+      ],
+      "mask": "docs/reference-lock/semantic-freezer-v5/feature-masks/front_control_band.png",
+      "behavior": "segment-owned",
+      "runtimeSizeTexels": null,
+      "worldPlacement": {
+        "face": "front",
+        "uTexels": 0.0,
+        "zTexels": 96.397,
+        "anchorMode": "top-fixed",
+        "topOffsetTexels": 7.603
+      },
+      "evidence": "direct",
+      "confidence": 0.98,
+      "tolerance": {
+        "positionTexels": 1.0,
+        "sizeTexels": 1.0,
+        "featureCount": "exact"
+      },
+      "nanoEligible": false,
+      "approval": "approved-direct"
+    },
+    {
+      "id": "medicalIdentity",
+      "face": "front",
+      "part": "control_crown",
+      "referenceView": "ref_front_view.png",
+      "referencePolygonPx": [
+        [
+          290,
+          181
+        ],
+        [
+          290,
+          244
+        ],
+        [
+          414,
+          278
+        ],
+        [
+          414,
+          214
+        ]
+      ],
+      "facePlatePolygonPx": [
+        [
+          2.604,
+          8.963
+        ],
+        [
+          2.604,
+          50.297
+        ],
+        [
+          67.037,
+          50.713
+        ],
+        [
+          67.037,
+          8.82
+        ]
+      ],
+      "mask": "docs/reference-lock/semantic-freezer-v5/feature-masks/medicalIdentity.png",
+      "behavior": "edge-fixed",
+      "runtimeSizeTexels": [
+        13,
+        8
+      ],
+      "worldPlacement": {
+        "face": "front",
+        "uTexels": 13.295,
+        "zTexels": 96.575,
+        "anchorMode": "top-fixed",
+        "topOffsetTexels": 7.425
+      },
+      "evidence": "direct",
+      "confidence": 0.95,
+      "tolerance": {
+        "positionTexels": 1.0,
+        "sizeTexels": 1.0,
+        "featureCount": "exact"
+      },
+      "nanoEligible": true,
+      "approval": "approved-direct"
+    },
+    {
+      "id": "digitalStatus",
+      "face": "front",
+      "part": "control_crown",
+      "referenceView": "ref_front_view.png",
+      "referencePolygonPx": [
+        [
+          518,
+          242
+        ],
+        [
+          518,
+          294
+        ],
+        [
+          610,
+          320
+        ],
+        [
+          610,
+          267
+        ]
+      ],
+      "facePlatePolygonPx": [
+        [
+          120.85,
+          8.91
+        ],
+        [
+          120.85,
+          42.883
+        ],
+        [
+          168.282,
+          43.708
+        ],
+        [
+          168.282,
+          9.141
+        ]
+      ],
+      "mask": "docs/reference-lock/semantic-freezer-v5/feature-masks/digitalStatus.png",
+      "behavior": "edge-fixed",
+      "runtimeSizeTexels": [
+        13,
+        5.8
+      ],
+      "worldPlacement": {
+        "face": "front",
+        "uTexels": -14.142,
+        "zTexels": 97.46,
+        "anchorMode": "top-fixed",
+        "topOffsetTexels": 6.54
+      },
+      "evidence": "direct",
+      "confidence": 0.95,
+      "tolerance": {
+        "positionTexels": 1.0,
+        "sizeTexels": 1.0,
+        "featureCount": "exact"
+      },
+      "nanoEligible": true,
+      "approval": "approved-direct"
+    },
+    {
+      "id": "front_door_opening",
+      "face": "front",
+      "part": "door_frame",
+      "referenceView": "ref_front_view.png",
+      "referencePolygonPx": [
+        [
+          287,
+          257
+        ],
+        [
+          287,
+          798
+        ],
+        [
+          610,
+          887
+        ],
+        [
+          610,
+          349
+        ]
+      ],
+      "facePlatePolygonPx": [
+        [
+          1.042,
+          59.356
+        ],
+        [
+          1.042,
+          414.321
+        ],
+        [
+          168.282,
+          413.516
+        ],
+        [
+          168.282,
+          62.623
+        ]
+      ],
+      "mask": "docs/reference-lock/semantic-freezer-v5/feature-masks/front_door_opening.png",
+      "behavior": "expand",
+      "runtimeSizeTexels": null,
+      "worldPlacement": {
+        "face": "front",
+        "uTexels": 0.834,
+        "zTexels": 44.636,
+        "anchorMode": "top-fixed",
+        "topOffsetTexels": 59.364
+      },
+      "evidence": "direct",
+      "confidence": 0.98,
+      "tolerance": {
+        "positionTexels": 1.0,
+        "sizeTexels": 1.0,
+        "featureCount": "exact"
+      },
+      "nanoEligible": false,
+      "approval": "approved-direct"
+    },
+    {
+      "id": "side_upper_panel",
+      "face": "side",
+      "part": "shell_left",
+      "referenceView": "ref_right_side_view.png",
+      "referencePolygonPx": [
+        [
+          377,
+          227
+        ],
+        [
+          377,
+          428
+        ],
+        [
+          686,
+          428
+        ],
+        [
+          686,
+          227
+        ]
+      ],
+      "facePlatePolygonPx": [
+        [
+          0.553,
+          0.591
+        ],
+        [
+          0.553,
+          119.31
+        ],
+        [
+          171.447,
+          119.31
+        ],
+        [
+          171.447,
+          0.591
+        ]
+      ],
+      "mask": "docs/reference-lock/semantic-freezer-v5/feature-masks/side_upper_panel.png",
+      "behavior": "segment-owned",
+      "runtimeSizeTexels": null,
+      "worldPlacement": {
+        "face": "left",
+        "fromFrontTexels": 21.5,
+        "zTexels": 86.012,
+        "anchorMode": "side-face"
+      },
+      "evidence": "direct",
+      "confidence": 0.98,
+      "tolerance": {
+        "positionTexels": 1.0,
+        "sizeTexels": 1.0,
+        "featureCount": "exact"
+      },
+      "nanoEligible": false,
+      "approval": "approved-direct"
+    },
+    {
+      "id": "side_lower_panel",
+      "face": "side",
+      "part": "shell_left",
+      "referenceView": "ref_right_side_view.png",
+      "referencePolygonPx": [
+        [
+          377,
+          431
+        ],
+        [
+          377,
+          909
+        ],
+        [
+          686,
+          909
+        ],
+        [
+          686,
+          431
+        ]
+      ],
+      "facePlatePolygonPx": [
+        [
+          0.553,
+          121.082
+        ],
+        [
+          0.553,
+          403.409
+        ],
+        [
+          171.447,
+          403.409
+        ],
+        [
+          171.447,
+          121.082
+        ]
+      ],
+      "mask": "docs/reference-lock/semantic-freezer-v5/feature-masks/side_lower_panel.png",
+      "behavior": "expand",
+      "runtimeSizeTexels": null,
+      "worldPlacement": {
+        "face": "left",
+        "fromFrontTexels": 21.5,
+        "zTexels": 35.439,
+        "anchorMode": "side-face"
+      },
+      "evidence": "direct",
+      "confidence": 0.98,
+      "tolerance": {
+        "positionTexels": 1.0,
+        "sizeTexels": 1.0,
+        "featureCount": "exact"
+      },
+      "nanoEligible": false,
+      "approval": "approved-direct"
+    },
+    {
+      "id": "side_panel_row_seed",
+      "face": "side",
+      "part": "shell_left",
+      "referenceView": "ref_right_side_view.png",
+      "referencePolygonPx": [
+        [
+          377,
+          426
+        ],
+        [
+          377,
+          432
+        ],
+        [
+          686,
+          432
+        ],
+        [
+          686,
+          426
+        ]
+      ],
+      "facePlatePolygonPx": [
+        [
+          0.553,
+          118.129
+        ],
+        [
+          0.553,
+          121.673
+        ],
+        [
+          171.447,
+          121.673
+        ],
+        [
+          171.447,
+          118.129
+        ]
+      ],
+      "mask": "docs/reference-lock/semantic-freezer-v5/feature-masks/side_panel_row_seed.png",
+      "behavior": "count-adaptive",
+      "runtimeSizeTexels": null,
+      "worldPlacement": {
+        "face": "left",
+        "fromFrontTexels": 21.5,
+        "zTexels": 71.025,
+        "anchorMode": "side-face"
+      },
+      "evidence": "direct",
+      "confidence": 0.98,
+      "tolerance": {
+        "positionTexels": 1.0,
+        "sizeTexels": 1.0,
+        "featureCount": "exact"
+      },
+      "nanoEligible": false,
+      "approval": "approved-direct"
+    },
+    {
+      "id": "side_upper_column_seed",
+      "face": "side",
+      "part": "shell_left",
+      "referenceView": "ref_right_side_view.png",
+      "referencePolygonPx": [
+        [
+          520,
+          227
+        ],
+        [
+          520,
+          428
+        ],
+        [
+          526,
+          428
+        ],
+        [
+          526,
+          227
+        ]
+      ],
+      "facePlatePolygonPx": [
+        [
+          79.64,
+          0.591
+        ],
+        [
+          79.64,
+          119.31
+        ],
+        [
+          82.958,
+          119.31
+        ],
+        [
+          82.958,
+          0.591
+        ]
+      ],
+      "mask": "docs/reference-lock/semantic-freezer-v5/feature-masks/side_upper_column_seed.png",
+      "behavior": "segment-owned",
+      "runtimeSizeTexels": null,
+      "worldPlacement": {
+        "face": "left",
+        "fromFrontTexels": 20.325,
+        "zTexels": 86.012,
+        "anchorMode": "side-face"
+      },
+      "evidence": "direct",
+      "confidence": 0.98,
+      "tolerance": {
+        "positionTexels": 1.0,
+        "sizeTexels": 1.0,
+        "featureCount": "exact"
+      },
+      "nanoEligible": false,
+      "approval": "approved-direct"
+    },
+    {
+      "id": "side_lower_column_seed",
+      "face": "side",
+      "part": "shell_left",
+      "referenceView": "ref_right_side_view.png",
+      "referencePolygonPx": [
+        [
+          600,
+          431
+        ],
+        [
+          600,
+          909
+        ],
+        [
+          606,
+          909
+        ],
+        [
+          606,
+          431
+        ]
+      ],
+      "facePlatePolygonPx": [
+        [
+          123.884,
+          121.082
+        ],
+        [
+          123.884,
+          403.409
+        ],
+        [
+          127.203,
+          403.409
+        ],
+        [
+          127.203,
+          121.082
+        ]
+      ],
+      "mask": "docs/reference-lock/semantic-freezer-v5/feature-masks/side_lower_column_seed.png",
+      "behavior": "segment-owned",
+      "runtimeSizeTexels": null,
+      "worldPlacement": {
+        "face": "left",
+        "fromFrontTexels": 31.386,
+        "zTexels": 35.439,
+        "anchorMode": "side-face"
+      },
+      "evidence": "direct",
+      "confidence": 0.98,
+      "tolerance": {
+        "positionTexels": 1.0,
+        "sizeTexels": 1.0,
+        "featureCount": "exact"
+      },
+      "nanoEligible": false,
+      "approval": "approved-direct"
+    },
+    {
+      "id": "sideRating",
+      "face": "side",
+      "part": "shell_left",
+      "referenceView": "ref_right_side_view.png",
+      "referencePolygonPx": [
+        [
+          394,
+          233
+        ],
+        [
+          394,
+          291
+        ],
+        [
+          475,
+          291
+        ],
+        [
+          475,
+          233
+        ]
+      ],
+      "facePlatePolygonPx": [
+        [
+          9.955,
+          4.135
+        ],
+        [
+          9.955,
+          38.392
+        ],
+        [
+          54.752,
+          38.392
+        ],
+        [
+          54.752,
+          4.135
+        ]
+      ],
+      "mask": "docs/reference-lock/semantic-freezer-v5/feature-masks/sideRating.png",
+      "behavior": "edge-fixed",
+      "runtimeSizeTexels": [
+        8,
+        5.3
+      ],
+      "worldPlacement": {
+        "face": "left",
+        "fromFrontTexels": 8.088,
+        "zTexels": 95.684,
+        "anchorMode": "side-face"
+      },
+      "evidence": "direct",
+      "confidence": 0.95,
+      "tolerance": {
+        "positionTexels": 1.0,
+        "sizeTexels": 1.0,
+        "featureCount": "exact"
+      },
+      "nanoEligible": true,
+      "approval": "approved-direct"
+    },
+    {
+      "id": "side_vent",
+      "face": "side",
+      "part": "side_vent_panel",
+      "referenceView": "ref_right_side_view.png",
+      "referencePolygonPx": [
+        [
+          519,
+          718
+        ],
+        [
+          519,
+          884
+        ],
+        [
+          674,
+          884
+        ],
+        [
+          674,
+          718
+        ]
+      ],
+      "facePlatePolygonPx": [
+        [
+          79.087,
+          290.596
+        ],
+        [
+          79.087,
+          388.643
+        ],
+        [
+          164.81,
+          388.643
+        ],
+        [
+          164.81,
+          290.596
+        ]
+      ],
+      "mask": "docs/reference-lock/semantic-freezer-v5/feature-masks/side_vent.png",
+      "behavior": "edge-fixed",
+      "runtimeSizeTexels": null,
+      "worldPlacement": {
+        "face": "left",
+        "fromFrontTexels": 30.487,
+        "zTexels": 16.095,
+        "anchorMode": "side-face"
+      },
+      "evidence": "direct",
+      "confidence": 0.98,
+      "tolerance": {
+        "positionTexels": 1.0,
+        "sizeTexels": 1.0,
+        "featureCount": "exact"
+      },
+      "nanoEligible": false,
+      "approval": "approved-direct"
+    },
+    {
+      "id": "side_bottom_wear",
+      "face": "side",
+      "part": "shell_left",
+      "referenceView": "ref_right_side_view.png",
+      "referencePolygonPx": [
+        [
+          377,
+          815
+        ],
+        [
+          377,
+          909
+        ],
+        [
+          516,
+          909
+        ],
+        [
+          516,
+          815
+        ]
+      ],
+      "facePlatePolygonPx": [
+        [
+          0.553,
+          347.889
+        ],
+        [
+          0.553,
+          403.409
+        ],
+        [
+          77.428,
+          403.409
+        ],
+        [
+          77.428,
+          347.889
+        ]
+      ],
+      "mask": "docs/reference-lock/semantic-freezer-v5/feature-masks/side_bottom_wear.png",
+      "behavior": "edge-fixed",
+      "runtimeSizeTexels": null,
+      "worldPlacement": {
+        "face": "left",
+        "fromFrontTexels": 9.748,
+        "zTexels": 7.088,
+        "anchorMode": "side-face"
+      },
+      "evidence": "direct",
+      "confidence": 0.98,
+      "tolerance": {
+        "positionTexels": 1.0,
+        "sizeTexels": 1.0,
+        "featureCount": "exact"
+      },
+      "nanoEligible": false,
+      "approval": "approved-direct"
+    },
+    {
+      "id": "rear_condenser_field",
+      "face": "back",
+      "part": "rear_coil_run",
+      "referenceView": "ref_back_view.png",
+      "referencePolygonPx": [
+        [
+          310,
+          289
+        ],
+        [
+          310,
+          668
+        ],
+        [
+          610,
+          751
+        ],
+        [
+          610,
+          371
+        ]
+      ],
+      "facePlatePolygonPx": [
+        [
+          12.897,
+          18.507
+        ],
+        [
+          12.897,
+          300.565
+        ],
+        [
+          168.208,
+          299.613
+        ],
+        [
+          168.208,
+          15.888
+        ]
+      ],
+      "mask": "docs/reference-lock/semantic-freezer-v5/feature-masks/rear_condenser_field.png",
+      "behavior": "count-adaptive",
+      "runtimeSizeTexels": null,
+      "worldPlacement": {
+        "face": "back",
+        "uTexels": 0.638,
+        "zTexels": 61.339,
+        "anchorMode": "back-face"
+      },
+      "evidence": "direct",
+      "confidence": 0.98,
+      "tolerance": {
+        "positionTexels": 1.0,
+        "sizeTexels": 1.0,
+        "featureCount": "exact"
+      },
+      "nanoEligible": false,
+      "approval": "approved-direct"
+    },
+    {
+      "id": "rearWarning",
+      "face": "back",
+      "part": "rear_coil_run",
+      "referenceView": "ref_back_view.png",
+      "referencePolygonPx": [
+        [
+          383,
+          410
+        ],
+        [
+          383,
+          474
+        ],
+        [
+          525,
+          514
+        ],
+        [
+          525,
+          450
+        ]
+      ],
+      "facePlatePolygonPx": [
+        [
+          50.596,
+          93.131
+        ],
+        [
+          50.596,
+          140.799
+        ],
+        [
+          124.1,
+          140.634
+        ],
+        [
+          124.1,
+          92.893
+        ]
+      ],
+      "mask": "docs/reference-lock/semantic-freezer-v5/feature-masks/rearWarning.png",
+      "behavior": "center-fixed",
+      "runtimeSizeTexels": [
+        16,
+        6.2
+      ],
+      "worldPlacement": {
+        "face": "back",
+        "uTexels": -0.163,
+        "zTexels": 71.784,
+        "anchorMode": "back-face"
+      },
+      "evidence": "direct",
+      "confidence": 0.95,
+      "tolerance": {
+        "positionTexels": 1.0,
+        "sizeTexels": 1.0,
+        "featureCount": "exact"
+      },
+      "nanoEligible": true,
+      "approval": "approved-direct"
+    },
+    {
+      "id": "rearDoNot",
+      "face": "back",
+      "part": "rear_coil_run",
+      "referenceView": "ref_back_view.png",
+      "referencePolygonPx": [
+        [
+          383,
+          610
+        ],
+        [
+          383,
+          651
+        ],
+        [
+          526,
+          690
+        ],
+        [
+          526,
+          650
+        ]
+      ],
+      "facePlatePolygonPx": [
+        [
+          50.596,
+          242.092
+        ],
+        [
+          50.596,
+          272.629
+        ],
+        [
+          124.619,
+          271.712
+        ],
+        [
+          124.619,
+          241.874
+        ]
+      ],
+      "mask": "docs/reference-lock/semantic-freezer-v5/feature-masks/rearDoNot.png",
+      "behavior": "center-fixed",
+      "runtimeSizeTexels": [
+        16,
+        5
+      ],
+      "worldPlacement": {
+        "face": "back",
+        "uTexels": -0.098,
+        "zTexels": 36.731,
+        "anchorMode": "back-face"
+      },
+      "evidence": "direct",
+      "confidence": 0.95,
+      "tolerance": {
+        "positionTexels": 1.0,
+        "sizeTexels": 1.0,
+        "featureCount": "exact"
+      },
+      "nanoEligible": true,
+      "approval": "approved-direct"
+    },
+    {
+      "id": "fanGrille",
+      "face": "back",
+      "part": "rear_fan",
+      "referenceView": "ref_back_view.png",
+      "referencePolygonPx": [
+        [
+          315,
+          690
+        ],
+        [
+          315,
+          786
+        ],
+        [
+          414,
+          814
+        ],
+        [
+          414,
+          718
+        ]
+      ],
+      "facePlatePolygonPx": [
+        [
+          15.477,
+          315.893
+        ],
+        [
+          15.477,
+          387.342
+        ],
+        [
+          66.624,
+          387.576
+        ],
+        [
+          66.624,
+          316.051
+        ]
+      ],
+      "mask": "docs/reference-lock/semantic-freezer-v5/feature-masks/fanGrille.png",
+      "behavior": "edge-fixed",
+      "runtimeSizeTexels": [
+        12,
+        12
+      ],
+      "worldPlacement": {
+        "face": "back",
+        "uTexels": -11.737,
+        "zTexels": 13.071,
+        "anchorMode": "back-face"
+      },
+      "evidence": "direct",
+      "confidence": 0.95,
+      "tolerance": {
+        "positionTexels": 1.0,
+        "sizeTexels": 1.0,
+        "featureCount": "exact"
+      },
+      "nanoEligible": true,
+      "approval": "approved-direct"
+    },
+    {
+      "id": "rear_machine_bay",
+      "face": "back",
+      "part": "rear_machine_bay",
+      "referenceView": "ref_back_view.png",
+      "referencePolygonPx": [
+        [
+          310,
+          676
+        ],
+        [
+          310,
+          795
+        ],
+        [
+          610,
+          878
+        ],
+        [
+          610,
+          757
+        ]
+      ],
+      "facePlatePolygonPx": [
+        [
+          12.897,
+          306.519
+        ],
+        [
+          12.897,
+          395.08
+        ],
+        [
+          168.208,
+          394.436
+        ],
+        [
+          168.208,
+          304.093
+        ]
+      ],
+      "mask": "docs/reference-lock/semantic-freezer-v5/feature-masks/rear_machine_bay.png",
+      "behavior": "segment-owned",
+      "runtimeSizeTexels": null,
+      "worldPlacement": {
+        "face": "back",
+        "uTexels": 0.638,
+        "zTexels": 13.492,
+        "anchorMode": "back-face"
+      },
+      "evidence": "direct",
+      "confidence": 0.98,
+      "tolerance": {
+        "positionTexels": 1.0,
+        "sizeTexels": 1.0,
+        "featureCount": "exact"
+      },
+      "nanoEligible": false,
+      "approval": "approved-direct"
+    }
+  ],
+  "runtimePlacements": {
+    "fixedFittings": {
+      "medicalIdentity": {
+        "face": "front",
+        "uTexels": 13.295,
+        "zTexels": 96.575,
+        "anchorMode": "top-fixed",
+        "topOffsetTexels": 7.425,
+        "sizeTexels": [
+          13,
+          8
+        ]
+      },
+      "digitalStatus": {
+        "face": "front",
+        "uTexels": -14.142,
+        "zTexels": 97.46,
+        "anchorMode": "top-fixed",
+        "topOffsetTexels": 6.54,
+        "sizeTexels": [
+          13,
+          5.8
+        ]
+      },
+      "sideRating": {
+        "face": "left",
+        "fromFrontTexels": 8.088,
+        "zTexels": 95.684,
+        "anchorMode": "side-face",
+        "sizeTexels": [
+          8,
+          5.3
+        ]
+      },
+      "rearWarning": {
+        "face": "back",
+        "uTexels": -0.163,
+        "zTexels": 71.784,
+        "anchorMode": "back-face",
+        "sizeTexels": [
+          16,
+          6.2
+        ]
+      },
+      "rearDoNot": {
+        "face": "back",
+        "uTexels": -0.098,
+        "zTexels": 36.731,
+        "anchorMode": "back-face",
+        "sizeTexels": [
+          16,
+          5
+        ]
+      },
+      "fanGrille": {
+        "face": "back",
+        "uTexels": -11.737,
+        "zTexels": 13.071,
+        "anchorMode": "back-face",
+        "sizeTexels": [
+          12,
+          12
+        ]
+      }
+    },
+    "sidePanelSeeds": {
+      "baseFaceWidthTexels": 43,
+      "baseFaceHeightTexels": 101,
+      "row": {
+        "face": "left",
+        "fromFrontTexels": 21.5,
+        "zTexels": 71.025,
+        "anchorMode": "side-face"
+      },
+      "upperColumn": {
+        "face": "left",
+        "fromFrontTexels": 20.325,
+        "zTexels": 86.012,
+        "anchorMode": "side-face"
+      },
+      "lowerColumn": {
+        "face": "left",
+        "fromFrontTexels": 31.386,
+        "zTexels": 35.439,
+        "anchorMode": "side-face"
+      },
+      "addedRowPitchTexels": 28,
+      "addedColumnPitchTexels": 18,
+      "thicknessTexels": 0.55
+    },
+    "sideVent": {
+      "face": "left",
+      "fromFrontTexels": 30.487,
+      "zTexels": 16.095,
+      "anchorMode": "side-face"
+    }
+  },
+  "nanoFeatureJobs": [
+    {
+      "id": "medicalIdentity",
+      "prompt": "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/medicalIdentity/prompt.txt",
+      "inputsInOrder": [
+        "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/medicalIdentity/target.png",
+        "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/medicalIdentity/edit-mask.png",
+        "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/medicalIdentity/source-evidence.png",
+        "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/medicalIdentity/face-context.png"
+      ],
+      "output": "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/medicalIdentity/nano-output.png",
+      "cropInFacePlatePx": [
+        0,
+        2,
+        74,
+        57
+      ],
+      "logicalTarget": "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/medicalIdentity/target-logical.png",
+      "logicalEditMask": "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/medicalIdentity/edit-mask-logical.png",
+      "logicalSizePx": [
+        74,
+        55
+      ],
+      "nanoCanvasSizePx": [
+        1024,
+        1024
+      ],
+      "canvasRectPx": [
+        68,
+        182,
+        888,
+        660
+      ],
+      "canvasScale": 12,
+      "approval": "pending"
+    },
+    {
+      "id": "digitalStatus",
+      "prompt": "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/digitalStatus/prompt.txt",
+      "inputsInOrder": [
+        "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/digitalStatus/target.png",
+        "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/digitalStatus/edit-mask.png",
+        "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/digitalStatus/source-evidence.png",
+        "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/digitalStatus/face-context.png"
+      ],
+      "output": "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/digitalStatus/nano-output.png",
+      "cropInFacePlatePx": [
+        114,
+        2,
+        175,
+        50
+      ],
+      "logicalTarget": "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/digitalStatus/target-logical.png",
+      "logicalEditMask": "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/digitalStatus/edit-mask-logical.png",
+      "logicalSizePx": [
+        61,
+        48
+      ],
+      "nanoCanvasSizePx": [
+        1024,
+        1024
+      ],
+      "canvasRectPx": [
+        146,
+        224,
+        732,
+        576
+      ],
+      "canvasScale": 12,
+      "approval": "pending"
+    },
+    {
+      "id": "sideRating",
+      "prompt": "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/sideRating/prompt.txt",
+      "inputsInOrder": [
+        "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/sideRating/target.png",
+        "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/sideRating/edit-mask.png",
+        "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/sideRating/source-evidence.png",
+        "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/sideRating/face-context.png"
+      ],
+      "output": "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/sideRating/nano-output.png",
+      "cropInFacePlatePx": [
+        3,
+        0,
+        61,
+        45
+      ],
+      "logicalTarget": "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/sideRating/target-logical.png",
+      "logicalEditMask": "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/sideRating/edit-mask-logical.png",
+      "logicalSizePx": [
+        58,
+        45
+      ],
+      "nanoCanvasSizePx": [
+        1024,
+        1024
+      ],
+      "canvasRectPx": [
+        164,
+        242,
+        696,
+        540
+      ],
+      "canvasScale": 12,
+      "approval": "pending"
+    },
+    {
+      "id": "rearWarning",
+      "prompt": "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/rearWarning/prompt.txt",
+      "inputsInOrder": [
+        "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/rearWarning/target.png",
+        "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/rearWarning/edit-mask.png",
+        "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/rearWarning/source-evidence.png",
+        "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/rearWarning/face-context.png"
+      ],
+      "output": "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/rearWarning/nano-output.png",
+      "cropInFacePlatePx": [
+        44,
+        86,
+        131,
+        147
+      ],
+      "logicalTarget": "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/rearWarning/target-logical.png",
+      "logicalEditMask": "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/rearWarning/edit-mask-logical.png",
+      "logicalSizePx": [
+        87,
+        61
+      ],
+      "nanoCanvasSizePx": [
+        1024,
+        1024
+      ],
+      "canvasRectPx": [
+        77,
+        207,
+        870,
+        610
+      ],
+      "canvasScale": 10,
+      "approval": "pending"
+    },
+    {
+      "id": "rearDoNot",
+      "prompt": "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/rearDoNot/prompt.txt",
+      "inputsInOrder": [
+        "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/rearDoNot/target.png",
+        "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/rearDoNot/edit-mask.png",
+        "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/rearDoNot/source-evidence.png",
+        "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/rearDoNot/face-context.png"
+      ],
+      "output": "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/rearDoNot/nano-output.png",
+      "cropInFacePlatePx": [
+        44,
+        235,
+        131,
+        279
+      ],
+      "logicalTarget": "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/rearDoNot/target-logical.png",
+      "logicalEditMask": "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/rearDoNot/edit-mask-logical.png",
+      "logicalSizePx": [
+        87,
+        44
+      ],
+      "nanoCanvasSizePx": [
+        1024,
+        1024
+      ],
+      "canvasRectPx": [
+        77,
+        292,
+        870,
+        440
+      ],
+      "canvasScale": 10,
+      "approval": "pending"
+    },
+    {
+      "id": "fanGrille",
+      "prompt": "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/fanGrille/prompt.txt",
+      "inputsInOrder": [
+        "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/fanGrille/target.png",
+        "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/fanGrille/edit-mask.png",
+        "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/fanGrille/source-evidence.png",
+        "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/fanGrille/face-context.png"
+      ],
+      "output": "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/fanGrille/nano-output.png",
+      "cropInFacePlatePx": [
+        9,
+        309,
+        73,
+        394
+      ],
+      "logicalTarget": "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/fanGrille/target-logical.png",
+      "logicalEditMask": "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/fanGrille/edit-mask-logical.png",
+      "logicalSizePx": [
+        64,
+        85
+      ],
+      "nanoCanvasSizePx": [
+        1024,
+        1024
+      ],
+      "canvasRectPx": [
+        192,
+        87,
+        640,
+        850
+      ],
+      "canvasScale": 10,
+      "approval": "pending"
+    }
+  ]
+}

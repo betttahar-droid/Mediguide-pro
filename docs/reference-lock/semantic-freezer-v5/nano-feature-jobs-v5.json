@@ -1,0 +1,215 @@
+{
+  "schemaVersion": 5,
+  "jobs": [
+    {
+      "id": "medicalIdentity",
+      "prompt": "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/medicalIdentity/prompt.txt",
+      "inputsInOrder": [
+        "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/medicalIdentity/target.png",
+        "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/medicalIdentity/edit-mask.png",
+        "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/medicalIdentity/source-evidence.png",
+        "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/medicalIdentity/face-context.png"
+      ],
+      "output": "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/medicalIdentity/nano-output.png",
+      "cropInFacePlatePx": [
+        0,
+        2,
+        74,
+        57
+      ],
+      "logicalTarget": "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/medicalIdentity/target-logical.png",
+      "logicalEditMask": "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/medicalIdentity/edit-mask-logical.png",
+      "logicalSizePx": [
+        74,
+        55
+      ],
+      "nanoCanvasSizePx": [
+        1024,
+        1024
+      ],
+      "canvasRectPx": [
+        68,
+        182,
+        888,
+        660
+      ],
+      "canvasScale": 12,
+      "approval": "pending"
+    },
+    {
+      "id": "digitalStatus",
+      "prompt": "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/digitalStatus/prompt.txt",
+      "inputsInOrder": [
+        "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/digitalStatus/target.png",
+        "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/digitalStatus/edit-mask.png",
+        "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/digitalStatus/source-evidence.png",
+        "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/digitalStatus/face-context.png"
+      ],
+      "output": "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/digitalStatus/nano-output.png",
+      "cropInFacePlatePx": [
+        114,
+        2,
+        175,
+        50
+      ],
+      "logicalTarget": "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/digitalStatus/target-logical.png",
+      "logicalEditMask": "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/digitalStatus/edit-mask-logical.png",
+      "logicalSizePx": [
+        61,
+        48
+      ],
+      "nanoCanvasSizePx": [
+        1024,
+        1024
+      ],
+      "canvasRectPx": [
+        146,
+        224,
+        732,
+        576
+      ],
+      "canvasScale": 12,
+      "approval": "pending"
+    },
+    {
+      "id": "sideRating",
+      "prompt": "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/sideRating/prompt.txt",
+      "inputsInOrder": [
+        "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/sideRating/target.png",
+        "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/sideRating/edit-mask.png",
+        "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/sideRating/source-evidence.png",
+        "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/sideRating/face-context.png"
+      ],
+      "output": "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/sideRating/nano-output.png",
+      "cropInFacePlatePx": [
+        3,
+        0,
+        61,
+        45
+      ],
+      "logicalTarget": "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/sideRating/target-logical.png",
+      "logicalEditMask": "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/sideRating/edit-mask-logical.png",
+      "logicalSizePx": [
+        58,
+        45
+      ],
+      "nanoCanvasSizePx": [
+        1024,
+        1024
+      ],
+      "canvasRectPx": [
+        164,
+        242,
+        696,
+        540
+      ],
+      "canvasScale": 12,
+      "approval": "pending"
+    },
+    {
+      "id": "rearWarning",
+      "prompt": "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/rearWarning/prompt.txt",
+      "inputsInOrder": [
+        "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/rearWarning/target.png",
+        "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/rearWarning/edit-mask.png",
+        "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/rearWarning/source-evidence.png",
+        "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/rearWarning/face-context.png"
+      ],
+      "output": "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/rearWarning/nano-output.png",
+      "cropInFacePlatePx": [
+        44,
+        86,
+        131,
+        147
+      ],
+      "logicalTarget": "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/rearWarning/target-logical.png",
+      "logicalEditMask": "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/rearWarning/edit-mask-logical.png",
+      "logicalSizePx": [
+        87,
+        61
+      ],
+      "nanoCanvasSizePx": [
+        1024,
+        1024
+      ],
+      "canvasRectPx": [
+        77,
+        207,
+        870,
+        610
+      ],
+      "canvasScale": 10,
+      "approval": "pending"
+    },
+    {
+      "id": "rearDoNot",
+      "prompt": "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/rearDoNot/prompt.txt",
+      "inputsInOrder": [
+        "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/rearDoNot/target.png",
+        "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/rearDoNot/edit-mask.png",
+        "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/rearDoNot/source-evidence.png",
+        "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/rearDoNot/face-context.png"
+      ],
+      "output": "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/rearDoNot/nano-output.png",
+      "cropInFacePlatePx": [
+        44,
+        235,
+        131,
+        279
+      ],
+      "logicalTarget": "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/rearDoNot/target-logical.png",
+      "logicalEditMask": "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/rearDoNot/edit-mask-logical.png",
+      "logicalSizePx": [
+        87,
+        44
+      ],
+      "nanoCanvasSizePx": [
+        1024,
+        1024
+      ],
+      "canvasRectPx": [
+        77,
+        292,
+        870,
+        440
+      ],
+      "canvasScale": 10,
+      "approval": "pending"
+    },
+    {
+      "id": "fanGrille",
+      "prompt": "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/fanGrille/prompt.txt",
+      "inputsInOrder": [
+        "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/fanGrille/target.png",
+        "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/fanGrille/edit-mask.png",
+        "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/fanGrille/source-evidence.png",
+        "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/fanGrille/face-context.png"
+      ],
+      "output": "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/fanGrille/nano-output.png",
+      "cropInFacePlatePx": [
+        9,
+        309,
+        73,
+        394
+      ],
+      "logicalTarget": "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/fanGrille/target-logical.png",
+      "logicalEditMask": "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/fanGrille/edit-mask-logical.png",
+      "logicalSizePx": [
+        64,
+        85
+      ],
+      "nanoCanvasSizePx": [
+        1024,
+        1024
+      ],
+      "canvasRectPx": [
+        192,
+        87,
+        640,
+        850
+      ],
+      "canvasScale": 10,
+      "approval": "pending"
+    }
+  ]
+}

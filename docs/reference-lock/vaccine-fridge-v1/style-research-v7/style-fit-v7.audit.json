@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 7,
+  "status": "PASS",
+  "checks": {
+    "fiveStyleAuthoritiesRecorded": true,
+    "lockedEnvelopeAuthorityPreserved": true,
+    "baselineStillExists": true,
+    "nearestSamplerNoMipmaps": true,
+    "twelvePurposefulNanoMotifs": true,
+    "internalMarginsAtLeastThree": true,
+    "atlasGuttersAtLeastFour": true,
+    "motifExtentWithinEightByTen": true,
+    "quietShareAtLeastSeventyFivePercent": true,
+    "threeLoopGeneratedServiceSlots": true,
+    "threeCompactDoorHinges": true,
+    "structuralDetailsAreMeshes": true,
+    "fixedSocketDecalMetadata": true,
+    "renderChangeIsDeliberateNotRedesign": true,
+    "renderClusterMedianMatchesReferences": true
+  },
+  "metrics": {
+    "modelSha256": "087f5b1a2f74199b7defd417641de64e0c225d85bb368fefb3305086e100da2b",
+    "baselineModelSha256": "657a970cee9b45ddf26c020407eb9ac5ad4fb0a4d788a0e2b42bf871273281f6",
+    "changedObjectPixelShare": 0.0327,
+    "meanMotifQuietShare": 0.8324,
+    "renderRunLengthPx": {
+      "horizontalMedian": 3,
+      "horizontalP75": 5,
+      "verticalMedian": 3,
+      "verticalP75": 5
+    },
+    "samplers": [
+      {
+        "magFilter": 9728,
+        "minFilter": 9728
+      }
+    ],
+    "v7NodeCount": 22
+  },
+  "visualAudit": {
+    "iteration1": "FAIL: hinge plates were too pale and service slots read as attached bright bars",
+    "iteration2": "PASS: hinges reduced and darkened; service slots reduced and integrated into teal side plane",
+    "remainingJudgment": "Style match is materially closer while appliance identity and quiet broad panels remain intact"
+  }
+}

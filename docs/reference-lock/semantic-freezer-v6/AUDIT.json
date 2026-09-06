@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "checks": {
+    "compilerPasses": true,
+    "allSeventeenCorrespondencesConsumed": true,
+    "measuredSupportsExist": true,
+    "condenserSupportExact": true,
+    "sideVentSupportExact": true,
+    "fanContainedByHousing": true,
+    "labelsLayerAboveCondenser": true,
+    "noMagentaKeyLeak": true,
+    "noDirectionalTileMirroring": true,
+    "explicitFaceBasis": true,
+    "legacyChunkyRearGridRemoved": true,
+    "baseSideTopologyExact": true,
+    "depthAddsPanelColumns": true,
+    "heightAddsPanelRows": true,
+    "fixedTexturePartsRemainFixed": true,
+    "handleRemainsFixed": true,
+    "runtimeClean": true
+  },
+  "magentaPixels": 0
+}

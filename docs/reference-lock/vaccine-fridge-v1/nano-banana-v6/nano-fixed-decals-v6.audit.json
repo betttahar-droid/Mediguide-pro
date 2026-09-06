@@ -1,0 +1,246 @@
+{
+  "schemaVersion": 6,
+  "generator": "gemini-3.1-flash-image (Nano Banana 2) + deterministic decal compiler",
+  "source": "docs/reference-lock/vaccine-fridge-v1/nano-banana-v6/nano-fixed-decals-v6.jpg",
+  "sourceSha256": "c1d3c1bdb3eb677f096b005111e74d60e1217ebfcf084d1702f10e3e0687b358",
+  "output": "public/textures/vaccine-fridge-nano-decals-v6.png",
+  "atlasSizePx": [
+    96,
+    96
+  ],
+  "policy": "dominant panel removed; largest deliberate component; locked v5 palette; 2px internal plus 4px atlas margin",
+  "decals": [
+    {
+      "name": "cream_corner_chip",
+      "atlasRectPx": [
+        4,
+        4,
+        16,
+        16
+      ],
+      "slotRectPx": [
+        0,
+        0,
+        24,
+        24
+      ],
+      "atlasMarginPx": 4,
+      "sourceCell": [
+        0,
+        3
+      ],
+      "role": "cream",
+      "sourceComponentPx": 12,
+      "compiledBoundsPx": [
+        7,
+        5,
+        8,
+        11
+      ],
+      "internalMarginPx": 5
+    },
+    {
+      "name": "steel_dark_mark",
+      "atlasRectPx": [
+        28,
+        4,
+        16,
+        16
+      ],
+      "slotRectPx": [
+        24,
+        0,
+        24,
+        24
+      ],
+      "atlasMarginPx": 4,
+      "sourceCell": [
+        1,
+        0
+      ],
+      "role": "steel",
+      "sourceComponentPx": 36,
+      "compiledBoundsPx": [
+        7,
+        7,
+        9,
+        9
+      ],
+      "internalMarginPx": 7
+    },
+    {
+      "name": "steel_light_mark",
+      "atlasRectPx": [
+        52,
+        4,
+        16,
+        16
+      ],
+      "slotRectPx": [
+        48,
+        0,
+        24,
+        24
+      ],
+      "atlasMarginPx": 4,
+      "sourceCell": [
+        1,
+        1
+      ],
+      "role": "steel",
+      "sourceComponentPx": 24,
+      "compiledBoundsPx": [
+        7,
+        7,
+        9,
+        9
+      ],
+      "internalMarginPx": 7
+    },
+    {
+      "name": "steel_fastener",
+      "atlasRectPx": [
+        76,
+        4,
+        16,
+        16
+      ],
+      "slotRectPx": [
+        72,
+        0,
+        24,
+        24
+      ],
+      "atlasMarginPx": 4,
+      "sourceCell": [
+        1,
+        3
+      ],
+      "role": "steel",
+      "sourceComponentPx": 16,
+      "compiledBoundsPx": [
+        6,
+        6,
+        10,
+        10
+      ],
+      "internalMarginPx": 6
+    },
+    {
+      "name": "teal_chip",
+      "atlasRectPx": [
+        4,
+        28,
+        16,
+        16
+      ],
+      "slotRectPx": [
+        0,
+        24,
+        24,
+        24
+      ],
+      "atlasMarginPx": 4,
+      "sourceCell": [
+        2,
+        0
+      ],
+      "role": "teal",
+      "sourceComponentPx": 72,
+      "compiledBoundsPx": [
+        6,
+        6,
+        10,
+        10
+      ],
+      "internalMarginPx": 6
+    },
+    {
+      "name": "teal_corner",
+      "atlasRectPx": [
+        28,
+        28,
+        16,
+        16
+      ],
+      "slotRectPx": [
+        24,
+        24,
+        24,
+        24
+      ],
+      "atlasMarginPx": 4,
+      "sourceCell": [
+        2,
+        2
+      ],
+      "role": "teal",
+      "sourceComponentPx": 32,
+      "compiledBoundsPx": [
+        6,
+        5,
+        10,
+        11
+      ],
+      "internalMarginPx": 5
+    },
+    {
+      "name": "glass_stair",
+      "atlasRectPx": [
+        52,
+        28,
+        16,
+        16
+      ],
+      "slotRectPx": [
+        48,
+        24,
+        24,
+        24
+      ],
+      "atlasMarginPx": 4,
+      "sourceCell": [
+        3,
+        0
+      ],
+      "role": "glass",
+      "sourceComponentPx": 135,
+      "compiledBoundsPx": [
+        5,
+        5,
+        10,
+        10
+      ],
+      "internalMarginPx": 5
+    },
+    {
+      "name": "shelf_end",
+      "atlasRectPx": [
+        76,
+        28,
+        16,
+        16
+      ],
+      "slotRectPx": [
+        72,
+        24,
+        24,
+        24
+      ],
+      "atlasMarginPx": 4,
+      "sourceCell": [
+        3,
+        1
+      ],
+      "role": "steel",
+      "sourceComponentPx": 14,
+      "compiledBoundsPx": [
+        5,
+        7,
+        11,
+        9
+      ],
+      "internalMarginPx": 5
+    }
+  ]
+}

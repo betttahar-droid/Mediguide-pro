@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "checks": {
+    "compilerPasses": true,
+    "runtimeClean": true,
+    "runtimeUsesV5": true,
+    "sixMeasuredFittingsPlaced": true,
+    "baseSideHasOneMeasuredRow": true,
+    "baseSideHasTwoSegmentColumns": true,
+    "depthAddsOnlyColumns": true,
+    "heightAddsOnlyRows": true,
+    "fixedFittingsInvariant": true,
+    "handleInvariant": true
+  }
+}

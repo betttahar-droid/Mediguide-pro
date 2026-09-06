@@ -1,0 +1,1819 @@
+{
+  "schemaVersion": 6,
+  "status": "PASS",
+  "generator": "support-owned semantic texture compiler",
+  "atlases": {
+    "microfields": "semantic-freezer-microfields-v6.png",
+    "fittings": "semantic-freezer-fittings-v6.png",
+    "semanticFaces": "semantic-freezer-faces-v1.png"
+  },
+  "evidencePolicy": {
+    "priority": [
+      "direct",
+      "reconstructed",
+      "invented"
+    ],
+    "direct": "extract from locked authority wherever visible",
+    "reconstructed": "allowed only when a geometry-locked view passes silhouette/depth/anchor review",
+    "invented": "excluded unless manually approved in a future manifest revision",
+    "geometryFromPaintover": false
+  },
+  "diagnosticPasses": [
+    "raw",
+    "part-id",
+    "face-normal",
+    "depth",
+    "anchor-id"
+  ],
+  "candidatePaintoverGates": {
+    "iso": {
+      "status": "missing",
+      "approved": false,
+      "path": "docs/reference-lock/semantic-freezer-v4/paintovers/iso-paintover-nano.png"
+    },
+    "side": {
+      "status": "missing",
+      "approved": false,
+      "path": "docs/reference-lock/semantic-freezer-v4/paintovers/side-paintover-nano.png"
+    },
+    "back": {
+      "status": "missing",
+      "approved": false,
+      "path": "docs/reference-lock/semantic-freezer-v4/paintovers/back-paintover-nano.png"
+    }
+  },
+  "alignedPaintoverGates": {
+    "iso": {
+      "status": "approved-internal-only",
+      "approved": true,
+      "silhouetteMayBeUsed": false,
+      "path": "docs/reference-lock/semantic-freezer-v2/paintovers/iso-paintover-gpt.png",
+      "silhouetteIoU": 0.992529,
+      "bboxDrift": 0.001427,
+      "outsideLeakShare": 0.005246,
+      "thresholds": {
+        "silhouetteIoU": 0.98,
+        "bboxDrift": 0.04,
+        "outsideLeakShare": 0.015
+      }
+    },
+    "side": {
+      "status": "approved-internal-only",
+      "approved": true,
+      "silhouetteMayBeUsed": false,
+      "path": "docs/reference-lock/semantic-freezer-v2/paintovers/side-paintover-gpt.png",
+      "silhouetteIoU": 0.984378,
+      "bboxDrift": 0.00214,
+      "outsideLeakShare": 0.013229,
+      "thresholds": {
+        "silhouetteIoU": 0.98,
+        "bboxDrift": 0.04,
+        "outsideLeakShare": 0.015
+      }
+    },
+    "back": {
+      "status": "approved-internal-only",
+      "approved": true,
+      "silhouetteMayBeUsed": false,
+      "path": "docs/reference-lock/semantic-freezer-v2/paintovers/back-paintover-gpt.png",
+      "silhouetteIoU": 0.980591,
+      "bboxDrift": 0.034237,
+      "outsideLeakShare": 0.005319,
+      "thresholds": {
+        "silhouetteIoU": 0.98,
+        "bboxDrift": 0.04,
+        "outsideLeakShare": 0.015
+      }
+    }
+  },
+  "scaleClasses": {
+    "expand": [
+      "base_color_field",
+      "solid_seam_length",
+      "panel_center"
+    ],
+    "repeat": [
+      "enamel",
+      "sideMetal",
+      "darkCavity",
+      "shelfMetal",
+      "medicinePaper",
+      "medicineTan",
+      "bottleAmber",
+      "coilMetal"
+    ],
+    "fixed": [
+      "medicalIdentity",
+      "digitalStatus",
+      "sideRating",
+      "rearWarning",
+      "rearDoNot",
+      "fanGrille",
+      "cartonCovid",
+      "cartonMmr",
+      "cartonFlu",
+      "cartonBooster",
+      "vialCovid",
+      "vialMmr",
+      "vialFlu",
+      "vialPolio",
+      "sideBottomWear",
+      "sideTopWear",
+      "frontBaseWear",
+      "sdf_outline",
+      "sdf_catch",
+      "sdf_inset",
+      "handle_assembly"
+    ],
+    "count-adaptive": [
+      "side_panel_row",
+      "side_panel_column",
+      "shelf",
+      "rear_coil_run",
+      "rear_coil_rail"
+    ]
+  },
+  "regions": [
+    {
+      "id": "microfield:enamel",
+      "runtimeName": "enamel",
+      "kind": "microfield",
+      "scaleClass": "repeat",
+      "semantic": "roof enamel center",
+      "source": {
+        "view": "iso",
+        "path": "docs/reference-lock/semantic-freezer-v4/authority/ref_front_view.png",
+        "sha256": "0d86e266debaa9f0f4bd19760f9d45fe6cafc7add9d8f40131f678bfb0300a36",
+        "boundsPx": [
+          430,
+          105,
+          535,
+          140
+        ],
+        "evidenceClass": "direct"
+      },
+      "pixelSource": {
+        "class": "reconstructed",
+        "generator": "gpt-image-editor",
+        "path": "docs/reference-lock/semantic-freezer-v2/paintovers/iso-paintover-gpt.png",
+        "boundsPx": [
+          395,
+          230,
+          445,
+          280
+        ],
+        "alignmentGate": "iso"
+      },
+      "atlasRectPx": [
+        0,
+        0,
+        64,
+        64
+      ],
+      "confidence": 0.873,
+      "metrics": {
+        "paletteSize": 8,
+        "dominantColorShare": 0.2334,
+        "entropyBits": 2.7785
+      },
+      "decision": {
+        "status": "approved",
+        "reason": "direct authority information rectified through approved internal-only paintover"
+      },
+      "conflicts": []
+    },
+    {
+      "id": "microfield:sideMetal",
+      "runtimeName": "sideMetal",
+      "kind": "microfield",
+      "scaleClass": "repeat",
+      "semantic": "service panel center",
+      "source": {
+        "view": "side",
+        "path": "docs/reference-lock/semantic-freezer-v4/authority/ref_right_side_view.png",
+        "sha256": "c5f452efd67f716e9768f9716bc7687b4daacd1a142248c782ad026e8a5a3e38",
+        "boundsPx": [
+          450,
+          325,
+          570,
+          405
+        ],
+        "evidenceClass": "direct"
+      },
+      "pixelSource": {
+        "class": "reconstructed",
+        "generator": "gpt-image-editor",
+        "path": "docs/reference-lock/semantic-freezer-v2/paintovers/side-paintover-gpt.png",
+        "boundsPx": [
+          610,
+          180,
+          750,
+          330
+        ],
+        "alignmentGate": "side"
+      },
+      "atlasRectPx": [
+        64,
+        0,
+        64,
+        64
+      ],
+      "confidence": 0.885,
+      "metrics": {
+        "paletteSize": 14,
+        "dominantColorShare": 0.1045,
+        "entropyBits": 3.7628
+      },
+      "decision": {
+        "status": "approved",
+        "reason": "direct authority information rectified through approved internal-only paintover"
+      },
+      "conflicts": []
+    },
+    {
+      "id": "microfield:darkCavity",
+      "runtimeName": "darkCavity",
+      "kind": "microfield",
+      "scaleClass": "repeat",
+      "semantic": "unoccluded interior cavity",
+      "source": {
+        "view": "iso",
+        "path": "docs/reference-lock/semantic-freezer-v4/authority/ref_front_view.png",
+        "sha256": "0d86e266debaa9f0f4bd19760f9d45fe6cafc7add9d8f40131f678bfb0300a36",
+        "boundsPx": [
+          628,
+          284,
+          687,
+          330
+        ],
+        "evidenceClass": "direct"
+      },
+      "pixelSource": {
+        "class": "reconstructed",
+        "generator": "gpt-image-editor",
+        "path": "docs/reference-lock/semantic-freezer-v2/paintovers/iso-paintover-gpt.png",
+        "boundsPx": [
+          305,
+          330,
+          585,
+          410
+        ],
+        "alignmentGate": "iso"
+      },
+      "atlasRectPx": [
+        128,
+        0,
+        64,
+        64
+      ],
+      "confidence": 0.879,
+      "metrics": {
+        "paletteSize": 10,
+        "dominantColorShare": 0.1367,
+        "entropyBits": 3.249
+      },
+      "decision": {
+        "status": "approved",
+        "reason": "direct authority information rectified through approved internal-only paintover"
+      },
+      "conflicts": []
+    },
+    {
+      "id": "microfield:shelfMetal",
+      "runtimeName": "shelfMetal",
+      "kind": "microfield",
+      "scaleClass": "repeat",
+      "semantic": "shelf lip metal",
+      "source": {
+        "view": "iso",
+        "path": "docs/reference-lock/semantic-freezer-v4/authority/ref_front_view.png",
+        "sha256": "0d86e266debaa9f0f4bd19760f9d45fe6cafc7add9d8f40131f678bfb0300a36",
+        "boundsPx": [
+          520,
+          397,
+          650,
+          414
+        ],
+        "evidenceClass": "direct"
+      },
+      "pixelSource": {
+        "class": "reconstructed",
+        "generator": "gpt-image-editor",
+        "path": "docs/reference-lock/semantic-freezer-v2/paintovers/iso-paintover-gpt.png",
+        "boundsPx": [
+          300,
+          500,
+          620,
+          548
+        ],
+        "alignmentGate": "iso"
+      },
+      "atlasRectPx": [
+        192,
+        0,
+        64,
+        64
+      ],
+      "confidence": 0.882,
+      "metrics": {
+        "paletteSize": 12,
+        "dominantColorShare": 0.1279,
+        "entropyBits": 3.5204
+      },
+      "decision": {
+        "status": "approved",
+        "reason": "direct authority information rectified through approved internal-only paintover"
+      },
+      "conflicts": []
+    },
+    {
+      "id": "microfield:medicinePaper",
+      "runtimeName": "medicinePaper",
+      "kind": "microfield",
+      "scaleClass": "repeat",
+      "semantic": "unprinted carton stock",
+      "source": {
+        "view": "iso",
+        "path": "docs/reference-lock/semantic-freezer-v4/authority/ref_front_view.png",
+        "sha256": "0d86e266debaa9f0f4bd19760f9d45fe6cafc7add9d8f40131f678bfb0300a36",
+        "boundsPx": [
+          373,
+          342,
+          405,
+          382
+        ],
+        "evidenceClass": "direct"
+      },
+      "pixelSource": {
+        "class": "reconstructed",
+        "generator": "gpt-image-editor",
+        "path": "docs/reference-lock/semantic-freezer-v2/paintovers/iso-paintover-gpt.png",
+        "boundsPx": [
+          370,
+          430,
+          405,
+          505
+        ],
+        "alignmentGate": "iso"
+      },
+      "atlasRectPx": [
+        256,
+        0,
+        64,
+        64
+      ],
+      "confidence": 0.879,
+      "metrics": {
+        "paletteSize": 10,
+        "dominantColorShare": 0.1426,
+        "entropyBits": 3.2705
+      },
+      "decision": {
+        "status": "approved",
+        "reason": "direct authority information rectified through approved internal-only paintover"
+      },
+      "conflicts": []
+    },
+    {
+      "id": "microfield:medicineTan",
+      "runtimeName": "medicineTan",
+      "kind": "microfield",
+      "scaleClass": "repeat",
+      "semantic": "unprinted tan carton stock",
+      "source": {
+        "view": "iso",
+        "path": "docs/reference-lock/semantic-freezer-v4/authority/ref_front_view.png",
+        "sha256": "0d86e266debaa9f0f4bd19760f9d45fe6cafc7add9d8f40131f678bfb0300a36",
+        "boundsPx": [
+          576,
+          532,
+          608,
+          560
+        ],
+        "evidenceClass": "direct"
+      },
+      "pixelSource": {
+        "class": "reconstructed",
+        "generator": "gpt-image-editor",
+        "path": "docs/reference-lock/semantic-freezer-v2/paintovers/iso-paintover-gpt.png",
+        "boundsPx": [
+          550,
+          430,
+          610,
+          520
+        ],
+        "alignmentGate": "iso"
+      },
+      "atlasRectPx": [
+        320,
+        0,
+        64,
+        64
+      ],
+      "confidence": 0.877,
+      "metrics": {
+        "paletteSize": 10,
+        "dominantColorShare": 0.1787,
+        "entropyBits": 3.0795
+      },
+      "decision": {
+        "status": "approved",
+        "reason": "direct authority information rectified through approved internal-only paintover"
+      },
+      "conflicts": []
+    },
+    {
+      "id": "microfield:bottleAmber",
+      "runtimeName": "bottleAmber",
+      "kind": "microfield",
+      "scaleClass": "repeat",
+      "semantic": "unlabelled amber glass",
+      "source": {
+        "view": "iso",
+        "path": "docs/reference-lock/semantic-freezer-v4/authority/ref_front_view.png",
+        "sha256": "0d86e266debaa9f0f4bd19760f9d45fe6cafc7add9d8f40131f678bfb0300a36",
+        "boundsPx": [
+          351,
+          548,
+          374,
+          574
+        ],
+        "evidenceClass": "direct"
+      },
+      "pixelSource": {
+        "class": "reconstructed",
+        "generator": "gpt-image-editor",
+        "path": "docs/reference-lock/semantic-freezer-v2/paintovers/iso-paintover-gpt.png",
+        "boundsPx": [
+          315,
+          590,
+          350,
+          675
+        ],
+        "alignmentGate": "iso"
+      },
+      "atlasRectPx": [
+        384,
+        0,
+        64,
+        64
+      ],
+      "confidence": 0.879,
+      "metrics": {
+        "paletteSize": 10,
+        "dominantColorShare": 0.1436,
+        "entropyBits": 3.2682
+      },
+      "decision": {
+        "status": "approved",
+        "reason": "direct authority information rectified through approved internal-only paintover"
+      },
+      "conflicts": []
+    },
+    {
+      "id": "microfield:coilMetal",
+      "runtimeName": "coilMetal",
+      "kind": "microfield",
+      "scaleClass": "repeat",
+      "semantic": "condenser bar metal",
+      "source": {
+        "view": "back",
+        "path": "docs/reference-lock/semantic-freezer-v4/authority/ref_back_view.png",
+        "sha256": "1055f39aad4d41b05cdae8393813f65cae9ecf3bb6958269b236a044ae34c85a",
+        "boundsPx": [
+          430,
+          285,
+          600,
+          307
+        ],
+        "evidenceClass": "direct"
+      },
+      "pixelSource": {
+        "class": "reconstructed",
+        "generator": "gpt-image-editor",
+        "path": "docs/reference-lock/semantic-freezer-v2/paintovers/back-paintover-gpt.png",
+        "boundsPx": [
+          565,
+          360,
+          830,
+          430
+        ],
+        "alignmentGate": "back"
+      },
+      "atlasRectPx": [
+        448,
+        0,
+        64,
+        64
+      ],
+      "confidence": 0.883,
+      "metrics": {
+        "paletteSize": 12,
+        "dominantColorShare": 0.1157,
+        "entropyBits": 3.5561
+      },
+      "decision": {
+        "status": "approved",
+        "reason": "direct authority information rectified through approved internal-only paintover"
+      },
+      "conflicts": []
+    },
+    {
+      "id": "fitting:medicalIdentity",
+      "runtimeName": "medicalIdentity",
+      "kind": "fitting",
+      "scaleClass": "fixed",
+      "anchor": "front:control-crown:top-left",
+      "source": {
+        "view": "iso",
+        "path": "docs/reference-lock/semantic-freezer-v4/authority/ref_front_view.png",
+        "sha256": "0d86e266debaa9f0f4bd19760f9d45fe6cafc7add9d8f40131f678bfb0300a36",
+        "boundsPx": [
+          286,
+          180,
+          407,
+          245
+        ],
+        "evidenceClass": "direct"
+      },
+      "pixelSource": {
+        "class": "reconstructed",
+        "generator": "gpt-image-editor",
+        "path": "docs/reference-lock/semantic-freezer-v2/paintovers/iso-paintover-gpt.png",
+        "boundsPx": [
+          244,
+          170,
+          390,
+          286
+        ],
+        "alignmentGate": "iso"
+      },
+      "atlasRectPx": [
+        0,
+        0,
+        32,
+        24
+      ],
+      "logicalSizePx": [
+        32,
+        24
+      ],
+      "confidence": 0.926,
+      "metrics": {
+        "paletteSize": 16,
+        "dominantColorShare": 0.1068,
+        "entropyBits": 3.8627
+      },
+      "decision": {
+        "status": "approved",
+        "reason": "direct fitting identity rectified onto locked geometry"
+      },
+      "conflicts": []
+    },
+    {
+      "id": "fitting:digitalStatus",
+      "runtimeName": "digitalStatus",
+      "kind": "fitting",
+      "scaleClass": "fixed",
+      "anchor": "front:control-crown:top-right",
+      "source": {
+        "view": "iso",
+        "path": "docs/reference-lock/semantic-freezer-v4/authority/ref_front_view.png",
+        "sha256": "0d86e266debaa9f0f4bd19760f9d45fe6cafc7add9d8f40131f678bfb0300a36",
+        "boundsPx": [
+          510,
+          188,
+          619,
+          254
+        ],
+        "evidenceClass": "direct"
+      },
+      "pixelSource": {
+        "class": "reconstructed",
+        "generator": "gpt-image-editor",
+        "path": "docs/reference-lock/semantic-freezer-v2/paintovers/iso-paintover-gpt.png",
+        "boundsPx": [
+          514,
+          188,
+          642,
+          302
+        ],
+        "alignmentGate": "iso"
+      },
+      "atlasRectPx": [
+        40,
+        0,
+        36,
+        16
+      ],
+      "logicalSizePx": [
+        36,
+        16
+      ],
+      "confidence": 0.926,
+      "metrics": {
+        "paletteSize": 16,
+        "dominantColorShare": 0.1302,
+        "entropyBits": 3.8425
+      },
+      "decision": {
+        "status": "approved",
+        "reason": "direct fitting identity rectified onto locked geometry"
+      },
+      "conflicts": []
+    },
+    {
+      "id": "fitting:sideRating",
+      "runtimeName": "sideRating",
+      "kind": "fitting",
+      "scaleClass": "fixed",
+      "anchor": "left:upper-panel:top-left",
+      "source": {
+        "view": "side",
+        "path": "docs/reference-lock/semantic-freezer-v4/authority/ref_right_side_view.png",
+        "sha256": "c5f452efd67f716e9768f9716bc7687b4daacd1a142248c782ad026e8a5a3e38",
+        "boundsPx": [
+          394,
+          233,
+          475,
+          291
+        ],
+        "evidenceClass": "direct"
+      },
+      "pixelSource": {
+        "class": "reconstructed",
+        "generator": "gpt-image-editor",
+        "path": "docs/reference-lock/semantic-freezer-v2/paintovers/side-paintover-gpt.png",
+        "boundsPx": [
+          395,
+          314,
+          510,
+          384
+        ],
+        "alignmentGate": "side"
+      },
+      "atlasRectPx": [
+        84,
+        0,
+        18,
+        12
+      ],
+      "logicalSizePx": [
+        18,
+        12
+      ],
+      "confidence": 0.927,
+      "metrics": {
+        "paletteSize": 16,
+        "dominantColorShare": 0.0972,
+        "entropyBits": 3.9184
+      },
+      "decision": {
+        "status": "approved",
+        "reason": "direct fitting identity rectified onto locked geometry"
+      },
+      "conflicts": []
+    },
+    {
+      "id": "fitting:rearWarning",
+      "runtimeName": "rearWarning",
+      "kind": "fitting",
+      "scaleClass": "fixed",
+      "anchor": "back:condenser:center",
+      "source": {
+        "view": "back",
+        "path": "docs/reference-lock/semantic-freezer-v4/authority/ref_back_view.png",
+        "sha256": "1055f39aad4d41b05cdae8393813f65cae9ecf3bb6958269b236a044ae34c85a",
+        "boundsPx": [
+          383,
+          416,
+          635,
+          476
+        ],
+        "evidenceClass": "direct"
+      },
+      "pixelSource": {
+        "class": "reconstructed",
+        "generator": "gpt-image-editor",
+        "path": "docs/reference-lock/semantic-freezer-v2/paintovers/back-paintover-gpt.png",
+        "boundsPx": [
+          578,
+          520,
+          836,
+          610
+        ],
+        "alignmentGate": "back"
+      },
+      "atlasRectPx": [
+        110,
+        0,
+        36,
+        14
+      ],
+      "logicalSizePx": [
+        36,
+        14
+      ],
+      "confidence": 0.928,
+      "metrics": {
+        "paletteSize": 16,
+        "dominantColorShare": 0.0952,
+        "entropyBits": 3.9624
+      },
+      "decision": {
+        "status": "approved",
+        "reason": "direct fitting identity rectified onto locked geometry"
+      },
+      "conflicts": []
+    },
+    {
+      "id": "fitting:rearDoNot",
+      "runtimeName": "rearDoNot",
+      "kind": "fitting",
+      "scaleClass": "fixed",
+      "anchor": "back:condenser:bottom-center",
+      "source": {
+        "view": "back",
+        "path": "docs/reference-lock/semantic-freezer-v4/authority/ref_back_view.png",
+        "sha256": "1055f39aad4d41b05cdae8393813f65cae9ecf3bb6958269b236a044ae34c85a",
+        "boundsPx": [
+          383,
+          614,
+          642,
+          656
+        ],
+        "evidenceClass": "direct"
+      },
+      "pixelSource": {
+        "class": "reconstructed",
+        "generator": "gpt-image-editor",
+        "path": "docs/reference-lock/semantic-freezer-v2/paintovers/back-paintover-gpt.png",
+        "boundsPx": [
+          582,
+          846,
+          829,
+          915
+        ],
+        "alignmentGate": "back"
+      },
+      "atlasRectPx": [
+        154,
+        0,
+        32,
+        10
+      ],
+      "logicalSizePx": [
+        32,
+        10
+      ],
+      "confidence": 0.928,
+      "metrics": {
+        "paletteSize": 16,
+        "dominantColorShare": 0.0719,
+        "entropyBits": 3.9894
+      },
+      "decision": {
+        "status": "approved",
+        "reason": "direct fitting identity rectified onto locked geometry"
+      },
+      "conflicts": []
+    },
+    {
+      "id": "fitting:fanGrille",
+      "runtimeName": "fanGrille",
+      "kind": "fitting",
+      "scaleClass": "fixed",
+      "anchor": "back:machine-bay:bottom-left",
+      "source": {
+        "view": "back",
+        "path": "docs/reference-lock/semantic-freezer-v4/authority/ref_back_view.png",
+        "sha256": "1055f39aad4d41b05cdae8393813f65cae9ecf3bb6958269b236a044ae34c85a",
+        "boundsPx": [
+          310,
+          685,
+          426,
+          804
+        ],
+        "evidenceClass": "direct"
+      },
+      "pixelSource": {
+        "class": "reconstructed",
+        "generator": "gpt-image-editor",
+        "path": "docs/reference-lock/semantic-freezer-v2/paintovers/back-paintover-gpt.png",
+        "boundsPx": [
+          365,
+          990,
+          535,
+          1195
+        ],
+        "alignmentGate": "back"
+      },
+      "atlasRectPx": [
+        192,
+        0,
+        28,
+        28
+      ],
+      "logicalSizePx": [
+        28,
+        28
+      ],
+      "confidence": 0.928,
+      "metrics": {
+        "paletteSize": 16,
+        "dominantColorShare": 0.0944,
+        "entropyBits": 3.9657
+      },
+      "decision": {
+        "status": "approved",
+        "reason": "direct fitting identity rectified onto locked geometry"
+      },
+      "conflicts": []
+    },
+    {
+      "id": "fitting:cartonCovid",
+      "runtimeName": "cartonCovid",
+      "kind": "fitting",
+      "scaleClass": "fixed",
+      "anchor": "front:shelf-3:slot-1",
+      "source": {
+        "view": "iso",
+        "path": "docs/reference-lock/semantic-freezer-v4/authority/ref_front_view.png",
+        "sha256": "0d86e266debaa9f0f4bd19760f9d45fe6cafc7add9d8f40131f678bfb0300a36",
+        "boundsPx": [
+          351,
+          324,
+          408,
+          391
+        ],
+        "evidenceClass": "direct"
+      },
+      "pixelSource": {
+        "class": "reconstructed",
+        "generator": "gpt-image-editor",
+        "path": "docs/reference-lock/semantic-freezer-v2/paintovers/iso-paintover-gpt.png",
+        "boundsPx": [
+          311,
+          418,
+          392,
+          532
+        ],
+        "alignmentGate": "iso"
+      },
+      "atlasRectPx": [
+        0,
+        32,
+        16,
+        20
+      ],
+      "logicalSizePx": [
+        16,
+        20
+      ],
+      "confidence": 0.928,
+      "metrics": {
+        "paletteSize": 16,
+        "dominantColorShare": 0.0969,
+        "entropyBits": 3.9584
+      },
+      "decision": {
+        "status": "approved",
+        "reason": "direct fitting identity rectified onto locked geometry"
+      },
+      "conflicts": []
+    },
+    {
+      "id": "fitting:cartonMmr",
+      "runtimeName": "cartonMmr",
+      "kind": "fitting",
+      "scaleClass": "fixed",
+      "anchor": "front:shelf-3:slot-2",
+      "source": {
+        "view": "iso",
+        "path": "docs/reference-lock/semantic-freezer-v4/authority/ref_front_view.png",
+        "sha256": "0d86e266debaa9f0f4bd19760f9d45fe6cafc7add9d8f40131f678bfb0300a36",
+        "boundsPx": [
+          430,
+          329,
+          480,
+          396
+        ],
+        "evidenceClass": "direct"
+      },
+      "pixelSource": {
+        "class": "reconstructed",
+        "generator": "gpt-image-editor",
+        "path": "docs/reference-lock/semantic-freezer-v2/paintovers/iso-paintover-gpt.png",
+        "boundsPx": [
+          400,
+          418,
+          476,
+          532
+        ],
+        "alignmentGate": "iso"
+      },
+      "atlasRectPx": [
+        20,
+        32,
+        16,
+        20
+      ],
+      "logicalSizePx": [
+        16,
+        20
+      ],
+      "confidence": 0.927,
+      "metrics": {
+        "paletteSize": 16,
+        "dominantColorShare": 0.0938,
+        "entropyBits": 3.8987
+      },
+      "decision": {
+        "status": "approved",
+        "reason": "direct fitting identity rectified onto locked geometry"
+      },
+      "conflicts": []
+    },
+    {
+      "id": "fitting:cartonFlu",
+      "runtimeName": "cartonFlu",
+      "kind": "fitting",
+      "scaleClass": "fixed",
+      "anchor": "front:shelf-3:slot-3",
+      "source": {
+        "view": "iso",
+        "path": "docs/reference-lock/semantic-freezer-v4/authority/ref_front_view.png",
+        "sha256": "0d86e266debaa9f0f4bd19760f9d45fe6cafc7add9d8f40131f678bfb0300a36",
+        "boundsPx": [
+          500,
+          323,
+          555,
+          396
+        ],
+        "evidenceClass": "direct"
+      },
+      "pixelSource": {
+        "class": "reconstructed",
+        "generator": "gpt-image-editor",
+        "path": "docs/reference-lock/semantic-freezer-v2/paintovers/iso-paintover-gpt.png",
+        "boundsPx": [
+          478,
+          418,
+          555,
+          532
+        ],
+        "alignmentGate": "iso"
+      },
+      "atlasRectPx": [
+        40,
+        32,
+        16,
+        20
+      ],
+      "logicalSizePx": [
+        16,
+        20
+      ],
+      "confidence": 0.927,
+      "metrics": {
+        "paletteSize": 16,
+        "dominantColorShare": 0.0938,
+        "entropyBits": 3.9342
+      },
+      "decision": {
+        "status": "approved",
+        "reason": "direct fitting identity rectified onto locked geometry"
+      },
+      "conflicts": []
+    },
+    {
+      "id": "fitting:cartonBooster",
+      "runtimeName": "cartonBooster",
+      "kind": "fitting",
+      "scaleClass": "fixed",
+      "anchor": "front:shelf-2:right",
+      "source": {
+        "view": "iso",
+        "path": "docs/reference-lock/semantic-freezer-v4/authority/ref_front_view.png",
+        "sha256": "0d86e266debaa9f0f4bd19760f9d45fe6cafc7add9d8f40131f678bfb0300a36",
+        "boundsPx": [
+          580,
+          520,
+          636,
+          587
+        ],
+        "evidenceClass": "direct"
+      },
+      "pixelSource": {
+        "class": "reconstructed",
+        "generator": "gpt-image-editor",
+        "path": "docs/reference-lock/semantic-freezer-v2/paintovers/iso-paintover-gpt.png",
+        "boundsPx": [
+          478,
+          638,
+          575,
+          735
+        ],
+        "alignmentGate": "iso"
+      },
+      "atlasRectPx": [
+        60,
+        32,
+        16,
+        20
+      ],
+      "logicalSizePx": [
+        16,
+        20
+      ],
+      "confidence": 0.926,
+      "metrics": {
+        "paletteSize": 16,
+        "dominantColorShare": 0.1125,
+        "entropyBits": 3.8216
+      },
+      "decision": {
+        "status": "approved",
+        "reason": "direct fitting identity rectified onto locked geometry"
+      },
+      "conflicts": []
+    },
+    {
+      "id": "fitting:vialCovid",
+      "runtimeName": "vialCovid",
+      "kind": "fitting",
+      "scaleClass": "fixed",
+      "anchor": "front:shelf-2:slot-1",
+      "source": {
+        "view": "iso",
+        "path": "docs/reference-lock/semantic-freezer-v4/authority/ref_front_view.png",
+        "sha256": "0d86e266debaa9f0f4bd19760f9d45fe6cafc7add9d8f40131f678bfb0300a36",
+        "boundsPx": [
+          348,
+          495,
+          390,
+          548
+        ],
+        "evidenceClass": "direct"
+      },
+      "pixelSource": {
+        "class": "reconstructed",
+        "generator": "gpt-image-editor",
+        "path": "docs/reference-lock/semantic-freezer-v2/paintovers/iso-paintover-gpt.png",
+        "boundsPx": [
+          313,
+          610,
+          357,
+          686
+        ],
+        "alignmentGate": "iso"
+      },
+      "atlasRectPx": [
+        84,
+        32,
+        10,
+        14
+      ],
+      "logicalSizePx": [
+        10,
+        14
+      ],
+      "confidence": 0.927,
+      "metrics": {
+        "paletteSize": 16,
+        "dominantColorShare": 0.0929,
+        "entropyBits": 3.9321
+      },
+      "decision": {
+        "status": "approved",
+        "reason": "direct fitting identity rectified onto locked geometry"
+      },
+      "conflicts": []
+    },
+    {
+      "id": "fitting:vialMmr",
+      "runtimeName": "vialMmr",
+      "kind": "fitting",
+      "scaleClass": "fixed",
+      "anchor": "front:shelf-2:slot-2",
+      "source": {
+        "view": "iso",
+        "path": "docs/reference-lock/semantic-freezer-v4/authority/ref_front_view.png",
+        "sha256": "0d86e266debaa9f0f4bd19760f9d45fe6cafc7add9d8f40131f678bfb0300a36",
+        "boundsPx": [
+          406,
+          500,
+          446,
+          552
+        ],
+        "evidenceClass": "direct"
+      },
+      "pixelSource": {
+        "class": "reconstructed",
+        "generator": "gpt-image-editor",
+        "path": "docs/reference-lock/semantic-freezer-v2/paintovers/iso-paintover-gpt.png",
+        "boundsPx": [
+          365,
+          610,
+          409,
+          686
+        ],
+        "alignmentGate": "iso"
+      },
+      "atlasRectPx": [
+        98,
+        32,
+        10,
+        14
+      ],
+      "logicalSizePx": [
+        10,
+        14
+      ],
+      "confidence": 0.927,
+      "metrics": {
+        "paletteSize": 16,
+        "dominantColorShare": 0.1,
+        "entropyBits": 3.8957
+      },
+      "decision": {
+        "status": "approved",
+        "reason": "direct fitting identity rectified onto locked geometry"
+      },
+      "conflicts": []
+    },
+    {
+      "id": "fitting:vialFlu",
+      "runtimeName": "vialFlu",
+      "kind": "fitting",
+      "scaleClass": "fixed",
+      "anchor": "front:shelf-2:slot-3",
+      "source": {
+        "view": "iso",
+        "path": "docs/reference-lock/semantic-freezer-v4/authority/ref_front_view.png",
+        "sha256": "0d86e266debaa9f0f4bd19760f9d45fe6cafc7add9d8f40131f678bfb0300a36",
+        "boundsPx": [
+          457,
+          499,
+          497,
+          555
+        ],
+        "evidenceClass": "direct"
+      },
+      "pixelSource": {
+        "class": "reconstructed",
+        "generator": "gpt-image-editor",
+        "path": "docs/reference-lock/semantic-freezer-v2/paintovers/iso-paintover-gpt.png",
+        "boundsPx": [
+          415,
+          610,
+          460,
+          686
+        ],
+        "alignmentGate": "iso"
+      },
+      "atlasRectPx": [
+        112,
+        32,
+        10,
+        14
+      ],
+      "logicalSizePx": [
+        10,
+        14
+      ],
+      "confidence": 0.927,
+      "metrics": {
+        "paletteSize": 16,
+        "dominantColorShare": 0.0857,
+        "entropyBits": 3.9501
+      },
+      "decision": {
+        "status": "approved",
+        "reason": "direct fitting identity rectified onto locked geometry"
+      },
+      "conflicts": []
+    },
+    {
+      "id": "fitting:vialPolio",
+      "runtimeName": "vialPolio",
+      "kind": "fitting",
+      "scaleClass": "fixed",
+      "anchor": "front:shelf-1:slot-1",
+      "source": {
+        "view": "iso",
+        "path": "docs/reference-lock/semantic-freezer-v4/authority/ref_front_view.png",
+        "sha256": "0d86e266debaa9f0f4bd19760f9d45fe6cafc7add9d8f40131f678bfb0300a36",
+        "boundsPx": [
+          350,
+          621,
+          391,
+          677
+        ],
+        "evidenceClass": "direct"
+      },
+      "pixelSource": {
+        "class": "reconstructed",
+        "generator": "gpt-image-editor",
+        "path": "docs/reference-lock/semantic-freezer-v2/paintovers/iso-paintover-gpt.png",
+        "boundsPx": [
+          313,
+          792,
+          360,
+          885
+        ],
+        "alignmentGate": "iso"
+      },
+      "atlasRectPx": [
+        126,
+        32,
+        10,
+        14
+      ],
+      "logicalSizePx": [
+        10,
+        14
+      ],
+      "confidence": 0.927,
+      "metrics": {
+        "paletteSize": 16,
+        "dominantColorShare": 0.0929,
+        "entropyBits": 3.9538
+      },
+      "decision": {
+        "status": "approved",
+        "reason": "direct fitting identity rectified onto locked geometry"
+      },
+      "conflicts": []
+    },
+    {
+      "id": "fitting:sideBottomWear",
+      "runtimeName": "sideBottomWear",
+      "kind": "fitting",
+      "scaleClass": "fixed",
+      "anchor": "left:bottom-left",
+      "source": {
+        "view": "side",
+        "path": "docs/reference-lock/semantic-freezer-v4/authority/ref_right_side_view.png",
+        "sha256": "c5f452efd67f716e9768f9716bc7687b4daacd1a142248c782ad026e8a5a3e38",
+        "boundsPx": [
+          350,
+          760,
+          455,
+          885
+        ],
+        "evidenceClass": "direct"
+      },
+      "pixelSource": {
+        "class": "reconstructed",
+        "generator": "gpt-image-editor",
+        "path": "docs/reference-lock/semantic-freezer-v2/paintovers/side-paintover-gpt.png",
+        "boundsPx": [
+          340,
+          1090,
+          500,
+          1240
+        ],
+        "alignmentGate": "side"
+      },
+      "atlasRectPx": [
+        150,
+        32,
+        28,
+        18
+      ],
+      "logicalSizePx": [
+        28,
+        18
+      ],
+      "confidence": 0.856,
+      "metrics": {
+        "paletteSize": 7,
+        "dominantColorShare": 0.752,
+        "entropyBits": 1.3213,
+        "opaqueShare": 0.248
+      },
+      "decision": {
+        "status": "approved",
+        "reason": "direct wear meaning isolated from aligned paintover into transparent semantic mark"
+      },
+      "conflicts": []
+    },
+    {
+      "id": "fitting:sideTopWear",
+      "runtimeName": "sideTopWear",
+      "kind": "fitting",
+      "scaleClass": "fixed",
+      "anchor": "left:top-right",
+      "source": {
+        "view": "side",
+        "path": "docs/reference-lock/semantic-freezer-v4/authority/ref_right_side_view.png",
+        "sha256": "c5f452efd67f716e9768f9716bc7687b4daacd1a142248c782ad026e8a5a3e38",
+        "boundsPx": [
+          600,
+          115,
+          686,
+          215
+        ],
+        "evidenceClass": "direct"
+      },
+      "pixelSource": {
+        "class": "reconstructed",
+        "generator": "gpt-image-editor",
+        "path": "docs/reference-lock/semantic-freezer-v2/paintovers/side-paintover-gpt.png",
+        "boundsPx": [
+          650,
+          180,
+          760,
+          295
+        ],
+        "alignmentGate": "side"
+      },
+      "atlasRectPx": [
+        182,
+        32,
+        28,
+        18
+      ],
+      "logicalSizePx": [
+        28,
+        18
+      ],
+      "confidence": 0.83,
+      "metrics": {
+        "paletteSize": 4,
+        "dominantColorShare": 0.8869,
+        "entropyBits": 0.6137,
+        "opaqueShare": 0.1131
+      },
+      "decision": {
+        "status": "approved",
+        "reason": "direct wear meaning isolated from aligned paintover into transparent semantic mark"
+      },
+      "conflicts": []
+    },
+    {
+      "id": "fitting:frontBaseWear",
+      "runtimeName": "frontBaseWear",
+      "kind": "fitting",
+      "scaleClass": "fixed",
+      "anchor": "front:bottom-center",
+      "source": {
+        "view": "iso",
+        "path": "docs/reference-lock/semantic-freezer-v4/authority/ref_front_view.png",
+        "sha256": "0d86e266debaa9f0f4bd19760f9d45fe6cafc7add9d8f40131f678bfb0300a36",
+        "boundsPx": [
+          415,
+          838,
+          540,
+          900
+        ],
+        "evidenceClass": "direct"
+      },
+      "pixelSource": {
+        "class": "reconstructed",
+        "generator": "gpt-image-editor",
+        "path": "docs/reference-lock/semantic-freezer-v2/paintovers/iso-paintover-gpt.png",
+        "boundsPx": [
+          250,
+          1170,
+          580,
+          1240
+        ],
+        "alignmentGate": "iso"
+      },
+      "atlasRectPx": [
+        214,
+        32,
+        32,
+        12
+      ],
+      "logicalSizePx": [
+        32,
+        12
+      ],
+      "confidence": 0.839,
+      "metrics": {
+        "paletteSize": 7,
+        "dominantColorShare": 0.8568,
+        "entropyBits": 0.8673,
+        "opaqueShare": 0.1432
+      },
+      "decision": {
+        "status": "approved",
+        "reason": "direct wear meaning isolated from aligned paintover into transparent semantic mark"
+      },
+      "conflicts": []
+    }
+  ],
+  "checks": {
+    "directionalFaceBasisDefined": true,
+    "allRuntimeFittingsHaveLayers": true,
+    "fanPixelsExcludeSupportGeometry": true,
+    "rearLabelsExcludeCoilPixels": true,
+    "sideVentHasMeasuredSupport": true,
+    "condenserHasMeasuredSupport": true,
+    "nanoOwnsNoPlacement": true
+  },
+  "correspondence": {
+    "path": "docs/reference-lock/semantic-freezer-v5/correspondence-v5.json",
+    "featureCount": 17,
+    "registrations": {
+      "front": {
+        "authority": "docs/reference-lock/semantic-freezer-v5/authority/ref_front_view.png",
+        "authoritySha256": "0d86e266debaa9f0f4bd19760f9d45fe6cafc7add9d8f40131f678bfb0300a36",
+        "sourceQuadPx": [
+          [
+            285,
+            166
+          ],
+          [
+            285,
+            800
+          ],
+          [
+            625,
+            895
+          ],
+          [
+            625,
+            257
+          ]
+        ],
+        "facePlate": "docs/reference-lock/semantic-freezer-v5/face-plates/front.png",
+        "facePlateSizePx": [
+          176,
+          416
+        ],
+        "worldSizeTexels": [
+          44,
+          104
+        ],
+        "renderView": "iso"
+      },
+      "side": {
+        "authority": "docs/reference-lock/semantic-freezer-v5/authority/ref_right_side_view.png",
+        "authoritySha256": "c5f452efd67f716e9768f9716bc7687b4daacd1a142248c782ad026e8a5a3e38",
+        "sourceQuadPx": [
+          [
+            376,
+            226
+          ],
+          [
+            376,
+            910
+          ],
+          [
+            687,
+            910
+          ],
+          [
+            687,
+            226
+          ]
+        ],
+        "facePlate": "docs/reference-lock/semantic-freezer-v5/face-plates/side.png",
+        "facePlateSizePx": [
+          172,
+          404
+        ],
+        "worldSizeTexels": [
+          43,
+          101
+        ],
+        "renderView": "side"
+      },
+      "back": {
+        "authority": "docs/reference-lock/semantic-freezer-v5/authority/ref_back_view.png",
+        "authoritySha256": "1055f39aad4d41b05cdae8393813f65cae9ecf3bb6958269b236a044ae34c85a",
+        "sourceQuadPx": [
+          [
+            285,
+            257
+          ],
+          [
+            285,
+            800
+          ],
+          [
+            625,
+            895
+          ],
+          [
+            625,
+            354
+          ]
+        ],
+        "facePlate": "docs/reference-lock/semantic-freezer-v5/face-plates/back.png",
+        "facePlateSizePx": [
+          176,
+          404
+        ],
+        "worldSizeTexels": [
+          44,
+          101
+        ],
+        "renderView": "backIso"
+      },
+      "roof": {
+        "authority": "docs/reference-lock/semantic-freezer-v5/authority/ref_front_view.png",
+        "authoritySha256": "0d86e266debaa9f0f4bd19760f9d45fe6cafc7add9d8f40131f678bfb0300a36",
+        "sourceQuadPx": [
+          [
+            464,
+            59
+          ],
+          [
+            285,
+            166
+          ],
+          [
+            625,
+            257
+          ],
+          [
+            804,
+            169
+          ]
+        ],
+        "facePlate": "docs/reference-lock/semantic-freezer-v5/face-plates/roof.png",
+        "facePlateSizePx": [
+          176,
+          172
+        ],
+        "worldSizeTexels": [
+          44,
+          43
+        ],
+        "renderView": "iso"
+      }
+    }
+  },
+  "runtimePlacements": {
+    "fixedFittings": {
+      "medicalIdentity": {
+        "face": "front",
+        "uTexels": 13.295,
+        "zTexels": 96.575,
+        "anchorMode": "top-fixed",
+        "topOffsetTexels": 7.425,
+        "sizeTexels": [
+          13,
+          8
+        ]
+      },
+      "digitalStatus": {
+        "face": "front",
+        "uTexels": -14.142,
+        "zTexels": 97.46,
+        "anchorMode": "top-fixed",
+        "topOffsetTexels": 6.54,
+        "sizeTexels": [
+          13,
+          5.8
+        ]
+      },
+      "sideRating": {
+        "face": "left",
+        "fromFrontTexels": 8.088,
+        "zTexels": 95.684,
+        "anchorMode": "side-face",
+        "sizeTexels": [
+          8,
+          5.3
+        ]
+      },
+      "rearWarning": {
+        "face": "back",
+        "uTexels": -0.163,
+        "zTexels": 71.784,
+        "anchorMode": "back-face",
+        "sizeTexels": [
+          16,
+          6.026
+        ],
+        "layer": "label"
+      },
+      "rearDoNot": {
+        "face": "back",
+        "uTexels": -0.098,
+        "zTexels": 36.731,
+        "anchorMode": "back-face",
+        "sizeTexels": [
+          16,
+          4.571
+        ],
+        "layer": "label"
+      },
+      "fanGrille": {
+        "face": "back",
+        "uTexels": -11.737,
+        "zTexels": 13.071,
+        "anchorMode": "back-face",
+        "sizeTexels": [
+          12,
+          12
+        ],
+        "layer": "mechanical-detail"
+      },
+      "condenserField": {
+        "face": "back",
+        "uTexels": 0.638,
+        "zTexels": 61.339,
+        "anchorMode": "back-face",
+        "sizeTexels": [
+          38.828,
+          71.169
+        ],
+        "layer": "structural-graphic"
+      },
+      "sideVentPanel": {
+        "face": "left",
+        "fromFrontTexels": 30.487,
+        "zTexels": 16.095,
+        "anchorMode": "side-face",
+        "sizeTexels": [
+          21.431,
+          24.512
+        ],
+        "layer": "structural-graphic"
+      }
+    },
+    "sidePanelSeeds": {
+      "baseFaceWidthTexels": 43,
+      "baseFaceHeightTexels": 101,
+      "row": {
+        "face": "left",
+        "fromFrontTexels": 21.5,
+        "zTexels": 71.025,
+        "anchorMode": "side-face"
+      },
+      "upperColumn": {
+        "face": "left",
+        "fromFrontTexels": 20.325,
+        "zTexels": 86.012,
+        "anchorMode": "side-face"
+      },
+      "lowerColumn": {
+        "face": "left",
+        "fromFrontTexels": 31.386,
+        "zTexels": 35.439,
+        "anchorMode": "side-face"
+      },
+      "addedRowPitchTexels": 28,
+      "addedColumnPitchTexels": 18,
+      "thicknessTexels": 0.55
+    },
+    "sideVent": {
+      "face": "left",
+      "fromFrontTexels": 30.487,
+      "zTexels": 16.095,
+      "anchorMode": "side-face"
+    }
+  },
+  "nanoFeatureGates": {
+    "medicalIdentity": {
+      "status": "rejected",
+      "approved": false,
+      "reason": "canvas-size",
+      "outputSizePx": [
+        1376,
+        768
+      ],
+      "expectedSizePx": [
+        1024,
+        1024
+      ]
+    },
+    "digitalStatus": {
+      "status": "rejected",
+      "approved": false,
+      "outsideLeakShare": 0.505501,
+      "maskCoverage": 2.684236,
+      "thresholds": {
+        "outsideLeakShare": 0.002,
+        "maskCoverage": [
+          0.72,
+          1.08
+        ]
+      },
+      "path": "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/digitalStatus/nano-output.png"
+    },
+    "sideRating": {
+      "status": "rejected",
+      "approved": false,
+      "outsideLeakShare": 0.74176,
+      "maskCoverage": 3.613104,
+      "thresholds": {
+        "outsideLeakShare": 0.002,
+        "maskCoverage": [
+          0.72,
+          1.08
+        ]
+      },
+      "path": "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/sideRating/nano-output.png"
+    },
+    "rearWarning": {
+      "status": "rejected",
+      "approved": false,
+      "reason": "canvas-size",
+      "outputSizePx": [
+        1376,
+        768
+      ],
+      "expectedSizePx": [
+        1024,
+        1024
+      ]
+    },
+    "rearDoNot": {
+      "status": "rejected",
+      "approved": false,
+      "reason": "canvas-size",
+      "outputSizePx": [
+        1376,
+        768
+      ],
+      "expectedSizePx": [
+        1024,
+        1024
+      ]
+    },
+    "fanGrille": {
+      "status": "rejected",
+      "approved": false,
+      "outsideLeakShare": 0.298297,
+      "maskCoverage": 1.521161,
+      "thresholds": {
+        "outsideLeakShare": 0.002,
+        "maskCoverage": [
+          0.72,
+          1.08
+        ]
+      },
+      "path": "docs/reference-lock/semantic-freezer-v5/nano-feature-jobs/fanGrille/nano-output.png"
+    }
+  },
+  "directRectifiedFeaturesCompiled": [
+    "medicalIdentity",
+    "digitalStatus",
+    "sideRating",
+    "rearWarning",
+    "rearDoNot",
+    "fanGrille"
+  ],
+  "nanoFeaturesCompiled": [],
+  "fittingAtlasSizePx": [
+    256,
+    192
+  ],
+  "additionalFittingRegions": {
+    "condenserField": [
+      0,
+      72,
+      64,
+      112
+    ],
+    "sideVentPanel": [
+      72,
+      72,
+      48,
+      56
+    ],
+    "compressorPlate": [
+      128,
+      72,
+      24,
+      28
+    ]
+  },
+  "faceBasis": {
+    "front": {
+      "u": "-x",
+      "v": "+z"
+    },
+    "back": {
+      "u": "+x",
+      "v": "+z"
+    },
+    "left": {
+      "u": "+depth",
+      "v": "+z"
+    },
+    "right": {
+      "u": "-depth",
+      "v": "+z"
+    },
+    "top": {
+      "u": "+x",
+      "v": "+depth"
+    }
+  },
+  "textureLayers": [
+    "material-field",
+    "structural-graphic",
+    "panel-mark",
+    "label",
+    "wear"
+  ]
+}

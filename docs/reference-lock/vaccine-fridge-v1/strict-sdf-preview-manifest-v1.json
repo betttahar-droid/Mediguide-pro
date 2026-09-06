@@ -1,0 +1,677 @@
+{
+  "style": {
+    "pixelsPerUnit": 32,
+    "tints": {
+      "top": 1.09,
+      "front": 1,
+      "side": 0.858,
+      "back": 0.9,
+      "bottom": 0.74
+    },
+    "rules": {
+      "outline": 0.03125,
+      "catchWidth": 0.0625,
+      "inset": 0.125,
+      "seamWidth": 0.0234375,
+      "gatePadding": 0.03125
+    },
+    "palette": {
+      "cream": [
+        "#dbc9a8",
+        "#a89a81",
+        "#fff4cc",
+        "#6b665d"
+      ],
+      "steel": [
+        "#617a80",
+        "#4a5d62",
+        "#76949c",
+        "#38474a"
+      ],
+      "teal": [
+        "#0d403b",
+        "#0a312d",
+        "#10504a",
+        "#071e1c"
+      ],
+      "glass": [
+        "#123f3b",
+        "#0a2927",
+        "#246a62",
+        "#061a19"
+      ],
+      "plum": [
+        "#2d1738",
+        "#1b0d23",
+        "#4a2a59",
+        "#100817"
+      ],
+      "ochre": [
+        "#c58b42",
+        "#845a2c",
+        "#e1aa5c",
+        "#55371f"
+      ],
+      "display": [
+        "#16272a",
+        "#0c1517",
+        "#31575b",
+        "#070c0d"
+      ]
+    }
+  },
+  "parts": [
+    {
+      "name": "strict_body_back",
+      "role": "steel",
+      "rule": "panel",
+      "kind": "structure",
+      "size": [
+        1.2109375,
+        0.03125,
+        3
+      ],
+      "position": [
+        0,
+        0.55859375,
+        1.5
+      ],
+      "opacity": 1
+    },
+    {
+      "name": "strict_body_side_-1",
+      "role": "steel",
+      "rule": "panel",
+      "kind": "structure",
+      "size": [
+        0.03125,
+        1.1484375,
+        3
+      ],
+      "position": [
+        -0.58984375,
+        0,
+        1.5
+      ],
+      "opacity": 1
+    },
+    {
+      "name": "strict_body_side_1",
+      "role": "steel",
+      "rule": "panel",
+      "kind": "structure",
+      "size": [
+        0.03125,
+        1.1484375,
+        3
+      ],
+      "position": [
+        0.58984375,
+        0,
+        1.5
+      ],
+      "opacity": 1
+    },
+    {
+      "name": "strict_crown",
+      "role": "cream",
+      "rule": "structural",
+      "kind": "structure",
+      "size": [
+        1.2109375,
+        1.1484375,
+        0.17343750596046448
+      ],
+      "position": [
+        0,
+        0,
+        2.91328125
+      ],
+      "opacity": 1
+    },
+    {
+      "name": "strict_roof",
+      "role": "cream",
+      "rule": "panel",
+      "kind": "structure",
+      "size": [
+        0.981249988079071,
+        0.859375,
+        0.046875
+      ],
+      "position": [
+        0,
+        0,
+        3.0234375
+      ],
+      "opacity": 1
+    },
+    {
+      "name": "strict_condenser",
+      "role": "teal",
+      "rule": "panel",
+      "kind": "structure",
+      "size": [
+        1.2109375,
+        0.02500000037252903,
+        0.4921875
+      ],
+      "position": [
+        0,
+        -0.64921875,
+        0.34765625
+      ],
+      "opacity": 1
+    },
+    {
+      "name": "strict_grille_panel",
+      "role": "ochre",
+      "rule": "structural",
+      "kind": "structure",
+      "size": [
+        0.8125,
+        0.03125,
+        0.34375
+      ],
+      "position": [
+        0,
+        -0.71484375,
+        0.328125
+      ],
+      "opacity": 1
+    },
+    {
+      "name": "strict_grille_louvre_0",
+      "role": "display",
+      "rule": "flat",
+      "kind": "repeated_structure",
+      "size": [
+        0.0625,
+        0.01406249962747097,
+        0.21875
+      ],
+      "position": [
+        -0.25,
+        -0.7375,
+        0.328125
+      ],
+      "opacity": 1
+    },
+    {
+      "name": "strict_grille_louvre_1",
+      "role": "display",
+      "rule": "flat",
+      "kind": "repeated_structure",
+      "size": [
+        0.0625,
+        0.01406249962747097,
+        0.21875
+      ],
+      "position": [
+        -0.125,
+        -0.7375,
+        0.328125
+      ],
+      "opacity": 1
+    },
+    {
+      "name": "strict_grille_louvre_2",
+      "role": "display",
+      "rule": "flat",
+      "kind": "repeated_structure",
+      "size": [
+        0.0625,
+        0.01406249962747097,
+        0.21875
+      ],
+      "position": [
+        0,
+        -0.7375,
+        0.328125
+      ],
+      "opacity": 1
+    },
+    {
+      "name": "strict_grille_louvre_3",
+      "role": "display",
+      "rule": "flat",
+      "kind": "repeated_structure",
+      "size": [
+        0.0625,
+        0.01406249962747097,
+        0.21875
+      ],
+      "position": [
+        0.125,
+        -0.7375,
+        0.328125
+      ],
+      "opacity": 1
+    },
+    {
+      "name": "strict_grille_louvre_4",
+      "role": "display",
+      "rule": "flat",
+      "kind": "repeated_structure",
+      "size": [
+        0.0625,
+        0.01406249962747097,
+        0.21875
+      ],
+      "position": [
+        0.25,
+        -0.7375,
+        0.328125
+      ],
+      "opacity": 1
+    },
+    {
+      "name": "strict_frame_left",
+      "role": "cream",
+      "rule": "structural",
+      "kind": "structure",
+      "size": [
+        0.09375,
+        0.012500000186264515,
+        1.875
+      ],
+      "position": [
+        -0.515625,
+        -0.67421875,
+        1.625
+      ],
+      "opacity": 1
+    },
+    {
+      "name": "strict_frame_right",
+      "role": "cream",
+      "rule": "structural",
+      "kind": "structure",
+      "size": [
+        0.09375,
+        0.012500000186264515,
+        1.875
+      ],
+      "position": [
+        0.515625,
+        -0.67421875,
+        1.625
+      ],
+      "opacity": 1
+    },
+    {
+      "name": "strict_frame_top",
+      "role": "cream",
+      "rule": "structural",
+      "kind": "structure",
+      "size": [
+        0.9375,
+        0.012500000186264515,
+        0.15625
+      ],
+      "position": [
+        0,
+        -0.67421875,
+        2.640625
+      ],
+      "opacity": 1
+    },
+    {
+      "name": "strict_frame_bottom",
+      "role": "cream",
+      "rule": "structural",
+      "kind": "structure",
+      "size": [
+        0.9375,
+        0.012500000186264515,
+        0.0625
+      ],
+      "position": [
+        0,
+        -0.67421875,
+        0.65625
+      ],
+      "opacity": 1
+    },
+    {
+      "name": "strict_cavity_0",
+      "role": "display",
+      "rule": "flat",
+      "kind": "structure",
+      "size": [
+        0.75,
+        0.00937500037252903,
+        1.625
+      ],
+      "position": [
+        0,
+        0.53828125,
+        1.65625
+      ],
+      "opacity": 1
+    },
+    {
+      "name": "strict_glass_0",
+      "role": "glass",
+      "rule": "panel",
+      "kind": "structure",
+      "size": [
+        0.75,
+        0.0062500000931322575,
+        1.625
+      ],
+      "position": [
+        0,
+        -0.73359375,
+        1.65625
+      ],
+      "opacity": 0.42
+    },
+    {
+      "name": "strict_door_rail_0_-1",
+      "role": "teal",
+      "rule": "structural",
+      "kind": "structure",
+      "size": [
+        0.09375,
+        0.00937500037252903,
+        1.875
+      ],
+      "position": [
+        -0.421875,
+        -0.70390625,
+        1.625
+      ],
+      "opacity": 1
+    },
+    {
+      "name": "strict_door_rail_0_1",
+      "role": "teal",
+      "rule": "structural",
+      "kind": "structure",
+      "size": [
+        0.09375,
+        0.00937500037252903,
+        1.875
+      ],
+      "position": [
+        0.421875,
+        -0.70390625,
+        1.625
+      ],
+      "opacity": 1
+    },
+    {
+      "name": "strict_handle_0",
+      "role": "plum",
+      "rule": "structural",
+      "kind": "fitting",
+      "size": [
+        0.078125,
+        0.04374999925494194,
+        0.46875
+      ],
+      "position": [
+        -0.515625,
+        -0.84609375,
+        1.703125
+      ],
+      "opacity": 1
+    },
+    {
+      "name": "strict_handle_mount_0_-1",
+      "role": "cream",
+      "rule": "flat",
+      "kind": "fitting",
+      "size": [
+        0.078125,
+        0.03750000149011612,
+        0.0625
+      ],
+      "position": [
+        -0.515625,
+        -0.81171875,
+        1.5
+      ],
+      "opacity": 1
+    },
+    {
+      "name": "strict_handle_mount_0_1",
+      "role": "cream",
+      "rule": "flat",
+      "kind": "fitting",
+      "size": [
+        0.078125,
+        0.03750000149011612,
+        0.0625
+      ],
+      "position": [
+        -0.515625,
+        -0.81171875,
+        1.90625
+      ],
+      "opacity": 1
+    },
+    {
+      "name": "strict_shelf_0_0.375",
+      "role": "steel",
+      "rule": "structural",
+      "kind": "structure",
+      "size": [
+        0.65625,
+        0.71875,
+        0.046875
+      ],
+      "position": [
+        0,
+        -0.015625,
+        1.125
+      ],
+      "opacity": 1
+    },
+    {
+      "name": "strict_shelf_0_0.5",
+      "role": "steel",
+      "rule": "structural",
+      "kind": "structure",
+      "size": [
+        0.65625,
+        0.71875,
+        0.046875
+      ],
+      "position": [
+        0,
+        -0.015625,
+        1.5
+      ],
+      "opacity": 1
+    },
+    {
+      "name": "strict_shelf_0_0.625",
+      "role": "steel",
+      "rule": "structural",
+      "kind": "structure",
+      "size": [
+        0.65625,
+        0.71875,
+        0.046875
+      ],
+      "position": [
+        0,
+        -0.015625,
+        1.875
+      ],
+      "opacity": 1
+    },
+    {
+      "name": "strict_shelf_0_0.75",
+      "role": "steel",
+      "rule": "structural",
+      "kind": "structure",
+      "size": [
+        0.65625,
+        0.71875,
+        0.046875
+      ],
+      "position": [
+        0,
+        -0.015625,
+        2.25
+      ],
+      "opacity": 1
+    },
+    {
+      "name": "strict_display_plate",
+      "role": "display",
+      "rule": "structural",
+      "kind": "fitting",
+      "size": [
+        0.40625,
+        0.01875000074505806,
+        0.125
+      ],
+      "position": [
+        0.27734375,
+        -0.77109375,
+        2.8125
+      ],
+      "opacity": 1
+    },
+    {
+      "name": "strict_display_pixel_0",
+      "role": "ochre",
+      "rule": "flat",
+      "kind": "fitting",
+      "size": [
+        0.03125,
+        0.0078125,
+        0.03125
+      ],
+      "position": [
+        0.15234375,
+        -0.796875,
+        2.8125
+      ],
+      "opacity": 1
+    },
+    {
+      "name": "strict_display_pixel_1",
+      "role": "cream",
+      "rule": "flat",
+      "kind": "fitting",
+      "size": [
+        0.03125,
+        0.0078125,
+        0.03125
+      ],
+      "position": [
+        0.24609375,
+        -0.796875,
+        2.8125
+      ],
+      "opacity": 1
+    },
+    {
+      "name": "strict_display_pixel_2",
+      "role": "teal",
+      "rule": "flat",
+      "kind": "fitting",
+      "size": [
+        0.03125,
+        0.0078125,
+        0.03125
+      ],
+      "position": [
+        0.33984375,
+        -0.796875,
+        2.8125
+      ],
+      "opacity": 1
+    },
+    {
+      "name": "strict_display_pixel_3",
+      "role": "cream",
+      "rule": "flat",
+      "kind": "fitting",
+      "size": [
+        0.03125,
+        0.0078125,
+        0.03125
+      ],
+      "position": [
+        0.40234375,
+        -0.796875,
+        2.8125
+      ],
+      "opacity": 1
+    },
+    {
+      "name": "strict_frame_rivet_0",
+      "role": "plum",
+      "rule": "flat",
+      "kind": "hardware",
+      "size": [
+        0.02250000089406967,
+        0.010937499813735485,
+        0.02250000089406967
+      ],
+      "position": [
+        -0.5203125,
+        -0.7359375,
+        0.7296875
+      ],
+      "opacity": 1
+    },
+    {
+      "name": "strict_frame_rivet_1",
+      "role": "plum",
+      "rule": "flat",
+      "kind": "hardware",
+      "size": [
+        0.02250000089406967,
+        0.010937499813735485,
+        0.02250000089406967
+      ],
+      "position": [
+        -0.5203125,
+        -0.7359375,
+        2.5203125
+      ],
+      "opacity": 1
+    },
+    {
+      "name": "strict_frame_rivet_2",
+      "role": "plum",
+      "rule": "flat",
+      "kind": "hardware",
+      "size": [
+        0.02250000089406967,
+        0.010937499813735485,
+        0.02250000089406967
+      ],
+      "position": [
+        0.5203125,
+        -0.7359375,
+        0.7296875
+      ],
+      "opacity": 1
+    },
+    {
+      "name": "strict_frame_rivet_3",
+      "role": "plum",
+      "rule": "flat",
+      "kind": "hardware",
+      "size": [
+        0.02250000089406967,
+        0.010937499813735485,
+        0.02250000089406967
+      ],
+      "position": [
+        0.5203125,
+        -0.7359375,
+        2.5203125
+      ],
+      "opacity": 1
+    }
+  ]
+}

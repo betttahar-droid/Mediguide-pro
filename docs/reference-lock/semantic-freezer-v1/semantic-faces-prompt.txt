@@ -1,0 +1,27 @@
+Use case: stylized-concept
+Asset type: source sheet for a deterministic UV-less per-face material compiler.
+Primary request: author exactly eight separate square FACE-ROLE TONE MASKS for the supplied tall medical freezer geometry.
+
+Input roles:
+- Images 1, 2 and 3 are the immutable visual authority: front/open-isometric, right-side, and rear views of the same appliance. Copy their purposeful surface vocabulary but never redraw the appliance.
+- Images 4, 5 and 6 are raw geometry renders. Their silhouettes, part boundaries and mounting planes are immutable.
+- Images 7 and 8 are diagnostic part-ID and face-orientation passes for spatial understanding only. Never copy their colors.
+- Image 9 is the spatial guide. Fill its eight equal square safe zones in reading order and do not copy its outlines.
+
+The eight masks in reading order are:
+1 ROOF_TOP: pale enamel top, inset perimeter, short top/left catches, two small corner scuffs.
+2 CROWN_FRONT: wide medical-freezer fascia with layered horizontal bands, a quiet left logo socket, center status-light sockets and a right digital-display socket.
+3 CABINET_SIDE: purple-grey sheet metal with large rectangular service-panel divisions, one long vertical seam, short edge catches and sparse corner fasteners.
+4 DOOR_FRAME: pale enamel frame strip with dark inner edge, bright outer catch, sparse hinge/socket notches and worn lower corner.
+5 SHELF_TOP: cold metal shelf field, quiet center, long shallow horizontal seams, sparse blocky reflection patches.
+6 SHELF_LIP: narrow metal lip vocabulary, bright upper catch, dark lower band and square end fasteners.
+7 BASE_FRONT: lower service plinth with a recessed panel perimeter, controlled corner wear and quiet center reserved for fittings.
+8 VENT_FIELD: repeated thick horizontal dark louvres separated by base bands, with a fixed pale rim.
+
+Output composition: pure flat magenta #FF00FF background. Exactly eight disconnected equal-size square panels in a strict 4-column by 2-row layout matching the guide. Wide magenta gutters. Nothing may touch another panel.
+
+Tone language: these are semantic masks, not colored textures. Use only five flat neutral values: #202020 deepest marks, #606060 secondary shade, #808080 untouched material, #C0C0C0 highlight, #F0F0F0 strongest catches. The deterministic compiler will quantize them.
+
+Style: coarse retro PS1-era pixel art, each panel reading as 32 large logical texels across; nearest-neighbor square edges; deliberate one-texel lines and two-to-eight-texel clusters. Keep broad fields calm and make every mark explain construction. Directional catches favor top/left; dark construction bands favor bottom/right.
+
+Hard constraints: no perspective, object render, text, letters, numbers, logos, shadows outside panels, gradients, blur, antialiasing, noise, random dirt, tiny speckle, watermark, color, extra panels, or geometry changes.

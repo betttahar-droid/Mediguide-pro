@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 4,
+  "model": "gemini-3.1-flash-image",
+  "generatedAt": "2026-09-05T21:16:21.514445+00:00",
+  "views": {
+    "iso": {
+      "status": "failed",
+      "output": "docs/reference-lock/semantic-freezer-v4/paintovers/iso-paintover-nano.png",
+      "errorType": "http",
+      "httpStatus": 429,
+      "message": "HTTP Error 429: Too Many Requests"
+    },
+    "side": {
+      "status": "failed",
+      "output": "docs/reference-lock/semantic-freezer-v4/paintovers/side-paintover-nano.png",
+      "errorType": "http",
+      "httpStatus": 429,
+      "message": "HTTP Error 429: Too Many Requests"
+    },
+    "back": {
+      "status": "failed",
+      "output": "docs/reference-lock/semantic-freezer-v4/paintovers/back-paintover-nano.png",
+      "errorType": "http",
+      "httpStatus": 429,
+      "message": "HTTP Error 429: Too Many Requests"
+    }
+  }
+}

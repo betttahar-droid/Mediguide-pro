@@ -1,0 +1,68 @@
+{
+  "method": "orthographic silhouette bounds calibrated from a known model-grid height",
+  "equation": "model coordinate = (raster coordinate - calibrated origin) / rasterPixelsPerModelPixel",
+  "warning": "AI-drawn grid lines are presentation pixels, not authority. Rectify the view and overlay a deterministic grid before measuring internal features.",
+  "front": {
+    "view": "front",
+    "semanticAxis": "width",
+    "rasterObjectBoundsPx": [
+      21,
+      43,
+      333,
+      816
+    ],
+    "rasterSizePx": [
+      312,
+      773
+    ],
+    "heightAnchorModelPx": 96,
+    "rasterPixelsPerModelPixel": 8.052083333333334,
+    "expectedHorizontalModelPx": 38.75,
+    "measuredHorizontalModelPx": 38.747736093143594,
+    "absoluteErrorModelPx": -0.002263906856406095,
+    "relativeErrorPercent": -0.005842340274596374,
+    "oneRasterPixelUncertaintyModelPx": 0.1241914618369987
+  },
+  "side": {
+    "view": "side",
+    "semanticAxis": "depth",
+    "rasterObjectBoundsPx": [
+      19,
+      45,
+      315,
+      816
+    ],
+    "rasterSizePx": [
+      296,
+      771
+    ],
+    "heightAnchorModelPx": 96,
+    "rasterPixelsPerModelPixel": 8.03125,
+    "expectedHorizontalModelPx": 36.75,
+    "measuredHorizontalModelPx": 36.856031128404666,
+    "absoluteErrorModelPx": 0.10603112840466622,
+    "relativeErrorPercent": 0.2885200772916088,
+    "oneRasterPixelUncertaintyModelPx": 0.1245136186770428
+  },
+  "backDiagnostic": {
+    "view": "back",
+    "semanticAxis": "width",
+    "rasterObjectBoundsPx": [
+      24,
+      45,
+      324,
+      816
+    ],
+    "rasterSizePx": [
+      300,
+      771
+    ],
+    "heightAnchorModelPx": 96,
+    "rasterPixelsPerModelPixel": 8.03125,
+    "expectedHorizontalModelPx": 36.625,
+    "measuredHorizontalModelPx": 37.35408560311284,
+    "absoluteErrorModelPx": 0.7290856031128428,
+    "relativeErrorPercent": 1.990677414642574,
+    "oneRasterPixelUncertaintyModelPx": 0.1245136186770428
+  }
+}

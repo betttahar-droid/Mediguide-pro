@@ -1,0 +1,24 @@
+Use case: stylized-concept.
+Asset type: isolated fixed-size pixel decals for a scalable retro voxel refrigerator.
+
+Image 1 is the PRIMARY material-style authority. Image 2 summarizes the supplied style references. Image 3 is the refrigerator design authority. Image 4 is the accepted current refrigerator; do not redesign it.
+
+Output one square 4-column by 4-row decal source board on a perfectly uniform pure magenta #FF00FF background. The background must fill every unused pixel with no shadows, glow, texture, checkerboard, border, labels, writing or gutters. Each cell is equal and contains exactly one isolated decal centered with a large empty magenta safety margin on every side. No decal may touch a cell boundary.
+
+Cells left-to-right, top-to-bottom:
+1 cream top-left enamel corner chip; cream top-right corner chip; cream bottom-left notch; cream bottom-right notch.
+2 blue-gray steel short dark panel mark; steel short light catch mark; steel two-pixel seam interruption; steel small square fastener.
+3 deep-teal upper-left door-rail chip; teal upper-right rail notch; teal lower-left chip; teal lower-right recessed-corner mark.
+4 dark-green staircase glass reflection; pale-steel shelf-lip end cap; warm-cream crown seam accent; ochre grille corner wear.
+
+Style rules copied from Image 1:
+- nearest-neighbour hard square pixels with no antialiasing or gradients;
+- each motif reads at 16x16 logical pixels;
+- individual marks are 1 logical pixel thick and 2-6 logical pixels long;
+- connected clusters stay within 2x6 logical pixels;
+- use only 2-4 flat colors inside each decal;
+- asymmetrical, deliberate rectangular marks; never random speckle, grime, rust clouds or broad surface patches;
+- preserve Image 3's cream, steel, teal, glass and ochre hues;
+- decal only: never draw a refrigerator, panel, material tile, frame, lighting example, text, logo or watermark.
+
+The magenta margin and exact isolated silhouettes are mandatory because a deterministic compiler will key out #FF00FF, quantize colors and add protected atlas padding.

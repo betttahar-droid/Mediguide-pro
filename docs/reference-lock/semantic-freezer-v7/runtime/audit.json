@@ -1,0 +1,6547 @@
+{
+  "status": "PASS",
+  "rigidPartsMatch": true,
+  "fixedFittingsMatch": true,
+  "records": [
+    {
+      "query": "texture=v7&view=iso",
+      "output": "C:\\Users\\mansour\\Documents\\Modular builder\\Mediguide-pro\\docs\\reference-lock\\semantic-freezer-v7\\runtime\\texture-v7-view-iso.png",
+      "ready": true,
+      "view": "iso",
+      "diagnostic": "",
+      "textureVersion": "v7",
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "diagnosticLegend": null,
+      "camera": {
+        "yaw": -36,
+        "elevation": 2.5,
+        "autoFit": true
+      },
+      "triangles": 2550,
+      "parts": 104,
+      "decals": 29,
+      "shelfCount": 4,
+      "rigidPartSizes": [
+        [
+          "handle_catch",
+          [
+            0.4,
+            0.2,
+            17.6
+          ]
+        ],
+        [
+          "handle_grip",
+          [
+            2.5,
+            1.1,
+            19
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_return",
+          [
+            2.35,
+            0.15,
+            18
+          ]
+        ]
+      ],
+      "fixedFittingSizes": [
+        [
+          "decal_cartonBooster",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonCovid",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonCovid",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonFlu",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonMmr",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonMmr",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_compressorPlate",
+          [
+            6.2,
+            5.2
+          ]
+        ],
+        [
+          "decal_digitalStatus",
+          [
+            13,
+            5.8
+          ]
+        ],
+        [
+          "decal_fanGrille",
+          [
+            12,
+            12
+          ]
+        ],
+        [
+          "decal_frontBaseWear",
+          [
+            24,
+            8
+          ]
+        ],
+        [
+          "decal_medicalIdentity",
+          [
+            13,
+            8
+          ]
+        ],
+        [
+          "decal_rearDoNot",
+          [
+            16,
+            4.571
+          ]
+        ],
+        [
+          "decal_rearWarning",
+          [
+            16,
+            6.026
+          ]
+        ],
+        [
+          "decal_sideBottomWear",
+          [
+            14,
+            9
+          ]
+        ],
+        [
+          "decal_sideBottomWear",
+          [
+            14,
+            9
+          ]
+        ],
+        [
+          "decal_sideRating",
+          [
+            8,
+            5.3
+          ]
+        ],
+        [
+          "decal_sideTopWear",
+          [
+            14,
+            9
+          ]
+        ],
+        [
+          "decal_sideVentPanel",
+          [
+            21.431,
+            24.512
+          ]
+        ],
+        [
+          "decal_vialCovid",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialCovid",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialCovid",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialFlu",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialFlu",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialFlu",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialMmr",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialMmr",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialMmr",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialPolio",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialPolio",
+          [
+            2.8,
+            4.1
+          ]
+        ]
+      ],
+      "correspondenceIds": [
+        "digitalStatus",
+        "fanGrille",
+        "front_control_band",
+        "front_door_opening",
+        "medicalIdentity",
+        "rearDoNot",
+        "rearWarning",
+        "rear_condenser_field",
+        "rear_machine_bay",
+        "sideRating",
+        "side_bottom_wear",
+        "side_lower_column_seed",
+        "side_lower_panel",
+        "side_panel_row_seed",
+        "side_upper_column_seed",
+        "side_upper_panel",
+        "side_vent"
+      ],
+      "correspondenceFeatureCount": 17,
+      "fittingPlacements": [
+        {
+          "id": "medicalIdentity",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            13.295,
+            96.575
+          ],
+          "sizeTexels": [
+            13,
+            8
+          ],
+          "planeTexels": -22.75,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 717.295,
+            "right": 690.705,
+            "bottom": 96.575,
+            "headerTop": 3134.913,
+            "panelLeft": 614.127,
+            "panelRight": 628.369,
+            "panelBottom": -727.553,
+            "panelTop": 3004.481
+          }
+        },
+        {
+          "id": "digitalStatus",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -14.142,
+            97.46
+          ],
+          "sizeTexels": [
+            13,
+            5.8
+          ],
+          "planeTexels": -22.75,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 689.858,
+            "right": 718.142,
+            "bottom": 97.46,
+            "headerTop": 3134.028,
+            "panelLeft": 586.6899999999999,
+            "panelRight": 655.806,
+            "panelBottom": -726.668,
+            "panelTop": 3003.596
+          }
+        },
+        {
+          "id": "sideRating",
+          "face": "left",
+          "layer": "label",
+          "centerTexels": [
+            -13.412,
+            95.684
+          ],
+          "sizeTexels": [
+            8,
+            5.3
+          ],
+          "planeTexels": -22.22,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "front": 674.588,
+            "back": 701.412,
+            "bottom": 95.684,
+            "headerTop": 3135.8039999999996
+          }
+        },
+        {
+          "id": "rearWarning",
+          "face": "back",
+          "layer": "label",
+          "centerTexels": [
+            -0.16300000000000014,
+            71.768
+          ],
+          "sizeTexels": [
+            16,
+            6.026
+          ],
+          "planeTexels": 22.95,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 703.837,
+            "right": 704.163,
+            "bottom": 71.768,
+            "headerTop": 3159.72,
+            "panelLeft": 600.669,
+            "panelRight": 641.827,
+            "panelBottom": -752.36,
+            "panelTop": 3029.288
+          }
+        },
+        {
+          "id": "rearDoNot",
+          "face": "back",
+          "layer": "label",
+          "centerTexels": [
+            -0.09800000000000009,
+            36.731
+          ],
+          "sizeTexels": [
+            16,
+            4.571
+          ],
+          "planeTexels": 22.95,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 703.902,
+            "right": 704.098,
+            "bottom": 36.731,
+            "headerTop": 3194.7569999999996,
+            "panelLeft": 600.734,
+            "panelRight": 641.762,
+            "panelBottom": -787.397,
+            "panelTop": 3064.325
+          }
+        },
+        {
+          "id": "frontBaseWear",
+          "face": "front",
+          "layer": "wear",
+          "centerTexels": [
+            0,
+            5
+          ],
+          "sizeTexels": [
+            24,
+            8
+          ],
+          "planeTexels": -22.75,
+          "renderOrder": 10,
+          "edgeDistancesTexels": {
+            "left": 704,
+            "right": 704,
+            "bottom": 5,
+            "headerTop": 3226.488,
+            "panelLeft": 600.832,
+            "panelRight": 641.664,
+            "panelBottom": -819.128,
+            "panelTop": 3096.056
+          }
+        },
+        {
+          "id": "sideBottomWear",
+          "face": "left",
+          "layer": "wear",
+          "centerTexels": [
+            -13.5,
+            7
+          ],
+          "sizeTexels": [
+            14,
+            9
+          ],
+          "planeTexels": -22.24,
+          "renderOrder": 10,
+          "edgeDistancesTexels": {
+            "front": 674.5,
+            "back": 701.5,
+            "bottom": 7,
+            "headerTop": 3224.488
+          }
+        },
+        {
+          "id": "sideBottomWear",
+          "face": "left",
+          "layer": "wear",
+          "centerTexels": [
+            13.5,
+            7
+          ],
+          "sizeTexels": [
+            14,
+            9
+          ],
+          "planeTexels": -22.25,
+          "renderOrder": 10,
+          "edgeDistancesTexels": {
+            "front": 701.5,
+            "back": 674.5,
+            "bottom": 7,
+            "headerTop": 3224.488
+          }
+        },
+        {
+          "id": "sideTopWear",
+          "face": "left",
+          "layer": "wear",
+          "centerTexels": [
+            13.5,
+            95
+          ],
+          "sizeTexels": [
+            14,
+            9
+          ],
+          "planeTexels": -22.26,
+          "renderOrder": 10,
+          "edgeDistancesTexels": {
+            "front": 701.5,
+            "back": 674.5,
+            "bottom": 95,
+            "headerTop": 3136.488
+          }
+        },
+        {
+          "id": "sideVentPanel",
+          "face": "left",
+          "layer": "structural-graphic",
+          "centerTexels": [
+            8.987,
+            16.095
+          ],
+          "sizeTexels": [
+            21.431,
+            24.512
+          ],
+          "planeTexels": -22.5,
+          "renderOrder": 7,
+          "edgeDistancesTexels": {
+            "front": 696.987,
+            "back": 679.013,
+            "bottom": 16.095,
+            "headerTop": 3215.393
+          }
+        },
+        {
+          "id": "fanGrille",
+          "face": "back",
+          "layer": "mechanical-detail",
+          "centerTexels": [
+            -11.737,
+            13.071
+          ],
+          "sizeTexels": [
+            12,
+            12
+          ],
+          "planeTexels": 24.2,
+          "renderOrder": 9,
+          "edgeDistancesTexels": {
+            "left": 692.263,
+            "right": 715.737,
+            "bottom": 13.071,
+            "headerTop": 3218.417,
+            "panelLeft": 589.095,
+            "panelRight": 653.401,
+            "panelBottom": -811.057,
+            "panelTop": 3087.985
+          }
+        },
+        {
+          "id": "compressorPlate",
+          "face": "back",
+          "layer": "label",
+          "centerTexels": [
+            3.1,
+            9.9
+          ],
+          "sizeTexels": [
+            6.2,
+            5.2
+          ],
+          "planeTexels": 26.36,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 707.1,
+            "right": 700.9,
+            "bottom": 9.9,
+            "headerTop": 3221.5879999999997,
+            "panelLeft": 603.932,
+            "panelRight": 638.564,
+            "panelBottom": -814.2280000000001,
+            "panelTop": 3091.156
+          }
+        },
+        {
+          "id": "cartonCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -12,
+            69.46000000000001
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 692,
+            "right": 716,
+            "bottom": 69.46000000000001,
+            "headerTop": 3162.028,
+            "panelLeft": 588.832,
+            "panelRight": 653.664,
+            "panelBottom": -754.668,
+            "panelTop": 3031.596
+          }
+        },
+        {
+          "id": "cartonMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -4,
+            69.46000000000001
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 700,
+            "right": 708,
+            "bottom": 69.46000000000001,
+            "headerTop": 3162.028,
+            "panelLeft": 596.832,
+            "panelRight": 645.664,
+            "panelBottom": -754.668,
+            "panelTop": 3031.596
+          }
+        },
+        {
+          "id": "cartonFlu",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            5,
+            69.46000000000001
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 709,
+            "right": 699,
+            "bottom": 69.46000000000001,
+            "headerTop": 3162.028,
+            "panelLeft": 605.832,
+            "panelRight": 636.664,
+            "panelBottom": -754.668,
+            "panelTop": 3031.596
+          }
+        },
+        {
+          "id": "cartonBooster",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            12,
+            69.46000000000001
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 716,
+            "right": 692,
+            "bottom": 69.46000000000001,
+            "headerTop": 3162.028,
+            "panelLeft": 612.832,
+            "panelRight": 629.664,
+            "panelBottom": -754.668,
+            "panelTop": 3031.596
+          }
+        },
+        {
+          "id": "vialCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -12,
+            50.71
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 692,
+            "right": 716,
+            "bottom": 50.71,
+            "headerTop": 3180.778,
+            "panelLeft": 588.832,
+            "panelRight": 653.664,
+            "panelBottom": -773.418,
+            "panelTop": 3050.346
+          }
+        },
+        {
+          "id": "vialMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -6,
+            50.71
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 698,
+            "right": 710,
+            "bottom": 50.71,
+            "headerTop": 3180.778,
+            "panelLeft": 594.832,
+            "panelRight": 647.664,
+            "panelBottom": -773.418,
+            "panelTop": 3050.346
+          }
+        },
+        {
+          "id": "vialFlu",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            0,
+            50.71
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 704,
+            "right": 704,
+            "bottom": 50.71,
+            "headerTop": 3180.778,
+            "panelLeft": 600.832,
+            "panelRight": 641.664,
+            "panelBottom": -773.418,
+            "panelTop": 3050.346
+          }
+        },
+        {
+          "id": "vialPolio",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            6,
+            50.71
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 710,
+            "right": 698,
+            "bottom": 50.71,
+            "headerTop": 3180.778,
+            "panelLeft": 606.832,
+            "panelRight": 635.664,
+            "panelBottom": -773.418,
+            "panelTop": 3050.346
+          }
+        },
+        {
+          "id": "vialCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            12,
+            50.71
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 716,
+            "right": 692,
+            "bottom": 50.71,
+            "headerTop": 3180.778,
+            "panelLeft": 612.832,
+            "panelRight": 629.664,
+            "panelBottom": -773.418,
+            "panelTop": 3050.346
+          }
+        },
+        {
+          "id": "vialMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -12,
+            33.45
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 692,
+            "right": 716,
+            "bottom": 33.45,
+            "headerTop": 3198.038,
+            "panelLeft": 588.832,
+            "panelRight": 653.664,
+            "panelBottom": -790.678,
+            "panelTop": 3067.606
+          }
+        },
+        {
+          "id": "vialFlu",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -6,
+            33.45
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 698,
+            "right": 710,
+            "bottom": 33.45,
+            "headerTop": 3198.038,
+            "panelLeft": 594.832,
+            "panelRight": 647.664,
+            "panelBottom": -790.678,
+            "panelTop": 3067.606
+          }
+        },
+        {
+          "id": "vialPolio",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            0,
+            33.45
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 704,
+            "right": 704,
+            "bottom": 33.45,
+            "headerTop": 3198.038,
+            "panelLeft": 600.832,
+            "panelRight": 641.664,
+            "panelBottom": -790.678,
+            "panelTop": 3067.606
+          }
+        },
+        {
+          "id": "vialCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            6,
+            33.45
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 710,
+            "right": 698,
+            "bottom": 33.45,
+            "headerTop": 3198.038,
+            "panelLeft": 606.832,
+            "panelRight": 635.664,
+            "panelBottom": -790.678,
+            "panelTop": 3067.606
+          }
+        },
+        {
+          "id": "vialMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            12,
+            33.45
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 716,
+            "right": 692,
+            "bottom": 33.45,
+            "headerTop": 3198.038,
+            "panelLeft": 612.832,
+            "panelRight": 629.664,
+            "panelBottom": -790.678,
+            "panelTop": 3067.606
+          }
+        },
+        {
+          "id": "cartonCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -10,
+            18.96
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 694,
+            "right": 714,
+            "bottom": 18.96,
+            "headerTop": 3212.528,
+            "panelLeft": 590.832,
+            "panelRight": 651.664,
+            "panelBottom": -805.168,
+            "panelTop": 3082.096
+          }
+        },
+        {
+          "id": "cartonMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            0,
+            19.46
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 704,
+            "right": 704,
+            "bottom": 19.46,
+            "headerTop": 3212.028,
+            "panelLeft": 600.832,
+            "panelRight": 641.664,
+            "panelBottom": -804.668,
+            "panelTop": 3081.596
+          }
+        },
+        {
+          "id": "vialFlu",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            10,
+            17.5225
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 714,
+            "right": 694,
+            "bottom": 17.5225,
+            "headerTop": 3213.9655,
+            "panelLeft": 610.832,
+            "panelRight": 631.664,
+            "panelBottom": -806.6055,
+            "panelTop": 3083.5335
+          }
+        }
+      ],
+      "semanticSupports": [
+        {
+          "id": "condenserField",
+          "sizeTexels": [
+            1242.496,
+            2276.928
+          ],
+          "mesh": "rear_condenser_support"
+        },
+        {
+          "id": "fanGrille",
+          "sizeTexels": [
+            14,
+            15
+          ],
+          "mesh": "rear_fan_housing"
+        },
+        {
+          "id": "rearMachineBay",
+          "sizeTexels": [
+            38.828,
+            22.747
+          ],
+          "mesh": "rear_machine_bay_back"
+        },
+        {
+          "id": "sideVentPanel",
+          "sizeTexels": [
+            21.431,
+            24.512
+          ],
+          "mesh": "side_vent_support"
+        }
+      ],
+      "adaptiveSurfaceCounts": [
+        [
+          "side_panel_column",
+          2
+        ],
+        [
+          "side_panel_row",
+          1
+        ]
+      ],
+      "adaptiveTexturePanels": [
+        {
+          "id": "condenserField",
+          "sizeTexels": [
+            1242.496,
+            2276.928
+          ],
+          "boundsTexels": [
+            -600.832,
+            824.128,
+            641.664,
+            3101.056
+          ],
+          "pitchTexels": [
+            2.45,
+            8.2
+          ],
+          "lineWidthTexels": [
+            0.52,
+            0.72
+          ],
+          "repeatCounts": [
+            507,
+            277
+          ],
+          "marginsTexels": [
+            3.224,
+            1.948,
+            25.754,
+            4.076
+          ]
+        }
+      ],
+      "repeatedStructureCounts": [
+        [
+          "rear_coil_run",
+          0
+        ],
+        [
+          "rear_coil_rail",
+          0
+        ],
+        [
+          "shelf",
+          4
+        ]
+      ],
+      "errors": [],
+      "paletteSize": 1200
+    },
+    {
+      "query": "texture=v7&view=side",
+      "output": "C:\\Users\\mansour\\Documents\\Modular builder\\Mediguide-pro\\docs\\reference-lock\\semantic-freezer-v7\\runtime\\texture-v7-view-side.png",
+      "ready": true,
+      "view": "side",
+      "diagnostic": "",
+      "textureVersion": "v7",
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "diagnosticLegend": null,
+      "camera": {
+        "yaw": -36,
+        "elevation": 2.5,
+        "autoFit": true
+      },
+      "triangles": 2550,
+      "parts": 104,
+      "decals": 29,
+      "shelfCount": 4,
+      "rigidPartSizes": [
+        [
+          "handle_catch",
+          [
+            0.4,
+            0.2,
+            17.6
+          ]
+        ],
+        [
+          "handle_grip",
+          [
+            2.5,
+            1.1,
+            19
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_return",
+          [
+            2.35,
+            0.15,
+            18
+          ]
+        ]
+      ],
+      "fixedFittingSizes": [
+        [
+          "decal_cartonBooster",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonCovid",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonCovid",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonFlu",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonMmr",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonMmr",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_compressorPlate",
+          [
+            6.2,
+            5.2
+          ]
+        ],
+        [
+          "decal_digitalStatus",
+          [
+            13,
+            5.8
+          ]
+        ],
+        [
+          "decal_fanGrille",
+          [
+            12,
+            12
+          ]
+        ],
+        [
+          "decal_frontBaseWear",
+          [
+            24,
+            8
+          ]
+        ],
+        [
+          "decal_medicalIdentity",
+          [
+            13,
+            8
+          ]
+        ],
+        [
+          "decal_rearDoNot",
+          [
+            16,
+            4.571
+          ]
+        ],
+        [
+          "decal_rearWarning",
+          [
+            16,
+            6.026
+          ]
+        ],
+        [
+          "decal_sideBottomWear",
+          [
+            14,
+            9
+          ]
+        ],
+        [
+          "decal_sideBottomWear",
+          [
+            14,
+            9
+          ]
+        ],
+        [
+          "decal_sideRating",
+          [
+            8,
+            5.3
+          ]
+        ],
+        [
+          "decal_sideTopWear",
+          [
+            14,
+            9
+          ]
+        ],
+        [
+          "decal_sideVentPanel",
+          [
+            21.431,
+            24.512
+          ]
+        ],
+        [
+          "decal_vialCovid",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialCovid",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialCovid",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialFlu",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialFlu",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialFlu",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialMmr",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialMmr",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialMmr",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialPolio",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialPolio",
+          [
+            2.8,
+            4.1
+          ]
+        ]
+      ],
+      "correspondenceIds": [
+        "digitalStatus",
+        "fanGrille",
+        "front_control_band",
+        "front_door_opening",
+        "medicalIdentity",
+        "rearDoNot",
+        "rearWarning",
+        "rear_condenser_field",
+        "rear_machine_bay",
+        "sideRating",
+        "side_bottom_wear",
+        "side_lower_column_seed",
+        "side_lower_panel",
+        "side_panel_row_seed",
+        "side_upper_column_seed",
+        "side_upper_panel",
+        "side_vent"
+      ],
+      "correspondenceFeatureCount": 17,
+      "fittingPlacements": [
+        {
+          "id": "medicalIdentity",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            13.295,
+            96.575
+          ],
+          "sizeTexels": [
+            13,
+            8
+          ],
+          "planeTexels": -22.75,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 717.295,
+            "right": 690.705,
+            "bottom": 96.575,
+            "headerTop": 3134.913,
+            "panelLeft": 614.127,
+            "panelRight": 628.369,
+            "panelBottom": -727.553,
+            "panelTop": 3004.481
+          }
+        },
+        {
+          "id": "digitalStatus",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -14.142,
+            97.46
+          ],
+          "sizeTexels": [
+            13,
+            5.8
+          ],
+          "planeTexels": -22.75,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 689.858,
+            "right": 718.142,
+            "bottom": 97.46,
+            "headerTop": 3134.028,
+            "panelLeft": 586.6899999999999,
+            "panelRight": 655.806,
+            "panelBottom": -726.668,
+            "panelTop": 3003.596
+          }
+        },
+        {
+          "id": "sideRating",
+          "face": "left",
+          "layer": "label",
+          "centerTexels": [
+            -13.412,
+            95.684
+          ],
+          "sizeTexels": [
+            8,
+            5.3
+          ],
+          "planeTexels": -22.22,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "front": 674.588,
+            "back": 701.412,
+            "bottom": 95.684,
+            "headerTop": 3135.8039999999996
+          }
+        },
+        {
+          "id": "rearWarning",
+          "face": "back",
+          "layer": "label",
+          "centerTexels": [
+            -0.16300000000000014,
+            71.768
+          ],
+          "sizeTexels": [
+            16,
+            6.026
+          ],
+          "planeTexels": 22.95,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 703.837,
+            "right": 704.163,
+            "bottom": 71.768,
+            "headerTop": 3159.72,
+            "panelLeft": 600.669,
+            "panelRight": 641.827,
+            "panelBottom": -752.36,
+            "panelTop": 3029.288
+          }
+        },
+        {
+          "id": "rearDoNot",
+          "face": "back",
+          "layer": "label",
+          "centerTexels": [
+            -0.09800000000000009,
+            36.731
+          ],
+          "sizeTexels": [
+            16,
+            4.571
+          ],
+          "planeTexels": 22.95,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 703.902,
+            "right": 704.098,
+            "bottom": 36.731,
+            "headerTop": 3194.7569999999996,
+            "panelLeft": 600.734,
+            "panelRight": 641.762,
+            "panelBottom": -787.397,
+            "panelTop": 3064.325
+          }
+        },
+        {
+          "id": "frontBaseWear",
+          "face": "front",
+          "layer": "wear",
+          "centerTexels": [
+            0,
+            5
+          ],
+          "sizeTexels": [
+            24,
+            8
+          ],
+          "planeTexels": -22.75,
+          "renderOrder": 10,
+          "edgeDistancesTexels": {
+            "left": 704,
+            "right": 704,
+            "bottom": 5,
+            "headerTop": 3226.488,
+            "panelLeft": 600.832,
+            "panelRight": 641.664,
+            "panelBottom": -819.128,
+            "panelTop": 3096.056
+          }
+        },
+        {
+          "id": "sideBottomWear",
+          "face": "left",
+          "layer": "wear",
+          "centerTexels": [
+            -13.5,
+            7
+          ],
+          "sizeTexels": [
+            14,
+            9
+          ],
+          "planeTexels": -22.24,
+          "renderOrder": 10,
+          "edgeDistancesTexels": {
+            "front": 674.5,
+            "back": 701.5,
+            "bottom": 7,
+            "headerTop": 3224.488
+          }
+        },
+        {
+          "id": "sideBottomWear",
+          "face": "left",
+          "layer": "wear",
+          "centerTexels": [
+            13.5,
+            7
+          ],
+          "sizeTexels": [
+            14,
+            9
+          ],
+          "planeTexels": -22.25,
+          "renderOrder": 10,
+          "edgeDistancesTexels": {
+            "front": 701.5,
+            "back": 674.5,
+            "bottom": 7,
+            "headerTop": 3224.488
+          }
+        },
+        {
+          "id": "sideTopWear",
+          "face": "left",
+          "layer": "wear",
+          "centerTexels": [
+            13.5,
+            95
+          ],
+          "sizeTexels": [
+            14,
+            9
+          ],
+          "planeTexels": -22.26,
+          "renderOrder": 10,
+          "edgeDistancesTexels": {
+            "front": 701.5,
+            "back": 674.5,
+            "bottom": 95,
+            "headerTop": 3136.488
+          }
+        },
+        {
+          "id": "sideVentPanel",
+          "face": "left",
+          "layer": "structural-graphic",
+          "centerTexels": [
+            8.987,
+            16.095
+          ],
+          "sizeTexels": [
+            21.431,
+            24.512
+          ],
+          "planeTexels": -22.5,
+          "renderOrder": 7,
+          "edgeDistancesTexels": {
+            "front": 696.987,
+            "back": 679.013,
+            "bottom": 16.095,
+            "headerTop": 3215.393
+          }
+        },
+        {
+          "id": "fanGrille",
+          "face": "back",
+          "layer": "mechanical-detail",
+          "centerTexels": [
+            -11.737,
+            13.071
+          ],
+          "sizeTexels": [
+            12,
+            12
+          ],
+          "planeTexels": 24.2,
+          "renderOrder": 9,
+          "edgeDistancesTexels": {
+            "left": 692.263,
+            "right": 715.737,
+            "bottom": 13.071,
+            "headerTop": 3218.417,
+            "panelLeft": 589.095,
+            "panelRight": 653.401,
+            "panelBottom": -811.057,
+            "panelTop": 3087.985
+          }
+        },
+        {
+          "id": "compressorPlate",
+          "face": "back",
+          "layer": "label",
+          "centerTexels": [
+            3.1,
+            9.9
+          ],
+          "sizeTexels": [
+            6.2,
+            5.2
+          ],
+          "planeTexels": 26.36,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 707.1,
+            "right": 700.9,
+            "bottom": 9.9,
+            "headerTop": 3221.5879999999997,
+            "panelLeft": 603.932,
+            "panelRight": 638.564,
+            "panelBottom": -814.2280000000001,
+            "panelTop": 3091.156
+          }
+        },
+        {
+          "id": "cartonCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -12,
+            69.46000000000001
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 692,
+            "right": 716,
+            "bottom": 69.46000000000001,
+            "headerTop": 3162.028,
+            "panelLeft": 588.832,
+            "panelRight": 653.664,
+            "panelBottom": -754.668,
+            "panelTop": 3031.596
+          }
+        },
+        {
+          "id": "cartonMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -4,
+            69.46000000000001
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 700,
+            "right": 708,
+            "bottom": 69.46000000000001,
+            "headerTop": 3162.028,
+            "panelLeft": 596.832,
+            "panelRight": 645.664,
+            "panelBottom": -754.668,
+            "panelTop": 3031.596
+          }
+        },
+        {
+          "id": "cartonFlu",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            5,
+            69.46000000000001
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 709,
+            "right": 699,
+            "bottom": 69.46000000000001,
+            "headerTop": 3162.028,
+            "panelLeft": 605.832,
+            "panelRight": 636.664,
+            "panelBottom": -754.668,
+            "panelTop": 3031.596
+          }
+        },
+        {
+          "id": "cartonBooster",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            12,
+            69.46000000000001
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 716,
+            "right": 692,
+            "bottom": 69.46000000000001,
+            "headerTop": 3162.028,
+            "panelLeft": 612.832,
+            "panelRight": 629.664,
+            "panelBottom": -754.668,
+            "panelTop": 3031.596
+          }
+        },
+        {
+          "id": "vialCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -12,
+            50.71
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 692,
+            "right": 716,
+            "bottom": 50.71,
+            "headerTop": 3180.778,
+            "panelLeft": 588.832,
+            "panelRight": 653.664,
+            "panelBottom": -773.418,
+            "panelTop": 3050.346
+          }
+        },
+        {
+          "id": "vialMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -6,
+            50.71
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 698,
+            "right": 710,
+            "bottom": 50.71,
+            "headerTop": 3180.778,
+            "panelLeft": 594.832,
+            "panelRight": 647.664,
+            "panelBottom": -773.418,
+            "panelTop": 3050.346
+          }
+        },
+        {
+          "id": "vialFlu",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            0,
+            50.71
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 704,
+            "right": 704,
+            "bottom": 50.71,
+            "headerTop": 3180.778,
+            "panelLeft": 600.832,
+            "panelRight": 641.664,
+            "panelBottom": -773.418,
+            "panelTop": 3050.346
+          }
+        },
+        {
+          "id": "vialPolio",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            6,
+            50.71
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 710,
+            "right": 698,
+            "bottom": 50.71,
+            "headerTop": 3180.778,
+            "panelLeft": 606.832,
+            "panelRight": 635.664,
+            "panelBottom": -773.418,
+            "panelTop": 3050.346
+          }
+        },
+        {
+          "id": "vialCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            12,
+            50.71
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 716,
+            "right": 692,
+            "bottom": 50.71,
+            "headerTop": 3180.778,
+            "panelLeft": 612.832,
+            "panelRight": 629.664,
+            "panelBottom": -773.418,
+            "panelTop": 3050.346
+          }
+        },
+        {
+          "id": "vialMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -12,
+            33.45
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 692,
+            "right": 716,
+            "bottom": 33.45,
+            "headerTop": 3198.038,
+            "panelLeft": 588.832,
+            "panelRight": 653.664,
+            "panelBottom": -790.678,
+            "panelTop": 3067.606
+          }
+        },
+        {
+          "id": "vialFlu",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -6,
+            33.45
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 698,
+            "right": 710,
+            "bottom": 33.45,
+            "headerTop": 3198.038,
+            "panelLeft": 594.832,
+            "panelRight": 647.664,
+            "panelBottom": -790.678,
+            "panelTop": 3067.606
+          }
+        },
+        {
+          "id": "vialPolio",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            0,
+            33.45
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 704,
+            "right": 704,
+            "bottom": 33.45,
+            "headerTop": 3198.038,
+            "panelLeft": 600.832,
+            "panelRight": 641.664,
+            "panelBottom": -790.678,
+            "panelTop": 3067.606
+          }
+        },
+        {
+          "id": "vialCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            6,
+            33.45
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 710,
+            "right": 698,
+            "bottom": 33.45,
+            "headerTop": 3198.038,
+            "panelLeft": 606.832,
+            "panelRight": 635.664,
+            "panelBottom": -790.678,
+            "panelTop": 3067.606
+          }
+        },
+        {
+          "id": "vialMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            12,
+            33.45
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 716,
+            "right": 692,
+            "bottom": 33.45,
+            "headerTop": 3198.038,
+            "panelLeft": 612.832,
+            "panelRight": 629.664,
+            "panelBottom": -790.678,
+            "panelTop": 3067.606
+          }
+        },
+        {
+          "id": "cartonCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -10,
+            18.96
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 694,
+            "right": 714,
+            "bottom": 18.96,
+            "headerTop": 3212.528,
+            "panelLeft": 590.832,
+            "panelRight": 651.664,
+            "panelBottom": -805.168,
+            "panelTop": 3082.096
+          }
+        },
+        {
+          "id": "cartonMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            0,
+            19.46
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 704,
+            "right": 704,
+            "bottom": 19.46,
+            "headerTop": 3212.028,
+            "panelLeft": 600.832,
+            "panelRight": 641.664,
+            "panelBottom": -804.668,
+            "panelTop": 3081.596
+          }
+        },
+        {
+          "id": "vialFlu",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            10,
+            17.5225
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 714,
+            "right": 694,
+            "bottom": 17.5225,
+            "headerTop": 3213.9655,
+            "panelLeft": 610.832,
+            "panelRight": 631.664,
+            "panelBottom": -806.6055,
+            "panelTop": 3083.5335
+          }
+        }
+      ],
+      "semanticSupports": [
+        {
+          "id": "condenserField",
+          "sizeTexels": [
+            1242.496,
+            2276.928
+          ],
+          "mesh": "rear_condenser_support"
+        },
+        {
+          "id": "fanGrille",
+          "sizeTexels": [
+            14,
+            15
+          ],
+          "mesh": "rear_fan_housing"
+        },
+        {
+          "id": "rearMachineBay",
+          "sizeTexels": [
+            38.828,
+            22.747
+          ],
+          "mesh": "rear_machine_bay_back"
+        },
+        {
+          "id": "sideVentPanel",
+          "sizeTexels": [
+            21.431,
+            24.512
+          ],
+          "mesh": "side_vent_support"
+        }
+      ],
+      "adaptiveSurfaceCounts": [
+        [
+          "side_panel_column",
+          2
+        ],
+        [
+          "side_panel_row",
+          1
+        ]
+      ],
+      "adaptiveTexturePanels": [
+        {
+          "id": "condenserField",
+          "sizeTexels": [
+            1242.496,
+            2276.928
+          ],
+          "boundsTexels": [
+            -600.832,
+            824.128,
+            641.664,
+            3101.056
+          ],
+          "pitchTexels": [
+            2.45,
+            8.2
+          ],
+          "lineWidthTexels": [
+            0.52,
+            0.72
+          ],
+          "repeatCounts": [
+            507,
+            277
+          ],
+          "marginsTexels": [
+            3.224,
+            1.948,
+            25.754,
+            4.076
+          ]
+        }
+      ],
+      "repeatedStructureCounts": [
+        [
+          "rear_coil_run",
+          0
+        ],
+        [
+          "rear_coil_rail",
+          0
+        ],
+        [
+          "shelf",
+          4
+        ]
+      ],
+      "errors": [],
+      "paletteSize": 282
+    },
+    {
+      "query": "texture=v7&view=backIso",
+      "output": "C:\\Users\\mansour\\Documents\\Modular builder\\Mediguide-pro\\docs\\reference-lock\\semantic-freezer-v7\\runtime\\texture-v7-view-backIso.png",
+      "ready": true,
+      "view": "backIso",
+      "diagnostic": "",
+      "textureVersion": "v7",
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "diagnosticLegend": null,
+      "camera": {
+        "yaw": -36,
+        "elevation": 2.5,
+        "autoFit": true
+      },
+      "triangles": 2550,
+      "parts": 104,
+      "decals": 29,
+      "shelfCount": 4,
+      "rigidPartSizes": [
+        [
+          "handle_catch",
+          [
+            0.4,
+            0.2,
+            17.6
+          ]
+        ],
+        [
+          "handle_grip",
+          [
+            2.5,
+            1.1,
+            19
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_return",
+          [
+            2.35,
+            0.15,
+            18
+          ]
+        ]
+      ],
+      "fixedFittingSizes": [
+        [
+          "decal_cartonBooster",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonCovid",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonCovid",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonFlu",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonMmr",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonMmr",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_compressorPlate",
+          [
+            6.2,
+            5.2
+          ]
+        ],
+        [
+          "decal_digitalStatus",
+          [
+            13,
+            5.8
+          ]
+        ],
+        [
+          "decal_fanGrille",
+          [
+            12,
+            12
+          ]
+        ],
+        [
+          "decal_frontBaseWear",
+          [
+            24,
+            8
+          ]
+        ],
+        [
+          "decal_medicalIdentity",
+          [
+            13,
+            8
+          ]
+        ],
+        [
+          "decal_rearDoNot",
+          [
+            16,
+            4.571
+          ]
+        ],
+        [
+          "decal_rearWarning",
+          [
+            16,
+            6.026
+          ]
+        ],
+        [
+          "decal_sideBottomWear",
+          [
+            14,
+            9
+          ]
+        ],
+        [
+          "decal_sideBottomWear",
+          [
+            14,
+            9
+          ]
+        ],
+        [
+          "decal_sideRating",
+          [
+            8,
+            5.3
+          ]
+        ],
+        [
+          "decal_sideTopWear",
+          [
+            14,
+            9
+          ]
+        ],
+        [
+          "decal_sideVentPanel",
+          [
+            21.431,
+            24.512
+          ]
+        ],
+        [
+          "decal_vialCovid",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialCovid",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialCovid",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialFlu",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialFlu",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialFlu",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialMmr",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialMmr",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialMmr",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialPolio",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialPolio",
+          [
+            2.8,
+            4.1
+          ]
+        ]
+      ],
+      "correspondenceIds": [
+        "digitalStatus",
+        "fanGrille",
+        "front_control_band",
+        "front_door_opening",
+        "medicalIdentity",
+        "rearDoNot",
+        "rearWarning",
+        "rear_condenser_field",
+        "rear_machine_bay",
+        "sideRating",
+        "side_bottom_wear",
+        "side_lower_column_seed",
+        "side_lower_panel",
+        "side_panel_row_seed",
+        "side_upper_column_seed",
+        "side_upper_panel",
+        "side_vent"
+      ],
+      "correspondenceFeatureCount": 17,
+      "fittingPlacements": [
+        {
+          "id": "medicalIdentity",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            13.295,
+            96.575
+          ],
+          "sizeTexels": [
+            13,
+            8
+          ],
+          "planeTexels": -22.75,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 717.295,
+            "right": 690.705,
+            "bottom": 96.575,
+            "headerTop": 3134.913,
+            "panelLeft": 614.127,
+            "panelRight": 628.369,
+            "panelBottom": -727.553,
+            "panelTop": 3004.481
+          }
+        },
+        {
+          "id": "digitalStatus",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -14.142,
+            97.46
+          ],
+          "sizeTexels": [
+            13,
+            5.8
+          ],
+          "planeTexels": -22.75,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 689.858,
+            "right": 718.142,
+            "bottom": 97.46,
+            "headerTop": 3134.028,
+            "panelLeft": 586.6899999999999,
+            "panelRight": 655.806,
+            "panelBottom": -726.668,
+            "panelTop": 3003.596
+          }
+        },
+        {
+          "id": "sideRating",
+          "face": "left",
+          "layer": "label",
+          "centerTexels": [
+            -13.412,
+            95.684
+          ],
+          "sizeTexels": [
+            8,
+            5.3
+          ],
+          "planeTexels": -22.22,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "front": 674.588,
+            "back": 701.412,
+            "bottom": 95.684,
+            "headerTop": 3135.8039999999996
+          }
+        },
+        {
+          "id": "rearWarning",
+          "face": "back",
+          "layer": "label",
+          "centerTexels": [
+            -0.16300000000000014,
+            71.768
+          ],
+          "sizeTexels": [
+            16,
+            6.026
+          ],
+          "planeTexels": 22.95,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 703.837,
+            "right": 704.163,
+            "bottom": 71.768,
+            "headerTop": 3159.72,
+            "panelLeft": 600.669,
+            "panelRight": 641.827,
+            "panelBottom": -752.36,
+            "panelTop": 3029.288
+          }
+        },
+        {
+          "id": "rearDoNot",
+          "face": "back",
+          "layer": "label",
+          "centerTexels": [
+            -0.09800000000000009,
+            36.731
+          ],
+          "sizeTexels": [
+            16,
+            4.571
+          ],
+          "planeTexels": 22.95,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 703.902,
+            "right": 704.098,
+            "bottom": 36.731,
+            "headerTop": 3194.7569999999996,
+            "panelLeft": 600.734,
+            "panelRight": 641.762,
+            "panelBottom": -787.397,
+            "panelTop": 3064.325
+          }
+        },
+        {
+          "id": "frontBaseWear",
+          "face": "front",
+          "layer": "wear",
+          "centerTexels": [
+            0,
+            5
+          ],
+          "sizeTexels": [
+            24,
+            8
+          ],
+          "planeTexels": -22.75,
+          "renderOrder": 10,
+          "edgeDistancesTexels": {
+            "left": 704,
+            "right": 704,
+            "bottom": 5,
+            "headerTop": 3226.488,
+            "panelLeft": 600.832,
+            "panelRight": 641.664,
+            "panelBottom": -819.128,
+            "panelTop": 3096.056
+          }
+        },
+        {
+          "id": "sideBottomWear",
+          "face": "left",
+          "layer": "wear",
+          "centerTexels": [
+            -13.5,
+            7
+          ],
+          "sizeTexels": [
+            14,
+            9
+          ],
+          "planeTexels": -22.24,
+          "renderOrder": 10,
+          "edgeDistancesTexels": {
+            "front": 674.5,
+            "back": 701.5,
+            "bottom": 7,
+            "headerTop": 3224.488
+          }
+        },
+        {
+          "id": "sideBottomWear",
+          "face": "left",
+          "layer": "wear",
+          "centerTexels": [
+            13.5,
+            7
+          ],
+          "sizeTexels": [
+            14,
+            9
+          ],
+          "planeTexels": -22.25,
+          "renderOrder": 10,
+          "edgeDistancesTexels": {
+            "front": 701.5,
+            "back": 674.5,
+            "bottom": 7,
+            "headerTop": 3224.488
+          }
+        },
+        {
+          "id": "sideTopWear",
+          "face": "left",
+          "layer": "wear",
+          "centerTexels": [
+            13.5,
+            95
+          ],
+          "sizeTexels": [
+            14,
+            9
+          ],
+          "planeTexels": -22.26,
+          "renderOrder": 10,
+          "edgeDistancesTexels": {
+            "front": 701.5,
+            "back": 674.5,
+            "bottom": 95,
+            "headerTop": 3136.488
+          }
+        },
+        {
+          "id": "sideVentPanel",
+          "face": "left",
+          "layer": "structural-graphic",
+          "centerTexels": [
+            8.987,
+            16.095
+          ],
+          "sizeTexels": [
+            21.431,
+            24.512
+          ],
+          "planeTexels": -22.5,
+          "renderOrder": 7,
+          "edgeDistancesTexels": {
+            "front": 696.987,
+            "back": 679.013,
+            "bottom": 16.095,
+            "headerTop": 3215.393
+          }
+        },
+        {
+          "id": "fanGrille",
+          "face": "back",
+          "layer": "mechanical-detail",
+          "centerTexels": [
+            -11.737,
+            13.071
+          ],
+          "sizeTexels": [
+            12,
+            12
+          ],
+          "planeTexels": 24.2,
+          "renderOrder": 9,
+          "edgeDistancesTexels": {
+            "left": 692.263,
+            "right": 715.737,
+            "bottom": 13.071,
+            "headerTop": 3218.417,
+            "panelLeft": 589.095,
+            "panelRight": 653.401,
+            "panelBottom": -811.057,
+            "panelTop": 3087.985
+          }
+        },
+        {
+          "id": "compressorPlate",
+          "face": "back",
+          "layer": "label",
+          "centerTexels": [
+            3.1,
+            9.9
+          ],
+          "sizeTexels": [
+            6.2,
+            5.2
+          ],
+          "planeTexels": 26.36,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 707.1,
+            "right": 700.9,
+            "bottom": 9.9,
+            "headerTop": 3221.5879999999997,
+            "panelLeft": 603.932,
+            "panelRight": 638.564,
+            "panelBottom": -814.2280000000001,
+            "panelTop": 3091.156
+          }
+        },
+        {
+          "id": "cartonCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -12,
+            69.46000000000001
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 692,
+            "right": 716,
+            "bottom": 69.46000000000001,
+            "headerTop": 3162.028,
+            "panelLeft": 588.832,
+            "panelRight": 653.664,
+            "panelBottom": -754.668,
+            "panelTop": 3031.596
+          }
+        },
+        {
+          "id": "cartonMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -4,
+            69.46000000000001
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 700,
+            "right": 708,
+            "bottom": 69.46000000000001,
+            "headerTop": 3162.028,
+            "panelLeft": 596.832,
+            "panelRight": 645.664,
+            "panelBottom": -754.668,
+            "panelTop": 3031.596
+          }
+        },
+        {
+          "id": "cartonFlu",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            5,
+            69.46000000000001
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 709,
+            "right": 699,
+            "bottom": 69.46000000000001,
+            "headerTop": 3162.028,
+            "panelLeft": 605.832,
+            "panelRight": 636.664,
+            "panelBottom": -754.668,
+            "panelTop": 3031.596
+          }
+        },
+        {
+          "id": "cartonBooster",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            12,
+            69.46000000000001
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 716,
+            "right": 692,
+            "bottom": 69.46000000000001,
+            "headerTop": 3162.028,
+            "panelLeft": 612.832,
+            "panelRight": 629.664,
+            "panelBottom": -754.668,
+            "panelTop": 3031.596
+          }
+        },
+        {
+          "id": "vialCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -12,
+            50.71
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 692,
+            "right": 716,
+            "bottom": 50.71,
+            "headerTop": 3180.778,
+            "panelLeft": 588.832,
+            "panelRight": 653.664,
+            "panelBottom": -773.418,
+            "panelTop": 3050.346
+          }
+        },
+        {
+          "id": "vialMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -6,
+            50.71
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 698,
+            "right": 710,
+            "bottom": 50.71,
+            "headerTop": 3180.778,
+            "panelLeft": 594.832,
+            "panelRight": 647.664,
+            "panelBottom": -773.418,
+            "panelTop": 3050.346
+          }
+        },
+        {
+          "id": "vialFlu",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            0,
+            50.71
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 704,
+            "right": 704,
+            "bottom": 50.71,
+            "headerTop": 3180.778,
+            "panelLeft": 600.832,
+            "panelRight": 641.664,
+            "panelBottom": -773.418,
+            "panelTop": 3050.346
+          }
+        },
+        {
+          "id": "vialPolio",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            6,
+            50.71
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 710,
+            "right": 698,
+            "bottom": 50.71,
+            "headerTop": 3180.778,
+            "panelLeft": 606.832,
+            "panelRight": 635.664,
+            "panelBottom": -773.418,
+            "panelTop": 3050.346
+          }
+        },
+        {
+          "id": "vialCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            12,
+            50.71
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 716,
+            "right": 692,
+            "bottom": 50.71,
+            "headerTop": 3180.778,
+            "panelLeft": 612.832,
+            "panelRight": 629.664,
+            "panelBottom": -773.418,
+            "panelTop": 3050.346
+          }
+        },
+        {
+          "id": "vialMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -12,
+            33.45
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 692,
+            "right": 716,
+            "bottom": 33.45,
+            "headerTop": 3198.038,
+            "panelLeft": 588.832,
+            "panelRight": 653.664,
+            "panelBottom": -790.678,
+            "panelTop": 3067.606
+          }
+        },
+        {
+          "id": "vialFlu",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -6,
+            33.45
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 698,
+            "right": 710,
+            "bottom": 33.45,
+            "headerTop": 3198.038,
+            "panelLeft": 594.832,
+            "panelRight": 647.664,
+            "panelBottom": -790.678,
+            "panelTop": 3067.606
+          }
+        },
+        {
+          "id": "vialPolio",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            0,
+            33.45
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 704,
+            "right": 704,
+            "bottom": 33.45,
+            "headerTop": 3198.038,
+            "panelLeft": 600.832,
+            "panelRight": 641.664,
+            "panelBottom": -790.678,
+            "panelTop": 3067.606
+          }
+        },
+        {
+          "id": "vialCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            6,
+            33.45
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 710,
+            "right": 698,
+            "bottom": 33.45,
+            "headerTop": 3198.038,
+            "panelLeft": 606.832,
+            "panelRight": 635.664,
+            "panelBottom": -790.678,
+            "panelTop": 3067.606
+          }
+        },
+        {
+          "id": "vialMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            12,
+            33.45
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 716,
+            "right": 692,
+            "bottom": 33.45,
+            "headerTop": 3198.038,
+            "panelLeft": 612.832,
+            "panelRight": 629.664,
+            "panelBottom": -790.678,
+            "panelTop": 3067.606
+          }
+        },
+        {
+          "id": "cartonCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -10,
+            18.96
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 694,
+            "right": 714,
+            "bottom": 18.96,
+            "headerTop": 3212.528,
+            "panelLeft": 590.832,
+            "panelRight": 651.664,
+            "panelBottom": -805.168,
+            "panelTop": 3082.096
+          }
+        },
+        {
+          "id": "cartonMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            0,
+            19.46
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 704,
+            "right": 704,
+            "bottom": 19.46,
+            "headerTop": 3212.028,
+            "panelLeft": 600.832,
+            "panelRight": 641.664,
+            "panelBottom": -804.668,
+            "panelTop": 3081.596
+          }
+        },
+        {
+          "id": "vialFlu",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            10,
+            17.5225
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 714,
+            "right": 694,
+            "bottom": 17.5225,
+            "headerTop": 3213.9655,
+            "panelLeft": 610.832,
+            "panelRight": 631.664,
+            "panelBottom": -806.6055,
+            "panelTop": 3083.5335
+          }
+        }
+      ],
+      "semanticSupports": [
+        {
+          "id": "condenserField",
+          "sizeTexels": [
+            1242.496,
+            2276.928
+          ],
+          "mesh": "rear_condenser_support"
+        },
+        {
+          "id": "fanGrille",
+          "sizeTexels": [
+            14,
+            15
+          ],
+          "mesh": "rear_fan_housing"
+        },
+        {
+          "id": "rearMachineBay",
+          "sizeTexels": [
+            38.828,
+            22.747
+          ],
+          "mesh": "rear_machine_bay_back"
+        },
+        {
+          "id": "sideVentPanel",
+          "sizeTexels": [
+            21.431,
+            24.512
+          ],
+          "mesh": "side_vent_support"
+        }
+      ],
+      "adaptiveSurfaceCounts": [
+        [
+          "side_panel_column",
+          2
+        ],
+        [
+          "side_panel_row",
+          1
+        ]
+      ],
+      "adaptiveTexturePanels": [
+        {
+          "id": "condenserField",
+          "sizeTexels": [
+            1242.496,
+            2276.928
+          ],
+          "boundsTexels": [
+            -600.832,
+            824.128,
+            641.664,
+            3101.056
+          ],
+          "pitchTexels": [
+            2.45,
+            8.2
+          ],
+          "lineWidthTexels": [
+            0.52,
+            0.72
+          ],
+          "repeatCounts": [
+            507,
+            277
+          ],
+          "marginsTexels": [
+            3.224,
+            1.948,
+            25.754,
+            4.076
+          ]
+        }
+      ],
+      "repeatedStructureCounts": [
+        [
+          "rear_coil_run",
+          0
+        ],
+        [
+          "rear_coil_rail",
+          0
+        ],
+        [
+          "shelf",
+          4
+        ]
+      ],
+      "errors": [],
+      "paletteSize": 438
+    },
+    {
+      "query": "texture=v7&view=side&sy=1.5",
+      "output": "C:\\Users\\mansour\\Documents\\Modular builder\\Mediguide-pro\\docs\\reference-lock\\semantic-freezer-v7\\runtime\\texture-v7-view-side-sy-1_5.png",
+      "ready": true,
+      "view": "side",
+      "diagnostic": "",
+      "textureVersion": "v7",
+      "scale": [
+        1,
+        1.5,
+        1
+      ],
+      "diagnosticLegend": null,
+      "camera": {
+        "yaw": -36,
+        "elevation": 2.5,
+        "autoFit": true
+      },
+      "triangles": 2552,
+      "parts": 105,
+      "decals": 29,
+      "shelfCount": 4,
+      "rigidPartSizes": [
+        [
+          "handle_catch",
+          [
+            0.4,
+            0.2,
+            17.6
+          ]
+        ],
+        [
+          "handle_grip",
+          [
+            2.5,
+            1.1,
+            19
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_return",
+          [
+            2.35,
+            0.15,
+            18
+          ]
+        ]
+      ],
+      "fixedFittingSizes": [
+        [
+          "decal_cartonBooster",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonCovid",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonCovid",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonFlu",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonMmr",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonMmr",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_compressorPlate",
+          [
+            6.2,
+            5.2
+          ]
+        ],
+        [
+          "decal_digitalStatus",
+          [
+            13,
+            5.8
+          ]
+        ],
+        [
+          "decal_fanGrille",
+          [
+            12,
+            12
+          ]
+        ],
+        [
+          "decal_frontBaseWear",
+          [
+            24,
+            8
+          ]
+        ],
+        [
+          "decal_medicalIdentity",
+          [
+            13,
+            8
+          ]
+        ],
+        [
+          "decal_rearDoNot",
+          [
+            16,
+            4.571
+          ]
+        ],
+        [
+          "decal_rearWarning",
+          [
+            16,
+            6.026
+          ]
+        ],
+        [
+          "decal_sideBottomWear",
+          [
+            14,
+            9
+          ]
+        ],
+        [
+          "decal_sideBottomWear",
+          [
+            14,
+            9
+          ]
+        ],
+        [
+          "decal_sideRating",
+          [
+            8,
+            5.3
+          ]
+        ],
+        [
+          "decal_sideTopWear",
+          [
+            14,
+            9
+          ]
+        ],
+        [
+          "decal_sideVentPanel",
+          [
+            21.431,
+            24.512
+          ]
+        ],
+        [
+          "decal_vialCovid",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialCovid",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialCovid",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialFlu",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialFlu",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialFlu",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialMmr",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialMmr",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialMmr",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialPolio",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialPolio",
+          [
+            2.8,
+            4.1
+          ]
+        ]
+      ],
+      "correspondenceIds": [
+        "digitalStatus",
+        "fanGrille",
+        "front_control_band",
+        "front_door_opening",
+        "medicalIdentity",
+        "rearDoNot",
+        "rearWarning",
+        "rear_condenser_field",
+        "rear_machine_bay",
+        "sideRating",
+        "side_bottom_wear",
+        "side_lower_column_seed",
+        "side_lower_panel",
+        "side_panel_row_seed",
+        "side_upper_column_seed",
+        "side_upper_panel",
+        "side_vent"
+      ],
+      "correspondenceFeatureCount": 17,
+      "fittingPlacements": [
+        {
+          "id": "medicalIdentity",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            13.295,
+            96.575
+          ],
+          "sizeTexels": [
+            13,
+            8
+          ],
+          "planeTexels": -33.5,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 717.295,
+            "right": 690.705,
+            "bottom": 96.575,
+            "headerTop": 3134.913,
+            "panelLeft": 614.127,
+            "panelRight": 628.369,
+            "panelBottom": -727.553,
+            "panelTop": 3004.481
+          }
+        },
+        {
+          "id": "digitalStatus",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -14.142,
+            97.46
+          ],
+          "sizeTexels": [
+            13,
+            5.8
+          ],
+          "planeTexels": -33.5,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 689.858,
+            "right": 718.142,
+            "bottom": 97.46,
+            "headerTop": 3134.028,
+            "panelLeft": 586.6899999999999,
+            "panelRight": 655.806,
+            "panelBottom": -726.668,
+            "panelTop": 3003.596
+          }
+        },
+        {
+          "id": "sideRating",
+          "face": "left",
+          "layer": "label",
+          "centerTexels": [
+            -24.162,
+            95.684
+          ],
+          "sizeTexels": [
+            8,
+            5.3
+          ],
+          "planeTexels": -22.22,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "front": 1007.838,
+            "back": 1056.162,
+            "bottom": 95.684,
+            "headerTop": 3135.8039999999996
+          }
+        },
+        {
+          "id": "rearWarning",
+          "face": "back",
+          "layer": "label",
+          "centerTexels": [
+            -0.16300000000000014,
+            71.768
+          ],
+          "sizeTexels": [
+            16,
+            6.026
+          ],
+          "planeTexels": 33.7,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 703.837,
+            "right": 704.163,
+            "bottom": 71.768,
+            "headerTop": 3159.72,
+            "panelLeft": 600.669,
+            "panelRight": 641.827,
+            "panelBottom": -752.36,
+            "panelTop": 3029.288
+          }
+        },
+        {
+          "id": "rearDoNot",
+          "face": "back",
+          "layer": "label",
+          "centerTexels": [
+            -0.09800000000000009,
+            36.731
+          ],
+          "sizeTexels": [
+            16,
+            4.571
+          ],
+          "planeTexels": 33.7,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 703.902,
+            "right": 704.098,
+            "bottom": 36.731,
+            "headerTop": 3194.7569999999996,
+            "panelLeft": 600.734,
+            "panelRight": 641.762,
+            "panelBottom": -787.397,
+            "panelTop": 3064.325
+          }
+        },
+        {
+          "id": "frontBaseWear",
+          "face": "front",
+          "layer": "wear",
+          "centerTexels": [
+            0,
+            5
+          ],
+          "sizeTexels": [
+            24,
+            8
+          ],
+          "planeTexels": -33.5,
+          "renderOrder": 10,
+          "edgeDistancesTexels": {
+            "left": 704,
+            "right": 704,
+            "bottom": 5,
+            "headerTop": 3226.488,
+            "panelLeft": 600.832,
+            "panelRight": 641.664,
+            "panelBottom": -819.128,
+            "panelTop": 3096.056
+          }
+        },
+        {
+          "id": "sideBottomWear",
+          "face": "left",
+          "layer": "wear",
+          "centerTexels": [
+            -24.25,
+            7
+          ],
+          "sizeTexels": [
+            14,
+            9
+          ],
+          "planeTexels": -22.24,
+          "renderOrder": 10,
+          "edgeDistancesTexels": {
+            "front": 1007.75,
+            "back": 1056.25,
+            "bottom": 7,
+            "headerTop": 3224.488
+          }
+        },
+        {
+          "id": "sideBottomWear",
+          "face": "left",
+          "layer": "wear",
+          "centerTexels": [
+            24.25,
+            7
+          ],
+          "sizeTexels": [
+            14,
+            9
+          ],
+          "planeTexels": -22.25,
+          "renderOrder": 10,
+          "edgeDistancesTexels": {
+            "front": 1056.25,
+            "back": 1007.75,
+            "bottom": 7,
+            "headerTop": 3224.488
+          }
+        },
+        {
+          "id": "sideTopWear",
+          "face": "left",
+          "layer": "wear",
+          "centerTexels": [
+            24.25,
+            95
+          ],
+          "sizeTexels": [
+            14,
+            9
+          ],
+          "planeTexels": -22.26,
+          "renderOrder": 10,
+          "edgeDistancesTexels": {
+            "front": 1056.25,
+            "back": 1007.75,
+            "bottom": 95,
+            "headerTop": 3136.488
+          }
+        },
+        {
+          "id": "sideVentPanel",
+          "face": "left",
+          "layer": "structural-graphic",
+          "centerTexels": [
+            19.737000000000002,
+            16.095
+          ],
+          "sizeTexels": [
+            21.431,
+            24.512
+          ],
+          "planeTexels": -22.5,
+          "renderOrder": 7,
+          "edgeDistancesTexels": {
+            "front": 1051.737,
+            "back": 1012.263,
+            "bottom": 16.095,
+            "headerTop": 3215.393
+          }
+        },
+        {
+          "id": "fanGrille",
+          "face": "back",
+          "layer": "mechanical-detail",
+          "centerTexels": [
+            -11.737,
+            13.071
+          ],
+          "sizeTexels": [
+            12,
+            12
+          ],
+          "planeTexels": 34.95,
+          "renderOrder": 9,
+          "edgeDistancesTexels": {
+            "left": 692.263,
+            "right": 715.737,
+            "bottom": 13.071,
+            "headerTop": 3218.417,
+            "panelLeft": 589.095,
+            "panelRight": 653.401,
+            "panelBottom": -811.057,
+            "panelTop": 3087.985
+          }
+        },
+        {
+          "id": "compressorPlate",
+          "face": "back",
+          "layer": "label",
+          "centerTexels": [
+            3.1,
+            9.9
+          ],
+          "sizeTexels": [
+            6.2,
+            5.2
+          ],
+          "planeTexels": 37.11,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 707.1,
+            "right": 700.9,
+            "bottom": 9.9,
+            "headerTop": 3221.5879999999997,
+            "panelLeft": 603.932,
+            "panelRight": 638.564,
+            "panelBottom": -814.2280000000001,
+            "panelTop": 3091.156
+          }
+        },
+        {
+          "id": "cartonCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -12,
+            69.46000000000001
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -29.43,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 692,
+            "right": 716,
+            "bottom": 69.46000000000001,
+            "headerTop": 3162.028,
+            "panelLeft": 588.832,
+            "panelRight": 653.664,
+            "panelBottom": -754.668,
+            "panelTop": 3031.596
+          }
+        },
+        {
+          "id": "cartonMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -4,
+            69.46000000000001
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -29.43,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 700,
+            "right": 708,
+            "bottom": 69.46000000000001,
+            "headerTop": 3162.028,
+            "panelLeft": 596.832,
+            "panelRight": 645.664,
+            "panelBottom": -754.668,
+            "panelTop": 3031.596
+          }
+        },
+        {
+          "id": "cartonFlu",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            5,
+            69.46000000000001
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -29.43,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 709,
+            "right": 699,
+            "bottom": 69.46000000000001,
+            "headerTop": 3162.028,
+            "panelLeft": 605.832,
+            "panelRight": 636.664,
+            "panelBottom": -754.668,
+            "panelTop": 3031.596
+          }
+        },
+        {
+          "id": "cartonBooster",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            12,
+            69.46000000000001
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -29.43,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 716,
+            "right": 692,
+            "bottom": 69.46000000000001,
+            "headerTop": 3162.028,
+            "panelLeft": 612.832,
+            "panelRight": 629.664,
+            "panelBottom": -754.668,
+            "panelTop": 3031.596
+          }
+        },
+        {
+          "id": "vialCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -12,
+            50.71
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -29.13,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 692,
+            "right": 716,
+            "bottom": 50.71,
+            "headerTop": 3180.778,
+            "panelLeft": 588.832,
+            "panelRight": 653.664,
+            "panelBottom": -773.418,
+            "panelTop": 3050.346
+          }
+        },
+        {
+          "id": "vialMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -6,
+            50.71
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -29.13,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 698,
+            "right": 710,
+            "bottom": 50.71,
+            "headerTop": 3180.778,
+            "panelLeft": 594.832,
+            "panelRight": 647.664,
+            "panelBottom": -773.418,
+            "panelTop": 3050.346
+          }
+        },
+        {
+          "id": "vialFlu",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            0,
+            50.71
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -29.13,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 704,
+            "right": 704,
+            "bottom": 50.71,
+            "headerTop": 3180.778,
+            "panelLeft": 600.832,
+            "panelRight": 641.664,
+            "panelBottom": -773.418,
+            "panelTop": 3050.346
+          }
+        },
+        {
+          "id": "vialPolio",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            6,
+            50.71
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -29.13,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 710,
+            "right": 698,
+            "bottom": 50.71,
+            "headerTop": 3180.778,
+            "panelLeft": 606.832,
+            "panelRight": 635.664,
+            "panelBottom": -773.418,
+            "panelTop": 3050.346
+          }
+        },
+        {
+          "id": "vialCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            12,
+            50.71
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -29.13,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 716,
+            "right": 692,
+            "bottom": 50.71,
+            "headerTop": 3180.778,
+            "panelLeft": 612.832,
+            "panelRight": 629.664,
+            "panelBottom": -773.418,
+            "panelTop": 3050.346
+          }
+        },
+        {
+          "id": "vialMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -12,
+            33.45
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -29.13,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 692,
+            "right": 716,
+            "bottom": 33.45,
+            "headerTop": 3198.038,
+            "panelLeft": 588.832,
+            "panelRight": 653.664,
+            "panelBottom": -790.678,
+            "panelTop": 3067.606
+          }
+        },
+        {
+          "id": "vialFlu",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -6,
+            33.45
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -29.13,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 698,
+            "right": 710,
+            "bottom": 33.45,
+            "headerTop": 3198.038,
+            "panelLeft": 594.832,
+            "panelRight": 647.664,
+            "panelBottom": -790.678,
+            "panelTop": 3067.606
+          }
+        },
+        {
+          "id": "vialPolio",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            0,
+            33.45
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -29.13,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 704,
+            "right": 704,
+            "bottom": 33.45,
+            "headerTop": 3198.038,
+            "panelLeft": 600.832,
+            "panelRight": 641.664,
+            "panelBottom": -790.678,
+            "panelTop": 3067.606
+          }
+        },
+        {
+          "id": "vialCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            6,
+            33.45
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -29.13,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 710,
+            "right": 698,
+            "bottom": 33.45,
+            "headerTop": 3198.038,
+            "panelLeft": 606.832,
+            "panelRight": 635.664,
+            "panelBottom": -790.678,
+            "panelTop": 3067.606
+          }
+        },
+        {
+          "id": "vialMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            12,
+            33.45
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -29.13,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 716,
+            "right": 692,
+            "bottom": 33.45,
+            "headerTop": 3198.038,
+            "panelLeft": 612.832,
+            "panelRight": 629.664,
+            "panelBottom": -790.678,
+            "panelTop": 3067.606
+          }
+        },
+        {
+          "id": "cartonCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -10,
+            18.96
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -29.43,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 694,
+            "right": 714,
+            "bottom": 18.96,
+            "headerTop": 3212.528,
+            "panelLeft": 590.832,
+            "panelRight": 651.664,
+            "panelBottom": -805.168,
+            "panelTop": 3082.096
+          }
+        },
+        {
+          "id": "cartonMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            0,
+            19.46
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -29.43,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 704,
+            "right": 704,
+            "bottom": 19.46,
+            "headerTop": 3212.028,
+            "panelLeft": 600.832,
+            "panelRight": 641.664,
+            "panelBottom": -804.668,
+            "panelTop": 3081.596
+          }
+        },
+        {
+          "id": "vialFlu",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            10,
+            17.5225
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -29.13,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 714,
+            "right": 694,
+            "bottom": 17.5225,
+            "headerTop": 3213.9655,
+            "panelLeft": 610.832,
+            "panelRight": 631.664,
+            "panelBottom": -806.6055,
+            "panelTop": 3083.5335
+          }
+        }
+      ],
+      "semanticSupports": [
+        {
+          "id": "condenserField",
+          "sizeTexels": [
+            1242.496,
+            2276.928
+          ],
+          "mesh": "rear_condenser_support"
+        },
+        {
+          "id": "fanGrille",
+          "sizeTexels": [
+            14,
+            15
+          ],
+          "mesh": "rear_fan_housing"
+        },
+        {
+          "id": "rearMachineBay",
+          "sizeTexels": [
+            38.828,
+            22.747
+          ],
+          "mesh": "rear_machine_bay_back"
+        },
+        {
+          "id": "sideVentPanel",
+          "sizeTexels": [
+            21.431,
+            24.512
+          ],
+          "mesh": "side_vent_support"
+        }
+      ],
+      "adaptiveSurfaceCounts": [
+        [
+          "side_panel_column",
+          3
+        ],
+        [
+          "side_panel_row",
+          1
+        ]
+      ],
+      "adaptiveTexturePanels": [
+        {
+          "id": "condenserField",
+          "sizeTexels": [
+            1242.496,
+            2276.928
+          ],
+          "boundsTexels": [
+            -600.832,
+            824.128,
+            641.664,
+            3101.056
+          ],
+          "pitchTexels": [
+            2.45,
+            8.2
+          ],
+          "lineWidthTexels": [
+            0.52,
+            0.72
+          ],
+          "repeatCounts": [
+            507,
+            277
+          ],
+          "marginsTexels": [
+            3.224,
+            1.948,
+            25.754,
+            4.076
+          ]
+        }
+      ],
+      "repeatedStructureCounts": [
+        [
+          "rear_coil_run",
+          0
+        ],
+        [
+          "rear_coil_rail",
+          0
+        ],
+        [
+          "shelf",
+          4
+        ]
+      ],
+      "errors": [],
+      "paletteSize": 250
+    },
+    {
+      "query": "texture=v7&view=backIso&sx=1.45",
+      "output": "C:\\Users\\mansour\\Documents\\Modular builder\\Mediguide-pro\\docs\\reference-lock\\semantic-freezer-v7\\runtime\\texture-v7-view-backIso-sx-1_45.png",
+      "ready": true,
+      "view": "backIso",
+      "diagnostic": "",
+      "textureVersion": "v7",
+      "scale": [
+        1.45,
+        1,
+        1
+      ],
+      "diagnosticLegend": null,
+      "camera": {
+        "yaw": -36,
+        "elevation": 2.5,
+        "autoFit": true
+      },
+      "triangles": 2550,
+      "parts": 104,
+      "decals": 29,
+      "shelfCount": 4,
+      "rigidPartSizes": [
+        [
+          "handle_catch",
+          [
+            0.4,
+            0.2,
+            17.6
+          ]
+        ],
+        [
+          "handle_grip",
+          [
+            2.5,
+            1.1,
+            19
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_return",
+          [
+            2.35,
+            0.15,
+            18
+          ]
+        ]
+      ],
+      "fixedFittingSizes": [
+        [
+          "decal_cartonBooster",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonCovid",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonCovid",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonFlu",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonMmr",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonMmr",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_compressorPlate",
+          [
+            6.2,
+            5.2
+          ]
+        ],
+        [
+          "decal_digitalStatus",
+          [
+            13,
+            5.8
+          ]
+        ],
+        [
+          "decal_fanGrille",
+          [
+            12,
+            12
+          ]
+        ],
+        [
+          "decal_frontBaseWear",
+          [
+            24,
+            8
+          ]
+        ],
+        [
+          "decal_medicalIdentity",
+          [
+            13,
+            8
+          ]
+        ],
+        [
+          "decal_rearDoNot",
+          [
+            16,
+            4.571
+          ]
+        ],
+        [
+          "decal_rearWarning",
+          [
+            16,
+            6.026
+          ]
+        ],
+        [
+          "decal_sideBottomWear",
+          [
+            14,
+            9
+          ]
+        ],
+        [
+          "decal_sideBottomWear",
+          [
+            14,
+            9
+          ]
+        ],
+        [
+          "decal_sideRating",
+          [
+            8,
+            5.3
+          ]
+        ],
+        [
+          "decal_sideTopWear",
+          [
+            14,
+            9
+          ]
+        ],
+        [
+          "decal_sideVentPanel",
+          [
+            21.431,
+            24.512
+          ]
+        ],
+        [
+          "decal_vialCovid",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialCovid",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialCovid",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialFlu",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialFlu",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialFlu",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialMmr",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialMmr",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialMmr",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialPolio",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialPolio",
+          [
+            2.8,
+            4.1
+          ]
+        ]
+      ],
+      "correspondenceIds": [
+        "digitalStatus",
+        "fanGrille",
+        "front_control_band",
+        "front_door_opening",
+        "medicalIdentity",
+        "rearDoNot",
+        "rearWarning",
+        "rear_condenser_field",
+        "rear_machine_bay",
+        "sideRating",
+        "side_bottom_wear",
+        "side_lower_column_seed",
+        "side_lower_panel",
+        "side_panel_row_seed",
+        "side_upper_column_seed",
+        "side_upper_panel",
+        "side_vent"
+      ],
+      "correspondenceFeatureCount": 17,
+      "fittingPlacements": [
+        {
+          "id": "medicalIdentity",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            13.295,
+            96.575
+          ],
+          "sizeTexels": [
+            13,
+            8
+          ],
+          "planeTexels": -22.75,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 1034.095,
+            "right": 1007.505,
+            "bottom": 96.575,
+            "headerTop": 3134.913,
+            "panelLeft": 930.9269999999999,
+            "panelRight": 945.169,
+            "panelBottom": -727.553,
+            "panelTop": 3004.481
+          }
+        },
+        {
+          "id": "digitalStatus",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -14.142,
+            97.46
+          ],
+          "sizeTexels": [
+            13,
+            5.8
+          ],
+          "planeTexels": -22.75,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 1006.6579999999999,
+            "right": 1034.942,
+            "bottom": 97.46,
+            "headerTop": 3134.028,
+            "panelLeft": 903.4899999999999,
+            "panelRight": 972.606,
+            "panelBottom": -726.668,
+            "panelTop": 3003.596
+          }
+        },
+        {
+          "id": "sideRating",
+          "face": "left",
+          "layer": "label",
+          "centerTexels": [
+            -13.412,
+            95.684
+          ],
+          "sizeTexels": [
+            8,
+            5.3
+          ],
+          "planeTexels": -32.12,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "front": 674.588,
+            "back": 701.412,
+            "bottom": 95.684,
+            "headerTop": 3135.8039999999996
+          }
+        },
+        {
+          "id": "rearWarning",
+          "face": "back",
+          "layer": "label",
+          "centerTexels": [
+            -0.16300000000000014,
+            71.768
+          ],
+          "sizeTexels": [
+            16,
+            6.026
+          ],
+          "planeTexels": 22.95,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 1020.637,
+            "right": 1020.963,
+            "bottom": 71.768,
+            "headerTop": 3159.72,
+            "panelLeft": 917.4689999999999,
+            "panelRight": 958.627,
+            "panelBottom": -752.36,
+            "panelTop": 3029.288
+          }
+        },
+        {
+          "id": "rearDoNot",
+          "face": "back",
+          "layer": "label",
+          "centerTexels": [
+            -0.09800000000000009,
+            36.731
+          ],
+          "sizeTexels": [
+            16,
+            4.571
+          ],
+          "planeTexels": 22.95,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 1020.702,
+            "right": 1020.8979999999999,
+            "bottom": 36.731,
+            "headerTop": 3194.7569999999996,
+            "panelLeft": 917.534,
+            "panelRight": 958.5619999999999,
+            "panelBottom": -787.397,
+            "panelTop": 3064.325
+          }
+        },
+        {
+          "id": "frontBaseWear",
+          "face": "front",
+          "layer": "wear",
+          "centerTexels": [
+            0,
+            5
+          ],
+          "sizeTexels": [
+            24,
+            8
+          ],
+          "planeTexels": -22.75,
+          "renderOrder": 10,
+          "edgeDistancesTexels": {
+            "left": 1020.8,
+            "right": 1020.8,
+            "bottom": 5,
+            "headerTop": 3226.488,
+            "panelLeft": 917.632,
+            "panelRight": 958.4639999999999,
+            "panelBottom": -819.128,
+            "panelTop": 3096.056
+          }
+        },
+        {
+          "id": "sideBottomWear",
+          "face": "left",
+          "layer": "wear",
+          "centerTexels": [
+            -13.5,
+            7
+          ],
+          "sizeTexels": [
+            14,
+            9
+          ],
+          "planeTexels": -32.14,
+          "renderOrder": 10,
+          "edgeDistancesTexels": {
+            "front": 674.5,
+            "back": 701.5,
+            "bottom": 7,
+            "headerTop": 3224.488
+          }
+        },
+        {
+          "id": "sideBottomWear",
+          "face": "left",
+          "layer": "wear",
+          "centerTexels": [
+            13.5,
+            7
+          ],
+          "sizeTexels": [
+            14,
+            9
+          ],
+          "planeTexels": -32.15,
+          "renderOrder": 10,
+          "edgeDistancesTexels": {
+            "front": 701.5,
+            "back": 674.5,
+            "bottom": 7,
+            "headerTop": 3224.488
+          }
+        },
+        {
+          "id": "sideTopWear",
+          "face": "left",
+          "layer": "wear",
+          "centerTexels": [
+            13.5,
+            95
+          ],
+          "sizeTexels": [
+            14,
+            9
+          ],
+          "planeTexels": -32.16,
+          "renderOrder": 10,
+          "edgeDistancesTexels": {
+            "front": 701.5,
+            "back": 674.5,
+            "bottom": 95,
+            "headerTop": 3136.488
+          }
+        },
+        {
+          "id": "sideVentPanel",
+          "face": "left",
+          "layer": "structural-graphic",
+          "centerTexels": [
+            8.987,
+            16.095
+          ],
+          "sizeTexels": [
+            21.431,
+            24.512
+          ],
+          "planeTexels": -32.4,
+          "renderOrder": 7,
+          "edgeDistancesTexels": {
+            "front": 696.987,
+            "back": 679.013,
+            "bottom": 16.095,
+            "headerTop": 3215.393
+          }
+        },
+        {
+          "id": "fanGrille",
+          "face": "back",
+          "layer": "mechanical-detail",
+          "centerTexels": [
+            -11.737,
+            13.071
+          ],
+          "sizeTexels": [
+            12,
+            12
+          ],
+          "planeTexels": 24.2,
+          "renderOrder": 9,
+          "edgeDistancesTexels": {
+            "left": 1009.063,
+            "right": 1032.537,
+            "bottom": 13.071,
+            "headerTop": 3218.417,
+            "panelLeft": 905.895,
+            "panelRight": 970.2009999999999,
+            "panelBottom": -811.057,
+            "panelTop": 3087.985
+          }
+        },
+        {
+          "id": "compressorPlate",
+          "face": "back",
+          "layer": "label",
+          "centerTexels": [
+            3.1,
+            9.9
+          ],
+          "sizeTexels": [
+            6.2,
+            5.2
+          ],
+          "planeTexels": 26.36,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 1023.9,
+            "right": 1017.6999999999999,
+            "bottom": 9.9,
+            "headerTop": 3221.5879999999997,
+            "panelLeft": 920.732,
+            "panelRight": 955.3639999999999,
+            "panelBottom": -814.2280000000001,
+            "panelTop": 3091.156
+          }
+        },
+        {
+          "id": "cartonCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -12,
+            69.46000000000001
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 1008.8,
+            "right": 1032.8,
+            "bottom": 69.46000000000001,
+            "headerTop": 3162.028,
+            "panelLeft": 905.632,
+            "panelRight": 970.4639999999999,
+            "panelBottom": -754.668,
+            "panelTop": 3031.596
+          }
+        },
+        {
+          "id": "cartonMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -4,
+            69.46000000000001
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 1016.8,
+            "right": 1024.8,
+            "bottom": 69.46000000000001,
+            "headerTop": 3162.028,
+            "panelLeft": 913.632,
+            "panelRight": 962.4639999999999,
+            "panelBottom": -754.668,
+            "panelTop": 3031.596
+          }
+        },
+        {
+          "id": "cartonFlu",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            5,
+            69.46000000000001
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 1025.8,
+            "right": 1015.8,
+            "bottom": 69.46000000000001,
+            "headerTop": 3162.028,
+            "panelLeft": 922.632,
+            "panelRight": 953.4639999999999,
+            "panelBottom": -754.668,
+            "panelTop": 3031.596
+          }
+        },
+        {
+          "id": "cartonBooster",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            12,
+            69.46000000000001
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 1032.8,
+            "right": 1008.8,
+            "bottom": 69.46000000000001,
+            "headerTop": 3162.028,
+            "panelLeft": 929.632,
+            "panelRight": 946.4639999999999,
+            "panelBottom": -754.668,
+            "panelTop": 3031.596
+          }
+        },
+        {
+          "id": "vialCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -12,
+            50.71
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 1008.8,
+            "right": 1032.8,
+            "bottom": 50.71,
+            "headerTop": 3180.778,
+            "panelLeft": 905.632,
+            "panelRight": 970.4639999999999,
+            "panelBottom": -773.418,
+            "panelTop": 3050.346
+          }
+        },
+        {
+          "id": "vialMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -6,
+            50.71
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 1014.8,
+            "right": 1026.8,
+            "bottom": 50.71,
+            "headerTop": 3180.778,
+            "panelLeft": 911.632,
+            "panelRight": 964.4639999999999,
+            "panelBottom": -773.418,
+            "panelTop": 3050.346
+          }
+        },
+        {
+          "id": "vialFlu",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            0,
+            50.71
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 1020.8,
+            "right": 1020.8,
+            "bottom": 50.71,
+            "headerTop": 3180.778,
+            "panelLeft": 917.632,
+            "panelRight": 958.4639999999999,
+            "panelBottom": -773.418,
+            "panelTop": 3050.346
+          }
+        },
+        {
+          "id": "vialPolio",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            6,
+            50.71
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 1026.8,
+            "right": 1014.8,
+            "bottom": 50.71,
+            "headerTop": 3180.778,
+            "panelLeft": 923.632,
+            "panelRight": 952.4639999999999,
+            "panelBottom": -773.418,
+            "panelTop": 3050.346
+          }
+        },
+        {
+          "id": "vialCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            12,
+            50.71
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 1032.8,
+            "right": 1008.8,
+            "bottom": 50.71,
+            "headerTop": 3180.778,
+            "panelLeft": 929.632,
+            "panelRight": 946.4639999999999,
+            "panelBottom": -773.418,
+            "panelTop": 3050.346
+          }
+        },
+        {
+          "id": "vialMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -12,
+            33.45
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 1008.8,
+            "right": 1032.8,
+            "bottom": 33.45,
+            "headerTop": 3198.038,
+            "panelLeft": 905.632,
+            "panelRight": 970.4639999999999,
+            "panelBottom": -790.678,
+            "panelTop": 3067.606
+          }
+        },
+        {
+          "id": "vialFlu",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -6,
+            33.45
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 1014.8,
+            "right": 1026.8,
+            "bottom": 33.45,
+            "headerTop": 3198.038,
+            "panelLeft": 911.632,
+            "panelRight": 964.4639999999999,
+            "panelBottom": -790.678,
+            "panelTop": 3067.606
+          }
+        },
+        {
+          "id": "vialPolio",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            0,
+            33.45
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 1020.8,
+            "right": 1020.8,
+            "bottom": 33.45,
+            "headerTop": 3198.038,
+            "panelLeft": 917.632,
+            "panelRight": 958.4639999999999,
+            "panelBottom": -790.678,
+            "panelTop": 3067.606
+          }
+        },
+        {
+          "id": "vialCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            6,
+            33.45
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 1026.8,
+            "right": 1014.8,
+            "bottom": 33.45,
+            "headerTop": 3198.038,
+            "panelLeft": 923.632,
+            "panelRight": 952.4639999999999,
+            "panelBottom": -790.678,
+            "panelTop": 3067.606
+          }
+        },
+        {
+          "id": "vialMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            12,
+            33.45
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 1032.8,
+            "right": 1008.8,
+            "bottom": 33.45,
+            "headerTop": 3198.038,
+            "panelLeft": 929.632,
+            "panelRight": 946.4639999999999,
+            "panelBottom": -790.678,
+            "panelTop": 3067.606
+          }
+        },
+        {
+          "id": "cartonCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -10,
+            18.96
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 1010.8,
+            "right": 1030.8,
+            "bottom": 18.96,
+            "headerTop": 3212.528,
+            "panelLeft": 907.632,
+            "panelRight": 968.4639999999999,
+            "panelBottom": -805.168,
+            "panelTop": 3082.096
+          }
+        },
+        {
+          "id": "cartonMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            0,
+            19.46
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 1020.8,
+            "right": 1020.8,
+            "bottom": 19.46,
+            "headerTop": 3212.028,
+            "panelLeft": 917.632,
+            "panelRight": 958.4639999999999,
+            "panelBottom": -804.668,
+            "panelTop": 3081.596
+          }
+        },
+        {
+          "id": "vialFlu",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            10,
+            17.5225
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 1030.8,
+            "right": 1010.8,
+            "bottom": 17.5225,
+            "headerTop": 3213.9655,
+            "panelLeft": 927.632,
+            "panelRight": 948.4639999999999,
+            "panelBottom": -806.6055,
+            "panelTop": 3083.5335
+          }
+        }
+      ],
+      "semanticSupports": [
+        {
+          "id": "condenserField",
+          "sizeTexels": [
+            1876.096,
+            2276.928
+          ],
+          "mesh": "rear_condenser_support"
+        },
+        {
+          "id": "fanGrille",
+          "sizeTexels": [
+            14,
+            15
+          ],
+          "mesh": "rear_fan_housing"
+        },
+        {
+          "id": "rearMachineBay",
+          "sizeTexels": [
+            38.828,
+            22.747
+          ],
+          "mesh": "rear_machine_bay_back"
+        },
+        {
+          "id": "sideVentPanel",
+          "sizeTexels": [
+            21.431,
+            24.512
+          ],
+          "mesh": "side_vent_support"
+        }
+      ],
+      "adaptiveSurfaceCounts": [
+        [
+          "side_panel_column",
+          2
+        ],
+        [
+          "side_panel_row",
+          1
+        ]
+      ],
+      "adaptiveTexturePanels": [
+        {
+          "id": "condenserField",
+          "sizeTexels": [
+            1876.096,
+            2276.928
+          ],
+          "boundsTexels": [
+            -917.632,
+            824.128,
+            958.4639999999999,
+            3101.056
+          ],
+          "pitchTexels": [
+            2.45,
+            8.2
+          ],
+          "lineWidthTexels": [
+            0.52,
+            0.72
+          ],
+          "repeatCounts": [
+            765,
+            277
+          ],
+          "marginsTexels": [
+            3.224,
+            1.948,
+            25.754,
+            4.076
+          ]
+        }
+      ],
+      "repeatedStructureCounts": [
+        [
+          "rear_coil_run",
+          0
+        ],
+        [
+          "rear_coil_rail",
+          0
+        ],
+        [
+          "shelf",
+          4
+        ]
+      ],
+      "errors": [],
+      "paletteSize": 363
+    },
+    {
+      "query": "texture=v7&view=backIso&sz=1.3",
+      "output": "C:\\Users\\mansour\\Documents\\Modular builder\\Mediguide-pro\\docs\\reference-lock\\semantic-freezer-v7\\runtime\\texture-v7-view-backIso-sz-1_3.png",
+      "ready": true,
+      "view": "backIso",
+      "diagnostic": "",
+      "textureVersion": "v7",
+      "scale": [
+        1,
+        1,
+        1.3
+      ],
+      "diagnosticLegend": null,
+      "camera": {
+        "yaw": -36,
+        "elevation": 2.5,
+        "autoFit": true
+      },
+      "triangles": 2564,
+      "parts": 106,
+      "decals": 29,
+      "shelfCount": 5,
+      "rigidPartSizes": [
+        [
+          "handle_catch",
+          [
+            0.4,
+            0.2,
+            17.6
+          ]
+        ],
+        [
+          "handle_grip",
+          [
+            2.5,
+            1.1,
+            19
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_mount",
+          [
+            3.2,
+            1.85,
+            2
+          ]
+        ],
+        [
+          "handle_return",
+          [
+            2.35,
+            0.15,
+            18
+          ]
+        ]
+      ],
+      "fixedFittingSizes": [
+        [
+          "decal_cartonBooster",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonCovid",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonCovid",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonFlu",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonMmr",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_cartonMmr",
+          [
+            5.3,
+            7.4
+          ]
+        ],
+        [
+          "decal_compressorPlate",
+          [
+            6.2,
+            5.2
+          ]
+        ],
+        [
+          "decal_digitalStatus",
+          [
+            13,
+            5.8
+          ]
+        ],
+        [
+          "decal_fanGrille",
+          [
+            12,
+            12
+          ]
+        ],
+        [
+          "decal_frontBaseWear",
+          [
+            24,
+            8
+          ]
+        ],
+        [
+          "decal_medicalIdentity",
+          [
+            13,
+            8
+          ]
+        ],
+        [
+          "decal_rearDoNot",
+          [
+            16,
+            4.571
+          ]
+        ],
+        [
+          "decal_rearWarning",
+          [
+            16,
+            6.026
+          ]
+        ],
+        [
+          "decal_sideBottomWear",
+          [
+            14,
+            9
+          ]
+        ],
+        [
+          "decal_sideBottomWear",
+          [
+            14,
+            9
+          ]
+        ],
+        [
+          "decal_sideRating",
+          [
+            8,
+            5.3
+          ]
+        ],
+        [
+          "decal_sideTopWear",
+          [
+            14,
+            9
+          ]
+        ],
+        [
+          "decal_sideVentPanel",
+          [
+            21.431,
+            24.512
+          ]
+        ],
+        [
+          "decal_vialCovid",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialCovid",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialCovid",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialFlu",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialFlu",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialFlu",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialMmr",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialMmr",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialMmr",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialPolio",
+          [
+            2.8,
+            4.1
+          ]
+        ],
+        [
+          "decal_vialPolio",
+          [
+            2.8,
+            4.1
+          ]
+        ]
+      ],
+      "correspondenceIds": [
+        "digitalStatus",
+        "fanGrille",
+        "front_control_band",
+        "front_door_opening",
+        "medicalIdentity",
+        "rearDoNot",
+        "rearWarning",
+        "rear_condenser_field",
+        "rear_machine_bay",
+        "sideRating",
+        "side_bottom_wear",
+        "side_lower_column_seed",
+        "side_lower_panel",
+        "side_panel_row_seed",
+        "side_upper_column_seed",
+        "side_upper_panel",
+        "side_vent"
+      ],
+      "correspondenceFeatureCount": 17,
+      "fittingPlacements": [
+        {
+          "id": "medicalIdentity",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            13.295,
+            127.77500000000002
+          ],
+          "sizeTexels": [
+            13,
+            8
+          ],
+          "planeTexels": -22.75,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 717.295,
+            "right": 690.705,
+            "bottom": 127.77500000000002,
+            "headerTop": 4073.1594,
+            "panelLeft": 614.127,
+            "panelRight": 628.369,
+            "panelBottom": -696.3530000000001,
+            "panelTop": 3942.7274
+          }
+        },
+        {
+          "id": "digitalStatus",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -14.142,
+            128.66000000000003
+          ],
+          "sizeTexels": [
+            13,
+            5.8
+          ],
+          "planeTexels": -22.75,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 689.858,
+            "right": 718.142,
+            "bottom": 128.66000000000003,
+            "headerTop": 4072.2744000000002,
+            "panelLeft": 586.6899999999999,
+            "panelRight": 655.806,
+            "panelBottom": -695.4680000000001,
+            "panelTop": 3941.8424000000005
+          }
+        },
+        {
+          "id": "sideRating",
+          "face": "left",
+          "layer": "label",
+          "centerTexels": [
+            -13.412,
+            125.9792
+          ],
+          "sizeTexels": [
+            8,
+            5.3
+          ],
+          "planeTexels": -22.22,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "front": 674.588,
+            "back": 701.412,
+            "bottom": 125.9792,
+            "headerTop": 4074.9552
+          }
+        },
+        {
+          "id": "rearWarning",
+          "face": "back",
+          "layer": "label",
+          "centerTexels": [
+            -0.16300000000000014,
+            102.06320000000001
+          ],
+          "sizeTexels": [
+            16,
+            6.026
+          ],
+          "planeTexels": 22.95,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 703.837,
+            "right": 704.163,
+            "bottom": 102.06320000000001,
+            "headerTop": 4098.8712000000005,
+            "panelLeft": 600.669,
+            "panelRight": 641.827,
+            "panelBottom": -722.0648,
+            "panelTop": 3968.4392000000003
+          }
+        },
+        {
+          "id": "rearDoNot",
+          "face": "back",
+          "layer": "label",
+          "centerTexels": [
+            -0.09800000000000009,
+            36.731
+          ],
+          "sizeTexels": [
+            16,
+            4.571
+          ],
+          "planeTexels": 22.95,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 703.902,
+            "right": 704.098,
+            "bottom": 36.731,
+            "headerTop": 4164.2034,
+            "panelLeft": 600.734,
+            "panelRight": 641.762,
+            "panelBottom": -787.397,
+            "panelTop": 4033.7714
+          }
+        },
+        {
+          "id": "frontBaseWear",
+          "face": "front",
+          "layer": "wear",
+          "centerTexels": [
+            0,
+            5
+          ],
+          "sizeTexels": [
+            24,
+            8
+          ],
+          "planeTexels": -22.75,
+          "renderOrder": 10,
+          "edgeDistancesTexels": {
+            "left": 704,
+            "right": 704,
+            "bottom": 5,
+            "headerTop": 4195.9344,
+            "panelLeft": 600.832,
+            "panelRight": 641.664,
+            "panelBottom": -819.128,
+            "panelTop": 4065.5024000000003
+          }
+        },
+        {
+          "id": "sideBottomWear",
+          "face": "left",
+          "layer": "wear",
+          "centerTexels": [
+            -13.5,
+            7
+          ],
+          "sizeTexels": [
+            14,
+            9
+          ],
+          "planeTexels": -22.24,
+          "renderOrder": 10,
+          "edgeDistancesTexels": {
+            "front": 674.5,
+            "back": 701.5,
+            "bottom": 7,
+            "headerTop": 4193.9344
+          }
+        },
+        {
+          "id": "sideBottomWear",
+          "face": "left",
+          "layer": "wear",
+          "centerTexels": [
+            13.5,
+            7
+          ],
+          "sizeTexels": [
+            14,
+            9
+          ],
+          "planeTexels": -22.25,
+          "renderOrder": 10,
+          "edgeDistancesTexels": {
+            "front": 701.5,
+            "back": 674.5,
+            "bottom": 7,
+            "headerTop": 4193.9344
+          }
+        },
+        {
+          "id": "sideTopWear",
+          "face": "left",
+          "layer": "wear",
+          "centerTexels": [
+            13.5,
+            126.20000000000002
+          ],
+          "sizeTexels": [
+            14,
+            9
+          ],
+          "planeTexels": -22.26,
+          "renderOrder": 10,
+          "edgeDistancesTexels": {
+            "front": 701.5,
+            "back": 674.5,
+            "bottom": 126.20000000000002,
+            "headerTop": 4074.7344000000003
+          }
+        },
+        {
+          "id": "sideVentPanel",
+          "face": "left",
+          "layer": "structural-graphic",
+          "centerTexels": [
+            8.987,
+            16.095
+          ],
+          "sizeTexels": [
+            21.431,
+            24.512
+          ],
+          "planeTexels": -22.5,
+          "renderOrder": 7,
+          "edgeDistancesTexels": {
+            "front": 696.987,
+            "back": 679.013,
+            "bottom": 16.095,
+            "headerTop": 4184.8394
+          }
+        },
+        {
+          "id": "fanGrille",
+          "face": "back",
+          "layer": "mechanical-detail",
+          "centerTexels": [
+            -11.737,
+            13.071
+          ],
+          "sizeTexels": [
+            12,
+            12
+          ],
+          "planeTexels": 24.2,
+          "renderOrder": 9,
+          "edgeDistancesTexels": {
+            "left": 692.263,
+            "right": 715.737,
+            "bottom": 13.071,
+            "headerTop": 4187.8634,
+            "panelLeft": 589.095,
+            "panelRight": 653.401,
+            "panelBottom": -811.057,
+            "panelTop": 4057.4314000000004
+          }
+        },
+        {
+          "id": "compressorPlate",
+          "face": "back",
+          "layer": "label",
+          "centerTexels": [
+            3.1,
+            9.9
+          ],
+          "sizeTexels": [
+            6.2,
+            5.2
+          ],
+          "planeTexels": 26.36,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 707.1,
+            "right": 700.9,
+            "bottom": 9.9,
+            "headerTop": 4191.0344000000005,
+            "panelLeft": 603.932,
+            "panelRight": 638.564,
+            "panelBottom": -814.2280000000001,
+            "panelTop": 4060.6024
+          }
+        },
+        {
+          "id": "cartonCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -12,
+            73.048
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 692,
+            "right": 716,
+            "bottom": 73.048,
+            "headerTop": 4127.8864,
+            "panelLeft": 588.832,
+            "panelRight": 653.664,
+            "panelBottom": -751.08,
+            "panelTop": 3997.4544000000005
+          }
+        },
+        {
+          "id": "cartonMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -4,
+            73.048
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 700,
+            "right": 708,
+            "bottom": 73.048,
+            "headerTop": 4127.8864,
+            "panelLeft": 596.832,
+            "panelRight": 645.664,
+            "panelBottom": -751.08,
+            "panelTop": 3997.4544000000005
+          }
+        },
+        {
+          "id": "cartonFlu",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            5,
+            73.048
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 709,
+            "right": 699,
+            "bottom": 73.048,
+            "headerTop": 4127.8864,
+            "panelLeft": 605.832,
+            "panelRight": 636.664,
+            "panelBottom": -751.08,
+            "panelTop": 3997.4544000000005
+          }
+        },
+        {
+          "id": "cartonBooster",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            12,
+            73.048
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 716,
+            "right": 692,
+            "bottom": 73.048,
+            "headerTop": 4127.8864,
+            "panelLeft": 612.832,
+            "panelRight": 629.664,
+            "panelBottom": -751.08,
+            "panelTop": 3997.4544000000005
+          }
+        },
+        {
+          "id": "vialCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -12,
+            54.298
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 692,
+            "right": 716,
+            "bottom": 54.298,
+            "headerTop": 4146.6364,
+            "panelLeft": 588.832,
+            "panelRight": 653.664,
+            "panelBottom": -769.83,
+            "panelTop": 4016.2044000000005
+          }
+        },
+        {
+          "id": "vialMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -6,
+            54.298
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 698,
+            "right": 710,
+            "bottom": 54.298,
+            "headerTop": 4146.6364,
+            "panelLeft": 594.832,
+            "panelRight": 647.664,
+            "panelBottom": -769.83,
+            "panelTop": 4016.2044000000005
+          }
+        },
+        {
+          "id": "vialFlu",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            0,
+            54.298
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 704,
+            "right": 704,
+            "bottom": 54.298,
+            "headerTop": 4146.6364,
+            "panelLeft": 600.832,
+            "panelRight": 641.664,
+            "panelBottom": -769.83,
+            "panelTop": 4016.2044000000005
+          }
+        },
+        {
+          "id": "vialPolio",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            6,
+            54.298
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 710,
+            "right": 698,
+            "bottom": 54.298,
+            "headerTop": 4146.6364,
+            "panelLeft": 606.832,
+            "panelRight": 635.664,
+            "panelBottom": -769.83,
+            "panelTop": 4016.2044000000005
+          }
+        },
+        {
+          "id": "vialCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            12,
+            54.298
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 716,
+            "right": 692,
+            "bottom": 54.298,
+            "headerTop": 4146.6364,
+            "panelLeft": 612.832,
+            "panelRight": 629.664,
+            "panelBottom": -769.83,
+            "panelTop": 4016.2044000000005
+          }
+        },
+        {
+          "id": "vialMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -12,
+            37.038000000000004
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 692,
+            "right": 716,
+            "bottom": 37.038000000000004,
+            "headerTop": 4163.8964000000005,
+            "panelLeft": 588.832,
+            "panelRight": 653.664,
+            "panelBottom": -787.09,
+            "panelTop": 4033.4644000000003
+          }
+        },
+        {
+          "id": "vialFlu",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -6,
+            37.038000000000004
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 698,
+            "right": 710,
+            "bottom": 37.038000000000004,
+            "headerTop": 4163.8964000000005,
+            "panelLeft": 594.832,
+            "panelRight": 647.664,
+            "panelBottom": -787.09,
+            "panelTop": 4033.4644000000003
+          }
+        },
+        {
+          "id": "vialPolio",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            0,
+            37.038000000000004
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 704,
+            "right": 704,
+            "bottom": 37.038000000000004,
+            "headerTop": 4163.8964000000005,
+            "panelLeft": 600.832,
+            "panelRight": 641.664,
+            "panelBottom": -787.09,
+            "panelTop": 4033.4644000000003
+          }
+        },
+        {
+          "id": "vialCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            6,
+            37.038000000000004
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 710,
+            "right": 698,
+            "bottom": 37.038000000000004,
+            "headerTop": 4163.8964000000005,
+            "panelLeft": 606.832,
+            "panelRight": 635.664,
+            "panelBottom": -787.09,
+            "panelTop": 4033.4644000000003
+          }
+        },
+        {
+          "id": "vialMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            12,
+            37.038000000000004
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 716,
+            "right": 692,
+            "bottom": 37.038000000000004,
+            "headerTop": 4163.8964000000005,
+            "panelLeft": 612.832,
+            "panelRight": 629.664,
+            "panelBottom": -787.09,
+            "panelTop": 4033.4644000000003
+          }
+        },
+        {
+          "id": "cartonCovid",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            -10,
+            22.548000000000002
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 694,
+            "right": 714,
+            "bottom": 22.548000000000002,
+            "headerTop": 4178.3864,
+            "panelLeft": 590.832,
+            "panelRight": 651.664,
+            "panelBottom": -801.58,
+            "panelTop": 4047.9544000000005
+          }
+        },
+        {
+          "id": "cartonMmr",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            0,
+            23.048000000000002
+          ],
+          "sizeTexels": [
+            5.3,
+            7.4
+          ],
+          "planeTexels": -18.68,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 704,
+            "right": 704,
+            "bottom": 23.048000000000002,
+            "headerTop": 4177.8864,
+            "panelLeft": 600.832,
+            "panelRight": 641.664,
+            "panelBottom": -801.08,
+            "panelTop": 4047.4544000000005
+          }
+        },
+        {
+          "id": "vialFlu",
+          "face": "front",
+          "layer": "label",
+          "centerTexels": [
+            10,
+            21.110500000000002
+          ],
+          "sizeTexels": [
+            2.8,
+            4.1
+          ],
+          "planeTexels": -18.38,
+          "renderOrder": 8,
+          "edgeDistancesTexels": {
+            "left": 714,
+            "right": 694,
+            "bottom": 21.110500000000002,
+            "headerTop": 4179.8239,
+            "panelLeft": 610.832,
+            "panelRight": 631.664,
+            "panelBottom": -803.0175,
+            "panelTop": 4049.3919000000005
+          }
+        }
+      ],
+      "semanticSupports": [
+        {
+          "id": "condenserField",
+          "sizeTexels": [
+            1242.496,
+            3246.3744
+          ],
+          "mesh": "rear_condenser_support"
+        },
+        {
+          "id": "fanGrille",
+          "sizeTexels": [
+            14,
+            15
+          ],
+          "mesh": "rear_fan_housing"
+        },
+        {
+          "id": "rearMachineBay",
+          "sizeTexels": [
+            38.828,
+            22.747
+          ],
+          "mesh": "rear_machine_bay_back"
+        },
+        {
+          "id": "sideVentPanel",
+          "sizeTexels": [
+            21.431,
+            24.512
+          ],
+          "mesh": "side_vent_support"
+        }
+      ],
+      "adaptiveSurfaceCounts": [
+        [
+          "side_panel_column",
+          2
+        ],
+        [
+          "side_panel_row",
+          2
+        ]
+      ],
+      "adaptiveTexturePanels": [
+        {
+          "id": "condenserField",
+          "sizeTexels": [
+            1242.496,
+            3246.3744
+          ],
+          "boundsTexels": [
+            -600.832,
+            824.128,
+            641.664,
+            4070.5024000000003
+          ],
+          "pitchTexels": [
+            2.45,
+            8.2
+          ],
+          "lineWidthTexels": [
+            0.52,
+            0.72
+          ],
+          "repeatCounts": [
+            507,
+            395
+          ],
+          "marginsTexels": [
+            3.224,
+            1.948,
+            25.754,
+            4.076
+          ]
+        }
+      ],
+      "repeatedStructureCounts": [
+        [
+          "rear_coil_run",
+          0
+        ],
+        [
+          "rear_coil_rail",
+          0
+        ],
+        [
+          "shelf",
+          5
+        ]
+      ],
+      "errors": [],
+      "paletteSize": 397
+    }
+  ]
+}

@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Adaptive Freezer — Standalone Scale Lab</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #090b0f;
+        --panel: #12161c;
+        --panel-2: #171c23;
+        --line: #29313b;
+        --line-soft: #20262e;
+        --text: #e5e9e7;
+        --muted: #87929b;
+        --blue: #76a9d4;
+        --green: #7db394;
+        --amber: #c6a26a;
+        --ease-out: cubic-bezier(.23, 1, .32, 1);
+      }
+
+      * { box-sizing: border-box; }
+      html, body { margin: 0; min-width: 320px; min-height: 100%; background: var(--bg); }
+      body {
+        min-height: 100vh;
+        overflow: hidden;
+        color: var(--text);
+        font: 13px/1.45 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+      button, input { font: inherit; }
+
+      .app { display: grid; grid-template-columns: minmax(0, 1fr) 330px; min-height: 100vh; }
+      .stage {
+        position: relative;
+        min-width: 0;
+        overflow: hidden;
+        background:
+          radial-gradient(circle at 50% 45%, rgba(73, 89, 100, .13), transparent 42%),
+          linear-gradient(rgba(255,255,255,.015) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255,255,255,.015) 1px, transparent 1px),
+          #0b0e12;
+        background-size: auto, 24px 24px, 24px 24px, auto;
+      }
+      .stage::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        box-shadow: inset -1px 0 var(--line), inset 0 0 80px rgba(0,0,0,.32);
+      }
+      iframe { width: 100%; height: 100%; min-height: 100vh; border: 0; display: block; }
+      .reference-review { width:100%; height:100%; min-height:100vh; object-fit:contain; display:none; image-rendering:pixelated; background:#101116; }
+      .drag-layer { position: absolute; inset: 58px 0 36px; z-index: 2; cursor: grab; touch-action: none; }
+      .drag-layer:active { cursor: grabbing; }
+      .stage-toolbar {
+        position: absolute;
+        z-index: 3;
+        top: 16px;
+        left: 50%;
+        display: flex;
+        gap: 4px;
+        padding: 4px;
+        border: 1px solid rgba(113, 127, 139, .28);
+        border-radius: 9px;
+        background: rgba(16, 20, 25, .86);
+        box-shadow: 0 10px 34px rgba(0,0,0,.26);
+        backdrop-filter: blur(10px);
+        transform: translateX(-50%);
+      }
+      .view-button, .icon-button {
+        border: 0;
+        border-radius: 6px;
+        color: var(--muted);
+        background: transparent;
+        cursor: pointer;
+        transition: color 140ms ease, background-color 140ms ease, transform 140ms var(--ease-out);
+      }
+      .view-button { padding: 7px 10px; }
+      .view-button:hover, .view-button[data-active="true"] { color: var(--text); background: #252c34; }
+      .view-button:active, .icon-button:active, .reset:active { transform: scale(.97); }
+      .stage-note {
+        position: absolute;
+        z-index: 3;
+        bottom: 15px;
+        left: 18px;
+        color: #6f7a83;
+        font-size: 11px;
+        letter-spacing: .02em;
+        pointer-events: none;
+      }
+      .status {
+        position: absolute;
+        z-index: 3;
+        right: 18px;
+        bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        color: var(--muted);
+        font-size: 11px;
+      }
+      .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--amber); }
+      .status[data-ready="true"] .status-dot { background: var(--green); box-shadow: 0 0 0 3px rgba(125,179,148,.12); }
+
+      aside {
+        position: relative;
+        z-index: 4;
+        height: 100vh;
+        overflow: auto;
+        padding: 21px 20px 24px;
+        background: var(--panel);
+        scrollbar-color: #303844 transparent;
+      }
+      .eyebrow { color: var(--blue); font-size: 10px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
+      h1 { margin: 5px 0 5px; font-size: 19px; line-height: 1.2; letter-spacing: -.02em; }
+      .subtitle { margin: 0; color: var(--muted); font-size: 12px; }
+      .section { padding: 20px 0; border-bottom: 1px solid var(--line-soft); }
+      .section:last-child { border-bottom: 0; }
+      .section-title { margin: 0 0 13px; color: #bbc3c7; font-size: 11px; font-weight: 650; letter-spacing: .06em; text-transform: uppercase; }
+
+      .control { margin: 0 0 14px; }
+      .control:last-child { margin-bottom: 0; }
+      .control-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 7px; }
+      .control-label { color: #cbd1d2; }
+      output { min-width: 42px; color: var(--blue); font-variant-numeric: tabular-nums; text-align: right; }
+      input[type="range"] {
+        width: 100%; height: 20px; margin: 0; accent-color: var(--blue); cursor: pointer;
+      }
+      input[type="range"]::-webkit-slider-runnable-track { height: 3px; border-radius: 3px; background: #303945; }
+      input[type="range"]::-webkit-slider-thumb { margin-top: -5px; }
+      .axis-x output { color: #d68c83; }
+      .axis-x input { accent-color: #d68c83; }
+      .axis-y output { color: #89b99a; }
+      .axis-y input { accent-color: #89b99a; }
+      .axis-z output { color: #82aedd; }
+      .axis-z input { accent-color: #82aedd; }
+
+      .row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+      .toggle { display: inline-flex; align-items: center; gap: 9px; color: #b8c0c3; cursor: pointer; user-select: none; }
+      .toggle input { position: absolute; opacity: 0; pointer-events: none; }
+      .track { width: 30px; height: 18px; padding: 2px; border-radius: 20px; background: #323a44; transition: background-color 160ms ease; }
+      .knob { display: block; width: 14px; height: 14px; border-radius: 50%; background: #929ca3; transition: transform 160ms var(--ease-out), background-color 160ms ease; }
+      .toggle input:checked + .track { background: #315b7d; }
+      .toggle input:checked + .track .knob { background: #dbe8ef; transform: translateX(12px); }
+      .reset {
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        padding: 6px 9px;
+        color: #b7c0c4;
+        background: var(--panel-2);
+        cursor: pointer;
+        transition: border-color 140ms ease, color 140ms ease, transform 140ms var(--ease-out);
+      }
+      .reset:hover { border-color: #46515e; color: #eef1ef; }
+
+      .metrics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; }
+      .metric { padding: 10px; border: 1px solid var(--line-soft); border-radius: 7px; background: var(--panel-2); }
+      .metric-value { display: block; color: #e3e8e6; font-size: 15px; font-weight: 620; font-variant-numeric: tabular-nums; }
+      .metric-label { display: block; margin-top: 1px; color: #77838c; font-size: 10px; }
+      .legend { display: flex; flex-wrap: wrap; gap: 6px; }
+      .chip { padding: 4px 7px; border: 1px solid var(--line); border-radius: 5px; color: #9ca7ad; background: #151a20; font: 600 9px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .04em; }
+      .chip.fixed { color: #a6c8df; border-color: #294b62; }
+      .chip.repeat { color: #b5ca9a; border-color: #3e5230; }
+      .chip.expand { color: #d1b792; border-color: #59462e; }
+      .chip.count { color: #b9a8d2; border-color: #47375e; }
+      .help { margin: 11px 0 0; color: #77828a; font-size: 11px; }
+
+      @media (max-width: 840px) {
+        body { overflow: auto; }
+        .app { grid-template-columns: 1fr; grid-template-rows: min(70vh, 650px) auto; }
+        .stage, iframe { min-height: 0; height: min(70vh, 650px); }
+        aside { height: auto; overflow: visible; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0ms !important; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="app">
+      <section class="stage" id="stage">
+        <iframe id="viewer" title="Interactive adaptive medical freezer"></iframe>
+        <img id="referenceReview" class="reference-review" alt="Registered authority and rectified face comparison" />
+        <div class="drag-layer" id="dragLayer" aria-label="Drag to orbit the model"></div>
+        <nav class="stage-toolbar" aria-label="Camera presets">
+          <button class="view-button" data-yaw="0" data-elevation="0">Front</button>
+          <button class="view-button" data-yaw="-36" data-elevation="2.5" data-active="true">Iso</button>
+          <button class="view-button" data-yaw="-90" data-elevation="0">Side</button>
+          <button class="view-button" data-yaw="180" data-elevation="2.5">Rear</button>
+        </nav>
+        <div class="stage-note">Drag to orbit · sliders rebuild the procedural asset</div>
+        <div class="status" id="status" data-ready="false"><span class="status-dot"></span><span id="statusText">Building model…</span></div>
+      </section>
+
+      <aside>
+        <header>
+          <div class="eyebrow">Standalone scale lab</div>
+          <h1>Adaptive Medical Freezer</h1>
+          <p class="subtitle">V7 · edge-anchored decals and fixed-pitch adaptive texture fields</p>
+        </header>
+
+        <section class="section">
+          <div class="row" style="margin-bottom: 15px">
+            <h2 class="section-title" style="margin:0">Dimensions</h2>
+            <button class="reset" id="resetScale">Reset</button>
+          </div>
+          <div class="control axis-x">
+            <div class="control-head"><label class="control-label" for="scaleX">Width · X</label><output id="scaleXValue">1.00×</output></div>
+            <input id="scaleX" type="range" min="0.65" max="1.80" value="1" step="0.05" />
+          </div>
+          <div class="control axis-y">
+            <div class="control-head"><label class="control-label" for="scaleY">Depth · Y</label><output id="scaleYValue">1.00×</output></div>
+            <input id="scaleY" type="range" min="0.65" max="1.80" value="1" step="0.05" />
+          </div>
+          <div class="control axis-z">
+            <div class="control-head"><label class="control-label" for="scaleZ">Height · Z</label><output id="scaleZValue">1.00×</output></div>
+            <input id="scaleZ" type="range" min="0.65" max="1.80" value="1" step="0.05" />
+          </div>
+          <div class="row">
+            <label class="toggle"><input id="lockScale" type="checkbox" /><span class="track"><span class="knob"></span></span>Lock proportions</label>
+            <label class="toggle"><input id="autoFit" type="checkbox" checked /><span class="track"><span class="knob"></span></span>Auto-fit</label>
+          </div>
+          <p class="help">Turn Auto-fit off to compare decals at a constant world-to-screen scale.</p>
+        </section>
+
+        <section class="section">
+          <h2 class="section-title">Camera</h2>
+          <div class="control">
+            <div class="control-head"><label class="control-label" for="evidencePass">Render pass</label></div>
+            <select id="evidencePass" style="width:100%;background:#171b22;color:#e5e7eb;border:1px solid #343b48;border-radius:8px;padding:9px 10px">
+              <option value="texture">Textured v7 adaptive</option>
+              <option value="raw">Raw geometry</option>
+              <option value="part-id">Part ID</option>
+              <option value="face-normal">Face normal</option>
+              <option value="linear-depth">Linear depth</option>
+              <option value="anchor-id">Anchor ID</option>
+              <option value="reference-front">Reference registration · front</option>
+              <option value="reference-side">Reference registration · side</option>
+              <option value="reference-back">Reference registration · back</option>
+            </select>
+          </div>
+          <div class="control">
+            <div class="control-head"><label class="control-label" for="yaw">Orbit</label><output id="yawValue">−36°</output></div>
+            <input id="yaw" type="range" min="-180" max="180" value="-36" step="1" />
+          </div>
+          <div class="control">
+            <div class="control-head"><label class="control-label" for="elevation">Elevation</label><output id="elevationValue">2.5°</output></div>
+            <input id="elevation" type="range" min="-12" max="24" value="2.5" step="0.5" />
+          </div>
+        </section>
+
+        <section class="section">
+          <h2 class="section-title">Live model</h2>
+          <div class="metrics">
+            <div class="metric"><span class="metric-value" id="triangles">—</span><span class="metric-label">triangles</span></div>
+            <div class="metric"><span class="metric-value" id="parts">—</span><span class="metric-label">parts</span></div>
+            <div class="metric"><span class="metric-value" id="decals">—</span><span class="metric-label">fixed decals</span></div>
+            <div class="metric"><span class="metric-value" id="shelves">—</span><span class="metric-label">shelves</span></div>
+            <div class="metric"><span class="metric-value" id="panelRows">—</span><span class="metric-label">panel rows</span></div>
+            <div class="metric"><span class="metric-value" id="condenserRails">—</span><span class="metric-label">condenser rails</span></div>
+            <div class="metric"><span class="metric-value" id="ventBack">—</span><span class="metric-label">vent rear offset</span></div>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2 class="section-title">Scaling contract</h2>
+          <div class="legend">
+            <span class="chip fixed">FIXED</span>
+            <span class="chip repeat">REPEAT</span>
+            <span class="chip expand">EXPAND</span>
+            <span class="chip count">COUNT-ADAPTIVE</span>
+          </div>
+          <p class="help">Labels, wear, borders, vents and the handle stay fixed. Adaptive fields expand only their bounds, then add fixed-pitch marks. Edge offsets are audited on every axis.</p>
+        </section>
+      </aside>
+    </main>
+
+    <script>
+      const viewer = document.querySelector('#viewer');
+      const referenceReview = document.querySelector('#referenceReview');
+      const status = document.querySelector('#status');
+      const statusText = document.querySelector('#statusText');
+      const scales = {
+        x: document.querySelector('#scaleX'),
+        y: document.querySelector('#scaleY'),
+        z: document.querySelector('#scaleZ'),
+      };
+      const scaleOutputs = {
+        x: document.querySelector('#scaleXValue'),
+        y: document.querySelector('#scaleYValue'),
+        z: document.querySelector('#scaleZValue'),
+      };
+      const yaw = document.querySelector('#yaw');
+      const elevation = document.querySelector('#elevation');
+      const yawValue = document.querySelector('#yawValue');
+      const elevationValue = document.querySelector('#elevationValue');
+      const lockScale = document.querySelector('#lockScale');
+      const autoFit = document.querySelector('#autoFit');
+      const evidencePass = document.querySelector('#evidencePass');
+      let loadToken = 0;
+
+      const signed = (value) => `${Number(value) < 0 ? '−' : ''}${Math.abs(Number(value))}°`;
+      const updateReadouts = () => {
+        for (const axis of Object.keys(scales)) scaleOutputs[axis].textContent = `${Number(scales[axis].value).toFixed(2)}×`;
+        yawValue.textContent = signed(yaw.value);
+        elevationValue.textContent = signed(elevation.value);
+      };
+
+      const buildUrl = () => {
+        const query = new URLSearchParams({
+          texture: 'v7', view: 'orbit', sx: scales.x.value, sy: scales.y.value,
+          sz: scales.z.value, fit: autoFit.checked ? '1' : '0',
+          yaw: yaw.value, elevation: elevation.value,
+        });
+        if (evidencePass.value !== 'texture') {
+          query.set('surfaces', '0');
+          query.set('fittings', '0');
+          query.set('bg', 'magenta');
+          if (evidencePass.value !== 'raw') query.set('diagnostic', evidencePass.value);
+        }
+        return `../semantic-freezer/index.html?${query}`;
+      };
+
+      const readStats = async (token) => {
+        for (let attempt = 0; attempt < 100 && token === loadToken; attempt += 1) {
+          const stats = viewer.contentWindow?.__SEMANTIC_FREEZER_STATS__;
+          if (stats?.ready) {
+            const surface = Object.fromEntries(stats.adaptiveSurfaceCounts || []);
+            const adaptiveTexture = stats.adaptiveTexturePanels?.[0];
+            const vent = stats.fittingPlacements?.find(item => item.id === 'sideVentPanel');
+            document.querySelector('#triangles').textContent = stats.triangles.toLocaleString();
+            document.querySelector('#parts').textContent = stats.parts;
+            document.querySelector('#decals').textContent = stats.decals;
+            document.querySelector('#shelves').textContent = stats.shelfCount;
+            document.querySelector('#panelRows').textContent = surface.side_panel_row ?? 0;
+            document.querySelector('#condenserRails').textContent = adaptiveTexture?.repeatCounts?.[0] ?? 0;
+            document.querySelector('#ventBack').textContent = vent ? `${vent.edgeDistancesTexels.back.toFixed(3)} tx` : '—';
+            status.dataset.ready = 'true';
+            statusText.textContent = `Ready · ${evidencePass.value === 'texture' ? 'v7 adaptive' : evidencePass.options[evidencePass.selectedIndex].text}`;
+            return;
+          }
+          await new Promise(resolve => setTimeout(resolve, 40));
+        }
+        if (token === loadToken) statusText.textContent = 'Viewer did not initialize';
+      };
+
+      const rebuild = () => {
+        updateReadouts();
+        status.dataset.ready = 'false';
+        statusText.textContent = 'Rebuilding…';
+        const token = ++loadToken;
+        if (evidencePass.value.startsWith('reference-')) {
+          viewer.style.display = 'none';
+          referenceReview.style.display = 'block';
+          referenceReview.src = `/docs/reference-lock/semantic-freezer-v5/registration-overlays/${evidencePass.value.slice(10)}.png`;
+          referenceReview.onload = () => {
+            if (token !== loadToken) return;
+            status.dataset.ready = 'true';
+            statusText.textContent = `Ready · ${evidencePass.options[evidencePass.selectedIndex].text}`;
+          };
+          return;
+        }
+        referenceReview.style.display = 'none';
+        viewer.style.display = 'block';
+        viewer.src = buildUrl();
+        viewer.addEventListener('load', () => readStats(token), { once: true });
+      };
+
+      const setCamera = () => {
+        updateReadouts();
+        viewer.contentWindow?.__SEMANTIC_FREEZER_SET_CAMERA__?.(Number(yaw.value), Number(elevation.value));
+      };
+
+      for (const [axis, input] of Object.entries(scales)) {
+        input.addEventListener('input', () => {
+          if (lockScale.checked) for (const other of Object.values(scales)) other.value = input.value;
+          updateReadouts();
+        });
+        input.addEventListener('change', rebuild);
+      }
+      autoFit.addEventListener('change', rebuild);
+      evidencePass.addEventListener('change', rebuild);
+      yaw.addEventListener('input', setCamera);
+      elevation.addEventListener('input', setCamera);
+
+      document.querySelector('#resetScale').addEventListener('click', () => {
+        for (const input of Object.values(scales)) input.value = 1;
+        rebuild();
+      });
+
+      document.querySelectorAll('.view-button').forEach(button => button.addEventListener('click', () => {
+        yaw.value = button.dataset.yaw;
+        elevation.value = button.dataset.elevation;
+        document.querySelectorAll('.view-button').forEach(item => item.dataset.active = String(item === button));
+        setCamera();
+      }));
+
+      const dragLayer = document.querySelector('#dragLayer');
+      let drag = null;
+      dragLayer.addEventListener('pointerdown', event => {
+        if (drag) return;
+        drag = { id: event.pointerId, x: event.clientX, y: event.clientY, yaw: Number(yaw.value), elevation: Number(elevation.value) };
+        dragLayer.setPointerCapture(event.pointerId);
+      });
+      dragLayer.addEventListener('pointermove', event => {
+        if (!drag || event.pointerId !== drag.id) return;
+        yaw.value = Math.max(-180, Math.min(180, drag.yaw + (event.clientX - drag.x) * .35));
+        elevation.value = Math.max(-12, Math.min(24, drag.elevation - (event.clientY - drag.y) * .16));
+        document.querySelectorAll('.view-button').forEach(item => item.dataset.active = 'false');
+        setCamera();
+      });
+      const stopDrag = event => { if (drag?.id === event.pointerId) drag = null; };
+      dragLayer.addEventListener('pointerup', stopDrag);
+      dragLayer.addEventListener('pointercancel', stopDrag);
+
+      updateReadouts();
+      rebuild();
+    </script>
+  </body>
+</html>

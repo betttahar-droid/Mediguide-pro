@@ -10,6 +10,72 @@ import {
   capTray, keypad, plate, posts, vents, worktop,
 } from './fittings.js';
 
+// A deliberately tiny 3x5 typeface. Important lettering is geometry rather
+// than part of a tiling texture, so it keeps the same chunky pixels when a
+// module changes variant. It also avoids the filtered, overly-clean look of a
+// canvas font at the game's normal camera distance.
+const PIXEL_GLYPHS = {
+  '2': ['111', '001', '111', '100', '111'],
+  '4': ['101', '101', '111', '001', '001'],
+  '8': ['111', '101', '111', '101', '111'],
+  C: ['111', '100', '100', '100', '111'],
+};
+
+function pixelText(text, { at, pixel = 0.014, gap = 1, accent = GLASS }) {
+  const parts = [];
+  let cursor = 0;
+  for (const char of text) {
+    const glyph = PIXEL_GLYPHS[char];
+    if (!glyph) { cursor += 4; continue; }
+    for (let row = 0; row < glyph.length; row++) {
+      for (let col = 0; col < glyph[row].length; col++) {
+        if (glyph[row][col] !== '1') continue;
+        parts.push({
+          size: [pixel, pixel, 0.006],
+          at: [at[0] + (cursor + col) * pixel, at[1] + (2 - row) * pixel, at[2]],
+          bevel: 0,
+          mat: 'screen',
+          accent,
+        });
+      }
+    }
+    cursor += 3 + gap;
+  }
+  return parts;
+}
+
+/** Pixel-painted stock seen through a door: large, irregular clusters only. */
+function fridgeStock(dx, doorIndex) {
+  const rows = [-0.33, -0.08, 0.18, 0.42];
+  const parts = [];
+  for (let r = 0; r < rows.length; r++) {
+    // A dark two-pixel shelf line gives the glass readable depth at a distance.
+    parts.push({ size: [0.48, 0.018, 0.008], at: [dx, rows[r] - 0.09, 0.333], bevel: 0, mat: 'screen', accent: DARK });
+    const count = 2 + ((r + doorIndex) % 3);
+    for (let i = 0; i < count; i++) {
+      const w = 0.055 + ((i + r) % 2) * 0.018;
+      const h = 0.075 + ((i * 2 + r) % 3) * 0.018;
+      const x = dx - 0.17 + i * 0.105 + (r % 2) * 0.018;
+      parts.push({
+        size: [w, h, 0.010],
+        at: [x, rows[r] - 0.09 + h / 2 + 0.012, 0.338],
+        bevel: 0,
+        mat: 'paper',
+        accent: (i + r) % 4 === 0 ? ACCENT : FRAME,
+      });
+      // One strong label texel; enough to read as packaging, not visual noise.
+      parts.push({
+        size: [w * 0.62, 0.012, 0.004],
+        at: [x, rows[r] - 0.09 + h * 0.52, 0.345],
+        bevel: 0,
+        mat: 'paper',
+        accent: (i + r) % 3 === 0 ? DARK : GLASS,
+      });
+    }
+  }
+  return parts;
+}
+
 /**
  * One fridge BODY: a carcass with `n` glass doors on it, centred at cx.
  *
@@ -52,13 +118,21 @@ function fridgeBody(cx, n) {
       { size: [0.034, 0.86, 0.050], at: [dx + side * 0.300, 0.075, 0.322], bevel: 0.008, mat: 'steel', accent: ACCENT }, // handle
       { size: [0.052, 0.042, 0.032], at: [dx + side * 0.300, 0.470, 0.308], bevel: 0.006, mat: 'steel', accent: FRAME }, // handle bracket
       { size: [0.052, 0.042, 0.032], at: [dx + side * 0.300, -0.320, 0.308], bevel: 0.006, mat: 'steel', accent: FRAME },
+      ...fridgeStock(dx, i),
     );
     // a temperature readout is a lit display, not a printed label
     // The sheet puts the readout HIGH on the door head, at eye level, which is
     // where you would read it. Ours sat low on the surround where the door
     // furniture is. One per cabinet, on the first door, clear of its handle.
     if (i === 0) {
-      parts.push(...plate({ at: [dx - side * 0.150, 0.700, 0.335], w: 0.24, h: 0.095, surround: DARK, mat: 'screen' }));
+      const screenX = dx - side * 0.150;
+      parts.push(
+        ...plate({ at: [screenX, 0.700, 0.335], w: 0.24, h: 0.105, surround: DARK, mat: 'screen' }),
+        // Fixed-size 2-8C marking: the plate may move with its door, but these
+        // pixels never scale. This is the prototype for labels and lettering
+        // throughout the adaptive catalogue.
+        ...pixelText('28C', { at: [screenX - 0.080, 0.700, 0.381], pixel: 0.012, accent: GLASS }),
+      );
     }
   }
 

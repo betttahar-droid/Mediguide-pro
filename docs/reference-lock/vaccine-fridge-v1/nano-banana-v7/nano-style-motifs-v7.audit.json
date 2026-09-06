@@ -1,0 +1,435 @@
+{
+  "schemaVersion": 7,
+  "generator": "gemini-3.1-flash-image + deterministic style-fit compiler",
+  "source": "docs/reference-lock/vaccine-fridge-v1/nano-banana-v7/nano-style-motifs-v7.jpg",
+  "sourceSha256": "55b886931b27ae948e3010ed43c0a3673ab6470810b6fd91df30025b66dee3c2",
+  "output": "public/textures/vaccine-fridge-nano-style-motifs-v7.png",
+  "atlasSizePx": [
+    96,
+    96
+  ],
+  "policy": "caption-safe component extraction; locked ramps; 3px internal margin; 4px atlas gutter",
+  "meanLogicalQuietShare": 0.8324,
+  "decals": [
+    {
+      "name": "steel_top_left",
+      "atlasRectPx": [
+        4,
+        4,
+        16,
+        16
+      ],
+      "slotRectPx": [
+        0,
+        0,
+        24,
+        24
+      ],
+      "atlasMarginPx": 4,
+      "sourceCell": [
+        0,
+        0
+      ],
+      "role": "steel",
+      "sourceComponents": 1,
+      "sourceForegroundPx": 20559,
+      "compiledBoundsPx": [
+        4,
+        4,
+        12,
+        12
+      ],
+      "compiledExtentPx": [
+        8,
+        8
+      ],
+      "internalMarginPx": 4,
+      "logicalCoverage": 0.1836
+    },
+    {
+      "name": "steel_bottom_right",
+      "atlasRectPx": [
+        28,
+        4,
+        16,
+        16
+      ],
+      "slotRectPx": [
+        24,
+        0,
+        24,
+        24
+      ],
+      "atlasMarginPx": 4,
+      "sourceCell": [
+        1,
+        0
+      ],
+      "role": "steel",
+      "sourceComponents": 1,
+      "sourceForegroundPx": 23712,
+      "compiledBoundsPx": [
+        4,
+        4,
+        12,
+        12
+      ],
+      "compiledExtentPx": [
+        8,
+        8
+      ],
+      "internalMarginPx": 4,
+      "logicalCoverage": 0.25
+    },
+    {
+      "name": "steel_double_seam",
+      "atlasRectPx": [
+        52,
+        4,
+        16,
+        16
+      ],
+      "slotRectPx": [
+        48,
+        0,
+        24,
+        24
+      ],
+      "atlasMarginPx": 4,
+      "sourceCell": [
+        2,
+        0
+      ],
+      "role": "steel",
+      "sourceComponents": 1,
+      "sourceForegroundPx": 14168,
+      "compiledBoundsPx": [
+        3,
+        6,
+        12,
+        10
+      ],
+      "compiledExtentPx": [
+        9,
+        4
+      ],
+      "internalMarginPx": 3,
+      "logicalCoverage": 0.1406
+    },
+    {
+      "name": "cream_top_left",
+      "atlasRectPx": [
+        76,
+        4,
+        16,
+        16
+      ],
+      "slotRectPx": [
+        72,
+        0,
+        24,
+        24
+      ],
+      "atlasMarginPx": 4,
+      "sourceCell": [
+        0,
+        1
+      ],
+      "role": "cream",
+      "sourceComponents": 1,
+      "sourceForegroundPx": 24786,
+      "compiledBoundsPx": [
+        4,
+        4,
+        12,
+        12
+      ],
+      "compiledExtentPx": [
+        8,
+        8
+      ],
+      "internalMarginPx": 4,
+      "logicalCoverage": 0.2227
+    },
+    {
+      "name": "cream_bottom_right",
+      "atlasRectPx": [
+        4,
+        28,
+        16,
+        16
+      ],
+      "slotRectPx": [
+        0,
+        24,
+        24,
+        24
+      ],
+      "atlasMarginPx": 4,
+      "sourceCell": [
+        1,
+        1
+      ],
+      "role": "cream",
+      "sourceComponents": 1,
+      "sourceForegroundPx": 20373,
+      "compiledBoundsPx": [
+        4,
+        4,
+        12,
+        11
+      ],
+      "compiledExtentPx": [
+        8,
+        7
+      ],
+      "internalMarginPx": 4,
+      "logicalCoverage": 0.2031
+    },
+    {
+      "name": "teal_top_left",
+      "atlasRectPx": [
+        28,
+        28,
+        16,
+        16
+      ],
+      "slotRectPx": [
+        24,
+        24,
+        24,
+        24
+      ],
+      "atlasMarginPx": 4,
+      "sourceCell": [
+        0,
+        2
+      ],
+      "role": "teal",
+      "sourceComponents": 1,
+      "sourceForegroundPx": 23159,
+      "compiledBoundsPx": [
+        4,
+        4,
+        12,
+        12
+      ],
+      "compiledExtentPx": [
+        8,
+        8
+      ],
+      "internalMarginPx": 4,
+      "logicalCoverage": 0.2188
+    },
+    {
+      "name": "teal_bottom_right",
+      "atlasRectPx": [
+        52,
+        28,
+        16,
+        16
+      ],
+      "slotRectPx": [
+        48,
+        24,
+        24,
+        24
+      ],
+      "atlasMarginPx": 4,
+      "sourceCell": [
+        1,
+        2
+      ],
+      "role": "teal",
+      "sourceComponents": 1,
+      "sourceForegroundPx": 18817,
+      "compiledBoundsPx": [
+        4,
+        5,
+        12,
+        11
+      ],
+      "compiledExtentPx": [
+        8,
+        6
+      ],
+      "internalMarginPx": 4,
+      "logicalCoverage": 0.1836
+    },
+    {
+      "name": "glass_glint",
+      "atlasRectPx": [
+        76,
+        28,
+        16,
+        16
+      ],
+      "slotRectPx": [
+        72,
+        24,
+        24,
+        24
+      ],
+      "atlasMarginPx": 4,
+      "sourceCell": [
+        2,
+        2
+      ],
+      "role": "glass",
+      "sourceComponents": 1,
+      "sourceForegroundPx": 13613,
+      "compiledBoundsPx": [
+        5,
+        5,
+        11,
+        11
+      ],
+      "compiledExtentPx": [
+        6,
+        6
+      ],
+      "internalMarginPx": 5,
+      "logicalCoverage": 0.0625
+    },
+    {
+      "name": "shelf_end",
+      "atlasRectPx": [
+        4,
+        52,
+        16,
+        16
+      ],
+      "slotRectPx": [
+        0,
+        48,
+        24,
+        24
+      ],
+      "atlasMarginPx": 4,
+      "sourceCell": [
+        3,
+        2
+      ],
+      "role": "steel",
+      "sourceComponents": 1,
+      "sourceForegroundPx": 13543,
+      "compiledBoundsPx": [
+        4,
+        5,
+        11,
+        11
+      ],
+      "compiledExtentPx": [
+        7,
+        6
+      ],
+      "internalMarginPx": 4,
+      "logicalCoverage": 0.1602
+    },
+    {
+      "name": "side_service_dashes",
+      "atlasRectPx": [
+        28,
+        52,
+        16,
+        16
+      ],
+      "slotRectPx": [
+        24,
+        48,
+        24,
+        24
+      ],
+      "atlasMarginPx": 4,
+      "sourceCell": [
+        0,
+        3
+      ],
+      "role": "steel",
+      "sourceComponents": 3,
+      "sourceForegroundPx": 3388,
+      "compiledBoundsPx": [
+        3,
+        7,
+        13,
+        8
+      ],
+      "compiledExtentPx": [
+        10,
+        1
+      ],
+      "internalMarginPx": 3,
+      "logicalCoverage": 0.0312
+    },
+    {
+      "name": "grille_corner",
+      "atlasRectPx": [
+        52,
+        52,
+        16,
+        16
+      ],
+      "slotRectPx": [
+        48,
+        48,
+        24,
+        24
+      ],
+      "atlasMarginPx": 4,
+      "sourceCell": [
+        2,
+        3
+      ],
+      "role": "ochre",
+      "sourceComponents": 1,
+      "sourceForegroundPx": 12604,
+      "compiledBoundsPx": [
+        4,
+        4,
+        12,
+        12
+      ],
+      "compiledExtentPx": [
+        8,
+        8
+      ],
+      "internalMarginPx": 4,
+      "logicalCoverage": 0.1875
+    },
+    {
+      "name": "handle_cap",
+      "atlasRectPx": [
+        76,
+        52,
+        16,
+        16
+      ],
+      "slotRectPx": [
+        72,
+        48,
+        24,
+        24
+      ],
+      "atlasMarginPx": 4,
+      "sourceCell": [
+        3,
+        3
+      ],
+      "role": "plum",
+      "sourceComponents": 1,
+      "sourceForegroundPx": 10916,
+      "compiledBoundsPx": [
+        4,
+        5,
+        12,
+        11
+      ],
+      "compiledExtentPx": [
+        8,
+        6
+      ],
+      "internalMarginPx": 4,
+      "logicalCoverage": 0.168
+    }
+  ]
+}

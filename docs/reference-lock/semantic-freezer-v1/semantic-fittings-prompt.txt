@@ -1,0 +1,17 @@
+Use case: stylized-concept
+Asset type: fixed-size semantic decal source sheet for the supplied tall medical freezer.
+Create exactly eight disconnected rectangular pixel-art fitting panels in a strict 4-column by 2-row layout on pure flat magenta #FF00FF.
+
+Input roles are identical to the face-mask request: the first three images are the front/right/rear authority; the next three are immutable raw geometry; the next two are diagnostics; the final image is the layout guide.
+
+Panels in reading order:
+1 MEDICAL_BADGE: abstract snowflake/cross-like cold-storage emblem, no letters.
+2 DIGITAL_STATUS: dark rectangular temperature display with two blocky numeral-like glyph groups and tiny status lamps; no readable text.
+3 STATUS_STRIP: short dark control strip with four colored square lamps and two pale buttons.
+4 SIDE_RATING: pale service/rating plate with dark barcode-like horizontal rows; no readable letters.
+5 REAR_WARNING: pale warning plate with one ochre caution block and dark line rows; no readable letters.
+6 CARTON_LABEL: medicine-package label with blue header, dark line rows and one colored corner tab.
+7 VIAL_LABEL: compact pale wrap-label motif with dark line rows and one blue square.
+8 FAN_GRILLE: bold circular-ish octagonal fan grille built from square pixel rings and four straight supports.
+
+Match the authority's restrained cool-grey, pale enamel, medical blue, amber, muted red and charcoal palette. Coarse PS1-era pixel clusters, 20-to-32 logical texels per fitting, hard nearest-neighbor edges, no gradients, no antialiasing, no random dirt. Preserve wide magenta gutters. Do not draw the appliance, add shadows, change geometry, or include any extra objects, captions, legends, watermark or readable text.

@@ -1,0 +1,644 @@
+{
+  "compiler": "prop-factory-v1",
+  "schemaVersion": 1,
+  "status": "PASS",
+  "asset": {
+    "id": "semantic-freezer-v7",
+    "label": "Semantic Medical Freezer V7"
+  },
+  "texelWorldSize": 0.03125,
+  "faceBasis": {
+    "front": {
+      "u": "-x",
+      "v": "+z"
+    },
+    "back": {
+      "u": "+x",
+      "v": "+z"
+    },
+    "left": {
+      "u": "+depth",
+      "v": "+z"
+    },
+    "right": {
+      "u": "-depth",
+      "v": "+z"
+    },
+    "top": {
+      "u": "+x",
+      "v": "+depth"
+    }
+  },
+  "layers": {
+    "order": [
+      "material-field",
+      "structural-graphic",
+      "mechanical-detail",
+      "panel-mark",
+      "label",
+      "wear"
+    ],
+    "renderOrder": {
+      "material-field": 5,
+      "structural-graphic": 7,
+      "mechanical-detail": 9,
+      "panel-mark": 7,
+      "label": 8,
+      "wear": 10
+    }
+  },
+  "visualAudit": {
+    "orthographicWidth": 2.7,
+    "orthographicHeight": 3.3,
+    "zoom": 0.83,
+    "targetHeightFactor": 0.49,
+    "darkThreshold": 105,
+    "pitchTolerancePixels": 1.25
+  },
+  "correspondenceIds": [
+    "digitalStatus",
+    "fanGrille",
+    "front_control_band",
+    "front_door_opening",
+    "medicalIdentity",
+    "rearDoNot",
+    "rearWarning",
+    "rear_condenser_field",
+    "rear_machine_bay",
+    "sideRating",
+    "side_bottom_wear",
+    "side_lower_column_seed",
+    "side_lower_panel",
+    "side_panel_row_seed",
+    "side_upper_column_seed",
+    "side_upper_panel",
+    "side_vent"
+  ],
+  "fixedGeometryRoles": [
+    "handle_catch",
+    "handle_grip",
+    "handle_mount",
+    "handle_return"
+  ],
+  "overlapRules": [
+    {
+      "face": "left",
+      "frontmost": "sideVentPanel",
+      "behind": "sideBottomWear"
+    }
+  ],
+  "cases": [
+    {
+      "id": "base",
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "dimensions": {
+        "width": 44,
+        "depth": 43,
+        "height": 104
+      },
+      "references": {
+        "bottom": 0.0,
+        "headerTop": 100.984
+      },
+      "adaptiveFields": [
+        {
+          "id": "condenserField",
+          "face": "back",
+          "layer": "structural-graphic",
+          "boundsTexels": [
+            -18.776,
+            25.754,
+            20.052,
+            96.908
+          ],
+          "centerTexels": [
+            0.6379999999999999,
+            61.331
+          ],
+          "sizeTexels": [
+            38.828,
+            71.154
+          ],
+          "pitchTexels": [
+            2.45,
+            8.2
+          ],
+          "lineWidthTexels": [
+            0.52,
+            0.72
+          ],
+          "repeatCounts": [
+            15,
+            8
+          ],
+          "marginsTexels": [
+            3.224,
+            1.948,
+            25.754,
+            4.076
+          ],
+          "renderOrder": 7,
+          "visualProbe": {
+            "uScanAtVTexels": 85,
+            "vScanAtUOffsetTexels": 1.3
+          }
+        }
+      ],
+      "fixedFittings": [
+        {
+          "id": "sideVentPanel",
+          "runtimeId": "sideVentPanel",
+          "face": "left",
+          "layer": "structural-graphic",
+          "sizeTexels": [
+            21.431,
+            24.512
+          ],
+          "centerTexels": [
+            8.987,
+            16.095
+          ],
+          "renderOrder": 7
+        },
+        {
+          "id": "sideRating",
+          "runtimeId": "sideRating",
+          "face": "left",
+          "layer": "label",
+          "sizeTexels": [
+            8,
+            5.3
+          ],
+          "centerTexels": [
+            -13.412,
+            95.684
+          ],
+          "renderOrder": 8
+        },
+        {
+          "id": "rearWarning",
+          "runtimeId": "rearWarning",
+          "face": "back",
+          "layer": "label",
+          "sizeTexels": [
+            16,
+            6.026
+          ],
+          "centerTexels": [
+            -0.16300000000000014,
+            71.768
+          ],
+          "renderOrder": 8
+        },
+        {
+          "id": "rearDoNot",
+          "runtimeId": "rearDoNot",
+          "face": "back",
+          "layer": "label",
+          "sizeTexels": [
+            16,
+            4.571
+          ],
+          "centerTexels": [
+            -0.09800000000000009,
+            36.731
+          ],
+          "renderOrder": 8
+        },
+        {
+          "id": "fanGrille",
+          "runtimeId": "fanGrille",
+          "face": "back",
+          "layer": "mechanical-detail",
+          "sizeTexels": [
+            12,
+            12
+          ],
+          "centerTexels": [
+            -11.737,
+            13.071
+          ],
+          "renderOrder": 9
+        }
+      ]
+    },
+    {
+      "id": "depth",
+      "scale": [
+        1,
+        1.5,
+        1
+      ],
+      "dimensions": {
+        "width": 44,
+        "depth": 64.5,
+        "height": 104
+      },
+      "references": {
+        "bottom": 0.0,
+        "headerTop": 100.984
+      },
+      "adaptiveFields": [
+        {
+          "id": "condenserField",
+          "face": "back",
+          "layer": "structural-graphic",
+          "boundsTexels": [
+            -18.776,
+            25.754,
+            20.052,
+            96.908
+          ],
+          "centerTexels": [
+            0.6379999999999999,
+            61.331
+          ],
+          "sizeTexels": [
+            38.828,
+            71.154
+          ],
+          "pitchTexels": [
+            2.45,
+            8.2
+          ],
+          "lineWidthTexels": [
+            0.52,
+            0.72
+          ],
+          "repeatCounts": [
+            15,
+            8
+          ],
+          "marginsTexels": [
+            3.224,
+            1.948,
+            25.754,
+            4.076
+          ],
+          "renderOrder": 7,
+          "visualProbe": {
+            "uScanAtVTexels": 85,
+            "vScanAtUOffsetTexels": 1.3
+          }
+        }
+      ],
+      "fixedFittings": [
+        {
+          "id": "sideVentPanel",
+          "runtimeId": "sideVentPanel",
+          "face": "left",
+          "layer": "structural-graphic",
+          "sizeTexels": [
+            21.431,
+            24.512
+          ],
+          "centerTexels": [
+            19.737000000000002,
+            16.095
+          ],
+          "renderOrder": 7
+        },
+        {
+          "id": "sideRating",
+          "runtimeId": "sideRating",
+          "face": "left",
+          "layer": "label",
+          "sizeTexels": [
+            8,
+            5.3
+          ],
+          "centerTexels": [
+            -24.162,
+            95.684
+          ],
+          "renderOrder": 8
+        },
+        {
+          "id": "rearWarning",
+          "runtimeId": "rearWarning",
+          "face": "back",
+          "layer": "label",
+          "sizeTexels": [
+            16,
+            6.026
+          ],
+          "centerTexels": [
+            -0.16300000000000014,
+            71.768
+          ],
+          "renderOrder": 8
+        },
+        {
+          "id": "rearDoNot",
+          "runtimeId": "rearDoNot",
+          "face": "back",
+          "layer": "label",
+          "sizeTexels": [
+            16,
+            4.571
+          ],
+          "centerTexels": [
+            -0.09800000000000009,
+            36.731
+          ],
+          "renderOrder": 8
+        },
+        {
+          "id": "fanGrille",
+          "runtimeId": "fanGrille",
+          "face": "back",
+          "layer": "mechanical-detail",
+          "sizeTexels": [
+            12,
+            12
+          ],
+          "centerTexels": [
+            -11.737,
+            13.071
+          ],
+          "renderOrder": 9
+        }
+      ]
+    },
+    {
+      "id": "width",
+      "scale": [
+        1.45,
+        1,
+        1
+      ],
+      "dimensions": {
+        "width": 63.8,
+        "depth": 43,
+        "height": 104
+      },
+      "references": {
+        "bottom": 0.0,
+        "headerTop": 100.984
+      },
+      "adaptiveFields": [
+        {
+          "id": "condenserField",
+          "face": "back",
+          "layer": "structural-graphic",
+          "boundsTexels": [
+            -28.676,
+            25.754,
+            29.951999999999998,
+            96.908
+          ],
+          "centerTexels": [
+            0.6379999999999999,
+            61.331
+          ],
+          "sizeTexels": [
+            58.628,
+            71.154
+          ],
+          "pitchTexels": [
+            2.45,
+            8.2
+          ],
+          "lineWidthTexels": [
+            0.52,
+            0.72
+          ],
+          "repeatCounts": [
+            23,
+            8
+          ],
+          "marginsTexels": [
+            3.224,
+            1.948,
+            25.754,
+            4.076
+          ],
+          "renderOrder": 7,
+          "visualProbe": {
+            "uScanAtVTexels": 85,
+            "vScanAtUOffsetTexels": 1.3
+          }
+        }
+      ],
+      "fixedFittings": [
+        {
+          "id": "sideVentPanel",
+          "runtimeId": "sideVentPanel",
+          "face": "left",
+          "layer": "structural-graphic",
+          "sizeTexels": [
+            21.431,
+            24.512
+          ],
+          "centerTexels": [
+            8.987,
+            16.095
+          ],
+          "renderOrder": 7
+        },
+        {
+          "id": "sideRating",
+          "runtimeId": "sideRating",
+          "face": "left",
+          "layer": "label",
+          "sizeTexels": [
+            8,
+            5.3
+          ],
+          "centerTexels": [
+            -13.412,
+            95.684
+          ],
+          "renderOrder": 8
+        },
+        {
+          "id": "rearWarning",
+          "runtimeId": "rearWarning",
+          "face": "back",
+          "layer": "label",
+          "sizeTexels": [
+            16,
+            6.026
+          ],
+          "centerTexels": [
+            -0.16300000000000014,
+            71.768
+          ],
+          "renderOrder": 8
+        },
+        {
+          "id": "rearDoNot",
+          "runtimeId": "rearDoNot",
+          "face": "back",
+          "layer": "label",
+          "sizeTexels": [
+            16,
+            4.571
+          ],
+          "centerTexels": [
+            -0.09800000000000009,
+            36.731
+          ],
+          "renderOrder": 8
+        },
+        {
+          "id": "fanGrille",
+          "runtimeId": "fanGrille",
+          "face": "back",
+          "layer": "mechanical-detail",
+          "sizeTexels": [
+            12,
+            12
+          ],
+          "centerTexels": [
+            -11.737,
+            13.071
+          ],
+          "renderOrder": 9
+        }
+      ]
+    },
+    {
+      "id": "height",
+      "scale": [
+        1,
+        1,
+        1.3
+      ],
+      "dimensions": {
+        "width": 44,
+        "depth": 43,
+        "height": 135.20000000000002
+      },
+      "references": {
+        "bottom": 0.0,
+        "headerTop": 131.2792
+      },
+      "adaptiveFields": [
+        {
+          "id": "condenserField",
+          "face": "back",
+          "layer": "structural-graphic",
+          "boundsTexels": [
+            -18.776,
+            25.754,
+            20.052,
+            127.20320000000001
+          ],
+          "centerTexels": [
+            0.6379999999999999,
+            76.4786
+          ],
+          "sizeTexels": [
+            38.828,
+            101.4492
+          ],
+          "pitchTexels": [
+            2.45,
+            8.2
+          ],
+          "lineWidthTexels": [
+            0.52,
+            0.72
+          ],
+          "repeatCounts": [
+            15,
+            12
+          ],
+          "marginsTexels": [
+            3.224,
+            1.948,
+            25.754,
+            4.076
+          ],
+          "renderOrder": 7,
+          "visualProbe": {
+            "uScanAtVTexels": 85,
+            "vScanAtUOffsetTexels": 1.3
+          }
+        }
+      ],
+      "fixedFittings": [
+        {
+          "id": "sideVentPanel",
+          "runtimeId": "sideVentPanel",
+          "face": "left",
+          "layer": "structural-graphic",
+          "sizeTexels": [
+            21.431,
+            24.512
+          ],
+          "centerTexels": [
+            8.987,
+            16.095
+          ],
+          "renderOrder": 7
+        },
+        {
+          "id": "sideRating",
+          "runtimeId": "sideRating",
+          "face": "left",
+          "layer": "label",
+          "sizeTexels": [
+            8,
+            5.3
+          ],
+          "centerTexels": [
+            -13.412,
+            125.9792
+          ],
+          "renderOrder": 8
+        },
+        {
+          "id": "rearWarning",
+          "runtimeId": "rearWarning",
+          "face": "back",
+          "layer": "label",
+          "sizeTexels": [
+            16,
+            6.026
+          ],
+          "centerTexels": [
+            -0.16300000000000014,
+            102.06320000000001
+          ],
+          "renderOrder": 8
+        },
+        {
+          "id": "rearDoNot",
+          "runtimeId": "rearDoNot",
+          "face": "back",
+          "layer": "label",
+          "sizeTexels": [
+            16,
+            4.571
+          ],
+          "centerTexels": [
+            -0.09800000000000009,
+            36.731
+          ],
+          "renderOrder": 8
+        },
+        {
+          "id": "fanGrille",
+          "runtimeId": "fanGrille",
+          "face": "back",
+          "layer": "mechanical-detail",
+          "sizeTexels": [
+            12,
+            12
+          ],
+          "centerTexels": [
+            -11.737,
+            13.071
+          ],
+          "renderOrder": 9
+        }
+      ]
+    }
+  ]
+}

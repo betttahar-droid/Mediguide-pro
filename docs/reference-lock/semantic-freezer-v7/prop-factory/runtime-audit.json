@@ -1,0 +1,50 @@
+{
+  "status": "PASS",
+  "checks": {
+    "runtimeProducedEveryScaleCase": true,
+    "baseRuntimeExists": true,
+    "case:base": true,
+    "case:depth": true,
+    "case:width": true,
+    "case:height": true,
+    "allCorrespondencesConsumed": true,
+    "faceBasisMatches": true,
+    "textureLayersMatch": true,
+    "fixedFittingSizesInvariant": true,
+    "fixedGeometryInvariant": true,
+    "overlap:sideVentPanel>sideBottomWear": true,
+    "pixelFrequency:condenserField": true,
+    "runtimeClean": true
+  },
+  "mismatches": [],
+  "visualEvidence": [
+    {
+      "runs": 17,
+      "medianPitchPixels": 15.0,
+      "axis": "u",
+      "expectedPitchPixels": 15.062962962962963,
+      "output": "C:\\Users\\mansour\\Documents\\Modular builder\\Mediguide-pro\\docs\\reference-lock\\semantic-freezer-v7\\factory-runtime\\texture-v7-fit-0-view-back.png"
+    },
+    {
+      "runs": 25,
+      "medianPitchPixels": 15.0,
+      "axis": "u",
+      "expectedPitchPixels": 15.062962962962963,
+      "output": "C:\\Users\\mansour\\Documents\\Modular builder\\Mediguide-pro\\docs\\reference-lock\\semantic-freezer-v7\\factory-runtime\\texture-v7-fit-0-view-back-sx-1_45.png"
+    },
+    {
+      "runs": 12,
+      "medianPitchPixels": 51.0,
+      "axis": "v",
+      "expectedPitchPixels": 51.56060606060605,
+      "output": "C:\\Users\\mansour\\Documents\\Modular builder\\Mediguide-pro\\docs\\reference-lock\\semantic-freezer-v7\\factory-runtime\\texture-v7-fit-0-view-back.png"
+    },
+    {
+      "runs": 17,
+      "medianPitchPixels": 51.0,
+      "axis": "v",
+      "expectedPitchPixels": 51.56060606060605,
+      "output": "C:\\Users\\mansour\\Documents\\Modular builder\\Mediguide-pro\\docs\\reference-lock\\semantic-freezer-v7\\factory-runtime\\texture-v7-fit-0-view-back-sz-1_3.png"
+    }
+  ]
+}

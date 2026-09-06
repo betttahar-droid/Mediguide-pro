@@ -1,0 +1,28 @@
+Use case: stylized-concept
+Asset type: source sheet for a deterministic UV-less per-face material compiler
+Primary request: author exactly eight separate square FACE-ROLE TONE MASKS for the supplied vaccine-fridge geometry.
+
+Input roles:
+- Images 1 and 2 are immutable raw front and isometric geometry renders. Preserve their part boundaries.
+- Images 3 and 4 are diagnostic part-ID and face-orientation passes for understanding only; do not copy their colors.
+- Image 5 is the target vaccine-fridge visual authority.
+- Images 6 through 10 are style references. Learn their hard rectangular pixel clusters, quiet broad faces, short directional catches and construction-readable marks; do not copy their subjects.
+- Image 11 is the spatial guide. Fill its eight equal square safe zones in reading order. Do not copy the guide outlines.
+
+The eight masks in reading order are:
+1 ROOF_TOP: quiet inset roof plate, two short top/left catches, two tiny corner notches.
+2 CROWN_FRONT: layered horizontal fascia bands, short left/right edge catches, quiet center reserved for controls.
+3 CABINET_SIDE: quiet sheet metal, one construction seam, two short right-edge service marks and tiny corner fasteners.
+4 DOOR_FRAME: enamel frame perimeter with sparse square hinge/socket notches, empty center.
+5 SHELF_TOP: metal shelf field with a quiet middle, one short directional highlight cluster and a few long shallow horizontal seams.
+6 SHELF_LIP: narrow horizontal lip vocabulary, bright upper catch, dark lower band, one square fastener at each end.
+7 BASE_FRONT: recessed service-panel perimeter, two short corner catches, quiet center reserved for ventilation.
+8 VENT_FIELD: repeated thick horizontal dark slots separated by base bands, with a bright upper rim and dark lower rim.
+
+Output composition: pure flat magenta #FF00FF background. Exactly eight disconnected equal-size square panels in a 4-column by 2-row layout matching the guide. Wide magenta gutters. Nothing may touch another panel.
+
+Tone language: these are semantic masks, never colored textures. Use only five flat neutral values: near-black #202020 for deepest construction/shadow marks, dark #606060 for secondary shade, base #808080 for untouched material, light #C0C0C0 for highlights, and near-white #F0F0F0 for strongest catches. The cutter will quantize them exactly.
+
+Style and density: each panel looks 32 huge logical texels across, nearest-neighbor, hard square edges. Use deliberate 1-logical-texel lines and 2-to-8-texel clusters. Keep 75-to-85 percent of each broad field at the base value, but make the requested marks clearly readable. Directional catches favor top/left; dark construction bands favor bottom/right.
+
+Constraints: no perspective, no object render, no shadows outside panels, no gradients, blur, antialiasing, texture noise, random dirt, scratches, text, letters, numbers, legends, labels, arrows, watermark, color, tiny speckle, or extra panels. Do not move or reinterpret the supplied fridge geometry.

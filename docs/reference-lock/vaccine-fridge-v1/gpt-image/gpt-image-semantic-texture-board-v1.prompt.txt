@@ -1,0 +1,10 @@
+Create a clean semantic texture-source board for the exact vaccine fridge in the supplied reference. This is source artwork for a voxel/low-poly asset, not a rendered object. Use a perfectly flat orthographic 4 by 4 grid of sixteen equal square cells on a neutral white sheet, with thin dark grid dividers and generous blank gutters inside every cell. No perspective, no lighting direction, no cast shadows, no labels, no letters, no numbers, no captions, no mockup, and no refrigerator silhouette. Every texture must keep the reference palette and crisp pixel-art character.
+
+Cell order, left-to-right and top-to-bottom:
+1 seamless warm cream enamel center tile; 2 seamless cool blue-gray painted-steel center tile; 3 seamless deep-teal enamel center tile; 4 seamless dark teal translucent glass tile with very subtle neutral mottling;
+5 warm cream horizontal trim LEFT end-cap isolated and centered; 6 seamless warm cream horizontal trim MIDDLE strip suitable for x-axis tiling; 7 warm cream horizontal trim RIGHT end-cap isolated and centered; 8 complete gold ventilation grille front decal, straight-on, transparent/blank around it;
+9 complete dark display-panel decal with the tiny amber square and green segmented marks matching the reference but no invented text; 10 complete plum handle front-face decal; 11 pale cyan diagonal glass-reflection decal on an otherwise blank cell; 12 subtle shelf-front highlight strip, straight-on;
+13 warm cream outer-corner wear/highlight decal confined to the cell corner; 14 blue-gray panel corner wear/highlight decal confined to the cell corner; 15 deep-teal panel corner wear/highlight decal confined to the cell corner; 16 blank neutral calibration cell.
+
+Tiles 1-4 and cell 6 must have matching opposite edges and no border features. Fixed decals 5,7,8,9,10,11,12,13,14,15 must be fully contained with clean empty gutters and must not touch a cell boundary. Hard-edged pixel clusters only, very restrained wear, no noise speckles, no gradients that imply object-scale lighting. Preserve symmetry and exact straight lines.
+

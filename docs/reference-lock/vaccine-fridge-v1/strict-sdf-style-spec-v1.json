@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "model": "vaccine-fridge-strict-sdf",
+  "authorityDimensionsPx": { "width": 38.75, "height": 96, "depth": 36.75 },
+  "geometryPolicy": "axis-aligned boxes with structural dimensions expressed as fractions of W, H, or D",
+  "surfacePolicy": "UV-less analytic edge distance; no texture maps, samplers, vertex colors, or baked lighting",
+  "palette": {
+    "cream": "#dbc9a8",
+    "steel": "#617a80",
+    "teal": "#0d403b",
+    "glass": "#123f3b",
+    "plum": "#2d1738",
+    "ochre": "#c58b42",
+    "display": "#16272a"
+  },
+  "tints": { "top": 1.09, "front": 1.0, "side": 0.858, "back": 0.9, "bottom": 0.74 },
+  "materialRules": {
+    "uOutline": 0.03125,
+    "uCatch": 0.0625,
+    "uInset": 0.125,
+    "uSeamWidth": 0.0234375,
+    "uGatePadding": 0.03125
+  },
+  "fittings": {
+    "policy": "fixed style-unit boxes anchored from named panel edges",
+    "atlas": null,
+    "display": "procedural colored pixel boxes",
+    "handle": "fixed-size box assembly",
+    "hardware": "procedural corner rule"
+  },
+  "repeatedStructure": {
+    "grilleLouvres": "geometric loop; count grows with available grille width",
+    "shelves": "four real boxes per complete door bay"
+  }
+}
