@@ -46,4 +46,10 @@ try {
   assert.equal(await page.locator('#emptyStage').isVisible(), true);
   assert.equal(await page.locator('#stageProgress').isVisible(), false);
   assert.equal(await page.locator('#stageError').isVisible(), false);
-  assert(await page.locator('#visionModel option').count()
+  assert(await page.locator('#visionModel option').count() >= 1);
+  assert.deepEqual(pageErrors, []);
+  console.log('Prop Factory Studio smoke test passed');
+} finally {
+  await browser?.close();
+  child.kill();
+}

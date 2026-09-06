@@ -161,13 +161,24 @@ const normalizeSpec = (source, id) => {
   return spec;
 };
 
-const auditSpec = (spec) => {
+const auditSpec = (spec, prompt = '') => {
   const ids = [...spec.parts, ...spec.fixedParts, ...spec.adaptiveFields].map((item) => item.id);
+  const spans = spec.parts.map(item => [item.bounds[3] - item.bounds[0], item.bounds[4] - item.bounds[1], item.bounds[5] - item.bounds[2]]);
+  const occupied = spec.parts.length ? [
+    Math.max(...spec.parts.map(item => item.bounds[3])) - Math.min(...spec.parts.map(item => item.bounds[0])),
+    Math.max(...spec.parts.map(item => item.bounds[4])) - Math.min(...spec.parts.map(item => item.bounds[1])),
+    Math.max(...spec.parts.map(item => item.bounds[5])) - Math.min(...spec.parts.map(item => item.bounds[2])),
+  ] : [0, 0, 0];
+  const requested = ['handle', 'vent', 'screen', 'label', 'warning', 'fan', 'hinge', 'control'].filter(type => new RegExp(`\\b${type}s?\\b`, 'i').test(prompt));
+  const presentTypes = new Set(spec.fixedParts.map(item => item.type));
   const checks = {
     dimensionsSane: Object.values(spec.dimensions).every((value) => value >= 8 && value <= 240),
     enoughStructuralParts: spec.parts.length >= 3,
     uniqueIds: new Set(ids).size === ids.length,
     orderedBounds: spec.parts.every((item) => item.bounds[0] < item.bounds[3] && item.bounds[1] < item.bounds[4] && item.bounds[2] < item.bounds[5]),
+    silhouetteCoverage: occupied.every(value => value >= .6),
+    mainBodyPresent: spans.some(([width, height, depth]) => width >= .55 && height >= .5 && depth >= .45),
+    requestedFittingsPresent: requested.every(type => presentTypes.has(type) || (type === 'warning' && presentTypes.has('label'))),
     fixedPartsHaveWorldSizes: spec.fixedParts.every((item) => item.size.every((value) => value > 0) && item.anchor),
     adaptivePitchIsFixed: spec.adaptiveFields.every((item) => item.pitch.every((value) => value > 0) && item.lineWidth.every((value, axis) => value < item.pitch[axis])),
     paletteComplete: ['primary', 'secondary', 'dark', 'light', 'accent'].every((name) => /^#[0-9a-f]{6}$/i.test(spec.palette[name])),
@@ -189,7 +200,7 @@ const runJob = async (job, revisionPrompt = '') => {
     }
     const modelSpec = await generateSpec(job, revisionPrompt);
     await updateJob(job, { phase: 'validating', progress: 76, message: 'Validating anchors, bounds, and texture behavior' });
-    const audit = auditSpec(modelSpec);
+    const audit = auditSpec(modelSpec, job.prompt);
     job.modelSpec = modelSpec; job.audit = audit;
     const revisionDirectory = path.join(job.directory, `revision-${String(job.iteration).padStart(3, '0')}`);
     await mkdir(revisionDirectory, { recursive: true });
@@ -222,7 +233,19 @@ const loadJobs = async () => {
   for (const name of await readdir(jobsRoot)) try {
     const state = JSON.parse(await readFile(path.join(jobsRoot, name, 'state.json'), 'utf8'));
     const modelSpec = await readFile(path.join(jobsRoot, name, 'model-spec.json'), 'utf8').then(JSON.parse).catch(() => null);
-    jobs.set(name, { ...state, directory: path.join(jobsRoot, name), references: [], modelSpec, usage: {} });
+    const referenceDirectory = path.join(jobsRoot, name, 'references');
+    const referenceFiles = await readdir(referenceDirectory).catch(() => []);
+    const references = referenceFiles.filter(file => /^reference-[1-5]\.(png|jpg|webp|gif)$/.test(file)).map(file => {
+      const extension = path.extname(file).toLowerCase();
+      const type = extension === '.jpg' ? 'image/jpeg' : `image/${extension.slice(1)}`;
+      return { name: file, type, path: path.join(referenceDirectory, file), url: `/api/jobs/${name}/references/${file}` };
+    });
+    const job = { ...state, directory: path.join(jobsRoot, name), references, modelSpec, usage: {} };
+    if (['queued', 'running'].includes(job.status)) {
+      Object.assign(job, { status: 'error', phase: 'error', progress: 100, message: 'Generation was interrupted', error: 'The Studio was closed while Ollama was working. Submit the request again.' });
+      await saveJob(job);
+    }
+    jobs.set(name, job);
   } catch {}
 };
 
@@ -277,4 +300,4 @@ const server = createServer(async (request, response) => {
     return json(response, 404, { error: 'Not found' });
   } catch (error) { return json(response, error.code === 'ENOENT' ? 404 : 500, { error: error.message }); }
 });
-server.listen(port, h
+server.listen(port, host, () => console.log(`Prop Factory Studio: http://${host}:${port}`));
