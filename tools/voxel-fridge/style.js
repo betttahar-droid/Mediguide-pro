@@ -255,8 +255,23 @@ export const MATERIALS = {
   posScreen: M({ base: '#2c3343', lit: '#3a4457', shade: '#111727', edge: 0,
                  checker: 1, checkerCell: 0.42 }),
   posGlare:  M({ base: '#39435a', lit: '#48546e', shade: '#2c3547', edge: 0 }),
+  // THE CHECKER IS THE TUBE'S, AND NOTHING ELSE'S. posScreen was reused for the
+  // power switch, the printer's slot and the vent slots because all four are
+  // "small dark rectangle" — and every one of them came out carrying the CRT's
+  // dither, a 0.42-unit checkerboard printed on a switch the size of a
+  // thumbnail. A material is a SUBSTANCE: this is the same dark plastic without
+  // the phosphor pattern. Sampled off the reference's own power switch.
+  posDark:   M({ base: '#2b313d', lit: '#3a4250', shade: '#151a26', edge: 0.10 }),
   posKey:    M({ base: '#d2c8a5', lit: '#ece2bd', shade: '#a89f83', edge: 0.08 }),
-  posKeyDk:  M({ base: '#a0947c', lit: '#bcae91', shade: '#7d7360', edge: 0.08 }),
+  // The accent caps at the keyboard's right-hand end: three RED in the back
+  // rows and one dark navy at the front. Both sampled off the reference —
+  // #ab564f / #6b2a30 and #2e3844 — and both were previously one muted brown,
+  // which is the colour you get by averaging a red and a navy.
+  posKeyRed: M({ base: '#ab564f', lit: '#c4695f', shade: '#6b2a30', edge: 0.08 }),
+  posKeyDk:  M({ base: '#2e3844', lit: '#3f4b5a', shade: '#1c232c', edge: 0.08 }),
+  // Receipt paper: warm, not the cold white of a box label (#dfe4e0 read as
+  // plastic). Sampled #ecefd4 off the reference's own till roll.
+  posPaper:  M({ base: '#ecefd4', lit: '#f8fbe6', shade: '#c9ceb2', edge: 0.06 }),
   posRead:   M({ base: '#30435f', lit: '#44597c', shade: '#1e2c42', edge: 0.10 }),
   posFoot:   M({ base: '#354255', lit: '#485672', shade: '#232c3a', edge: 0.14 }),
   mintFlat: M({ base: '#a5d6b6', lit: '#c5f3d4', shade: '#95baa7', edge: 0 }),

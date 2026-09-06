@@ -35,8 +35,26 @@
 //      moulding, the glare mark starts at the glass. The visible half is what
 //      you measured; the buried half is what makes it a part.
 //
+// AND THEN AUDITED AGAINST THE REFERENCE PIXEL BY PIXEL, which is a different
+// question again from either the outline or the assembly, and found seven
+// things no silhouette check can see because none of them is in the outline:
+//
+//   - THE PROP IS TWO-TONE and was built in one. The tan accent runs the full
+//     width at z 0.03 (skirt), 0.145 (keyboard well), 0.19 (printer rim),
+//     0.25 (riser), 0.33 (neck) and 0.36 (tube underside); the plinth's face
+//     and the whole monitor stay pale. That division is most of its character.
+//   - the accent keycaps are at the OTHER END of the keyboard, and they are
+//     RED (#ab564f) plus one navy (#2e3844), not one averaged brown
+//   - the lamp sits BETWEEN the switch and the monitor's edge, not beyond it
+//   - the switch, the printer's slot and the vents all carried the CRT's
+//     checker dither, because they reused posScreen
+//   - the receipt was a five-pixel sliver where the reference hangs 0.13 of
+//     the width of paper with a torn edge
+//   - the card reader's face is a little SCREEN with two diagonal glare
+//     stripes, not the keypad-and-slot somebody imagined
+//
 // Built by following docs/BUILDING-A-PROP.txt. Nothing in ../style.js changed
-// except eight material families and the two userData fields the join-check
+// except eleven material families and the two userData fields the join-check
 // reads.
 //
 // MEASURED off docs/style-bible/props/pos_terminal.png (front 617 x 709 px,
@@ -152,7 +170,7 @@ export function build(THREE, MATS, kit, H) {
   const LAMP_W = 0.018 * U;
   const PRN_B = 0.284 * U;                          // in from the base edge
   const KEY_IN = 0.086 * U;                         // first key, in from the edge
-  const KEY_DARK = 5;                               // function block, fixed count
+  const KEY_DARK = 3;                               // accent caps, fixed count
   const MHW = 0.401 * U;                            // monitor half-width
   const MCX = -(0.4355 - CXF) * U;                  // its centre, off the base's
 
@@ -209,6 +227,15 @@ export function build(THREE, MATS, kit, H) {
   // =========================================================================
   // 2. BOTTOM SHELL -> the feet
   // =========================================================================
+  // THE PROP IS TWO-TONE, and this is the first tan part. MEASURED: the tan
+  // accent (#a49375, our posTrim) runs the full width at z 0.03..0.05 (this
+  // skirt), across the keyboard well at 0.145, the printer's rim at 0.19, the
+  // riser's front at 0.25, the neck at 0.33 and the tube's underside at 0.36 —
+  // while the plinth's own face and the whole monitor case stay pale (#c8cfbf,
+  // our posCase). Built in one tone it was a grey-green machine with a tan
+  // screen surround; the reference is a pale case sitting on a tan deck, and
+  // that division is most of its character.
+  //
   // The lower rim the case sits on, inset all round so the plinth above reads
   // as overhanging it. ASYMMETRIC, because the reference is: at z 0.030 it
   // reads 0.023..0.846 against a deck of 0.000..0.859, so the lip is inset 0.86
@@ -216,7 +243,7 @@ export function build(THREE, MATS, kit, H) {
   // where the feet stop — ZP.footTop, not a fraction of its own — and a lip
   // starting 0.004 higher left a 1105-pixel band of bare floor, the largest
   // single disagreement on the front elevation.
-  add('posCase', [-(W - 0.50), -(D - 0.78), ZP.footTop],
+  add('posTrim', [-(W - 0.50), -(D - 0.78), ZP.footTop],
                  [W - 0.86, D - 0.78, ZP.shellTop],
       at('shell', 'foot', CRISP));
 
@@ -267,10 +294,10 @@ export function build(THREE, MATS, kit, H) {
   const KN = Math.max(3, Math.floor((kx2 - (BASE.xOut + PRN_B + 1.6)) / KEY_P));
   const DECK_X = [kx2 - KN * KEY_P - 0.7, kx2 + 0.7];  // the keys, plus margin
 
-  add('posCase', [DECK_X[0], uy(0.105), ZP.plinthTop],
+  add('posTrim', [DECK_X[0], uy(0.105), ZP.plinthTop],
                  [DECK_X[1], uy(0.205), ZP.deckLip],
       at('deck', 'plinth', { bevel: [0.8, 0.8, 0, 0.6, 0.8, 0] }));
-  add('posCase', [DECK_X[0], uy(0.205), ZP.plinthTop],
+  add('posTrim', [DECK_X[0], uy(0.205), ZP.plinthTop],
                  [DECK_X[1], uy(0.332), ZP.deckTop],
       at('deck', 'plinth', { bevel: [0.8, 0.8, 0, 0.8, 1.0, 0.6] }));
 
@@ -299,13 +326,23 @@ export function build(THREE, MATS, kit, H) {
       // The reference's right-hand group is darker — a numeric or function
       // block, which every till has. Indexed by POSITION, not random, so two
       // renders of the same model are comparable and a wider deck extends the
-      // pale block rather than reshuffling every key. A FIXED five keys at the
+      // pale block rather than reshuffling every key. A FIXED three keys at the
       // far end, not a fraction of the keyboard, or a wider till would get a
-      // wider function block. px() is mirrored, so k = 0 is the reference's
-      // right-hand end: written the obvious way round it put the function block
-      // on the wrong side of the keyboard.
-      const dark = k < KEY_DARK;
-      add(dark ? 'posKeyDk' : 'posKey', [s, ky1, r.lo], [s + KEY_W, ky2, r.hi],
+      // wider function block.
+      //
+      // AND THEY ARE AT THE OTHER END, AND THEY ARE RED. Measured cap by cap
+      // along the reference's own rows: pale (#d2c8a5) from x 0.097 to 0.344,
+      // then three RED caps at 0.368..0.394, 0.425..0.451 and 0.480..0.507, with
+      // a dark navy cap (#2e3844) at 0.478 in the FRONT row. px() is mirrored,
+      // so k = 0 is the reference's LEFT-hand end — the block was written at
+      // k < 5 and came out on the wrong side of the keyboard, in a muted brown
+      // that is what you get by averaging a red with a navy. Both faults
+      // survived every silhouette check, because a keycap's colour is not in
+      // the outline.
+      const accent = k >= KN - KEY_DARK;
+      const kind = !accent ? 'posKey'
+                 : (r === ROW[0] ? 'posKeyDk' : 'posKeyRed');
+      add(kind, [s, ky1, r.lo], [s + KEY_W, ky2, r.hi],
           at('key', 'deck', { bevel: 0.18 }));
     }
   }
@@ -328,13 +365,13 @@ export function build(THREE, MATS, kit, H) {
   // and 0.049/0.044 by z 0.222 — so a step with vertical sides is up to 1.0
   // unit wide across the top half of its own band. Insets are FIXED world units
   // off the base's own edges, never fractions.
-  add('posCase', [BASE.xOut + 0.30, uy(0.330), ZP.plinthTop],
+  add('posTrim', [BASE.xOut + 0.30, uy(0.330), ZP.plinthTop],
                  [BASE.xIn - 0.78, uy(0.955), ZP.step1Top],
       at('riser', 'plinth', { ...STEP, taperX: 1.0 }));
-  add('posCase', [BASE.xOut + 1.70, uy(0.373), ZP.step1Top],
+  add('posTrim', [BASE.xOut + 1.70, uy(0.373), ZP.step1Top],
                  [BASE.xIn - 2.00, uy(0.919), ZP.step2Top],
       at('riser', 'riser', { ...STEP, taperX: 0.6 }));
-  add('posCase', [BASE.xOut + 2.83, uy(0.430), ZP.step2Top],
+  add('posTrim', [BASE.xOut + 2.83, uy(0.430), ZP.step2Top],
                  [BASE.xIn - 3.28, uy(0.880), ZP.riserTop],
       at('riser', 'riser', { ...STEP, taperX: 0.8 }));
 
@@ -346,7 +383,7 @@ export function build(THREE, MATS, kit, H) {
   // way down. Its front draws BACK as it rises — u 0.475 at the riser, 0.498 by
   // z 0.33 — so a straight column stood 911 pixels in front of the reference.
   const NECK_HW = 0.1355 * U;
-  add('posCase', [MCX - NECK_HW, uy(0.475), ZP.riserTop],
+  add('posTrim', [MCX - NECK_HW, uy(0.475), ZP.riserTop],
                  [MCX + NECK_HW, uy(0.820), ZP.neckTop],
       at('neck', 'riser', { bevel: [0.9, 0, 0.9], taperZ: 0.7 }));
 
@@ -379,7 +416,7 @@ export function build(THREE, MATS, kit, H) {
   // the underside recessed between them. Built as one slab it filled that gap
   // and ran 0.087 of the depth too far back, the worst single error on the prop.
   // The lip hangs off the flare above it, which is what carries it.
-  mb('posCase', 0.337 * U, uy(0.251), uy(0.430), ZP.flareLo, ZP.flareMid,
+  mb('posTrim', 0.337 * U, uy(0.251), uy(0.430), ZP.flareLo, ZP.flareMid,
      at('tube-lip', 'tube-flare', { bevel: 0, taperX: -0.0105 * U }));
   // The flare itself is CONCAVE — 12.63 half-width at z 0.344, still 13.02 at
   // 0.362, 15.03 by 0.375, most of the widening in the last third. A negative
@@ -387,7 +424,7 @@ export function build(THREE, MATS, kit, H) {
   // step put it 6% wide across the middle of the band. Its front runs from
   // u 0.230 to 0.179 over its own height, so a flat face stood 287 pixels
   // proud of the reference's outline.
-  mb('posCase', 0.3475 * U, uy(0.230), uy(0.907), ZP.flareMid, ZP.caseLo,
+  mb('posTrim', 0.3475 * U, uy(0.230), uy(0.907), ZP.flareMid, ZP.caseLo,
      at('tube-flare', 'neck', { bevel: 0, taperX: -0.054 * U, taperZ: -1.7 }));
 
   // THE CASE, in two pieces because the tube has a shoulder: the reference
@@ -476,13 +513,26 @@ export function build(THREE, MATS, kit, H) {
   // the rim's front — a switch buried inside the moulding it is meant to be
   // mounted in, which no elevation shows and which the join-check does. Proud
   // of RIM_F by a third of a unit, and running back into the moulding.
+  //
+  // THE LAMP IS BETWEEN THE SWITCH AND THE EDGE, not beyond it. Measured off the
+  // reference: switch x 0.645..0.699, lamp 0.715..0.736, against a monitor whose
+  // edge is at 0.836 — so the lamp's offset from that edge (0.100) is SMALLER
+  // than the switch's (0.137). Written as "the switch, plus its width, plus a
+  // gap" the lamp came out on the far side of the switch. px() mirrors x, so
+  // "next to it" is the one direction you cannot check by reading the code, and
+  // the silhouette cannot see a lamp at all.
+  //
+  // SQUARE, AND NOT THE TUBE'S MATERIAL. posScreen carries the CRT's checker
+  // dither (see style.js), so the switch was a thumbnail-sized checkerboard; and
+  // a 0.25 bevel on a part 2 units wide rounded it into a pebble. The reference
+  // draws a crisp square cap inside a square surround.
   const monEdge = MCX - MHW;          // the monitor's own -x face
   const BY = [RIM_F - 0.30, RIM_F + 1.2];
-  add('posScreen', [monEdge + BTN_A, BY[0], ZP.caseLo],
-                   [monEdge + BTN_A + BTN_W, BY[1], z(0.405)],
-      at('power-switch', 'bezel-rim', { bevel: 0.25 }));
-  add('digit', [monEdge + BTN_A + BTN_W + 0.9, BY[0], z(0.385)],
-               [monEdge + BTN_A + BTN_W + 0.9 + LAMP_W, BY[1], z(0.405)],
+  add('posDark', [monEdge + BTN_A, BY[0], ZP.caseLo],
+                 [monEdge + BTN_A + BTN_W, BY[1], z(0.405)],
+      at('power-switch', 'bezel-rim', { bevel: 0.08 }));
+  add('digit', [monEdge + 0.100 * U, BY[0], z(0.383)],
+               [monEdge + 0.100 * U + LAMP_W, BY[1], z(0.398)],
       at('lamp', 'bezel-rim', { bevel: 0 }));
 
   // ---- vent slots (REPEAT) -> the cap -------------------------------------
@@ -497,7 +547,7 @@ export function build(THREE, MATS, kit, H) {
   // no boolean subtract.
   const VX = 0.3585 * U;
   for (let s = MCX - VX; s < MCX + VX - VENT_W; s += VENT_P) {
-    add('posScreen', [s, MY0 + 0.25, z(0.965)], [s + VENT_W, MY0 + 0.9, z(0.985)],
+    add('posDark', [s, MY0 + 0.25, z(0.965)], [s + VENT_W, MY0 + 0.9, z(0.985)],
         at('vent', 'crt-cap', { bevel: 0 }));
   }
 
@@ -519,19 +569,62 @@ export function build(THREE, MATS, kit, H) {
   const F = BASE.front, R = BASE.xOut;
   const pbox = (kind, xa, xb, y0, y1, za, zb, o) =>
     add(kind, [R + xa, F - y1, za], [R + xb, F - y0, zb], o);
-  pbox('posCase', 0.069 * U, PRN_B, -1.30, -1.05, z(0.140), z(0.200),
+  pbox('posTrim', 0.069 * U, PRN_B, -1.30, -1.05, z(0.140), z(0.200),
        at('printer', 'plinth', { bevel: 0.4 }));
-  pbox('posScreen', 0.079 * U, 0.274 * U, -1.10, -0.85, z(0.168), z(0.190),
+  pbox('posDark', 0.079 * U, 0.274 * U, -1.10, -0.85, z(0.168), z(0.190),
        at('printer-slot', 'printer', { bevel: 0 }));
-  // The tail leaves the silhouette, which is what says the thing is loaded. It
-  // lives in the chamfer band too: recessed to the printer's own plane it was
-  // inside the plinth and drew nothing, brought forward to the nominal front
-  // face it would set the side view's bounding box. z 0.140..0.172 is where the
-  // chamfer has opened far enough for it to show.
-  pbox('boxPale', 0.115 * U, 0.245 * U, -1.05, -0.70, z(0.140), z(0.172),
+  // THE RECEIPT HANGS OUT OF THE SLOT, and that is the whole point of drawing a
+  // printer at all. Measured off the reference: paper x 0.624..0.754, running
+  // from the slot at z 0.155 down to a TORN edge at 0.100 — a fifth of the
+  // prop's height of white paper against a pale case.
+  //
+  // It was built inside the plinth's front chamfer to keep it out of the side
+  // view's bounding box, and at that depth it drew a five-pixel sliver: the tail
+  // measured 0.005 of the width where the reference has 0.130. A part hidden to
+  // protect a measurement is not a part. It hangs 0.35 proud of the base's own
+  // front face instead — 0.011 of the depth in profile, which is what a sheet of
+  // paper taped to a machine actually looks like from the side.
+  // It reaches BACK INTO THE SLOT, of course: a receipt comes out of the
+  // mechanism, so the sheet runs from 0.35 proud of the front face to inside the
+  // housing. Same rule as the switch and the vents.
+  // pbox()'s y pair is DISTANCE IN FRONT OF THE FACE, so the sheet runs from
+  // PAP_F proud back to 1.40 INSIDE the housing: [-1.40, PAP_F].
+  //
+  // AND IT LEANS BACK AS IT RISES, because the face it hangs on does. The base's
+  // front is chamfered back 2.4 units over z 0.135..0.175, so a flat sheet at
+  // the nominal front plane stands nearly two units proud of the actual surface
+  // at the slot — invisible from the front, and in the side view a 2218-pixel
+  // tongue that reset the whole drawing's bounding box and measured the entire
+  // monitor 0.048 of the depth out of place. The reference's side elevation
+  // shows no paper at all: it lies ON the case. taperZ follows the chamfer.
+  // IN TWO STEPS, because the face it hangs on changes angle: the plinth's front
+  // is vertical up to z 0.124 and then chamfers back 2.4 units by 0.175. The
+  // sheet follows — flush with the vertical part, tucked into the chamfer above
+  // it — which is how a receipt actually hangs and what keeps the side view
+  // honest. One flat sheet at the nominal front plane stood two units proud of
+  // the real surface at the slot: a 2218-pixel tongue in profile that reset the
+  // drawing's bounding box and measured the whole monitor 0.048 out of place.
+  const PAP = [0.115 * U, 0.245 * U], PAP_F = 0.05;
+  // The UPPER sheet is the one in the slot, so that is the one mounted on the
+  // printer; the hanging part below mounts on it. Written the other way round
+  // the join-check reported a 0.18 gap — the hanging sheet ends at z 0.126 and
+  // the housing does not start until 0.140, so it was attached to a part it
+  // does not reach.
+  pbox('posPaper', PAP[0], PAP[1], -1.40, -0.70, z(0.126), z(0.158),
        at('paper', 'printer', { bevel: 0 }));
-  pbox('posTrim', 0.115 * U, 0.245 * U, -0.80, -0.62, z(0.140), z(0.148),
-       at('tear-strip', 'paper', { bevel: 0 }));
+  pbox('posPaper', PAP[0], PAP[1], -1.40, PAP_F, z(0.100), z(0.126),
+       at('paper', 'paper', { bevel: 0 }));
+  // THE TORN EDGE, five tabs at a fixed pitch. A rectangle of paper reads as a
+  // label stuck on the case; the zigzag is what says it was ripped off a roll,
+  // and the reference draws it at about a fifth of the sheet's own width.
+  const TEAR = (PAP[1] - PAP[0]) / 5;
+  for (let t = 0; t < 5; t++) {
+    pbox('posPaper', PAP[0] + t * TEAR + TEAR * 0.25,
+                     PAP[0] + t * TEAR + TEAR * 0.75,
+         PAP_F - 0.30, PAP_F, z(0.088), z(0.100),
+         at('tear-tab', 'paper', { bevel: 0 }));
+  }
+
 
   // ---- card reader on its stalk -> the plinth's side ----------------------
   // An outrigger, and the reason this prop's sheet is wider than its base: a
@@ -547,29 +640,36 @@ export function build(THREE, MATS, kit, H) {
   const BK = BASE.back;
   const rbox = (kind, xa, xb, ya, yb, za, zb, o) =>
     add(kind, [R + xa, BK - yb, za], [R + xb, BK - ya, zb], o);
-  rbox('posCase', -3.00, 0.40, 2.53, 4.31, z(0.075), z(0.150),
+  rbox('posTrim', -3.00, 0.40, 2.53, 4.31, z(0.075), z(0.150),
        at('reader-foot', 'plinth', { bevel: 0.5 }));
-  rbox('posCase', -3.02, -0.56, 2.74, 4.15, z(0.150), z(0.245),
+  rbox('posTrim', -3.02, -0.56, 2.74, 4.15, z(0.150), z(0.245),
        at('reader-stalk', 'reader-foot', { bevel: 0.5 }));
   // THE HEAD IS TILTED BACK towards the operator, which is why it is two steps:
   // the front view puts it at z 0.236..0.351, but the side view shows it
   // reaching u 0.919 at z 0.23 and nothing beyond 0.819 by z 0.29. One box says
   // a slab, and put a solid block across the rear of the side silhouette.
   // Top bevels at 0.4: at 1.0 they chamfered the head's own top corners.
-  rbox('posCase', -5.20, 1.46, 1.78, 5.56, z(0.231), z(0.290),
+  rbox('posTrim', -5.20, 1.46, 1.78, 5.56, z(0.231), z(0.290),
        at('reader-head', 'reader-stalk',
           { bevel: [1.3, 1.3, 0, 0.4, 1.0, 1.0], taperZ: 1.6 }));
   rbox('posCase', -4.95, 1.46, 4.90, 5.56, z(0.290), z(0.351),
        at('reader-head', 'reader-head', { bevel: [1.3, 1.3, 0, 0.4, 1.0, 1.0] }));
-  rbox('posRead', -4.61, 0.86, 5.49, 5.72, z(0.252), z(0.318),
+  // ITS FACE IS A LITTLE SCREEN, NOT A KEYPAD. What the reference draws here is
+  // a dark panel with TWO DIAGONAL GLARE STRIPES across it — a customer display,
+  // the same object as the CRT at a twentieth of the size. It was built with
+  // three pale pips and a slot bar, which is a card reader somebody imagined
+  // rather than the one in front of them (R6: do not invent fittings). Its dark
+  // face also stopped at z 0.318 where the reference's runs to 0.330.
+  rbox('posRead', -4.61, 0.86, 5.49, 5.72, z(0.252), z(0.330),
        at('reader-face', 'reader-head', { bevel: 0 }));
-  // the card slot, ON the face rather than in front of it
-  rbox('posTrim', -1.53, 0.53, 5.72, 5.92, z(0.258), z(0.268),
-       at('card-slot', 'reader-face', { bevel: 0 }));
-  // its own little keypad, three pips, so it reads as a reader and not a box
-  for (let k = 0; k < 3; k++) {
-    rbox('posKey', -2.20 - 0.974 * k, -1.53 - 0.974 * k, 5.63, 5.79,
-         z(0.258), z(0.272), at('reader-key', 'reader-face', { bevel: 0 }));
+  // The stripes are built the same way as the CRT's glare: stepped blocks
+  // standing on the face they are a reflection in, never floating off it.
+  for (const [xa, xb, za, zb] of [[-3.90, -3.10, 0.262, 0.300],
+                                  [-3.30, -2.50, 0.278, 0.320],
+                                  [-2.10, -1.30, 0.262, 0.300],
+                                  [-1.50, -0.70, 0.278, 0.320]]) {
+    rbox('posGlare', xa, xb, 5.62, 5.75, z(za), z(zb),
+         at('reader-glare', 'reader-face', { bevel: 0 }));
   }
 
   // ---- screws (the style bible's one RULE, at a fixed inset) --------------
