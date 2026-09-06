@@ -46,7 +46,34 @@ sys.path.insert(0, str(ROOT / "tools" / "voxel-fridge"))
 from concept_sheet import generate_image, load_key  # noqa: E402
 import nano_views  # noqa: E402  -- for STYLE, so the house style stays one string
 
-STYLE = nano_views.STYLE
+# PIXELATION IS A POST EFFECT, NOT A SOURCE PROPERTY. nano_views.STYLE opens
+# with "16-bit pixel art, hard-edged chunky pixels", so every reference this
+# tool generated was pixel art -- and then the measurement stage read texels as
+# if they were geometry, and the part list inherited a look that main.js
+# already applies in the shader (palette snap, dither, outline). Asking for it
+# twice bakes it into the model.
+#
+# A PlayStation-era asset is not that: it is a low-polygon mesh with visible
+# flat facets carrying a small, low-resolution, hand-painted TEXTURE. The
+# geometry is chunky; the detail lives in the texture. So the reference must
+# show a clean render of exactly that, and the pixelation must be left to post.
+PS1_STYLE = (
+    "A single game prop rendered as a late-1990s PlayStation 1 game model. "
+    "LOW POLYGON COUNT: visible flat angular facets, hard straight edges, no "
+    "smooth shading, no bevels, no subdivision, no rounded corners. Surfaces "
+    "carry LOW-RESOLUTION HAND-PAINTED TEXTURES -- coarse visible texels, "
+    "baked-in shading, panel lines and grime painted into the texture rather "
+    "than modelled -- in a muted, slightly desaturated palette. "
+    "A CRISP CLEAN RENDER: this is NOT pixel art, NOT a sprite. No dithering, "
+    "no black outline, no posterisation, no halftone. "
+    "STRICT ORTHOGRAPHIC PROJECTION: no perspective, no foreshortening, no "
+    "vanishing point. Absolutely flat single-colour background, NO drop "
+    "shadow, NO ground plane, NO reflection. The object fills the frame with "
+    "a small even margin. No text, no labels, no annotations, no watermark."
+)
+
+STYLES = {"pixel": nano_views.STYLE, "ps1": PS1_STYLE}
+STYLE = PS1_STYLE
 
 OR_ENDPOINT = "https://openrouter.ai/api/v1/chat/completions"
 # BENCHMARKED ON THIS TASK, not chosen. Six models authored the same measured
@@ -352,6 +379,9 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("asset", help='the thing to build, e.g. "arcade cabinet"')
     ap.add_argument("--out", default=None)
+    ap.add_argument("--style", choices=sorted(STYLES), default="ps1",
+                    help="ps1: low-poly textured render (default). "
+                         "pixel: the old 16-bit sprite look.")
     ap.add_argument("--retries", type=int, default=2,
                     help="regeneration attempts per view that fails the gate")
     args = ap.parse_args()
@@ -359,6 +389,8 @@ def main():
     out = Path(args.out or (ROOT / "tools" / "img2threejs-work" /
                             re.sub(r"\W+", "_", args.asset.lower())))
     out.mkdir(parents=True, exist_ok=True)
+    global STYLE
+    STYLE = STYLES[args.style]
     gkey = load_key()
     okey = _openrouter_key()
 

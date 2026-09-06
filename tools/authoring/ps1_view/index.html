@@ -1,0 +1,140 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>PS1 prop</title>
+<style>html,body{margin:0;background:#8a8a8a;overflow:hidden}canvas{display:block}</style>
+<script type="module">
+// Render the extruded profile with the sheet's own elevations as textures.
+//
+// A PlayStation-era prop is a few dozen flat facets carrying a small
+// low-resolution texture, and for a swept form the reference sheet ALREADY
+// holds those textures: the front elevation is the front face, the side is
+// the sides, the back is the back, the top is the top. Planar-map each onto
+// the face it came from -- box projection by dominant normal -- and the
+// texturing needs no unwrap, no atlas and no search.
+//
+// NearestFilter and no mipmaps are the period-correct part: PS1 had neither
+// bilinear filtering nor mip selection, and that crunch is the look. It is
+// applied at SAMPLE time, which is where pixelation belongs -- not baked into
+// the source art.
+import * as THREE from 'three';
+
+const p = new URLSearchParams(location.search);
+const dir = p.get('dir') ?? '/tools/img2threejs-work/ps1_arcade';
+const model = await (await fetch(`${dir}/model.json`)).json();
+
+const W = 1024, H = 1024;
+const renderer = new THREE.WebGLRenderer({ antialias: false });
+renderer.setSize(W, H);
+document.body.appendChild(renderer.domElement);
+const scene = new THREE.Scene();
+scene.background = new THREE.Color('#8a8a8a');
+
+// --- geometry: extrude the side profile across the measured width ----------
+const shape = new THREE.Shape();
+model.profile.forEach(([u, v], i) => {
+  const y = u * model.depth, z = v;                 // depth, height
+  i ? shape.lineTo(y, z) : shape.moveTo(y, z);
+});
+shape.closePath();
+const geo = new THREE.ExtrudeGeometry(shape, {
+  depth: model.width, bevelEnabled: false, steps: 1,
+}).toNonIndexed();
+// The shape lives in XY as (depth, height) and extrudes along +Z as width.
+// Rotating about Y by -90 sends width to X and leaves height on Y, which is
+// the orientation everything downstream assumes. Rotating about X instead --
+// as this did at first -- swaps height into depth and the prop renders lying
+// on its back.
+geo.rotateY(-Math.PI / 2);
+geo.computeBoundingBox();
+const c = new THREE.Vector3();
+geo.boundingBox.getCenter(c);
+geo.translate(-c.x, -c.y, -c.z);
+geo.computeVertexNormals();
+
+// --- box-projected UVs, and a material group per face direction ------------
+const pos = geo.attributes.position, nor = geo.attributes.normal;
+const uv = new Float32Array((pos.count) * 2);
+const face = new Array(pos.count / 3);
+const bb = new THREE.Box3().setFromBufferAttribute(pos);
+const size = new THREE.Vector3(); bb.getSize(size);
+for (let t = 0; t < pos.count; t += 3) {
+  // CLASSIFY BY FACING, NOT BY WHICH COMPONENT IS BIGGEST. A swept prop is
+  // mostly slopes -- the marquee leans back, the control panel leans forward
+  // -- and on those the Y component wins, so dominance sent them to the TOP
+  // texture. In the elevation they are plainly front surfaces, and sampling
+  // them from the front image is what makes the marquee art and the control
+  // panel land where the reference has them.
+  const nx = Math.abs(nor.getX(t)), nz = nor.getZ(t);
+  const ny = Math.abs(nor.getY(t));
+  let kind;
+  if (nx >= ny && nx >= Math.abs(nz)) kind = 'side';
+  else if (nz > 0.15) kind = 'front';
+  else if (nz < -0.15) kind = 'back';
+  else kind = 'top';
+  face[t / 3] = kind;
+  for (let k = 0; k < 3; k++) {
+    const i = t + k;
+    const x = pos.getX(i), y = pos.getY(i), z = pos.getZ(i);
+    let u, v;
+    if (kind === 'side') { u = (z - bb.min.z) / size.z; v = (y - bb.min.y) / size.y; }
+    else if (kind === 'top') { u = (x - bb.min.x) / size.x; v = (z - bb.min.z) / size.z; }
+    else { u = (x - bb.min.x) / size.x; v = (y - bb.min.y) / size.y; }
+    if (kind === 'back') u = 1 - u;               // back is seen mirrored
+    uv[i * 2] = u; uv[i * 2 + 1] = v;
+  }
+}
+geo.setAttribute('uv', new THREE.BufferAttribute(uv, 2));
+
+const ORDER = ['front', 'side', 'back', 'top'];
+const tris = [];
+ORDER.forEach((k) => face.forEach((f, i) => { if (f === k) tris.push(i); }));
+const src = geo.clone();
+for (let n = 0; n < tris.length; n++) {
+  for (let k = 0; k < 3; k++) {
+    for (const attr of ['position', 'normal', 'uv']) {
+      const a = geo.attributes[attr], b = src.attributes[attr];
+      for (let c = 0; c < a.itemSize; c++) {
+        a.array[(n * 3 + k) * a.itemSize + c] = b.array[(tris[n] * 3 + k) * a.itemSize + c];
+      }
+    }
+  }
+}
+geo.clearGroups();
+let start = 0;
+ORDER.forEach((k, gi) => {
+  const n = face.filter((f) => f === k).length * 3;
+  if (n) geo.addGroup(start, n, gi);
+  start += n;
+});
+
+// AWAIT THE TEXTURES. TextureLoader.load is asynchronous, so rendering on the
+// next line drew the mesh before a single image had arrived and every face
+// came out black -- with the geometry perfectly correct underneath.
+const loader = new THREE.TextureLoader();
+const mats = await Promise.all(ORDER.map(async (k) => {
+  const tex = await loader.loadAsync(`${dir}/${model.textures[k]}`);
+  tex.magFilter = THREE.NearestFilter;      // PS1 had no bilinear filtering
+  tex.minFilter = THREE.NearestFilter;      // and no mipmaps
+  tex.generateMipmaps = false;
+  tex.colorSpace = THREE.SRGBColorSpace;
+  return new THREE.MeshBasicMaterial({ map: tex });   // textures carry the shading
+}));
+const mesh = new THREE.Mesh(geo, mats);
+scene.add(mesh);
+
+// --- camera ---------------------------------------------------------------
+const yaw = Number(p.get('yaw') ?? 34) * Math.PI / 180;
+const pitch = Number(p.get('pitch') ?? 20) * Math.PI / 180;
+const r = 3.2;
+geo.computeBoundingSphere();
+const rad = geo.boundingSphere.radius * 1.05;
+const cam = new THREE.OrthographicCamera(-rad, rad, rad, -rad, 0.01, 50);
+cam.position.set(r * Math.cos(pitch) * Math.sin(yaw), r * Math.sin(pitch),
+                 r * Math.cos(pitch) * Math.cos(yaw));
+cam.lookAt(0, 0, 0);
+renderer.render(scene, cam);
+
+console.info(`ps1: ${geo.attributes.position.count / 3} triangles, `
+  + `${model.profile.length} profile corners, 4 textures`);
+globalThis.__done = true;
+</script>
