@@ -253,6 +253,9 @@ def build_body(d, asset):
     run([sys.executable, "tools/authoring/body_faces.py", str(d)])
     run([sys.executable, "tools/authoring/side_profile.py", str(d),
          "--asset", asset])
+    # how wide the prop is at each height, so the body is the intersection of
+    # both silhouettes rather than one extrusion with a constant width
+    run([sys.executable, "tools/authoring/front_profile.py", str(d)])
     # MEASURE THE SHAPE AGAINST THE DRAWINGS, AND CORRECT WHAT IS MEASURABLE.
     # The model claims to be the prop on the sheet, so its outline from the
     # front, the side and above must match the three elevations. The footprint

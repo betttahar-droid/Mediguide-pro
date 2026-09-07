@@ -41,15 +41,28 @@ VIEWS = {                      # name: (query, elevation, mirror the elevation?)
 
 
 def shot_silhouette(path):
-    """Non-magenta pixels: what the model actually covers."""
+    """Non-magenta pixels: what the model actually covers.
+
+    Eroded by one pixel first. The renderer blends the prop's edge against the
+    magenta ground, and a blended pixel is not magenta, so every outline came
+    back a pixel fat on all four sides -- which showed up as a uniform red rim
+    around an otherwise perfect match and cost several points of a score meant
+    to detect shape errors. A metric with a bias that size cannot see the fault
+    it exists to find.
+    """
     im = Image.open(path).convert("RGB")
     W, H = im.size
     px = im.load()
-    m = [[False] * H for _ in range(W)]
+    raw = [[False] * H for _ in range(W)]
     for x in range(W):
         for y in range(H):
             r, g, b = px[x, y]
-            m[x][y] = not (r > 200 and b > 200 and g < 90)
+            raw[x][y] = not (r > 200 and b > 200 and g < 90)
+    m = [[False] * H for _ in range(W)]
+    for x in range(1, W - 1):
+        for y in range(1, H - 1):
+            m[x][y] = (raw[x][y] and raw[x - 1][y] and raw[x + 1][y]
+                       and raw[x][y - 1] and raw[x][y + 1])
     return m, W, H
 
 
