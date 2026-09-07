@@ -243,8 +243,10 @@ def main():
     args = ap.parse_args()
 
     d = Path(args.sheet_dir)
-    im = Image.open(d / f"bg_{args.face}.png").convert("RGB")
+    rgba = Image.open(d / f"bg_{args.face}.png").convert("RGBA")
+    im = rgba.convert("RGB")
     W, H = im.size
+    ap = rgba.load()
 
     # STRIP BOUNDARIES ARE THE STRONG HORIZONTAL LINES. A cabinet's bands are
     # drawn with them -- the rail under the marquee, the lip of the deck -- so
@@ -267,8 +269,17 @@ def main():
         hband, noise = quiet_window(cd, 0.10)
         rows = rd[y0:max(y0 + 2, y1 - 1)]
         vband, vnoise = quiet_window(rows, 0.25)
-        hmode, hflank, hrep = grow_mode(cd, noise)
-        vmode, vflank, vrep = grow_mode(rows, vnoise)
+        # THE BACKGROUND NEVER REPEATS ITS OWN ARTWORK. Every threshold tried
+        # here leaked: a marquee's glyphs are a few percent of a thin strip, so
+        # the band measured quiet and a widened cabinet read
+        # "ULTIMA / AMA / ATE". The background is MATERIAL, and the seamless
+        # tile is material -- tinted to the strip's own colour it carries the
+        # same grain with nothing recognisable in it. Repetition earns its keep
+        # on PARTS, where a wider deck should genuinely get more button
+        # clusters, and those have their own measured rules. Here it only ever
+        # duplicated something a player could name.
+        hmode, hflank, hrep = "extend", flank_window(cd)[0], False
+        vmode, vflank, vrep = "extend", flank_window(rows)[0], False
         # and the band has to be MATERIAL, not just smooth on average
         BUSY = 0.05
         if hrep and busy_frac(im, hband[0] * W, hband[1] * W, y0, y1) > BUSY:
@@ -276,10 +287,22 @@ def main():
         if vrep and busy_frac(im, 0, W, y0 + vband[0] * (y1 - y0),
                               y0 + vband[1] * (y1 - y0)) > BUSY:
             vmode, vrep = "extend", False
-        if hmode == "extend" and hrep and \
-                busy_frac(im, hflank[0] * W, hflank[1] * W, y0, y1) > BUSY:
-            hrep = False
+        # A FLANK IS NEVER REPEATED. Growth in extend mode is always the
+        # tinted panel tile. The flank is a nine-percent window that has to be
+        # clear of artwork at EVERY height of the strip, and on a marquee it
+        # never is: repeating it put "ULTIMA / AMA / ATE" across a widened
+        # cabinet. The tile is safe by construction and, tinted to the flank's
+        # own colour, carries the same grain -- so repeating the flank was
+        # buying almost nothing and risking the title.
+        hrep = vrep = False
+        # how wide the PROP is across this strip, not how wide its box is: the
+        # inserted band has to match the cabinet's own edges or it steps in and
+        # out of the silhouette as the prop grows
+        xs = [x for x in range(0, W, 2)
+              if any(ap[x, y][3] > 127 for y in range(y0, y1, 4))]
         strips.append({
+            "xspan": [round((xs[0] if xs else 0) / W, 5),
+                      round(((xs[-1] + 2) if xs else W) / W, 5)],
             "fill": flank_colour(im, y0, y1, hflank[0], hflank[1]),
             "hmode": hmode, "hf": [round(hflank[0], 5), round(hflank[1], 5)],
             "hf_repeat": hrep,
@@ -327,6 +350,46 @@ def main():
     grow = max(range(len(strips)), key=lambda i: body_score(strips[i]))
     for i, s in enumerate(strips):
         s["grow_y"] = (i == grow)
+
+    # AND THE CUT MUST NOT LAND INSIDE A PART. The extra height is inserted at
+    # the grow strip's band, and the background is flat there precisely BECAUSE
+    # a part was cut out of it and the hole filled -- so the quietest rows are
+    # often the door's own hole. Inserting there slid the hole out from under
+    # the door, which is anchored to the bottom, and tore the cabinet open. The
+    # cut is nudged to the nearest row no part occupies.
+    pm = {}
+    try:
+        pm = json.loads((d / f"parts_{args.face}.json").read_text())
+        taken = set()
+        for q in pm.get("parts", []):
+            x0, y0, x1, y1 = q["px"]
+            taken.update(range(max(0, y0 - 2), min(H, y1 + 2)))
+    except Exception:
+        taken = set()
+    st = strips[grow]
+    gy0, gy1 = st["px"]
+    cut = int(gy0 + st["vh"][0] * (gy1 - gy0))
+    # AND IT MUST SIT ABOVE ANYTHING HELD TO THE BOTTOM. A coin door anchored
+    # to the bottom edge moves down with it, but the HOLE it was cut from is
+    # painted into the background at its original height -- so inserting the
+    # extra below that hole left a pale rectangle stranded up the cabinet with
+    # the door far beneath it, the prop torn open between them. Inserting above
+    # carries hole and door down together.
+    try:
+        low = [q["px"][1] for q in pm.get("parts", [])
+               if q.get("anchor") == "bottom"]
+        ceiling = min(low) - 3 if low else gy1
+    except Exception:
+        ceiling = gy1
+    if cut > ceiling or cut in taken:
+        free = [y for y in range(gy0 + 2, max(gy0 + 3, min(gy1 - 2, ceiling)))
+                if y not in taken]
+        if free:
+            new = min(free, key=lambda y: abs(y - cut))
+            print(f"  cut row {cut} -> {new} (clear of parts, above the "
+                  f"bottom-held ones)")
+            cut = new
+            st["vh"] = [round((cut - gy0) / max(1, gy1 - gy0), 5), st["vh"][1]]
 
     (d / f"strips_{args.face}.json").write_text(json.dumps(
         {"size": [W, H], "strips": strips}, indent=1))

@@ -223,7 +223,9 @@ function bgFromStrips(S) {
     let y = cutY;
     if (extra > 0) {
       if (st.vf_repeat === false) {
-        fillQuad(-FW / 2, FW / 2, y - extra, y, st.fill || [128, 128, 128]);
+        const [sx0, sx1] = st.xspan || [0, 1];
+        fillQuad(-FW / 2 + sx0 * A, FW / 2 - (1 - sx1) * A,
+                 y - extra, y, st.fill || [128, 128, 128]);
       } else {
         const [ta, tb] = st.vh;
         const unit = Math.max(1e-3, (tb - ta) * oh);

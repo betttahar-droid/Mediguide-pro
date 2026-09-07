@@ -211,6 +211,36 @@ def main():
         small = min((a[2] - a[0]) * (a[3] - a[1]), (b[2] - b[0]) * (b[3] - b[1]))
         return w * h / max(1, small)
 
+    # A WORD IS NOT ITS LETTERS. Cells are disjoint by construction, so a
+    # title splits into separate blobs and only some of them land inside the
+    # part's box -- the rest stays in the background. At original size that is
+    # invisible; widen the prop and the two halves drift apart, which is how a
+    # marquee came out reading "ULTIMATE STRIK ... ATE KE". Cells that share a
+    # row band and sit close together are one fitting, so group them first.
+    def same_row(a, b):
+        top, bot = max(a[1], b[1]), min(a[3], b[3])
+        ov = max(0, bot - top)
+        return ov >= 0.6 * min(a[3] - a[1], b[3] - b[1])
+
+    def near_x(a, b):
+        gap = max(a[0], b[0]) - min(a[2], b[2])
+        return gap < 0.06 * W
+
+    grouped = True
+    while grouped:
+        grouped = False
+        for i in range(len(boxes)):
+            for j in range(i + 1, len(boxes)):
+                a, b = boxes[i], boxes[j]
+                if same_row(a, b) and near_x(a, b):
+                    boxes[i] = [min(a[0], b[0]), min(a[1], b[1]),
+                                max(a[2], b[2]), max(a[3], b[3]), a[4] + b[4]]
+                    boxes.pop(j)
+                    grouped = True
+                    break
+            if grouped:
+                break
+
     merged = True
     while merged:
         merged = False

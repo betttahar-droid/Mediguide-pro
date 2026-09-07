@@ -289,9 +289,23 @@ def main():
             b = _bands(kit / f"{p['name']}.png", quantile=0.20, min_frac=0.15)
         except Exception:
             b = None
+        # A SPAN RULE THE MEASUREMENT CONTRADICTS IS NOT A RULE. The model
+        # called a marquee TITLE occupying 29% of the width "spanx_center", and
+        # a spanning part is drawn at the full width and centred -- so the title
+        # was moved out of its own position and stretched across the face at
+        # ORIGINAL SIZE, reading "ATE / KE". A part can only be told to run the
+        # full width if it already nearly does; anything else is fixed.
+        fw_, fh_ = (x1 - x0) / W, (y1 - y0) / H
+        rule = p["resize"]
+        if rule.startswith("spanx") and fw_ < 0.75:
+            print(f"  {p['name']}: {rule} but only {100*fw_:.0f}% wide -> fixed")
+            rule = "fixed"
+        elif rule.startswith("spany") and fh_ < 0.75:
+            print(f"  {p['name']}: {rule} but only {100*fh_:.0f}% tall -> fixed")
+            rule = "fixed"
         out.append({
             "name": p["name"], "image": f"parts/{p['name']}.png",
-            "resize": p["resize"], "anchor": p["anchor"],
+            "resize": rule, "anchor": p["anchor"],
             "depth": p.get("depth", "proud"), "motion": p.get("motion", "none"),
             # where THIS part may repeat, in its own 0..1 box
             "bands": {"h": (b or {}).get("h"), "v": (b or {}).get("v")},
