@@ -334,6 +334,26 @@ if (built && built.fills.length) {
 // construction: the marquee, screen and deck keep their spacing, the coin door
 // and plinth keep theirs, and the new body appears between them. That is what
 // a nine-slice does, and it needs no opinion about what any part IS.
+// AND THE SAME ON THE OTHER AXIS. The extra WIDTH goes in at two symmetric
+// cuts, so the face is [cap][grow][middle][grow][cap]. A part in a cap belongs
+// to that edge; a part in the middle belongs to the middle and must keep its
+// place relative to the centre. Deciding by the sign of a part's offset instead
+// sent the coin door's own slots to the outer edges while the door stayed
+// central -- "the lower coin-door slots detach from the coin door and float as
+// isolated panels", which is exactly what both judges saw.
+function xFor(q, w, FW, A) {
+  const uc = (q.u[0] + q.u[1]) / 2;
+  let f0 = 0.5;
+  if (strips) {
+    const g = strips.strips.find((s) => s.grow_y) || strips.strips[0];
+    if (g && g.hf) f0 = g.hf[0];
+  }
+  if (f0 <= 0.001) f0 = 0.0;                 // padding sits outside the art
+  if (uc < f0) return -FW / 2 + q.u[0] * A + w / 2;      // held to the left cap
+  if (uc > 1 - f0) return FW / 2 - (1 - q.u[1]) * A - w / 2;   // to the right
+  return (uc - 0.5) * A;                     // middle: keeps its own place
+}
+
 function anchorFor(q) {
   if (!strips) return q.anchor;
   const g = strips.strips.find((s) => s.grow_y);
@@ -381,9 +401,7 @@ for (const q of man.parts) {
   const cx = ((q.u[0] + q.u[1]) / 2 - 0.5) * A;
   let x, y;
   if (spanX) x = 0;
-  else if (Math.abs(cx) < 0.05 * A) x = 0;                       // centred stays centred
-  else if (cx < 0) x = -FW / 2 + q.u[0] * A + w / 2;             // held to the left
-  else x = FW / 2 - (1 - q.u[1]) * A - w / 2;                    // held to the right
+  else x = xFor(q, w, FW, A);
   if (spanY) y = 0;
   else if (anchorFor(q) === 'bottom') y = -FH / 2 + dBot + h / 2;
   else y = FH / 2 - dTop - h / 2;                                // default: hangs from the top

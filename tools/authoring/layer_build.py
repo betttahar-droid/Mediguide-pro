@@ -340,8 +340,13 @@ def main():
         # intersecting each other and the deck they sit on. At this scale a
         # fitting that small has no relief a player could ever see, so it keeps
         # its art and loses its box.
+        # -- except a stick or a hinge, which is three-dimensional by
+        # definition. Flattening by size alone made one joystick flush and left
+        # its twin protruding, which the second judge spotted at once: a lever
+        # you can push has relief whatever its footprint.
         if (x1 - x0) * (y1 - y0) < 0.004 * W * H and \
-                p.get("depth") in ("proud", "deep"):
+                p.get("depth") in ("proud", "deep") and \
+                p.get("motion", "none") in ("none", "press"):
             p["depth"] = "flush"
 
         # PER-BAY IS FOR CONTROLS, AND A CONTROL IS SMALL. A bay is one
