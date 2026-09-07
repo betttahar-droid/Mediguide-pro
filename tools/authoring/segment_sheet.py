@@ -252,10 +252,36 @@ def main():
     mdir.mkdir(exist_ok=True)
     boxes = []
     for i, (x0, y0, x1, y1, cells_) in enumerate(regions, 1):
-        m = Image.new("L", (x1 - x0, y1 - y0), 0)
+        mw, mh = x1 - x0, y1 - y0
+        m = Image.new("L", (mw, mh), 0)
         mp = m.load()
         for (x, y) in cells_:
             mp[x - x0, y - y0] = 255
+
+        # SMOOTH THE BOUNDARY. The map is returned at a larger size and
+        # resampled down, so a region's edge arrives ragged -- and alphaTest
+        # renders every spike, which is why the solid view showed the screen as
+        # "a ragged, torn silhouette with jagged spiked edges protruding around
+        # its border". A majority filter over a 5x5 neighbourhood rounds off a
+        # one-pixel spike and fills a one-pixel notch, and leaves any real edge
+        # alone: a fitting's outline is never a single pixel wide.
+        for _ in range(2):
+            prev = m.copy().load()
+            for x in range(mw):
+                for y in range(mh):
+                    on = tot = 0
+                    for dx in range(-2, 3):
+                        xx = x + dx
+                        if xx < 0 or xx >= mw:
+                            continue
+                        for dy in range(-2, 3):
+                            yy = y + dy
+                            if yy < 0 or yy >= mh:
+                                continue
+                            tot += 1
+                            if prev[xx, yy] > 128:
+                                on += 1
+                    mp[x, y] = 255 if on * 2 > tot else 0
         m.save(mdir / f"{i}.png")
         boxes.append([x0, y0, x1, y1])
 
