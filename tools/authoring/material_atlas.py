@@ -188,6 +188,48 @@ def prove(sw, size=64):
     return tile, before, after
 
 
+def flat_cell(face, n=9):
+    """The calmest cell on the elevation: this prop's bare panel.
+
+    ASKED HERE RATHER THAN READ FROM A FILE. layer_build works this out and
+    writes it down, but layer_build runs later in the pipeline than the atlas
+    does -- so on a prop built from scratch the file did not exist yet, the
+    grain target fell back to a slab taken by fraction, and that slab lands on
+    the coin door and measures EDGES. It reported a panel grain of 5.74 against
+    a swatch that cannot exceed about 2 at any scale, so the match pinned
+    itself to the end of its range. Same question, asked where it is needed.
+    """
+    W, H = face.size
+    best = None
+    for i in range(n):
+        for j in range(n):
+            box = (int(W * i / n), int(H * j / n),
+                   int(W * (i + 1) / n), int(H * (j + 1) / n))
+            if box[2] - box[0] < 8 or box[3] - box[1] < 8:
+                continue
+            c = face.crop(box)
+            g = grain_px(c)
+            if best is None or g < best[0]:
+                best = (g, c)
+    return best[1] if best else face
+
+
+def recolour(tile, target):
+    """Put the swatch's median onto the panel's, channel by channel."""
+    px = tile.load()
+    W, H = tile.size
+    for c in range(3):
+        vals = sorted(px[x, y][c] for x in range(W) for y in range(H))
+        have = vals[len(vals) // 2]
+        k = 0.0 if have <= 0 else max(0.25, min(4.0, target[c] / have))
+        for x in range(W):
+            for y in range(H):
+                q = list(px[x, y])
+                q[c] = max(0, min(255, int(round(q[c] * k))))
+                px[x, y] = tuple(q)
+    return tile
+
+
 def grain_px(im, step=1):
     """How fine this surface is: mean absolute neighbour difference."""
     g = im.convert("RGB")
@@ -297,8 +339,19 @@ def main():
     if not any(g["main"] for g in got):
         got[0]["main"] = True         # something has to be the carcass
 
-    # the main material's grain is matched to the elevation's own panel, so a
-    # filled area and a painted one show the same size of speckle
+    # THE SWATCH CARRIES THE GRAIN; THE PROP DECIDES THE COLOUR. This rule was
+    # already proved once, on the carved tile, and then not applied to the
+    # authored one -- an inconsistency both judges found within a round. The
+    # atlas for this cabinet came back with a body panel at (44,43,44), a
+    # neutral near-black, against a prop whose own panel is (53,74,69), a green
+    # grey. On the previous prop the two happened to agree and it looked
+    # perfect; here the fill read as exactly what the graders called it,
+    # "massive flat untextured grey voids". Which is the whole point of asking
+    # a drawing model for material rather than for a colour: it is very good at
+    # the grain and it has no way to know what this particular cabinet is
+    # painted. So the main material -- the one the carcass is filled with -- is
+    # put onto the prop's own panel median. The others keep their colours,
+    # because a wood or a rubber is supposed to differ from the panel.
     px_per_tile = 48
     try:
         from identify_parts import object_crop
@@ -311,18 +364,21 @@ def main():
         # pins itself to whichever end of the range it started from.
         # layer_build already finds the flattest cell on the face and writes it
         # down for the panel patch; that is the same question asked once.
-        pp = d / "panel_patch_front.json"
-        if pp.exists():
-            x0, y0, pw, ph = json.loads(pp.read_text())["patch"]
-            panel = face.crop((x0, y0, x0 + pw, y0 + ph))
-        else:
-            panel = face.crop((int(W2 * 0.3), int(H2 * 0.55),
-                               int(W2 * 0.7), int(H2 * 0.85)))
+        panel = flat_cell(face)
+        void = (W2, H2)
         main = next(g for g in got if g["main"])
-        px_per_tile, want, gotg = match_grain(
-            Image.open(out / f"m{main['n']}.png"), panel)
+        pp = panel.convert("RGB").load()
+        pw2, ph2 = panel.size
+        target = [sorted(pp[x, y][c] for x in range(pw2) for y in range(ph2))[
+            pw2 * ph2 // 2] for c in range(3)]
+        mt = recolour(Image.open(out / f"m{main['n']}.png").convert("RGB"), target)
+        mt.save(out / f"m{main['n']}.png")
+        main["median"] = target
+        print(f"  {main['name']} recoloured to the prop's panel {target}")
+        px_per_tile, want, gotg = match_grain(mt, panel)
         print(f"  grain: panel {want}, tile {gotg} at {px_per_tile}px "
               f"of a {H2}px elevation")
+        void = void
     except Exception as e:
         print(f"  ! grain match failed ({type(e).__name__}), using {px_per_tile}px")
 

@@ -600,7 +600,20 @@ function buildLoft() {
   // chamfered cabinet and a rounded jukebox.
   const facet = (p, q) => {
     const nx = -(q.z - p.z), nz = (q.x - p.x);
-    if (Math.abs(nx) > Math.abs(nz)) return { mi: 0, u: (v) => sideU(v.z) };
+    // A FLANK IS ONE OF TWO FLANKS, AND THEY FACE OPPOSITE WAYS. Both got the
+    // same UV function when the explicit left and right quads were replaced by
+    // this normal test, and the distinction went with them: the side art then
+    // ran the same way round in world space on both panels, so from one side
+    // of the cabinet "ARCADE" read backwards. It hid at width 1 because the
+    // prop is very nearly symmetric and I was comparing a flank against
+    // itself; widening it showed the mirror plainly. Each panel carries its
+    // art reading correctly FROM OUTSIDE, which means the two are mirror
+    // images of each other -- so the outward normal's sign chooses, exactly as
+    // it does for front against back.
+    if (Math.abs(nx) > Math.abs(nz)) {
+      return nx >= 0 ? { mi: 0, u: (v) => 1 - sideU(v.z) }
+                     : { mi: 0, u: (v) => sideU(v.z) };
+    }
     if (nz >= 0) return { mi: 1, u: (v) => v.t };
     return { mi: 2, u: (v) => 1 - v.t };
   };
