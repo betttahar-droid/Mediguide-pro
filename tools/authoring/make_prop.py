@@ -177,8 +177,11 @@ def main():
     args = ap.parse_args()
 
     import re
+    # RESOLVE IT. render() asks for the path relative to the repo root to build
+    # the dev-server URL, and a relative --out makes that raise rather than
+    # render -- which killed a three-prop batch on its first round.
     d = Path(args.out or ROOT / "tools/img2threejs-work" /
-             ("prop_" + re.sub(r"\W+", "_", args.asset.lower())))
+             ("prop_" + re.sub(r"\W+", "_", args.asset.lower()))).resolve()
     d.mkdir(parents=True, exist_ok=True)
     key = _openrouter_key()
     print(f"=== {args.asset} -> {d} ===")

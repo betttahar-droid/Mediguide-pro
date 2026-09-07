@@ -32,47 +32,28 @@ from identify_parts import object_crop  # noqa: E402
 from layer_build import silhouette  # noqa: E402
 
 
-def clamp_to_silhouette(im):
-    """Push the prop's own colour out into the sheet showing past its outline.
+def cut_to_silhouette(im):
+    """Make the sheet showing past the prop's outline transparent.
 
-    A prop is not a rectangle and an elevation crop is, so an arcade cabinet's
-    side view arrives with pale sheet in the corner above its sloped back. Laid
-    on a box face that read as two grey slabs bolted to the cabinet -- which is
-    the first thing you see once the prop is turned.
-
-    The body is a box, so the honest thing for a face to show past the profile
-    is more of the same panel: extend the nearest real pixel outwards, which
-    carries the panel's own shading with it rather than inventing a flat fill.
-    Making the face TRANSPARENT there instead would be wrong -- you would see
-    straight through the cabinet -- and reshaping the box to the profile is a
-    different job from texturing it.
+    An earlier version CLAMPED instead -- extending the nearest real pixel
+    outwards to fill the corner. That removed the pale slabs but replaced them
+    with the cabinet's rear vent rows smeared sideways, because whatever sits
+    on the profile edge is what gets dragged. Both were the same mistake:
+    painting over a shape problem. Now that the body is extruded to the side
+    profile, the honest answer is that those pixels are not the prop and must
+    not be drawn.
     """
-    W, H = im.size
-    inside = silhouette(im, erode=1)
-    px = im.load()
-    out = im.copy()
-    op = out.load()
-    for y in range(H):
-        run = [x for x in range(W) if inside[x][y]]
-        if not run:
-            continue
-        lo, hi = run[0], run[-1]
-        for x in range(W):
-            if inside[x][y]:
-                continue
-            op[x, y] = px[min(max(x, lo), hi), y]
-    # a row entirely outside the prop (above a dome, below a plinth) has no
-    # neighbour to borrow from, so take the nearest row that did have one
-    rows = [y for y in range(H) if any(inside[x][y] for x in range(W))]
-    if rows:
-        for y in range(H):
-            if y in (rows[0], rows[-1]) or (rows[0] <= y <= rows[-1]
-                                            and any(inside[x][y] for x in range(W))):
-                continue
-            src_y = min(rows, key=lambda r: abs(r - y))
-            for x in range(W):
-                op[x, y] = op[x, src_y]
-    return out
+    keep = silhouette(im, erode=0)
+    out = im.convert("RGBA")
+    px = out.load()
+    n = 0
+    for x in range(out.width):
+        for y in range(out.height):
+            if not keep[x][y]:
+                r, g, b, _ = px[x, y]
+                px[x, y] = (r, g, b, 0)
+                n += 1
+    return out, n / max(1, out.width * out.height)
 
 
 def main():
@@ -90,7 +71,7 @@ def main():
         if not src.exists():
             print(f"  no {face}.png -- skipping")
             continue
-        im = clamp_to_silhouette(object_crop(src))
+        im, cutfrac = cut_to_silhouette(object_crop(src))
         # THE VIEWS MUST AGREE ON HEIGHT, OR THE DEPTH IS A LIE. side and back
         # are elevations of the same prop, so resampling them to the front's
         # height costs nothing and makes the box's faces line up exactly.
@@ -102,7 +83,8 @@ def main():
             im = im.resize((FW, im.height))   # the front's, its height the depth
         im.save(d / f"body_{face}.png")
         out[face] = {"image": f"body_{face}.png", "size": list(im.size)}
-        print(f"  {face}: {im.size[0]}x{im.size[1]}")
+        print(f"  {face}: {im.size[0]}x{im.size[1]}, "
+              f"{100*cutfrac:.1f}% cut outside the outline")
 
     # depth in the renderer's units, where the front face is `aspect` wide and
     # exactly 1 tall. Prefer the side elevation; the top view is the check.

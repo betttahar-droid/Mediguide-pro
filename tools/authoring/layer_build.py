@@ -173,6 +173,24 @@ def main():
 
     boxes = [p["px"] for p in man["parts"]]
     bg = fill_from_panel(ob, boxes)
+    # CUT THE FACE TO THE PROP'S OUTLINE. A prop is not a rectangle and the
+    # crop is, so a jukebox's domed top leaves sheet-white in the corners of
+    # the background image. On a flat quad that read as a white fringe all the
+    # way round the front face. Alpha there lets the renderer discard those
+    # pixels, so the prop's outline is its own silhouette rather than its
+    # bounding box -- and it costs nothing, because those pixels were never
+    # part of the prop.
+    bg = bg.convert("RGBA")
+    mask = silhouette(ob, erode=0)
+    ap_ = bg.load()
+    cut = 0
+    for x in range(W):
+        for y in range(H):
+            if not mask[x][y]:
+                r, g, b, _ = ap_[x, y]
+                ap_[x, y] = (r, g, b, 0)
+                cut += 1
+    print(f"  cut {100*cut/(W*H):.1f}% of the face outside the silhouette")
     bg.save(d / f"bg_{args.face}.png")
     if PANEL_PATCH.get("patch"):
         (d / f"panel_patch_{args.face}.json").write_text(json.dumps(PANEL_PATCH))

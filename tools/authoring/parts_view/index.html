@@ -78,15 +78,22 @@ const mirrored = (t) => {
   return c;
 };
 const plain = (c) => new THREE.MeshBasicMaterial({ color: c, side: THREE.DoubleSide });
+// HONOUR THE CUT. body_faces and layer_build make the sheet showing past the
+// prop's outline transparent, so a domed jukebox is not drawn inside its own
+// bounding box. alphaTest rather than blending: these pixels are absent, not
+// translucent, and a cutout that still writes depth keeps the parts in front
+// of it sorting correctly.
 const mapped = (t, c) => (t
-  ? new THREE.MeshBasicMaterial({ map: t, side: THREE.DoubleSide })
+  ? new THREE.MeshBasicMaterial({ map: t, side: THREE.DoubleSide,
+                                  transparent: true, alphaTest: 0.5 })
   : plain(c));
 
 // --- the body ---------------------------------------------------------------
 // material slots, shared by both body builds
 const MAT = [
   mapped(faceTex.side, 0x6a5a4a),          // 0  the two profile caps
-  new THREE.MeshBasicMaterial({ map: bgTex, side: THREE.DoubleSide }), // 1 front
+  new THREE.MeshBasicMaterial({ map: bgTex, side: THREE.DoubleSide,
+                                transparent: true, alphaTest: 0.5 }), // 1 front
   mapped(faceTex.back, 0x6a5a4a),          // 2  back
   mapped(faceTex.top, 0x6a5a4a),           // 3  top
   plain(0x2a2622),                         // 4  underside, never seen

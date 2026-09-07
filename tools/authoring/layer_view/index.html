@@ -116,7 +116,11 @@ const useTile = tileMeta && !naive && p.get('tile') !== '0';
 const bgGeo = naive ? new THREE.PlaneGeometry(FW, FH)
   : sliced(FW, FH, slice && slice.h, slice && slice.v, A, 1,
            bgMode === 'mirror', useTile);
-scene.add(new THREE.Mesh(bgGeo, new THREE.MeshBasicMaterial({ map: bgTex })));
+// HONOUR THE SILHOUETTE CUT. layer_build makes the sheet showing past the
+// prop's outline transparent; without alphaTest those pixels come back as
+// opaque white and a domed prop is drawn inside its own bounding box.
+scene.add(new THREE.Mesh(bgGeo, new THREE.MeshBasicMaterial(
+  { map: bgTex, transparent: true, alphaTest: 0.5 })));
 
 if (useTile) {
   const [a, b] = (slice && slice.h) ?? [0.5, 0.5];
