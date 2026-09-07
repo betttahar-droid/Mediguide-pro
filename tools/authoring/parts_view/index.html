@@ -60,6 +60,24 @@ const FW = A * wS, FH = 1 * hS;
 // how far each depth class stands off the body, in units of the prop's height
 const DEPTH = { flush: 0.004, proud: 0.018, deep: 0.055, recessed: -0.014 };
 
+let strips = null;
+try { strips = await (await fetch(`${dir}/strips_front.json`)).json(); } catch {}
+
+// WHICH EDGE A PART HOLDS TO IS DECIDED BY THE CUT, NOT BY A MODEL. See
+// layer_view: everything above the row where the extra height is inserted
+// belongs to the top half of the prop and everything below it to the bottom
+// half. Anchors assigned per part let a taller cabinet slide its control deck
+// down past its own coin door.
+function anchorFor(q) {
+  if (!strips) return q.anchor;
+  const g = strips.strips.find((s) => s.grow_y);
+  if (!g) return q.anchor;
+  const H = strips.size[1];
+  const cutRow = g.px[0] + g.vh[0] * (g.px[1] - g.px[0]);
+  const vCut = 1 - cutRow / H;
+  return ((q.v[0] + q.v[1]) / 2 > vCut) ? 'top' : 'bottom';
+}
+
 let bodyMeta = null, profile = null;
 try { bodyMeta = await (await fetch(`${dir}/body.json`)).json(); } catch {}
 try { profile = await (await fetch(`${dir}/profile.json`)).json(); } catch {}
@@ -327,7 +345,7 @@ for (const q of man.parts) {
   else if (cx < 0) x = -FW / 2 + q.u[0] * A + w / 2;
   else x = FW / 2 - (1 - q.u[1]) * A - w / 2;
   if (canY) y = 0;
-  else if (q.anchor === 'bottom') y = -FH / 2 + dBot + h / 2;
+  else if (anchorFor(q) === 'bottom') y = -FH / 2 + dBot + h / 2;
   else y = FH / 2 - dTop - h / 2;
   // MOUNT ON THE SURFACE, NOT ON A PLANE. With a shaped body the front is at a
   // different depth at every height, so a fixed z floated the control deck in

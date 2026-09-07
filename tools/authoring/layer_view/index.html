@@ -320,6 +320,30 @@ if (built && built.fills.length) {
   }
 }
 
+// WHICH EDGE A PART HOLDS TO IS DECIDED BY THE CUT, NOT BY A MODEL.
+//
+// Every part was given an anchor when it was named, and a prop's parts were
+// then pulled to whichever edge each had been assigned. Make the cabinet taller
+// and the control deck, anchored bottom, slid down past the coin door: the
+// vertical ORDER of the front came apart, which is a fault no amount of
+// texturing can hide -- controls cannot sit under the coin mechanisms.
+//
+// The extra height is inserted at one known row. Everything above that row
+// belongs to the top half of the prop and everything below it to the bottom
+// half, and if each holds to its own side then the whole layout survives by
+// construction: the marquee, screen and deck keep their spacing, the coin door
+// and plinth keep theirs, and the new body appears between them. That is what
+// a nine-slice does, and it needs no opinion about what any part IS.
+function anchorFor(q) {
+  if (!strips) return q.anchor;
+  const g = strips.strips.find((s) => s.grow_y);
+  if (!g) return q.anchor;
+  const H = strips.size[1];
+  const cutRow = g.px[0] + g.vh[0] * (g.px[1] - g.px[0]);
+  const vCut = 1 - cutRow / H;                 // measured from the bottom
+  return ((q.v[0] + q.v[1]) / 2 > vCut) ? 'top' : 'bottom';
+}
+
 // --- parts -----------------------------------------------------------------
 let z = 0.001;
 for (const q of man.parts) {
@@ -361,7 +385,7 @@ for (const q of man.parts) {
   else if (cx < 0) x = -FW / 2 + q.u[0] * A + w / 2;             // held to the left
   else x = FW / 2 - (1 - q.u[1]) * A - w / 2;                    // held to the right
   if (spanY) y = 0;
-  else if (q.anchor === 'bottom') y = -FH / 2 + dBot + h / 2;
+  else if (anchorFor(q) === 'bottom') y = -FH / 2 + dBot + h / 2;
   else y = FH / 2 - dTop - h / 2;                                // default: hangs from the top
 
   // ONE PER BAY. The prop's own width is the unit, so a cabinet made twice as
