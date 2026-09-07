@@ -210,13 +210,67 @@ const planUs = havePlan
       .map((u) => Math.min(1, Math.max(0, u))).sort((a, b) => a - b)
       .filter((u, i, a) => i === 0 || u - a[i - 1] > 1e-4)
   : [0, 1];
-// how far forward the body's front face is at a given height and a given
-// fraction across its width -- what a part has to be mounted on
-function frontZAt(y, u) {
+// A WIDER PROP HAS THE SAME CORNERS, NOT WIDER ONES. The plan is a shape in
+// the prop's own units, so stretching it bodily made the two-player cabinet's
+// front chamfers twice as deep as the one-player cabinet's -- a 20%-of-width
+// corner cut became 40%, which is the same smearing that nine-slicing exists
+// to prevent, committed on the geometry instead of the texture. The plan's
+// straight middle is the part that may stretch; its shaped ends hold their
+// real size, exactly as a marquee's ends do.
+const planBand = (() => {
+  if (!havePlan) return [0, 1];
+  const flat = (w, a, b) => {
+    let lo = Infinity, hi = -Infinity;
+    for (const u of planUs) {
+      if (u < a - 1e-9 || u > b + 1e-9) continue;
+      const v = depthAt(w, u); lo = Math.min(lo, v); hi = Math.max(hi, v);
+    }
+    return hi - lo <= 0.03;
+  };
+  let best = [0.5, 0.5];
+  for (let i = 0; i < planUs.length; i++) {
+    for (let j = planUs.length - 1; j > i; j--) {
+      if (planUs[j] - planUs[i] <= best[1] - best[0]) break;
+      if (flat(planF, planUs[i], planUs[j]) && flat(planB, planUs[i], planUs[j])) {
+        best = [planUs[i], planUs[j]];
+        break;
+      }
+    }
+  }
+  return best;
+})();
+const ringX = (r) => {
+  const W1 = r.x1 - r.x0, W0 = W1 / wS;
+  const stretch = wS !== 1 && planBand[1] > planBand[0] && havePlan;
+  const xa = r.x0 + planBand[0] * W0, xb = r.x1 - (1 - planBand[1]) * W0;
+  return {
+    of: (u) => {
+      if (!stretch) return r.x0 + u * W1;
+      if (u <= planBand[0]) return r.x0 + u * W0;
+      if (u >= planBand[1]) return r.x1 - (1 - u) * W0;
+      return xa + ((u - planBand[0]) / (planBand[1] - planBand[0])) * (xb - xa);
+    },
+    at: (x) => {
+      if (W1 <= 1e-9) return 0.5;
+      if (!stretch) return (x - r.x0) / W1;
+      if (x <= xa) return (x - r.x0) / Math.max(1e-9, W0);
+      if (x >= xb) return 1 - (r.x1 - x) / Math.max(1e-9, W0);
+      return planBand[0] + ((x - xa) / Math.max(1e-9, xb - xa)) *
+        (planBand[1] - planBand[0]);
+    },
+  };
+};
+
+// how far forward the body's front face is at a given height and a given point
+// across its width -- what a part has to be mounted on
+function frontZAt(y, x) {
   const zf = lerpWall(profile?.front_wall, y, BODY_D / 2);
-  if (!havePlan) return zf;
+  if (!havePlan || !fprofile) return zf;
   const zb = lerpWall(profile?.back_wall, y, -BODY_D / 2);
-  return zb + (zf - zb) * depthAt(planF, Math.min(1, Math.max(0, u)));
+  const r = { x0: lerpWall(fprofile.left_wall, y, -FW / 2 / wS) * wS,
+              x1: lerpWall(fprofile.right_wall, y, FW / 2 / wS) * wS };
+  const u = Math.min(1, Math.max(0, ringX(r).at(x)));
+  return zb + (zf - zb) * depthAt(planF, u);
 }
 
 function buildLoft() {
@@ -260,10 +314,8 @@ function buildLoft() {
   const fracF = (u) => (havePlan ? depthAt(planF, u) : 1);
   const fracB = (u) => (havePlan ? depthAt(planB, u) : 0);
   const loopOf = (r) => {
-    const at = (u, f) => ({
-      x: r.x0 + u * (r.x1 - r.x0),
-      z: r.zb + (r.zf - r.zb) * f(u),
-    });
+    const X = ringX(r);
+    const at = (u, f) => ({ x: X.of(u), z: r.zb + (r.zf - r.zb) * f(u) });
     return [...planUs.map((u) => at(u, fracF)),
             ...[...planUs].reverse().map((u) => at(u, fracB))];
   };
@@ -563,7 +615,7 @@ for (const q of man.parts) {
     const yy = (y - h / 2 + (h * k) / 8) / FH + 0.5;
     for (let j = 0; j <= 4; j++) {
       const xx = x - w / 2 + (w * j) / 4;
-      surf = Math.max(surf, frontZAt(yy, xx / FW + 0.5));
+      surf = Math.max(surf, frontZAt(yy, xx));
     }
   }
   // A RECESSED PART CANNOT SIT BEHIND A SOLID FACE. Centring its box at
