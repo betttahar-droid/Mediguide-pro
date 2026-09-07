@@ -109,7 +109,7 @@ def quiet_window(diff, frac):
     return [besti / n, (besti + k) / n], max(best / k, max(win) / 3.0)
 
 
-def flank_window(diff, w=0.09, lo=0.07, hi=0.44):
+def flank_window(diff, w=0.045, lo=0.03, hi=0.47, forbid=None):
     """The calmest window in the LEFT FLANK -- inside the trim, outside the art.
 
     Measuring "the outer tenth" instead called every strip busy, because the
@@ -122,11 +122,30 @@ def flank_window(diff, w=0.09, lo=0.07, hi=0.44):
     i0, i1 = int(lo * n), max(int(lo * n) + 1, int(hi * n) - k)
     if n < 8 or i1 <= i0:
         return (0.15, 0.24), 999.0
-    best, besti = None, i0
+    # THE CUT MUST NOT FALL THROUGH A FITTING. The insertion point is where a
+    # widened prop gains its extra width, and on a marquee the quietest window
+    # was still inside the lettering -- so the title's left half was pushed out
+    # to the frame with a band of panel between it and the rest, reading
+    # "GALACTIC RA ... AIDERS". Columns belonging to a part are struck out
+    # before the search, so the cut lands in plain frame or not at all.
+    def blocked(i):
+        return forbid is not None and any(forbid[j] for j in range(i, i + k))
+
+    best, besti = None, None
     for i in range(i0, i1):
+        if blocked(i):
+            continue
         v = sum(diff[i:i + k]) / k
         if best is None or v < best:
             best, besti = v, i
+    # NOWHERE SAFE INSIDE MEANS PAD OUTSIDE. A marquee's artwork runs the full
+    # width of its strip, so every interior cut splits it and the title came
+    # out as "GALACTIC RA ... AIDERS" with a band of panel between the halves.
+    # A zero-width window puts the growth at the outer edge instead: the art is
+    # held whole at its real size and the prop gains plain frame either side of
+    # it, which is what a person would draw.
+    if besti is None or best > 2.5 * QUIET:
+        return (0.0, 0.0), 999.0
     return (besti / n, (besti + k) / n), best
 
 
@@ -208,31 +227,25 @@ def busy_frac(im, x0, x1, y0, y1):
     return far / max(1, n)
 
 
-def flank_colour(im, y0, y1, f0, f1):
-    """The mean colour of the region a strip grows from.
+def strip_colour(im, y0, y1):
+    """The colour a strip should GROW in: its own panel tone.
 
-    A strip that cannot repeat its artwork has to be filled with something, and
-    a stretched column gives a featureless wash -- "a flat blank panel", "a
-    huge blank smear", in the judge's words, which is as much a bug as the
-    duplicated screen it replaced. The answer is the seamless panel tile, which
-    has real grain and repeats without duplicating anything recognisable. But
-    the tile is cut from ONE patch of the prop, and a marquee's frame is not
-    the colour of the cabinet body. So each strip also records the colour of
-    its own growth region, and the renderer tints the shared tile to it: one
-    material, every strip's own colour, nobody's artwork repeated.
+    Sampling the growth window itself looked right until that window collapsed
+    to zero at the outer edge -- which is where it goes when a strip's artwork
+    runs its full width -- and the sample became the cabinet's blue outline.
+    A widened prop then grew bright blue flanks. A strip's dominant mid-tone is
+    its panel by definition, and that is what more of the prop should be made
+    of; the darkest and lightest few percent are outline and specular.
     """
-    W, _ = im.size
     px = im.load()
-    x0, x1 = int(f0 * W), max(int(f0 * W) + 1, int(f1 * W))
-    n = 0
-    acc = [0, 0, 0]
-    for x in range(x0, min(W, x1)):
+    W, _ = im.size
+    tally = _Counter()
+    for x in range(0, W, 2):
         for y in range(y0, y1, 2):
             c = px[x, y]
-            acc = [a + v for a, v in zip(acc, c)]
-            n += 1
-    return [round(a / max(1, n)) for a in acc]
-
+            if 28 < 0.299 * c[0] + 0.587 * c[1] + 0.114 * c[2] < 232:
+                tally[c] += 1
+    return list(tally.most_common(1)[0][0]) if tally else [128, 128, 128]
 
 def main():
     ap = argparse.ArgumentParser()
@@ -262,6 +275,13 @@ def main():
         edges.pop()
     edges.append(H)
 
+    part_boxes = []
+    try:
+        part_boxes = [q["px"] for q in json.loads(
+            (d / f"parts_{args.face}.json").read_text()).get("parts", [])]
+    except Exception:
+        pass
+
     strips = []
     for i in range(len(edges) - 1):
         y0, y1 = edges[i], edges[i + 1]
@@ -278,7 +298,15 @@ def main():
         # on PARTS, where a wider deck should genuinely get more button
         # clusters, and those have their own measured rules. Here it only ever
         # duplicated something a player could name.
-        hmode, hflank, hrep = "extend", flank_window(cd)[0], False
+        # columns this strip's own parts occupy, so the cut can dodge them
+        forbid = [False] * max(1, len(cd))
+        for q in part_boxes:
+            qx0, qy0, qx1, qy1 = q
+            if qy1 <= y0 or qy0 >= y1:
+                continue
+            for x in range(max(0, qx0 - 2), min(len(forbid), qx1 + 2)):
+                forbid[x] = True
+        hmode, hflank, hrep = "extend", flank_window(cd, forbid=forbid)[0], False
         vmode, vflank, vrep = "extend", flank_window(rows)[0], False
         # and the band has to be MATERIAL, not just smooth on average
         BUSY = 0.05
@@ -303,7 +331,7 @@ def main():
         strips.append({
             "xspan": [round((xs[0] if xs else 0) / W, 5),
                       round(((xs[-1] + 2) if xs else W) / W, 5)],
-            "fill": flank_colour(im, y0, y1, hflank[0], hflank[1]),
+            "fill": strip_colour(im, y0, y1),
             "hmode": hmode, "hf": [round(hflank[0], 5), round(hflank[1], 5)],
             "hf_repeat": hrep,
             "vmode": vmode, "vf": [round(vflank[0], 5), round(vflank[1], 5)],

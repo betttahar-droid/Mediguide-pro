@@ -329,6 +329,24 @@ def main():
             "motion": q.get("motion") if q.get("motion") in MOTIONS else "none",
         })
 
+    # PARTS ON THE SAME ROW MUST HOLD TO THE SAME EDGE. Widening the prop moves
+    # a left-anchored part left and a right-anchored one right, so a marquee
+    # that measured as two cells -- title and artwork -- was pulled apart into
+    # "GALACTIC RA ... AIDERS" with panel between the halves. Grouping them into
+    # one part instead needed a merge gap so wide it swallowed the whole lower
+    # cabinet, which starved the background of panel until the tile it grows
+    # with came out the colour of the cabinet's blue trim. Sharing the anchor
+    # costs nothing and keeps their spacing exactly: each holds the same
+    # distance from the same edge, so they travel together.
+    for i, o in enumerate(out):
+        band = [q for q in out
+                if min(q["px"][3], o["px"][3]) - max(q["px"][1], o["px"][1])
+                >= 0.6 * min(q["px"][3] - q["px"][1], o["px"][3] - o["px"][1])]
+        if len(band) > 1:
+            lead = min(band, key=lambda q: q["px"][0])["anchor"]
+            if lead in ("left", "right", "center") and o["anchor"] != lead:
+                o["anchor"] = lead
+
     (d / f"parts_{args.face}.json").write_text(
         json.dumps({"face": args.face, "size": [W, H], "parts": out}, indent=1))
     print(f"measured {len(boxes)} regions, {CRITIC_MODEL} named {len(out)}")

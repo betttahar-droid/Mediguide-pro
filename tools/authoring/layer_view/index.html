@@ -281,10 +281,18 @@ if (built && built.fills.length) {
       const t = tileTex.clone();
       t.needsUpdate = true;
       t.repeat.set(Math.max(1, w2 / unit), Math.max(1, h2 / unit));
-      const col = new THREE.Color(
-        Math.min(2, (rgb[0] + 1) / (tm[0] + 1)),
-        Math.min(2, (rgb[1] + 1) / (tm[1] + 1)),
-        Math.min(2, (rgb[2] + 1) / (tm[2] + 1)));
+      // TINT ONLY WHEN THE SAMPLE IS TRUSTWORTHY. A strip's dominant colour is
+      // its panel only while the strip still HAS panel; once the parts covered
+      // most of the face the dominant colour became the cabinet's blue outline,
+      // and a widened prop grew bright blue flanks. The tile is already cut
+      // from this prop's own clean panel, so leaving it untinted is right
+      // wherever the strip cannot offer a better sample -- and a sample that
+      // lands far from the tile's own tone is exactly the case that was wrong.
+      const ratio = [0, 1, 2].map((i) => (rgb[i] + 1) / (tm[i] + 1));
+      const spread = Math.max(...ratio) / Math.max(1e-6, Math.min(...ratio));
+      const col = spread > 1.35
+        ? new THREE.Color(1, 1, 1)
+        : new THREE.Color(...ratio.map((v) => Math.min(1.6, v)));
       const m = new THREE.Mesh(new THREE.PlaneGeometry(w2, h2),
         new THREE.MeshBasicMaterial({ map: t, color: col }));
       m.position.set((x0 + x1) / 2, (y0 + y1) / 2, -0.0005);

@@ -268,7 +268,12 @@ def main():
     for k in (16, 24, 32):
         src = bg.crop((x0, y0, x0 + pw, y0 + ph)).resize(
             (size + k, size + k), Image.LANCZOS)
-        tile = make_seamless_overlap(damp(flatten(src)), size, size, k)
+        # LIGHTLY DAMPED ONLY. This tile is now what every growth region is filled
+        # with, so it is the entire surface of an enlarged prop -- damped hard it
+        # reads as "a huge blank smeared slab with no detail", which is a fault
+        # in its own right. It needs to keep its grain; it is the repeat, not the
+        # contrast, that had to go.
+        tile = make_seamless_overlap(damp(flatten(src), 0.92), size, size, k)
         wv, wh = tile_seam_ratio(tile)
         cv, ch = cross_seam_ratio(tile)
         worst = max(wv, wh, cv, ch)
