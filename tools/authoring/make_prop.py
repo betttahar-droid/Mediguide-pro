@@ -256,6 +256,12 @@ def build_body(d, asset):
     # how wide the prop is at each height, so the body is the intersection of
     # both silhouettes rather than one extrusion with a constant width
     run([sys.executable, "tools/authoring/front_profile.py", str(d)])
+    # AND THE CROSS-SECTION, WHICH ONLY THE THIRD DRAWING KNOWS. Width crossed
+    # with depth is a rectangle, always, so two views left every prop's plan
+    # stuck around 90% agreement however the depth was tuned. The top elevation
+    # is where a chamfered corner or a rounded flank is written down.
+    run([sys.executable, "tools/authoring/top_profile.py", str(d),
+         "--asset", asset])
     # MEASURE THE SHAPE AGAINST THE DRAWINGS, AND CORRECT WHAT IS MEASURABLE.
     # The model claims to be the prop on the sheet, so its outline from the
     # front, the side and above must match the three elevations. The footprint
@@ -264,7 +270,7 @@ def build_body(d, asset):
     # error out.
     r = run([sys.executable, "tools/authoring/geometry_audit.py", str(d), "--fix"],
             env=_env())
-    for line in (r.stdout or "").strip().splitlines()[-4:]:
+    for line in (r.stdout or "").strip().splitlines()[-5:]:
         print("   ", line.strip()[:110])
 
 
