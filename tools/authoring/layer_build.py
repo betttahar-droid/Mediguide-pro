@@ -333,6 +333,17 @@ def main():
         # full width each time, so it hung off both sides of the cabinet.
         # Per-bay is the more specific claim, so it wins and the part keeps its
         # real size.
+        # A SIX-PIXEL BUTTON IS PAINTED ON, NOT MODELLED. The segmentation is
+        # fine-grained enough to find every individual button, which is a good
+        # thing for decals and a bad one for geometry: each became a box
+        # standing proud of the deck, and the wireframe showed sixteen of them
+        # intersecting each other and the deck they sit on. At this scale a
+        # fitting that small has no relief a player could ever see, so it keeps
+        # its art and loses its box.
+        if (x1 - x0) * (y1 - y0) < 0.004 * W * H and \
+                p.get("depth") in ("proud", "deep"):
+            p["depth"] = "flush"
+
         # PER-BAY IS FOR CONTROLS, AND A CONTROL IS SMALL. A bay is one
         # player's station, so what repeats in it is a joystick, a button
         # cluster, a coin slot. The rule was applied to a SCREEN, and a widened
