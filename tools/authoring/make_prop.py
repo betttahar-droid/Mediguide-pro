@@ -147,11 +147,23 @@ def main():
         for img in [d / "front.png", *shots]:
             content.append({"type": "image_url",
                             "image_url": {"url": data_uri(img)}})
-        try:
-            v = as_json(glm([{"role": "user", "content": content}], CRITIC_MODEL,
-                            key, max_tokens=14000))
-        except SystemExit as e:
-            print(f"  round {rnd}: judge failed -- {str(e)[:100]}")
+        # A JUDGE THAT REPLIES BADLY MUST NOT KILL THE RUN. as_json raises
+        # JSONDecodeError on a malformed reply and only SystemExit was caught,
+        # so one truncated answer ended a five-round run at round 1 with a
+        # traceback. Unattended, that would take a three-prop batch down.
+        v = None
+        for attempt in range(3):
+            try:
+                v = as_json(glm([{"role": "user", "content": content}], CRITIC_MODEL,
+                                key, max_tokens=14000,
+                                temperature=0.2 + 0.2 * attempt))
+                break
+            except Exception as e:
+                print(f"  round {rnd}: judge reply unusable "
+                      f"({type(e).__name__}), retry {attempt + 1}/3")
+        if v is None:
+            print(f"  round {rnd}: judge unusable three times -- keeping the "
+                  f"last good build and stopping")
             break
 
         faults = v.get("faults", [])
