@@ -346,10 +346,18 @@ def main():
         print("   ", line[:150])
 
     print("[4] body: side, back, top and the profile ...", flush=True)
-    build_body(d, args.asset)
-
+    # CUT THE LAYERS FIRST, OR THE AUDIT MEASURES NOTHING. build_body finishes
+    # by rendering the model from three axes and scoring it against the
+    # elevations -- and the renderer's very first act is to fetch
+    # layers_front.json, which rebuild had not written yet. So on every prop
+    # built from scratch the audit printed "no render or no front.png" three
+    # times and moved on, and the one measurement in this tool that can say
+    # whether the geometry is right was never taken. It only ever looked like a
+    # flake because re-running it by hand found the file from the round before.
     outstanding = []
     rebuild(d)
+    build_body(d, args.asset)
+
     # A STAGE THAT FAILED MUST SAY SO HERE, NOT SIX FRAMES DOWN. layer_build
     # crashing left no layers_front.json, and the loop went on to render it and
     # died in json.loads with a traceback that named neither the prop nor the

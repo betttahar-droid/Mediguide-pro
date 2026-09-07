@@ -178,16 +178,36 @@ def main():
         return (pu0 >= su0 - m and pu1 <= su1 + m
                 and pv0 >= sv0 - m and pv1 <= sv1 + m)
 
+    # A STATION'S PARTS ARE PEERS, SO THE CLOSURE ONLY REACHES PEERS. The rule
+    # as first written promoted anything standing on a structure once one of
+    # its neighbours was per-bay -- and on this cabinet the screen stands on
+    # the screen bezel alongside a coin slot that does repeat, so the SCREEN
+    # was marked per-bay. A widened cabinet would have come back with two
+    # screens side by side, which is the exact failure the per_bay prompt warns
+    # about in as many words. A joystick and a button are the same order of
+    # thing; a screen is not, and size says so without being told.
+    def area(p):
+        u0, u1, v0, v1 = box(p)
+        return max(0.0, u1 - u0) * max(0.0, v1 - v0)
+
     added = []
     for s in [p for p in parts if p["name"] in spans]:
         riders = [p for p in parts
                   if p["name"] != s["name"] and p["name"] not in spans
                   and sits_on(p, s)]
-        if any(p["name"] in per_bay for p in riders):
-            for p in riders:
-                if p["name"] not in per_bay:
-                    per_bay.append(p["name"])
-                    added.append(f"{p['name']} (stands on {s['name']})")
+        seats = [p for p in riders if p["name"] in per_bay]
+        if not seats:
+            continue
+        biggest = max(area(p) for p in seats)
+        for p in riders:
+            if p["name"] in per_bay:
+                continue
+            if area(p) > 0.08:
+                continue                     # too big to be one player's fitting
+            if area(p) > 3 * biggest:
+                continue                     # not a peer of what already repeats
+            per_bay.append(p["name"])
+            added.append(f"{p['name']} (stands on {s['name']})")
 
     rules = {
         "wider_means": str(got.get("wider_means", "a wider one of the same thing"))[:300],

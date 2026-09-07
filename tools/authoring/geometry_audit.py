@@ -310,6 +310,14 @@ def main():
             apply_depth(d, ar)
             report = measure(d, out)
 
+    # SAY IT LOUDLY WHEN NOTHING WAS MEASURED. This printed three quiet "no
+    # render" lines and carried on, and that is how a build-order bug hid for
+    # weeks: the renderer needs layers_front.json and the pipeline had not cut
+    # the layers yet, so on every prop built from scratch the one measurement
+    # that can say whether the geometry is right was silently skipped.
+    if not [k for k in report if not k.startswith("_")]:
+        print("  ! measured NOTHING -- the model did not render. The geometry "
+              "is unchecked, not correct.")
     (d / "geometry_audit.json").write_text(json.dumps(report, indent=1))
 
 
