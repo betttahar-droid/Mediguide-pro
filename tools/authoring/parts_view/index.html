@@ -306,7 +306,13 @@ for (const q of man.parts) {
   const cls = q.depth ?? 'proud';
   const d = Math.max(0.002, Math.min(Math.abs(DEPTH[cls] ?? DEPTH.proud),
                                      (CAP[cls] ?? 0.45) * Math.min(w, h)));
-  const recessed = (cls === 'recessed');
+  // A PART THAT MOVES CANNOT BE BURIED. A recess is drawn as a face a hair
+  // proud with its box sunk behind, which is right for a screen and wrong for
+  // anything on a hinge: the box is inside the body, so swinging it sweeps
+  // straight through the cabinet -- which is exactly what the second judge
+  // reported about the access door. If it moves, it sits on the surface.
+  const moves = (q.motion || 'none') !== 'none';
+  const recessed = (cls === 'recessed') && !moves;
 
   const geo = partGeometry(q, w, h, d);
   const mesh = new THREE.Mesh(geo, new THREE.MeshBasicMaterial(

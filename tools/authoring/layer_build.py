@@ -364,6 +364,16 @@ def main():
         # and nothing about it restructured. Which parts are frames is a
         # question about what the object IS, so scale_rules asks it, and an
         # explicit role beats a width heuristic.
+        # AND A FRAME IS SOMETHING THAT ALREADY RUNS THE WIDTH. scale_rules is
+        # told in as many words not to call a coin door structure, and it did
+        # anyway -- so a widened cabinet stretched its coin door across the
+        # whole front, slot boxes and all. The claim is about a role; whether a
+        # part occupies that role is measurable, and a fitting covering a third
+        # of the width is not the carcass it sits in.
+        if p.get("spans") and fw_ < 0.70:
+            print(f"  {p['name']}: called structure but only {100*fw_:.0f}% "
+                  f"wide -- not a frame")
+            p["spans"] = False
         if p.get("spans"):
             if rule == "fixed":
                 print(f"  {p['name']}: structure, fixed -> spanx_center")

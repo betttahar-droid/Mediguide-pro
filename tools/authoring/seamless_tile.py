@@ -35,6 +35,7 @@ and that number is what says whether this worked.
 """
 import argparse
 import json
+from collections import Counter
 from pathlib import Path
 
 from PIL import Image, ImageFilter
@@ -252,13 +253,48 @@ def per_strip(d, args):
     from identify_parts import object_crop as _oc
     src = _oc(d / f"{args.face}.png").convert("RGB")
     strips = json.loads((d / f"strips_{args.face}.json").read_text())["strips"]
+    cov = _covered_mask(d, args.face, src.size)
+    W0, H0 = src.size
+
+    # THE CARCASS IS ONE MATERIAL. A band across the marquee has almost no body
+    # panel in it, so the best "material" it can offer is the vent beside the
+    # title -- and a widened cabinet grew ribbed dark chequerwork either side of
+    # its marquee. What a prop is MADE of is a property of the prop, not of the
+    # band, so a strip whose own material does not look like the carcass borrows
+    # the carcass instead.
+    px0 = src.load()
+    tally = Counter()
+    for x in range(0, W0, 2):
+        for y in range(0, H0, 2):
+            if cov[x][y]:
+                continue
+            c = px0[x, y][:3]
+            if 28 < 0.299 * c[0] + 0.587 * c[1] + 0.114 * c[2] < 232:
+                tally[c] += 1
+    body = tally.most_common(1)[0][0] if tally else (128, 128, 128)
+    bx, by, bw, bh = _patch_in(src, (0, H0), cov)
+    print(f"  carcass {body}, patch {bw}x{bh} at ({bx},{by})")
+
     out = []
     for i, st in enumerate(strips):
         y0, y1 = st["px"]
         if y1 - y0 < 12:
             out.append(None)
             continue
-        x0, py0, pw, ph = _patch_in(src, (y0, y1))
+        x0, py0, pw, ph = _patch_in(src, (y0, y1), cov)
+        mean = [0, 0, 0]
+        n = 0
+        for xx in range(x0, x0 + pw, 2):
+            for yy in range(py0, py0 + ph, 2):
+                c = px0[xx, yy][:3]
+                mean = [m + v for m, v in zip(mean, c)]
+                n += 1
+        mean = [m / max(1, n) for m in mean]
+        far = sum(abs(a - b) for a, b in zip(mean, body)) / 3
+        if far > 26 or min(pw, ph) < 12:
+            x0, py0, pw, ph = bx, by, bw, bh
+            print(f"  strip {i}: own material is {far:.0f} from the carcass "
+                  f"-- borrowing the carcass")
         size = max(16, min(args.size, min(pw, ph)))
         k = max(4, size // 5)
         crop = src.crop((x0, py0, x0 + pw, py0 + ph)).resize(
@@ -277,21 +313,50 @@ def per_strip(d, args):
     print(f"wrote {sum(1 for t in out if t)} strip tiles")
 
 
-def _patch_in(bg, band):
+def _covered_mask(d, face, size):
+    """Which pixels belong to a fitting, so material is never cut from one."""
+    W, H = size
+    cov = [[False] * H for _ in range(W)]
+    try:
+        man = json.loads((d / f"parts_{face}.json").read_text())
+    except Exception:
+        return cov
+    for q in man.get("parts", []):
+        x0, y0, x1, y1 = q["px"]
+        mp = None
+        if q.get("mask") and (d / q["mask"]).exists():
+            mp = Image.open(d / q["mask"]).convert("L").load()
+        for x in range(max(0, x0), min(W, x1)):
+            for y in range(max(0, y0), min(H, y1)):
+                if mp is None or mp[x - x0, y - y0] > 128:
+                    cov[x][y] = True
+    return cov
+
+
+def _patch_in(bg, band, cov=None):
     """The largest chunky run of the dominant mid-tone inside one row band."""
     from collections import Counter
     W, _ = bg.size
     y0, y1 = band
     px = bg.load()
+    # MATERIAL IS WHAT THE FITTINGS SIT ON, NOT THE FITTINGS. Cutting from the
+    # elevation avoids the circular grey problem, but the elevation still has
+    # the artwork in it -- so the marquee's band offered its own cream border as
+    # "material" and a widened cabinet grew cream chequerwork either side of its
+    # title. Pixels a part covers are not eligible.
     tally = Counter()
     for x in range(0, W, 2):
         for y in range(y0, y1, 2):
+            if cov is not None and cov[x][y]:
+                continue
             c = px[x, y][:3]
             if 28 < 0.299 * c[0] + 0.587 * c[1] + 0.114 * c[2] < 232:
                 tally[c] += 1
     base = tally.most_common(1)[0][0] if tally else (128, 128, 128)
 
     def ok(x, y):
+        if cov is not None and cov[x][y]:
+            return False
         return sum(abs(a - b) for a, b in zip(px[x, y][:3], base)) < 70
 
     best, bw, bh, score = None, 0, 0, 0
@@ -356,7 +421,8 @@ def main():
         srcim = _oc(d / f"{args.face}.png").convert("RGB")
         if srcim.size != bg.size:
             srcim = srcim.resize(bg.size)
-        x0, y0, pw, ph = _patch_in(srcim, band)
+        x0, y0, pw, ph = _patch_in(srcim, band,
+                                   _covered_mask(d, args.face, srcim.size))
         bg = srcim
         print(f"  tile cut from the elevation, rows {band[0]}..{band[1]}")
     elif patch_meta.exists():
