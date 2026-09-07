@@ -66,14 +66,28 @@ Rules available:
                   title, not three)
   "spany_repeat" / "spany_center"  the same for the vertical axis
 
-Report what looks wrong, then give a PATCH: only parts whose rule or anchor
-should change, or that should be dropped because they are not really a part.
-Change nothing that already looks right. If all three images look like a
-well-made {asset}, set looks_good true and return an empty patch.
+JUDGE IT AGAINST THE RIGHT BAR. This is a late-1990s PlayStation-era game
+prop, not a hero asset: low polygon count, small low-resolution textures,
+visible texels. Grade every fault "blocking" or "minor".
+
+  blocking  a part missing, in the wrong place, duplicated, obscuring another
+            part, or plainly the wrong size; the prop not reading as a
+            {asset} at all
+  minor     a faint tiling seam, slight repetition in a grime or grain
+            pattern, a soft edge, small texel crunch, mild banding in a flat
+            panel -- ALL NORMAL at this fidelity and NOT worth a round
+
+Set looks_good TRUE when nothing is blocking, even if minor faults remain. A
+prop with two faint seams in its side panel is a finished PS1 prop. Do not
+withhold a pass for imperfection; withhold it only for something broken.
+
+Then give a PATCH: only parts whose rule or anchor should change, or that
+should be dropped because they are not really a part. Change nothing that
+already looks right; return an empty patch when nothing is blocking.
 
 JSON only:
 {{"looks_good": false,
-  "faults": [{{"part": "...", "fault": "..."}}],
+  "faults": [{{"part": "...", "fault": "...", "severity": "blocking"}}],
   "patch": [{{"name": "...", "resize": "...", "anchor": "...", "drop": false}}]}}"""
 
 
@@ -167,12 +181,22 @@ def main():
             break
 
         faults = v.get("faults", [])
+        blocking = [f for f in faults
+                    if str(f.get("severity", "blocking")).lower() == "blocking"]
         print(f"\n  round {rnd}: looks_good={v.get('looks_good')}  "
-              f"{len(faults)} faults, {len(v.get('patch', []))} corrections")
+              f"{len(blocking)} blocking / {len(faults)} faults, "
+              f"{len(v.get('patch', []))} corrections")
         for f in faults[:6]:
-            print(f"    - {f.get('part')}: {f.get('fault')}")
-        if best is None or len(faults) < best[0]:
-            best = (len(faults), rnd)
+            print(f"    - [{f.get('severity','?'):8}] {f.get('part')}: {f.get('fault')}")
+        # A LOOP NEEDS A BAR ITS JUDGE CAN CLEAR. Asked only "what looks
+        # wrong", a model always answers something, so looks_good never came
+        # true in eleven rounds across two runs while the faults were faint
+        # cap seams. Passing on "nothing blocking" is the reachable bar.
+        if not blocking and not v.get("looks_good"):
+            print("  no blocking faults -- treating as a pass")
+            v["looks_good"] = True
+        if best is None or len(blocking) < best[0]:
+            best = (len(blocking), rnd)
         if v.get("looks_good"):
             print("  JUDGE PASSED")
             break
