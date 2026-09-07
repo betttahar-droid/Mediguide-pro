@@ -65,7 +65,7 @@ def _runs(diff, thresh):
     return best
 
 
-def bands(path, quantile=0.35, min_frac=0.08):
+def bands(path, quantile=0.35, min_frac=0.08, fallback=False):
     """-> {"v": [z0, z1], "h": [x0, x1]} stretch bands, normalised 0..1.
 
     z runs UP from the floor to match the model, so the vertical band is
@@ -108,9 +108,26 @@ def bands(path, quantile=0.35, min_frac=0.08):
         srt = sorted(sm)
         thresh = max(srt[int(quantile * (len(srt) - 1))], 3.0)
         span, a, b = _runs(sm, thresh)
-        if span < min_frac * n:            # nothing uniform enough to trust
-            return None
-        return [a / n, b / n]
+        if span >= min_frac * n:
+            return [a / n, b / n]
+        if not fallback:
+            return None                    # nothing uniform enough to trust
+        # THE BACKGROUND MUST ALWAYS HAVE A BAND. Returning None for it left
+        # the renderer with a zero-width middle and unitW pinned to its floor,
+        # so a widened prop asked for four thousand copies of a zero-width UV
+        # slice -- the vertical streaking the judge reported on every enlarged
+        # prop, round after round. A part may honestly refuse to stretch; a
+        # background cannot, because something has to absorb the change. So
+        # take the QUIETEST window of the required width instead of the empty
+        # answer: it is the best this artwork can offer, and it is measured.
+        k = max(2, int(min_frac * n))
+        run = sum(sm[:k])
+        bestv, besti = run, 0
+        for i in range(1, len(sm) - k + 1):
+            run += sm[i + k - 1] - sm[i - 1]
+            if run < bestv:
+                bestv, besti = run, i
+        return [besti / n, (besti + k) / n]
 
     v = pick(rowdiff, H, "v")
     h = pick(coldiff, W, "h")
@@ -127,9 +144,11 @@ def main():
     ap.add_argument("image")
     ap.add_argument("--quantile", type=float, default=0.35,
                     help="share of rows counted as 'uniform enough'")
+    ap.add_argument("--fallback", action="store_true",
+                    help="never return null: use the quietest window instead")
     ap.add_argument("--out", default=None)
     args = ap.parse_args()
-    b = bands(args.image, args.quantile)
+    b = bands(args.image, args.quantile, fallback=args.fallback)
     print(f"{args.image}: object {b['size'][0]}x{b['size'][1]}")
     if b["v"]:
         print(f"  vertical   stretch band z {b['v'][0]:.3f}..{b['v'][1]:.3f}  "

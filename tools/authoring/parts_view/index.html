@@ -31,6 +31,7 @@
 //   ?box=1       fall back to the old box body, for comparison
 //   ?export=1    write the whole rig out as glTF, hierarchy and pivots intact
 import * as THREE from 'three';
+import { faceQuads, spansOf } from '../part_slice.mjs';
 
 const p = new URLSearchParams(location.search);
 const dir = p.get('dir') ?? '/tools/img2threejs-work/prop_arcade_cabinet';
@@ -253,49 +254,14 @@ function partGeometry(q, w, h, d) {
     uv.push(...U[0], ...U[1], ...U[2], ...U[0], ...U[2], ...U[3]);
   };
   const X = w / 2, Y = h / 2, Z = d / 2;
-  const R = q.resize || 'fixed';
-  // only an axis this part actually spans may repeat; a fixed part keeps one
-  // piece whatever its bands say, because nothing is asking it to grow
-  const bh = R.startsWith('spanx') ? (q.bands?.h ?? null) : null;
-  const bv = R.startsWith('spany') ? (q.bands?.v ?? null) : null;
-  const spans = { x: R.startsWith('spanx') && !!bh, y: R.startsWith('spany') && !!bv };
-  const [a0, a1] = bh ?? [0.5, 0.5];
-  const [c0, c1] = bv ?? [0.5, 0.5];
-  // the part's ORIGINAL size on the face: caps must keep that, not scale
   const ow = (q.u[1] - q.u[0]) * A, oh = q.v[1] - q.v[0];
-  const capL = a0 * ow, capR = (1 - a1) * ow;
-  const capB = c0 * oh, capT = (1 - c1) * oh;
-  const xs = [-X, Math.min(0, -X + capL), Math.max(0, X - capR), X];
-  const ys = [-Y, Math.min(0, -Y + capB), Math.max(0, Y - capT), Y];
-  const us = [0, a0, a1, 1], vs = [0, c0, c1, 1];
-  const unitW = Math.max(1e-4, (a1 - a0) * ow);
-  const unitH = Math.max(1e-4, (c1 - c0) * oh);
-  // REPEAT MEANS REPEAT; CENTER MEANS ONE. The two span rules differ only
-  // here, and treating them alike put "ARCADE" on the marquee followed by two
-  // clipped copies of its own last letters. A "_center" part holds a single
-  // middle and lets that uniform band take up the slack -- which is safe
-  // precisely because the band was measured as uniform; a "_repeat" part
-  // instances it, so a wider deck gets more button clusters.
-  const nx = (bh && R === 'spanx_repeat')
-    ? Math.max(1, Math.round((xs[2] - xs[1]) / unitW)) : 1;
-  const ny = (bv && R === 'spany_repeat')
-    ? Math.max(1, Math.round((ys[2] - ys[1]) / unitH)) : 1;
-
-  for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) {
-    const cx = i === 1 ? nx : 1, cy = j === 1 ? ny : 1;
-    for (let m = 0; m < cx; m++) for (let n = 0; n < cy; n++) {
-      const x0 = xs[i] + (xs[i + 1] - xs[i]) * m / cx;
-      const x1 = xs[i] + (xs[i + 1] - xs[i]) * (m + 1) / cx;
-      const y0 = ys[j] + (ys[j + 1] - ys[j]) * n / cy;
-      const y1 = ys[j] + (ys[j + 1] - ys[j]) * (n + 1) / cy;
-      const [u0, u1, v0, v1] = [us[i], us[i + 1], vs[j], vs[j + 1]];
-      quad([[x0, y0, Z], [x1, y0, Z], [x1, y1, Z], [x0, y1, Z]],
-           [[u0, v0], [u1, v0], [u1, v1], [u0, v1]]);
-      // the back face, for a part swung open on a hinge -- same art, mirrored,
-      // so the inside of a coin door is the door and not a hole
-      quad([[x1, y0, -Z], [x0, y0, -Z], [x0, y1, -Z], [x1, y1, -Z]],
-           [[u1, v0], [u0, v0], [u0, v1], [u1, v1]]);
-    }
+  for (const [x0, x1, y0, y1, u0, u1, v0, v1] of faceQuads(q, w, h, ow, oh)) {
+    quad([[x0, y0, Z], [x1, y0, Z], [x1, y1, Z], [x0, y1, Z]],
+         [[u0, v0], [u1, v0], [u1, v1], [u0, v1]]);
+    // the back face, for a part swung open on a hinge -- same art, mirrored,
+    // so the inside of a coin door is the door and not a hole
+    quad([[x1, y0, -Z], [x0, y0, -Z], [x0, y1, -Z], [x1, y1, -Z]],
+         [[u1, v0], [u0, v0], [u0, v1], [u1, v1]]);
   }
   // the four rims, each clamped to the border it was cut from
   quad([[-X, Y, Z], [X, Y, Z], [X, Y, -Z], [-X, Y, -Z]],
@@ -326,8 +292,8 @@ for (const q of man.parts) {
   // last letter stretched half the length of the sign. Holding its real size
   // and centring it is the honest answer: the source art says this part does
   // not grow, and inventing pixels to make it grow is worse than not growing.
-  const canX = R.startsWith('spanx') && !!(q.bands && q.bands.h);
-  const canY = R.startsWith('spany') && !!(q.bands && q.bands.v);
+  const sp = spansOf(q);
+  const canX = sp.x, canY = sp.y;
   const w = canX ? FW : ow;
   const h = canY ? FH : oh;
   // STAND-OFF IS RELATIVE TO THE PART, NOT THE PROP. "deep" as a flat 5.5% of

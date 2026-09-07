@@ -196,6 +196,52 @@ def main():
     boxes = [b for b in boxes
              if (b[2] - b[0]) * (b[3] - b[1]) < 0.45 * W * H
              and (b[2] - b[0]) >= 7 and (b[3] - b[1]) >= 7]
+    # PARTS MUST NOT OVERLAP. Components are disjoint but their bounding boxes
+    # are not -- a ring-shaped bezel's box contains the screen's, and the
+    # marquee's frame box contains its title's. Cut as separate parts they both
+    # carry the shared artwork, and once they are anchored to different edges a
+    # widened cabinet draws it twice: the marquee came out reading
+    # "TRAIL TRAIL". Merging them into one part is the honest resolution --
+    # they are one fitting that happened to measure as two cells.
+    def overlap(a, b):
+        w = min(a[2], b[2]) - max(a[0], b[0])
+        h = min(a[3], b[3]) - max(a[1], b[1])
+        if w <= 0 or h <= 0:
+            return 0.0
+        small = min((a[2] - a[0]) * (a[3] - a[1]), (b[2] - b[0]) * (b[3] - b[1]))
+        return w * h / max(1, small)
+
+    merged = True
+    while merged:
+        merged = False
+        for i in range(len(boxes)):
+            for j in range(i + 1, len(boxes)):
+                if overlap(boxes[i], boxes[j]) < 0.80:
+                    continue
+                a, b = boxes[i], boxes[j]
+                ar = (a[2] - a[0]) * (a[3] - a[1])
+                br = (b[2] - b[0]) * (b[3] - b[1])
+                big, small = (i, j) if ar >= br else (j, i)
+                # CONTAINING SOMETHING IS NOT BEING IT. Merging on containment
+                # alone swallowed the coin door into the lower cabinet panel,
+                # because a panel's box naturally contains every fitting on it.
+                # A box several times larger than what it holds is the PANEL
+                # AROUND that fitting, and the background already carries it --
+                # so it is dropped, not merged. Boxes of comparable size that
+                # overlap really are one fitting measured as two cells, a
+                # bezel ring and the glass inside it, and those are merged.
+                if max(ar, br) > 3.0 * max(1, min(ar, br)):
+                    boxes.pop(big)
+                else:
+                    boxes[min(i, j)] = [min(a[0], b[0]), min(a[1], b[1]),
+                                        max(a[2], b[2]), max(a[3], b[3]),
+                                        a[4] + b[4]]
+                    boxes.pop(max(i, j))
+                merged = True
+                break
+            if merged:
+                break
+
     boxes.sort(key=lambda b: -b[4])
     boxes = boxes[:args.max_parts]
     boxes.sort(key=lambda b: (b[1], b[0]))          # reading order

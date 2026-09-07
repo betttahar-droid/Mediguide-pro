@@ -23,6 +23,7 @@
 // this renders the reference exactly, and any error at another size is the
 // resize rule's fault and nothing else's.
 import * as THREE from 'three';
+import { faceQuads, spansOf } from '../part_slice.mjs';
 
 const p = new URLSearchParams(location.search);
 const dir = p.get('dir') ?? '/tools/img2threejs-work/ps1_arcade';
@@ -101,90 +102,148 @@ function sliced(w, h, bu, bv, ow, oh, mirror = false, skipMiddle = false) {
 // --- background ------------------------------------------------------------
 const bgTex = await load(`${dir}/${man.background}`);
 const bgMode = p.get('bg') ?? man.background_mode ?? 'mirror';
+let strips = null;
+try { strips = await (await fetch(`${dir}/strips_front.json`)).json(); } catch {}
+if (p.get('strips') === '0') strips = null;
 
-// A SEAMLESS TILE FOR THE MIDDLE, THE REAL PANEL FOR THE CAPS. Repeating the
-// background crop is what the judge complained about for five straight rounds
-// -- a painted panel carries a gradient and a wrap discontinuity, and neither
-// tiles. seamless_tile.py flattens the gradient out and rebuilds the crop as a
-// tile whose seam measures 1.11 against an interior of 1.0, i.e. gone. The
-// gradient is not lost: it belongs to the prop rather than the material, so it
-// stays in the CAPS, which never repeat.
-let tileMeta = null;
-try { tileMeta = await (await fetch(`${dir}/tile_front.json`)).json(); } catch {}
-const useTile = tileMeta && !naive && p.get('tile') !== '0';
+// A FACE IS A STACK OF BANDS, NOT ONE PANEL. A single horizontal stretch band
+// applies to every height at once, and the quietest such band on this cabinet
+// ran straight through the word on its marquee: widened, the title tiled into
+// "TRAIL TRAIL TRAIL" while the panel below it repeated perfectly. No one band
+// can miss the artwork at every height, because the artwork is somewhere
+// different at every height.
+//
+// strip_slice.py splits the face at its own strong horizontal lines -- the
+// rail under the marquee, the lip of the deck -- and measures a stretch band
+// for each strip separately. Each then repeats its OWN quiet region: the
+// marquee grows in the plain frame either side of its title, the lower panel
+// grows almost anywhere. Vertically one strip takes the whole difference,
+// because a taller cabinet is not a cabinet with a taller marquee.
+function bgFromStrips(S) {
+  const H = S.size[1];
+  const list = S.strips.slice().sort((a, b) => a.px[0] - b.px[0]);
+  const extra = FH - 1;                       // the height that must go somewhere
+  const pos = [], uv = [];
+  const quad = (x0, x1, y0, y1, u0, u1, v0, v1) => {
+    pos.push(x0, y0, 0, x1, y0, 0, x1, y1, 0, x0, y0, 0, x1, y1, 0, x0, y1, 0);
+    uv.push(u0, v0, u1, v0, u1, v1, u0, v0, u1, v1, u0, v1);
+  };
+  // one strip horizontally: caps at their real width, its own band repeated --
+  // or, where the artwork sits in the middle and the calm is either side of it,
+  // the art held at real size in the centre with both FLANKS grown outwards.
+  const band = (yTop, yBot, vTop, vBot) => {
+    if (S_mode === 'extend') {
+      const [f0, f1] = S_f;
+      const grow = Math.max(0, (FW - A) / 2) + (f1 - f0) * A;
+      const xs = [-FW / 2, -FW / 2 + f0 * A, -FW / 2 + f0 * A + grow,
+                  FW / 2 - (f0 * A) - grow, FW / 2 - f0 * A, FW / 2];
+      const uu = [0, f0, f1, 1 - f1, 1 - f0, 1];
+      const unit = Math.max(1e-3, (f1 - f0) * A);
+      const n = Math.min(64, Math.max(1, Math.round(grow / unit)));
+      for (let i = 0; i < 5; i++) {
+        if (xs[i + 1] - xs[i] <= 1e-6) continue;
+        const c = (i === 1 || i === 3) ? n : 1;
+        for (let m = 0; m < c; m++) {
+          const x0 = xs[i] + (xs[i + 1] - xs[i]) * m / c;
+          const x1 = xs[i] + (xs[i + 1] - xs[i]) * (m + 1) / c;
+          // grow the RIGHT flank from the mirrored window, so both sides read
+          // the same frame and the art stays centred
+          const u0 = i === 3 ? uu[4] : uu[i], u1 = i === 3 ? uu[3] : uu[i + 1];
+          quad(x0, x1, yBot, yTop, u0, u1, vBot, vTop);
+        }
+      }
+      return;
+    }
+    const [a0, a1] = [Math.min(0.49, S_h[0]), Math.max(0.51, S_h[1])];
+    const capL = a0 * A, capR = (1 - a1) * A;
+    const xs = [-FW / 2, Math.min(0, -FW / 2 + capL),
+                Math.max(0, FW / 2 - capR), FW / 2];
+    const us = [0, a0, a1, 1];
+    const unit = Math.max(1e-3, (a1 - a0) * A);
+    const n = Math.min(64, Math.max(1, Math.round((xs[2] - xs[1]) / unit)));
+    for (let i = 0; i < 3; i++) {
+      if (xs[i + 1] - xs[i] <= 1e-6) continue;
+      const c = i === 1 ? n : 1;
+      for (let m = 0; m < c; m++) {
+        const x0 = xs[i] + (xs[i + 1] - xs[i]) * m / c;
+        const x1 = xs[i] + (xs[i + 1] - xs[i]) * (m + 1) / c;
+        const flip = bgMode === 'mirror' && i === 1 && m % 2 === 1;
+        quad(x0, x1, yBot, yTop, flip ? us[i + 1] : us[i],
+             flip ? us[i] : us[i + 1], vBot, vTop);
+      }
+    }
+  };
+  let S_h = [0.4, 0.6], S_mode = 'repeat', S_f = [0.15, 0.24];
+  let yTop = FH / 2;
+  for (const st of list) {
+    S_h = st.h; S_mode = st.hmode || 'repeat'; S_f = st.hf || [0.15, 0.24];
+    const oh = (st.px[1] - st.px[0]) / H;               // its real height
+    const vTop = 1 - st.px[0] / H, vBot = 1 - st.px[1] / H;
+    if (!st.grow_y || extra <= 0) {
+      band(yTop, yTop - oh, vTop, vBot);
+      yTop -= oh;
+      continue;
+    }
+    // this strip absorbs the height: caps hold, its own quiet rows repeat
+    const [t0, t1] = st.vh;
+    const capT = t0 * oh, capB = (1 - t1) * oh;
+    const midH = Math.max(0, oh + extra - capT - capB);
+    const unit = Math.max(1e-3, (t1 - t0) * oh);
+    const n = Math.min(64, Math.max(1, Math.round(midH / unit)));
+    const vAt = (f) => vTop - f * oh;                   // f is 0..1 down the strip
+    band(yTop, yTop - capT, vTop, vAt(t0));
+    let y = yTop - capT;
+    for (let m = 0; m < n; m++) {
+      const h2 = midH / n;
+      band(y, y - h2, vAt(t0), vAt(t1));
+      y -= h2;
+    }
+    band(y, y - capB, vAt(t1), vBot);
+    yTop = y - capB;
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
+  return g;
+}
 
 const bgGeo = naive ? new THREE.PlaneGeometry(FW, FH)
-  : sliced(FW, FH, slice && slice.h, slice && slice.v, A, 1,
-           bgMode === 'mirror', useTile);
+  : (strips ? bgFromStrips(strips)
+            : sliced(FW, FH, slice && slice.h, slice && slice.v, A, 1,
+                     bgMode === 'mirror', false));
 // HONOUR THE SILHOUETTE CUT. layer_build makes the sheet showing past the
 // prop's outline transparent; without alphaTest those pixels come back as
 // opaque white and a domed prop is drawn inside its own bounding box.
 scene.add(new THREE.Mesh(bgGeo, new THREE.MeshBasicMaterial(
   { map: bgTex, transparent: true, alphaTest: 0.5 })));
 
-if (useTile) {
-  const [a, b] = (slice && slice.h) ?? [0.5, 0.5];
-  const [c, dd] = (slice && slice.v) ?? [0.5, 0.5];
-  const midW = FW - a * A - (1 - b) * A, midH = FH - c - (1 - dd);
-  if (midW > 0 && midH > 0) {
-    const tex = await load(`${dir}/${tileMeta.tile}`);
-    tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
-    // one repeat per unit of the ORIGINAL panel, so texel density never changes
-    const unit = (tileMeta.patch_px[0] / man.size[0]) * A;
-    tex.repeat.set(Math.max(1, midW / unit), Math.max(1, midH / unit));
-    const m = new THREE.Mesh(new THREE.PlaneGeometry(midW, midH),
-                             new THREE.MeshBasicMaterial({ map: tex }));
-    m.position.set((a * A - (1 - b) * A) / 2, (c - (1 - dd)) / 2, 0.0005);
-    scene.add(m);
-  }
-}
-
 // --- parts -----------------------------------------------------------------
 let z = 0.001;
 for (const q of man.parts) {
   const tex = await load(`${dir}/${q.image}`);
   const ow = (q.u[1] - q.u[0]) * A, oh = q.v[1] - q.v[0];
-  const R = q.resize || 'fixed';
-  const spanX = R.startsWith('spanx'), spanY = R.startsWith('spany');
+  const sp = spansOf(q);
+  const spanX = sp.x, spanY = sp.y;
   const w = naive ? ow * wS : (spanX ? FW : ow);
   const h = naive ? oh * hS : (spanY ? FH : oh);
 
-  // REPEAT AND CENTRE-HOLD ARE DIFFERENT ANSWERS. Repeating the control deck
-  // gives a believable two-player cabinet; repeating the marquee gives three
-  // copies of the title. So a spanning part says which it wants: "_repeat"
-  // tiles its middle, "_center" keeps the middle at its original size in the
-  // centre and lets the ENDS take the change, which is what a marquee needs.
+  // ONE RULE, SHARED WITH parts_view. See part_slice.mjs: this file used to
+  // stretch a "_center" part's outer thirds to fill the extra width, which
+  // smeared the sides of the CRT outwards until the judge read them as two
+  // more tubes, and it repeated "_repeat" parts on a band hard-coded at
+  // [0.18, 0.82] rather than the one measured from the artwork.
   let geo;
-  if (!naive && (spanX || spanY)) {
-    const centred = R.endsWith('_center');
-    if (centred) {
-      // ends stretch, centre art holds its size: caps are what grows
-      const keep = spanX ? ow / w : oh / h;
-      const c0 = (1 - keep) / 2, c1 = 1 - c0;
-      const pos = [], uv = [];
-      const push = (x0, x1, y0, y1, u0, u1, v0, v1) => {
-        pos.push(x0, y0, 0, x1, y0, 0, x1, y1, 0, x0, y0, 0, x1, y1, 0, x0, y1, 0);
-        uv.push(u0, v0, u1, v0, u1, v1, u0, v0, u1, v1, u0, v1);
-      };
-      if (spanX) {
-        const xs = [-w / 2, -w / 2 + c0 * w, w / 2 - c0 * w, w / 2];
-        push(xs[0], xs[1], -h / 2, h / 2, 0, 0.5 - keep / 2, 0, 1);
-        push(xs[1], xs[2], -h / 2, h / 2, 0.5 - keep / 2, 0.5 + keep / 2, 0, 1);
-        push(xs[2], xs[3], -h / 2, h / 2, 0.5 + keep / 2, 1, 0, 1);
-      } else {
-        const ys = [-h / 2, -h / 2 + c0 * h, h / 2 - c0 * h, h / 2];
-        push(-w / 2, w / 2, ys[0], ys[1], 0, 1, 0, 0.5 - keep / 2);
-        push(-w / 2, w / 2, ys[1], ys[2], 0, 1, 0.5 - keep / 2, 0.5 + keep / 2);
-        push(-w / 2, w / 2, ys[2], ys[3], 0, 1, 0.5 + keep / 2, 1);
-      }
-      geo = new THREE.BufferGeometry();
-      geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
-      geo.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
-    } else {
-      geo = spanX ? sliced(w, h, [0.18, 0.82], null, ow, oh)
-                  : sliced(w, h, null, [0.18, 0.82], ow, oh);
+  if (naive) geo = new THREE.PlaneGeometry(w, h);
+  else {
+    const pos = [], uv = [];
+    for (const [x0, x1, y0, y1, u0, u1, v0, v1] of faceQuads(q, w, h, ow, oh)) {
+      pos.push(x0, y0, 0, x1, y0, 0, x1, y1, 0, x0, y0, 0, x1, y1, 0, x0, y1, 0);
+      uv.push(u0, v0, u1, v0, u1, v1, u0, v0, u1, v1, u0, v1);
     }
-  } else geo = new THREE.PlaneGeometry(w, h);
+    geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+    geo.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
+  }
 
   // anchors: the distance to the held edge is a world size and never scales
   const dTop = 1 - q.v[1], dBot = q.v[0];

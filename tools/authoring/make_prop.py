@@ -175,7 +175,10 @@ def render_solid(d, out):
 def rebuild(d, face="front"):
     run([sys.executable, "tools/authoring/layer_build.py", str(d), "--face", face])
     run([sys.executable, "tools/authoring/nine_slice.py", str(d / f"bg_{face}.png"),
-         "--out", str(d / "slice_bg.json")])
+         "--out", str(d / "slice_bg.json"), "--fallback"])
+    # per-strip stretch bands: one band for a whole face cannot miss the
+    # artwork at every height, and the marquee is where that shows
+    run([sys.executable, "tools/authoring/strip_slice.py", str(d), "--face", face])
     # synthesise the seamless panel tile the background's middle repeats
     run([sys.executable, "tools/authoring/seamless_tile.py", str(d), "--face", face])
 
