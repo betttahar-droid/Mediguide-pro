@@ -231,6 +231,8 @@ const MAT = [
           : new THREE.MeshBasicMaterial({ color: 0xffffff,
                                           side: THREE.DoubleSide,
                                           vertexColors: true }),
+  // 6  the OTHER flank's copy of the side art, sampled mirrored -- see facet()
+  mapped(mirrored(faceTex.side), 0x6a5a4a),
 ];
 
 // THE BODY IS THE INTERSECTION OF TWO SILHOUETTES, NOT ONE EXTRUSION.
@@ -695,16 +697,35 @@ function buildLoft() {
     // images of each other -- so the outward normal's sign chooses, exactly as
     // it does for front against back.
     if (Math.abs(nx) > Math.abs(nz)) {
-      // DERIVED, NOT GUESSED. The first version of this picked the pairing by
-      // trying one and looking, on a prop where it happened to read correctly,
-      // and the next prop showed its side art backwards. The derivation is
-      // short enough that there was never an excuse: the prop's front is +z;
-      // a camera at yaw 90 sits at +x with screen-right along -z, so the front
-      // lands on screen-LEFT; sideU is already 0 at the front, and u runs left
-      // to right. So the +x flank takes sideU as it stands and the -x flank
-      // takes its mirror.
-      return nx >= 0 ? { mi: 0, u: (v) => sideU(v.z) }
-                     : { mi: 0, u: (v) => 1 - sideU(v.z) };
+      // ONE DRAWING, TWO FLANKS, AND IT ONLY DEPICTS ONE OF THEM. I got this
+      // wrong three times looking for the right UV expression. There isn't
+      // one, and the reason is worth writing down so nobody hunts for it
+      // again.
+      //
+      // Two things have to be true of a flank: its art must READ correctly
+      // from outside, and the drawn control deck must sit at the same end as
+      // the modelled one. Seen from +x, screen-right runs along -z; seen from
+      // -x it runs along +z. On the flank the drawing depicts, both hold at
+      // once. On the other flank they are in direct conflict -- reading
+      // correctly puts the drawn nose at the model's tail, and aligning the
+      // nose mirrors the lettering -- because the drawing ties its letter
+      // direction to which end its nose is on. One image cannot be its own
+      // reflection.
+      //
+      // Alignment wins. A painted control deck at the back of a cabinet that
+      // has a real one at the front is a fault at any distance; mirrored
+      // lettering on the far side is what a real cabinet with one printed
+      // decal actually looks like. The depicted flank is now fully correct,
+      // where before it was the one carrying the misaligned deck.
+      //
+      // The real fix is more information, not more arithmetic: either ask the
+      // turnaround for both sides, or lift the side art off as a decal and lay
+      // a correctly-oriented copy on each flank. The decal sheet already
+      // classifies side art; that is where this should go.
+      const drawnIsPlusX = profile.front_edge === 'left';
+      return nx >= 0
+        ? { mi: drawnIsPlusX ? 0 : 6, u: (v) => backFrac(v.z) }
+        : { mi: drawnIsPlusX ? 6 : 0, u: (v) => 1 - backFrac(v.z) };
     }
     if (nz >= 0) return { mi: 1, u: (v) => v.t };
     return { mi: 2, u: (v) => 1 - v.t };
