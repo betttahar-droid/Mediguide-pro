@@ -164,12 +164,79 @@ def simplify(pts, tol):
     return simplify(pts[:wi + 1], tol)[:-1] + simplify(pts[wi:], tol)
 
 
+def fit(pts, want_px, span_px, cap=40):
+    """Simplify only as far as the shape survives, and no further.
+
+    A FIXED TOLERANCE THROWS AWAY WHATEVER IS SHORTEST, WHICH IS THE DETAIL.
+    Douglas-Peucker at 0.012 of the height gave this cabinet a twelve-point
+    front wall, and the places it went wrong were not spread out -- they were
+    the corners: 29 pixels at the junction where the control deck meets the
+    screen slope, 20 at the plinth, 15 under the deck. Those are exactly the
+    features a cabinet is RECOGNISED by, and they are short, so they are the
+    first things a tolerance eats. The prop then reads as a slab with a lean
+    on it, which is what a slope and a bevel look like once they have been
+    averaged away.
+
+    The tolerance is not a thing to tune, it is a thing to solve for: halve it
+    until the polyline sits within `want_px` of the traced edge everywhere, or
+    the point budget is spent. A box still comes back four points because
+    there is nothing to lose; a cabinet gets the thirty it needs, which is
+    nothing for a prop of this era and is the difference between its silhouette
+    reading as the object or not.
+    """
+    tol = 0.05
+    under = None                       # the finest fit still inside the budget
+    for _ in range(12):
+        got = simplify(pts, tol)
+        err = max_dev(pts, got) * span_px
+        if len(got) <= cap:
+            under = (got, tol, err)
+        if err <= want_px:
+            # a fit that meets the target but blows the budget is not a fit:
+            # a profile is meant to be a few dozen segments, and chasing the
+            # last half pixel took this cabinet's front wall to 185 points --
+            # 185 rings in the loft, for a shape a player reads in one glance
+            return (got, tol, err) if len(got) <= cap else under
+        tol /= 2
+    return under or (simplify(pts, tol), tol, max_dev(pts, simplify(pts, tol)) * span_px)
+
+
+def max_dev(pts, poly):
+    """The worst gap between the traced edge and the polyline standing in for it.
+
+    Measured PERPENDICULAR to the polyline, not straight across at the same
+    height. A profile's most important features are its vertical steps -- the
+    face of a control deck, the drop under a marquee -- and a step is where a
+    vertical reading is meaningless: the traced edge crosses the whole step
+    within one or two rows, so comparing at equal height reports the full
+    height of the step as an error. It reported 29 pixels on this cabinet and
+    stayed at 29 however many points were spent, right up to 185, because no
+    number of points makes a vertical segment single-valued. The distance from
+    the drawn edge to the LINE is what "does this polyline follow that edge"
+    actually means, and it is the same distance Douglas-Peucker minimises.
+    """
+    p = sorted(poly)
+    worst = 0.0
+    for a, b in pts:
+        best = float("inf")
+        for i in range(len(p) - 1):
+            x0, y0 = p[i]
+            x1, y1 = p[i + 1]
+            dx, dy = x1 - x0, y1 - y0
+            n2 = dx * dx + dy * dy
+            t = 0.0 if n2 < 1e-18 else max(0.0, min(1.0, ((a - x0) * dx + (b - y0) * dy) / n2))
+            best = min(best, ((a - (x0 + t * dx)) ** 2 + (b - (y0 + t * dy)) ** 2) ** 0.5)
+        worst = max(worst, best)
+    return worst
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("sheet_dir")
     ap.add_argument("--asset", default="game prop")
-    ap.add_argument("--tol", type=float, default=0.012,
-                    help="simplify tolerance, as a fraction of the height")
+    ap.add_argument("--want", type=float, default=2.0,
+                    help="how close the polyline must sit to the traced edge, "
+                         "in pixels of the elevation")
     args = ap.parse_args()
     d = Path(args.sheet_dir)
 
@@ -207,10 +274,10 @@ def main():
         prof.append((yy, max(za, zb), min(za, zb)))   # (height, front z, back z)
 
     # simplify the two walls independently -- the front wall carries the deck
-    # and the back wall the slope, and they are not the same curve
-    tol = args.tol
-    fw = simplify([(p[0], p[1]) for p in prof], tol)
-    bw = simplify([(p[0], p[2]) for p in prof], tol)
+    # and the back wall the slope, and they are not the same curve -- and each
+    # only as far as its own shape survives, measured in pixels of the drawing
+    fw, ftol, ferr = fit([(p[0], p[1]) for p in prof], args.want, H)
+    bw, btol, berr = fit([(p[0], p[2]) for p in prof], args.want, H)
 
     out = {
         "depth": round(depth, 5),
@@ -228,9 +295,11 @@ def main():
              "no call" if not said else f"DISAGREE (relief says {by_bias})")
     print(f"profile: depth {depth:.3f}, front edge = {out['front_edge']}  "
           f"[model {said or '-'}, relief {by_bias} {bias:+.3f}, {agree}]")
-    print(f"  front wall {len(fw)} points, deepest step {flat:.3f} "
+    print(f"  front wall {len(fw)} points, within {ferr:.1f}px of the drawing "
+          f"(tol {ftol:.4f}); deepest step {flat:.3f} "
           f"({'shaped' if flat > 0.02 else 'essentially flat'})")
-    print(f"  back  wall {len(bw)} points -> {d / 'profile.json'}")
+    print(f"  back  wall {len(bw)} points, within {berr:.1f}px -> "
+          f"{d / 'profile.json'}")
 
 
 if __name__ == "__main__":

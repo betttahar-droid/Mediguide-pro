@@ -31,6 +31,7 @@
 //   ?box=1       fall back to the old box body, for comparison
 //   ?export=1    write the whole rig out as glTF, hierarchy and pivots intact
 //   ?wire=1      wireframe only: the geometry with no texture to hide behind
+//   ?fit=1       print the surface each part is mounted on, and its angle
 //   ?audit=1     magenta ground, so the model's silhouette can be measured
 import * as THREE from 'three';
 import { faceQuads, spansOf } from '../part_slice.mjs';
@@ -372,6 +373,100 @@ function tOfG(g) {
     }
   }
   return 1;
+}
+
+// A PART LIES IN THE SURFACE IT IS MOUNTED ON, IT DOES NOT LEAN AGAINST IT.
+//
+// Every part was an axis-aligned box mounted at the frontmost z it spanned,
+// and on an arcade cabinet that is most of the prop: the bezel slopes back,
+// the marquee hood is angled, the control deck tilts toward the player. Seen
+// from the side the screen was a flat slab standing bolt upright with a wedge
+// of air behind it, the marquee was another stuck to the front of the hood,
+// and the deck was a jumble of upright plates. The mounting rule was doing
+// exactly what it said -- "a part cannot be buried by the surface it is
+// mounted on" -- and the answer to burying was never to push the part out in
+// front, it was to lay it in the surface.
+//
+// So fit a plane to the body's front surface over the part's own footprint and
+// put the part in that plane: pitch from how the surface leans up the height,
+// yaw from how it leans across the width. Both fall out of the geometry that
+// is already there, so a chamfered corner tilts a coin slot exactly as much as
+// the chamfer, with nothing said about chamfers anywhere.
+//
+// A STEP IS NOT A SLOPE, and the difference is measurable. Where the surface
+// under a part is a cliff rather than a ramp -- a part bridging the drop under
+// a marquee -- a least-squares plane through it is a diagonal through thin
+// air. When the residual says the fit is poor the part keeps the old rule and
+// sits square on the frontmost point, which is what a bridging part wants.
+function surfacePlane(cx, cy, w, h) {
+  const zAt = (dx, dy) => frontZAt(tOfG((cy + dy) / FH + 0.5), cx + dx);
+  const N = 6;
+
+  // ONE FIT PER AXIS, BECAUSE THEY FAIL FOR DIFFERENT REASONS. Fitting a
+  // single plane to the whole footprint let either axis veto the other, and on
+  // this cabinet the horizontal one vetoed everything: the plan chamfers the
+  // front corners, so any part more than about half the width crosses a curve,
+  // the residual blew the tolerance, and the part lost its PITCH as well --
+  // the vent grille, the coin door and the screen all fell back to standing
+  // square. Down the height the surface is the side profile; across the width
+  // it is the plan. Ask each separately and a wide part on a chamfered body
+  // keeps the slope it is lying on and simply declines the twist.
+  const line = (span, at) => {
+    if (span < 1e-6) return { k: 0, ok: true };
+    let sdz = 0, sdd = 0;
+    const pts = [];
+    for (let i = 0; i <= N; i++) {
+      const t = -span / 2 + (span * i) / N;
+      const z = at(t);
+      pts.push([t, z]);
+      sdz += t * z; sdd += t * t;
+    }
+    const k = sdd > 1e-12 ? sdz / sdd : 0;
+    const mid = pts.reduce((a, q) => a + q[1], 0) / pts.length;
+    let resid = 0;
+    for (const [t, z] of pts) resid = Math.max(resid, Math.abs(z - (mid + k * t)));
+    return { k, ok: resid <= 0.12 * span && Math.abs(k) < 6 };
+  };
+
+  // MEASURED OVER THE PART'S BODY, NOT ITS LAST ROW OF PIXELS. The front
+  // elevation puts this cabinet's deck at 53.5% of the height and the side
+  // elevation puts it at 58%; two drawings of one object, disagreeing by four
+  // percent. So the screen's box overhangs the top of the deck by a sliver,
+  // and the deck is a CLIFF -- a tenth of the prop's depth in one step. That
+  // sliver was enough to make the vertical fit look like nonsense and refuse
+  // the pitch, and then to shove the whole screen forward to clear a step it
+  // barely touches. Fitting over the inner four fifths asks what surface the
+  // part is ON, which is the question, instead of what it grazes at its edge.
+  const IN = 0.8;
+  const down = line(h * IN, (t) => zAt(0, t));
+  const across = line(w * IN, (t) => zAt(t, 0));
+  const c = down.ok ? down.k : 0;
+  const b = across.ok ? across.k : 0;
+
+  // seated on the surface directly under its middle, then pushed out only as
+  // far as it takes to clear: the old rule mounted every part at the frontmost
+  // point it spanned, which is what put the screen in mid-air in front of the
+  // bezel. A part must not be buried by the surface -- it need not float above
+  // it either.
+  const a = zAt(0, 0);
+  const over = [];
+  let front = -Infinity;
+  for (let i = 0; i <= N; i++) {
+    for (let j = 0; j <= N; j++) {
+      const dx = (-w / 2 + (w * j) / N) * IN, dy = (-h / 2 + (h * i) / N) * IN;
+      const z = zAt(dx, dy);
+      front = Math.max(front, z);
+      over.push(z - (a + b * dx + c * dy));
+    }
+  }
+  // and cleared by what most of it needs, not by its worst pixel: taking the
+  // maximum let one sample on a step decide where a whole panel sits, and a
+  // part may never be pushed further out than its own depth however deep the
+  // thing it grazes
+  over.sort((x, y2) => x - y2);
+  const need = over[Math.min(over.length - 1, Math.round(over.length * 0.92))];
+  return { a: a + Math.max(0, Math.min(need, 1.5 * Math.max(w, h) * 0.1)),
+           b, c, front, fitted: down.ok || across.ok };
 }
 
 // how far forward the body's front face is at a given height and a given point
@@ -720,10 +815,6 @@ for (const q of man.parts) {
   const moves = (q.motion || 'none') !== 'none';
   const recessed = (cls === 'recessed') && !moves;
 
-  const geo = partGeometry(q, w, h, d);
-  const mesh = new THREE.Mesh(geo, new THREE.MeshBasicMaterial(
-    { map: tex, transparent: true, alphaTest: 0.5 }));
-
   // position on the face, from the same anchor arithmetic as layer_view
   const dTop = 1 - q.v[1], dBot = q.v[0];
   const cx = ((q.u[0] + q.u[1]) / 2 - 0.5) * A;
@@ -746,14 +837,6 @@ for (const q of man.parts) {
   // shapes the body: a coin door near a chamfered corner sits further back
   // than one at the centre, and sampling only down the height floated it.
   const yFrac = y / FH + 0.5;
-  let surf = -Infinity;
-  for (let k = 0; k <= 8; k++) {
-    const yy = (y - h / 2 + (h * k) / 8) / FH + 0.5;
-    for (let j = 0; j <= 4; j++) {
-      const xx = x - w / 2 + (w * j) / 4;
-      surf = Math.max(surf, frontZAt(tOfG(yy), xx));
-    }
-  }
   // A RECESSED PART CANNOT SIT BEHIND A SOLID FACE. Centring its box at
   // surf - d/2 puts its front face exactly ON the body's, and two coplanar
   // opaque faces z-fight: the vending machine's window came out as mottled
@@ -762,7 +845,6 @@ for (const q of man.parts) {
   // as a face a hair in front with its box buried behind -- the recession is
   // carried by the part's own dark bezel, which is where it was drawn anyway.
   const EPS = 0.002;
-  const z = surf + (recessed ? EPS - d / 2 : d / 2) + explode * 0.6;
 
   // ONE PER BAY, AND IN 3D TOO. The flat view has instanced per-bay parts since
   // the two-player rule was written; the rig never did, so every judge that
@@ -793,26 +875,47 @@ for (const q of man.parts) {
     // THE PIVOT IS THE POINT. A door that spins about its centre is not a door,
     // so the part hangs off a pivot placed on the edge its motion turns about,
     // and the mesh is offset back by the same amount inside it.
+    // each bay lies in the surface under IT, not the one under the first bay
+    const pl = surfacePlane(bx, y, w, h);
+    // ?fit=1 prints what surface each part decided it was lying on. Every
+    // mounting fault so far has been invisible in the render and obvious in
+    // these four numbers.
+    if (p.get('fit') === '1') {
+      console.log(`fit ${q.name.padEnd(22)} pitch ${(Math.atan(pl.c) * 57.3).toFixed(1).padStart(6)}`
+        + `  yaw ${(Math.atan(-pl.b) * 57.3).toFixed(1).padStart(6)}`
+        + `  seat ${pl.a.toFixed(3)}  frontmost ${pl.front.toFixed(3)}`
+        + (pl.fitted ? '' : '   (step, not a slope: mounted square)'));
+    }
+    const rotX = Math.max(-1.2, Math.min(1.2, Math.atan(pl.c)));
+    const rotY = Math.max(-1.2, Math.min(1.2, -Math.atan(pl.b)));
+    // A SLOPE IS LONGER THAN ITS SHADOW. The elevation measures a part where it
+    // projects, so a bezel drawn 0.30 tall covers 0.30/cos of actual slope --
+    // laid in the plane at its drawn size the screen fell short of its own
+    // opening by exactly the amount the cabinet leans.
+    const bw = w / Math.max(0.35, Math.cos(rotY));
+    const bh = h / Math.max(0.35, Math.cos(rotX));
+    const geo = partGeometry(q, bw, bh, d);
+    const inst = new THREE.Mesh(geo, new THREE.MeshBasicMaterial(
+      { map: tex, transparent: true, alphaTest: 0.5 }));
     const pivot = new THREE.Object3D();
     let off = [0, 0, 0];
-    if (m === 'hinge_left') off = [-w / 2, 0, 0];
-    else if (m === 'hinge_right') off = [w / 2, 0, 0];
-    else if (m === 'hinge_bottom') off = [0, -h / 2, 0];
-    else if (m === 'hinge_top') off = [0, h / 2, 0];
-    else if (m === 'stick') off = [0, -h / 2, 0];
-    // each bay mounts on the surface under IT, not under the first one
-    let bsurf = -Infinity;
-    for (let k = 0; k <= 8; k++) {
-      const yy = (y - h / 2 + (h * k) / 8) / FH + 0.5;
-      for (let j = 0; j <= 4; j++) {
-        bsurf = Math.max(bsurf, frontZAt(tOfG(yy), bx - w / 2 + (w * j) / 4));
-      }
-    }
-    const bz = bsurf + (recessed ? EPS - d / 2 : d / 2) + explode * 0.6;
-    const inst = bays > 1 ? mesh.clone() : mesh;
-    pivot.position.set(bx + off[0], y + off[1], bz + off[2]);
+    if (m === 'hinge_left') off = [-bw / 2, 0, 0];
+    else if (m === 'hinge_right') off = [bw / 2, 0, 0];
+    else if (m === 'hinge_bottom') off = [0, -bh / 2, 0];
+    else if (m === 'hinge_top') off = [0, bh / 2, 0];
+    else if (m === 'stick') off = [0, -bh / 2, 0];
+    pivot.rotation.set(rotX, rotY, 0);
+    // the stand-off runs along the surface's own normal, so a part on a slope
+    // stands off the slope rather than off the world
+    const nrm = new THREE.Vector3(-pl.b, -pl.c, 1).normalize();
+    const k = (recessed ? EPS - d / 2 : d / 2) + explode * 0.6;
+    const seat = new THREE.Vector3(bx, y, pl.a).addScaledVector(nrm, k);
+    // the hinge edge is an edge of the PART, so its offset turns with the part
+    const offW = new THREE.Vector3(...off).applyEuler(pivot.rotation);
+    pivot.position.copy(seat.clone().add(offW));
     inst.position.set(-off[0], -off[1], -off[2]);
     pivot.add(inst);
+    const bsurf = pl.front;
     // NAME BOTH, AND RECORD THE MECHANISM. An exported rig is only editable if
     // the thing you select in a DCC tool tells you what it is and how it moves;
     // an anonymous Object3D_7 is no better than a merged mesh.
@@ -831,12 +934,14 @@ for (const q of man.parts) {
     // there. Only for parts that open: nothing else ever exposes one.
     if (m.startsWith('hinge')) {
       const back = new THREE.Mesh(
-        new THREE.PlaneGeometry(w * 0.98, h * 0.98), plain(0x100d0a));
-      back.position.set(bx, y, bsurf - Math.max(0.012, d * 0.6));
+        new THREE.PlaneGeometry(bw * 0.98, bh * 0.98), plain(0x100d0a));
+      back.position.copy(seat.clone().addScaledVector(nrm, -Math.max(0.012, d * 0.9)));
+      back.rotation.copy(pivot.rotation);
       back.name = `${pivot.name}_interior`;
       scene.add(back);
     }
-    if (m !== 'none') movers.push({ pivot, motion: m, w, h, d });
+    if (m !== 'none') movers.push({ pivot, motion: m, w: bw, h: bh, d,
+                                    rest: pivot.rotation.clone() });
   }
 }
 
@@ -848,11 +953,15 @@ for (const mv of movers) {
     // edge to -z, i.e. into the cabinet, so at anim=1 the coin door was
     // swinging through the body instead of out of it -- invisible, and exactly
     // the sort of thing that looks like "the animation does not work".
-    case 'hinge_left': mv.pivot.rotation.y = -t * 1.4; break;
-    case 'hinge_right': mv.pivot.rotation.y = t * 1.4; break;
-    case 'hinge_bottom': mv.pivot.rotation.x = t * 1.2; break;
-    case 'hinge_top': mv.pivot.rotation.x = -t * 1.2; break;
-    case 'stick': mv.pivot.rotation.x = -t * 0.6; break;
+    // ADDED TO THE REST POSE, NOT SUBSTITUTED FOR IT. A part now sits tilted
+    // into the surface it is mounted on, so assigning a rotation outright
+    // stood the deck's joysticks back up straight the moment anim went above
+    // zero -- the animation undoing the mounting.
+    case 'hinge_left': mv.pivot.rotation.y = mv.rest.y - t * 1.4; break;
+    case 'hinge_right': mv.pivot.rotation.y = mv.rest.y + t * 1.4; break;
+    case 'hinge_bottom': mv.pivot.rotation.x = mv.rest.x + t * 1.2; break;
+    case 'hinge_top': mv.pivot.rotation.x = mv.rest.x - t * 1.2; break;
+    case 'stick': mv.pivot.rotation.x = mv.rest.x - t * 0.6; break;
     case 'press': mv.pivot.position.z -= t * mv.d * 0.8; break;
     case 'slide_x': mv.pivot.position.x += t * mv.w * 0.6; break;
     case 'slide_y': mv.pivot.position.y -= t * mv.h * 0.6; break;

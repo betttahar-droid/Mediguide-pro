@@ -35,7 +35,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools" / "authoring"))
 from identify_parts import object_crop  # noqa: E402
 from layer_build import silhouette  # noqa: E402
-from side_profile import simplify  # noqa: E402
+from side_profile import fit  # noqa: E402
 
 
 def relief(rows, W):
@@ -62,7 +62,9 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("sheet_dir")
     ap.add_argument("--asset", default="game prop")
-    ap.add_argument("--tol", type=float, default=0.008)
+    ap.add_argument("--want", type=float, default=2.0,
+                    help="how close the polyline must sit to the traced edge, "
+                         "in pixels of the elevation")
     args = ap.parse_args()
 
     d = Path(args.sheet_dir)
@@ -113,8 +115,10 @@ def main():
     def frac(v):
         return 1 - v if front_top else v
 
-    near = simplify([(u, frac(a)) for u, a, _ in cols], args.tol)
-    far = simplify([(u, frac(b)) for u, _, b in cols], args.tol)
+    # a plan's shaping IS its short features -- a chamfer, a rounded corner --
+    # so it is fitted to the drawing rather than to a tolerance
+    near, ntol, nerr = fit([(u, frac(a)) for u, a, _ in cols], args.want, H)
+    far, ftol, ferr = fit([(u, frac(b)) for u, _, b in cols], args.want, H)
     front_wall = near if front_top else far
     back_wall = far if front_top else near
 
@@ -133,6 +137,7 @@ def main():
     print(f"plan: front edge = {out['front_edge']}  "
           f"[model {said or '-'}, relief {r:+.3f}]")
     print(f"  {len(out['front_wall'])} + {len(out['back_wall'])} points, "
+          f"within {max(nerr, ferr):.1f}px, "
           f"front wall varies by {depth_var:.3f} "
           f"({'shaped' if depth_var > 0.06 else 'essentially straight'})")
 

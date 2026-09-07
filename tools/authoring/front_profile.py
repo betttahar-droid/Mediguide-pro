@@ -29,14 +29,16 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools" / "authoring"))
 from identify_parts import object_crop  # noqa: E402
 from layer_build import silhouette  # noqa: E402
-from side_profile import simplify  # noqa: E402
+from side_profile import fit  # noqa: E402
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("sheet_dir")
     ap.add_argument("--face", default="front")
-    ap.add_argument("--tol", type=float, default=0.006)
+    ap.add_argument("--want", type=float, default=2.0,
+                    help="how close the polyline must sit to the traced edge, "
+                         "in pixels of the elevation")
     args = ap.parse_args()
 
     d = Path(args.sheet_dir)
@@ -54,8 +56,10 @@ def main():
 
     # the two edges are different curves -- a cabinet can be square one side
     # and stepped the other -- so they are simplified independently
-    left = simplify([(a, b) for a, b, _ in rows], args.tol)
-    right = simplify([(a, c) for a, _, c in rows], args.tol)
+    # only as far as the shape survives: a fixed tolerance eats whatever is
+    # SHORT, and what is short on a cabinet is its plinth step and its hood
+    left, ltol, lerr = fit([(a, b) for a, b, _ in rows], args.want, H)
+    right, rtol, rerr = fit([(a, c) for a, _, c in rows], args.want, H)
 
     aspect = W / H
     out = {
@@ -68,7 +72,8 @@ def main():
     (d / f"front_profile_{args.face}.json").write_text(json.dumps(out, indent=1))
     span = max(f for _, f in right) - min(f for _, f in left)
     waist = min(r - l for (_, l), (_, r) in zip(left, right)) if len(left) == len(right) else None
-    print(f"front profile: {len(left)} + {len(right)} points, "
+    print(f"front profile: {len(left)} + {len(right)} points, within "
+          f"{max(lerr, rerr):.1f}px of the drawing, "
           f"widest {span:.3f}" + (f", narrowest {waist:.3f}" if waist else ""))
     print(f"wrote {d / f'front_profile_{args.face}.json'}")
 
