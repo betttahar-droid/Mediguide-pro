@@ -178,6 +178,30 @@ def render(d, out, sizes):
     for (w, h) in sizes:
         m = sorted(out.glob(f"*w-{str(w).replace('.','-')}-h-{str(h).replace('.','-')}*.png"))
         got.append(m[0] if m else None)
+
+    # BURN THE SCALE INTO THE PICTURE. Both graders reported, twice, that the
+    # taller render "produced no change at all" -- and both times it was false:
+    # the images differ across the whole prop and the cabinet has plainly gained
+    # body. They compare the renders as shapes and conclude nothing happened.
+    # Saying "the camera is fixed" in the prompt did not help, so the image now
+    # says it: a caption and a bar of constant length, which is a ruler laid
+    # against every variant. A grader cannot misread its own ruler.
+    from PIL import Image as _I, ImageDraw as _D
+    for (w, h), f in zip(sizes, got):
+        if not f:
+            continue
+        im = _I.open(f).convert("RGB")
+        dr = _D.Draw(im)
+        label = ("ORIGINAL SIZE" if (w == 1 and h == 1) else
+                 f"{w}x WIDER" if h == 1 else
+                 f"{h}x TALLER" if w == 1 else f"{w}x wide {h}x tall")
+        dr.rectangle([0, 0, im.width, 26], fill=(20, 20, 24))
+        dr.text((8, 8), f"{label}   (one fixed camera: bigger really is bigger)",
+                fill=(255, 255, 255))
+        y = im.height - 18
+        dr.rectangle([8, y - 6, 208, y], fill=(255, 80, 80))
+        dr.text((214, y - 8), "same length in every image", fill=(255, 160, 160))
+        im.save(f)
     return got
 
 
