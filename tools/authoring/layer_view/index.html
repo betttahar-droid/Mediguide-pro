@@ -96,7 +96,7 @@ function sliced(w, h, bu, bv, ow, oh, mirror = false, skipMiddle = false) {
   const g = new THREE.BufferGeometry();
   g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
   g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
-  return g;
+  return { geo: g, fills };
 }
 
 // --- background ------------------------------------------------------------
@@ -128,36 +128,54 @@ function bgFromStrips(S) {
     pos.push(x0, y0, 0, x1, y0, 0, x1, y1, 0, x0, y0, 0, x1, y1, 0, x0, y1, 0);
     uv.push(u0, v0, u1, v0, u1, v1, u0, v0, u1, v1, u0, v1);
   };
+  // GROWTH THAT CANNOT REPEAT ARTWORK IS FILLED WITH PANEL, NOT WITH NOTHING.
+  // Stretching one column across the gap left "a flat, featureless slab" and
+  // "a huge blank smear" -- as pointable as the duplicated screen it replaced.
+  // These regions are handed to the seamless tile instead, tinted to the
+  // strip's own colour so a marquee's frame extends in cream and a cabinet
+  // body in grey-green, from one shared material.
+  const fills = [];
+  const fillQuad = (x0, x1, y0, y1, rgb) => fills.push([x0, x1, y0, y1, rgb]);
   // one strip horizontally: caps at their real width, its own band repeated --
   // or, where the artwork sits in the middle and the calm is either side of it,
   // the art held at real size in the centre with both FLANKS grown outwards.
   const band = (yTop, yBot, vTop, vBot) => {
     if (S_mode === 'extend') {
+      // GROWTH IS ADDED TO THE ARTWORK, NOT SUBSTITUTED FOR IT. Replacing the
+      // flank region with fill meant the fill was there at scale 1 too, and a
+      // plain bar appeared straight down the middle of the speaker grille on a
+      // prop that was not being resized at all. The whole original face is laid
+      // out at its real size, and the extra width is INSERTED just inside the
+      // outer cap -- so at scale 1 there is nothing to insert and the render is
+      // the reference, which is the one thing that must never break.
       const [f0, f1] = S_f;
-      const grow = Math.max(0, (FW - A) / 2) + (f1 - f0) * A;
-      const xs = [-FW / 2, -FW / 2 + f0 * A, -FW / 2 + f0 * A + grow,
-                  FW / 2 - (f0 * A) - grow, FW / 2 - f0 * A, FW / 2];
-      const uu = [0, f0, f1, 1 - f1, 1 - f0, 1];
-      const unit = Math.max(1e-3, (f1 - f0) * A);
-      // a flank quiet enough to repeat is repeated; one that is not is grown
-      // from a single column stretched, which cannot duplicate any artwork
-      const n = S_frep ? Math.min(64, Math.max(1, Math.round(grow / unit))) : 1;
-      const fc = (f0 + f1) / 2;
-      for (let i = 0; i < 5; i++) {
-        if (xs[i + 1] - xs[i] <= 1e-6) continue;
-        const c = (i === 1 || i === 3) ? n : 1;
-        for (let m = 0; m < c; m++) {
-          const x0 = xs[i] + (xs[i + 1] - xs[i]) * m / c;
-          const x1 = xs[i] + (xs[i + 1] - xs[i]) * (m + 1) / c;
-          // grow the RIGHT flank from the mirrored window, so both sides read
-          // the same frame and the art stays centred
-          let u0 = i === 3 ? uu[4] : uu[i], u1 = i === 3 ? uu[3] : uu[i + 1];
-          if (!S_frep && (i === 1 || i === 3)) {
-            u0 = i === 3 ? 1 - fc : fc;
-            u1 = u0;
+      const add = Math.max(0, (FW - A) / 2);
+      const seg = [];                      // [width, u0, u1] left to right
+      seg.push([f0 * A, 0, f0]);
+      if (add > 0) seg.push([add, f0, f1, true]);
+      seg.push([(f1 - f0) * A, f0, f1]);
+      seg.push([(1 - 2 * f1) * A, f1, 1 - f1]);
+      seg.push([(f1 - f0) * A, 1 - f1, 1 - f0]);
+      if (add > 0) seg.push([add, 1 - f1, 1 - f0, true]);
+      seg.push([f0 * A, 1 - f0, 1]);
+      let x = -FW / 2;
+      for (const [wd, u0, u1, grow] of seg) {
+        if (wd <= 1e-6) { continue; }
+        if (grow) {
+          if (S_frep) {
+            const unit = Math.max(1e-3, (f1 - f0) * A);
+            const n = Math.min(64, Math.max(1, Math.round(wd / unit)));
+            for (let m = 0; m < n; m++) {
+              quad(x + wd * m / n, x + wd * (m + 1) / n, yBot, yTop, u0, u1,
+                   vBot, vTop);
+            }
+          } else {
+            fillQuad(x, x + wd, yBot, yTop, S_fill);
           }
-          quad(x0, x1, yBot, yTop, u0, u1, vBot, vTop);
+        } else {
+          quad(x, x + wd, yBot, yTop, u0, u1, vBot, vTop);
         }
+        x += wd;
       }
       return;
     }
@@ -181,10 +199,11 @@ function bgFromStrips(S) {
     }
   };
   let S_h = [0.4, 0.6], S_mode = 'repeat', S_f = [0.15, 0.24], S_frep = true;
+  let S_fill = [128, 128, 128];
   let yTop = FH / 2;
   for (const st of list) {
     S_h = st.h; S_mode = st.hmode || 'repeat'; S_f = st.hf || [0.15, 0.24];
-    S_frep = st.hf_repeat !== false;
+    S_frep = st.hf_repeat !== false; S_fill = st.fill || [128, 128, 128];
     const oh = (st.px[1] - st.px[0]) / H;               // its real height
     const vTop = 1 - st.px[0] / H, vBot = 1 - st.px[1] / H;
     if (!st.grow_y || extra <= 0) {
@@ -192,38 +211,85 @@ function bgFromStrips(S) {
       yTop -= oh;
       continue;
     }
-    // this strip absorbs the height: caps hold, its own quiet rows repeat
-    const [t0, t1] = st.vh;
-    const capT = t0 * oh, capB = (1 - t1) * oh;
-    const midH = Math.max(0, oh + extra - capT - capB);
-    const unit = Math.max(1e-3, (t1 - t0) * oh);
-    const n = Math.min(64, Math.max(1, Math.round(midH / unit)));
-    const vAt = (f) => vTop - f * oh;                   // f is 0..1 down the strip
-    band(yTop, yTop - capT, vTop, vAt(t0));
-    let y = yTop - capT;
-    for (let m = 0; m < n; m++) {
-      const h2 = midH / n;
-      band(y, y - h2, vAt(t0), vAt(t1));
-      y -= h2;
+    // this strip absorbs the height, and again the extra is INSERTED: the
+    // whole strip is drawn at its real height and the difference goes in at
+    // the quiet band, as tile when nothing there is safe to repeat. Repeating
+    // regardless ran the coin door's frame and a warning label six times down
+    // a two-metre cabinet.
+    const [t0] = st.vh;
+    const cutY = yTop - t0 * oh;
+    const vCut = vTop - t0 * oh;
+    band(yTop, cutY, vTop, vCut);
+    let y = cutY;
+    if (extra > 0) {
+      if (st.vf_repeat === false) {
+        fillQuad(-FW / 2, FW / 2, y - extra, y, st.fill || [128, 128, 128]);
+      } else {
+        const [ta, tb] = st.vh;
+        const unit = Math.max(1e-3, (tb - ta) * oh);
+        const n = Math.min(64, Math.max(1, Math.round(extra / unit)));
+        for (let m = 0; m < n; m++) {
+          band(y - extra * m / n, y - extra * (m + 1) / n,
+               vTop - ta * oh, vTop - tb * oh);
+        }
+      }
+      y -= extra;
     }
-    band(y, y - capB, vAt(t1), vBot);
-    yTop = y - capB;
+    band(y, y - (1 - t0) * oh, vCut, vBot);
+    yTop = y - (1 - t0) * oh;
   }
   const g = new THREE.BufferGeometry();
   g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
   g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
-  return g;
+  return { geo: g, fills };
 }
 
+const built = (!naive && strips) ? bgFromStrips(strips) : null;
 const bgGeo = naive ? new THREE.PlaneGeometry(FW, FH)
-  : (strips ? bgFromStrips(strips)
-            : sliced(FW, FH, slice && slice.h, slice && slice.v, A, 1,
-                     bgMode === 'mirror', false));
+  : (built ? built.geo
+           : sliced(FW, FH, slice && slice.h, slice && slice.v, A, 1,
+                    bgMode === 'mirror', false));
 // HONOUR THE SILHOUETTE CUT. layer_build makes the sheet showing past the
 // prop's outline transparent; without alphaTest those pixels come back as
 // opaque white and a domed prop is drawn inside its own bounding box.
 scene.add(new THREE.Mesh(bgGeo, new THREE.MeshBasicMaterial(
   { map: bgTex, transparent: true, alphaTest: 0.5 })));
+
+// the growth regions, drawn with the seamless panel tile tinted to each
+// strip's own colour -- grain instead of a wash, and no artwork duplicated
+if (built && built.fills.length) {
+  let tileMeta = null;
+  try { tileMeta = await (await fetch(`${dir}/tile_front.json`)).json(); } catch {}
+  if (tileMeta) {
+    const tileTex = await load(`${dir}/${tileMeta.tile}`);
+    tileTex.wrapS = tileTex.wrapT = THREE.RepeatWrapping;
+    // the tile's own mean, so tinting to a strip's colour lands ON that colour
+    let tm = [128, 128, 128];
+    try {
+      const c = document.createElement('canvas');
+      c.width = c.height = 1;
+      const g2 = c.getContext('2d', { willReadFrequently: true });
+      g2.drawImage(tileTex.image, 0, 0, 1, 1);
+      tm = [...g2.getImageData(0, 0, 1, 1).data].slice(0, 3);
+    } catch { /* keep the neutral default */ }
+    const unit = (tileMeta.patch_px[0] / man.size[0]) * A;   // texel density holds
+    for (const [x0, x1, y0, y1, rgb] of built.fills) {
+      const w2 = x1 - x0, h2 = y1 - y0;
+      if (w2 <= 1e-6 || h2 <= 1e-6) continue;
+      const t = tileTex.clone();
+      t.needsUpdate = true;
+      t.repeat.set(Math.max(1, w2 / unit), Math.max(1, h2 / unit));
+      const col = new THREE.Color(
+        Math.min(2, (rgb[0] + 1) / (tm[0] + 1)),
+        Math.min(2, (rgb[1] + 1) / (tm[1] + 1)),
+        Math.min(2, (rgb[2] + 1) / (tm[2] + 1)));
+      const m = new THREE.Mesh(new THREE.PlaneGeometry(w2, h2),
+        new THREE.MeshBasicMaterial({ map: t, color: col }));
+      m.position.set((x0 + x1) / 2, (y0 + y1) / 2, -0.0005);
+      scene.add(m);
+    }
+  }
+}
 
 // --- parts -----------------------------------------------------------------
 let z = 0.001;
