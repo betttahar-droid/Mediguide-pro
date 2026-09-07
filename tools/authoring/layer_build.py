@@ -308,6 +308,38 @@ def main():
     # fitting's actual outline -- so a bezel and the screen inside it can abut
     # without either claiming the other's pixels, and the background is exactly
     # the body panel and nothing else.
+    # A FLAT PATCH IS NOT A FITTING. The segmenter hands back every region it
+    # drew, and the ones it did not name become decal_N -- most are real, a
+    # warning label or a stencil, but some are a stretch of bare panel it
+    # happened to outline. Built as a part, bare panel becomes a slab standing
+    # proud of the face in exactly the colour of the face, which is what both
+    # judges called "a large flat-coloured rectangle with no texture, reading
+    # as an untextured face". It is not untextured; there is simply nothing on
+    # it. A part carries detail by definition, so a region with no detail
+    # belongs in the panel it was cut from -- and it has to be dropped HERE,
+    # before the background is patched, or the background would be left with a
+    # hole where the tool decided there was nothing to take out.
+    def tone_sd(p):
+        g = ob.crop(tuple(p["px"])).convert("RGB")
+        gw, gh = g.size
+        gp = g.load()
+        vals = [sum(gp[x, y]) / 3 for x in range(gw) for y in range(gh)]
+        if not vals:
+            return 0.0
+        mean = sum(vals) / len(vals)
+        return (sum((v - mean) ** 2 for v in vals) / len(vals)) ** 0.5
+
+    keep = []
+    for p in man["parts"]:
+        if p["name"].startswith("decal"):
+            sd = tone_sd(p)
+            if sd < 9.0:
+                print(f"  {p['name']}: flat ({sd:.1f} of tone) -- panel, not a "
+                      f"fitting; left in the background")
+                continue
+        keep.append(p)
+    man["parts"] = keep
+
     masks = {}
     for p in man["parts"]:
         if p.get("mask") and (d / p["mask"]).exists():
@@ -441,6 +473,7 @@ def main():
         if not p.get("spans") and not p.get("per_bay") and rule != "fixed":
             print(f"  {p['name']}: not named as structure, {rule} -> fixed")
             rule = "fixed"
+
 
         # A FRAME IS STRUCTURE AND MUST WIDEN WITH THE PROP. The width guard
         # below exists to stop a 29%-wide TITLE being stretched across the

@@ -806,6 +806,20 @@ for (const q of man.parts) {
                        resize: R, anchor: q.anchor,
                        ...(bays > 1 ? { bay: b + 1, bays } : {}) };
     scene.add(pivot);
+    // A DOOR HAS SOMETHING BEHIND IT. The background has the door's own shape
+    // cut out of it, so swinging the door open showed straight through the
+    // body to the inside of its back panel -- "the hinged-open door reveals a
+    // flat untextured grey-green cavity", which is the one thing a door must
+    // never do. A dark interior quad set just inside the opening costs two
+    // triangles and turns a hole into a compartment, which is what is actually
+    // there. Only for parts that open: nothing else ever exposes one.
+    if (m.startsWith('hinge')) {
+      const back = new THREE.Mesh(
+        new THREE.PlaneGeometry(w * 0.98, h * 0.98), plain(0x100d0a));
+      back.position.set(bx, y, bsurf - Math.max(0.012, d * 0.6));
+      back.name = `${pivot.name}_interior`;
+      scene.add(back);
+    }
     if (m !== 'none') movers.push({ pivot, motion: m, w, h, d });
   }
 }
