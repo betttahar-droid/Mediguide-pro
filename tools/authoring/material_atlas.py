@@ -365,7 +365,6 @@ def main():
         # layer_build already finds the flattest cell on the face and writes it
         # down for the panel patch; that is the same question asked once.
         panel = flat_cell(face)
-        void = (W2, H2)
         main = next(g for g in got if g["main"])
         pp = panel.convert("RGB").load()
         pw2, ph2 = panel.size
@@ -378,7 +377,6 @@ def main():
         px_per_tile, want, gotg = match_grain(mt, panel)
         print(f"  grain: panel {want}, tile {gotg} at {px_per_tile}px "
               f"of a {H2}px elevation")
-        void = void
     except Exception as e:
         print(f"  ! grain match failed ({type(e).__name__}), using {px_per_tile}px")
 
