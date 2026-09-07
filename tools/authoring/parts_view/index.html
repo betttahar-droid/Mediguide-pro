@@ -1063,7 +1063,17 @@ for (const q of man.parts) {
   // deck does not run the full width and never claimed to. A station repeats
   // along its own structure, so the host's placed extent is the ruler.
   const host = hostSpan(q);
-  const bays = q.per_bay ? Math.max(1, Math.round(FW / A)) : 1;
+  // A BAY IS DEFINED BY THE STRUCTURE THE STATIONS STAND ON, so a part with no
+  // structure under it has no bay to be one-per-of. This cabinet's scale rule
+  // named its coin slots and coin returns per-bay along with the joysticks --
+  // defensible as a sentence, since a second player does pay -- and the six of
+  // them then had nothing to repeat ALONG, so they were laid out across the
+  // whole face and both judges saw what they actually were: "the background
+  // tiles the baked coin door across the lower front panel, duplicate phantom
+  // coin doors". The joysticks and buttons stand on the deck and repeat with
+  // it; the coin door stands on the cabinet, and a wider cabinet is still one
+  // cabinet.
+  const bays = (q.per_bay && host) ? Math.max(1, Math.round(FW / A)) : 1;
   const bayW = (host ? host.w : FW) / bays;
   const bx0 = host ? host.x - host.w / 2 : -FW / 2;
   // its place within one bay, measured from the host's own left edge
