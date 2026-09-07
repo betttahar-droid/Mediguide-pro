@@ -39,6 +39,8 @@ from pathlib import Path
 
 from PIL import Image, ImageFilter
 
+ROOT = Path(__file__).resolve().parents[2]
+
 
 def flatten(im, radius_frac=0.25):
     """Remove the low-frequency gradient, keep the grain."""
@@ -236,17 +238,128 @@ def tile_seam_ratio(im):
     return (join_v / max(0.01, in_v), join_h / max(0.01, in_h))
 
 
+def per_strip(d, args):
+    """A tile for every band, cut from that band's own material.
+
+    One tile for the whole face cannot be right on a prop made of more than one
+    material. This cabinet is grey above and wood below: cutting the tile from
+    the wood made a taller cabinet grow correctly and a WIDER one grow wooden
+    flanks either side of its grey upper body. Each strip knows which rows it
+    owns, so each gets its own tile and grows in the material it is made of.
+    """
+    import sys as _s
+    _s.path.insert(0, str(ROOT / "tools" / "authoring"))
+    from identify_parts import object_crop as _oc
+    src = _oc(d / f"{args.face}.png").convert("RGB")
+    strips = json.loads((d / f"strips_{args.face}.json").read_text())["strips"]
+    out = []
+    for i, st in enumerate(strips):
+        y0, y1 = st["px"]
+        if y1 - y0 < 12:
+            out.append(None)
+            continue
+        x0, py0, pw, ph = _patch_in(src, (y0, y1))
+        size = max(16, min(args.size, min(pw, ph)))
+        k = max(4, size // 5)
+        crop = src.crop((x0, py0, x0 + pw, py0 + ph)).resize(
+            (size + k, size + k), Image.LANCZOS)
+        tile = make_seamless_overlap(flatten(crop), size, size, k)
+        name = f"tile_{args.face}_{i}.png"
+        tile.save(d / name)
+        wv, wh = tile_seam_ratio(tile)
+        cv, ch = cross_seam_ratio(tile)
+        out.append({"tile": name, "size": size, "patch_px": [pw, ph],
+                    "worst_seam": round(max(wv, wh, cv, ch), 3),
+                    "rows": [y0, y1]})
+        print(f"  strip {i} rows {y0:4}..{y1:4}  patch {pw}x{ph} -> {size}px  "
+              f"seam {max(wv, wh, cv, ch):.2f}")
+    (d / f"tiles_{args.face}.json").write_text(json.dumps({"tiles": out}, indent=1))
+    print(f"wrote {sum(1 for t in out if t)} strip tiles")
+
+
+def _patch_in(bg, band):
+    """The largest chunky run of the dominant mid-tone inside one row band."""
+    from collections import Counter
+    W, _ = bg.size
+    y0, y1 = band
+    px = bg.load()
+    tally = Counter()
+    for x in range(0, W, 2):
+        for y in range(y0, y1, 2):
+            c = px[x, y][:3]
+            if 28 < 0.299 * c[0] + 0.587 * c[1] + 0.114 * c[2] < 232:
+                tally[c] += 1
+    base = tally.most_common(1)[0][0] if tally else (128, 128, 128)
+
+    def ok(x, y):
+        return sum(abs(a - b) for a, b in zip(px[x, y][:3], base)) < 70
+
+    best, bw, bh, score = None, 0, 0, 0
+    for sy in range(y0, y1, 4):
+        for sx in range(0, W, 4):
+            if not ok(sx, sy):
+                continue
+            ex = sx
+            while ex + 1 < W and ok(ex + 1, sy):
+                ex += 1
+            ey = sy
+            while ey + 1 < y1 and all(ok(x, ey + 1) for x in range(sx, ex + 1, 3)):
+                ey += 1
+            w, h = ex - sx + 1, ey - sy + 1
+            if min(w, h) < 8:
+                continue
+            sc = w * h * (min(w, h) / max(w, h))
+            if sc > score:
+                best, bw, bh, score = (sx, sy), w, h, sc
+    if best is None:
+        return 0, y0, min(W, 32), min(32, y1 - y0)
+    return best[0], best[1], bw, bh
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("sheet_dir")
     ap.add_argument("--face", default="front")
     ap.add_argument("--size", type=int, default=96)
+    ap.add_argument("--rows", default="",
+                    help="y0,y1 -- cut the tile from this band only")
+    ap.add_argument("--per-strip", action="store_true",
+                    help="one tile per strip, each from its own material")
     args = ap.parse_args()
 
     d = Path(args.sheet_dir)
+    if args.per_strip:
+        return per_strip(d, args)
     patch_meta = d / f"panel_patch_{args.face}.json"
     bg = Image.open(d / f"bg_{args.face}.png").convert("RGB")
-    if patch_meta.exists():
+    # CUT THE TILE FROM THE BAND THAT WILL BE FILLED WITH IT. The patch was
+    # chosen anywhere on the face, and on a cabinet with a grey upper half and a
+    # wood lower half it landed on the grey -- so making the prop taller
+    # inserted a flat grey band into the middle of the woodwork, which both
+    # judges called out as untextured body. The strip that absorbs the height is
+    # known by the time this runs, so the material is taken from there.
+    band = None
+    if args.rows:
+        try:
+            a, b = (int(v) for v in args.rows.split(","))
+            band = (max(0, a), min(bg.size[1], b))
+        except ValueError:
+            band = None
+    if band and band[1] - band[0] > 24:
+        # FROM THE ORIGINAL, NOT FROM THE FILLED BACKGROUND. Taking it from the
+        # background is circular: the holes there were already filled with the
+        # PREVIOUS tile, so a grey tile makes the band grey, which makes the
+        # next tile grey. The elevation still has the prop's real material.
+        import sys as _s
+        _s.path.insert(0, str(ROOT / "tools" / "authoring"))
+        from identify_parts import object_crop as _oc
+        srcim = _oc(d / f"{args.face}.png").convert("RGB")
+        if srcim.size != bg.size:
+            srcim = srcim.resize(bg.size)
+        x0, y0, pw, ph = _patch_in(srcim, band)
+        bg = srcim
+        print(f"  tile cut from the elevation, rows {band[0]}..{band[1]}")
+    elif patch_meta.exists():
         x0, y0, pw, ph = json.loads(patch_meta.read_text())["patch"]
     else:                       # fall back to the middle of the lower panel
         W, H = bg.size

@@ -199,8 +199,20 @@ def rebuild(d, face="front"):
     # per-strip stretch bands: one band for a whole face cannot miss the
     # artwork at every height, and the marquee is where that shows
     run([sys.executable, "tools/authoring/strip_slice.py", str(d), "--face", face])
-    # synthesise the seamless panel tile the background's middle repeats
-    run([sys.executable, "tools/authoring/seamless_tile.py", str(d), "--face", face])
+    # synthesise the seamless panel tile the background's middle repeats, cut
+    # from the strip that will actually be filled with it
+    rows = ""
+    try:
+        st = json.loads((d / f"strips_{face}.json").read_text())
+        g = next(x for x in st["strips"] if x.get("grow_y"))
+        rows = f"{g['px'][0]},{g['px'][1]}"
+    except Exception:
+        pass
+    run([sys.executable, "tools/authoring/seamless_tile.py", str(d), "--face", face]
+        + (["--rows", rows] if rows else []))
+    # and one tile per band, so each grows in the material it is made of
+    run([sys.executable, "tools/authoring/seamless_tile.py", str(d),
+         "--face", face, "--per-strip"])
 
 
 def build_body(d, asset):

@@ -135,7 +135,9 @@ function bgFromStrips(S) {
   // strip's own colour so a marquee's frame extends in cream and a cabinet
   // body in grey-green, from one shared material.
   const fills = [];
-  const fillQuad = (x0, x1, y0, y1, rgb) => fills.push([x0, x1, y0, y1, rgb]);
+  let S_idx = 0;
+  const fillQuad = (x0, x1, y0, y1, rgb) =>
+    fills.push([x0, x1, y0, y1, rgb, S_idx]);
   // one strip horizontally: caps at their real width, its own band repeated --
   // or, where the artwork sits in the middle and the calm is either side of it,
   // the art held at real size in the centre with both FLANKS grown outwards.
@@ -202,6 +204,7 @@ function bgFromStrips(S) {
   let S_fill = [128, 128, 128];
   let yTop = FH / 2;
   for (const st of list) {
+    S_idx = list.indexOf(st);
     S_h = st.h; S_mode = st.hmode || 'repeat'; S_f = st.hf || [0.15, 0.24];
     S_frep = st.hf_repeat !== false; S_fill = st.fill || [128, 128, 128];
     const oh = (st.px[1] - st.px[0]) / H;               // its real height
@@ -260,8 +263,12 @@ scene.add(new THREE.Mesh(bgGeo, new THREE.MeshBasicMaterial(
 // the growth regions, drawn with the seamless panel tile tinted to each
 // strip's own colour -- grain instead of a wash, and no artwork duplicated
 if (built && built.fills.length) {
-  let tileMeta = null;
+  let tileMeta = null, stripTiles = null;
   try { tileMeta = await (await fetch(`${dir}/tile_front.json`)).json(); } catch {}
+  // ONE MATERIAL PER BAND. A prop is not made of one thing: this cabinet is
+  // grey above and wood below, and a single tile grew wooden flanks either side
+  // of its grey upper body. Each strip carries its own.
+  try { stripTiles = (await (await fetch(`${dir}/tiles_front.json`)).json()).tiles; } catch {}
   if (tileMeta) {
     const tileTex = await load(`${dir}/${tileMeta.tile}`);
     tileTex.wrapS = tileTex.wrapT = THREE.RepeatWrapping;
@@ -275,12 +282,24 @@ if (built && built.fills.length) {
       tm = [...g2.getImageData(0, 0, 1, 1).data].slice(0, 3);
     } catch { /* keep the neutral default */ }
     const unit = (tileMeta.patch_px[0] / man.size[0]) * A;   // texel density holds
-    for (const [x0, x1, y0, y1, rgb] of built.fills) {
+    const cache = {};
+    for (const [x0, x1, y0, y1, rgb, si] of built.fills) {
       const w2 = x1 - x0, h2 = y1 - y0;
       if (w2 <= 1e-6 || h2 <= 1e-6) continue;
-      const t = tileTex.clone();
+      let base = tileTex, meta = tileMeta;
+      const own = stripTiles && stripTiles[si];
+      if (own) {
+        if (!cache[si]) {
+          cache[si] = await load(`${dir}/${own.tile}`);
+          cache[si].wrapS = cache[si].wrapT = THREE.RepeatWrapping;
+        }
+        base = cache[si];
+        meta = own;
+      }
+      const unitOwn = (meta.patch_px[0] / man.size[0]) * A;
+      const t = base.clone();
       t.needsUpdate = true;
-      t.repeat.set(Math.max(1, w2 / unit), Math.max(1, h2 / unit));
+      t.repeat.set(Math.max(1, w2 / unitOwn), Math.max(1, h2 / unitOwn));
       // TINT ONLY WHEN THE SAMPLE IS TRUSTWORTHY. A strip's dominant colour is
       // its panel only while the strip still HAS panel; once the parts covered
       // most of the face the dominant colour became the cabinet's blue outline,
