@@ -394,9 +394,43 @@ def main():
         like_body = 1.0 / (1.0 + (dist / 22.0) ** 2)
         return (y1 - y0) * like_body / max(1.0, st["vnoise"])
 
-    grow = max(range(len(strips)), key=lambda i: body_score(strips[i]))
+    # A STRIP FULL OF FITTINGS IS NOT CARCASS, however panel-coloured its
+    # leftovers are. body_score rewards a strip for being tall, close to the
+    # panel colour and quiet -- and a strip packed with fittings scores well on
+    # all three, because the fittings were cut out of the background and their
+    # holes patched with panel. So this cabinet chose the band between its
+    # screen and its marquee, and growing it taller inserted bare material into
+    # the busiest part of the prop. Both judges: "the marquee-to-screen region
+    # becomes a blank streaked panel", "large blank flat-coloured voids across
+    # the chassis face".
+    #
+    # Where a prop may grow is where it has nothing on it. That is what "more
+    # cabinet" means, and it is the free area of the strip -- squared, because
+    # the choice should be decisive rather than a nudge.
+    occupied = [0] * (H + 1)
+    try:
+        _pm = json.loads((d / f"parts_{args.face}.json").read_text())
+        for q in _pm.get("parts", []):
+            qx0, qy0, qx1, qy1 = q["px"]
+            for y in range(max(0, qy0), min(H, qy1)):
+                occupied[y] += max(0, qx1 - qx0)
+    except Exception:
+        pass
+
+    def free_frac(st):
+        y0, y1 = st["px"]
+        if y1 <= y0:
+            return 0.0
+        cov = sum(min(occupied[y], W) for y in range(y0, min(H, y1)))
+        return max(0.0, 1.0 - cov / float(W * (y1 - y0)))
+
+    grow = max(range(len(strips)),
+               key=lambda i: body_score(strips[i]) * (free_frac(strips[i]) ** 2))
     for i, s in enumerate(strips):
         s["grow_y"] = (i == grow)
+        s["free"] = round(free_frac(s), 3)
+    print(f"  grows in strip {grow} "
+          f"({100*free_frac(strips[grow]):.0f}% of it is bare carcass)")
 
     # AND THE CUT MUST NOT LAND INSIDE A PART. The extra height is inserted at
     # the grow strip's band, and the background is flat there precisely BECAUSE

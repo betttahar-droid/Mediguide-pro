@@ -226,8 +226,11 @@ const MAT = [
   plain(0x2a2622),                         // 4  underside, never seen
   // 5  the carcass, tiled in WORLD space so its texel density never changes:
   // a cabinet made twice as wide gains twice as much panel, at the same grain
-  tileTex ? new THREE.MeshBasicMaterial({ map: tileTex, side: THREE.DoubleSide })
-          : plain(0x6a5a4a),
+  tileTex ? new THREE.MeshBasicMaterial({ map: tileTex, side: THREE.DoubleSide,
+                                         vertexColors: true })
+          : new THREE.MeshBasicMaterial({ color: 0xffffff,
+                                          side: THREE.DoubleSide,
+                                          vertexColors: true }),
 ];
 
 // THE BODY IS THE INTERSECTION OF TWO SILHOUETTES, NOT ONE EXTRUSION.
@@ -332,7 +335,7 @@ const hBand = (() => {
   if (h && h[1] - h[0] > 0.02) return [h[0], h[1]];
   return (havePlan && planBand[1] > planBand[0]) ? planBand : null;
 })();
-const wRuns = sliceRuns(hBand?.[0] ?? 0, hBand?.[1] ?? 0, wS);
+const wRuns = sliceRuns(hBand?.[0] ?? 0, hBand?.[1] ?? 0, wS, true);
 // where to sample across the width, the same list for every ring so the loft
 // has matching vertex counts: t is the fraction along the DRAWING, g along the
 // FINISHED prop. At width 1 they are equal and this is just the plan's points.
@@ -424,12 +427,48 @@ const growBand = (() => {
 // that fill has no internal seam by construction, and it meets the artwork at
 // the same two columns the nine-slice would have cut at, which were chosen for
 // being the flattest on the face.
-function sliceRuns(bandA, bandB, scale) {
+// AND WIDTH GOES IN SYMMETRICALLY, or the prop slides sideways. Inserting at
+// one band is fine when that band sits near the middle, and this cabinet's did
+// until the band was taught to avoid fittings -- which correctly moved it to
+// the bare right-hand third, and then shoved the marquee, screen and deck
+// bodily left while the new material piled up on one side. A cabinet is
+// symmetric about its centre line and its artwork is composed on that line, so
+// the growth is split: half at the band, half at the band's mirror. Where the
+// band already straddles the centre there is nothing to mirror and it inserts
+// once, as before.
+function sliceRuns(bandA, bandB, scale, symmetric = false) {
   if (scale === 1 || !(bandB > bandA)) return [{ g0: 0, g1: 1, t0: 0, t1: 1 }];
-  const gA = bandA / scale, gB = 1 - (1 - bandB) / scale;
-  const runs = [{ g0: 0, g1: gA, t0: 0, t1: bandA }];
-  if (gB > gA) runs.push({ g0: gA, g1: gB, t0: bandA, t1: bandB, fill: true });
-  runs.push({ g0: gB, g1: 1, t0: bandB, t1: 1 });
+  // ORDER THEM, because the band may be on either side of the centre. The
+  // first version assumed it was the left one and this cabinet's is the right
+  // one, so the mirror test failed and the whole thing fell through to the
+  // single-band path it was written to replace.
+  const lo0 = Math.min(bandA, 1 - bandB), lo1 = Math.min(bandB, 1 - bandA);
+  const hi0 = Math.max(bandA, 1 - bandB), hi1 = Math.max(bandB, 1 - bandA);
+  if (!symmetric || !(hi0 > lo1 + 1e-6)) {
+    const gA = bandA / scale, gB = 1 - (1 - bandB) / scale;
+    const runs = [{ g0: 0, g1: gA, t0: 0, t1: bandA }];
+    if (gB > gA) runs.push({ g0: gA, g1: gB, t0: bandA, t1: bandB, fill: true });
+    runs.push({ g0: gB, g1: 1, t0: bandB, t1: 1 });
+    return runs.filter((r) => r.g1 > r.g0 + 1e-9);
+  }
+  // held lengths, in units of the drawing, and the extra split evenly
+  const hold = [lo0, hi0 - lo1, 1 - hi1];
+  const add = Math.max(0, (scale - 1)) / 2;
+  const w0 = lo1 - lo0, w1 = hi1 - hi0;
+  const t = [0, lo0, lo1, hi0, hi1, 1];
+  const g = [];
+  let acc = 0;
+  const push = (len) => { acc += len / scale; g.push(acc); };
+  g.push(0);
+  push(hold[0]); push(w0 + add * 1.0); push(hold[1]); push(w1 + add * 1.0);
+  push(hold[2]);
+  const runs = [
+    { g0: g[0], g1: g[1], t0: t[0], t1: t[1] },
+    { g0: g[1], g1: g[2], t0: t[1], t1: t[2], fill: true },
+    { g0: g[2], g1: g[3], t0: t[2], t1: t[3] },
+    { g0: g[3], g1: g[4], t0: t[3], t1: t[4], fill: true },
+    { g0: g[4], g1: 1, t0: t[4], t1: t[5] },
+  ];
   return runs.filter((r) => r.g1 > r.g0 + 1e-9);
 }
 
@@ -584,12 +623,31 @@ function buildLoft() {
   // cheap -- and they merge into three regardless of what order they were
   // generated in.
   const bucket = new Map();
-  const quadTo = (mi, P, U) => {
-    if (!bucket.has(mi)) bucket.set(mi, { pos: [], uv: [] });
+  const quadTo = (mi, P, U, C) => {
+    if (!bucket.has(mi)) bucket.set(mi, { pos: [], uv: [], col: [] });
     const b = bucket.get(mi);
     b.pos.push(...P[0], ...P[1], ...P[2], ...P[0], ...P[2], ...P[3]);
     b.uv.push(...U[0], ...U[1], ...U[2], ...U[0], ...U[2], ...U[3]);
+    const c = C || [1, 1, 1];
+    for (let i = 0; i < 6; i++) b.col.push(c[0], c[1], c[2]);
   };
+  // THE TINT THAT PUTS THE CARCASS ON THE PANEL IT ADJOINS. The tile carries
+  // one colour for the whole prop, which is right for a prop with one body
+  // material and wrong for this cabinet, whose lower panels are brown and
+  // whose bezel surround is dark: the median landed on the dark and a widened
+  // cabinet grew green out of brown sides. nine_slice now records the artwork's
+  // colour inside each band -- which is precisely the colour the new material
+  // stands next to -- and the tile is multiplied onto it per band.
+  const tileMed = (() => {
+    const mm = materialsJson?.materials || [];
+    return (mm.find((m) => m.main) || mm[0])?.median || null;
+  })();
+  const tintFor = (rgb) => {
+    if (!rgb || !tileMed) return [1, 1, 1];
+    return rgb.map((v, i) => Math.max(0.25, Math.min(2.5,
+      v / Math.max(1, tileMed[i]))));
+  };
+  const tintX = tintFor(sliceBg?.h_rgb), tintY = tintFor(sliceBg?.v_rgb);
   const ring = (y, g) => ({
     x0: lerpWall(fprofile.left_wall, y, -FW / 2) * wS,
     x1: lerpWall(fprofile.right_wall, y, FW / 2) * wS,
@@ -671,10 +729,12 @@ function buildLoft() {
             || growRuns[yri[i]]?.fill || growRuns[yri[i + 1]]?.fill);
       const P4 = [[p.x, a.wy, p.z], [q.x, a.wy, q.z],
                   [Q.x, b.wy, Q.z], [P.x, b.wy, P.z]];
-      if (fill && tileTex) {
+      if (fill) {
         // world-space UVs, so the grain is the same size at any scale and the
         // fill has no period of its own to beat against the prop's
-        quadTo(5, P4, P4.map((v) => [v[0] / tileWorld, v[1] / tileWorld]));
+        const byX = wRuns[p.ri]?.fill || wRuns[q.ri]?.fill;
+        quadTo(5, P4, P4.map((v) => [v[0] / tileWorld, v[1] / tileWorld]),
+               byX ? tintX : tintY);
       } else {
         quadTo(f.mi, P4,
                [[f.u(p), ys[i]], [f.u(q), ys[i]],
@@ -702,21 +762,23 @@ function buildLoft() {
       const p = L[j], q = L[(j + 1) % N];
       const A = [cx, r.wy, cz, ct], B = [p.x, r.wy, p.z, p.t], C = [q.x, r.wy, q.z, q.t];
       const T = flip ? [A, C, B] : [A, B, C];
-      if (!bucket.has(mi)) bucket.set(mi, { pos: [], uv: [] });
+      if (!bucket.has(mi)) bucket.set(mi, { pos: [], uv: [], col: [] });
       const bk = bucket.get(mi);
       for (const v of T) bk.pos.push(v[0], v[1], v[2]);
       for (const v of T) bk.uv.push(v[3], backFrac(v[2]));
+      for (let i = 0; i < 3; i++) bk.col.push(1, 1, 1);
     }
   }
 
-  const pos = [], uv = [], groups = [];
+  const pos = [], uv = [], col = [], groups = [];
   for (const [mi, b] of bucket) {
     groups.push([pos.length / 3, b.pos.length / 3, mi]);
-    pos.push(...b.pos); uv.push(...b.uv);
+    pos.push(...b.pos); uv.push(...b.uv); col.push(...b.col);
   }
   const g = new THREE.BufferGeometry();
   g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
   g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
+  g.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
   for (const [s2, c, mi] of groups) g.addGroup(s2, c, mi);
   return g;
 }

@@ -32,6 +32,7 @@ and its texture stay locked together at any size.
 """
 import argparse
 import json
+from pathlib import Path
 from collections import Counter
 
 from PIL import Image
@@ -65,7 +66,7 @@ def _runs(diff, thresh):
     return best
 
 
-def bands(path, quantile=0.35, min_frac=0.08, fallback=False):
+def bands(path, quantile=0.35, min_frac=0.08, fallback=False, parts=None):
     """-> {"v": [z0, z1], "h": [x0, x1]} stretch bands, normalised 0..1.
 
     z runs UP from the floor to match the model, so the vertical band is
@@ -129,6 +130,37 @@ def bands(path, quantile=0.35, min_frac=0.08, fallback=False):
                 bestv, besti = run, i
         return [besti / n, (besti + k) / n]
 
+    # A COLUMN A FITTING STANDS IN IS NOT SOMEWHERE TO INSERT WIDTH. The same
+    # trap as the vertical band: the background is flat where a part was cut
+    # out and its hole patched, so the quietest columns are often the coin
+    # door's. Striking out the occupied columns first asks where the prop is
+    # actually BARE, which is the only place more of it can go.
+    if parts:
+        try:
+            man = json.loads(Path(parts).read_text())
+            # WEIGHTED BY HOW MUCH OF THE COLUMN IS COVERED, not struck out on
+            # first contact. Striking a column because ANY part touches it left
+            # this cabinet with no free columns at all -- its deck and its
+            # marquee each run the full width -- so the search fell through to
+            # its fallback and returned a band spanning the whole face, which
+            # is the stretch-everything behaviour the band exists to prevent.
+            # A column under a full-height door is a bad place to insert width;
+            # a column that clips one marquee corner is nearly fine. Coverage
+            # says which is which, and adding it to the difference score lets
+            # busy-ness and occupancy trade off instead of one vetoing.
+            cov = [0] * len(coldiff)
+            for q in man.get("parts", []):
+                x0, y0, x1, y1 = q["px"]
+                for x in range(max(0, x0 - 1), min(len(cov), x1 + 1)):
+                    cov[x] += max(0, y1 - y0)
+            span = max(1.0, max(cov)) if cov else 1.0
+            scale = (sorted(coldiff)[int(0.9 * (len(coldiff) - 1))]
+                     if coldiff else 1.0) * 2.0 + 1.0
+            for x in range(len(coldiff)):
+                coldiff[x] += scale * (cov[x] / span)
+        except Exception:
+            pass
+
     v = pick(rowdiff, H, "v")
     h = pick(coldiff, W, "h")
     out = {}
@@ -136,6 +168,35 @@ def bands(path, quantile=0.35, min_frac=0.08, fallback=False):
     out["v"] = [round(1 - v[1], 4), round(1 - v[0], 4)] if v else None
     out["h"] = [round(h[0], 4), round(h[1], 4)] if h else None
     out["size"] = [W, H]
+
+    # THE FILL MATCHES WHAT IT BUTTS AGAINST, NOT THE PROP'S AVERAGE. One
+    # global colour for the carcass works on a prop with one body material and
+    # fails on one with two: this cabinet has brown panels below and a dark
+    # bezel surround above, the median landed on the dark, and a widened
+    # cabinet grew dark green out of brown sides. The band is known here, so
+    # the colour of the artwork inside it is known too -- and that is exactly
+    # the colour the new material will stand next to.
+    def band_rgb(box):
+        x0, y0, x1, y1 = box
+        vals = [[], [], []]
+        src = _object(Image.open(path).convert("RGBA"))
+        sp = src.load()
+        for x in range(max(0, x0), min(W, x1)):
+            for y in range(max(0, y0), min(H, y1)):
+                q = sp[x, y]
+                if len(q) < 4 or q[3] > 200:
+                    for c in range(3):
+                        vals[c].append(q[c])
+        if not vals[0]:
+            return None
+        return [sorted(v)[len(v) // 2] for v in vals]
+
+    if h:
+        out["h_rgb"] = band_rgb((int(h[0] * W), 0, int(h[1] * W), H))
+    if v:
+        # v is stored in model coordinates, so flip it back to image rows
+        out["v_rgb"] = band_rgb((0, int((1 - out["v"][1]) * H),
+                                 W, int((1 - out["v"][0]) * H)))
     return out
 
 
@@ -144,11 +205,14 @@ def main():
     ap.add_argument("image")
     ap.add_argument("--quantile", type=float, default=0.35,
                     help="share of rows counted as 'uniform enough'")
+    ap.add_argument("--parts", default=None,
+                    help="parts manifest: strike out the columns they occupy")
     ap.add_argument("--fallback", action="store_true",
                     help="never return null: use the quietest window instead")
     ap.add_argument("--out", default=None)
     args = ap.parse_args()
-    b = bands(args.image, args.quantile, fallback=args.fallback)
+    b = bands(args.image, args.quantile, fallback=args.fallback,
+              parts=args.parts)
     print(f"{args.image}: object {b['size'][0]}x{b['size'][1]}")
     if b["v"]:
         print(f"  vertical   stretch band z {b['v'][0]:.3f}..{b['v'][1]:.3f}  "
