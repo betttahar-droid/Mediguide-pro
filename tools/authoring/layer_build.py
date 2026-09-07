@@ -100,7 +100,7 @@ def silhouette(ob, erode=3):
     return inside
 
 
-def fill_from_panel(ob, boxes):
+def fill_from_panel(ob, boxes, shaped=None):
     """Paint out the parts using panel taken from directly above or below.
 
     A cabinet panel is vertically streaked -- wear runs down it -- so a column
@@ -112,10 +112,19 @@ def fill_from_panel(ob, boxes):
     px = out.load()
     src = ob.load()
     covered = [[False] * H for _ in range(W)]
-    for (x0, y0, x1, y1) in boxes:
-        for x in range(max(0, x0), min(W, x1)):
-            for y in range(max(0, y0), min(H, y1)):
-                covered[x][y] = True
+    if shaped:
+        for (bx, m) in shaped:
+            x0, y0, x1, y1 = bx
+            mp = m.load() if m is not None else None
+            for x in range(max(0, x0), min(W, x1)):
+                for y in range(max(0, y0), min(H, y1)):
+                    if mp is None or mp[x - x0, y - y0] > 128:
+                        covered[x][y] = True
+    else:
+        for (x0, y0, x1, y1) in boxes:
+            for x in range(max(0, x0), min(W, x1)):
+                for y in range(max(0, y0), min(H, y1)):
+                    covered[x][y] = True
     # SOURCE ROWS MUST BE PANEL, NOT MERELY UNCOVERED. Between two parts sits
     # dark trim, and it is uncovered -- so filling from "the nearest row no
     # part occupies" packed the holes with black. At scale 1 the parts sat on
@@ -245,8 +254,18 @@ def main():
     W, H = ob.size
     assert [W, H] == man["size"], f"size drift {W}x{H} vs {man['size']}"
 
+    # A MASK IS THE SHAPE; A BOX WAS ONLY EVER ITS BOUNDING RECTANGLE. Where
+    # segment_sheet has produced masks, the hole cut in the background is the
+    # fitting's actual outline -- so a bezel and the screen inside it can abut
+    # without either claiming the other's pixels, and the background is exactly
+    # the body panel and nothing else.
+    masks = {}
+    for p in man["parts"]:
+        if p.get("mask") and (d / p["mask"]).exists():
+            masks[p["name"]] = Image.open(d / p["mask"]).convert("L")
     boxes = [p["px"] for p in man["parts"]]
-    bg = fill_from_panel(ob, boxes)
+    bg = fill_from_panel(ob, boxes, [(p["px"], masks.get(p["name"]))
+                                     for p in man["parts"]])
     # CUT THE FACE TO THE PROP'S OUTLINE. A prop is not a rectangle and the
     # crop is, so a jukebox's domed top leaves sheet-white in the corners of
     # the background image. On a flat quad that read as a white fringe all the
@@ -283,6 +302,9 @@ def main():
     for p in man["parts"]:
         x0, y0, x1, y1 = p["px"]
         crop = ob.crop((x0, y0, x1, y1))
+        if p["name"] in masks:                 # cut to the fitting's real shape
+            crop = crop.convert("RGBA")
+            crop.putalpha(masks[p["name"]])
         crop.save(kit / f"{p['name']}.png")
         try:
             # STRICTER THAN THE BACKGROUND'S. The default scan calls the most
@@ -371,7 +393,8 @@ def main():
     check = bg.copy()
     for p, o in zip(man["parts"], out):
         x0, y0, x1, y1 = p["px"]
-        check.paste(Image.open(kit / f"{p['name']}.png"), (x0, y0))
+        piece = Image.open(kit / f"{p['name']}.png")
+        check.paste(piece, (x0, y0), piece if piece.mode == "RGBA" else None)
     a, b = ob.load(), check.load()
     diff = sum(1 for x in range(0, W, 2) for y in range(0, H, 2)
                if sum(abs(m - n) for m, n in zip(a[x, y], b[x, y])) > 12)

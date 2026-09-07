@@ -10,8 +10,11 @@ THE WHOLE CHAIN, and who does what:
 
     Nano Banana 2   one turnaround sheet, four true elevations in one pass
     arithmetic      split it, crop the captions off, measure the object boxes
-    arithmetic      measure the fittings as cells fenced in by their own
-                    borders -- never ask a model where anything is
+    Nano Banana 2   draw the same elevation again as a flat-colour
+                    segmentation map: one colour per fitting
+    arithmetic      check that map against the artwork -- silhouette agreement
+                    and whether its borders sit on real edges -- and take the
+                    fittings as exact MASKS, or fall back to measuring cells
     glm-5.3-flash   name each measured region, and say how it resizes, how
                     deep it sits and which edge it turns about
     arithmetic      cut the parts, fill the background, measure the stretch
@@ -227,11 +230,25 @@ def main():
     if not (d / "front.png").exists():
         raise SystemExit("no front.png -- the sheet did not split into views")
 
-    print("[2] measuring regions, naming parts ...", flush=True)
-    r = run([sys.executable, "tools/authoring/region_parts.py", str(d),
+    print("[2] segmenting the face, naming parts ...", flush=True)
+    # THE MODEL DRAWS THE DECOMPOSITION; ARITHMETIC CHECKS IT. See
+    # segment_sheet.py -- masks instead of thresholded boxes. If the map fails
+    # its alignment or border checks, the measured finder is still here and
+    # takes over, so a bad draw costs a call rather than the prop.
+    r = run([sys.executable, "tools/authoring/segment_sheet.py", str(d),
              "--face", "front", "--asset", args.asset])
+    for line in (r.stdout or "").strip().splitlines()[:6]:
+        print("   ", line.strip()[:120])
+    try:
+        seg_ok = json.loads((d / "seg_front.json").read_text()).get("usable")
+    except Exception:
+        seg_ok = False
+    if not seg_ok or not (d / "parts_front.json").exists():
+        print("    segmentation rejected -- measuring the regions instead")
+        r = run([sys.executable, "tools/authoring/region_parts.py", str(d),
+                 "--face", "front", "--asset", args.asset])
     if not (d / "parts_front.json").exists():
-        raise SystemExit("region_parts produced nothing")
+        raise SystemExit("neither segmentation nor measurement produced parts")
     for line in (r.stdout or "").strip().splitlines()[:14]:
         print("   ", line[:120])
 
