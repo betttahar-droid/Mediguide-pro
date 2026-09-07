@@ -170,6 +170,11 @@ def make_seamless_overlap(src, W, H, k):
     at the cost of a soft cross-fade in one corner strip.
     """
     sp = src.load()
+    sw, sh = src.size
+    # defensive: a caller asking for a tile the source cannot cover should get
+    # a slightly worse seam, never an IndexError that ends an unattended run
+    gx = lambda x: min(x, sw - 1)
+    gy = lambda y: min(y, sh - 1)
     out = Image.new("RGB", (W, H))
     op = out.load()
     for x in range(W):
@@ -183,12 +188,13 @@ def make_seamless_overlap(src, W, H, k):
             # blend in the far side on each axis that is inside the overlap
             r = list(base)
             if ax > 0:
-                q = sp[x + W, y]
+                q = sp[gx(x + W), gy(y)]
                 r = [r[i] * (1 - ax) + q[i] * ax for i in range(3)]
             if ay > 0:
-                q2 = sp[x, y + H]
+                q2 = sp[gx(x), gy(y + H)]
                 if ax > 0:
-                    q2 = [q2[i] * (1 - ax) + sp[x + W, y + H][i] * ax for i in range(3)]
+                    q2 = [q2[i] * (1 - ax) + sp[gx(x + W), gy(y + H)][i] * ax
+                          for i in range(3)]
                 r = [r[i] * (1 - ay) + q2[i] * ay for i in range(3)]
             op[x, y] = tuple(max(0, min(255, int(v))) for v in r)
     return out

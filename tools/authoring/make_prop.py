@@ -217,6 +217,13 @@ def main():
     build_body(d, args.asset)
 
     rebuild(d)
+    # A STAGE THAT FAILED MUST SAY SO HERE, NOT SIX FRAMES DOWN. layer_build
+    # crashing left no layers_front.json, and the loop went on to render it and
+    # died in json.loads with a traceback that named neither the prop nor the
+    # stage that actually broke.
+    if not (d / "layers_front.json").exists():
+        raise SystemExit(f"layer_build produced no manifest for {args.asset} "
+                         f"-- see the '!' lines above")
     best = None
     for rnd in range(args.rounds):
         shots = render(d, d / f"r{rnd}", [(1, 1), (2, 1), (1, 1.8)])

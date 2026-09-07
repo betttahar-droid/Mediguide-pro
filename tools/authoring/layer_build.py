@@ -128,10 +128,20 @@ def fill_from_panel(ob, boxes):
     inside = silhouette(ob)
     solid = silhouette(ob, erode=0)      # unroded: what to PAINT, vs what to copy FROM
     from collections import Counter as _C
+    # PANEL IS NEITHER A VOID NOR A HIGHLIGHT. On a vending machine whose
+    # frame and interior are near-black, the modal uncovered colour WAS black,
+    # so "panel" resolved to the plinth shadow and every hole in the background
+    # was filled with it -- the whole face came out a black rectangle, which
+    # the judge reported for three rounds as "large black voids where the panel
+    # should show cabinet metal". A painted panel has a mid tone; the darkest
+    # and lightest few percent are shadow and specular, not material.
+    def lum(c):
+        return 0.299 * c[0] + 0.587 * c[1] + 0.114 * c[2]
+
     tally = _C()
     for x in range(0, W, 2):
         for y in range(0, H, 2):
-            if not covered[x][y] and inside[x][y]:
+            if not covered[x][y] and inside[x][y] and 28 < lum(src[x, y]) < 232:
                 tally[src[x, y]] += 1
     base = tally.most_common(1)[0][0] if tally else (128, 128, 128)
     tol = 70
@@ -140,7 +150,8 @@ def fill_from_panel(ob, boxes):
         return sum(abs(a - b) for a, b in zip(c, base)) < tol
 
     def usable(x, y):
-        return not covered[x][y] and inside[x][y] and is_panel(src[x, y])
+        return (not covered[x][y] and inside[x][y] and is_panel(src[x, y])
+                and 28 < lum(src[x, y]) < 232)
 
     # FILL FROM A CLEAN PATCH, NOT FROM THE NEAREST ROW. Copying a hole's own
     # column meant the screen's coloured border was the nearest "panel" pixel
@@ -170,6 +181,10 @@ def fill_from_panel(ob, boxes):
                                      for x in range(x0, x1 + 1, 3)):
                 y1 += 1
             w, h = x1 - x0 + 1, y1 - y0 + 1
+            # a sliver is not a swatch: a 273x11 strip tiles as horizontal
+            # banding whatever it contains, so it must lose to anything chunkier
+            if min(w, h) < 8:
+                continue
             score = w * h * (min(w, h) / max(w, h))
             if score > bscore:
                 best, bw, bh, bscore = (x0, y0), w, h, score
@@ -186,11 +201,21 @@ def fill_from_panel(ob, boxes):
     # no join to hide, so the same patch can simply repeat.
     # damped for the same reason the renderer's tile is: one strong drip mark
     # repeated on a grid reads as wallpaper, and this fill covers whole panels
+    # THE OVERLAP HAS TO FIT INSIDE THE PATCH. make_seamless_overlap reads
+    # column x+W of its source, so the tile must be exactly the overlap
+    # narrower than what it is given -- clamping the tile to a minimum instead
+    # asked for pixels the patch did not have and took a whole prop down with
+    # "IndexError: image index out of range".
     from seamless_tile import make_seamless_overlap, damp
-    k = max(4, min(bw, bh) // 5)
-    tw, th = max(8, bw - k), max(8, bh - k)
-    patch = ob.crop((ox, oy, ox + bw, oy + bh))
-    tile = make_seamless_overlap(damp(patch, 0.6), tw, th, k)
+    patch = damp(ob.crop((ox, oy, ox + bw, oy + bh)), 0.6)
+    k = max(2, min(bw, bh) // 5)
+    while k > 1 and min(bw - k, bh - k) < 6:
+        k -= 1
+    tw, th = bw - k, bh - k
+    if tw < 4 or th < 4:            # too small to repair; repeat it as it is
+        tile, tw, th = patch, bw, bh
+    else:
+        tile = make_seamless_overlap(patch, tw, th, k)
     tp = tile.load()
     for x in range(W):
         for y in range(H):
