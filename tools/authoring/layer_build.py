@@ -33,6 +33,9 @@ from PIL import Image
 from identify_parts import object_crop
 
 
+PANEL_PATCH = {}
+
+
 def fill_from_panel(ob, boxes):
     """Paint out the parts using panel taken from directly above or below.
 
@@ -93,6 +96,7 @@ def fill_from_panel(ob, boxes):
     if best is None:
         return out
     ox, oy = best
+    PANEL_PATCH["patch"] = [ox, oy, bw, bh]   # where the clean panel was found
     for x in range(W):
         for y in range(H):
             if not covered[x][y]:
@@ -119,6 +123,9 @@ def main():
     boxes = [p["px"] for p in man["parts"]]
     bg = fill_from_panel(ob, boxes)
     bg.save(d / f"bg_{args.face}.png")
+    if PANEL_PATCH.get("patch"):
+        (d / f"panel_patch_{args.face}.json").write_text(json.dumps(PANEL_PATCH))
+        print(f"  clean panel patch: {PANEL_PATCH['patch']}")
 
     kit = d / "parts"
     kit.mkdir(exist_ok=True)

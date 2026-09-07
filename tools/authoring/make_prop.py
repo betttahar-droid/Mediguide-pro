@@ -101,6 +101,8 @@ def rebuild(d, face="front"):
     run([sys.executable, "tools/authoring/layer_build.py", str(d), "--face", face])
     run([sys.executable, "tools/authoring/nine_slice.py", str(d / f"bg_{face}.png"),
          "--out", str(d / "slice_bg.json")])
+    # synthesise the seamless panel tile the background's middle repeats
+    run([sys.executable, "tools/authoring/seamless_tile.py", str(d), "--face", face])
 
 
 def main():
