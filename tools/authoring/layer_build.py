@@ -36,6 +36,55 @@ from identify_parts import object_crop
 PANEL_PATCH = {}
 
 
+def bleed(im, rounds=512):
+    """Push the artwork's colour outwards into the pixels that were cut away.
+
+    A CUT PIXEL STILL HAS A COLOUR, AND IT IS THE SHEET'S. Making the outside of
+    a part transparent leaves the sheet's background sitting in the RGB channels
+    underneath, and the GPU does not know it is meant to be ignored: bilinear
+    filtering blends it into the last real texel, and the rim quads -- which are
+    the texture's own border row and column, extruded -- sample it outright. The
+    arcade cabinet's control deck came out with salmon-pink corners in every
+    three-quarter view, one pixel of sheet background magnified into the widest
+    surface on the prop. It reads as an untextured face and it is not one.
+
+    Dilating the opaque colour outward a few pixels, alpha untouched, is the
+    standard fix and it is free at author time: the transparent pixels keep
+    their transparency and gain a colour that continues the art, so anything
+    that samples past the edge continues the art too.
+    """
+    im = im.convert("RGBA")
+    W, H = im.size
+    px = im.load()
+    known = [[px[x, y][3] > 0 for y in range(H)] for x in range(W)]
+    # RUN IT TO CONVERGENCE, NOT A FIXED FEW PIXELS. The control deck's crop is
+    # 273 by 29 with the deck itself along the middle: its top-left corner is
+    # eighteen pixels from the nearest real colour, so a bleed of six left the
+    # corner exactly as it was -- and the rim quads sample the corners. Walking
+    # only the frontier keeps it cheap however far it has to travel.
+    edge = [(x, y) for x in range(W) for y in range(H) if not known[x][y]]
+    for _ in range(rounds):
+        todo, rest = [], []
+        for x, y in edge:
+            acc, n = [0, 0, 0], 0
+            for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                nx, ny = x + dx, y + dy
+                if 0 <= nx < W and 0 <= ny < H and known[nx][ny]:
+                    r, g, b, _a = px[nx, ny]
+                    acc[0] += r; acc[1] += g; acc[2] += b; n += 1
+            if n:
+                todo.append((x, y, acc[0] // n, acc[1] // n, acc[2] // n))
+            else:
+                rest.append((x, y))
+        if not todo:
+            break
+        for x, y, r, g, b in todo:
+            px[x, y] = (r, g, b, px[x, y][3])
+            known[x][y] = True
+        edge = rest
+    return im
+
+
 def silhouette(ob, erode=3):
     """Which pixels are the PROP, as opposed to sheet behind it.
 
@@ -284,6 +333,7 @@ def main():
                 ap_[x, y] = (r, g, b, 0)
                 cut += 1
     print(f"  cut {100*cut/(W*H):.1f}% of the face outside the silhouette")
+    bg = bleed(bg)
     bg.save(d / f"bg_{args.face}.png")
     if PANEL_PATCH.get("patch"):
         (d / f"panel_patch_{args.face}.json").write_text(json.dumps(PANEL_PATCH))
@@ -301,10 +351,30 @@ def main():
     from nine_slice import bands as _bands
     for p in man["parts"]:
         x0, y0, x1, y1 = p["px"]
-        crop = ob.crop((x0, y0, x1, y1))
+        crop = ob.crop((x0, y0, x1, y1)).convert("RGBA")
+        # NO PART MAY CARRY THE SHEET. A part is cut at its bounding box, and a
+        # part that overhangs the prop -- a control panel wider than the cabinet
+        # below it, a jukebox's crown -- has sheet background in the corners of
+        # that box. control_panel_front had 287 such texels and they came out as
+        # salmon-pink flags on both ends of the deck in every three-quarter
+        # view: one pixel of paper, magnified onto the prop. The prop's own
+        # silhouette is already measured for the background, so every part is
+        # cut against it whether or not the segmenter gave it a mask of its own.
+        a = Image.new("L", crop.size, 255)
+        ap2 = a.load()
+        for xx in range(crop.size[0]):
+            for yy in range(crop.size[1]):
+                gx, gy = x0 + xx, y0 + yy
+                if not (0 <= gx < W and 0 <= gy < H and mask[gx][gy]):
+                    ap2[xx, yy] = 0
         if p["name"] in masks:                 # cut to the fitting's real shape
-            crop = crop.convert("RGBA")
-            crop.putalpha(masks[p["name"]])
+            own = masks[p["name"]].load()
+            for xx in range(crop.size[0]):
+                for yy in range(crop.size[1]):
+                    if own[xx, yy] < 128:
+                        ap2[xx, yy] = 0
+        crop.putalpha(a)
+        crop = bleed(crop)
         crop.save(kit / f"{p['name']}.png")
         try:
             # STRICTER THAN THE BACKGROUND'S. The default scan calls the most

@@ -285,11 +285,9 @@ function buildLoft() {
   const N = loops[0].length;
   for (let i = 0; i + 1 < rings.length; i++) {
     const a = rings[i], b = rings[i + 1], la = loops[i], lb = loops[i + 1];
-    let stepped = false;
     for (let j = 0; j < N; j++) {
       const k = (j + 1) % N;
       const p = la[j], q = la[k], P = lb[j], Q = lb[k];
-      if (Math.hypot(p.x - P.x, p.z - P.z) > 1e-4) stepped = true;
       if (Math.hypot(q.x - p.x, q.z - p.z) < 1e-6 &&
           Math.hypot(Q.x - P.x, Q.z - P.z) < 1e-6) continue;
       const f = facet(p, q);
@@ -298,20 +296,15 @@ function buildLoft() {
              [[f.u(p), ys[i]], [f.u(q), ys[i]],
               [f.u(Q), ys[i + 1]], [f.u(P), ys[i + 1]]]);
     }
-    // where the ring changes size, close the step with a horizontal face: the
-    // band between the two outlines, quad by quad, which handles a plan that
-    // grows on one side and shrinks on the other without knowing that it did
-    if (stepped) {
-      const wy = Math.max(a.wy, b.wy);
-      for (let j = 0; j < N; j++) {
-        const k = (j + 1) % N;
-        const p = la[j], q = la[k], P = lb[j], Q = lb[k];
-        quadTo(3,
-               [[p.x, wy, p.z], [q.x, wy, q.z], [Q.x, wy, Q.z], [P.x, wy, P.z]],
-               [[uOf(p.x), backFrac(p.z)], [uOf(q.x), backFrac(q.z)],
-                [uOf(Q.x), backFrac(Q.z)], [uOf(P.x), backFrac(P.z)]]);
-      }
-    }
+    // NO HORIZONTAL LEDGE HERE. The two-view build closed every change of ring
+    // size with a horizontal face on top of the sloped one, and it was pure
+    // garbage: the quads above already run from ring a's outline to ring b's,
+    // so the surface between two rings is closed whatever the outlines do. On
+    // a prop with a genuine slope -- this cabinet leans back above the screen
+    // -- the extra face came out as a flange hanging in the air off the top of
+    // every slope, plainly visible in a three-quarter view and counted against
+    // the side outline. Two rings are never at the same height (the levels are
+    // a set), so there is no step to close.
   }
   // cap the top and the bottom -- a fan from the outline's centroid, because a
   // plan with a jutting deck is not convex and a fan from a corner folds
