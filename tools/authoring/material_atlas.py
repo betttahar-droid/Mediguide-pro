@@ -44,7 +44,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools" / "authoring"))
 from concept_sheet import generate_image, load_key  # noqa: E402
 from seamless_tile import (make_seamless_overlap, tile_seam_ratio,  # noqa: E402
-                           cross_seam_ratio)
+                           cross_seam_ratio, damp_outliers)
 
 # Six is a compromise found by looking: three leaves a cabinet without its
 # grille or its glass, and nine makes each cell small enough that the model
@@ -184,8 +184,8 @@ def prove(sw, size=64):
     # the raw square behind an absolute threshold threw away the better of the
     # two whenever both were imperfect, which is precisely when it matters.
     if before <= after:
-        return src, before, before
-    return tile, before, after
+        return damp_outliers(src), before, before
+    return damp_outliers(tile), before, after
 
 
 def flat_cell(face, n=9):
@@ -279,7 +279,7 @@ def panel_grain(face, n=9):
     return calm[len(calm) // 2]
 
 
-def match_grain(tile, want, lo=16, hi=192):
+def match_grain(tile, want, lo=16, hi=192, tall=None):
     """How many elevation pixels one tile should cover.
 
     A SWATCH HAS NO SCALE OF ITS OWN. It is a square of material and nothing in
@@ -291,6 +291,21 @@ def match_grain(tile, want, lo=16, hi=192):
     whose grain statistic lands closest to the painted panel's. Measured, per
     prop, from the drawing that is already the reference for everything else.
     """
+    # A REPEAT IS VISIBLE BECAUSE IT REPEATS OFTEN, so the size a material is
+    # shown at is bounded before it is optimised. Two things pushed the search
+    # to the bottom of its range and both were artefacts rather than answers:
+    # damping the tile's outliers -- necessary, it is what stops a blob reading
+    # as wallpaper -- leaves it smoother, so the matcher chased the panel's
+    # coarser grain by shrinking; and shrinking is measured by downsampling,
+    # which ALIASES, so a small tile scores a high grain it does not really
+    # have. The result was a 16px tile repeating nearly forty times up the
+    # prop, which is precisely the "visible repeating hatch/dot pattern" both
+    # judges then reported. No material on a prop this size repeats ten times,
+    # whatever the statistic says, so that is the floor and the match chooses
+    # within it.
+    if tall:
+        lo = max(lo, tall // 10)
+        hi = max(lo + 1, hi)
     best = None
     n = lo
     while n <= hi:
@@ -408,8 +423,9 @@ def main():
         mt.save(out / f"m{main['n']}.png")
         main["median"] = target
         print(f"  {main['name']} recoloured to the prop's panel {target}")
-        px_per_tile, want, gotg = match_grain(mt, panel_grain(face))
-        edge = "" if lo_hi_clear(px_per_tile) else "   (at the end of the range)"
+        px_per_tile, want, gotg = match_grain(mt, panel_grain(face), tall=H2)
+        edge = ("" if lo_hi_clear(px_per_tile, max(16, H2 // 10))
+                else "   (at the end of the range)")
         print(f"  grain: panel {want}, tile {gotg} at {px_per_tile}px "
               f"of a {H2}px elevation{edge}")
     except Exception as e:
