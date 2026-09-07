@@ -114,7 +114,33 @@ function hostSpan(q) {
   return best ? placeX(best) : null;
 }
 
-function anchorFor(q) {
+// WHAT A PART STANDS ON IS WHAT IT MOVES WITH. The anchor is decided per part
+// from which side of the growth cut it sits on, and an assembly that straddles
+// that cut is torn in half by it: this cabinet's coin slots took 'center' while
+// the coin door under them took 'bottom', so making the prop taller left the
+// slots floating in mid-air well above their own door. gemini put it exactly:
+// "the coin slots detach and float far above the coin door assembly". A slot is
+// part of the door, and the relation is already measured everywhere else in
+// this tool -- so a rider simply inherits, and the whole assembly travels
+// together whatever the cut says about its individual pieces.
+function hostOf(q) {
+  let best = null;
+  for (const s of man.parts) {
+    if (s.name === q.name) continue;
+    const m = 0.02;
+    if (q.u[0] < s.u[0] - m || q.u[1] > s.u[1] + m
+        || q.v[0] < s.v[0] - m || q.v[1] > s.v[1] + m) continue;
+    const a = (s.u[1] - s.u[0]) * (s.v[1] - s.v[0]);
+    const b = (q.u[1] - q.u[0]) * (q.v[1] - q.v[0]);
+    if (a <= b * 1.05) continue;              // not a host, just the same box
+    if (!best || a < (best.u[1] - best.u[0]) * (best.v[1] - best.v[0])) best = s;
+  }
+  return best;
+}
+
+function anchorFor(q, depth = 0) {
+  const host = depth < 4 ? hostOf(q) : null;
+  if (host) return anchorFor(host, depth + 1);
   if (!strips) return q.anchor;
   const g = strips.strips.find((s) => s.grow_y);
   if (!g) return q.anchor;
