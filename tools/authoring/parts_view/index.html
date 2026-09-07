@@ -611,8 +611,16 @@ function buildLoft() {
     // images of each other -- so the outward normal's sign chooses, exactly as
     // it does for front against back.
     if (Math.abs(nx) > Math.abs(nz)) {
-      return nx >= 0 ? { mi: 0, u: (v) => 1 - sideU(v.z) }
-                     : { mi: 0, u: (v) => sideU(v.z) };
+      // DERIVED, NOT GUESSED. The first version of this picked the pairing by
+      // trying one and looking, on a prop where it happened to read correctly,
+      // and the next prop showed its side art backwards. The derivation is
+      // short enough that there was never an excuse: the prop's front is +z;
+      // a camera at yaw 90 sits at +x with screen-right along -z, so the front
+      // lands on screen-LEFT; sideU is already 0 at the front, and u runs left
+      // to right. So the +x flank takes sideU as it stands and the -x flank
+      // takes its mirror.
+      return nx >= 0 ? { mi: 0, u: (v) => sideU(v.z) }
+                     : { mi: 0, u: (v) => 1 - sideU(v.z) };
     }
     if (nz >= 0) return { mi: 1, u: (v) => v.t };
     return { mi: 2, u: (v) => 1 - v.t };
