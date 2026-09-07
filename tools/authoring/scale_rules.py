@@ -163,8 +163,13 @@ def main():
     # standing on that same structure does, because they are one station. Left
     # to the model this needs a perfect list every time; measured from the
     # boxes it needs the model to be right once.
+    # at this stage a part is still a pixel box on the face; u and v are added
+    # later by layer_build, so the fractions are taken from px directly
+    SW, SH = man["size"]
+
     def box(p):
-        return p["u"][0], p["u"][1], p["v"][0], p["v"][1]
+        x0, y0, x1, y1 = p["px"]
+        return x0 / SW, x1 / SW, 1 - y1 / SH, 1 - y0 / SH
 
     def sits_on(p, s):
         pu0, pu1, pv0, pv1 = box(p)
