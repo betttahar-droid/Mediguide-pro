@@ -31,6 +31,7 @@
 //   ?box=1       fall back to the old box body, for comparison
 //   ?export=1    write the whole rig out as glTF, hierarchy and pivots intact
 //   ?wire=1      wireframe only: the geometry with no texture to hide behind
+//   ?audit=1     magenta ground, so the model's silhouette can be measured
 import * as THREE from 'three';
 import { faceQuads, spansOf } from '../part_slice.mjs';
 
@@ -46,7 +47,8 @@ const renderer = new THREE.WebGLRenderer({ antialias: false });
 renderer.setSize(1024, 1024);
 document.body.appendChild(renderer.domElement);
 const scene = new THREE.Scene();
-scene.background = new THREE.Color('#8a8a8a');
+scene.background = new THREE.Color(
+  p.get('audit') === '1' ? '#ff00ff' : '#8a8a8a');
 
 const load = async (u) => {
   const t = await new THREE.TextureLoader().loadAsync(u);

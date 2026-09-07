@@ -253,6 +253,16 @@ def build_body(d, asset):
     run([sys.executable, "tools/authoring/body_faces.py", str(d)])
     run([sys.executable, "tools/authoring/side_profile.py", str(d),
          "--asset", asset])
+    # MEASURE THE SHAPE AGAINST THE DRAWINGS, AND CORRECT WHAT IS MEASURABLE.
+    # The model claims to be the prop on the sheet, so its outline from the
+    # front, the side and above must match the three elevations. The footprint
+    # was 18% out on a cabinet and 39% on a jukebox while both looked
+    # convincing textured -- geometry_audit renders all three and divides the
+    # error out.
+    r = run([sys.executable, "tools/authoring/geometry_audit.py", str(d), "--fix"],
+            env=_env())
+    for line in (r.stdout or "").strip().splitlines()[-4:]:
+        print("   ", line.strip()[:110])
 
 
 def main():
