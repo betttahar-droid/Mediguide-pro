@@ -333,6 +333,18 @@ def main():
         # full width each time, so it hung off both sides of the cabinet.
         # Per-bay is the more specific claim, so it wins and the part keeps its
         # real size.
+        # THE PROP'S SCALE RULES ARE THE ONLY AUTHORITY ON RESIZING. Each part
+        # is also given a resize rule when it is NAMED, and that is a guess made
+        # while looking at one fitting in isolation -- the namer called a SCREEN
+        # "spanx_repeat", so a widened cabinet showed three copies of the same
+        # ship picture side by side. scale_rules decides afterwards, looking at
+        # the whole prop and what a bigger one of it actually is, and names the
+        # structure and the per-bay fittings explicitly. Anything it did not
+        # name is fixed: one of them, at its real size, wherever it was.
+        if not p.get("spans") and not p.get("per_bay") and rule != "fixed":
+            print(f"  {p['name']}: not named as structure, {rule} -> fixed")
+            rule = "fixed"
+
         # A FRAME IS STRUCTURE AND MUST WIDEN WITH THE PROP. The width guard
         # below exists to stop a 29%-wide TITLE being stretched across the
         # face, and it was doing its job -- but applied to everything it also
