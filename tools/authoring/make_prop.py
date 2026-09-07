@@ -10,9 +10,12 @@ THE WHOLE CHAIN, and who does what:
 
     Nano Banana 2   one turnaround sheet, four true elevations in one pass
     arithmetic      split it, crop the captions off, measure the object boxes
-    glm-5.3-flash   name the parts and say how each resizes
-    arithmetic      snap the boxes, cut the parts, fill the background,
-                    measure the stretch bands
+    arithmetic      measure the fittings as cells fenced in by their own
+                    borders -- never ask a model where anything is
+    glm-5.3-flash   name each measured region, and say how it resizes, how
+                    deep it sits and which edge it turns about
+    arithmetic      cut the parts, fill the background, measure the stretch
+                    bands, per part as well as for the whole face
     the renderer    background nine-sliced with its middle REPEATED, parts
                     anchored at real size
     glm-5.3-flash   look at the result and say what is wrong with it
@@ -77,20 +80,31 @@ Rules available:
                   title, not three)
   "spany_repeat" / "spany_center"  the same for the vertical axis
 
-JUDGE IT AGAINST THE RIGHT BAR. This is a late-1990s PlayStation-era game
-prop, not a hero asset: low polygon count, small low-resolution textures,
-visible texels. Grade every fault "blocking" or "minor".
+JUDGE IT AS A TOP STUDIO WOULD. You are the art lead on a shipping title at a
+studio whose props get held up as reference work, and this asset is in final
+review with your studio's name going on it. Not "good enough for the era" --
+low poly and small textures are the STYLE, not an excuse. A 1998 prop made by
+a great team had clean silhouettes, no seams you could point at, and every
+fitting sitting where it belongs. That is the bar.
 
-  blocking  a part missing, in the wrong place, duplicated, obscuring another
-            part, or plainly the wrong size; the prop not reading as a
-            {asset} at all
-  minor     a faint tiling seam, slight repetition in a grime or grain
-            pattern, a soft edge, small texel crunch, mild banding in a flat
-            panel -- ALL NORMAL at this fidelity and NOT worth a round
+REJECT the asset for any of these. All of them are "blocking":
 
-Set looks_good TRUE when nothing is blocking, even if minor faults remain. A
-prop with two faint seams in its side panel is a finished PS1 prop. Do not
-withhold a pass for imperfection; withhold it only for something broken.
+  - a tiling seam, repeat, smear, stretch or band a player could point at
+  - a part floating clear of the body, sunk into it, or overlapping another
+  - a door, flap or lid hinging THROUGH the body instead of out of it
+  - a face left untextured, flat-coloured, holed, or showing background
+    through the prop
+  - text or a decal that is cut, doubled, stretched or unreadable
+  - a part duplicated, mirrored the wrong way, or on the wrong face
+  - geometry that does not read as the object: wrong proportions, missing
+    bulk, a silhouette with a notch or a step that should not be there
+  - anything that looks like a bug rather than a decision
+
+"minor" is reserved for TASTE -- a colour you would push warmer, grime you
+would add, a detail you would sharpen. If a player could point at it and call
+it broken, it is blocking, however small.
+
+Set looks_good TRUE only when you would sign this off and ship it.
 
 Then give a PATCH: only parts whose rule, anchor, depth or motion should
 change, or that should be dropped because they are not really a part. Change
@@ -202,20 +216,18 @@ def main():
     if not (d / "front.png").exists():
         raise SystemExit("no front.png -- the sheet did not split into views")
 
-    print("[2] naming parts ...", flush=True)
-    r = run([sys.executable, "tools/authoring/identify_parts.py", str(d), "--face", "front"])
-    if not (d / "parts_front.json").exists():
-        raise SystemExit("identify_parts produced nothing")
-    print("   ", (r.stdout or "").strip().splitlines()[0][:120])
-
-    print("[3] mechanics (depth and pivots) ...", flush=True)
-    r = run([sys.executable, "tools/authoring/add_mechanics.py", str(d),
+    print("[2] measuring regions, naming parts ...", flush=True)
+    r = run([sys.executable, "tools/authoring/region_parts.py", str(d),
              "--face", "front", "--asset", args.asset])
-    print("   ", (r.stdout or "").strip().splitlines()[0][:120] if r.stdout else "")
+    if not (d / "parts_front.json").exists():
+        raise SystemExit("region_parts produced nothing")
+    for line in (r.stdout or "").strip().splitlines()[:14]:
+        print("   ", line[:120])
 
-    print("[4] body: side, back, top and the profile ...", flush=True)
+    print("[3] body: side, back, top and the profile ...", flush=True)
     build_body(d, args.asset)
 
+    outstanding = []
     rebuild(d)
     # A STAGE THAT FAILED MUST SAY SO HERE, NOT SIX FRAMES DOWN. layer_build
     # crashing left no layers_front.json, and the loop went on to render it and
@@ -318,7 +330,13 @@ def main():
                     changed += 1
             keep.append(p)
         if not changed and not bg_changed:
-            print("  no actionable corrections -- stopping")
+            # THE BAR IS NOW HIGHER THAN THE LEVERS. Judged as a shipping
+            # asset, the faults that remain are mostly ones no resize rule can
+            # fix -- a seam, a silhouette notch, a smear. Say exactly what they
+            # are and stop, rather than spending rounds re-rendering the same
+            # picture: this list is the work queue for the TOOL, not the loop.
+            outstanding = blocking
+            print("  no lever for what is left -- stopping")
             break
         pm["parts"] = keep
         (d / "parts_front.json").write_text(json.dumps(pm, indent=1))
@@ -335,6 +353,11 @@ def main():
         if "gltf" in line:
             print("   ", line.strip()[:140])
 
+    if outstanding:
+        print(f"\n{len(outstanding)} blocking fault(s) the loop could not fix "
+              f"-- these need the tool changed, not the prop:")
+        for f in outstanding:
+            print(f"  * {f.get('part')}: {f.get('fault')}")
     print(f"\ndone: {d}")
 
 

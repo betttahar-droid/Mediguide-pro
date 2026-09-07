@@ -266,14 +266,36 @@ def main():
     kit = d / "parts"
     kit.mkdir(exist_ok=True)
     out = []
+    # EVERY PART GETS ITS OWN NINE-SLICE. A part that spans the face was being
+    # scaled as a plain quad, so a wider prop stretched its artwork -- the very
+    # thing AdaptivePropBase calls a CRITICAL failure, applied to parts instead
+    # of to the body. The bands are measured from the part's own crop by the
+    # same scan that measures the background's, so the renderer can hold its
+    # ends at real size and repeat only what is uniform.
+    from nine_slice import bands as _bands
     for p in man["parts"]:
         x0, y0, x1, y1 = p["px"]
         crop = ob.crop((x0, y0, x1, y1))
         crop.save(kit / f"{p['name']}.png")
+        try:
+            # STRICTER THAN THE BACKGROUND'S. The default scan calls the most
+            # uniform third of an axis stretchable, which on a whole elevation
+            # is panel but on a 220px marquee is the gap between two letters:
+            # it returned h=[0.80,0.97], a band sitting ON the final E, and
+            # stretching it smeared the letter across the sign. At quantile
+            # 0.20 with a 15% minimum the marquee correctly reports NO band --
+            # there is nowhere on it that can grow -- while the control deck,
+            # the trim rails and the delivery flap keep theirs.
+            b = _bands(kit / f"{p['name']}.png", quantile=0.20, min_frac=0.15)
+        except Exception:
+            b = None
         out.append({
             "name": p["name"], "image": f"parts/{p['name']}.png",
             "resize": p["resize"], "anchor": p["anchor"],
             "depth": p.get("depth", "proud"), "motion": p.get("motion", "none"),
+            # where THIS part may repeat, in its own 0..1 box
+            "bands": {"h": (b or {}).get("h"), "v": (b or {}).get("v")},
+            "px_size": [x1 - x0, y1 - y0],
             # fractions of the ORIGINAL face; the renderer turns these into
             # world units that do not change when the prop resizes
             "u": [round(x0 / W, 5), round(x1 / W, 5)],

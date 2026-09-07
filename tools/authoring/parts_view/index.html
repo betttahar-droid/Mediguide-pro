@@ -224,6 +224,95 @@ bodyMesh.name = 'body';
 bodyMesh.userData = { depth: BODY_D, profile: !!profile };
 scene.add(bodyMesh);
 
+// --- a part, textured on every face, and adaptive on every face -------------
+// TWO FAULTS, ONE CAUSE. A part was a BoxGeometry with its texture on the
+// front and a flat averaged colour on the other five, scaled bodily to its
+// resized width. So its rim was untextured -- visible the moment the prop is
+// turned, which is the whole reason for building it in parts -- and a part
+// that spans the face SMEARED, which is precisely the failure
+// AdaptivePropBase calls critical, committed on the parts instead of the body.
+//
+// Both go away by building the part rather than scaling a primitive.
+//
+//   THE FACE is nine-sliced from the part's OWN measured bands, so its ends
+//   hold their real size and only the uniform middle repeats. A wider control
+//   deck gets more button clusters; a wider marquee gets more rail, not
+//   wider letters.
+//
+//   THE RIM is not a colour and needs no texture of its own. An extruded
+//   silhouette continues the pixel it was cut at, so the top rim samples the
+//   texture's top ROW, the left rim its left COLUMN, and so on -- clamp one UV
+//   axis to the border and let the other run. The bevel then varies along the
+//   part exactly as its outline does, for free, from the texture already
+//   loaded. A flat average could never do that: it is one colour for a rim
+//   that is a different colour at every point along it.
+function partGeometry(q, w, h, d) {
+  const pos = [], uv = [];
+  const quad = (P, U) => {
+    pos.push(...P[0], ...P[1], ...P[2], ...P[0], ...P[2], ...P[3]);
+    uv.push(...U[0], ...U[1], ...U[2], ...U[0], ...U[2], ...U[3]);
+  };
+  const X = w / 2, Y = h / 2, Z = d / 2;
+  const R = q.resize || 'fixed';
+  // only an axis this part actually spans may repeat; a fixed part keeps one
+  // piece whatever its bands say, because nothing is asking it to grow
+  const bh = R.startsWith('spanx') ? (q.bands?.h ?? null) : null;
+  const bv = R.startsWith('spany') ? (q.bands?.v ?? null) : null;
+  const spans = { x: R.startsWith('spanx') && !!bh, y: R.startsWith('spany') && !!bv };
+  const [a0, a1] = bh ?? [0.5, 0.5];
+  const [c0, c1] = bv ?? [0.5, 0.5];
+  // the part's ORIGINAL size on the face: caps must keep that, not scale
+  const ow = (q.u[1] - q.u[0]) * A, oh = q.v[1] - q.v[0];
+  const capL = a0 * ow, capR = (1 - a1) * ow;
+  const capB = c0 * oh, capT = (1 - c1) * oh;
+  const xs = [-X, Math.min(0, -X + capL), Math.max(0, X - capR), X];
+  const ys = [-Y, Math.min(0, -Y + capB), Math.max(0, Y - capT), Y];
+  const us = [0, a0, a1, 1], vs = [0, c0, c1, 1];
+  const unitW = Math.max(1e-4, (a1 - a0) * ow);
+  const unitH = Math.max(1e-4, (c1 - c0) * oh);
+  // REPEAT MEANS REPEAT; CENTER MEANS ONE. The two span rules differ only
+  // here, and treating them alike put "ARCADE" on the marquee followed by two
+  // clipped copies of its own last letters. A "_center" part holds a single
+  // middle and lets that uniform band take up the slack -- which is safe
+  // precisely because the band was measured as uniform; a "_repeat" part
+  // instances it, so a wider deck gets more button clusters.
+  const nx = (bh && R === 'spanx_repeat')
+    ? Math.max(1, Math.round((xs[2] - xs[1]) / unitW)) : 1;
+  const ny = (bv && R === 'spany_repeat')
+    ? Math.max(1, Math.round((ys[2] - ys[1]) / unitH)) : 1;
+
+  for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) {
+    const cx = i === 1 ? nx : 1, cy = j === 1 ? ny : 1;
+    for (let m = 0; m < cx; m++) for (let n = 0; n < cy; n++) {
+      const x0 = xs[i] + (xs[i + 1] - xs[i]) * m / cx;
+      const x1 = xs[i] + (xs[i + 1] - xs[i]) * (m + 1) / cx;
+      const y0 = ys[j] + (ys[j + 1] - ys[j]) * n / cy;
+      const y1 = ys[j] + (ys[j + 1] - ys[j]) * (n + 1) / cy;
+      const [u0, u1, v0, v1] = [us[i], us[i + 1], vs[j], vs[j + 1]];
+      quad([[x0, y0, Z], [x1, y0, Z], [x1, y1, Z], [x0, y1, Z]],
+           [[u0, v0], [u1, v0], [u1, v1], [u0, v1]]);
+      // the back face, for a part swung open on a hinge -- same art, mirrored,
+      // so the inside of a coin door is the door and not a hole
+      quad([[x1, y0, -Z], [x0, y0, -Z], [x0, y1, -Z], [x1, y1, -Z]],
+           [[u1, v0], [u0, v0], [u0, v1], [u1, v1]]);
+    }
+  }
+  // the four rims, each clamped to the border it was cut from
+  quad([[-X, Y, Z], [X, Y, Z], [X, Y, -Z], [-X, Y, -Z]],
+       [[0, 1], [1, 1], [1, 1], [0, 1]]);                    // top row
+  quad([[X, -Y, Z], [-X, -Y, Z], [-X, -Y, -Z], [X, -Y, -Z]],
+       [[1, 0], [0, 0], [0, 0], [1, 0]]);                    // bottom row
+  quad([[-X, -Y, Z], [-X, Y, Z], [-X, Y, -Z], [-X, -Y, -Z]],
+       [[0, 0], [0, 1], [0, 1], [0, 0]]);                    // left column
+  quad([[X, Y, Z], [X, -Y, Z], [X, -Y, -Z], [X, Y, -Z]],
+       [[1, 1], [1, 0], [1, 0], [1, 1]]);                    // right column
+
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
+  return g;
+}
+
 // --- parts ----------------------------------------------------------------
 const movers = [];
 for (const q of man.parts) {
@@ -231,8 +320,16 @@ for (const q of man.parts) {
   const tex = await load(`${dir}/${q.image}`);
   const ow = (q.u[1] - q.u[0]) * A, oh = q.v[1] - q.v[0];
   const R = q.resize || 'fixed';
-  const w = R.startsWith('spanx') ? FW : ow;
-  const h = R.startsWith('spany') ? FH : oh;
+  // A PART WITH NOTHING UNIFORM ON ITS SPAN AXIS MUST NOT SPAN. Told to run
+  // the full width with no band to absorb the difference, the only thing left
+  // to give is the artwork, and a marquee reading ARCADE came out with its
+  // last letter stretched half the length of the sign. Holding its real size
+  // and centring it is the honest answer: the source art says this part does
+  // not grow, and inventing pixels to make it grow is worse than not growing.
+  const canX = R.startsWith('spanx') && !!(q.bands && q.bands.h);
+  const canY = R.startsWith('spany') && !!(q.bands && q.bands.v);
+  const w = canX ? FW : ow;
+  const h = canY ? FH : oh;
   // STAND-OFF IS RELATIVE TO THE PART, NOT THE PROP. "deep" as a flat 5.5% of
   // the cabinet's height turns a coin slot into a tower, and the judge read
   // exactly that: "a small brown box floats clear off the front face". A part
@@ -243,38 +340,19 @@ for (const q of man.parts) {
                                      (CAP[cls] ?? 0.45) * Math.min(w, h)));
   const recessed = (cls === 'recessed');
 
-  // EDGES TAKE THE PART'S OWN COLOUR. A fixed brown for every part's sides is
-  // what made them read as foreign objects bolted on -- three separate faults
-  // in one run called them "a loose brown box", "a plain brown slab", "a small
-  // brown box floats clear", on a blue vending machine. Averaging the part's
-  // own texture and darkening it gives the edge a believable shaded bevel and
-  // keeps the part looking like part of the prop.
-  const edge = new THREE.Color(0x584a3d);
-  try {
-    const c = document.createElement('canvas');
-    c.width = c.height = 1;
-    const cx2 = c.getContext('2d', { willReadFrequently: true });
-    cx2.drawImage(tex.image, 0, 0, 1, 1);
-    const [r8, g8, b8] = cx2.getImageData(0, 0, 1, 1).data;
-    edge.setRGB((r8 / 255) ** 2.2, (g8 / 255) ** 2.2, (b8 / 255) ** 2.2);
-    edge.multiplyScalar(0.72);          // a lit edge is darker than the face
-  } catch { /* keep the fallback */ }
-
-  // a real box, textured on its front face, edges shaded from that texture
-  const geo = new THREE.BoxGeometry(w, h, d);
-  const mats = [0, 1, 2, 3, 4, 5].map((i) => new THREE.MeshBasicMaterial(
-    i === 4 ? { map: tex } : { color: edge }));
-  const mesh = new THREE.Mesh(geo, mats);
+  const geo = partGeometry(q, w, h, d);
+  const mesh = new THREE.Mesh(geo, new THREE.MeshBasicMaterial(
+    { map: tex, transparent: true, alphaTest: 0.5 }));
 
   // position on the face, from the same anchor arithmetic as layer_view
   const dTop = 1 - q.v[1], dBot = q.v[0];
   const cx = ((q.u[0] + q.u[1]) / 2 - 0.5) * A;
   let x, y;
-  if (R.startsWith('spanx')) x = 0;
+  if (canX) x = 0;
   else if (Math.abs(cx) < 0.05 * A) x = 0;
   else if (cx < 0) x = -FW / 2 + q.u[0] * A + w / 2;
   else x = FW / 2 - (1 - q.u[1]) * A - w / 2;
-  if (R.startsWith('spany')) y = 0;
+  if (canY) y = 0;
   else if (q.anchor === 'bottom') y = -FH / 2 + dBot + h / 2;
   else y = FH / 2 - dTop - h / 2;
   // MOUNT ON THE SURFACE, NOT ON A PLANE. With a shaped body the front is at a
