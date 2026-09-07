@@ -49,9 +49,17 @@ MOTIONS = {"none", "hinge_left", "hinge_right", "hinge_top", "hinge_bottom",
 
 JUDGE = """IMAGE 1 is the reference front elevation of a {asset}.
 IMAGE 2 is the 3D model at its ORIGINAL size -- it should match image 1 closely.
-IMAGE 3 is the same model made TWICE AS WIDE, and IMAGE 4 twice as tall. Those
-two SHOULD be bigger; judge only whether they still look like a well-made
-{asset}, not whether they differ in size.
+IMAGE 3 is the same model at {wx}x its width, and IMAGE 4 at {hx}x its height.
+They SHOULD be bigger -- do not fault them for that. Judge them against what
+resizing this prop is supposed to MEAN, which the tool worked out from the
+elevation itself:
+
+  WIDER  {wider}
+  TALLER {taller}
+
+That is the bar for images 3 and 4. A wider prop that merely has more blank
+panel where those things should be is WRONG even if nothing is smeared or
+seamed -- it does not make sense as the object. Say so as a blocking fault.
 
 IMAGE 5 is the finished prop as SOLID GEOMETRY, turned to three-quarters and
 with every moving part driven open, so you can see it as an object rather than
@@ -227,7 +235,13 @@ def main():
     for line in (r.stdout or "").strip().splitlines()[:14]:
         print("   ", line[:120])
 
-    print("[3] body: side, back, top and the profile ...", flush=True)
+    print("[3] what resizing this prop means ...", flush=True)
+    r = run([sys.executable, "tools/authoring/scale_rules.py", str(d),
+             "--face", "front", "--asset", args.asset])
+    for line in (r.stdout or "").strip().splitlines()[:3]:
+        print("   ", line[:150])
+
+    print("[4] body: side, back, top and the profile ...", flush=True)
     build_body(d, args.asset)
 
     outstanding = []
@@ -241,7 +255,18 @@ def main():
                          f"-- see the '!' lines above")
     best = None
     for rnd in range(args.rounds):
-        shots = render(d, d / f"r{rnd}", [(1, 1), (2, 1), (1, 1.8)])
+        try:
+            sr = json.loads((d / "scale_rules.json").read_text())
+        except Exception:
+            sr = {"max_wider": 2.0, "max_taller": 1.8,
+                  "wider_means": "a wider one of the same thing",
+                  "taller_means": "more body, same fittings", "per_bay": []}
+        # THE PROP DECIDES HOW FAR IT GOES. Rendering every prop at 2x wide
+        # proved nothing about a jukebox, which is not a thing that comes in
+        # double width; judging it there was judging it against the wrong
+        # question.
+        shots = render(d, d / f"r{rnd}",
+                       [(1, 1), (sr["max_wider"], 1), (1, sr["max_taller"])])
         if not all(shots):
             raise SystemExit("render failed -- is the dev server up on 5173?")
         solid = render_solid(d, d / f"r{rnd}")
@@ -251,7 +276,10 @@ def main():
             f"{p.get('depth','proud')}, motion {p.get('motion','none')}"
             for p in man["parts"])
         content = [{"type": "text",
-                    "text": JUDGE.format(asset=args.asset, parts=listing)}]
+                    "text": JUDGE.format(asset=args.asset, parts=listing,
+                                         wider=sr["wider_means"],
+                                         taller=sr["taller_means"],
+                                         wx=sr["max_wider"], hx=sr["max_taller"])}]
         for img in [d / "front.png", *shots, *( [solid] if solid else [] )]:
             content.append({"type": "image_url",
                             "image_url": {"url": data_uri(img)}})

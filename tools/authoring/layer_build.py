@@ -307,6 +307,7 @@ def main():
             "name": p["name"], "image": f"parts/{p['name']}.png",
             "resize": rule, "anchor": p["anchor"],
             "depth": p.get("depth", "proud"), "motion": p.get("motion", "none"),
+            "per_bay": bool(p.get("per_bay")),
             # where THIS part may repeat, in its own 0..1 box
             "bands": {"h": (b or {}).get("h"), "v": (b or {}).get("v")},
             "px_size": [x1 - x0, y1 - y0],

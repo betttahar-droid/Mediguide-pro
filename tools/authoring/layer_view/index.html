@@ -341,10 +341,22 @@ for (const q of man.parts) {
   else if (q.anchor === 'bottom') y = -FH / 2 + dBot + h / 2;
   else y = FH / 2 - dTop - h / 2;                                // default: hangs from the top
 
-  const m = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ map: tex }));
-  m.position.set(x, y, z);
-  z += 0.0005;                       // stable order, no z-fighting
-  scene.add(m);
+  // ONE PER BAY. The prop's own width is the unit, so a cabinet made twice as
+  // wide is two bays and anything the tool marked per_bay appears in each of
+  // them at the same place within it. That is what makes a widened arcade
+  // cabinet a TWO-PLAYER cabinet rather than a one-player cabinet with a lot of
+  // spare panel -- and it is why the rule has to be decided per prop: the same
+  // arithmetic on a jukebox would give it two turntables.
+  const bays = q.per_bay ? Math.max(1, Math.round(FW / A)) : 1;
+  const mat = new THREE.MeshBasicMaterial({ map: tex });
+  const bayW = FW / bays;
+  const ox = ((q.u[0] + q.u[1]) / 2 - 0.5) * A;   // its place within one bay
+  for (let b = 0; b < bays; b++) {
+    const m = new THREE.Mesh(geo, mat);
+    m.position.set(bays > 1 ? -FW / 2 + bayW * (b + 0.5) + ox : x, y, z);
+    z += 0.0005;                     // stable order, no z-fighting
+    scene.add(m);
+  }
 }
 
 // A FIXED CAMERA, OR THE SIZES ARE NOT COMPARABLE. Framing each render to

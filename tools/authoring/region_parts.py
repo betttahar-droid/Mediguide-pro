@@ -47,6 +47,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools" / "authoring"))
 from auto_prop import glm, as_json, data_uri, _openrouter_key, CRITIC_MODEL  # noqa: E402
 from identify_parts import object_crop, edge_energy, snap  # noqa: E402
+from collections import Counter as _Counter  # noqa: E402
 from layer_build import silhouette  # noqa: E402
 
 ASK = """This is the front elevation of a {asset}. Every region the tool
@@ -134,6 +135,77 @@ def cells(ob, quantile=0.80, floor=40.0):
     return [[inside[x][y] and not wall[x][y] for y in range(H)] for x in range(W)]
 
 
+def panel_colour(ob, cellmask):
+    """The prop's material, taken from the largest flat cell.
+
+    Taking the modal colour of the whole face gave (48,48,48) -- an arcade
+    cabinet's dark trim, of which there is a great deal -- and everything was
+    then "not panel". The biggest area fenced in by edges IS the panel by
+    construction, whatever colour the rest of the prop happens to be.
+    """
+    W, H = ob.size
+    px = ob.convert("RGB").load()
+    comps = components(cellmask, W, H, min_px=int(0.001 * W * H))
+    if not comps:
+        return (128, 128, 128)
+    big = max(comps, key=lambda b: b[4])
+    t = _Counter()
+    for x in range(big[0], big[2]):
+        for y in range(big[1], big[3]):
+            if cellmask[x][y]:
+                t[px[x, y]] += 1
+    return t.most_common(1)[0][0] if t else (128, 128, 128)
+
+
+def not_panel(ob, panel, tol=55):
+    """Everything that is not the material: the artwork, in one mask.
+
+    cells() finds flat areas FENCED IN by edges, which is the right question
+    for a screen or a coin door and the wrong one for a painted marquee: busy
+    artwork is all wall and never becomes a cell at all. So the arcade
+    cabinet's ARCADE banner and its side art were never regions, stayed in the
+    background, and duplicated every time the prop was widened -- the single
+    fault that survived six rounds of judging.
+
+    A decal is simply anything that is not the panel colour. The two questions
+    together cover the face: flat fittings from one, painted artwork from the
+    other.
+    """
+    W, H = ob.size
+    px = ob.convert("RGB").load()
+    inside = silhouette(ob, erode=0)
+    m = [[inside[x][y]
+          and sum(abs(a - b) for a, b in zip(px[x, y], panel)) > tol
+          for y in range(H)] for x in range(W)]
+
+    # OPEN IT, OR IT IS ALL ONE BLOB. A prop's trim lines are not the panel
+    # colour either, and they run everywhere -- so the mask came back as a
+    # single component spanning the whole cabinet, which the size cap then
+    # discarded, and the marquee went straight back into the background it had
+    # to come out of. Eroding by two pixels severs lines a few pixels wide and
+    # leaves solid artwork untouched; dilating restores what survived.
+    def grow(src, r, want):
+        out = [[False] * H for _ in range(W)]
+        for x in range(W):
+            for y in range(H):
+                if src[x][y] != want:
+                    continue
+                for dx in range(-r, r + 1):
+                    xx = x + dx
+                    if xx < 0 or xx >= W:
+                        continue
+                    for dy in range(-r, r + 1):
+                        yy = y + dy
+                        if 0 <= yy < H:
+                            out[xx][yy] = True
+        return out
+
+    holes = grow(m, 2, False)                       # erode = grow the gaps
+    eroded = [[m[x][y] and not holes[x][y] for y in range(H)] for x in range(W)]
+    back = grow(eroded, 2, True)
+    return [[m[x][y] and back[x][y] for y in range(H)] for x in range(W)]
+
+
 def components(mask, W, H, min_px):
     """Connected components, as bounding boxes."""
     seen = [[False] * H for _ in range(W)]
@@ -191,7 +263,22 @@ def main():
     ob = object_crop(d / f"{args.face}.png")
     W, H = ob.size
 
-    boxes = components(cells(ob), W, H, min_px=int(0.0025 * W * H))
+    cellmask = cells(ob)
+    panel = panel_colour(ob, cellmask)
+    art = components(not_panel(ob, panel), W, H, min_px=int(0.0004 * W * H))
+    boxes = components(cellmask, W, H, min_px=int(0.0006 * W * H)) + list(art)
+    # DECALS ARE EXTRACTED INDEPENDENTLY OF THE FITTING PIPELINE. The merge and
+    # drop rules exist to stop one large fitting measuring as two boxes, and
+    # every version of them ate the marquee: it is a big region, something
+    # always contains it, and it went back into the background where widening
+    # duplicated it. What must come off the face cannot depend on rules whose
+    # job is to combine things. Every not-panel cluster is a decal unless a
+    # named fitting already draws it.
+    art = [b for b in art
+           if (b[2] - b[0]) * (b[3] - b[1]) < 0.60 * W * H
+           and (b[2] - b[0]) >= 4 and (b[3] - b[1]) >= 4]
+    print(f"  panel colour {panel}, {len(boxes)} candidates, "
+          f"{len(art)} of them artwork")
     # a region covering half the face is the cabinet, not a fitting on it
     boxes = [b for b in boxes
              if (b[2] - b[0]) * (b[3] - b[1]) < 0.45 * W * H
@@ -210,6 +297,16 @@ def main():
             return 0.0
         small = min((a[2] - a[0]) * (a[3] - a[1]), (b[2] - b[0]) * (b[3] - b[1]))
         return w * h / max(1, small)
+
+    # GROUPING AND MERGING ARE FOR FITTINGS, NOT FOR DECALS. Both rules exist
+    # to stop one large object measuring as two boxes that then drift apart.
+    # Applied to every speck they did the opposite: 28 usable regions collapsed
+    # to 7, and the details that had to come OFF the background were folded
+    # back into the big shapes and left painted on. Small regions are set aside
+    # here and rejoin untouched afterwards.
+    SMALL = 0.01 * W * H
+    small = [b for b in boxes if (b[2] - b[0]) * (b[3] - b[1]) < SMALL]
+    boxes = [b for b in boxes if (b[2] - b[0]) * (b[3] - b[1]) >= SMALL]
 
     # A WORD IS NOT ITS LETTERS. Cells are disjoint by construction, so a
     # title splits into separate blobs and only some of them land inside the
@@ -272,9 +369,39 @@ def main():
             if merged:
                 break
 
+    # EVERY DETAIL COMES OFF THE FACE, NOT JUST THE ONES WORTH NAMING.
+    #
+    # The background is what kept failing: enlarge a prop and whatever detail is
+    # still painted into it has to either duplicate or smear, and there is no
+    # third option. Six rounds of judging said so in the same words every time
+    # -- "the marquee artwork tiles through the fixed parts", "a flat dark slab
+    # with no texture detail". Every fix moved the fault, none removed it.
+    #
+    # It cannot be removed while the background carries artwork. So take the
+    # artwork out. Everything the edge scan finds becomes a DECAL held at its
+    # real size against its nearest edge, and what is left behind is panel and
+    # nothing else -- pure material, which grows by tiling with nothing in it to
+    # duplicate. A label does not stretch when the cabinet does; it stays the
+    # size it was printed and sits where it was stuck. That is what a decal IS.
+    #
+    # Only the largest regions are worth a name and a mechanism. The rest do not
+    # need one: they need lifting off the background, an anchor, and their real
+    # size, and all three are measurable.
+    # a small region swallowed by a fitting is already drawn by it
+    def inside_any(b, big):
+        for a in big:
+            w = min(a[2], b[2]) - max(a[0], b[0])
+            h = min(a[3], b[3]) - max(a[1], b[1])
+            if w > 0 and h > 0 and \
+                    w * h >= 0.7 * (b[2] - b[0]) * (b[3] - b[1]):
+                return True
+        return False
+
     boxes.sort(key=lambda b: -b[4])
-    boxes = boxes[:args.max_parts]
-    boxes.sort(key=lambda b: (b[1], b[0]))          # reading order
+    named = boxes[:args.max_parts]
+    extra = [b for b in art if not inside_any(b, named)]
+    named.sort(key=lambda b: (b[1], b[0]))          # reading order
+    boxes = named
     if not boxes:
         raise SystemExit("no regions found -- the elevation reads as all panel")
 
@@ -346,6 +473,22 @@ def main():
             lead = min(band, key=lambda q: q["px"][0])["anchor"]
             if lead in ("left", "right", "center") and o["anchor"] != lead:
                 o["anchor"] = lead
+
+    # the unnamed remainder: decals, anchored to whichever edge they sit nearest
+    for k, b in enumerate(extra, 1):
+        cx = (b[0] + b[2]) / 2 / W
+        cy = (b[1] + b[3]) / 2 / H
+        out.append({
+            "name": f"decal_{k}", "px": [b[0], b[1], b[2], b[3]],
+            "resize": "fixed",
+            # the nearer edge holds it: a sticker low on a cabinet stays low
+            # when the cabinet grows taller, and one high stays under the rail
+            "anchor": "bottom" if cy > 0.5 else "top",
+            # flush, because a decal is printed on rather than bolted to
+            "depth": "flush", "motion": "none",
+        })
+    if extra:
+        print(f"  + {len(extra)} unnamed decals lifted off the background")
 
     (d / f"parts_{args.face}.json").write_text(
         json.dumps({"face": args.face, "size": [W, H], "parts": out}, indent=1))
