@@ -36,6 +36,40 @@ from identify_parts import object_crop
 PANEL_PATCH = {}
 
 
+def silhouette(ob, erode=3):
+    """Which pixels are the PROP, as opposed to sheet behind it.
+
+    object_crop returns a bounding box, and a prop is not a rectangle -- a
+    jukebox has a domed top, a cabinet a sloped deck. The sheet showing through
+    those corners is inside the crop, is covered by no part, and was therefore
+    a candidate for "clean panel". On the jukebox it won: the chosen patch
+    measured RGB(187,186,182), which is the sheet, so every hole in the
+    background was filled with white and the judge reported "a blank whitish
+    wash instead of the wood-grain side panels" for four rounds running.
+
+    Eroding the mask drops the outline pixels too, which are trim rather than
+    panel and would otherwise streak the tile.
+    """
+    W, H = ob.size
+    px = ob.load()
+    corners = [px[0, 0], px[W - 1, 0], px[0, H - 1], px[W - 1, H - 1]]
+    from collections import Counter as _C
+    bg = _C(corners).most_common(1)[0][0]
+    inside = [[sum(abs(a - b) for a, b in zip(px[x, y], bg)) >= 40
+               for y in range(H)] for x in range(W)]
+    for _ in range(erode):
+        prev = [col[:] for col in inside]
+        for x in range(W):
+            for y in range(H):
+                if not prev[x][y]:
+                    continue
+                if (x == 0 or y == 0 or x == W - 1 or y == H - 1
+                        or not (prev[x - 1][y] and prev[x + 1][y]
+                                and prev[x][y - 1] and prev[x][y + 1])):
+                    inside[x][y] = False
+    return inside
+
+
 def fill_from_panel(ob, boxes):
     """Paint out the parts using panel taken from directly above or below.
 
@@ -58,17 +92,25 @@ def fill_from_panel(ob, boxes):
     # top and hid it; the moment the background stretched, those fills came
     # out as black rectangles across the cabinet. Only rows that actually look
     # like the panel may be copied from.
+    # AND THEY MUST BE INSIDE THE PROP. See silhouette(): the sheet showing
+    # through a domed top is uncovered too, and on the jukebox it was the modal
+    # colour, so "panel" resolved to white.
+    inside = silhouette(ob)
+    solid = silhouette(ob, erode=0)      # unroded: what to PAINT, vs what to copy FROM
     from collections import Counter as _C
     tally = _C()
     for x in range(0, W, 2):
         for y in range(0, H, 2):
-            if not covered[x][y]:
+            if not covered[x][y] and inside[x][y]:
                 tally[src[x, y]] += 1
     base = tally.most_common(1)[0][0] if tally else (128, 128, 128)
     tol = 70
 
     def is_panel(c):
         return sum(abs(a - b) for a, b in zip(c, base)) < tol
+
+    def usable(x, y):
+        return not covered[x][y] and inside[x][y] and is_panel(src[x, y])
 
     # FILL FROM A CLEAN PATCH, NOT FROM THE NEAREST ROW. Copying a hole's own
     # column meant the screen's coloured border was the nearest "panel" pixel
@@ -79,28 +121,37 @@ def fill_from_panel(ob, boxes):
     #
     # Take one rectangle that is genuinely panel and tile it, mirrored, over
     # every hole. A patch of panel always looks like panel.
-    best, bw, bh = None, 0, 0
+    #
+    # SCORE BY SHAPE, NOT BY AREA ALONE. seamless_tile.py resamples whatever it
+    # is given to a square, so the widest rectangle is not the best one: the
+    # jukebox's 191x19 sliver became a 96x96 tile at a 10:1 stretch, which is a
+    # smear before it is even repeated. Penalising elongation by the aspect
+    # ratio makes a chunky patch beat a wide thin one of the same area.
+    best, bw, bh, bscore = None, 0, 0, 0.0
     for y0 in range(0, H, 4):
         for x0 in range(0, W, 4):
-            if covered[x0][y0] or not is_panel(src[x0, y0]):
+            if not usable(x0, y0):
                 continue
             x1 = x0
-            while x1 + 1 < W and not covered[x1 + 1][y0] and is_panel(src[x1 + 1, y0]):
+            while x1 + 1 < W and usable(x1 + 1, y0):
                 x1 += 1
             y1 = y0
-            while y1 + 1 < H and all(not covered[x][y1 + 1] and is_panel(src[x, y1 + 1])
+            while y1 + 1 < H and all(usable(x, y1 + 1)
                                      for x in range(x0, x1 + 1, 3)):
                 y1 += 1
-            if (x1 - x0) * (y1 - y0) > bw * bh:
-                best, bw, bh = (x0, y0), x1 - x0 + 1, y1 - y0 + 1
+            w, h = x1 - x0 + 1, y1 - y0 + 1
+            score = w * h * (min(w, h) / max(w, h))
+            if score > bscore:
+                best, bw, bh, bscore = (x0, y0), w, h, score
     if best is None:
         return out
     ox, oy = best
     PANEL_PATCH["patch"] = [ox, oy, bw, bh]   # where the clean panel was found
     for x in range(W):
         for y in range(H):
-            if not covered[x][y]:
-                continue           # only the holes; trim outside them is real
+            if not covered[x][y] or not solid[x][y]:
+                continue    # only holes, and only inside the prop -- a part box
+                            # that overhangs the silhouette must not grow it
             u, v = x % (2 * bw), y % (2 * bh)
             u = u if u < bw else 2 * bw - 1 - u        # mirror so joins reflect
             v = v if v < bh else 2 * bh - 1 - v
@@ -137,6 +188,7 @@ def main():
         out.append({
             "name": p["name"], "image": f"parts/{p['name']}.png",
             "resize": p["resize"], "anchor": p["anchor"],
+            "depth": p.get("depth", "proud"), "motion": p.get("motion", "none"),
             # fractions of the ORIGINAL face; the renderer turns these into
             # world units that do not change when the prop resizes
             "u": [round(x0 / W, 5), round(x1 / W, 5)],

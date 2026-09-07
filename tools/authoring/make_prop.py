@@ -40,6 +40,9 @@ from auto_prop import glm, as_json, data_uri, _openrouter_key, CRITIC_MODEL  # n
 
 RESIZES = {"fixed", "spanx_repeat", "spanx_center", "spany_repeat", "spany_center"}
 ANCHORS = {"top", "bottom", "left", "right", "center"}
+DEPTHS = {"flush", "proud", "deep", "recessed"}
+MOTIONS = {"none", "hinge_left", "hinge_right", "hinge_top", "hinge_bottom",
+           "press", "stick", "slide_x", "slide_y"}
 
 JUDGE = """IMAGE 1 is the reference front elevation of a {asset}.
 IMAGE 2 is the 3D model at its ORIGINAL size -- it should match image 1 closely.
@@ -47,8 +50,16 @@ IMAGE 3 is the same model made TWICE AS WIDE, and IMAGE 4 twice as tall. Those
 two SHOULD be bigger; judge only whether they still look like a well-made
 {asset}, not whether they differ in size.
 
+IMAGE 5 is the finished prop as SOLID GEOMETRY, turned to three-quarters and
+with every moving part driven open, so you can see it as an object rather than
+a picture. Its body is the side elevation's own profile extruded across the
+width, and each part is a separate box standing off that surface on its own
+pivot. Judge whether it reads as a {asset} in three dimensions: parts on the
+correct face, nothing floating clear of the body or sunk inside it, doors
+swinging OUT rather than through the body, sides and back textured.
+
 The model is built as a background panel plus these parts, each with a resize
-rule:
+rule, a depth and a motion:
 {parts}
 
 The BACKGROUND panel behind the parts is also adjustable. If its texture looks
@@ -81,14 +92,23 @@ Set looks_good TRUE when nothing is blocking, even if minor faults remain. A
 prop with two faint seams in its side panel is a finished PS1 prop. Do not
 withhold a pass for imperfection; withhold it only for something broken.
 
-Then give a PATCH: only parts whose rule or anchor should change, or that
-should be dropped because they are not really a part. Change nothing that
-already looks right; return an empty patch when nothing is blocking.
+Then give a PATCH: only parts whose rule, anchor, depth or motion should
+change, or that should be dropped because they are not really a part. Change
+nothing that already looks right; return an empty patch when nothing is
+blocking.
+
+  "depth"   "flush" (painted on) | "proud" (stands off a little) |
+            "deep" (sticks well out: a joystick, a handle) |
+            "recessed" (set into the body: a screen, a vent, a tray)
+  "motion"  "none" | "hinge_left" | "hinge_right" | "hinge_top" |
+            "hinge_bottom" | "press" | "stick" | "slide_x" | "slide_y"
+            -- name the EDGE a door turns about, not just that it opens
 
 JSON only:
 {{"looks_good": false,
   "faults": [{{"part": "...", "fault": "...", "severity": "blocking"}}],
-  "patch": [{{"name": "...", "resize": "...", "anchor": "...", "drop": false}}]}}"""
+  "patch": [{{"name": "...", "resize": "...", "anchor": "...",
+              "depth": "...", "motion": "...", "drop": false}}]}}"""
 
 
 def run(cmd, **kw):
@@ -98,17 +118,35 @@ def run(cmd, **kw):
     return r
 
 
+def _env():
+    import os
+    return {**os.environ, "CHROMIUM_PATH": os.environ.get(
+        "CHROMIUM_PATH", "/opt/pw-browsers/chromium-1194/chrome-linux/chrome")}
+
+
 def render(d, out, sizes):
     qs = [f"dir=/{d.relative_to(ROOT)}&w={w}&h={h}" for (w, h) in sizes]
     run(["node", str(ROOT / "tools/authoring/layer_view/shoot.mjs"), str(out), *qs],
-        env={**__import__("os").environ,
-             "CHROMIUM_PATH": __import__("os").environ.get(
-                 "CHROMIUM_PATH", "/opt/pw-browsers/chromium-1194/chrome-linux/chrome")})
+        env=_env())
     got = []
     for (w, h) in sizes:
         m = sorted(out.glob(f"*w-{str(w).replace('.','-')}-h-{str(h).replace('.','-')}*.png"))
         got.append(m[0] if m else None)
     return got
+
+
+def render_solid(d, out):
+    """The prop as geometry, three-quarters on, with the moving parts open.
+
+    The judge only ever saw flat elevations, so it could not see a part
+    floating clear of the body, a door hinging through the cabinet or an
+    untextured side -- exactly the faults that separate a picture from a model.
+    """
+    q = f"dir=/{d.relative_to(ROOT)}&anim=1&yaw=32&pitch=14"
+    run(["node", str(ROOT / "tools/authoring/parts_view/shoot.mjs"), str(out), q],
+        env=_env())
+    m = sorted(out.glob("*anim-1*.png"))
+    return m[0] if m else None
 
 
 def rebuild(d, face="front"):
@@ -117,6 +155,17 @@ def rebuild(d, face="front"):
          "--out", str(d / "slice_bg.json")])
     # synthesise the seamless panel tile the background's middle repeats
     run([sys.executable, "tools/authoring/seamless_tile.py", str(d), "--face", face])
+
+
+def build_body(d, asset):
+    """The other three elevations, and the shape they describe.
+
+    Only needs doing once per sheet: the judge's patches move parts about on
+    the front face, and none of them changes the prop's profile.
+    """
+    run([sys.executable, "tools/authoring/body_faces.py", str(d)])
+    run([sys.executable, "tools/authoring/side_profile.py", str(d),
+         "--asset", asset])
 
 
 def main():
@@ -147,18 +196,29 @@ def main():
         raise SystemExit("identify_parts produced nothing")
     print("   ", (r.stdout or "").strip().splitlines()[0][:120])
 
+    print("[3] mechanics (depth and pivots) ...", flush=True)
+    r = run([sys.executable, "tools/authoring/add_mechanics.py", str(d),
+             "--face", "front", "--asset", args.asset])
+    print("   ", (r.stdout or "").strip().splitlines()[0][:120] if r.stdout else "")
+
+    print("[4] body: side, back, top and the profile ...", flush=True)
+    build_body(d, args.asset)
+
     rebuild(d)
     best = None
     for rnd in range(args.rounds):
         shots = render(d, d / f"r{rnd}", [(1, 1), (2, 1), (1, 1.8)])
         if not all(shots):
             raise SystemExit("render failed -- is the dev server up on 5173?")
+        solid = render_solid(d, d / f"r{rnd}")
         man = json.loads((d / "layers_front.json").read_text())
-        listing = "\n".join(f"  {p['name']}: {p['resize']}, anchored {p['anchor']}"
-                            for p in man["parts"])
+        listing = "\n".join(
+            f"  {p['name']}: {p['resize']}, anchored {p['anchor']}, "
+            f"{p.get('depth','proud')}, motion {p.get('motion','none')}"
+            for p in man["parts"])
         content = [{"type": "text",
                     "text": JUDGE.format(asset=args.asset, parts=listing)}]
-        for img in [d / "front.png", *shots]:
+        for img in [d / "front.png", *shots, *( [solid] if solid else [] )]:
             content.append({"type": "image_url",
                             "image_url": {"url": data_uri(img)}})
         # A JUDGE THAT REPLIES BADLY MUST NOT KILL THE RUN. as_json raises
@@ -232,6 +292,11 @@ def main():
                 print(f"    {p['name']}: anchor {p['anchor']} -> {q['anchor']}")
                 p["anchor"] = q["anchor"]
                 changed += 1
+            for field, allowed in (("depth", DEPTHS), ("motion", MOTIONS)):
+                if q and q.get(field) in allowed and q[field] != p.get(field):
+                    print(f"    {p['name']}: {field} {p.get(field)} -> {q[field]}")
+                    p[field] = q[field]
+                    changed += 1
             keep.append(p)
         if not changed and not bg_changed:
             print("  no actionable corrections -- stopping")

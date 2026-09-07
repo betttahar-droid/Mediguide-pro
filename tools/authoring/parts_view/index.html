@@ -1,0 +1,314 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Prop parts</title>
+<style>html,body{margin:0;background:#8a8a8a;overflow:hidden}canvas{display:block}</style>
+<script type="module">
+// The prop as SEPARATE 3D PARTS on a body that is the right SHAPE, not a box.
+//
+// layer_view builds the same decomposition as coplanar quads: it looks right
+// and it is one object. Nothing can open, tilt or press, and nothing can be
+// edited without editing the picture. This builds each part as real geometry
+// standing off the body by its own depth, parented to a pivot placed where the
+// part would actually turn -- a coin door on its hinge edge, a joystick at its
+// base, a button on its own normal.
+//
+// The body is the side elevation's own silhouette, extruded across the width.
+// A box with the side view painted on it left pale slabs where the sheet
+// showed past the profile; clamping those pixels outwards only replaced them
+// with smeared vent stripes. Both were the same mistake -- painting a shape
+// rather than building it -- and the shape was sitting in the sheet all along.
+//
+// Because the body is shaped, parts mount on the surface they actually belong
+// to: a control deck sits on the jutting deck, not floating in front of it.
+//
+// That is the shape fromSculptSpec.js wants ("correct hierarchy, correct
+// pivots, named sockets"), and it is what makes a prop modifiable rather than
+// merely correct: move one part, animate one part, swap one part.
+//
+//   ?anim=0..1   drives every moving part through its motion
+//   ?only=name   isolate one part
+//   ?explode=0.3 pull the parts off the body to show they are separate
+//   ?box=1       fall back to the old box body, for comparison
+import * as THREE from 'three';
+
+const p = new URLSearchParams(location.search);
+const dir = p.get('dir') ?? '/tools/img2threejs-work/prop_arcade_cabinet';
+const man = await (await fetch(`${dir}/layers_front.json`)).json();
+const wS = Number(p.get('w') ?? 1), hS = Number(p.get('h') ?? 1);
+const anim = Number(p.get('anim') ?? 0);
+const explode = Number(p.get('explode') ?? 0);
+const only = p.get('only');
+
+const renderer = new THREE.WebGLRenderer({ antialias: false });
+renderer.setSize(1024, 1024);
+document.body.appendChild(renderer.domElement);
+const scene = new THREE.Scene();
+scene.background = new THREE.Color('#8a8a8a');
+
+const load = async (u) => {
+  const t = await new THREE.TextureLoader().loadAsync(u);
+  t.magFilter = THREE.NearestFilter; t.minFilter = THREE.NearestFilter;
+  t.generateMipmaps = false; t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+};
+const A = man.aspect;
+const FW = A * wS, FH = 1 * hS;
+
+// how far each depth class stands off the body, in units of the prop's height
+const DEPTH = { flush: 0.004, proud: 0.018, deep: 0.055, recessed: -0.014 };
+
+let bodyMeta = null, profile = null;
+try { bodyMeta = await (await fetch(`${dir}/body.json`)).json(); } catch {}
+try { profile = await (await fetch(`${dir}/profile.json`)).json(); } catch {}
+if (p.get('box') === '1') profile = null;
+const BODY_D = Number(p.get('depth') ?? profile?.depth ?? bodyMeta?.depth ?? 0.34);
+
+// --- textures ---------------------------------------------------------------
+// THE SHEET PAID FOR FOUR ELEVATIONS; USE FOUR. Texturing only the front and
+// painting the rest a flat brown is invisible head-on and is most of what you
+// see the moment the prop is turned to show its parts are separate objects.
+const bgTex = await load(`${dir}/${man.background}`);
+const faceTex = {};
+for (const f of ['side', 'back', 'top']) {
+  if (bodyMeta?.[f]) faceTex[f] = await load(`${dir}/${bodyMeta[f].image}`);
+}
+const mirrored = (t) => {
+  if (!t) return t;
+  const c = t.clone(); c.repeat.x = -1; c.offset.x = 1; c.needsUpdate = true;
+  return c;
+};
+const plain = (c) => new THREE.MeshBasicMaterial({ color: c, side: THREE.DoubleSide });
+const mapped = (t, c) => (t
+  ? new THREE.MeshBasicMaterial({ map: t, side: THREE.DoubleSide })
+  : plain(c));
+
+// --- the body ---------------------------------------------------------------
+// material slots, shared by both body builds
+const MAT = [
+  mapped(faceTex.side, 0x6a5a4a),          // 0  the two profile caps
+  new THREE.MeshBasicMaterial({ map: bgTex, side: THREE.DoubleSide }), // 1 front
+  mapped(faceTex.back, 0x6a5a4a),          // 2  back
+  mapped(faceTex.top, 0x6a5a4a),           // 3  top
+  plain(0x2a2622),                         // 4  underside, never seen
+];
+
+// front wall as a lookup, so a part can be mounted on the surface under it
+const wall = (profile?.front_wall ?? [[1, BODY_D / 2], [0, BODY_D / 2]])
+  .slice().sort((a, b) => a[0] - b[0]);            // ascending in height
+function frontZ(y) {
+  if (y <= wall[0][0]) return wall[0][1];
+  if (y >= wall[wall.length - 1][0]) return wall[wall.length - 1][1];
+  for (let i = 1; i < wall.length; i++) {
+    if (y <= wall[i][0]) {
+      const [ya, za] = wall[i - 1], [yb, zb] = wall[i];
+      const t = (y - ya) / Math.max(1e-6, yb - ya);
+      return za + (zb - za) * t;
+    }
+  }
+  return wall[wall.length - 1][1];
+}
+
+function buildBody() {
+  if (!profile) {
+    const g = new THREE.BoxGeometry(FW, FH, BODY_D);
+    // BoxGeometry group order is +x,-x,+y,-y,+z,-z
+    const order = [0, 0, 3, 4, 1, 2];
+    g.groups.forEach((grp, i) => { grp.materialIndex = order[i]; });
+    return g;
+  }
+  // the closed profile, in the (z, y) plane: down the front wall, up the back
+  const fw = profile.front_wall.slice().sort((a, b) => b[0] - a[0]);   // top->bottom
+  const bw = profile.back_wall.slice().sort((a, b) => a[0] - b[0]);    // bottom->top
+  let loop = [...fw.map(([y, z]) => [z, y]), ...bw.map(([y, z]) => [z, y])];
+  // drop duplicate consecutive points -- triangulation chokes on them
+  loop = loop.filter((q, i) => i === 0 ||
+    Math.hypot(q[0] - loop[i - 1][0], q[1] - loop[i - 1][1]) > 1e-5);
+  // WIND IT CCW. Everything below reads the outward normal off the winding, so
+  // a clockwise loop would put the front texture on the back of the prop.
+  let area = 0;
+  for (let i = 0; i < loop.length; i++) {
+    const [z0, y0] = loop[i], [z1, y1] = loop[(i + 1) % loop.length];
+    area += z0 * y1 - z1 * y0;
+  }
+  if (area < 0) loop.reverse();
+
+  const zs = loop.map((q) => q[0]);
+  const zmin = Math.min(...zs), zmax = Math.max(...zs);
+  const backFrac = (z) => (zmax - z) / Math.max(1e-6, zmax - zmin);  // 0 at the nose
+  const sideU = (z) => (profile.front_edge === 'left' ? backFrac(z) : 1 - backFrac(z));
+
+  const pos = [], uv = [], groups = [];
+  let start = 0;
+  const push = (a, b, c, ua, ub, uc) => {
+    pos.push(...a, ...b, ...c); uv.push(...ua, ...ub, ...uc);
+  };
+  const emit = (mi) => {
+    const count = pos.length / 3 - start;
+    if (count > 0) groups.push([start, count, mi]);
+    start = pos.length / 3;
+  };
+
+  // --- the two caps: the side elevation, seen from either side
+  const contour = loop.map(([z, y]) => new THREE.Vector2(z, y));
+  const tris = THREE.ShapeUtils.triangulateShape(contour, []);
+  // WHICH CAP THE ARTIST DREW IS FIXED BY WHERE THE NOSE IS. Looking at a
+  // prop's left side you face +x, so your right hand is +z and the front lands
+  // on the RIGHT of the image; looking at its right side the front lands on the
+  // LEFT. So front_edge tells us which cap the elevation is native to, and the
+  // other cap is that art mirrored. Guessing instead put the cabinet's side
+  // decal on its front corner rather than its back one.
+  const nativeX = profile.front_edge === 'left' ? 1 : -1;
+  for (const sgn of [1, -1]) {
+    const x = sgn * FW / 2;
+    for (const [i, j, k] of tris) {
+      const P = [i, j, k].map((n) => contour[n]);
+      const V = P.map((q) => [x, (q.y - 0.5) * FH, q.x]);
+      // the far cap is the near cap mirrored -- a prop's two sides are one art
+      const U = P.map((q) => [sgn === nativeX ? sideU(q.x) : 1 - sideU(q.x), q.y]);
+      push(V[0], V[1], V[2], U[0], U[1], U[2]);
+    }
+  }
+  emit(0);
+
+  // --- the skirt, one quad per profile segment, sorted by which way it faces
+  const buckets = { 1: [], 2: [], 3: [], 4: [] };
+  for (let i = 0; i < loop.length; i++) {
+    const [z0, y0] = loop[i], [z1, y1] = loop[(i + 1) % loop.length];
+    const dz = z1 - z0, dy = y1 - y0;
+    const n = Math.hypot(dz, dy) || 1e-6;
+    const nz = dy / n, ny = -dz / n;      // outward normal of a CCW loop
+    // CLASSIFY BY FACING, NOT BY DOMINANT AXIS. A cabinet's sloped back leans
+    // far enough that its largest normal component is upward, and sorting by
+    // dominant axis sent it to the top texture -- the same bug that put an
+    // earlier model's slopes on the wrong map. What matters is whether the
+    // surface can be seen from the front, so test nz first.
+    const mi = nz > 0.15 ? 1 : nz < -0.15 ? 2 : ny > 0 ? 3 : 4;
+    const x0 = -FW / 2, x1 = FW / 2;
+    const P = [[x0, (y0 - 0.5) * FH, z0], [x1, (y0 - 0.5) * FH, z0],
+               [x1, (y1 - 0.5) * FH, z1], [x0, (y1 - 0.5) * FH, z1]];
+    // front and back are projected in x,y; the top and underside in x,z
+    const uOf = (x) => (x - x0) / Math.max(1e-6, x1 - x0);
+    let U;
+    if (mi === 1) U = [[uOf(x0), y0], [uOf(x1), y0], [uOf(x1), y1], [uOf(x0), y1]];
+    else if (mi === 2) U = [[1 - uOf(x0), y0], [1 - uOf(x1), y0],
+                            [1 - uOf(x1), y1], [1 - uOf(x0), y1]];
+    else U = [[uOf(x0), 1 - backFrac(z0)], [uOf(x1), 1 - backFrac(z0)],
+              [uOf(x1), 1 - backFrac(z1)], [uOf(x0), 1 - backFrac(z1)]];
+    buckets[mi].push([P, U]);
+  }
+  for (const mi of [1, 2, 3, 4]) {
+    for (const [P, U] of buckets[mi]) {
+      push(P[0], P[1], P[2], U[0], U[1], U[2]);
+      push(P[0], P[2], P[3], U[0], U[2], U[3]);
+    }
+    emit(Number(mi));
+  }
+
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
+  for (const [s, c, mi] of groups) g.addGroup(s, c, mi);
+  return g;
+}
+const bodyGeo = buildBody();
+scene.add(new THREE.Mesh(bodyGeo, MAT));
+
+// --- parts ----------------------------------------------------------------
+const movers = [];
+for (const q of man.parts) {
+  if (only && q.name !== only) continue;
+  const tex = await load(`${dir}/${q.image}`);
+  const ow = (q.u[1] - q.u[0]) * A, oh = q.v[1] - q.v[0];
+  const R = q.resize || 'fixed';
+  const w = R.startsWith('spanx') ? FW : ow;
+  const h = R.startsWith('spany') ? FH : oh;
+  const d = Math.abs(DEPTH[q.depth] ?? DEPTH.proud);
+  const recessed = (q.depth === 'recessed');
+
+  // a real box, textured on its front face, edges taking the body colour
+  const geo = new THREE.BoxGeometry(w, h, d);
+  const mats = [0, 1, 2, 3, 4, 5].map((i) => new THREE.MeshBasicMaterial(
+    i === 4 ? { map: tex } : { color: 0x584a3d }));
+  const mesh = new THREE.Mesh(geo, mats);
+
+  // position on the face, from the same anchor arithmetic as layer_view
+  const dTop = 1 - q.v[1], dBot = q.v[0];
+  const cx = ((q.u[0] + q.u[1]) / 2 - 0.5) * A;
+  let x, y;
+  if (R.startsWith('spanx')) x = 0;
+  else if (Math.abs(cx) < 0.05 * A) x = 0;
+  else if (cx < 0) x = -FW / 2 + q.u[0] * A + w / 2;
+  else x = FW / 2 - (1 - q.u[1]) * A - w / 2;
+  if (R.startsWith('spany')) y = 0;
+  else if (q.anchor === 'bottom') y = -FH / 2 + dBot + h / 2;
+  else y = FH / 2 - dTop - h / 2;
+  // MOUNT ON THE SURFACE, NOT ON A PLANE. With a shaped body the front is at a
+  // different depth at every height, so a fixed z floated the control deck in
+  // front of the deck it belongs to and buried the marquee in the slope.
+  const yFrac = y / FH + 0.5;
+  const surf = frontZ(yFrac);
+  const z = surf + (recessed ? -d / 2 : d / 2) + explode * 0.6;
+
+  // THE PIVOT IS THE POINT. A door that spins about its centre is not a door,
+  // so the part hangs off a pivot placed on the edge its motion turns about,
+  // and the mesh is offset back by the same amount inside it.
+  const pivot = new THREE.Object3D();
+  const m = q.motion || 'none';
+  let off = [0, 0, 0];
+  if (m === 'hinge_left') off = [-w / 2, 0, 0];
+  else if (m === 'hinge_right') off = [w / 2, 0, 0];
+  else if (m === 'hinge_bottom') off = [0, -h / 2, 0];
+  else if (m === 'hinge_top') off = [0, h / 2, 0];
+  else if (m === 'stick') off = [0, -h / 2, 0];
+  pivot.position.set(x + off[0], y + off[1], z + off[2]);
+  mesh.position.set(-off[0], -off[1], -off[2]);
+  pivot.add(mesh);
+  pivot.name = q.name;
+  scene.add(pivot);
+  if (m !== 'none') movers.push({ pivot, motion: m, w, h, d });
+}
+
+// --- drive the motions ------------------------------------------------------
+for (const mv of movers) {
+  const t = anim;
+  switch (mv.motion) {
+    // A DOOR OPENS OUTWARD. Rotating +y about the left edge carries the free
+    // edge to -z, i.e. into the cabinet, so at anim=1 the coin door was
+    // swinging through the body instead of out of it -- invisible, and exactly
+    // the sort of thing that looks like "the animation does not work".
+    case 'hinge_left': mv.pivot.rotation.y = -t * 1.4; break;
+    case 'hinge_right': mv.pivot.rotation.y = t * 1.4; break;
+    case 'hinge_bottom': mv.pivot.rotation.x = t * 1.2; break;
+    case 'hinge_top': mv.pivot.rotation.x = -t * 1.2; break;
+    case 'stick': mv.pivot.rotation.x = -t * 0.6; break;
+    case 'press': mv.pivot.position.z -= t * mv.d * 0.8; break;
+    case 'slide_x': mv.pivot.position.x += t * mv.w * 0.6; break;
+    case 'slide_y': mv.pivot.position.y -= t * mv.h * 0.6; break;
+  }
+}
+
+const yaw = Number(p.get('yaw') ?? 0) * Math.PI / 180;
+const pitch = Number(p.get('pitch') ?? 0) * Math.PI / 180;
+// FRAME WHAT IS ACTUALLY THERE. layer_view fixes its camera on purpose, so
+// that a prop made twice as tall DRAWS twice as tall and the judge is not
+// fooled by re-normalisation. Nothing here varies the prop's size -- the
+// variables are anim and explode -- so a fixed frame only means the prop sits
+// small in the middle of a grey field, which is how the first parts sheet came
+// out. Measure the scene instead, with the swung-open parts included.
+const bb = new THREE.Box3().setFromObject(scene);
+const size = bb.getSize(new THREE.Vector3());
+const mid = bb.getCenter(new THREE.Vector3());
+const rad = Number(p.get('frame')
+  ?? Math.max(size.x, size.y, size.z) * 0.5 * 1.12);
+const cam = new THREE.OrthographicCamera(-rad, rad, rad, -rad, 0.01, 40);
+const r = 8;
+cam.position.set(mid.x + r * Math.cos(pitch) * Math.sin(yaw),
+                 mid.y + r * Math.sin(pitch),
+                 mid.z + r * Math.cos(pitch) * Math.cos(yaw));
+cam.lookAt(mid);
+renderer.render(scene, cam);
+console.info(`parts: ${man.parts.length} parts, ${movers.length} movable `
+  + `(${movers.map((m) => m.motion).join(', ') || 'none'}), anim=${anim}, `
+  + `body=${profile ? `profile d${BODY_D.toFixed(3)}` : 'box'}`);
+globalThis.__done = true;
+</script>

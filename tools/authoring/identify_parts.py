@@ -65,9 +65,26 @@ For each part give:
                              (a side rail repeats; a badge on a post centres)
   "anchor" which edge it holds to: "top", "bottom", "left", "right", or
            "center" if it belongs to the middle of the face
+  "depth"  how it sits on the face, as a real object rather than a sticker:
+             "flush"     painted on, no relief (side art, a printed label)
+             "proud"     stands off the surface a little (a bezel, a trim
+                         rail, a marquee housing, a control deck)
+             "deep"      stands well off (a joystick, a handle, a lever)
+             "recessed"  set INTO the body (a screen, a coin slot, a vent)
+  "motion" how the part MOVES, if it does -- this decides its pivot, so a door
+           swings on its hinge edge rather than spinning about its middle:
+             "none"        static
+             "hinge_left" / "hinge_right" / "hinge_top" / "hinge_bottom"
+                           swings open about that edge (a coin door, a
+                           service hatch, a glass front)
+             "press"       pushes in along its own normal (a button, a key)
+             "stick"       tilts about its base (a joystick, a lever)
+             "slide_x" / "slide_y"
+                           travels along the face (a drawer, a tray)
 
 Reply with JSON only:
-{"parts": [{"name": "...", "box": [0,0,0,0], "resize": "...", "anchor": "..."}]}"""
+{"parts": [{"name": "...", "box": [0,0,0,0], "resize": "...", "anchor": "...",
+            "depth": "...", "motion": "..."}]}"""
 
 
 def object_crop(path):
@@ -175,9 +192,12 @@ def main():
                     abs(sb[2] - b[2] * W), abs(sb[3] - b[3] * H))
         out.append({"name": p.get("name", "part"), "px": sb,
                     "resize": p.get("resize", "fixed"),
-                    "anchor": p.get("anchor", "center")})
-        print(f"  {p.get('name','?'):16} {p.get('resize','?'):6} "
-              f"{p.get('anchor','?'):7} px {sb}  (snapped {moved:.0f}px)")
+                    "anchor": p.get("anchor", "center"),
+                    "depth": p.get("depth", "proud"),
+                    "motion": p.get("motion", "none")})
+        print(f"  {p.get('name','?'):18} {p.get('resize','?'):13} "
+              f"{p.get('anchor','?'):7} {p.get('depth','?'):9} "
+              f"{p.get('motion','?'):12} px {sb}")
 
     man = {"face": args.face, "size": [W, H], "parts": out}
     dst = Path(args.out or d / f"parts_{args.face}.json")
