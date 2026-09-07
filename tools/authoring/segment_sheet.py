@@ -282,6 +282,18 @@ def main():
                             if prev[xx, yy] > 128:
                                 on += 1
                     mp[x, y] = 255 if on * 2 > tot else 0
+        # A NEARLY RECTANGULAR FITTING IS A RECTANGLE. A screen, a door, a
+        # badge and a panel all have straight edges, and a mask that fills most
+        # of its own bounding box is one of those with a ragged border the
+        # segmentation invented. Snapping it to the box gives back the straight
+        # edge the artwork actually has -- the dark screen kept reading as a
+        # torn blob otherwise. A genuinely shaped fitting fills much less of its
+        # box and is left exactly as measured.
+        on = sum(1 for x in range(mw) for y in range(mh) if mp[x, y] > 128)
+        if on > 0.82 * mw * mh:
+            for x in range(mw):
+                for y in range(mh):
+                    mp[x, y] = 255
         m.save(mdir / f"{i}.png")
         boxes.append([x0, y0, x1, y1])
 
