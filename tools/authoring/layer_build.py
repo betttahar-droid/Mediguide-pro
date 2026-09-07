@@ -55,8 +55,38 @@ def silhouette(ob, erode=3):
     corners = [px[0, 0], px[W - 1, 0], px[0, H - 1], px[W - 1, H - 1]]
     from collections import Counter as _C
     bg = _C(corners).most_common(1)[0][0]
-    inside = [[sum(abs(a - b) for a, b in zip(px[x, y], bg)) >= 40
-               for y in range(H)] for x in range(W)]
+
+    def looks_bg(c):
+        return sum(abs(a - b) for a, b in zip(c, bg)) < 40
+
+    # OUTSIDE MEANS REACHABLE FROM THE EDGE, NOT MERELY THE RIGHT COLOUR. The
+    # colour test alone called the vending machine's white "COLD DRINKS"
+    # lettering background, because white sits within tolerance of the pale
+    # sheet. fill_from_panel then skipped those pixels as "not part of the
+    # prop", so the sign survived being painted out and tiled across the whole
+    # widened cabinet as a ghost -- and the alpha cut would have punched the
+    # letters clean through the face. Sheet is what the sheet is CONNECTED to;
+    # anything enclosed by the prop is the prop, whatever colour it is.
+    outside = [[False] * H for _ in range(W)]
+    stack = []
+    for x in range(W):
+        for y in (0, H - 1):
+            if looks_bg(px[x, y]) and not outside[x][y]:
+                outside[x][y] = True
+                stack.append((x, y))
+    for y in range(H):
+        for x in (0, W - 1):
+            if looks_bg(px[x, y]) and not outside[x][y]:
+                outside[x][y] = True
+                stack.append((x, y))
+    while stack:
+        x, y = stack.pop()
+        for nx, ny in ((x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)):
+            if 0 <= nx < W and 0 <= ny < H and not outside[nx][ny] \
+                    and looks_bg(px[nx, ny]):
+                outside[nx][ny] = True
+                stack.append((nx, ny))
+    inside = [[not outside[x][y] for y in range(H)] for x in range(W)]
     for _ in range(erode):
         prev = [col[:] for col in inside]
         for x in range(W):
@@ -147,15 +177,27 @@ def fill_from_panel(ob, boxes):
         return out
     ox, oy = best
     PANEL_PATCH["patch"] = [ox, oy, bw, bh]   # where the clean panel was found
+
+    # FILL WITH A SEAMLESS TILE, NOT A MIRRORED ONE. Mirroring makes every join
+    # a reflection, which removes the hard cut and replaces it with a butterfly:
+    # each grime drip appears back to back with its own mirror image on a
+    # regular grid, and once the background is stretched that pattern is the
+    # most obvious thing on the prop. seamless_tile's overlap construction has
+    # no join to hide, so the same patch can simply repeat.
+    # damped for the same reason the renderer's tile is: one strong drip mark
+    # repeated on a grid reads as wallpaper, and this fill covers whole panels
+    from seamless_tile import make_seamless_overlap, damp
+    k = max(4, min(bw, bh) // 5)
+    tw, th = max(8, bw - k), max(8, bh - k)
+    patch = ob.crop((ox, oy, ox + bw, oy + bh))
+    tile = make_seamless_overlap(damp(patch, 0.6), tw, th, k)
+    tp = tile.load()
     for x in range(W):
         for y in range(H):
             if not covered[x][y] or not solid[x][y]:
                 continue    # only holes, and only inside the prop -- a part box
                             # that overhangs the silhouette must not grow it
-            u, v = x % (2 * bw), y % (2 * bh)
-            u = u if u < bw else 2 * bw - 1 - u        # mirror so joins reflect
-            v = v if v < bh else 2 * bh - 1 - v
-            px[x, y] = src[ox + min(u, bw - 1), oy + min(v, bh - 1)]
+            px[x, y] = tp[x % tw, y % th]
     return out
 
 

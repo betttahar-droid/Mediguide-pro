@@ -233,13 +233,37 @@ for (const q of man.parts) {
   const R = q.resize || 'fixed';
   const w = R.startsWith('spanx') ? FW : ow;
   const h = R.startsWith('spany') ? FH : oh;
-  const d = Math.abs(DEPTH[q.depth] ?? DEPTH.proud);
-  const recessed = (q.depth === 'recessed');
+  // STAND-OFF IS RELATIVE TO THE PART, NOT THE PROP. "deep" as a flat 5.5% of
+  // the cabinet's height turns a coin slot into a tower, and the judge read
+  // exactly that: "a small brown box floats clear off the front face". A part
+  // may stand off about as far as its own smallest dimension allows.
+  const CAP = { flush: 0.15, proud: 0.45, deep: 1.0, recessed: 0.45 };
+  const cls = q.depth ?? 'proud';
+  const d = Math.max(0.002, Math.min(Math.abs(DEPTH[cls] ?? DEPTH.proud),
+                                     (CAP[cls] ?? 0.45) * Math.min(w, h)));
+  const recessed = (cls === 'recessed');
 
-  // a real box, textured on its front face, edges taking the body colour
+  // EDGES TAKE THE PART'S OWN COLOUR. A fixed brown for every part's sides is
+  // what made them read as foreign objects bolted on -- three separate faults
+  // in one run called them "a loose brown box", "a plain brown slab", "a small
+  // brown box floats clear", on a blue vending machine. Averaging the part's
+  // own texture and darkening it gives the edge a believable shaded bevel and
+  // keeps the part looking like part of the prop.
+  const edge = new THREE.Color(0x584a3d);
+  try {
+    const c = document.createElement('canvas');
+    c.width = c.height = 1;
+    const cx2 = c.getContext('2d', { willReadFrequently: true });
+    cx2.drawImage(tex.image, 0, 0, 1, 1);
+    const [r8, g8, b8] = cx2.getImageData(0, 0, 1, 1).data;
+    edge.setRGB((r8 / 255) ** 2.2, (g8 / 255) ** 2.2, (b8 / 255) ** 2.2);
+    edge.multiplyScalar(0.72);          // a lit edge is darker than the face
+  } catch { /* keep the fallback */ }
+
+  // a real box, textured on its front face, edges shaded from that texture
   const geo = new THREE.BoxGeometry(w, h, d);
   const mats = [0, 1, 2, 3, 4, 5].map((i) => new THREE.MeshBasicMaterial(
-    i === 4 ? { map: tex } : { color: 0x584a3d }));
+    i === 4 ? { map: tex } : { color: edge }));
   const mesh = new THREE.Mesh(geo, mats);
 
   // position on the face, from the same anchor arithmetic as layer_view
