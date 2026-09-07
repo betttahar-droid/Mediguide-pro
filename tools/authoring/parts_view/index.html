@@ -30,6 +30,7 @@
 //   ?explode=0.3 pull the parts off the body to show they are separate
 //   ?box=1       fall back to the old box body, for comparison
 //   ?export=1    write the whole rig out as glTF, hierarchy and pivots intact
+//   ?wire=1      wireframe only: the geometry with no texture to hide behind
 import * as THREE from 'three';
 import { faceQuads, spansOf } from '../part_slice.mjs';
 
@@ -400,6 +401,29 @@ cam.position.set(mid.x + r * Math.cos(pitch) * Math.sin(yaw),
                  mid.y + r * Math.sin(pitch),
                  mid.z + r * Math.cos(pitch) * Math.cos(yaw));
 cam.lookAt(mid);
+// WIREFRAME, BECAUSE TEXTURE HIDES GEOMETRY. A prop can read perfectly in the
+// three-quarter view and still be a mess underneath -- a part sunk into the
+// body, a profile with a step that should not be there, faces stacked on faces.
+// None of that is visible while every surface is carrying artwork, so the judge
+// gets a pass with the artwork taken away and only the edges left.
+if (p.get('wire') === '1') {
+  scene.background = new THREE.Color('#101014');
+  const lines = [];
+  scene.traverse((o) => {
+    if (o.isMesh) {
+      lines.push([new THREE.LineSegments(
+        new THREE.WireframeGeometry(o.geometry),
+        new THREE.LineBasicMaterial({ color: 0x7fe3ff })), o]);
+    }
+  });
+  for (const [ln, src] of lines) {
+    src.getWorldPosition(ln.position);
+    src.getWorldQuaternion(ln.quaternion);
+    src.getWorldScale(ln.scale);
+    src.visible = false;
+    scene.add(ln);
+  }
+}
 renderer.render(scene, cam);
 
 // --- export ------------------------------------------------------------------

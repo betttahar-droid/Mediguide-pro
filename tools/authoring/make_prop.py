@@ -72,6 +72,13 @@ pivot. Judge whether it reads as a {asset} in three dimensions: parts on the
 correct face, nothing floating clear of the body or sunk inside it, doors
 swinging OUT rather than through the body, sides and back textured.
 
+IMAGE 6 is the same view as WIREFRAME, with every texture removed. Texture
+hides geometry, so judge the SHAPE here and be unforgiving about it: a profile
+with a step or notch that the object should not have, a part sunk into the body
+or floating clear of it, boxes intersecting each other, faces stacked on faces,
+bulk that is missing or in the wrong place. A prop that only looks right while
+it is wearing its texture is not finished.
+
 The model is built as a background panel plus these parts, each with a resize
 rule, a depth and a motion:
 {parts}
@@ -176,11 +183,13 @@ def render_solid(d, out):
     floating clear of the body, a door hinging through the cabinet or an
     untextured side -- exactly the faults that separate a picture from a model.
     """
-    q = f"dir=/{d.relative_to(ROOT)}&anim=1&yaw=32&pitch=14"
-    run(["node", str(ROOT / "tools/authoring/parts_view/shoot.mjs"), str(out), q],
+    base = f"dir=/{d.relative_to(ROOT)}"
+    run(["node", str(ROOT / "tools/authoring/parts_view/shoot.mjs"), str(out),
+         f"{base}&anim=1&yaw=32&pitch=14", f"{base}&wire=1&yaw=32&pitch=14"],
         env=_env())
-    m = sorted(out.glob("*anim-1*.png"))
-    return m[0] if m else None
+    solid = sorted(out.glob("*anim-1*.png"))
+    wire = sorted(out.glob("*wire-1*.png"))
+    return (solid[0] if solid else None), (wire[0] if wire else None)
 
 
 def rebuild(d, face="front"):
@@ -286,7 +295,7 @@ def main():
                        [(1, 1), (sr["max_wider"], 1), (1, sr["max_taller"])])
         if not all(shots):
             raise SystemExit("render failed -- is the dev server up on 5173?")
-        solid = render_solid(d, d / f"r{rnd}")
+        solid, wire = render_solid(d, d / f"r{rnd}")
         man = json.loads((d / "layers_front.json").read_text())
         listing = "\n".join(
             f"  {p['name']}: {p['resize']}, anchored {p['anchor']}, "
@@ -297,7 +306,8 @@ def main():
                                          wider=sr["wider_means"],
                                          taller=sr["taller_means"],
                                          wx=sr["max_wider"], hx=sr["max_taller"])}]
-        for img in [d / "front.png", *shots, *( [solid] if solid else [] )]:
+        for img in [d / "front.png", *shots,
+                    *([solid] if solid else []), *([wire] if wire else [])]:
             content.append({"type": "image_url",
                             "image_url": {"url": data_uri(img)}})
         # A JUDGE THAT REPLIES BADLY MUST NOT KILL THE RUN. as_json raises
@@ -319,7 +329,39 @@ def main():
                   f"last good build and stopping")
             break
 
-        faults = v.get("faults", [])
+        # A SECOND PAIR OF EYES, FROM THE OTHER FAMILY. One grader is one set
+        # of blind spots: glm passed a prop while listing "duplicated content
+        # blocks that read as a bug" in the same reply. Gemini is already here
+        # drawing the sheets, so it grades the same images against the same
+        # schema, and a fault EITHER of them calls blocking is blocking. The
+        # prop passes only when both would sign it off.
+        gem = None
+        try:
+            sys.path.insert(0, str(ROOT / "tools" / "authoring"))
+            from gemini_judge import vision_json
+            imgs = [str(d / "front.png")] + [str(x) for x in shots if x]
+            if solid:
+                imgs.append(str(solid))
+            if wire:
+                imgs.append(str(wire))
+            gem, gmodel = vision_json(
+                JUDGE.format(asset=args.asset, parts=listing,
+                             wider=sr["wider_means"], taller=sr["taller_means"],
+                             wx=sr["max_wider"], hx=sr["max_taller"]), imgs)
+            print(f"  second opinion from {gmodel}: "
+                  f"looks_good={gem.get('looks_good')}, "
+                  f"{len(gem.get('faults', []))} faults")
+        except Exception as e:
+            print(f"  second opinion unavailable ({type(e).__name__})")
+
+        faults = list(v.get("faults", []))
+        if gem:
+            for f in gem.get("faults", []):
+                f = dict(f)
+                f["part"] = f"{f.get('part')} (gemini)"
+                faults.append(f)
+            if not gem.get("looks_good"):
+                v["looks_good"] = False
         blocking = [f for f in faults
                     if str(f.get("severity", "blocking")).lower() == "blocking"]
         print(f"\n  round {rnd}: looks_good={v.get('looks_good')}  "
