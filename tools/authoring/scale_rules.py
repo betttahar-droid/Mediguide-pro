@@ -68,6 +68,14 @@ one of these actually is.
                   brand sign, a screen, a coin door, or a maker's plate: there
                   is only ever one of those however big the prop gets.
 
+  "spans"         the NUMBERS of the parts that are STRUCTURE rather than
+                  content -- the housings and frames that physically run the
+                  whole width of the prop and must keep doing so at any size: a
+                  marquee housing, a screen bezel, a control deck, a kick
+                  panel, a plinth. These get WIDER when the prop does. Do not
+                  list content that merely sits on them: a title, a screen
+                  image, a logo, a coin door, a joystick.
+
 Be strict about per_bay. Anything you list will be DUPLICATED when the prop is
 widened, so list only what genuinely comes in multiples on a bigger machine.
 
@@ -77,7 +85,7 @@ what you can SEE in each outline, not by its name.
 
 JSON only:
 {{"wider_means": "...", "taller_means": "...",
-  "max_wider": 2.0, "max_taller": 1.6, "per_bay": [4, 7]}}"""
+  "max_wider": 2.0, "max_taller": 1.6, "per_bay": [4, 7], "spans": [1, 3]}}"""
 
 
 def main():
@@ -124,6 +132,18 @@ def main():
         except (TypeError, ValueError):
             return dflt
 
+    def numbers(key):
+        got_list = []
+        for n in got.get(key, []):
+            try:
+                i = int(n)
+            except (TypeError, ValueError):
+                continue
+            if 1 <= i <= len(parts):
+                got_list.append(parts[i - 1]["name"])
+        return got_list
+
+    spans = numbers("spans")
     per_bay = []
     for n in got.get("per_bay", []):
         try:
@@ -139,17 +159,21 @@ def main():
         "max_wider": clamp(got.get("max_wider"), 1.0, 3.0, 2.0),
         "max_taller": clamp(got.get("max_taller"), 1.0, 3.0, 1.6),
         "per_bay": per_bay,
+        # a part cannot be both the frame and the thing bolted into it
+        "spans": [n for n in spans if n not in per_bay],
     }
     (d / "scale_rules.json").write_text(json.dumps(rules, indent=1))
 
     # the manifest carries the flag, so the renderer needs nothing else
     for p in parts:
         p["per_bay"] = p["name"] in per_bay
+        p["spans"] = p["name"] in rules["spans"]
     (d / f"parts_{args.face}.json").write_text(json.dumps(man, indent=1))
 
     print(f"wider  x{rules['max_wider']}: {rules['wider_means']}")
     print(f"taller x{rules['max_taller']}: {rules['taller_means']}")
     print(f"per bay: {', '.join(per_bay) if per_bay else '(nothing repeats)'}")
+    print(f"spans:   {', '.join(rules['spans']) if rules['spans'] else '(nothing spans)'}")
 
 
 if __name__ == "__main__":

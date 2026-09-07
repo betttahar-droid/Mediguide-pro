@@ -294,8 +294,9 @@ for (const q of man.parts) {
   // not grow, and inventing pixels to make it grow is worse than not growing.
   const sp = spansOf(q);
   const canX = sp.x, canY = sp.y;
-  const w = canX ? FW : ow;
-  const h = canY ? FH : oh;
+  // grows by the difference, so at scale 1 it is exactly its own size
+  const w = canX ? ow + (FW - A) : ow;
+  const h = canY ? oh + (FH - 1) : oh;
   // STAND-OFF IS RELATIVE TO THE PART, NOT THE PROP. "deep" as a flat 5.5% of
   // the cabinet's height turns a coin slot into a tower, and the judge read
   // exactly that: "a small brown box floats clear off the front face". A part

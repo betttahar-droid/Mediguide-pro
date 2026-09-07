@@ -138,14 +138,24 @@ def flank_window(diff, w=0.045, lo=0.03, hi=0.47, forbid=None):
         v = sum(diff[i:i + k]) / k
         if best is None or v < best:
             best, besti = v, i
-    # NOWHERE SAFE INSIDE MEANS PAD OUTSIDE. A marquee's artwork runs the full
-    # width of its strip, so every interior cut splits it and the title came
-    # out as "GALACTIC RA ... AIDERS" with a band of panel between the halves.
-    # A zero-width window puts the growth at the outer edge instead: the art is
-    # held whole at its real size and the prop gains plain frame either side of
-    # it, which is what a person would draw.
+    # NOWHERE SAFE INSIDE MEANS GROW BEHIND THE TRIM, NOT OUTSIDE IT.
+    #
+    # A marquee's artwork runs the full width of its strip, so every interior
+    # cut splits it. The first answer was to pad at x=0 -- and that is why a
+    # widened cabinet came out as the same cabinet with flat slabs bolted to
+    # its flanks: inserting at zero pushes the prop's own EDGE TRIM inboard and
+    # leaves bare material on the outside, which is the one place a cabinet
+    # never has bare material. Its trim is its silhouette.
+    #
+    # The trim is the strongest vertical edge near the border -- on this
+    # cabinet, columns 17..22 of 289 -- so growing just INSIDE it keeps the
+    # trim on the outside where it belongs and widens the panel behind it,
+    # which is what a wider cabinet physically is.
     if besti is None or best > 2.5 * QUIET:
-        return (0.0, 0.0), 999.0
+        lim = max(2, int(0.18 * n))
+        edge = max(range(lim), key=lambda i: diff[i]) if lim > 1 else 0
+        f0 = min(0.30, (edge + 3) / n)
+        return (f0, f0), 999.0
     return (besti / n, (besti + k) / n), best
 
 

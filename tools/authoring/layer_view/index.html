@@ -308,8 +308,12 @@ for (const q of man.parts) {
   const ow = (q.u[1] - q.u[0]) * A, oh = q.v[1] - q.v[0];
   const sp = spansOf(q);
   const spanX = sp.x, spanY = sp.y;
-  const w = naive ? ow * wS : (spanX ? FW : ow);
-  const h = naive ? oh * hS : (spanY ? FH : oh);
+  // A SPANNING PART KEEPS ITS OWN MARGINS AND GROWS BY THE DIFFERENCE. Setting
+  // it to the full face width stretched every framed fitting out to the
+  // silhouette -- visible at scale 1, where nothing is being resized at all and
+  // the render must equal the reference exactly.
+  const w = naive ? ow * wS : (spanX ? ow + (FW - A) : ow);
+  const h = naive ? oh * hS : (spanY ? oh + (FH - 1) : oh);
 
   // ONE RULE, SHARED WITH parts_view. See part_slice.mjs: this file used to
   // stretch a "_center" part's outer thirds to fill the extra width, which

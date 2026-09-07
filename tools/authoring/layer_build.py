@@ -150,7 +150,14 @@ def fill_from_panel(ob, boxes):
         return sum(abs(a - b) for a, b in zip(c, base)) < tol
 
     def usable(x, y):
-        return (not covered[x][y] and inside[x][y] and is_panel(src[x, y])
+        # PANEL IS PANEL WHETHER OR NOT A DECAL SITS ON IT. Requiring the patch
+        # to be UNCOVERED made sense while a part was a rare large fitting; now
+        # that every detail is lifted off, the boxes cover most of the face and
+        # the largest "clean panel" left was a 20x11 sliver next to the trim.
+        # Tiled, that read as corrugated slabs bolted to the flanks of every
+        # widened prop. What the patch has to be is material, and a decal's box
+        # is drawn over material like everything else.
+        return (inside[x][y] and is_panel(src[x, y])
                 and 28 < lum(src[x, y]) < 232)
 
     # FILL FROM A CLEAN PATCH, NOT FROM THE NEAREST ROW. Copying a hole's own
@@ -304,17 +311,47 @@ def main():
         # full width each time, so it hung off both sides of the cabinet.
         # Per-bay is the more specific claim, so it wins and the part keeps its
         # real size.
+        # A FRAME IS STRUCTURE AND MUST WIDEN WITH THE PROP. The width guard
+        # below exists to stop a 29%-wide TITLE being stretched across the
+        # face, and it was doing its job -- but applied to everything it also
+        # pinned the marquee housing, the screen bezel and the control deck, so
+        # a widened cabinet was the same cabinet with panel either side of it
+        # and nothing about it restructured. Which parts are frames is a
+        # question about what the object IS, so scale_rules asks it, and an
+        # explicit role beats a width heuristic.
+        if p.get("spans"):
+            if rule == "fixed":
+                print(f"  {p['name']}: structure, fixed -> spanx_center")
+                rule = "spanx_center"
+            out_span = True
+        else:
+            out_span = False
         if p.get("per_bay") and rule != "fixed":
             print(f"  {p['name']}: per-bay, so {rule} -> fixed")
             rule = "fixed"
-        if rule.startswith("spanx") and fw_ < 0.75:
+        if rule.startswith("spanx") and fw_ < 0.75 and not out_span:
             print(f"  {p['name']}: {rule} but only {100*fw_:.0f}% wide -> fixed")
             rule = "fixed"
         elif rule.startswith("spany") and fh_ < 0.75:
             print(f"  {p['name']}: {rule} but only {100*fh_:.0f}% tall -> fixed")
             rule = "fixed"
+        # A FRAME OFTEN HAS NO UNIFORM BAND, AND STILL HAS TO WIDEN. Spanning
+        # was gated on a measured repeat band, so a screen bezel marked as
+        # structure kept its exact size and the widened cabinet was unchanged.
+        # Give it the same growth the background uses: hold the artwork, insert
+        # the extra just inside its own edge moulding. Frames and faces then
+        # grow by one rule instead of two.
+        hf = None
+        if p.get("spans"):
+            try:
+                from strip_slice import col_diff, flank_window
+                rgb = crop.convert("RGB")
+                hf = list(flank_window(col_diff(rgb, 0, rgb.size[1]))[0])
+            except Exception:
+                hf = None
         out.append({
             "name": p["name"], "image": f"parts/{p['name']}.png",
+            "hf": hf,
             "resize": rule, "anchor": p["anchor"],
             "depth": p.get("depth", "proud"), "motion": p.get("motion", "none"),
             "per_bay": bool(p.get("per_bay")),

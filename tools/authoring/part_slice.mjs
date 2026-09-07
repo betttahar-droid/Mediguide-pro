@@ -26,6 +26,25 @@
 //              reading ARCADE reports no band, and that is correct.
 export function faceQuads(q, w, h, ow, oh) {
   const R = q.resize || 'fixed';
+  // A STRUCTURAL FRAME GROWS THE WAY THE BACKGROUND DOES. It has no uniform
+  // band to repeat -- a bezel is moulding all the way across -- so the extra
+  // width is INSERTED just inside its own edge, holding the artwork whole at
+  // its real size. Without this a screen bezel marked as structure simply kept
+  // its size and a widened cabinet was the same cabinet with panel beside it.
+  if (R.startsWith('spanx') && !(q.bands && q.bands.h) && q.hf && w > ow) {
+    const [f0, f1] = q.hf;
+    const add = Math.max(0, (w - ow) / 2);
+    const seg = [[f0 * ow, 0, f0], [add, f0, f1], [(f1 - f0) * ow, f0, f1],
+                 [(1 - 2 * f1) * ow, f1, 1 - f1], [(f1 - f0) * ow, 1 - f1, 1 - f0],
+                 [add, 1 - f1, 1 - f0], [f0 * ow, 1 - f0, 1]];
+    const out = [];
+    let x = -w / 2;
+    for (const [wd, u0, u1] of seg) {
+      if (wd > 1e-6) out.push([x, x + wd, -h / 2, h / 2, u0, u1, 0, 1]);
+      x += wd;
+    }
+    return out;
+  }
   const bh = R.startsWith('spanx') ? (q.bands?.h ?? null) : null;
   const bv = R.startsWith('spany') ? (q.bands?.v ?? null) : null;
   const [a0, a1] = bh ?? [0.5, 0.5];
@@ -70,7 +89,7 @@ export function faceQuads(q, w, h, ow, oh) {
 export function spansOf(q) {
   const R = q.resize || 'fixed';
   return {
-    x: R.startsWith('spanx') && !!(q.bands && q.bands.h),
+    x: R.startsWith('spanx') && !!((q.bands && q.bands.h) || q.hf),
     y: R.startsWith('spany') && !!(q.bands && q.bands.v),
   };
 }
