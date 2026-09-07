@@ -529,6 +529,14 @@ def main():
             "resize": rule, "anchor": p["anchor"],
             "depth": p.get("depth", "proud"), "motion": p.get("motion", "none"),
             "per_bay": bool(p.get("per_bay")),
+            # WHICH PARTS ARE STRUCTURE HAS TO REACH THE RENDERER TOO. It was
+            # used here to decide a resize rule and then dropped, so the rig had
+            # no way to know that a joystick stands on a control deck -- and it
+            # laid the two bays out across the whole cabinet instead, putting
+            # player one's stick on the bare flank a third of a metre clear of
+            # the deck. A station repeats along its structure; the renderer
+            # cannot find the structure it was never told about.
+            "spans": bool(p.get("spans")),
             "scatter": bool(p.get("scatter")),
             # where THIS part may repeat, in its own 0..1 box
             "bands": {"h": (b or {}).get("h"), "v": (b or {}).get("v")},

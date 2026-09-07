@@ -36,6 +36,7 @@ prop; the same run makes a cabinet, a vending machine or a jukebox.
 """
 import argparse
 import json
+import re as re0
 import subprocess
 import sys
 from pathlib import Path
@@ -168,16 +169,33 @@ def render(d, out, sizes):
     # constant 1.45 left the 1:1 prop occupying a third of the picture, with
     # the judge grading texel detail it could barely see. Fix it once, from the
     # largest variant in this batch, and every shot stays comparable.
+    # JUDGE THE MODEL, NOT THE PICTURE OF IT. These three shots came from
+    # layer_view -- flat quads, a debugging aid -- while the thing the tool
+    # delivers is the rig. So every resize fix went into the rig and every
+    # resize verdict came off a picture that never saw it, and both judges kept
+    # reporting a stretched blank band that the model had stopped having. The
+    # same split had already been caught once, on per-bay parts: "the picture
+    # was right and the actual model was not". Grade the deliverable.
     A = json.loads((d / "layers_front.json").read_text())["aspect"]
     frame = max(max(A * w, h) for (w, h) in sizes) * 0.5 * 1.08
     qs = [f"dir=/{d.relative_to(ROOT)}&w={w}&h={h}&frame={frame:.4f}"
-          for (w, h) in sizes]
-    run(["node", str(ROOT / "tools/authoring/layer_view/shoot.mjs"), str(out), *qs],
+          f"&yaw=22&pitch=10" for (w, h) in sizes]
+    run(["node", str(ROOT / "tools/authoring/parts_view/shoot.mjs"), str(out), *qs],
         env=_env())
-    got = []
-    for (w, h) in sizes:
-        m = sorted(out.glob(f"*w-{str(w).replace('.','-')}-h-{str(h).replace('.','-')}*.png"))
-        got.append(m[0] if m else None)
+    # NAME THE FILE, DO NOT GUESS AT IT. shoot.mjs names each shot after its
+    # own query, and this matched them back with a glob -- so `*w-1-h-1*` also
+    # matched `w-1-h-1-5-...`, and sorting put the 1.5x TALLER file first
+    # because '5' precedes 'f'. The ORIGINAL slot got the taller render, the
+    # TALLER slot got the same file again, and the judge was handed one image
+    # twice under two captions. Both judges reported that, in those words, in
+    # round after round -- "image 4 is pixel-identical to image 2, the vertical
+    # resize produced no change at all" -- and I overruled them on the grounds
+    # that the model plainly had changed. The model had. The images had not.
+    # A grader that keeps saying the same impossible thing is worth checking
+    # against the files rather than against the intent.
+    stem = lambda q: re0.sub(r"[^a-z0-9]+", "-", q, flags=re0.I)
+    got = [(out / f"{stem(q)}.png") for q in qs]
+    got = [f if f.exists() else None for f in got]
 
     # BURN THE SCALE INTO THE PICTURE. Both graders reported, twice, that the
     # taller render "produced no change at all" -- and both times it was false:
