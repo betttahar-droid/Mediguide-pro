@@ -153,6 +153,37 @@ def main():
             continue
         if 1 <= i <= len(parts):
             per_bay.append(parts[i - 1]["name"])
+    # WHAT SITS ON A BAY REPEATS WITH THE BAY, WHETHER OR NOT IT WAS LISTED.
+    # The model named this cabinet's six buttons and forgot its two joysticks,
+    # and both judges caught the result in the same words: "the widened deck
+    # gets a second button field with no second stick". That is not a matter of
+    # taste, it is arithmetic. A part in `spans` is bay-level STRUCTURE -- a
+    # control deck, a kick panel -- and everything mounted on it comes with it.
+    # So if anything standing on a structure repeats per bay, everything
+    # standing on that same structure does, because they are one station. Left
+    # to the model this needs a perfect list every time; measured from the
+    # boxes it needs the model to be right once.
+    def box(p):
+        return p["u"][0], p["u"][1], p["v"][0], p["v"][1]
+
+    def sits_on(p, s):
+        pu0, pu1, pv0, pv1 = box(p)
+        su0, su1, sv0, sv1 = box(s)
+        m = 0.03
+        return (pu0 >= su0 - m and pu1 <= su1 + m
+                and pv0 >= sv0 - m and pv1 <= sv1 + m)
+
+    added = []
+    for s in [p for p in parts if p["name"] in spans]:
+        riders = [p for p in parts
+                  if p["name"] != s["name"] and p["name"] not in spans
+                  and sits_on(p, s)]
+        if any(p["name"] in per_bay for p in riders):
+            for p in riders:
+                if p["name"] not in per_bay:
+                    per_bay.append(p["name"])
+                    added.append(f"{p['name']} (stands on {s['name']})")
+
     rules = {
         "wider_means": str(got.get("wider_means", "a wider one of the same thing"))[:300],
         "taller_means": str(got.get("taller_means", "more body, same fittings"))[:300],
@@ -173,6 +204,8 @@ def main():
     print(f"wider  x{rules['max_wider']}: {rules['wider_means']}")
     print(f"taller x{rules['max_taller']}: {rules['taller_means']}")
     print(f"per bay: {', '.join(per_bay) if per_bay else '(nothing repeats)'}")
+    for a in added:
+        print(f"  + {a}")
     print(f"spans:   {', '.join(rules['spans']) if rules['spans'] else '(nothing spans)'}")
 
 

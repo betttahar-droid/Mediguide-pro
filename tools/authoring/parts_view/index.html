@@ -90,6 +90,29 @@ function xFor(q, w, FW, A) {
   return (uc - 0.5) * A;                     // middle: keeps its own place
 }
 
+// where a part ends up across the width, and how wide it ends up -- needed
+// before the part is built, so a station can be laid out along its structure
+function placeX(q) {
+  const ow = (q.u[1] - q.u[0]) * A;
+  const w = spansOf(q).x ? ow + (FW - A) : ow;
+  return { x: spansOf(q).x ? 0 : xFor(q, w, FW, A), w, u: q.u };
+}
+
+// the smallest STRUCTURE this part stands on: a control deck under a joystick,
+// a kick panel under a coin slot. A part that stands on nothing has the prop.
+function hostSpan(q) {
+  if (!q.per_bay) return null;
+  let best = null;
+  for (const s of man.parts) {
+    if (!s.spans || s.name === q.name) continue;
+    const m = 0.03;
+    if (q.u[0] < s.u[0] - m || q.u[1] > s.u[1] + m
+        || q.v[0] < s.v[0] - m || q.v[1] > s.v[1] + m) continue;
+    if (!best || (s.u[1] - s.u[0]) < (best.u[1] - best.u[0])) best = s;
+  }
+  return best ? placeX(best) : null;
+}
+
 function anchorFor(q) {
   if (!strips) return q.anchor;
   const g = strips.strips.find((s) => s.grow_y);
@@ -725,29 +748,66 @@ for (const q of man.parts) {
   const EPS = 0.002;
   const z = surf + (recessed ? EPS - d / 2 : d / 2) + explode * 0.6;
 
-  // THE PIVOT IS THE POINT. A door that spins about its centre is not a door,
-  // so the part hangs off a pivot placed on the edge its motion turns about,
-  // and the mesh is offset back by the same amount inside it.
-  const pivot = new THREE.Object3D();
+  // ONE PER BAY, AND IN 3D TOO. The flat view has instanced per-bay parts since
+  // the two-player rule was written; the rig never did, so every judge that
+  // looked at the SOLID render of a 2x cabinet said the same thing -- "the
+  // widened deck gets a second button field with no second stick", "a wider
+  // cabinet must be a two-player cabinet, it only has one joystick". The flat
+  // picture was right and the actual model was not, which is the worse half to
+  // be wrong in. The prop's own width is the unit: a cabinet twice as wide is
+  // two bays, and anything the tool marked per_bay stands in each of them at
+  // the same place within it. Deciding that per prop is the point -- the same
+  // arithmetic on a jukebox would give it two turntables.
+  // THE BAYS ARE LAID OUT ON WHAT THE PART STANDS ON, NOT ON THE WHOLE PROP.
+  // Dividing the cabinet's full width into two put bay one's joystick out on
+  // the bare flank, three hundred pixels clear of the deck it belongs to: the
+  // deck does not run the full width and never claimed to. A station repeats
+  // along its own structure, so the host's placed extent is the ruler.
+  const host = hostSpan(q);
+  const bays = q.per_bay ? Math.max(1, Math.round(FW / A)) : 1;
+  const bayW = (host ? host.w : FW) / bays;
+  const bx0 = host ? host.x - host.w / 2 : -FW / 2;
+  // its place within one bay, measured from the host's own left edge
+  const ox = host
+    ? ((q.u[0] + q.u[1]) / 2 - (host.u[0] + host.u[1]) / 2) * A
+    : ((q.u[0] + q.u[1]) / 2 - 0.5) * A;
   const m = q.motion || 'none';
-  let off = [0, 0, 0];
-  if (m === 'hinge_left') off = [-w / 2, 0, 0];
-  else if (m === 'hinge_right') off = [w / 2, 0, 0];
-  else if (m === 'hinge_bottom') off = [0, -h / 2, 0];
-  else if (m === 'hinge_top') off = [0, h / 2, 0];
-  else if (m === 'stick') off = [0, -h / 2, 0];
-  pivot.position.set(x + off[0], y + off[1], z + off[2]);
-  mesh.position.set(-off[0], -off[1], -off[2]);
-  pivot.add(mesh);
-  // NAME BOTH, AND RECORD THE MECHANISM. An exported rig is only editable if
-  // the thing you select in a DCC tool tells you what it is and how it moves;
-  // an anonymous Object3D_7 is no better than a merged mesh.
-  pivot.name = q.name;
-  mesh.name = `${q.name}_mesh`;
-  pivot.userData = { part: q.name, motion: m, depth: q.depth ?? 'proud',
-                     resize: R, anchor: q.anchor };
-  scene.add(pivot);
-  if (m !== 'none') movers.push({ pivot, motion: m, w, h, d });
+  for (let b = 0; b < bays; b++) {
+    const bx = bays > 1 ? bx0 + bayW * (b + 0.5) + ox : x;
+    // THE PIVOT IS THE POINT. A door that spins about its centre is not a door,
+    // so the part hangs off a pivot placed on the edge its motion turns about,
+    // and the mesh is offset back by the same amount inside it.
+    const pivot = new THREE.Object3D();
+    let off = [0, 0, 0];
+    if (m === 'hinge_left') off = [-w / 2, 0, 0];
+    else if (m === 'hinge_right') off = [w / 2, 0, 0];
+    else if (m === 'hinge_bottom') off = [0, -h / 2, 0];
+    else if (m === 'hinge_top') off = [0, h / 2, 0];
+    else if (m === 'stick') off = [0, -h / 2, 0];
+    // each bay mounts on the surface under IT, not under the first one
+    let bsurf = -Infinity;
+    for (let k = 0; k <= 8; k++) {
+      const yy = (y - h / 2 + (h * k) / 8) / FH + 0.5;
+      for (let j = 0; j <= 4; j++) {
+        bsurf = Math.max(bsurf, frontZAt(tOfG(yy), bx - w / 2 + (w * j) / 4));
+      }
+    }
+    const bz = bsurf + (recessed ? EPS - d / 2 : d / 2) + explode * 0.6;
+    const inst = bays > 1 ? mesh.clone() : mesh;
+    pivot.position.set(bx + off[0], y + off[1], bz + off[2]);
+    inst.position.set(-off[0], -off[1], -off[2]);
+    pivot.add(inst);
+    // NAME BOTH, AND RECORD THE MECHANISM. An exported rig is only editable if
+    // the thing you select in a DCC tool tells you what it is and how it moves;
+    // an anonymous Object3D_7 is no better than a merged mesh.
+    pivot.name = bays > 1 ? `${q.name}_bay${b + 1}` : q.name;
+    inst.name = `${pivot.name}_mesh`;
+    pivot.userData = { part: q.name, motion: m, depth: q.depth ?? 'proud',
+                       resize: R, anchor: q.anchor,
+                       ...(bays > 1 ? { bay: b + 1, bays } : {}) };
+    scene.add(pivot);
+    if (m !== 'none') movers.push({ pivot, motion: m, w, h, d });
+  }
 }
 
 // --- drive the motions ------------------------------------------------------
