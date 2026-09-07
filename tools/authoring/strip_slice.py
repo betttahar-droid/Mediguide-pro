@@ -123,6 +123,13 @@ def flank_window(diff, w=0.09, lo=0.07, hi=0.44):
     return (besti / n, (besti + k) / n), best
 
 
+# Above this, a region is ARTWORK and repeating it duplicates content a player
+# can name -- a screen, a ship, a row of cans. Measured as mean absolute
+# neighbour difference on 0..255, so it is an absolute bar and not a quantile:
+# every axis has a quietest tenth, and on a busy strip that tenth is still busy.
+QUIET = 2.0
+
+
 def grow_mode(diff):
     """Repeat an interior band, or hold the art and grow its FLANKS?
 
@@ -140,11 +147,20 @@ def grow_mode(diff):
     """
     n = len(diff)
     if n < 8:
-        return "repeat", (0.15, 0.24)
-    c0, c1 = int(0.34 * n), int(0.66 * n)
-    centre = sum(diff[c0:c1]) / max(1, c1 - c0)
+        return "extend", (0.15, 0.24), False
     (f0, f1), fn = flank_window(diff)
-    return ("extend" if fn < 0.6 * max(centre, 1e-6) else "repeat"), (f0, f1)
+    _, bn = quiet_window(diff, 0.10)
+    if bn < QUIET:
+        return "repeat", (f0, f1), True
+    # NOTHING INSIDE IS QUIET ENOUGH TO REPEAT. Repeating the best of a busy
+    # strip is how a widened cabinet ended up with three screens, ships cut
+    # mid-sprite and a row of doubled can labels -- the judge called every one
+    # of those a bug a player could point at, and it was right. Hold the
+    # artwork at its real size and grow the flanks instead; and if even the
+    # flanks are busy, grow them from a SINGLE column stretched, which cannot
+    # duplicate anything. A plain extruded band reads as more cabinet. A second
+    # copy of the screen reads as broken.
+    return "extend", (f0, f1), (fn < QUIET)
 
 
 def main():
@@ -180,11 +196,13 @@ def main():
         hband, noise = quiet_window(cd, 0.10)
         rows = rd[y0:max(y0 + 2, y1 - 1)]
         vband, vnoise = quiet_window(rows, 0.25)
-        hmode, hflank = grow_mode(cd)
-        vmode, vflank = grow_mode(rows)
+        hmode, hflank, hrep = grow_mode(cd)
+        vmode, vflank, vrep = grow_mode(rows)
         strips.append({
             "hmode": hmode, "hf": [round(hflank[0], 5), round(hflank[1], 5)],
+            "hf_repeat": hrep,
             "vmode": vmode, "vf": [round(vflank[0], 5), round(vflank[1], 5)],
+            "vf_repeat": vrep,
             # v measured from the BOTTOM, like everything else the renderer eats
             "v": [round(1 - y1 / H, 5), round(1 - y0 / H, 5)],
             "h": [round(hband[0], 5), round(hband[1], 5)],

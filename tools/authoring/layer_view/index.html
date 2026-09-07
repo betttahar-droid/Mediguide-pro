@@ -139,7 +139,10 @@ function bgFromStrips(S) {
                   FW / 2 - (f0 * A) - grow, FW / 2 - f0 * A, FW / 2];
       const uu = [0, f0, f1, 1 - f1, 1 - f0, 1];
       const unit = Math.max(1e-3, (f1 - f0) * A);
-      const n = Math.min(64, Math.max(1, Math.round(grow / unit)));
+      // a flank quiet enough to repeat is repeated; one that is not is grown
+      // from a single column stretched, which cannot duplicate any artwork
+      const n = S_frep ? Math.min(64, Math.max(1, Math.round(grow / unit))) : 1;
+      const fc = (f0 + f1) / 2;
       for (let i = 0; i < 5; i++) {
         if (xs[i + 1] - xs[i] <= 1e-6) continue;
         const c = (i === 1 || i === 3) ? n : 1;
@@ -148,7 +151,11 @@ function bgFromStrips(S) {
           const x1 = xs[i] + (xs[i + 1] - xs[i]) * (m + 1) / c;
           // grow the RIGHT flank from the mirrored window, so both sides read
           // the same frame and the art stays centred
-          const u0 = i === 3 ? uu[4] : uu[i], u1 = i === 3 ? uu[3] : uu[i + 1];
+          let u0 = i === 3 ? uu[4] : uu[i], u1 = i === 3 ? uu[3] : uu[i + 1];
+          if (!S_frep && (i === 1 || i === 3)) {
+            u0 = i === 3 ? 1 - fc : fc;
+            u1 = u0;
+          }
           quad(x0, x1, yBot, yTop, u0, u1, vBot, vTop);
         }
       }
@@ -173,10 +180,11 @@ function bgFromStrips(S) {
       }
     }
   };
-  let S_h = [0.4, 0.6], S_mode = 'repeat', S_f = [0.15, 0.24];
+  let S_h = [0.4, 0.6], S_mode = 'repeat', S_f = [0.15, 0.24], S_frep = true;
   let yTop = FH / 2;
   for (const st of list) {
     S_h = st.h; S_mode = st.hmode || 'repeat'; S_f = st.hf || [0.15, 0.24];
+    S_frep = st.hf_repeat !== false;
     const oh = (st.px[1] - st.px[0]) / H;               // its real height
     const vTop = 1 - st.px[0] / H, vBot = 1 - st.px[1] / H;
     if (!st.grow_y || extra <= 0) {

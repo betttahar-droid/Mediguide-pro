@@ -289,6 +289,14 @@ def main():
         if not blocking and not v.get("looks_good"):
             print("  no blocking faults -- treating as a pass")
             v["looks_good"] = True
+        # AND A PASS CANNOT CARRY A BLOCKING FAULT. The judge returned
+        # looks_good=true alongside "duplicated content blocks that read as a
+        # bug" in the same reply; at a shipping bar the fault list is the
+        # answer and the flag is a summary of it.
+        if blocking and v.get("looks_good"):
+            print(f"  judge said looks_good but listed {len(blocking)} "
+                  f"blocking fault(s) -- not a pass")
+            v["looks_good"] = False
         if best is None or len(blocking) < best[0]:
             best = (len(blocking), rnd)
         if v.get("looks_good"):
