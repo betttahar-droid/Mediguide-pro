@@ -493,6 +493,31 @@ def main():
             print(f"  {p['name']}: called structure but only {100*fw_:.0f}% "
                   f"wide -- not a frame")
             p["spans"] = False
+        # STRUCTURE CARRIES SOMETHING, OR IT RUNS THE WHOLE WIDTH. scale_rules
+        # is told in as many words not to call a screen structure, and it did
+        # anyway -- so the screen was promoted to spanx_center and a widened
+        # cabinet came back with one small picture adrift in a huge black
+        # rectangle, which both judges called "does not read as a monitor".
+        # What makes a control deck structure is that joysticks stand on it;
+        # what makes a kick panel structure is that it runs wall to wall. A
+        # part that does neither is content, whatever it was called.
+        # AND WHAT IT CARRIES HAS TO STAND OFF IT. Counting anything inside the
+        # box kept the screen structural, because its HUD -- score, timer, lap
+        # -- sits inside it: that is the screen's own picture, not six fittings
+        # bolted to a frame. A joystick and a button stand proud of the deck; a
+        # score readout is painted on. The depth class already says which.
+        if p.get("spans") and fw_ < 0.88:
+            riders = [o for o in man["parts"]
+                      if o["name"] != p["name"]
+                      and o.get("depth", "proud") in ("proud", "deep")
+                      and o["px"][0] >= p["px"][0] - 4
+                      and o["px"][2] <= p["px"][2] + 4
+                      and o["px"][1] >= p["px"][1] - 4
+                      and o["px"][3] <= p["px"][3] + 4]
+            if not riders:
+                print(f"  {p['name']}: structure that carries nothing and does "
+                      f"not run the width ({100*fw_:.0f}%) -- content, not frame")
+                p["spans"] = False
         if p.get("spans"):
             if rule == "fixed":
                 print(f"  {p['name']}: structure, fixed -> spanx_center")
@@ -516,11 +541,32 @@ def main():
         # the extra just inside its own edge moulding. Frames and faces then
         # grow by one rule instead of two.
         hf = None
-        if p.get("spans"):
+        # AND ANY _center PART NEEDS THE SAME WINDOW, not just a frame. A
+        # _center rule promises one piece of artwork held at its real size with
+        # the ENDS extending, and the renderer can only keep that promise if it
+        # knows where the plain flanks are. Without hf a marquee fell back to
+        # stretching its measured middle band -- which on a marquee is the gap
+        # between two letters -- and the title split in half when the cabinet
+        # widened.
+        if p.get("spans") or rule.endswith("_center"):
             try:
                 from strip_slice import col_diff, flank_window
                 rgb = crop.convert("RGB")
-                hf = list(flank_window(col_diff(rgb, 0, rgb.size[1]))[0])
+                win, score = flank_window(col_diff(rgb, 0, rgb.size[1]))
+                # NO PLAIN FLANK MEANS NO GROWTH, AND THAT IS AN ANSWER.
+                # flank_window falls back to a zero-width cut just inside the
+                # trim when nothing is quiet enough, which is right for a
+                # background strip and wrong for a fitting: on this marquee the
+                # cut landed two letters in and widening the cabinet gave back
+                # "QU  ANTUM" and "R  UNNER" with a smeared column between.
+                # A part whose artwork runs edge to edge has nowhere to put the
+                # extra width, and holding it at its real size in the centre is
+                # the honest answer -- exactly what a person would do with one
+                # title on a wider sign.
+                hf = None if score >= 999 or win[1] <= win[0] else list(win)
+                if hf is None:
+                    print(f"  {p['name']}: {rule} but its artwork runs edge to "
+                          f"edge -- nowhere to grow, held at real size")
             except Exception:
                 hf = None
         out.append({

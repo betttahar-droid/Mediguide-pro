@@ -31,7 +31,19 @@ export function faceQuads(q, w, h, ow, oh) {
   // width is INSERTED just inside its own edge, holding the artwork whole at
   // its real size. Without this a screen bezel marked as structure simply kept
   // its size and a widened cabinet was the same cabinet with panel beside it.
-  if (R.startsWith('spanx') && !(q.bands && q.bands.h) && q.hf && w > ow) {
+  // AND "_center" MEANS THE ENDS EXTEND, WHICH IS NOT THE SAME AS STRETCHING
+  // THE MIDDLE. This path used to run only when a part had no measured band;
+  // with one, a _center part fell through to the nine-slice below and had its
+  // middle stretched -- and on a marquee the most uniform strip across the
+  // artwork is the GAP BETWEEN TWO LETTERS. So the band landed inside the
+  // title and widening the cabinet split it: "QU/ANTUM", "R/UNNER", with a
+  // smear across the join. Both judges called it unreadable, which it was.
+  // A measured band is the right thing for _repeat, whose job is to instance a
+  // uniform unit. _center's job is the opposite -- hold ONE piece of artwork
+  // at its real size -- so it inserts the extra width at the part's plain
+  // flanks and never touches the middle at all.
+  if (R.startsWith('spanx') && (R.endsWith('_center') || !(q.bands && q.bands.h))
+      && q.hf && w > ow) {
     const [f0, f1] = q.hf;
     const add = Math.max(0, (w - ow) / 2);
     const seg = [[f0 * ow, 0, f0], [add, f0, f1], [(f1 - f0) * ow, f0, f1],
@@ -88,8 +100,15 @@ export function faceQuads(q, w, h, ow, oh) {
 // drawn at one size and positioned as though it were another.
 export function spansOf(q) {
   const R = q.resize || 'fixed';
+  // EACH RULE NEEDS ITS OWN THING, AND WITHOUT IT DOES NOT GROW. _repeat needs
+  // a measured uniform band to instance; _center needs a plain flank to insert
+  // into. Accepting either for both let a _center marquee with no flank claim
+  // it could span on the strength of a band -- and then get its middle
+  // stretched, which is what split the title. A part that has neither holds
+  // its real size, which is the honest answer and always was.
+  const center = R.endsWith('_center');
   return {
-    x: R.startsWith('spanx') && !!((q.bands && q.bands.h) || q.hf),
+    x: R.startsWith('spanx') && (center ? !!q.hf : !!(q.bands && q.bands.h)),
     y: R.startsWith('spany') && !!(q.bands && q.bands.v),
   };
 }
