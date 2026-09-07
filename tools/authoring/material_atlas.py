@@ -1,0 +1,333 @@
+#!/usr/bin/env python3
+"""Ask for the prop's MATERIALS, instead of carving them out of a painting.
+
+    python3 tools/authoring/material_atlas.py work/ps1 --asset "arcade cabinet"
+
+Authoring tool. NOT a build, CI or runtime dependency.
+
+WHY THIS EXISTS, AND WHY THE OLD WAY COULD NOT WIN.
+
+Every surface in this tool has been reverse-engineered out of one painted
+picture of the finished prop: find the flattest patch, divide out its gradient,
+cross-blend it into something that tiles, patch the hole it left. That is
+un-baking a cake. It works, and the ceiling is exactly where you would expect
+-- the last judged run ended on the same fault in three different wordings,
+"repeats as visible horizontal bands", "the decal is smeared and cut at the
+panel edge", "disjointed stacked panel seams". There is no crop of a
+hand-painted, weathered, unevenly lit panel that tiles invisibly. Choosing the
+least-bad crop is the whole of what that approach can do.
+
+So ask for the ingredients rather than the dish. A material authored AS a
+material has no artwork to separate out, no gradient to divide away and no
+hole to patch: it is already the thing the fill wants to be. The elevation
+stays exactly where it is useful -- as the reference that keeps the palette
+honest, and as the drawing the geometry audit still measures against.
+
+THE MODEL AUTHORS AND NAMES; ARITHMETIC MEASURES AND VERIFIES. That division
+is the one thing this repo has learned the hard way (see R3 and section 14.0:
+never read proportions off pixels), and it is not relaxed here just because the
+model is being asked for something it is good at. "Seamlessly tileable" is a
+claim, so it is checked: tile_seam_ratio butts two copies together and scores
+the join against the tile's own interior gradient. A swatch that fails goes
+through the same overlap blend the carved tiles used, and the score after is
+recorded. Nothing is trusted because it was requested.
+"""
+import argparse
+import json
+import sys
+from collections import Counter
+from pathlib import Path
+
+from PIL import Image
+
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "tools" / "authoring"))
+from concept_sheet import generate_image, load_key  # noqa: E402
+from seamless_tile import (make_seamless_overlap, tile_seam_ratio,  # noqa: E402
+                           cross_seam_ratio)
+
+# Six is a compromise found by looking: three leaves a cabinet without its
+# grille or its glass, and nine makes each cell small enough that the model
+# starts drawing objects in them instead of material.
+COLS, ROWS = 3, 2
+
+PROMPT = """A MATERIAL SWATCH SHEET for a {asset}, in the style of the attached
+reference elevations.
+
+Draw a {cols} by {rows} grid of square swatches on a pure white background,
+with a wide white gutter between every swatch and a wide white margin around
+the whole grid.
+
+Each square is ONE MATERIAL of this {asset}, filling its square edge to edge:
+
+  - the main body panel, as bare material
+  - a second body material if the prop has one (a different panel, wood, metal)
+  - the metal of its trim, mouldings and fixings
+  - a mesh, grille or vent material if it has one
+  - a dark material: rubber, plastic, the inside of a recess
+  - a worn/dirty version of the main body panel
+
+EVERY SWATCH MUST BE:
+
+  - FLAT MATERIAL ONLY. No object, no fitting, no edge, no corner, no border,
+    no outline, no lettering, no logo, no number, no icon, no label.
+  - EVENLY LIT. No highlight, no shadow, no vignette, no gradient from one
+    side to the other. Same brightness in the middle as at the edges.
+  - SEAMLESSLY TILEABLE. The left edge must continue into the right edge and
+    the top edge into the bottom, so that copies laid side by side show no
+    join at all.
+  - FINE GRAINED. Small scale grain, weathering and speckle, of the kind that
+    reads as a surface. No large blobs, no big stains, no single feature that
+    the eye would find again when the swatch is repeated.
+
+Hand-painted PlayStation-era texture look, low resolution, muted palette taken
+from the reference. Do not label the swatches. Do not draw the {asset} itself.
+"""
+
+NAME_ASK = """These are material swatches cut from a sheet for a {asset}.
+
+Name each one for what MATERIAL it is, in one or two lowercase words with
+underscores -- for example body_panel, worn_panel, metal_trim, vent_mesh,
+dark_rubber, wood. Use the same name only once.
+
+Also say, for each, whether it is the prop's MAIN body material.
+
+JSON only, one entry per swatch in the order given:
+{{"materials": [{{"n": 1, "name": "...", "main": true}}, ...]}}"""
+
+
+def cells(path, cols=COLS, rows=ROWS, pad=3):
+    """Cut the sheet on its white gutters. Deterministic; no model involved.
+
+    The grid is asked for and then MEASURED, not assumed: a model that draws
+    five swatches instead of six, or drifts the spacing, still splits
+    correctly, and if the gutters cannot be found at all the even division is
+    the fallback rather than the failure.
+    """
+    im = Image.open(path).convert("RGB")
+    W, H = im.size
+    px = im.load()
+    bg = Counter([px[0, 0], px[W - 1, 0], px[0, H - 1],
+                  px[W - 1, H - 1]]).most_common(1)[0][0]
+
+    def is_bg(c):
+        return sum(abs(a - b) for a, b in zip(c, bg)) < 40
+
+    def runs(flags, lo):
+        out, s = [], None
+        for i, f in enumerate(flags):
+            if f and s is None:
+                s = i
+            elif not f and s is not None:
+                if i - s >= lo:
+                    out.append((s, i))
+                s = None
+        if s is not None and len(flags) - s >= lo:
+            out.append((s, len(flags)))
+        return out
+
+    xr = runs([any(not is_bg(px[x, y]) for y in range(0, H, 2))
+               for x in range(W)], W // (cols * 4))
+    yr = runs([any(not is_bg(px[x, y]) for x in range(0, W, 2))
+               for y in range(H)], H // (rows * 4))
+    # THE GRID IS WHATEVER WAS DRAWN, NOT WHATEVER WAS ASKED FOR. The prompt
+    # asks for 3 by 2 and the model drew 2 by 4 -- which is a perfectly good
+    # sheet of six materials, and the first version of this splitter measured
+    # that correctly and then threw the measurement away in favour of the
+    # request. Overriding a measurement with an assumption is the one mistake
+    # this whole tool is organised against. The layout is data; only when the
+    # gutters yield nothing usable is an even split a better guess than none.
+    if not (1 <= len(xr) <= 6 and 1 <= len(yr) <= 6 and 2 <= len(xr) * len(yr) <= 16):
+        print(f"  gutters gave {len(xr)}x{len(yr)} -- splitting evenly instead")
+        xr = [(int(W * i / cols), int(W * (i + 1) / cols)) for i in range(cols)]
+        yr = [(int(H * j / rows), int(H * (j + 1) / rows)) for j in range(rows)]
+    else:
+        print(f"  grid measured {len(xr)}x{len(yr)}")
+
+    out = []
+    for (y0, y1) in yr:
+        for (x0, x1) in xr:
+            # inset, because the swatch's own outermost pixels are where a
+            # drawn square blends into the gutter and are not material
+            k = pad + max(2, (x1 - x0) // 24)
+            box = (x0 + k, y0 + k, max(x0 + k + 8, x1 - k),
+                   max(y0 + k + 8, y1 - k))
+            out.append(im.crop(box))
+    return out
+
+
+def prove(sw, size=64):
+    """Make it tile, and say by how much it did not.
+
+    A swatch is asked for as tileable and then treated as though it might not
+    be, because that is the difference between a pipeline that works and one
+    that works when the model is having a good day. The overlap blend is the
+    same one the carved tiles used; the only change is that it now starts from
+    material rather than from a crop of a painting, which is why it has so
+    little left to do.
+    """
+    src = sw.convert("RGB").resize((size, size), Image.LANCZOS)
+    before = max(tile_seam_ratio(src) + cross_seam_ratio(src))
+    best = None
+    for k in (8, 12, 16):
+        big = sw.convert("RGB").resize((size + k, size + k), Image.LANCZOS)
+        t = make_seamless_overlap(big, size, size, k)
+        got = max(tile_seam_ratio(t) + cross_seam_ratio(t))
+        if best is None or got < best[0]:
+            best = (got, t)
+    after, tile = best
+    # KEEP WHICHEVER ACTUALLY TILES BETTER, FULL STOP. The blend exists to
+    # rescue a crop that does not wrap; on a swatch drawn as material it has
+    # little to fix and can only soften. The vent mesh proved it -- a hard
+    # regular grid, 1.36 raw, 1.64 after blending, because cross-fading a
+    # lattice against a half-period copy of itself smears the lattice. Gating
+    # the raw square behind an absolute threshold threw away the better of the
+    # two whenever both were imperfect, which is precisely when it matters.
+    if before <= after:
+        return src, before, before
+    return tile, before, after
+
+
+def grain_px(im, step=1):
+    """How fine this surface is: mean absolute neighbour difference."""
+    g = im.convert("RGB")
+    W, H = g.size
+    px = g.load()
+    n = tot = 0
+    for x in range(0, W - step, 2):
+        for y in range(0, H - step, 2):
+            a, b = px[x, y], px[x + step, y + step]
+            tot += sum(abs(p - q) for p, q in zip(a, b)) / 3
+            n += 1
+    return tot / max(1, n)
+
+
+def match_grain(tile, panel, lo=16, hi=192):
+    """How many elevation pixels one tile should cover.
+
+    A SWATCH HAS NO SCALE OF ITS OWN. It is a square of material and nothing in
+    it says whether that square is a hand's width or a wall. Guessing a number
+    puts the prop's grain at a size unrelated to its painted panels, and the
+    two then disagree wherever they meet -- which is exactly the join the fill
+    has to cross. The elevation already shows this material at the right size,
+    so match to it: resample the tile to each candidate size and take the one
+    whose grain statistic lands closest to the painted panel's. Measured, per
+    prop, from the drawing that is already the reference for everything else.
+    """
+    want = grain_px(panel)
+    best = None
+    n = lo
+    while n <= hi:
+        got = grain_px(tile.resize((n, n), Image.LANCZOS))
+        d = abs(got - want)
+        if best is None or d < best[0]:
+            best = (d, n, got)
+        n = int(n * 1.4)
+    return best[1], round(want, 2), round(best[2], 2)
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("sheet_dir")
+    ap.add_argument("--asset", default="game prop")
+    ap.add_argument("--size", type=int, default=64)
+    ap.add_argument("--redraw", action="store_true")
+    args = ap.parse_args()
+
+    d = Path(args.sheet_dir)
+    d.mkdir(parents=True, exist_ok=True)
+    sheet = d / "materials.png"
+    key = load_key()
+
+    if args.redraw or not sheet.exists():
+        refs = [p for p in (d / "front.png", d / "side.png") if p.exists()]
+        generate_image(
+            PROMPT.format(asset=args.asset, cols=COLS, rows=ROWS),
+            sheet, key, refs=refs)
+        print(f"  drew {sheet}")
+
+    sw = cells(sheet)
+    print(f"  {len(sw)} swatches")
+
+    out = d / "materials"
+    out.mkdir(exist_ok=True)
+    got = []
+    for i, s in enumerate(sw, 1):
+        tile, before, after = prove(s, args.size)
+        p = out / f"m{i}.png"
+        tile.save(p)
+        got.append({"n": i, "image": f"materials/m{i}.png",
+                    "seam_before": round(before, 3),
+                    "seam_after": round(after, 3),
+                    "tiles": bool(after <= 1.25)})
+        print(f"    m{i}: seam {before:.2f} -> {after:.2f}"
+              f"{'' if after <= 1.25 else '   STILL SEAMS'}")
+
+    # NAMING IS THE MODEL'S JOB AND MEASURING IS NOT, so it is asked only what
+    # each material IS -- never how big, how it repeats or where it goes.
+    named = {}
+    try:
+        from gemini_judge import vision_json
+        r, model = vision_json(NAME_ASK.format(asset=args.asset),
+                               [out / f"m{i}.png" for i in range(1, len(sw) + 1)],
+                               key)
+        for e in r.get("materials", []):
+            try:
+                named[int(e["n"])] = (str(e.get("name", "")).strip().lower()
+                                      .replace(" ", "_")[:32],
+                                      bool(e.get("main")))
+            except (KeyError, TypeError, ValueError):
+                continue
+        print(f"    {model} named {len(named)} of {len(sw)}")
+    except Exception as e:
+        print(f"  ! naming failed ({type(e).__name__}) -- numbers will do")
+
+    seen = set()
+    for g in got:
+        nm, main = named.get(g["n"], (f"material_{g['n']}", False))
+        if not nm or nm in seen:
+            nm = f"material_{g['n']}"
+        seen.add(nm)
+        g["name"], g["main"] = nm, main
+    if not any(g["main"] for g in got):
+        got[0]["main"] = True         # something has to be the carcass
+
+    # the main material's grain is matched to the elevation's own panel, so a
+    # filled area and a painted one show the same size of speckle
+    px_per_tile = 48
+    try:
+        from identify_parts import object_crop
+        face = object_crop(d / "front.png").convert("RGB")
+        W2, H2 = face.size
+        # FROM THE CLEANEST FLAT CELL, NOT FROM THE MIDDLE OF THE FACE. A slab
+        # taken by fraction lands on the coin door and its trim, and the grain
+        # statistic then measures EDGES rather than material -- 11.1 against a
+        # swatch that cannot exceed about 2 however it is scaled, so the match
+        # pins itself to whichever end of the range it started from.
+        # layer_build already finds the flattest cell on the face and writes it
+        # down for the panel patch; that is the same question asked once.
+        pp = d / "panel_patch_front.json"
+        if pp.exists():
+            x0, y0, pw, ph = json.loads(pp.read_text())["patch"]
+            panel = face.crop((x0, y0, x0 + pw, y0 + ph))
+        else:
+            panel = face.crop((int(W2 * 0.3), int(H2 * 0.55),
+                               int(W2 * 0.7), int(H2 * 0.85)))
+        main = next(g for g in got if g["main"])
+        px_per_tile, want, gotg = match_grain(
+            Image.open(out / f"m{main['n']}.png"), panel)
+        print(f"  grain: panel {want}, tile {gotg} at {px_per_tile}px "
+              f"of a {H2}px elevation")
+    except Exception as e:
+        print(f"  ! grain match failed ({type(e).__name__}), using {px_per_tile}px")
+
+    (d / "materials.json").write_text(json.dumps(
+        {"asset": args.asset, "px_per_tile": px_per_tile,
+         "materials": got}, indent=1))
+    ok = sum(1 for g in got if g["tiles"])
+    print(f"  {ok}/{len(got)} tile cleanly -> {d / 'materials.json'}")
+    print("   ", ", ".join(f"{g['name']}{'*' if g['main'] else ''}" for g in got))
+
+
+if __name__ == "__main__":
+    main()

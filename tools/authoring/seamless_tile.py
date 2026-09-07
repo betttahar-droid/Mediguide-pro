@@ -467,6 +467,58 @@ def main():
     raw = bg.crop((x0, y0, x0 + pw, y0 + ph)).resize((size, size),
                                                      Image.LANCZOS)
     rv, rh = tile_seam_ratio(raw)
+    # THE TILE CARRIES THE GRAIN; THE PANEL DECIDES THE COLOUR. flatten() lifts
+    # the low-frequency gradient off so the tile can repeat at all, and that is
+    # the same operation that throws away where the panel sits on the colour
+    # wheel. On this cabinet the patch landed near the left edge and the tile
+    # came out dusty pink at (150,121,126) against a body whose panel is
+    # (71,77,83) -- so a widened cabinet grew pink. Which patch the search
+    # happens to pick is a lottery worth not depending on: put the tile's
+    # median back onto the panel's median and the fill matches whatever it is
+    # standing next to, however the cut went.
+    tp = tile.load()
+    ob_pix = [tp[x, y] for x in range(size) for y in range(size)]
+    face = Image.open(d / f"bg_{args.face}.png").convert("RGBA")
+    fp = face.load()
+    FW, FH = face.size
+    panel = [fp[x, y] for x in range(0, FW, 2) for y in range(0, FH, 2)
+             if fp[x, y][3] > 200]
+    if panel:
+        def med(vals):
+            v = sorted(vals)
+            return v[len(v) // 2]
+        for c in range(3):
+            want = med([q[c] for q in panel])
+            have = med([q[c] for q in ob_pix])
+            k2 = 0 if have <= 0 else min(3.0, want / have)
+            for x in range(size):
+                for y in range(size):
+                    q = list(tp[x, y])
+                    q[c] = max(0, min(255, int(round(q[c] * k2))))
+                    tp[x, y] = tuple(q)
+        print(f"  tile recoloured to the panel: median now "
+              f"{tuple(med([tp[x, y][c] for x in range(size) for y in range(size)]) for c in range(3))}")
+    # GRAIN REPEATS AS MATERIAL; A BLOB REPEATS AS WALLPAPER. With the colour
+    # right, the fill was clean except for one thing: a small light mark in the
+    # patch tiled across the whole added panel as a faint regular motif, which
+    # is exactly the "repeat a player could point at" this tile exists to
+    # avoid. The difference between grain and a feature is amplitude, not
+    # frequency -- so clamp each texel to within a fixed multiple of the tile's
+    # own median absolute deviation. Fine variation passes through untouched
+    # and only the outliers, which are the things the eye latches onto, are
+    # pulled back. Damping everything was tried once and made an enlarged prop
+    # read as a flat slab; this keeps the material and removes the pattern.
+    tp2 = tile.load()
+    for c in range(3):
+        vals = sorted(tp2[x, y][c] for x in range(size) for y in range(size))
+        med = vals[len(vals) // 2]
+        mad = sorted(abs(v - med) for v in vals)[len(vals) // 2] or 1
+        lim = 2.0 * mad
+        for x in range(size):
+            for y in range(size):
+                q = list(tp2[x, y])
+                q[c] = int(round(med + max(-lim, min(lim, q[c] - med))))
+                tp2[x, y] = tuple(max(0, min(255, v)) for v in q)
     tile.save(d / f"tile_{args.face}.png")
     print(f"panel patch {pw}x{ph} at ({x0},{y0}) -> {size}px tile, overlap k={k}")
     print(f"  raw crop   wrap v {rv:5.2f}  h {rh:5.2f}")

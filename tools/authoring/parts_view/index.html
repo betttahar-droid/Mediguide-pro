@@ -164,6 +164,32 @@ const mapped = (t, c) => (t
 
 // --- the body ---------------------------------------------------------------
 // material slots, shared by both body builds
+// The carcass material, at a texel density measured from the elevation itself.
+// AUTHORED IF THERE IS ONE, CARVED IF THERE IS NOT. material_atlas asks the
+// image model for the prop's materials as materials -- flat, evenly lit,
+// tileable by construction -- and proves each one wraps before writing it out.
+// That is a different thing from the tile seamless_tile carves out of the
+// painting: the body panel came back scoring 1.76 as drawn where a crop of the
+// same panel scored 27. The carved tile stays as the fallback, because a prop
+// whose atlas failed still has to be built.
+let tileTex = null, tileWorld = 0.05;
+try {
+  const px = strips?.size?.[1] ?? sliceBg?.size?.[1] ?? 600;
+  const mj = await (await fetch(`${dir}/materials.json`)).json();
+  const main = (mj.materials || []).find((m) => m.main) || (mj.materials || [])[0];
+  if (!main) throw new Error('no materials');
+  tileTex = await load(`${dir}/${main.image}`);
+  tileWorld = Math.max(1e-3, (mj.px_per_tile ?? 48) / px);
+} catch {
+  try {
+    const tj = await (await fetch(`${dir}/tile_front.json`)).json();
+    tileTex = await load(`${dir}/${tj.tile}`);
+    const px = strips?.size?.[1] ?? sliceBg?.size?.[1] ?? 600;
+    tileWorld = Math.max(1e-3, (tj.size ?? 24) / px);
+  } catch {}
+}
+if (tileTex) tileTex.wrapS = tileTex.wrapT = THREE.RepeatWrapping;
+
 const MAT = [
   mapped(faceTex.side, 0x6a5a4a),          // 0  the two profile caps
   new THREE.MeshBasicMaterial({ map: bgTex, side: THREE.DoubleSide,
@@ -171,6 +197,10 @@ const MAT = [
   mapped(faceTex.back, 0x6a5a4a),          // 2  back
   mapped(faceTex.top, 0x6a5a4a),           // 3  top
   plain(0x2a2622),                         // 4  underside, never seen
+  // 5  the carcass, tiled in WORLD space so its texel density never changes:
+  // a cabinet made twice as wide gains twice as much panel, at the same grain
+  tileTex ? new THREE.MeshBasicMaterial({ map: tileTex, side: THREE.DoubleSide })
+          : plain(0x6a5a4a),
 ];
 
 // THE BODY IS THE INTERSECTION OF TWO SILHOUETTES, NOT ONE EXTRUSION.
@@ -349,17 +379,29 @@ const growBand = (() => {
 // The runs come back as pairs: g is the fraction along the FINISHED prop, t
 // the fraction along the DRAWING. Outside the band they are the same length so
 // nothing moves; inside, each run is one whole copy of the band.
+// THE ARTWORK IS NEVER CUT; WHAT A RESIZE ADDS IS MATERIAL. Repeating the
+// band was the least-bad way to cut up a painted picture, and it was still a
+// cut: every judged round ended with the same fault in different words --
+// "repeats as visible horizontal bands and seams across the middle", "the
+// decal is smeared and cut at the panel edge", "disjointed stacked panel
+// seams". There is no band of a hand-painted, weathered panel that tiles
+// invisibly. Choosing the least-bad cut is the whole of what nine-slicing can
+// do, and it is not enough.
+//
+// An artist widening a cabinet does not stretch the front panel. They keep it
+// and put more carcass beside it. So the elevation is mapped ONCE, at its real
+// size, anchored at the cut -- never stretched, never repeated, never split
+// through its own artwork -- and the area the resize adds is filled with the
+// seamless carcass tile that seamless_tile.py already synthesises and proves
+// (it butts two copies together and scores the join). At a fixed texel density
+// that fill has no internal seam by construction, and it meets the artwork at
+// the same two columns the nine-slice would have cut at, which were chosen for
+// being the flattest on the face.
 function sliceRuns(bandA, bandB, scale) {
   if (scale === 1 || !(bandB > bandA)) return [{ g0: 0, g1: 1, t0: 0, t1: 1 }];
-  const src = bandB - bandA;
   const gA = bandA / scale, gB = 1 - (1 - bandB) / scale;
-  const span = Math.max(0, gB - gA);
   const runs = [{ g0: 0, g1: gA, t0: 0, t1: bandA }];
-  const n = Math.max(1, Math.round((span * scale) / src));
-  for (let k = 0; k < n; k++) {
-    runs.push({ g0: gA + (span * k) / n, g1: gA + (span * (k + 1)) / n,
-                t0: bandA, t1: bandB });
-  }
+  if (gB > gA) runs.push({ g0: gA, g1: gB, t0: bandA, t1: bandB, fill: true });
   runs.push({ g0: gB, g1: 1, t0: bandB, t1: 1 });
   return runs.filter((r) => r.g1 > r.g0 + 1e-9);
 }
@@ -493,21 +535,21 @@ function buildLoft() {
   // the growth band the two agree; inside, each copy of the band restarts `t`
   // at its top, which is the repeat.
   const runs = growRuns;
-  const ys = [], gs = [];
-  const push = (t, g) => {
+  const ys = [], gs = [], yri = [];
+  const push = (t, g, ri) => {
     if (ys.length && Math.abs(ys[ys.length - 1] - t) < 1e-9 &&
         Math.abs(gs[gs.length - 1] - g) < 1e-9) return;
-    ys.push(t); gs.push(g);
+    ys.push(t); gs.push(g); yri.push(ri);
   };
   const base = [...levels].sort((a, b) => a - b);
-  for (const r of runs) {
+  runs.forEach((r, ri) => {
     const inside = base.filter((y) => y > r.t0 + 1e-9 && y < r.t1 - 1e-9);
-    push(r.t0, r.g0);
+    push(r.t0, r.g0, ri);
     for (const y of inside) {
-      push(y, r.g0 + ((y - r.t0) / Math.max(1e-9, r.t1 - r.t0)) * (r.g1 - r.g0));
+      push(y, r.g0 + ((y - r.t0) / Math.max(1e-9, r.t1 - r.t0)) * (r.g1 - r.g0), ri);
     }
-    push(r.t1, r.g1);
-  }
+    push(r.t1, r.g1, ri);
+  });
 
   // one bucket per material, concatenated at the end. Emitting a group per
   // quad the way the two-view build did would give a shaped plan a group per
@@ -544,7 +586,7 @@ function buildLoft() {
     const W1 = r.x1 - r.x0;
     const at = ([t, g, ri], f) => {
       const x = r.x0 + g * W1;
-      return { x, z: r.zb + (r.zf - r.zb) * f(t), t: uTexAt(ri, x) };
+      return { x, z: r.zb + (r.zf - r.zb) * f(t), t: uTexAt(ri, x), ri };
     };
     return [...widthSamples.map((s) => at(s, fracF)),
             ...[...widthSamples].reverse().map((s) => at(s, fracB))];
@@ -573,10 +615,23 @@ function buildLoft() {
       if (Math.hypot(q.x - p.x, q.z - p.z) < 1e-6 &&
           Math.hypot(Q.x - P.x, Q.z - P.z) < 1e-6) continue;
       const f = facet(p, q);
-      quadTo(f.mi,
-             [[p.x, a.wy, p.z], [q.x, a.wy, q.z], [Q.x, b.wy, Q.z], [P.x, b.wy, P.z]],
-             [[f.u(p), ys[i]], [f.u(q), ys[i]],
-              [f.u(Q), ys[i + 1]], [f.u(P), ys[i + 1]]]);
+      // A BAND THAT LIES IN A FILL RUN IS CARCASS, NOT ARTWORK. Either axis is
+      // enough: the strip a widening adds is carcass all the way up, and the
+      // course a heightening adds is carcass all the way across.
+      const fill = f.mi !== 0
+        && (wRuns[p.ri]?.fill || wRuns[q.ri]?.fill
+            || growRuns[yri[i]]?.fill || growRuns[yri[i + 1]]?.fill);
+      const P4 = [[p.x, a.wy, p.z], [q.x, a.wy, q.z],
+                  [Q.x, b.wy, Q.z], [P.x, b.wy, P.z]];
+      if (fill && tileTex) {
+        // world-space UVs, so the grain is the same size at any scale and the
+        // fill has no period of its own to beat against the prop's
+        quadTo(5, P4, P4.map((v) => [v[0] / tileWorld, v[1] / tileWorld]));
+      } else {
+        quadTo(f.mi, P4,
+               [[f.u(p), ys[i]], [f.u(q), ys[i]],
+                [f.u(Q), ys[i + 1]], [f.u(P), ys[i + 1]]]);
+      }
     }
     // NO HORIZONTAL LEDGE HERE. The two-view build closed every change of ring
     // size with a horizontal face on top of the sloped one, and it was pure
