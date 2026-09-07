@@ -244,7 +244,42 @@ def grain_px(im, step=1):
     return tot / max(1, n)
 
 
-def match_grain(tile, panel, lo=16, hi=192):
+def lo_hi_clear(n, lo=16, hi=192):
+    """Did the search settle inside its range, or give up at an edge?"""
+    return lo * 1.05 < n < hi * 0.95
+
+
+def panel_grain(face, n=9):
+    """How coarse this prop's PANEL is, as opposed to its flattest inch.
+
+    THE FLATTEST CELL IS THE WRONG TARGET FOR GRAIN, and it is the right one
+    for colour, which is how the mistake got in. The flat cell is chosen
+    precisely because it is the smoothest patch on the face -- ideal for taking
+    a median colour off, since no edge pollutes it -- so matching a material's
+    grain to it asks the material to be as smooth as the smoothest thing on the
+    prop. The search obligingly went to the bottom of its range on two props
+    running, which is the same "pinned to an endpoint" answer that the coin
+    door gave at the other end, and means the match never converged at all.
+    The panel is not the smoothest cell and it is not the busiest either: it is
+    the ordinary run of the face. Taking the median grain of the calmer half of
+    the cells says that, and drops the fittings without landing on a mirror.
+    """
+    W, H = face.size
+    vals = []
+    for i in range(n):
+        for j in range(n):
+            box = (int(W * i / n), int(H * j / n),
+                   int(W * (i + 1) / n), int(H * (j + 1) / n))
+            if box[2] - box[0] >= 8 and box[3] - box[1] >= 8:
+                vals.append(grain_px(face.crop(box)))
+    if not vals:
+        return 1.0
+    vals.sort()
+    calm = vals[:max(1, len(vals) // 2)]
+    return calm[len(calm) // 2]
+
+
+def match_grain(tile, want, lo=16, hi=192):
     """How many elevation pixels one tile should cover.
 
     A SWATCH HAS NO SCALE OF ITS OWN. It is a square of material and nothing in
@@ -256,7 +291,6 @@ def match_grain(tile, panel, lo=16, hi=192):
     whose grain statistic lands closest to the painted panel's. Measured, per
     prop, from the drawing that is already the reference for everything else.
     """
-    want = grain_px(panel)
     best = None
     n = lo
     while n <= hi:
@@ -374,9 +408,10 @@ def main():
         mt.save(out / f"m{main['n']}.png")
         main["median"] = target
         print(f"  {main['name']} recoloured to the prop's panel {target}")
-        px_per_tile, want, gotg = match_grain(mt, panel)
+        px_per_tile, want, gotg = match_grain(mt, panel_grain(face))
+        edge = "" if lo_hi_clear(px_per_tile) else "   (at the end of the range)"
         print(f"  grain: panel {want}, tile {gotg} at {px_per_tile}px "
-              f"of a {H2}px elevation")
+              f"of a {H2}px elevation{edge}")
     except Exception as e:
         print(f"  ! grain match failed ({type(e).__name__}), using {px_per_tile}px")
 
