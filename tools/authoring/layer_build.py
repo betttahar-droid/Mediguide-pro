@@ -333,6 +333,17 @@ def main():
         # full width each time, so it hung off both sides of the cabinet.
         # Per-bay is the more specific claim, so it wins and the part keeps its
         # real size.
+        # PER-BAY IS FOR CONTROLS, AND A CONTROL IS SMALL. A bay is one
+        # player's station, so what repeats in it is a joystick, a button
+        # cluster, a coin slot. The rule was applied to a SCREEN, and a widened
+        # cabinet came out with two screens side by side -- a two-player cabinet
+        # has one wide screen and two sets of controls. Size settles it without
+        # argument: nothing occupying a twelfth of the face is a control.
+        if p.get("per_bay") and fw_ * fh_ > 0.08:
+            print(f"  {p['name']}: {100*fw_*fh_:.0f}% of the face is too big "
+                  f"to be per-bay -> once only")
+            p["per_bay"] = False
+
         # THE PROP'S SCALE RULES ARE THE ONLY AUTHORITY ON RESIZING. Each part
         # is also given a resize rule when it is NAMED, and that is a guess made
         # while looking at one fitting in isolation -- the namer called a SCREEN

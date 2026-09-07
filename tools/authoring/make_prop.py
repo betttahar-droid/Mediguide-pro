@@ -53,6 +53,11 @@ MOTIONS = {"none", "hinge_left", "hinge_right", "hinge_top", "hinge_bottom",
 JUDGE = """IMAGE 1 is the reference front elevation of a {asset}.
 IMAGE 2 is the 3D model at its ORIGINAL size -- it should match image 1 closely.
 IMAGE 3 is the same model at {wx}x its width, and IMAGE 4 at {hx}x its height.
+All four renders use ONE FIXED CAMERA, so a bigger prop genuinely draws bigger
+on the page. Do not judge them side by side as though they were scaled to
+match: if image 4 looks taller than image 2, it IS taller, and reporting "the
+vertical resize produced no change" because the two look similar in shape is a
+mistake both graders have made.
 They SHOULD be bigger -- do not fault them for that. Judge them against what
 resizing this prop is supposed to MEAN, which the tool worked out from the
 elevation itself:
