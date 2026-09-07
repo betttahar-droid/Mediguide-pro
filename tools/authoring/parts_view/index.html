@@ -332,8 +332,17 @@ for (const q of man.parts) {
   // MOUNT ON THE SURFACE, NOT ON A PLANE. With a shaped body the front is at a
   // different depth at every height, so a fixed z floated the control deck in
   // front of the deck it belongs to and buried the marquee in the slope.
+  // MOUNT ON THE FRONTMOST SURFACE IT SPANS, NOT THE ONE AT ITS MIDDLE. The
+  // body's front is at a different depth at every height, and a screen spans a
+  // recess -- so a single z taken at the part's centre put the top of the
+  // screen BEHIND the cabinet's own face, and the 3D view showed woodwork
+  // where the display should be while the flat render of the same prop was
+  // perfect. A part cannot be buried by the surface it is mounted on.
   const yFrac = y / FH + 0.5;
-  const surf = frontZ(yFrac);
+  let surf = -Infinity;
+  for (let k = 0; k <= 8; k++) {
+    surf = Math.max(surf, frontZ((y - h / 2 + (h * k) / 8) / FH + 0.5));
+  }
   // A RECESSED PART CANNOT SIT BEHIND A SOLID FACE. Centring its box at
   // surf - d/2 puts its front face exactly ON the body's, and two coplanar
   // opaque faces z-fight: the vending machine's window came out as mottled
