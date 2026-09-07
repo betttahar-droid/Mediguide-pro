@@ -256,9 +256,14 @@ def main():
         tile, before, after = prove(s, args.size)
         p = out / f"m{i}.png"
         tile.save(p)
+        tq = tile.convert("RGB").load()
+        med = [sorted(tq[x, y][c] for x in range(tile.size[0])
+                      for y in range(tile.size[1]))[
+                   tile.size[0] * tile.size[1] // 2] for c in range(3)]
         got.append({"n": i, "image": f"materials/m{i}.png",
                     "seam_before": round(before, 3),
                     "seam_after": round(after, 3),
+                    "median": med,
                     "tiles": bool(after <= 1.25)})
         print(f"    m{i}: seam {before:.2f} -> {after:.2f}"
               f"{'' if after <= 1.25 else '   STILL SEAMS'}")

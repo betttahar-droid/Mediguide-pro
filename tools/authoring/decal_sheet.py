@@ -89,9 +89,14 @@ For each, give:
           "repeat" -- scattered at a fixed density, so a larger area gets more
                       of them (rivets, bolts, stencil marks).
   "where" the face it belongs on: "front", "side", "back", "top" or "any".
+  "size"  how TALL it is on the real machine, as a percentage of the whole
+          prop's height. A title band across a marquee is around 6. A warning
+          label is around 3. A rivet or bolt head is under 1. A pinstripe is
+          under 1. Give a number, not a range.
 
 JSON only, one entry per decal in the order given:
-{{"decals": [{{"n": 1, "name": "...", "rule": "hold", "where": "front"}}, ...]}}"""
+{{"decals": [{{"n": 1, "name": "...", "rule": "hold", "where": "front",
+              "size": 4}}, ...]}}"""
 
 RULES = {"hold", "along", "repeat"}
 
@@ -176,6 +181,39 @@ def key_out(im, tol=90):
     return im, cut / max(1, W * H)
 
 
+def shrink(im, k=2):
+    """Pull the matte in, so no half-keyed pixel survives as artwork.
+
+    THE FRINGE IS NOT ARTWORK AND IT IS NOT BACKGROUND. Flood filling removes
+    what is exactly the key colour; the anti-aliased ring where a letter meets
+    the sheet is a BLEND of the two, so it is neither, and it stayed. Every
+    decal came out with a magenta rim -- and it did not merely look wrong, it
+    poisoned the measurements taken off these files: the rivet's median colour
+    read (106,36,109), which is the rim rather than the rivet, and any test
+    that compares a decal's colour to the panel it sits on would have been
+    reading the key. Two pixels of matte are cheap; bleed then refills them
+    with the graphic's own colour, so nothing is lost but the magenta.
+    """
+    W, H = im.size
+    px = im.load()
+    a = [[px[x, y][3] for y in range(H)] for x in range(W)]
+    for _ in range(k):
+        prev = [c[:] for c in a]
+        for x in range(W):
+            for y in range(H):
+                if prev[x][y] <= 8:
+                    continue
+                for nx, ny in ((x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)):
+                    if not (0 <= nx < W and 0 <= ny < H) or prev[nx][ny] <= 8:
+                        a[x][y] = 0
+                        break
+    for x in range(W):
+        for y in range(H):
+            r, g, b, _ = px[x, y]
+            px[x, y] = (r, g, b, a[x][y])
+    return im
+
+
 def trim(im):
     """Crop to the graphic itself, so its box IS its extent."""
     px = im.load()
@@ -242,10 +280,30 @@ def main():
             print(f"    cell {i}: no background keyed out ({100*frac:.1f}%) -- "
                   f"drawn as a panel, not a decal; dropped")
             continue
+        # A KEYED PIXEL STILL HAS A COLOUR, AND IT IS MAGENTA. Alpha says
+        # ignore it; bilinear filtering does not, and every decal came out
+        # ringed and speckled with pure key colour the moment it was drawn at
+        # any size but 1:1. Exactly the fault the parts had when they carried
+        # the sheet's background in their corners, with a louder colour. So the
+        # artwork is bled outwards into the transparent pixels here, at the one
+        # place that knows which pixels were keyed.
+        from layer_build import bleed
+        g = shrink(g, 2)
+        g = bleed(g)
         p = out / f"d{len(got) + 1}.png"
         g.save(p)
+        # ITS COLOUR, SO THE RENDERER CAN TELL A MOULDING FROM A WARNING. A
+        # trim run is a tonal variation of the surface it sits on; a hazard
+        # chevron is not, however strip-shaped it is. Both come back classified
+        # "along", and only one of them belongs down the side of a cabinet.
+        gp = g.load()
+        vis = [gp[x, y] for x in range(g.size[0]) for y in range(g.size[1])
+               if gp[x, y][3] > 128]
+        med = [sorted(q[c] for q in vis)[len(vis) // 2] for c in range(3)] \
+            if vis else [128, 128, 128]
         got.append({"n": len(got) + 1, "image": f"decals/{p.name}",
-                    "px": list(g.size), "keyed": round(frac, 3)})
+                    "px": list(g.size), "keyed": round(frac, 3),
+                    "median": med})
         print(f"    d{len(got)}: {g.size[0]}x{g.size[1]}, "
               f"{100*frac:.0f}% keyed away")
 
@@ -263,7 +321,8 @@ def main():
                 named[int(e["n"])] = (
                     str(e.get("name", "")).strip().lower().replace(" ", "_")[:32],
                     str(e.get("rule", "hold")).strip().lower(),
-                    str(e.get("where", "any")).strip().lower())
+                    str(e.get("where", "any")).strip().lower(),
+                    float(e.get("size", 4)))
             except (KeyError, TypeError, ValueError):
                 continue
         print(f"    {model} classified {len(named)} of {len(got)}")
@@ -272,7 +331,8 @@ def main():
 
     seen = set()
     for g in got:
-        nm, rule, where = named.get(g["n"], (f"decal_{g['n']}", "hold", "any"))
+        nm, rule, where, size = named.get(
+            g["n"], (f"decal_{g['n']}", "hold", "any", 4.0))
         if not nm or nm in seen:
             nm = f"decal_{g['n']}"
         seen.add(nm)
@@ -282,12 +342,22 @@ def main():
         g["name"] = nm
         g["rule"] = rule if rule in RULES else "hold"
         g["where"] = where if where in ("front", "side", "back", "top") else "any"
+        # HOW BIG A STICKER IS ON THE MACHINE IS A DESIGN QUESTION, not a
+        # measurement -- there is nothing in a square of artwork that says
+        # whether it is a nameplate or a hoarding, and the elevation cannot say
+        # either because these graphics were never on it. So it is asked, and
+        # then bounded: anything outside a hand's width to a third of the prop
+        # is a misread rather than an opinion, and the class it was given
+        # already implies the order of magnitude.
+        cap = {"repeat": 0.03, "along": 0.04, "hold": 0.30}[g["rule"]]
+        g["size"] = round(max(0.004, min(cap, size / 100.0)), 4)
 
     (d / "decals.json").write_text(json.dumps(
         {"asset": args.asset, "decals": got}, indent=1))
     print(f"  {len(got)} decals -> {d / 'decals.json'}")
     for g in got:
-        print(f"    {g['name']:<20} {g['rule']:<7} {g['where']}")
+        print(f"    {g['name']:<20} {g['rule']:<7} {g['where']:<6} "
+              f"{100*g['size']:.1f}% tall")
 
 
 if __name__ == "__main__":

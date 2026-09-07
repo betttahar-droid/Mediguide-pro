@@ -317,6 +317,19 @@ def main():
     if not (d / "front.png").exists():
         raise SystemExit("no front.png -- the sheet did not split into views")
 
+    # THE PROP'S OWN MATERIALS AND GRAPHICS, ASKED FOR AS THEMSELVES. Both
+    # sheets are drawn once, from the elevations, and everything downstream
+    # uses them instead of carving the same things back out of the painting.
+    # Neither is allowed to stop the build: a prop whose atlas failed still has
+    # the carved tile to fall back on, and one with no decals is a prop with no
+    # stickers, which is a look rather than a failure.
+    print("[1b] the prop's materials and graphics ...", flush=True)
+    for tool, args_ in (("material_atlas.py", []), ("decal_sheet.py", [])):
+        r = run([sys.executable, f"tools/authoring/{tool}", str(d),
+                 "--asset", args.asset, *args_])
+        for line in (r.stdout or "").strip().splitlines()[-3:]:
+            print("   ", line.strip()[:120])
+
     print("[2] segmenting the face, naming parts ...", flush=True)
     # THE MODEL DRAWS THE DECOMPOSITION; ARITHMETIC CHECKS IT. See
     # segment_sheet.py -- masks instead of thresholded boxes. If the map fails

@@ -172,10 +172,11 @@ const mapped = (t, c) => (t
 // painting: the body panel came back scoring 1.76 as drawn where a crop of the
 // same panel scored 27. The carved tile stays as the fallback, because a prop
 // whose atlas failed still has to be built.
-let tileTex = null, tileWorld = 0.05;
+let tileTex = null, tileWorld = 0.05, materialsJson = null;
 try {
   const px = strips?.size?.[1] ?? sliceBg?.size?.[1] ?? 600;
   const mj = await (await fetch(`${dir}/materials.json`)).json();
+  materialsJson = mj;
   const main = (mj.materials || []).find((m) => m.main) || (mj.materials || [])[0];
   if (!main) throw new Error('no materials');
   tileTex = await load(`${dir}/${main.image}`);
@@ -781,6 +782,130 @@ const bodyMesh = new THREE.Mesh(bodyGeo, MAT);
 bodyMesh.name = 'body';
 bodyMesh.userData = { depth: BODY_D, profile: !!profile };
 scene.add(bodyMesh);
+
+// --- dressing the fill ------------------------------------------------------
+// A BARE MATERIAL IS AS WRONG AS A SMEARED ONE, just in the other direction.
+// Filling growth with authored material killed the seams and left the judges'
+// other complaint standing: "a massive blank block", "stretched blank expanse
+// with no new structure". Both are true of the same panel. What a prop gains
+// when it is made bigger is more of its own DETAIL at the pitch that detail
+// already has -- more fixings, more trim -- and that is what the decal sheet
+// is for. Each graphic came back classified with how it behaves at size, so
+// the renderer can lay it without knowing what it depicts.
+//
+// AND THE TRIM GOES ON THE JOIN. New material meets old artwork at two lines,
+// and however well the colours match, a line is where an eye goes looking. An
+// artist covers a transition with a moulding rather than hoping it disappears.
+// So the "along" strips are laid exactly there: the one place the surface has
+// something to hide is the one place the prop has a reason for a detail.
+let decals = null;
+try { decals = await (await fetch(`${dir}/decals.json`)).json(); } catch {}
+
+async function dressFill() {
+  if (!decals?.decals?.length) return;
+  const fills = wRuns.filter((r) => r.fill).map((r) => ({ axis: 'x', ...r }))
+    .concat(growRuns.filter((r) => r.fill).map((r) => ({ axis: 'y', ...r })));
+  if (!fills.length) return;                       // nothing grew; nothing to do
+
+  const panelMedian = (() => {
+    try {
+      const mm = materialsJson?.materials || [];
+      return (mm.find((m) => m.main) || mm[0])?.median || null;
+    } catch { return null; }
+  })();
+  const pick = (rule, where) => decals.decals.filter(
+    (q) => q.rule === rule && (q.where === where || q.where === 'any'));
+  const tex = new Map();
+  const grab = async (q) => {
+    if (!tex.has(q.image)) tex.set(q.image, await load(`${dir}/${q.image}`));
+    return tex.get(q.image);
+  };
+  const lay = async (q, cx, cy, w2, h2, roll = 0) => {
+    const t = await grab(q);
+    // follow the body: a decal on a chamfer or a slope lies in it, by the same
+    // surface fit that mounts the parts
+    const pl = surfacePlane(cx, cy, w2, h2);
+    // a rolled strip is built long-side-along and then turned, so its artwork
+    // runs the way the run does
+    const g2 = roll ? new THREE.PlaneGeometry(h2, w2)
+                    : new THREE.PlaneGeometry(w2, h2);
+    const m = new THREE.Mesh(g2,
+      new THREE.MeshBasicMaterial({ map: t, transparent: true, alphaTest: 0.35,
+                                    side: THREE.DoubleSide }));
+    m.rotation.set(Math.max(-1.2, Math.min(1.2, Math.atan(pl.c))),
+                   Math.max(-1.2, Math.min(1.2, -Math.atan(pl.b))), roll);
+    const n = new THREE.Vector3(-pl.b, -pl.c, 1).normalize();
+    m.position.copy(new THREE.Vector3(cx, cy, pl.a).addScaledVector(n, 0.004));
+    m.name = `decal_${q.name}`;
+    scene.add(m);
+  };
+
+  for (const f of fills) {
+    const horiz = f.axis === 'x';
+    const lo = horiz ? (f.g0 - 0.5) * FW : (f.g0 - 0.5) * FH;
+    const hi = horiz ? (f.g1 - 0.5) * FW : (f.g1 - 0.5) * FH;
+    const span = hi - lo;
+    if (span < 0.02) continue;
+
+    // THE JOINS, COVERED -- and the strip picked by SHAPE, not by order. The
+    // first "along" decal on this sheet was a hazard chevron, and laid down
+    // both joins full height it turned the cabinet into a roadworks barrier.
+    // What makes a graphic a moulding run is that it is long and thin, which
+    // is a number its own pixels already carry, so the longest and thinnest is
+    // the strip and the rest are labels that happened to be classified along.
+    // AND A MOULDING IS A TONAL VARIATION OF WHAT IT SITS ON. Long and thin is
+    // not enough: the first strip laid down both joins was a yellow-and-black
+    // hazard chevron, which turned the cabinet into a roadworks barrier, and
+    // the second was a red pinstripe that read as a laser. Both are correctly
+    // classified "along" -- they DO run and repeat -- and neither is trim. A
+    // run of moulding is the panel's own colour catching the light
+    // differently, so the test is its distance from the panel's median, which
+    // both sheets now record. On this cabinet nothing qualifies, and nothing
+    // is laid: clean panel beats a lurid stripe, and that is a verdict from
+    // the pixels rather than from my taste.
+    const strips = pick('along', 'front')
+      .map((q) => ({ q, ar: q.px[0] / Math.max(1, q.px[1]),
+                     d: panelMedian && q.median
+                        ? q.median.reduce((a, v, i2) => a + Math.abs(v - panelMedian[i2]), 0) / 3
+                        : 999 }))
+      .filter((e) => e.ar >= 4 && e.d <= 30)
+      .sort((a, b) => b.ar - a.ar);
+    if (strips.length) {
+      const q = strips[0].q, th = q.size;
+      for (const at of [lo, hi]) {
+        // ALONG ITS OWN LENGTH. The sheet draws a run horizontally, so laying
+        // it up a vertical join without turning it squashed its whole length
+        // into a hair's width and stretched one row of pixels the full height
+        // -- a solid colour bar, which is what those first strips actually
+        // were on screen.
+        if (horiz) await lay(q, at, 0, th, FH * 0.98, Math.PI / 2);
+        else await lay(q, 0, at, FW * 0.98, th, 0);
+      }
+    }
+
+    // AND FIXINGS GO AT THE CORNERS OF A PANEL, NOT ALL OVER IT. Scattering
+    // them at a fixed spacing gave this cabinet two hundred and forty rivets
+    // in a regular field across its whole face, which reads as a pegboard --
+    // and as a repeat, which is the thing all of this exists to stop. A panel
+    // is fixed at its corners; that is where they go, four per panel, so a
+    // wider prop with more panels gets more fixings and no panel gets a rash.
+    const dots = pick('repeat', 'front')
+      .filter((q) => q.px[0] / Math.max(1, q.px[1]) < 3);
+    if (dots.length) {
+      const q = dots[0];
+      const h2 = q.size, w2 = h2 * (q.px[0] / Math.max(1, q.px[1]));
+      const inset = Math.max(w2, h2) * 1.8;
+      const x0 = (horiz ? lo : -FW / 2) + inset, x1 = (horiz ? hi : FW / 2) - inset;
+      const y0 = (horiz ? -FH / 2 : lo) + inset, y1 = (horiz ? FH / 2 : hi) - inset;
+      if (x1 > x0 && y1 > y0) {
+        for (const cx of [x0, x1]) for (const cy of [y0, y1]) {
+          await lay(q, cx, cy, w2, h2);
+        }
+      }
+    }
+  }
+}
+await dressFill();
 
 // --- a part, textured on every face, and adaptive on every face -------------
 // TWO FAULTS, ONE CAUSE. A part was a BoxGeometry with its texture on the
