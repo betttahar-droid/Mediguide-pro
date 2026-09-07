@@ -347,15 +347,27 @@ for (const q of man.parts) {
   // cabinet a TWO-PLAYER cabinet rather than a one-player cabinet with a lot of
   // spare panel -- and it is why the rule has to be decided per prop: the same
   // arithmetic on a jukebox would give it two turntables.
+  const copies = 1;
   const bays = q.per_bay ? Math.max(1, Math.round(FW / A)) : 1;
   const mat = new THREE.MeshBasicMaterial({ map: tex });
   const bayW = FW / bays;
   const ox = ((q.u[0] + q.u[1]) / 2 - 0.5) * A;   // its place within one bay
+  // deterministic, so a prop renders the same way every time it is built
+  let seed = 0;
+  for (let i = 0; i < q.name.length; i++) seed = (seed * 31 + q.name.charCodeAt(i)) >>> 0;
+  const rnd = () => (seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296;
   for (let b = 0; b < bays; b++) {
-    const m = new THREE.Mesh(geo, mat);
-    m.position.set(bays > 1 ? -FW / 2 + bayW * (b + 0.5) + ox : x, y, z);
-    z += 0.0005;                     // stable order, no z-fighting
-    scene.add(m);
+    for (let c = 0; c < copies; c++) {
+      const m = new THREE.Mesh(geo, mat);
+      let px2 = bays > 1 ? -FW / 2 + bayW * (b + 0.5) + ox : x, py2 = y;
+      if (c > 0) {                   // the first copy stays exactly where it was
+        px2 = (rnd() - 0.5) * (FW - w);
+        py2 = (rnd() - 0.5) * (FH - h);
+      }
+      m.position.set(px2, py2, z);
+      z += 0.0005;                   // stable order, no z-fighting
+      scene.add(m);
+    }
   }
 }
 

@@ -297,6 +297,16 @@ def main():
         # full width if it already nearly does; anything else is fixed.
         fw_, fh_ = (x1 - x0) / W, (y1 - y0) / H
         rule = p["resize"]
+        # SPANNING AND PER-BAY ARE THE SAME QUESTION ANSWERED TWICE. Spanning
+        # says "one of these, stretched across whatever width there is";
+        # per-bay says "one of these in each bay, at its real size". Marked
+        # both, the control deck was drawn once per bay AND stretched to the
+        # full width each time, so it hung off both sides of the cabinet.
+        # Per-bay is the more specific claim, so it wins and the part keeps its
+        # real size.
+        if p.get("per_bay") and rule != "fixed":
+            print(f"  {p['name']}: per-bay, so {rule} -> fixed")
+            rule = "fixed"
         if rule.startswith("spanx") and fw_ < 0.75:
             print(f"  {p['name']}: {rule} but only {100*fw_:.0f}% wide -> fixed")
             rule = "fixed"
@@ -308,6 +318,7 @@ def main():
             "resize": rule, "anchor": p["anchor"],
             "depth": p.get("depth", "proud"), "motion": p.get("motion", "none"),
             "per_bay": bool(p.get("per_bay")),
+            "scatter": bool(p.get("scatter")),
             # where THIS part may repeat, in its own 0..1 box
             "bands": {"h": (b or {}).get("h"), "v": (b or {}).get("v")},
             "px_size": [x1 - x0, y1 - y0],
