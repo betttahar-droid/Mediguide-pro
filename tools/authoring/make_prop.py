@@ -343,6 +343,50 @@ def main():
         seg_ok = json.loads((d / "seg_front.json").read_text()).get("usable")
     except Exception:
         seg_ok = False
+    # ALIGNED IS NOT THE SAME AS DETAILED, and only alignment was being
+    # checked. This cabinet's map scored 99.5% on silhouette and 63% on
+    # borders -- both comfortably usable -- and yielded FOUR fittings:
+    # marquee, screen, deck, coin door. No joysticks, no buttons, no coin
+    # slots, because the map drew the whole control panel as one flat colour.
+    # Sibling runs on the same prompt gave fifteen and forty-two. So the rig
+    # had nothing to instance and both judges said so plainly: "no second
+    # joystick or button cluster appears, leaving long blank panel where the
+    # two-player controls should be". A decomposition that passes every test
+    # and decomposes nothing is the failure those tests exist to catch.
+    #
+    # The cross-check was already written. region_parts finds fittings by
+    # measuring the artwork's own flat cells -- no model, no drawing, free --
+    # and it was only ever consulted when segmentation FAILED. Asking it every
+    # time turns it into a second opinion on how much detail is really there.
+    # Richer is not automatically better, so it only overrules a map that found
+    # less than half what measurement can see.
+    seg_n = 0
+    if seg_ok and (d / "parts_front.json").exists():
+        try:
+            seg_n = len(json.loads(
+                (d / "parts_front.json").read_text()).get("parts", []))
+            (d / "parts_front.seg.json").write_text(
+                (d / "parts_front.json").read_text())
+        except Exception:
+            seg_n = 0
+    if seg_ok and seg_n:
+        r2 = run([sys.executable, "tools/authoring/region_parts.py", str(d),
+                  "--face", "front", "--asset", args.asset])
+        try:
+            meas_n = len(json.loads(
+                (d / "parts_front.json").read_text()).get("parts", []))
+        except Exception:
+            meas_n = 0
+        if meas_n and seg_n * 2 >= meas_n:
+            (d / "parts_front.json").write_text(
+                (d / "parts_front.seg.json").read_text())
+            print(f"    segmentation {seg_n} fittings vs measured {meas_n} "
+                  f"-- keeping the map")
+        else:
+            print(f"    segmentation found only {seg_n} fittings where "
+                  f"measurement sees {meas_n} -- the map under-segmented, "
+                  f"using the measured regions")
+            r = r2
     if not seg_ok or not (d / "parts_front.json").exists():
         print("    segmentation rejected -- measuring the regions instead")
         r = run([sys.executable, "tools/authoring/region_parts.py", str(d),
