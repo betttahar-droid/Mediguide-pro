@@ -300,11 +300,20 @@ def main():
         # duplicated something a player could name.
         # columns this strip's own parts occupy, so the cut can dodge them
         forbid = [False] * max(1, len(cd))
-        for q in part_boxes:
-            qx0, qy0, qx1, qy1 = q
-            if qy1 <= y0 or qy0 >= y1:
-                continue
-            for x in range(max(0, qx0 - 2), min(len(forbid), qx1 + 2)):
+        # THE GAP BETWEEN TWO HALVES OF ONE FITTING IS ALSO FORBIDDEN. A marquee
+        # that measures as marquee_left and marquee_right holds both halves
+        # against the same edge, so they do not move relative to each other --
+        # but the BACKGROUND grows wherever the cut is, and putting the cut
+        # between them pushed a band of panel through the middle of the title.
+        # "Street Fighter cut mid-word with a smeared fragment floating in the
+        # gap" was the judge's description, on sheet after sheet. Blocking every
+        # column from the leftmost part in a row band to the rightmost closes
+        # the gaps as well as the parts.
+        here = [q for q in part_boxes if not (q[3] <= y0 or q[1] >= y1)]
+        if here:
+            lo = min(q[0] for q in here)
+            hi = max(q[2] for q in here)
+            for x in range(max(0, lo - 2), min(len(forbid), hi + 2)):
                 forbid[x] = True
         hmode, hflank, hrep = "extend", flank_window(cd, forbid=forbid)[0], False
         vmode, vflank, vrep = "extend", flank_window(rows)[0], False
