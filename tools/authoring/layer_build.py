@@ -381,9 +381,61 @@ def main():
     # same scan that measures the background's, so the renderer can hold its
     # ends at real size and repeat only what is uniform.
     from nine_slice import bands as _bands
+    # A PART THAT CARRIES OTHER PARTS MUST NOT ALSO BE PAINTED WITH THEM.
+    # The background has every part cut out of it and the hole filled, and a
+    # structural part -- a control deck, a bezel -- never had the same done for
+    # what stands on IT. So the deck's crop still had its joysticks painted on,
+    # the rig then mounted real joysticks on top, and both judges caught the
+    # arithmetic of it the moment the cabinet widened: "widening produces FOUR
+    # joysticks, not two -- the original pair is duplicated by copies baked
+    # into the panel". At width 1 the painted one hides exactly behind its
+    # model and nothing looks wrong, which is why this survived so long.
+    # One fill per host, and only for hosts that have riders, so the common
+    # case costs nothing.
+    riders_of = {}
+    for host in man["parts"]:
+        hx0, hy0, hx1, hy1 = host["px"]
+        kids = [q for q in man["parts"]
+                if q["name"] != host["name"]
+                and q["px"][0] >= hx0 - 3 and q["px"][2] <= hx1 + 3
+                and q["px"][1] >= hy0 - 3 and q["px"][3] <= hy1 + 3
+                and (q["px"][2] - q["px"][0]) * (q["px"][3] - q["px"][1])
+                < 0.7 * (hx1 - hx0) * (hy1 - hy0)]
+        if kids:
+            riders_of[host["name"]] = kids
+
+    def stands_on(host):
+        """The fittings resting ON this part: within its width, at its top.
+
+        STANDS ON means resting on top of, not sitting inside. Containment
+        finds only what a control deck's own box encloses -- a flush button, a
+        decal -- while the joysticks it actually carries poke ABOVE its lip,
+        which is where joysticks are. Judged by containment the deck carried
+        nothing, so it was left as neither per-bay nor structure, the rig had
+        nothing to lay two player stations along, and the deck stayed a small
+        tray in the middle of a cabinet twice its width.
+        """
+        hx0, hy0, hx1, hy1 = host["px"]
+        near = max(6, int(0.06 * H))
+        return [q for q in man["parts"]
+                if q["name"] != host["name"]
+                and q.get("depth", "proud") in ("proud", "deep")
+                and q["px"][0] >= hx0 - 3 and q["px"][2] <= hx1 + 3
+                and (abs(q["px"][3] - hy0) <= near
+                     or (q["px"][1] >= hy0 - 3 and q["px"][3] <= hy1 + 3))]
+
+    clean = {}
+    for name, kids in riders_of.items():
+        clean[name] = fill_from_panel(
+            ob, [q["px"] for q in kids],
+            [(q["px"], masks.get(q["name"])) for q in kids])
+        print(f"  {name}: {len(kids)} fitting(s) stand on it -- painted out of "
+              f"its own layer so they are not drawn twice")
+
     for p in man["parts"]:
         x0, y0, x1, y1 = p["px"]
-        crop = ob.crop((x0, y0, x1, y1)).convert("RGBA")
+        src_im = clean.get(p["name"], ob)
+        crop = src_im.crop((x0, y0, x1, y1)).convert("RGBA")
         # NO PART MAY CARRY THE SHEET. A part is cut at its bounding box, and a
         # part that overhangs the prop -- a control panel wider than the cabinet
         # below it, a jukebox's crown -- has sheet background in the corners of
@@ -470,6 +522,29 @@ def main():
         # the whole prop and what a bigger one of it actually is, and names the
         # structure and the per-bay fittings explicitly. Anything it did not
         # name is fixed: one of them, at its real size, wherever it was.
+        # AND A PART THAT CARRIES FITTINGS IS STRUCTURE, WHOEVER SAID OTHERWISE.
+        # scale_rules called this deck per-bay; the size guard above correctly
+        # refused to duplicate something a tenth of the whole face, and the
+        # deck was then left as neither per-bay nor structure -- so the rig had
+        # nothing to lay the two player stations along and spread four
+        # joysticks across the entire cabinet, one at each quarter, with the
+        # deck itself a small tray in the middle. The evidence is already
+        # gathered: a part with joysticks and buttons standing PROUD of it is a
+        # control deck by definition, whatever it was classified as.
+        # STANDS ON means resting on top of, not sitting inside. Containment
+        # found only what the deck's own box encloses -- a flush button and a
+        # decal -- while the joysticks it actually carries poke ABOVE its lip,
+        # which is where joysticks are. So the deck was left as neither per-bay
+        # nor structure, the rig had nothing to lay the two player stations
+        # along, and the deck stayed a small tray in the middle of a cabinet
+        # twice its width. A fitting stands on a part if it sits within that
+        # part's width and its base is at the part's top, which is the same
+        # sentence a person would use.
+        on = stands_on(p)
+        if on and not p.get("spans"):
+            print(f"  {p['name']}: {len(on)} fitting(s) stand on it "
+                  f"({', '.join(q['name'] for q in on[:3])}) -- structure")
+            p["spans"] = True
         if not p.get("spans") and not p.get("per_bay") and rule != "fixed":
             print(f"  {p['name']}: not named as structure, {rule} -> fixed")
             rule = "fixed"
@@ -506,15 +581,14 @@ def main():
         # -- sits inside it: that is the screen's own picture, not six fittings
         # bolted to a frame. A joystick and a button stand proud of the deck; a
         # score readout is painted on. The depth class already says which.
+        # THE SAME QUESTION, ASKED THE SAME WAY. This test and the promotion
+        # above both ask "does anything stand on this?", and they used to
+        # answer differently -- one by containment, one by resting-on -- so the
+        # deck was promoted to structure by the second and demoted by the first
+        # on the very next line. Two rules that disagree about a definition are
+        # one rule with a bug in it.
         if p.get("spans") and fw_ < 0.88:
-            riders = [o for o in man["parts"]
-                      if o["name"] != p["name"]
-                      and o.get("depth", "proud") in ("proud", "deep")
-                      and o["px"][0] >= p["px"][0] - 4
-                      and o["px"][2] <= p["px"][2] + 4
-                      and o["px"][1] >= p["px"][1] - 4
-                      and o["px"][3] <= p["px"][3] + 4]
-            if not riders:
+            if not on:
                 print(f"  {p['name']}: structure that carries nothing and does "
                       f"not run the width ({100*fw_:.0f}%) -- content, not frame")
                 p["spans"] = False

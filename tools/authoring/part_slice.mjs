@@ -106,9 +106,17 @@ export function spansOf(q) {
   // it could span on the strength of a band -- and then get its middle
   // stretched, which is what split the title. A part that has neither holds
   // its real size, which is the honest answer and always was.
+  // AND A FRAME WITH NO BAND STILL WIDENS, because faceQuads has a path for
+  // exactly that: insert at the plain flanks and hold the artwork whole. This
+  // said otherwise, so a control deck classified "spanx_repeat" with no
+  // measured uniform band never grew at all -- it stayed a small tray in the
+  // middle of a cabinet twice its width while four joysticks stood out on
+  // either side of it. Two places deciding whether a part can span, by
+  // different tests, is one decision with a bug in it.
   const center = R.endsWith('_center');
+  const band = !!(q.bands && q.bands.h);
   return {
-    x: R.startsWith('spanx') && (center ? !!q.hf : !!(q.bands && q.bands.h)),
+    x: R.startsWith('spanx') && (center ? !!q.hf : (band || !!q.hf)),
     y: R.startsWith('spany') && !!(q.bands && q.bands.v),
   };
 }
