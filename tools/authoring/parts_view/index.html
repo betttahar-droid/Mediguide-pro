@@ -29,6 +29,7 @@
 //   ?only=name   isolate one part
 //   ?explode=0.3 pull the parts off the body to show they are separate
 //   ?box=1       fall back to the old box body, for comparison
+//   ?export=1    write the whole rig out as glTF, hierarchy and pivots intact
 import * as THREE from 'three';
 
 const p = new URLSearchParams(location.search);
@@ -218,7 +219,10 @@ function buildBody() {
   return g;
 }
 const bodyGeo = buildBody();
-scene.add(new THREE.Mesh(bodyGeo, MAT));
+const bodyMesh = new THREE.Mesh(bodyGeo, MAT);
+bodyMesh.name = 'body';
+bodyMesh.userData = { depth: BODY_D, profile: !!profile };
+scene.add(bodyMesh);
 
 // --- parts ----------------------------------------------------------------
 const movers = [];
@@ -254,7 +258,15 @@ for (const q of man.parts) {
   // front of the deck it belongs to and buried the marquee in the slope.
   const yFrac = y / FH + 0.5;
   const surf = frontZ(yFrac);
-  const z = surf + (recessed ? -d / 2 : d / 2) + explode * 0.6;
+  // A RECESSED PART CANNOT SIT BEHIND A SOLID FACE. Centring its box at
+  // surf - d/2 puts its front face exactly ON the body's, and two coplanar
+  // opaque faces z-fight: the vending machine's window came out as mottled
+  // blue with the cans flickering away, which reads as a texture fault and is
+  // not one. There is no hole in the body to sink into, so a recess is drawn
+  // as a face a hair in front with its box buried behind -- the recession is
+  // carried by the part's own dark bezel, which is where it was drawn anyway.
+  const EPS = 0.002;
+  const z = surf + (recessed ? EPS - d / 2 : d / 2) + explode * 0.6;
 
   // THE PIVOT IS THE POINT. A door that spins about its centre is not a door,
   // so the part hangs off a pivot placed on the edge its motion turns about,
@@ -270,7 +282,13 @@ for (const q of man.parts) {
   pivot.position.set(x + off[0], y + off[1], z + off[2]);
   mesh.position.set(-off[0], -off[1], -off[2]);
   pivot.add(mesh);
+  // NAME BOTH, AND RECORD THE MECHANISM. An exported rig is only editable if
+  // the thing you select in a DCC tool tells you what it is and how it moves;
+  // an anonymous Object3D_7 is no better than a merged mesh.
   pivot.name = q.name;
+  mesh.name = `${q.name}_mesh`;
+  pivot.userData = { part: q.name, motion: m, depth: q.depth ?? 'proud',
+                     resize: R, anchor: q.anchor };
   scene.add(pivot);
   if (m !== 'none') movers.push({ pivot, motion: m, w, h, d });
 }
@@ -314,6 +332,24 @@ cam.position.set(mid.x + r * Math.cos(pitch) * Math.sin(yaw),
                  mid.z + r * Math.cos(pitch) * Math.cos(yaw));
 cam.lookAt(mid);
 renderer.render(scene, cam);
+
+// --- export ------------------------------------------------------------------
+// A prop that exists only as a page is not an asset. Written out as glTF the
+// hierarchy survives -- one node per named part, its pivot where the motion
+// turns, the body separate -- which is the whole point of building it in parts
+// rather than as one collapsed mesh.
+if (p.get('export') === '1') {
+  const { GLTFExporter } = await import(
+    'three/examples/jsm/exporters/GLTFExporter.js');
+  const rig = new THREE.Group();
+  rig.name = (dir.split('/').pop() || 'prop');
+  for (const child of [...scene.children]) rig.add(child);
+  const gltf = await new GLTFExporter().parseAsync(rig, { binary: false });
+  globalThis.__gltf = JSON.stringify(gltf);
+  console.info(`gltf: ${gltf.nodes?.length ?? 0} nodes, `
+    + `${gltf.meshes?.length ?? 0} meshes`);
+}
+
 console.info(`parts: ${man.parts.length} parts, ${movers.length} movable `
   + `(${movers.map((m) => m.motion).join(', ') || 'none'}), anim=${anim}, `
   + `body=${profile ? `profile d${BODY_D.toFixed(3)}` : 'box'}`);

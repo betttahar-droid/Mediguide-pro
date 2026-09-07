@@ -125,7 +125,16 @@ def _env():
 
 
 def render(d, out, sizes):
-    qs = [f"dir=/{d.relative_to(ROOT)}&w={w}&h={h}" for (w, h) in sizes]
+    # ONE FRAME FOR ALL THE VARIANTS, SIZED TO THE BIGGEST. The camera must not
+    # re-frame per shot -- that is what let a 2x taller prop draw at the same
+    # screen size and made the judge report "the cabinet is unchanged" -- but a
+    # constant 1.45 left the 1:1 prop occupying a third of the picture, with
+    # the judge grading texel detail it could barely see. Fix it once, from the
+    # largest variant in this batch, and every shot stays comparable.
+    A = json.loads((d / "layers_front.json").read_text())["aspect"]
+    frame = max(max(A * w, h) for (w, h) in sizes) * 0.5 * 1.08
+    qs = [f"dir=/{d.relative_to(ROOT)}&w={w}&h={h}&frame={frame:.4f}"
+          for (w, h) in sizes]
     run(["node", str(ROOT / "tools/authoring/layer_view/shoot.mjs"), str(out), *qs],
         env=_env())
     got = []
@@ -307,6 +316,17 @@ def main():
         pm["parts"] = keep
         (d / "parts_front.json").write_text(json.dumps(pm, indent=1))
         rebuild(d)
+
+    # A PROP THAT EXISTS ONLY AS A PAGE IS NOT AN ASSET. Write the rig out with
+    # its hierarchy intact -- one named node per part, its pivot on the edge the
+    # motion turns about, the body separate -- which is the only form in which
+    # "modifiable and animatable by parts" means anything outside this renderer.
+    print("\n[5] exporting the rig ...", flush=True)
+    r = run(["node", str(ROOT / "tools/authoring/parts_view/shoot.mjs"), str(d / "export"),
+             f"dir=/{d.relative_to(ROOT)}&export=1"], env=_env())
+    for line in (r.stdout or "").splitlines():
+        if "gltf" in line:
+            print("   ", line.strip()[:140])
 
     print(f"\ndone: {d}")
 
