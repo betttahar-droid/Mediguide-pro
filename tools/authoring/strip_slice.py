@@ -84,6 +84,7 @@ from PIL import Image
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools" / "authoring"))
 from collections import Counter as _Counter  # noqa: E402
+from identify_parts import object_crop  # noqa: E402
 from nine_slice import _runs  # noqa: E402
 
 
@@ -316,6 +317,51 @@ def main():
     im = rgba.convert("RGB")
     W, H = im.size
     ap = rgba.load()
+
+    # THE BAND IS CHOSEN ON THE FRONT AND APPLIED TO EVERY FACE. A prop grows
+    # as one body, so the rows the front repeats are the rows the side and the
+    # back repeat too -- and nothing here ever looked at them. On this cabinet
+    # the front's lower body is bare and its SIDE carries a BATTLE ZONE decal
+    # across the same rows, so a prop half again as tall came back with the
+    # title stacked three times down its flank. Both judges, every round, and
+    # invisible in everything this file measures.
+    #
+    # A row's activity on another elevation is measured exactly as it is here,
+    # and each face is scaled to this one's height: they are elevations of the
+    # same prop, so the same fraction of the height is the same place on it.
+    other = []
+    for face in ("side", "back"):
+        f = d / f"{face}.png"
+        if not f.exists():
+            continue
+        try:
+            o = object_crop(f).convert("RGB")
+            rd = row_diff(o)
+            if len(rd) < 8:
+                continue
+            # SCALED TO THAT FACE'S OWN GRAIN, NOT TO A CONSTANT. A flat bar
+            # of 3*QUIET sits around the 75th percentile of an ordinary painted
+            # side panel, so it called most of every prop busy and threw away
+            # three of this cabinet's four growth places -- back to the copy
+            # bound and the flat tile. What marks a decal is being well above
+            # what its own face usually does.
+            mid = sorted(rd)[len(rd) // 2]
+            other.append(([rd[min(len(rd) - 1, int(y * len(rd) / H))]
+                           for y in range(H)], max(6.0, 3.0 * mid)))
+        except Exception:
+            pass
+
+    def busy_elsewhere(a, b):
+        """Does any other elevation carry artwork across these rows?
+
+        Judged on the band's 80th percentile rather than its worst row: one
+        noisy line is grain, and a fifth of the band being loud is a decal.
+        """
+        for rd, bar in other:
+            seg = sorted(rd[max(0, a):max(1, min(H, b))])
+            if seg and seg[int(0.8 * (len(seg) - 1))] > bar:
+                return True
+        return False
 
     # STRIP BOUNDARIES ARE THE STRONG HORIZONTAL LINES. A cabinet's bands are
     # drawn with them -- the rail under the marquee, the lip of the deck -- so
@@ -634,8 +680,12 @@ def main():
                   f"-- not growing there")
             continue
         a, b = rows[0], rows[-1] + 1
+        clean = not busy_elsewhere(a, b)
+        if not clean:
+            print(f"  {e['side']} {e['part']}: rows {a}..{b} are bare in front "
+                  f"and carry artwork on another face -- second choice")
         grow_bands.append({"part": e["part"], "side": e["side"],
-                           "px": [a, b],
+                           "clean": clean, "px": [a, b],
                            # bottom-up, like everything the renderer eats
                            "band": [round(1 - b / H, 5), round(1 - a / H, 5)]})
     # AND THE PLACES HAVE TO BE ABLE TO HOLD IT. The renderer lays whole copies
@@ -654,7 +704,21 @@ def main():
     # can hold the change adds the pinball's lower body and its apron to its
     # backbox, and the same three fifty-row runs that were never the right
     # answer on their own become the right answer beside one.
+    # A VETO WAS TOO STRONG. Refusing every place that carries artwork on
+    # another elevation left this cabinet three of its four places short and
+    # the pinball with seven rows -- forty-seven copies, straight back to the
+    # flat tile that all of this exists to avoid, which is a worse fault than
+    # the one being fixed. It is a PREFERENCE: grow where no face has artwork
+    # if there is room enough there, and fall back to the rest rather than to
+    # nothing. A repeated decal down a flank is bad; a column of static is
+    # worse.
     need = (max_taller - 1.0) * H / 9.0
+    _clean = [g for g in grow_bands if g.get("clean")]
+    if _clean and sum(g["px"][1] - g["px"][0] for g in _clean) >= need:
+        if len(_clean) < len(grow_bands):
+            print(f"  {len(grow_bands) - len(_clean)} place(s) dropped: "
+                  f"the ones clear on every face have room enough")
+        grow_bands = _clean
     if grow_bands and sum(g["px"][1] - g["px"][0] for g in grow_bands) < need:
         spare = []
         for st in strips:
@@ -677,6 +741,7 @@ def main():
             # going spare grew a column of static instead.
             if not best or best[1] - best[0] < 8:
                 continue
+
             if any(best[0] < g["px"][1] and best[1] > g["px"][0]
                    for g in grow_bands):
                 continue                     # already covered by an authored one
