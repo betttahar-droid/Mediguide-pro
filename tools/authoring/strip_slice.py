@@ -27,6 +27,35 @@ marquee -- it has more cabinet. So the strip with the longest genuinely uniform
 run of rows absorbs the whole difference by repeating its own middle, and every
 other strip keeps its real height. That is what makes a two-metre cabinet look
 like a cabinet rather than a photograph of one pulled out of shape.
+
+AND ONE STRIP IS NOT ALWAYS ENOUGH, WHICH IS AN OPEN FAULT. On a cabinet whose
+lower body is densely fitted -- coin door, two vents, an instruction card, a
+control deck, leaving free runs of 32, 35 and 46 rows in a strip of 344 -- there
+is no band that is at once tall enough to repeat, bare, quiet AND the colour of
+the body. The growth then goes wherever the score's compromise lands, and on
+that cabinet it lands in the SCREEN BAY: a taller prop grows a column of bezel
+surround above its monitor.
+
+Three ways of reweighting the choice were tried and all three were reverted,
+because each fixed one prop by breaking another:
+
+  - scoring the strip on its BAND's height and its BAND's free fraction rather
+    than the whole strip's. The right question, and it picks bands too short to
+    repeat: one cabinet's 22-row band needs 13 copies, blows the ten-copy cap
+    and falls back to the very carcass tile the change was meant to avoid.
+  - adding a term for whether the band CAN absorb the change (band height
+    against a tenth of the prop). Correct and not sufficient: it is outweighed
+    by 1/vnoise, where a sliver of dead panel scores 1.26 against a real band's
+    10.89.
+  - stating the two hard conditions as filters -- can absorb it, is bare -- and
+    weighing only what survives. Clean, and on a prop where nothing survives it
+    falls through to a band with a coin door in it and repeats the door.
+
+The conclusion is that this is not a weighting problem. One band cannot serve a
+prop that has no single good one, and the fix is structural: either let the
+growth be SPLIT across several bands in different strips, or cut finer strips
+so the bare runs stop being averaged in with the fitted ones. Both are real
+changes to how a resize is composed, not another factor in this product.
 """
 import argparse
 import json
