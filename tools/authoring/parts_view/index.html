@@ -591,6 +591,19 @@ function tOfGx(g) {
 const growBands = (() => {
   if (!strips) return [];
   const H = strips.size[1];
+  // AUTHORED PLACES FIRST. strip_slice asks the model where a taller one of
+  // these actually gains body -- "above the marquee", "below the coin door" --
+  // and verifies those rows are clear of fittings before writing them out. On
+  // this cabinet that is four places totalling 64 rows against the blind
+  // search's one of 12, which is five copies apiece instead of twenty-six and
+  // nowhere near the bound below. A prop the model had no usable answer for
+  // has no grow_bands and falls through to the measured band unchanged.
+  if (strips.grow_bands?.length) {
+    return strips.grow_bands
+      .map((g) => [g.band[0], g.band[1], g.share])
+      .filter((r) => r[1] - r[0] > 0.005)
+      .sort((p, q) => p[0] - q[0]);
+  }
   const out = [];
   for (const s of strips.strips) {
     const sh = s.grow_share ?? (s.grow_y ? 1 : 0);

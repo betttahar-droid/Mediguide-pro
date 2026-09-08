@@ -594,8 +594,60 @@ def main():
     # line, and sixteen repeats of a black lip turned the cabinet into a
     # radiator. Two mechanisms answering one question is how a tool oscillates.
 
+    # WHERE THE PROP GETS TALLER IS AUTHORED, NOT SEARCHED FOR.
+    #
+    # Everything above chooses the growth band by measuring the prop for
+    # somewhere quiet, bare and body-coloured, and the note at the top of this
+    # file lists five reweightings of that search, every one reverted, every
+    # one fixing a prop by breaking another. The conclusion recorded there is
+    # that it is not a weighting problem. It is not: it is the wrong question.
+    #
+    # "Somewhere calm" is not what a taller cabinet is. scale_rules has always
+    # asked the model what taller MEANS and always got a straight answer --
+    # "more carcass above the marquee and below the coin door" -- and nothing
+    # downstream could read a sentence, so the sentence was used to judge the
+    # result and never to produce it. Asked for the same thing as a fitting and
+    # a side, it gives this cabinet four places totalling 73 rows where the
+    # blind search found one of 12: four copies each instead of twenty-six, and
+    # the copy bound never comes near. It is the division the rest of the tool
+    # runs on -- the model says where a cabinet gets longer, which it knows,
+    # and arithmetic checks that those rows are really bare, which it can.
+    #
+    # VERIFIED, not taken. A place is used only if the artwork there is clear
+    # of fittings; anything else falls through to the measured band, which is
+    # still computed above and still the answer for a prop the model has no
+    # opinion about.
+    grow_bands = []
+    try:
+        want = json.loads((d / "scale_rules.json").read_text()).get("taller_at")
+    except Exception:
+        want = None
+    for e in (want or []):
+        a, b = int(e["px"][0]), int(e["px"][1])
+        rows = [y for y in range(max(0, a), min(H, b))
+                if occupied[y] <= 0.10 * W]
+        if len(rows) < 6:
+            print(f"  {e['side']} {e['part']}: rows {a}..{b} are not bare "
+                  f"-- not growing there")
+            continue
+        a, b = rows[0], rows[-1] + 1
+        grow_bands.append({"part": e["part"], "side": e["side"],
+                           "px": [a, b],
+                           # bottom-up, like everything the renderer eats
+                           "band": [round(1 - b / H, 5), round(1 - a / H, 5)]})
+    if grow_bands:
+        # SHARED BY HEIGHT, so every band takes the same number of copies --
+        # the allocation that keeps all of them inside the renderer's bound at
+        # once. Sharing by anything else loads one band and blows it.
+        tot = float(sum(g["px"][1] - g["px"][0] for g in grow_bands))
+        for g in grow_bands:
+            g["share"] = round((g["px"][1] - g["px"][0]) / tot, 5)
+        rows = int(tot)
+        print(f"  taller_at: {len(grow_bands)} authored place(s), {rows} bare "
+              f"rows -- {0.5 * H / max(1, rows) + 1:.1f} copies at 1.5x")
+
     (d / f"strips_{args.face}.json").write_text(json.dumps(
-        {"size": [W, H], "strips": strips}, indent=1))
+        {"size": [W, H], "strips": strips, "grow_bands": grow_bands}, indent=1))
     print(f"{args.face}: {len(strips)} strips")
     for i, s in enumerate(strips):
         print(f"  {i}: rows {s['px'][0]:4}..{s['px'][1]:4}  {s['hmode']:6} "

@@ -57,6 +57,18 @@ one of these actually is.
                   wardrobe it is simply a wider carcass with the same doors.
   "taller_means"  the same for height. Usually more body or more shelves; for
                   most props it is NOT a taller screen or a taller sign.
+  "taller_at"     WHERE on this prop that extra height physically goes, as the
+                  outlined parts it goes next to. One entry per place, each
+                  {{"n": <part number>, "side": "above"|"below"}}: "above" means
+                  the new body is added between that part and whatever is above
+                  it, "below" means between it and whatever is below.
+                  A cabinet whose taller_means is "more carcass above the
+                  marquee and below the coin door" gives two entries. Name the
+                  places where a real one of these has PLAIN MATERIAL that
+                  simply gets longer -- never inside a screen, a grille, a sign
+                  or a control deck, and never somewhere the prop has no bare
+                  panel at all. If this prop genuinely has nowhere like that,
+                  give an empty list; that is a real answer.
   "max_wider"     how many times its own width this prop can sensibly reach
                   before it stops being a {asset}. 1.0 means it should not be
                   widened at all. Typically 1.5 to 2.5.
@@ -85,6 +97,7 @@ what you can SEE in each outline, not by its name.
 
 JSON only:
 {{"wider_means": "...", "taller_means": "...",
+  "taller_at": [{{"n": 1, "side": "above"}}, {{"n": 9, "side": "below"}}],
   "max_wider": 2.0, "max_taller": 1.6, "per_bay": [4, 7], "spans": [1, 3]}}"""
 
 
@@ -98,6 +111,8 @@ def main():
     d = Path(args.sheet_dir)
     man = json.loads((d / f"parts_{args.face}.json").read_text())
     parts = man["parts"]
+    H_face = man.get("size", [0, 0])[1] or max(
+        [p["px"][3] for p in parts] + [1])
     listing = "\n".join(f"  {i}. {p['name']}"
                         for i, p in enumerate(parts, 1)) or "  (none)"
 
@@ -209,9 +224,47 @@ def main():
             per_bay.append(p["name"])
             added.append(f"{p['name']} (stands on {s['name']})")
 
+    # WHERE THE PROP GETS TALLER, AS ROWS. taller_means has always said it in
+    # words -- "more carcass above the marquee and below the coin door" -- and
+    # nothing downstream could read a sentence, so strip_slice searched the
+    # whole prop for somewhere quiet and bare and landed wherever its score
+    # came out. On a densely fitted cabinet that is a compromise every time,
+    # and five different scorings of it have been tried and reverted.
+    #
+    # The model already knows the answer and is good at this question; it is
+    # the same division the rest of the tool runs on. It names a fitting and a
+    # side, arithmetic turns that into the gap between that fitting and its
+    # neighbour, and the band is then chosen inside a place a real one of these
+    # actually gets longer rather than anywhere that measures calm.
+    taller_at = []
+    for e in (got.get("taller_at") or []):
+        try:
+            i = int(e.get("n"))
+            side = str(e.get("side", "")).lower()
+        except (TypeError, ValueError, AttributeError):
+            continue
+        if not (1 <= i <= len(parts)) or side not in ("above", "below"):
+            continue
+        q = parts[i - 1]
+        y0, y1 = q["px"][1], q["px"][3]
+        # the gap runs to the nearest edge of any part on the far side of it,
+        # or to the prop's own end -- measured, not asserted
+        if side == "above":
+            lo = max([p["px"][3] for p in parts
+                      if p["px"][3] <= y0 and p is not q] + [0])
+            gap = [lo, y0]
+        else:
+            hi = min([p["px"][1] for p in parts
+                      if p["px"][1] >= y1 and p is not q] + [H_face])
+            gap = [y1, hi]
+        if gap[1] - gap[0] >= 6:
+            taller_at.append({"part": q["name"], "side": side,
+                              "px": [int(gap[0]), int(gap[1])]})
+
     rules = {
         "wider_means": str(got.get("wider_means", "a wider one of the same thing"))[:300],
         "taller_means": str(got.get("taller_means", "more body, same fittings"))[:300],
+        "taller_at": taller_at,
         "max_wider": clamp(got.get("max_wider"), 1.0, 3.0, 2.0),
         "max_taller": clamp(got.get("max_taller"), 1.0, 3.0, 1.6),
         "per_bay": per_bay,
