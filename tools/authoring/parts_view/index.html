@@ -1544,8 +1544,56 @@ function recessGeometry(q, w, h, d) {
   return g;
 }
 
+// A BUTTON IS A CAP, NOT A TILE.
+//
+// A part you can press has relief by definition -- that is the whole of what
+// distinguishes it from a sticker -- and every one of them was a flat quad
+// lying on the panel. Two things had made that the sensible answer and neither
+// is true any more. The fittings were thirteen texels across, so there was no
+// relief a player could resolve and layer_build flattened them on sight; the
+// detail pass now draws them at six times that. And boxes standing proud of a
+// deck used to intersect the deck, because a part was seated on the BODY's
+// surface however far its host stood out from it; riders sit on their host now.
+//
+// So a pressable fitting gets the shape it is: its face raised and inset, with
+// a chamfer flaring down and out to its footprint. Five quads, no rounder than
+// the artwork asks for -- the alpha still cuts the silhouette, so a round cap
+// stays round and a rectangular one stays rectangular, and the chamfer samples
+// the art just inside its own edge so it is lined in the cap's own colour
+// rather than in whatever the border row happens to hold.
+function capGeometry(q, w, h, d) {
+  const pos = [], uv = [];
+  const quad = (P, U) => {
+    pos.push(...P[0], ...P[1], ...P[2], ...P[0], ...P[2], ...P[3]);
+    uv.push(...U[0], ...U[1], ...U[2], ...U[0], ...U[2], ...U[3]);
+  };
+  const X = w / 2, Y = h / 2, Z = d / 2;
+  const ow = (q.u[1] - q.u[0]) * A, oh = q.v[1] - q.v[0];
+  const F = 0.82;
+  for (const [x0, x1, y0, y1, u0, u1, v0, v1] of faceQuads(q, w, h, ow, oh)) {
+    quad([[x0 * F, y0 * F, Z], [x1 * F, y0 * F, Z],
+          [x1 * F, y1 * F, Z], [x0 * F, y1 * F, Z]],
+         [[u0, v0], [u1, v0], [u1, v1], [u0, v1]]);
+  }
+  const e = (1 - F) / 2;
+  const uL = e, uR = 1 - e, vB = e, vT = 1 - e;
+  quad([[-X * F, Y * F, Z], [X * F, Y * F, Z], [X, Y, -Z], [-X, Y, -Z]],
+       [[uL, vT], [uR, vT], [uR, vT], [uL, vT]]);
+  quad([[X * F, -Y * F, Z], [-X * F, -Y * F, Z], [-X, -Y, -Z], [X, -Y, -Z]],
+       [[uR, vB], [uL, vB], [uL, vB], [uR, vB]]);
+  quad([[-X * F, -Y * F, Z], [-X * F, Y * F, Z], [-X, Y, -Z], [-X, -Y, -Z]],
+       [[uL, vB], [uL, vT], [uL, vT], [uL, vB]]);
+  quad([[X * F, Y * F, Z], [X * F, -Y * F, Z], [X, -Y, -Z], [X, Y, -Z]],
+       [[uR, vT], [uR, vB], [uR, vB], [uR, vT]]);
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
+  return g;
+}
+
 function partGeometry(q, w, h, d) {
   if ((q.motion || 'none') === 'stick') return stickGeometry(w, h, d);
+  if ((q.motion || 'none') === 'press') return capGeometry(q, w, h, d);
   const pos = [], uv = [];
   const quad = (P, U) => {
     pos.push(...P[0], ...P[1], ...P[2], ...P[0], ...P[2], ...P[3]);
@@ -2041,6 +2089,15 @@ const mid = bb.getCenter(new THREE.Vector3());
 const rad = Number(p.get('frame')
   ?? Math.max(size.x, size.y, size.z) * 0.5 * 1.12);
 const cam = new THREE.OrthographicCamera(-rad, rad, rad, -rad, 0.01, 40);
+// ?pan=x,y shifts the look-at point in units of the frame radius, so a close
+// frame can be aimed at the deck or the coin door instead of always at the
+// prop's centre. Inspection only -- the judge's shots leave it at 0,0.
+{
+  const [px, py] = (p.get('pan') ?? '0,0').split(',').map(Number);
+  mid.x += (px || 0) * rad * Math.cos(yaw);
+  mid.z -= (px || 0) * rad * Math.sin(yaw);
+  mid.y += (py || 0) * rad;
+}
 const r = 8;
 cam.position.set(mid.x + r * Math.cos(pitch) * Math.sin(yaw),
                  mid.y + r * Math.sin(pitch),
@@ -2109,5 +2166,10 @@ if (p.get('export') === '1') {
 console.info(`parts: ${man.parts.length} parts, ${movers.length} movable `
   + `(${movers.map((m) => m.motion).join(', ') || 'none'}), anim=${anim}, `
   + `body=${profile ? `profile d${BODY_D.toFixed(3)}` : 'box'}`);
+// handles for the shooter: name what is under a pixel, which is the only
+// way to tell a body face from a part from a decal in a finished render
+globalThis.__three = THREE;
+globalThis.__scene = scene;
+globalThis.__cam = cam;
 globalThis.__done = true;
 </script>

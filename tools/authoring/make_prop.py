@@ -409,6 +409,14 @@ def main():
         raise SystemExit("neither segmentation nor measurement produced parts")
     for line in (r.stdout or "").strip().splitlines()[:14]:
         print("   ", line[:120])
+    # NEITHER SOURCE EVER ASKS WHETHER TWO OF ITS BOXES ARE THE SAME FITTING,
+    # and both produce pairs that are: a pad and the pad's own inner face, a
+    # coin door and a strip across its top, a slot and a button drawn over it.
+    # Two boxes on one spot become two boxes of geometry on one spot.
+    r2 = run([sys.executable, "tools/authoring/settle_parts.py", str(d),
+              "--face", "front"])
+    for line in (r2.stdout or "").strip().splitlines()[:8]:
+        print("   ", line[:120])
 
     print("[3] what resizing this prop means ...", flush=True)
     r = run([sys.executable, "tools/authoring/scale_rules.py", str(d),

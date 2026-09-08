@@ -587,9 +587,18 @@ def main():
         # definition. Flattening by size alone made one joystick flush and left
         # its twin protruding, which the second judge spotted at once: a lever
         # you can push has relief whatever its footprint.
+        # -- and except a PRESS, for the same reason, now that both grounds for
+        # flattening one have gone. "No relief a player could ever see" was
+        # true of a thirteen-texel button and is not true of the same button
+        # redrawn at six times that by detail_sheet; and the boxes that were
+        # seen "intersecting each other and the deck they sit on" did so
+        # because a part was seated on the BODY's surface however far its host
+        # stood proud of it, which is fixed -- a rider sits on its host. A
+        # thing whose whole definition is that it can be pushed in has to
+        # stand out first.
         if (x1 - x0) * (y1 - y0) < 0.004 * W * H and \
                 p.get("depth") in ("proud", "deep") and \
-                p.get("motion", "none") in ("none", "press"):
+                p.get("motion", "none") == "none":
             p["depth"] = "flush"
 
         # PER-BAY IS FOR CONTROLS, AND A CONTROL IS SMALL. A bay is one

@@ -96,13 +96,38 @@ JSON only, one entry per swatch in the order given:
 {{"materials": [{{"n": 1, "name": "...", "main": true}}, ...]}}"""
 
 
-def cells(path, cols=COLS, rows=ROWS, pad=3):
+def cells(path, cols=COLS, rows=ROWS, pad=3, most=16):
     """Cut the sheet on its white gutters. Deterministic; no model involved.
 
     The grid is asked for and then MEASURED, not assumed: a model that draws
     five swatches instead of six, or drifts the spacing, still splits
     correctly, and if the gutters cannot be found at all the even division is
     the fallback rather than the failure.
+
+    TWO WAYS THIS THREW THE MEASUREMENT AWAY, both found by looking at what
+    came back rather than at what the splitter reported.
+
+    THE SHORTEST GUTTER IT WOULD ACCEPT CAME FROM THE GRID IT ASKED FOR --
+    `H // (rows * 4)` -- so a sheet asked for as one row of three would only
+    admit a band of content taller than a quarter of the sheet. The fittings
+    sheet asks for a row and the model returns a column about half the time;
+    sheet 0 of the cabinet came back 640 by 1632 with four fittings stacked,
+    every band well under that floor, so the projection collapsed to a single
+    run, the whole sheet looked unsplittable, and the even division cut three
+    vertical strips THROUGH all four drawings. The rig was handed a joystick
+    with a coin slot underneath it and kept it, because a strip of the right
+    palette and the right aspect passes every check that is about colour. A
+    floor is there to reject a speck, so it is a small fraction of the sheet
+    and nothing to do with the request.
+
+    ONE PASS OF PROJECTION CANNOT READ A LAYOUT THAT IS NOT A GRID. Sheet 1
+    came back with a tall strip down the left and three fittings stacked to
+    the right of it: no horizontal band of paper crosses the sheet, because
+    the strip is in the way, so the rows read as one and three drawings
+    arrived as a single cell. Cutting the widest gutter first and then asking
+    the same question of each piece -- the recursive cut -- reads that, and
+    reads a plain row, a plain column and a true grid identically, since for
+    those the second pass simply finds nothing left to cut.
     """
     im = Image.open(path).convert("RGB")
     W, H = im.size
@@ -126,33 +151,52 @@ def cells(path, cols=COLS, rows=ROWS, pad=3):
             out.append((s, len(flags)))
         return out
 
-    xr = runs([any(not is_bg(px[x, y]) for y in range(0, H, 2))
-               for x in range(W)], W // (cols * 4))
-    yr = runs([any(not is_bg(px[x, y]) for x in range(0, W, 2))
-               for y in range(H)], H // (rows * 4))
-    # THE GRID IS WHATEVER WAS DRAWN, NOT WHATEVER WAS ASKED FOR. The prompt
-    # asks for 3 by 2 and the model drew 2 by 4 -- which is a perfectly good
-    # sheet of six materials, and the first version of this splitter measured
-    # that correctly and then threw the measurement away in favour of the
-    # request. Overriding a measurement with an assumption is the one mistake
-    # this whole tool is organised against. The layout is data; only when the
-    # gutters yield nothing usable is an even split a better guess than none.
-    if not (1 <= len(xr) <= 6 and 1 <= len(yr) <= 6 and 2 <= len(xr) * len(yr) <= 16):
-        print(f"  gutters gave {len(xr)}x{len(yr)} -- splitting evenly instead")
-        xr = [(int(W * i / cols), int(W * (i + 1) / cols)) for i in range(cols)]
-        yr = [(int(H * j / rows), int(H * (j + 1) / rows)) for j in range(rows)]
-    else:
-        print(f"  grid measured {len(xr)}x{len(yr)}")
+    def bands(x0, y0, x1, y1):
+        """content runs across each axis of one region, and the widest gutter"""
+        bx = runs([any(not is_bg(px[x, y]) for y in range(y0, y1, 2))
+                   for x in range(x0, x1)], max(8, (x1 - x0) // 24))
+        by = runs([any(not is_bg(px[x, y]) for x in range(x0, x1, 2))
+                   for y in range(y0, y1)], max(8, (y1 - y0) // 24))
+        bx = [(x0 + a, x0 + b) for a, b in bx]
+        by = [(y0 + a, y0 + b) for a, b in by]
+        gx = max((b[0] - a[1] for a, b in zip(bx, bx[1:])), default=0)
+        gy = max((b[0] - a[1] for a, b in zip(by, by[1:])), default=0)
+        return bx, by, gx, gy
 
+    def cut(x0, y0, x1, y1, depth=0):
+        bx, by, gx, gy = bands(x0, y0, x1, y1)
+        if not bx or not by:
+            return []
+        # tighten to the drawn content whatever happens next
+        x0, x1, y0, y1 = bx[0][0], bx[-1][1], by[0][0], by[-1][1]
+        if depth >= 3 or (len(bx) < 2 and len(by) < 2):
+            return [(x0, y0, x1, y1)]
+        # the most decisive separation first, measured against the side it
+        # divides so a wide sheet does not always win on the x axis
+        if len(by) < 2 or (len(bx) > 1 and gx / (x1 - x0) >= gy / (y1 - y0)):
+            return [b for a, c in bx for b in cut(a, y0, c, y1, depth + 1)]
+        return [b for a, c in by for b in cut(x0, a, x1, c, depth + 1)]
+
+    boxes = cut(0, 0, W, H)
+    if not 2 <= len(boxes) <= most:
+        print(f"  gutters gave {len(boxes)} cells -- splitting evenly instead")
+        boxes = [(int(W * i / cols), int(H * j / rows),
+                  int(W * (i + 1) / cols), int(H * (j + 1) / rows))
+                 for j in range(rows) for i in range(cols)]
+    else:
+        print(f"  gutters measured {len(boxes)} cells")
+
+    # read top to bottom, then left to right, so a sheet that IS a plain grid
+    # still comes back in the order it was asked for
+    boxes.sort(key=lambda b: (b[1] // max(1, H // 16), b[0]))
     out = []
-    for (y0, y1) in yr:
-        for (x0, x1) in xr:
-            # inset, because the swatch's own outermost pixels are where a
-            # drawn square blends into the gutter and are not material
-            k = pad + max(2, (x1 - x0) // 24)
-            box = (x0 + k, y0 + k, max(x0 + k + 8, x1 - k),
-                   max(y0 + k + 8, y1 - k))
-            out.append(im.crop(box))
+    for (x0, y0, x1, y1) in boxes:
+        # inset, because the swatch's own outermost pixels are where a
+        # drawn square blends into the gutter and are not material
+        k = pad + max(2, (x1 - x0) // 24)
+        box = (x0 + k, y0 + k, max(x0 + k + 8, x1 - k),
+               max(y0 + k + 8, y1 - k))
+        out.append(im.crop(box))
     return out
 
 
