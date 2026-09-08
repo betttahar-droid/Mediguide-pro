@@ -529,20 +529,54 @@ function surfacePlane(cx, cy, w, h) {
   // square. Down the height the surface is the side profile; across the width
   // it is the plan. Ask each separately and a wide part on a chamfered body
   // keeps the slope it is lying on and simply declines the twist.
+  // FITTED ROBUSTLY, BECAUSE ONE CLIFF IS NOT A SHAPE. Trimming the footprint
+  // to its inner four fifths was not enough on this cabinet: its bezel slopes
+  // 14 degrees and then drops a tenth of the prop's depth in three thousandths
+  // of its height, and the screen's box reaches that cliff. A straight fit
+  // through it has a residual the size of the cliff, the test refuses the
+  // slope, and EVERY part came back at pitch 0.0 -- a monitor standing bolt
+  // upright in a sloped bezel, which is exactly what was reported.
+  //
+  // The slope is what most of the samples agree about; the cliff is two of
+  // them. So fit, discard the third that agree least, fit again, and judge the
+  // residual on what is left. That is the same trimmed fit the plane used
+  // before it was split per axis, and dropping it in the split was an
+  // oversight rather than a decision.
   const line = (span, at) => {
     if (span < 1e-6) return { k: 0, ok: true };
-    let sdz = 0, sdd = 0;
     const pts = [];
     for (let i = 0; i <= N; i++) {
       const t = -span / 2 + (span * i) / N;
-      const z = at(t);
-      pts.push([t, z]);
-      sdz += t * z; sdd += t * t;
+      pts.push([t, at(t)]);
     }
-    const k = sdd > 1e-12 ? sdz / sdd : 0;
-    const mid = pts.reduce((a, q) => a + q[1], 0) / pts.length;
-    let resid = 0;
-    for (const [t, z] of pts) resid = Math.max(resid, Math.abs(z - (mid + k * t)));
+    // THE MEDIAN OF THE PAIRWISE SLOPES, not least squares with a trim on top.
+    // Trimming needs to know which samples are the outliers, and it was asking
+    // a least-squares line -- which the outlier has already dragged. Through
+    // six samples on this bezel and one on the cliff below it, that line
+    // reported a slope of +0.512 where the bezel runs at -0.245, then threw
+    // away two of the six good samples as the worst offenders. A contaminated
+    // estimator cannot be used to find its own contamination.
+    //
+    // The median pairwise slope has no such problem: a minority of samples on
+    // a cliff cannot move a median. It is one extra loop over a handful of
+    // points and it makes the trim honest, because the residuals are now
+    // measured against a line the outliers did not help draw.
+    const med = (a) => {
+      const v = a.slice().sort((x, y) => x - y);
+      return v.length ? v[v.length >> 1] : 0;
+    };
+    const slopes = [];
+    for (let i = 0; i < pts.length; i++) {
+      for (let j = i + 1; j < pts.length; j++) {
+        const dt = pts[j][0] - pts[i][0];
+        if (Math.abs(dt) > 1e-9) slopes.push((pts[j][1] - pts[i][1]) / dt);
+      }
+    }
+    const k = med(slopes);
+    const mid = med(pts.map(([t, z]) => z - k * t));
+    const errs = pts.map(([t, z]) => Math.abs(z - (mid + k * t)))
+      .sort((a, b) => a - b);
+    const resid = errs[Math.max(0, Math.round(errs.length * 0.68) - 1)];
     return { k, ok: resid <= 0.12 * span && Math.abs(k) < 6 };
   };
 
@@ -577,12 +611,34 @@ function surfacePlane(cx, cy, w, h) {
       over.push(z - (a + b * dx + c * dy));
     }
   }
-  // and cleared by what most of it needs, not by its worst pixel: taking the
-  // maximum let one sample on a step decide where a whole panel sits, and a
-  // part may never be pushed further out than its own depth however deep the
-  // thing it grazes
-  over.sort((x, y2) => x - y2);
-  const need = over[Math.min(over.length - 1, Math.round(over.length * 0.92))];
+  // CLEARED AGAINST THE SURFACE IT LIES IN, NOT THE ONE IT OVERHANGS. This
+  // asked for the 92nd percentile of the residuals, which was meant to stop a
+  // single sample on a step from deciding where a whole panel sits. It does
+  // not, because a step is rarely one sample: the screen's box hangs over the
+  // top of the control deck, its bottom ROW of samples lands on the deck --
+  // seven of forty-nine, fourteen percent -- and the 92nd percentile is one of
+  // them. The deck stands a fourteenth of the prop's depth proud of the bezel,
+  // so the monitor was pushed that far out of the bezel and hung in the air in
+  // front of the cabinet with daylight behind it. The pitch was finally right
+  // and the screen still looked wrong, which is what was reported.
+  //
+  // A bezel is SUPPOSED to overhang a deck. The fit already knows which samples
+  // are the surface -- they are the ones it agrees with -- so cut the residuals
+  // at a few times their own median absolute deviation and clear against what
+  // is left. If the far samples really are the majority then they are not a
+  // step, the median moves with them, and nothing is discarded. Same rule as
+  // the slope fit above: a minority on a cliff must not move the answer.
+  const med2 = (arr) => {
+    const v = arr.slice().sort((x, y2) => x - y2);
+    return v.length ? v[v.length >> 1] : 0;
+  };
+  const mid2 = med2(over);
+  const mad = med2(over.map((v) => Math.abs(v - mid2)));
+  const lim = mid2 + 3 * Math.max(mad, 0.002);
+  const on = over.filter((v) => v <= lim);
+  const need = on.length ? Math.max(...on) : 0;
+  // and a part may never be pushed further out than its own depth however deep
+  // the thing it grazes
   return { a: a + Math.max(0, Math.min(need, 1.5 * Math.max(w, h) * 0.1)),
            b, c, front, fitted: down.ok || across.ok };
 }
@@ -1319,8 +1375,17 @@ for (const q of man.parts) {
         + `  seat ${pl.a.toFixed(3)}  frontmost ${pl.front.toFixed(3)}`
         + (pl.fitted ? '' : '   (step, not a slope: mounted square)'));
     }
-    const rotX = Math.max(-1.2, Math.min(1.2, Math.atan(pl.c)));
-    const rotY = Math.max(-1.2, Math.min(1.2, -Math.atan(pl.b)));
+    // CAPPED AT 45 DEGREES, BEYOND WHICH THE TWO DRAWINGS DISAGREE. With the
+    // fit made robust, the control deck came back at -64 degrees: the profile
+    // really does turn that steeply there, because that is the deck's front
+    // LIP rather than its top, and a deck laid at 64 degrees stands nearly
+    // upright. Past 45 a part has to grow by more than 40% to cover its own
+    // footprint -- 1/cos -- which is the elevation and the profile disagreeing
+    // about what the part is, not a surface to lie in. Holding it square is
+    // the safer reading of a disagreement.
+    const CAP = Math.PI / 4;
+    const rotX = Math.max(-CAP, Math.min(CAP, Math.atan(pl.c)));
+    const rotY = Math.max(-CAP, Math.min(CAP, -Math.atan(pl.b)));
     // A SLOPE IS LONGER THAN ITS SHADOW. The elevation measures a part where it
     // projects, so a bezel drawn 0.30 tall covers 0.30/cos of actual slope --
     // laid in the plane at its drawn size the screen fell short of its own
