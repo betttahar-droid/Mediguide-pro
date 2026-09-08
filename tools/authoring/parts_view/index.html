@@ -96,13 +96,13 @@ function xFor(q, w, FW, A) {
 function placeX(q) {
   const ow = (q.u[1] - q.u[0]) * A;
   const w = spansOf(q).x ? ow + (FW - A) : ow;
-  return { x: spansOf(q).x ? 0 : xFor(q, w, FW, A), w, u: q.u };
+  return { x: spansOf(q).x ? 0 : xFor(q, w, FW, A), w, u: q.u, v: q.v };
 }
 
 // the smallest STRUCTURE this part stands on: a control deck under a joystick,
 // a kick panel under a coin slot. A part that stands on nothing has the prop.
 function hostSpan(q) {
-  if (!q.per_bay) return null;
+  if (!q.per_bay && !q.per_tier) return null;
   let best = null;
   for (const s of man.parts) {
     if (!s.spans || s.name === q.name) continue;
@@ -110,6 +110,30 @@ function hostSpan(q) {
     if (q.u[0] < s.u[0] - m || q.u[1] > s.u[1] + m
         || q.v[0] < s.v[0] - m || q.v[1] > s.v[1] + m) continue;
     if (!best || (s.u[1] - s.u[0]) < (best.u[1] - best.u[0])) best = s;
+  }
+  // A TIER'S HOST IS AN ENCLOSURE, NOT A SHELF THAT CARRIES THINGS. Structure
+  // is defined here as a part that either runs the prop's width or has fittings
+  // standing PROUD of it, which is right for a control deck and wrong for a
+  // display window: the vending machine's products sit BEHIND its glass, so
+  // nothing stands on the window, layer_build demoted it from structure, no
+  // product found a host, and every one of them tiered down the whole prop --
+  // a second row of drinks floating in the cabinet's lower body, outside the
+  // case, which is what the render showed.
+  //
+  // What a row of products repeats along is simply the thing they are all
+  // inside. Containment and a size gap say that without needing to know
+  // whether anything is bolted to anything.
+  if (!best && q.per_tier) {
+    const qa = (q.u[1] - q.u[0]) * (q.v[1] - q.v[0]);
+    for (const s of man.parts) {
+      if (s.name === q.name) continue;
+      const m = 0.03;
+      if (q.u[0] < s.u[0] - m || q.u[1] > s.u[1] + m
+          || q.v[0] < s.v[0] - m || q.v[1] > s.v[1] + m) continue;
+      const sa = (s.u[1] - s.u[0]) * (s.v[1] - s.v[0]);
+      if (sa < 3 * qa) continue;          // a peer is not an enclosure
+      if (!best || sa < (best.u[1] - best.u[0]) * (best.v[1] - best.v[0])) best = s;
+    }
   }
   // A STATION IS NOT ALWAYS INSIDE ITS STRUCTURE'S BOX. The test above is
   // containment, and on this cabinet the segmenter drew the joysticks straddling
@@ -162,7 +186,7 @@ function hostSpan(q) {
   // the same convention placeX uses for a part that spans: centred, and the
   // whole of the added width goes to it
   return { x: 0, w: (xr - xl) + (FW - A),
-           u: [xl / A + 0.5, xr / A + 0.5] };
+           u: [xl / A + 0.5, xr / A + 0.5], v: [0, 1] };
 }
 
 // WHAT A PART STANDS ON IS WHAT IT MOVES WITH. The anchor is decided per part
@@ -1678,8 +1702,21 @@ for (const q of man.parts) {
   let x, y;
   if (canX) x = 0;
   else x = xFor(q, w, FW, A);
-  if (canY) y = 0;
-  else y = (gOfT((q.v[0] + q.v[1]) / 2) - 0.5) * FH;
+  // A PART THAT GROWS DOWNWARDS IS NOT NECESSARILY THE WHOLE PROP. Centring
+  // anything that spans on Y was safe while only full-height parts ever did:
+  // the first part that grew vertically WITHOUT running the whole height --
+  // the vending machine's display case, lengthening to hold another shelf --
+  // was centred on the cabinet instead of staying where it is drawn, and slid
+  // down over the keypad in the render at its ORIGINAL size, where nothing
+  // should have moved at all. A part keeps the edge its anchor names and grows
+  // away from it, which is what the anchor has always meant on the other axis.
+  if (canY && (q.v[1] - q.v[0]) > 0.85) y = 0;
+  else if (canY) {
+    const base = (gOfT((q.v[0] + q.v[1]) / 2) - 0.5) * FH;
+    const grew = h - oh;
+    y = q.anchor === 'top' ? base - grew / 2
+      : q.anchor === 'bottom' ? base + grew / 2 : base;
+  } else y = (gOfT((q.v[0] + q.v[1]) / 2) - 0.5) * FH;
   // MOUNT ON THE SURFACE, NOT ON A PLANE. With a shaped body the front is at a
   // different depth at every height, so a fixed z floated the control deck in
   // front of the deck it belongs to and buried the marquee in the slope.
@@ -1735,9 +1772,31 @@ for (const q of man.parts) {
   const ox = host
     ? ((q.u[0] + q.u[1]) / 2 - (host.u[0] + host.u[1]) / 2) * A
     : ((q.u[0] + q.u[1]) / 2 - 0.5) * A;
+
+  // AND ONE PER TIER, WHICH IS THE SAME SENTENCE ABOUT THE OTHER AXIS. Width
+  // could always say "a bigger one has more of these" and height could only
+  // stretch or hold, so a taller vending machine grew its product rows instead
+  // of gaining one, and a taller jukebox got taller title strips. Nothing in
+  // "more shelves, not taller shelves" is about width; the machinery just
+  // never existed on the other axis.
+  //
+  // The prop's own height is the unit, exactly as its width is for bays: at
+  // 1.5x there is one and a half tiers' worth of room, which is two tiers. The
+  // tier is measured on the HOST, like a bay -- shelves repeat down the cabinet
+  // they are in, not down the whole prop -- and the part keeps its offset
+  // within its tier so a strip mounted near the top of one shelf stays near
+  // the top of every shelf.
+  const tiers = (q.per_tier && host) ? Math.max(1, Math.round(FH)) : 1;
+  const hv = host?.v ?? [0, 1];
+  const hy0 = (gOfT(hv[0]) - 0.5) * FH, hy1 = (gOfT(hv[1]) - 0.5) * FH;
+  const tierH = (hy1 - hy0) / tiers;
+  const oy = y - (hy0 + (hy1 - hy0) / 2);
+
   const m = q.motion || 'none';
-  for (let b = 0; b < bays; b++) {
-    const bx = bays > 1 ? bx0 + bayW * (b + 0.5) + ox : x;
+  for (let b = 0; b < bays * tiers; b++) {
+    const bi = b % bays, ti = (b / bays) | 0;
+    const bx = bays > 1 ? bx0 + bayW * (bi + 0.5) + ox : x;
+    const by = tiers > 1 ? hy0 + tierH * (ti + 0.5) + oy / tiers : y;
     // THE PIVOT IS THE POINT. A door that spins about its centre is not a door,
     // so the part hangs off a pivot placed on the edge its motion turns about,
     // and the mesh is offset back by the same amount inside it.
@@ -1749,8 +1808,8 @@ for (const q of man.parts) {
     // that runs at -2.08, the residual then failed, and the stick was mounted
     // square. A panel is held along its whole face and is asked about all of
     // it; a stick is held only where it enters the panel.
-    const pl = m === 'stick' ? surfacePlane(bx, y - h * 0.35, w, h * 0.30)
-                             : surfacePlane(bx, y, w, h);
+    const pl = m === 'stick' ? surfacePlane(bx, by - h * 0.35, w, h * 0.30)
+                             : surfacePlane(bx, by, w, h);
     // ?fit=1 prints what surface each part decided it was lying on. Every
     // mounting fault so far has been invisible in the render and obvious in
     // these four numbers.
@@ -1840,7 +1899,7 @@ for (const q of man.parts) {
     // stands off the slope rather than off the world
     const nrm = new THREE.Vector3(-pl.b, -pl.c, 1).normalize();
     const k = d / 2 + explode * 0.6;
-    const seat = new THREE.Vector3(bx, y, pl.a).addScaledVector(nrm, k);
+    const seat = new THREE.Vector3(bx, by, pl.a).addScaledVector(nrm, k);
     // the hinge edge is an edge of the PART, so its offset turns with the part
     const offW = new THREE.Vector3(...off).applyEuler(pivot.rotation);
     pivot.position.copy(seat.clone().add(offW));
@@ -1850,11 +1909,15 @@ for (const q of man.parts) {
     // NAME BOTH, AND RECORD THE MECHANISM. An exported rig is only editable if
     // the thing you select in a DCC tool tells you what it is and how it moves;
     // an anonymous Object3D_7 is no better than a merged mesh.
-    pivot.name = bays > 1 ? `${q.name}_bay${b + 1}` : q.name;
+    pivot.name = (bays * tiers) > 1
+      ? (tiers > 1 && bays > 1 ? `${q.name}_bay${bi + 1}_tier${ti + 1}`
+         : tiers > 1 ? `${q.name}_tier${ti + 1}` : `${q.name}_bay${bi + 1}`)
+      : q.name;
     inst.name = `${pivot.name}_mesh`;
     pivot.userData = { part: q.name, motion: m, depth: q.depth ?? 'proud',
                        resize: R, anchor: q.anchor,
-                       ...(bays > 1 ? { bay: b + 1, bays } : {}) };
+                       ...(bays > 1 ? { bay: bi + 1, bays } : {}),
+                       ...(tiers > 1 ? { tier: ti + 1, tiers } : {}) };
     scene.add(pivot);
     // A DOOR HAS SOMETHING BEHIND IT. The background has the door's own shape
     // cut out of it, so swinging the door open showed straight through the

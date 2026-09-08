@@ -86,6 +86,25 @@ one of these actually is.
                   brand sign, a screen, a coin door, or a maker's plate: there
                   is only ever one of those however big the prop gets.
 
+  "per_tier"      the same question for HEIGHT: the NUMBERS of the parts a
+                  TALLER one of these has MORE OF rather than BIGGER ones. A
+                  shelf, a product row, a title strip, a drawer, a rack. A
+                  taller vending machine has more shelves, not taller shelves;
+                  a taller jukebox has more title strips, not taller ones. Most
+                  props have none of these -- a cabinet's screen, marquee and
+                  coin door are each one of a kind at any height -- and an
+                  empty list is the usual answer. Never list something that is
+                  one per prop however tall it gets.
+                  BUT IT MUST AGREE WITH YOUR OWN taller_means SENTENCE. If
+                  that sentence says a taller one has MORE of something, that
+                  something goes here. An empty per_tier beside a taller_means
+                  promising more shelves is a contradiction, and the shelves
+                  will come back stretched.
+                  A part may be in BOTH per_bay and per_tier -- a product slot
+                  in a grid is one more column when the machine is wider and
+                  one more row when it is taller, and that is two answers to
+                  two different questions, not a mistake.
+
   "spans"         the NUMBERS of the parts that are STRUCTURE rather than
                   content -- the housings and frames that physically run the
                   whole width of the prop and must keep doing so at any size: a
@@ -104,7 +123,8 @@ what you can SEE in each outline, not by its name.
 JSON only:
 {{"wider_means": "...", "taller_means": "...",
   "taller_at": [{{"n": 1, "side": "above"}}, {{"n": 9, "side": "below"}}],
-  "max_wider": 2.0, "max_taller": 1.6, "per_bay": [4, 7], "spans": [1, 3]}}"""
+  "max_wider": 2.0, "max_taller": 1.6, "per_bay": [4, 7],
+  "per_tier": [], "spans": [1, 3]}}"""
 
 
 def main():
@@ -165,6 +185,11 @@ def main():
         return got_list
 
     spans = numbers("spans")
+    # A TALLER MACHINE HAS MORE SHELVES, NOT TALLER ONES. per_bay has always
+    # been able to say "a wider one has more of these" and height had no way to
+    # say it at all, so a taller vending machine grew its product rows instead
+    # of gaining one. Same flag, same instancing, other axis.
+    per_tier = numbers("per_tier")
     per_bay = []
     for n in got.get("per_bay", []):
         try:
@@ -274,6 +299,12 @@ def main():
         "max_wider": clamp(got.get("max_wider"), 1.0, 3.0, 2.0),
         "max_taller": clamp(got.get("max_taller"), 1.0, 3.0, 1.6),
         "per_bay": per_bay,
+        # BOTH AXES IS ALLOWED, and the vending machine is why. Its product
+        # slots are a grid: a wider machine has more columns of them and a
+        # taller one more rows, which is two answers to two different questions.
+        # Excluding the overlap silently dropped every one of them from the
+        # height axis, since they were all named per_bay first.
+        "per_tier": per_tier,
         # a part cannot be both the frame and the thing bolted into it
         "spans": [n for n in spans if n not in per_bay],
     }
@@ -282,12 +313,15 @@ def main():
     # the manifest carries the flag, so the renderer needs nothing else
     for p in parts:
         p["per_bay"] = p["name"] in per_bay
+        p["per_tier"] = p["name"] in rules["per_tier"]
         p["spans"] = p["name"] in rules["spans"]
     (d / f"parts_{args.face}.json").write_text(json.dumps(man, indent=1))
 
     print(f"wider  x{rules['max_wider']}: {rules['wider_means']}")
     print(f"taller x{rules['max_taller']}: {rules['taller_means']}")
     print(f"per bay: {', '.join(per_bay) if per_bay else '(nothing repeats)'}")
+    if rules["per_tier"]:
+        print(f"per tier: {', '.join(rules['per_tier'])}")
     for a in added:
         print(f"  + {a}")
     print(f"spans:   {', '.join(rules['spans']) if rules['spans'] else '(nothing spans)'}")

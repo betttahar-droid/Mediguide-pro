@@ -76,8 +76,9 @@ export function faceQuads(q, w, h, ow, oh) {
     }
     return out;
   }
+  const RY = q.resize_y || R;
   const bh = R.startsWith('spanx') ? (q.bands?.h ?? null) : null;
-  const bv = R.startsWith('spany') ? (q.bands?.v ?? null) : null;
+  const bv = RY.startsWith('spany') ? (q.bands?.v ?? null) : null;
   const [a0, a1] = bh ?? [0.5, 0.5];
   const [c0, c1] = bv ?? [0.5, 0.5];
   const X = w / 2, Y = h / 2;
@@ -94,7 +95,7 @@ export function faceQuads(q, w, h, ow, oh) {
   // reporting on every enlarged prop.
   const nx = (bh && R === 'spanx_repeat')
     ? Math.min(64, Math.max(1, Math.round((xs[2] - xs[1]) / unitW))) : 1;
-  const ny = (bv && R === 'spany_repeat')
+  const ny = (bv && RY === 'spany_repeat')
     ? Math.min(64, Math.max(1, Math.round((ys[2] - ys[1]) / unitH))) : 1;
 
   const out = [];
@@ -131,6 +132,15 @@ export function faceQuads(q, w, h, ow, oh) {
 // drawn at one size and positioned as though it were another.
 export function spansOf(q) {
   const R = q.resize || 'fixed';
+  // ONE ENUM CANNOT SAY TWO THINGS. "resize" is a single value, so a part could
+  // grow across OR down and never both -- and the vending machine's display
+  // case has to do both: a wider machine has more product columns in it and a
+  // taller one more shelf rows. Marked spanx it held its height, the extra
+  // tier had nowhere to go, and the products piled up inside a case that had
+  // stayed the size it was drawn. resize_y carries the other axis when the two
+  // differ; where it is absent the old single value answers for both, which is
+  // every prop authored before this.
+  const RY = q.resize_y || R;
   // EACH RULE NEEDS ITS OWN THING, AND WITHOUT IT DOES NOT GROW. _repeat needs
   // a measured uniform band to instance; _center needs a plain flank to insert
   // into. Accepting either for both let a _center marquee with no flank claim
@@ -148,6 +158,6 @@ export function spansOf(q) {
   const band = !!(q.bands && q.bands.h);
   return {
     x: R.startsWith('spanx') && (center ? !!q.hf : (band || !!q.hf)),
-    y: R.startsWith('spany') && !!(q.bands && q.bands.v),
+    y: RY.startsWith('spany') && !!(q.bands && q.bands.v),
   };
 }

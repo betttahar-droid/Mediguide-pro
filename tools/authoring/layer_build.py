@@ -321,6 +321,88 @@ def fill_from_panel(ob, boxes, shaped=None):
     return out
 
 
+def rule_y(p, parts, rule):
+    """How this part grows DOWN, which is not always how it grows across.
+
+    A WHOLE ENCLOSURE OF TIERS HAS TO GET TALLER, or the extra tier has nowhere
+    to be. The vending machine's display case is the case in point: a wider
+    machine has more product columns in it, so the case is spanx; a taller one
+    has more shelf ROWS in it, and the case was still spanx, so it held the
+    height it was drawn at, the second row of products was laid into a case
+    that had not grown, and they piled up inside it. The rule is not a taste
+    call -- the model has already said which parts come one per tier, and
+    whatever contains them is the thing that must lengthen to hold them.
+
+    Everything else answers with its across-rule, which is what the single
+    field always meant and what every prop authored before this expects.
+    """
+    # THE RULE THIS FUNCTION FALLS BACK TO IS THE ONE layer_build DECIDED, not
+    # the one it was handed. p["resize"] is the model's raw answer, and half of
+    # this file exists to overrule it: a joystick asked for spanx_repeat, was
+    # demoted to fixed for being per-bay, and then got spanx_repeat back on the
+    # other axis from here -- a rule for an axis it does not even name.
+    tiers = [q for q in parts if q.get("per_tier") and q["name"] != p["name"]]
+    if not tiers:
+        return rule
+    x0, y0, x1, y1 = p["px"]
+    area = max(1, (x1 - x0) * (y1 - y0))
+    m = 0.03 * max(x1 - x0, y1 - y0)
+    holds = [q for q in tiers
+             if q["px"][0] >= x0 - m and q["px"][2] <= x1 + m
+             and q["px"][1] >= y0 - m and q["px"][3] <= y1 + m
+             and (q["px"][2] - q["px"][0]) * (q["px"][3] - q["px"][1]) * 3 <= area]
+    if not holds:
+        return rule
+    print(f"  {p['name']}: holds {len(holds)} per-tier part(s) -> spany_repeat")
+    p["per_tier_host"] = True
+    return "spany_repeat"
+
+
+def tier_band(p, parts):
+    """For an enclosure of tiers, the repeating unit is ONE ROW of them.
+
+    Bands are measured by looking for a run that is UNIFORM along the axis,
+    which is the right question for panel and the wrong one here: a display
+    case full of drinks is uniform nowhere, so the vending machine's window
+    reported no vertical band, could not span downwards, and held the height it
+    was drawn at while a second shelf of products was laid into it. The
+    products piled up inside a case that had not grown.
+
+    A shelf row does not need to be measured. The model has already said which
+    parts come one per tier, and their own boxes say how tall a row is: the
+    band is the row nearest the middle of the enclosure, in the enclosure's own
+    coordinates. Repeating THAT is what another shelf is.
+    """
+    if not p.get("per_tier_host"):
+        return None
+    x0, y0, x1, y1 = p["px"]
+    hh = y1 - y0
+    if hh <= 0:
+        return None
+    kids = [q for q in parts if q.get("per_tier") and q["name"] != p["name"]
+            and q["px"][0] >= x0 and q["px"][2] <= x1
+            and q["px"][1] >= y0 and q["px"][3] <= y1]
+    if len(kids) < 2:
+        return None
+    # group the children into rows by vertical overlap, then take a middle row
+    rows = []
+    for q in sorted(kids, key=lambda q: q["px"][1]):
+        for r in rows:
+            if q["px"][1] < r[1] and q["px"][3] > r[0]:
+                r[0], r[1] = min(r[0], q["px"][1]), max(r[1], q["px"][3])
+                break
+        else:
+            rows.append([q["px"][1], q["px"][3]])
+    if not rows:
+        return None
+    a, b = rows[len(rows) // 2]
+    # v is measured from the BOTTOM, like everything the renderer eats
+    lo, hi = (y1 - b) / hh, (y1 - a) / hh
+    if hi - lo < 0.03 or hi - lo > 0.9:
+        return None
+    return [round(lo, 5), round(hi, 5)]
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("sheet_dir")
@@ -786,9 +868,11 @@ def main():
         out.append({
             "name": p["name"], "image": f"parts/{p['name']}.png",
             "hf": hf,
-            "resize": rule, "anchor": p["anchor"],
+            "resize": rule, "resize_y": rule_y(p, man["parts"], rule),
+            "anchor": p["anchor"],
             "depth": p.get("depth", "proud"), "motion": p.get("motion", "none"),
             "per_bay": bool(p.get("per_bay")),
+            "per_tier": bool(p.get("per_tier")),
             # WHICH PARTS ARE STRUCTURE HAS TO REACH THE RENDERER TOO. It was
             # used here to decide a resize rule and then dropped, so the rig had
             # no way to know that a joystick stands on a control deck -- and it
@@ -799,7 +883,8 @@ def main():
             "spans": bool(p.get("spans")),
             "scatter": bool(p.get("scatter")),
             # where THIS part may repeat, in its own 0..1 box
-            "bands": {"h": (b or {}).get("h"), "v": (b or {}).get("v")},
+            "bands": {"h": (b or {}).get("h"),
+                      "v": tier_band(p, man["parts"]) or (b or {}).get("v")},
             "px_size": [x1 - x0, y1 - y0],
             # fractions of the ORIGINAL face; the renderer turns these into
             # world units that do not change when the prop resizes
