@@ -753,7 +753,20 @@ def main():
                     sd.append((sum((z - m) ** 2 for z in v) / len(v)) ** 0.5)
                 calm = sorted(sd)[max(0, int(0.15 * len(sd)))]
                 inked = [s > max(3.0, 2.0 * calm) for s in sd]
-                win, score = flank_window(col_diff(rgb, 0, Hc), forbid=inked)
+                # AND A FLANK IS NEAR THE EDGE. The search ran out to 47% of
+                # the part, which is the middle of a 240-pixel control deck --
+                # and that is where it went: hf came back at 0.42..0.46, so
+                # the widened deck had six copies of a strip of its own dark
+                # centre inserted either side of the middle. Both judges, all
+                # three rounds: "the control deck smears a large black void
+                # across the panel", "repeated dark panel rectangles". The
+                # default suits a background strip, whose flank really can run
+                # that far in; a fitting's plain flank is its outer fifth. At
+                # 0.20 both cabinets' decks move to a genuinely plain window
+                # just inside the trim and every marquee is unmoved -- their
+                # windows were already under 0.15 and the bound never binds.
+                win, score = flank_window(col_diff(rgb, 0, Hc), hi=0.20,
+                                          forbid=inked)
                 # NO PLAIN FLANK MEANS NO GROWTH, AND THAT IS AN ANSWER.
                 # flank_window falls back to a zero-width cut just inside the
                 # trim when nothing is quiet enough, which is right for a
