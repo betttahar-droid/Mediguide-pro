@@ -724,7 +724,36 @@ def main():
             try:
                 from strip_slice import col_diff, flank_window
                 rgb = crop.convert("RGB")
-                win, score = flank_window(col_diff(rgb, 0, rgb.size[1]))
+                # QUIET ACROSS IS NOT QUIET. col_diff measures how much a
+                # column differs from the one beside it, and the gap between
+                # two letters differs from its neighbours hardly at all -- so
+                # on this marquee the calmest window in the whole left flank
+                # sat at columns 66..76, in the middle of ASTEROID, and the
+                # widened cabinet came back reading "AS2 2S2S2STEROI[][]D".
+                # Both judges called it unreadable text on the prop's most
+                # prominent face, twice in a row.
+                #
+                # What separates that gap from real plain frame is the OTHER
+                # axis: plain frame is uniform from top to bottom, and a
+                # column in a letter gap carries the tops and bottoms of the
+                # glyphs either side of it. Striking out every column whose
+                # vertical spread is well above the part's own calm end --
+                # measured against its 15th percentile, so it is the part's
+                # material that sets the bar and not a constant -- moves the
+                # window to columns 22..32, which is the frame just inside the
+                # trim. The multiplier barely matters: 1.6, 2.0 and 2.5 all
+                # land on the same window, which is what a real edge in the
+                # data looks like.
+                Wc, Hc = rgb.size
+                pxc = rgb.load()
+                sd = []
+                for x in range(Wc):
+                    v = [sum(pxc[x, y]) / 3 for y in range(Hc)]
+                    m = sum(v) / len(v)
+                    sd.append((sum((z - m) ** 2 for z in v) / len(v)) ** 0.5)
+                calm = sorted(sd)[max(0, int(0.15 * len(sd)))]
+                inked = [s > max(3.0, 2.0 * calm) for s in sd]
+                win, score = flank_window(col_diff(rgb, 0, Hc), forbid=inked)
                 # NO PLAIN FLANK MEANS NO GROWTH, AND THAT IS AN ANSWER.
                 # flank_window falls back to a zero-width cut just inside the
                 # trim when nothing is quiet enough, which is right for a
