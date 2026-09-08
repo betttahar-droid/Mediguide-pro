@@ -135,6 +135,15 @@ def bands(path, quantile=0.35, min_frac=0.08, fallback=False, parts=None):
     # out and its hole patched, so the quietest columns are often the coin
     # door's. Striking out the occupied columns first asks where the prop is
     # actually BARE, which is the only place more of it can go.
+    # AND THE SAME IS TRUE OF ROWS, WHICH THIS ONLY DID FOR COLUMNS. The note
+    # below was written about inserting width and the fix was applied to the
+    # width axis alone, though every word of it is about the background being
+    # flattest exactly where a fitting was cut out. The height axis went on
+    # picking the quietest rows, which on this cabinet are the patched hole
+    # behind the coin door -- so the vertical band ran straight through the
+    # door, and a cabinet made half again as tall grew a SECOND coin door
+    # surround above the real one. The band must be where the prop is bare on
+    # both axes or it is not a band, it is a fitting.
     if parts:
         try:
             man = json.loads(Path(parts).read_text())
@@ -148,16 +157,23 @@ def bands(path, quantile=0.35, min_frac=0.08, fallback=False, parts=None):
             # a column that clips one marquee corner is nearly fine. Coverage
             # says which is which, and adding it to the difference score lets
             # busy-ness and occupancy trade off instead of one vetoing.
-            cov = [0] * len(coldiff)
-            for q in man.get("parts", []):
-                x0, y0, x1, y1 = q["px"]
-                for x in range(max(0, x0 - 1), min(len(cov), x1 + 1)):
-                    cov[x] += max(0, y1 - y0)
-            span = max(1.0, max(cov)) if cov else 1.0
-            scale = (sorted(coldiff)[int(0.9 * (len(coldiff) - 1))]
-                     if coldiff else 1.0) * 2.0 + 1.0
-            for x in range(len(coldiff)):
-                coldiff[x] += scale * (cov[x] / span)
+            def weigh(diff, lo, hi, extent):
+                """Add each part's coverage of a line to that line's score."""
+                if not diff:
+                    return
+                cov = [0] * len(diff)
+                for q in man.get("parts", []):
+                    box = q["px"]
+                    for i in range(max(0, box[lo] - 1),
+                                   min(len(cov), box[hi] + 1)):
+                        cov[i] += max(0, box[extent[1]] - box[extent[0]])
+                span = max(1.0, max(cov))
+                scale = sorted(diff)[int(0.9 * (len(diff) - 1))] * 2.0 + 1.0
+                for i in range(len(diff)):
+                    diff[i] += scale * (cov[i] / span)
+
+            weigh(coldiff, 0, 2, (1, 3))     # columns, weighted by part height
+            weigh(rowdiff, 1, 3, (0, 2))     # rows, weighted by part width
         except Exception:
             pass
 

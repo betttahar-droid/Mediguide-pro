@@ -298,6 +298,26 @@ def main():
         cd = col_diff(im, y0, y1)
         hband, noise = quiet_window(cd, 0.10)
         rows = rd[y0:max(y0 + 2, y1 - 1)]
+        # A ROW A FITTING STANDS IN IS NOT SOMEWHERE TO INSERT HEIGHT, and it
+        # measures quiet precisely BECAUSE the fitting was cut out of the
+        # background and its hole patched flat. So the calmest rows in this
+        # cabinet's lower strip were the inside of its coin door, the band ran
+        # through the door, and once the renderer began repeating that band
+        # rather than stretching it the prop grew a second coin-door surround.
+        # The same weighting nine_slice already gives its columns: coverage
+        # added to the difference score, so busy-ness and occupancy trade off
+        # instead of one vetoing the other. Choosing on occupancy alone put the
+        # band on the control deck's shadow line -- no part there, and sixteen
+        # copies of a black lip turned the cabinet into a radiator -- which is
+        # the same lesson from the other side. The band must be bare AND quiet.
+        cov = [0] * len(rows)
+        for q in part_boxes:
+            for y in range(max(y0, q[1] - 1), min(y0 + len(rows), q[3] + 1)):
+                cov[y - y0] += max(0, q[2] - q[0])
+        if rows and max(cov) > 0:
+            span = float(max(cov))
+            scale = sorted(rows)[int(0.9 * (len(rows) - 1))] * 2.0 + 1.0
+            rows = [v + scale * (c / span) for v, c in zip(rows, cov)]
         vband, vnoise = quiet_window(rows, 0.25)
         # THE BACKGROUND NEVER REPEATS ITS OWN ARTWORK. Every threshold tried
         # here leaked: a marquee's glyphs are a few percent of a thin strip, so
@@ -450,27 +470,16 @@ def main():
     st = strips[grow]
     gy0, gy1 = st["px"]
     cut = int(gy0 + st["vh"][0] * (gy1 - gy0))
-    # AND IT MUST SIT ABOVE ANYTHING HELD TO THE BOTTOM. A coin door anchored
-    # to the bottom edge moves down with it, but the HOLE it was cut from is
-    # painted into the background at its original height -- so inserting the
-    # extra below that hole left a pale rectangle stranded up the cabinet with
-    # the door far beneath it, the prop torn open between them. Inserting above
-    # carries hole and door down together.
-    try:
-        low = [q["px"][1] for q in pm.get("parts", [])
-               if q.get("anchor") == "bottom"]
-        ceiling = min(low) - 3 if low else gy1
-    except Exception:
-        ceiling = gy1
-    if cut > ceiling or cut in taken:
-        free = [y for y in range(gy0 + 2, max(gy0 + 3, min(gy1 - 2, ceiling)))
-                if y not in taken]
-        if free:
-            new = min(free, key=lambda y: abs(y - cut))
-            print(f"  cut row {cut} -> {new} (clear of parts, above the "
-                  f"bottom-held ones)")
-            cut = new
-            st["vh"] = [round((cut - gy0) / max(1, gy1 - gy0), 5), st["vh"][1]]
+    # NO SECOND OPINION ABOUT THE BAND. There was a guard here that took the
+    # longest run of rows no fitting stands in whenever the chosen band
+    # overlapped a part, and it was written when the row score knew nothing
+    # about fittings. Now that coverage is folded into the score itself the
+    # guard optimises a DIFFERENT objective -- occupancy alone, where the score
+    # trades occupancy against busy-ness -- and the two disagree: the score
+    # picked the bare plinth below the coin door, the guard overruled it with
+    # the one part-free run in the strip, which is the control deck's shadow
+    # line, and sixteen repeats of a black lip turned the cabinet into a
+    # radiator. Two mechanisms answering one question is how a tool oscillates.
 
     (d / f"strips_{args.face}.json").write_text(json.dumps(
         {"size": [W, H], "strips": strips}, indent=1))

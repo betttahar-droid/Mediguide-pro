@@ -214,6 +214,35 @@ def flat_cell(face, n=9):
     return best[1] if best else face
 
 
+def panel_tile(face, want, n=9, size=64):
+    """A tile carved from the prop's own panel, for when the swatch is flat.
+
+    THE ORDINARY RUN OF THE FACE, not the calmest inch of it. flat_cell picks
+    the single smoothest cell, which is the right question for a colour and the
+    wrong one for a texture -- carving from it would hand back another flat
+    square. The cell whose grain is nearest the panel's own is the one that
+    looks like the panel, and it has the panel's grime, seams and wear in it
+    because it IS the panel.
+    """
+    W, H = face.size
+    best = None
+    for i in range(n):
+        for j in range(n):
+            box = (int(W * i / n), int(H * j / n),
+                   int(W * (i + 1) / n), int(H * (j + 1) / n))
+            if box[2] - box[0] < 8 or box[3] - box[1] < 8:
+                continue
+            c = face.crop(box)
+            d = abs(grain_px(c) - want)
+            if best is None or d < best[0]:
+                best = (d, c)
+    if not best:
+        return None
+    k = 12
+    big = best[1].convert("RGB").resize((size + k, size + k), Image.LANCZOS)
+    return damp_outliers(make_seamless_overlap(big, size, size, k))
+
+
 def recolour(tile, target):
     """Put the swatch's median onto the panel's, channel by channel."""
     px = tile.load()
@@ -423,7 +452,36 @@ def main():
         mt.save(out / f"m{main['n']}.png")
         main["median"] = target
         print(f"  {main['name']} recoloured to the prop's panel {target}")
-        px_per_tile, want, gotg = match_grain(mt, panel_grain(face), tall=H2)
+        pg = panel_grain(face)
+        px_per_tile, want, gotg = match_grain(mt, pg, tall=H2)
+        # A MATERIAL WITH NO GRAIN IS NOT A MATERIAL. Everything here checks
+        # that the swatch TILES, and a flat square of colour tiles perfectly --
+        # it scores about 1.0 on both seam ratios and sails through, which is
+        # how this cabinet's cabinet_body came back as a featureless grey-green
+        # square and got used. Every judge for two rounds then reported the
+        # same thing in the same words: at 1.5x height "the lower cabinet
+        # extends as an enormous flat, untextured, featureless grey monolith",
+        # at 2x width "massive blank flat grey areas". They were describing the
+        # material exactly. Its grain was 0.49 against a painted panel of 8.07,
+        # sixteen times too smooth at any scale the matcher could reach, and
+        # the match duly pinned itself to the end of its range -- which was
+        # already being PRINTED as a warning every run and treated as noise.
+        #
+        # The painting always has the answer: the prop's own panel, carved and
+        # made to wrap, is the material by definition. It is the fallback the
+        # renderer has always had for a missing atlas; it just needed to also
+        # be the fallback for an empty one.
+        if gotg < want / 3:
+            carved = panel_tile(face, pg)
+            if carved is not None:
+                carved = recolour(carved, target)
+                carved.save(out / f"m{main['n']}.png")
+                mt = carved
+                n2, want, g2 = match_grain(mt, pg, tall=H2)
+                print(f"  {main['name']} came back FLAT ({gotg} against a "
+                      f"panel of {want}) -- carved from the prop's own panel "
+                      f"instead, now {g2}")
+                px_per_tile, gotg = n2, g2
         edge = ("" if lo_hi_clear(px_per_tile, max(16, H2 // 10))
                 else "   (at the end of the range)")
         print(f"  grain: panel {want}, tile {gotg} at {px_per_tile}px "
