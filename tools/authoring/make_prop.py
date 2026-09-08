@@ -249,7 +249,24 @@ def render_solid(d, out):
     return (solid[0] if solid else None), (wire[0] if wire else None)
 
 
+ASSET = {}
+
+
 def rebuild(d, face="front", asset=None):
+    # THE HOLES ARE FILLED BY THE MODEL, NOT BY A TILED PATCH. paint_out asks
+    # for the prop with its fittings taken off and composites the reply through
+    # the hole mask, so layer_build has real material to put where each fitting
+    # was instead of one rectangle of panel repeated over all of them. It must
+    # run BEFORE layer_build, which is what reads the plate, and it re-runs each
+    # round because the part list changes between rounds -- the drawing itself
+    # is bought once and cached.
+    a = asset or ASSET.get("name")
+    if a:
+        r = run([sys.executable, "tools/authoring/paint_out.py", str(d),
+                 "--face", face, "--asset", a])
+        for line in (r.stdout or "").strip().splitlines():
+            if "painted out by the model" in line or "arithmetic fill stands" in line:
+                print("   ", line.strip()[:120])
     run([sys.executable, "tools/authoring/layer_build.py", str(d), "--face", face])
     # THE REDRAWN FITTINGS GO BACK ON, AND ARE NOT RE-BOUGHT. layer_build cuts
     # every part fresh out of the elevation each time it runs, which is right
@@ -343,6 +360,7 @@ def main():
              ("prop_" + re.sub(r"\W+", "_", args.asset.lower()))).resolve()
     d.mkdir(parents=True, exist_ok=True)
     key = _openrouter_key()
+    ASSET["name"] = args.asset
     print(f"=== {args.asset} -> {d} ===")
 
     if not args.skip_sheet:
