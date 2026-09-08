@@ -100,6 +100,31 @@ scored a colour distance of 10 on one sheet and 82 on the next from an identical
 prompt. Anything that asks a model for artwork and checks it should ask again
 for what failed.
 
+## When arithmetic keeps failing, check you are not asking it the wrong question
+
+The strongest instance of the rule above, and the one that took longest to see.
+
+`strip_slice.py` picks where the body grows by searching for somewhere quiet,
+bare and body-coloured. Five reweightings of that search were implemented,
+measured and reverted; the file concludes it is not a weighting problem. It is
+not — but neither is it a structural one. "Somewhere calm" is simply not what a
+taller cabinet is, and no amount of measuring the artwork will make it so.
+
+`scale_rules.py` had been asking the model what taller *means* since the
+beginning and getting a straight answer: *more carcass above the marquee, more
+panel between the control deck and the coin door, a taller kick panel below it.*
+That sentence was used to judge the result and never to produce it, because
+nothing downstream could read a sentence. Asked for the same thing as a fitting
+and a side, it becomes rows, and the blind search's single 12-row band (26
+copies, over the renderer's bound, so a flat slab) becomes four places totalling
+64 rows at 5.7 copies each.
+
+So: when a measurement has failed several times in several forms, ask whether
+some part of the pipeline already *knows* the answer in a form nothing reads.
+Authorship supplies the constraint; arithmetic verifies it. That is the same
+division as everywhere else here — it is easy to forget that it applies to
+decisions as well as to geometry.
+
 ## Some things cannot be measured, and saying so is the answer
 
 Whether a fitting the segmenter declared is actually *there* was measured four
@@ -148,9 +173,12 @@ just against how bare the band is.
 
 - **Phantom fittings.** A cabinet's right-hand panel carries a vent, a coin slot
   and two buttons over blank wall. Unmeasurable by everything tried; see above.
-- **Body growth on a densely-fitted prop.** No single band is at once tall
-  enough to repeat, bare, quiet and body-coloured. `strip_slice.py` says what
-  the structural fix would be. Do not attempt it as another weight.
+- **Body growth where the model has no usable answer.** `taller_at` now names
+  the places and arithmetic verifies them, which handles the props that had no
+  single good band. A prop whose authored places all measure occupied still
+  falls back to the blind search and still lands on a compromise. The next step
+  there is to ask again with the refusal quoted back, the way `detail_sheet`
+  asks again for a refused redraw — not another weighting.
 - **Every part mask is a rectangle** on the props measured, so a round button is
   modelled as a rectangular cap. The mask pipeline can carry a real shape; the
   segmentation draws boxes.
