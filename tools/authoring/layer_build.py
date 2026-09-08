@@ -221,6 +221,7 @@ def fill_from_panel(ob, boxes, shaped=None, within=None):
     # behind a coin door; this is an answer. Only holes are taken from it, and
     # only holes that passed paint_out's own colour and grain checks -- the
     # rest fall through to the patch below, so a bad reply costs nothing.
+    painted = None
     if PAINTED.get("im") is not None:
         pl = PAINTED["im"].load()
         ok = PAINTED["ok"].load()
@@ -237,7 +238,18 @@ def fill_from_panel(ob, boxes, shaped=None, within=None):
         if not left:
             return out
         # fall through: the holes the plate could not answer for still need the
-        # patch, and `out` already carries the ones it could
+        # patch, and `out` already carries the ones it could -- WHICH THE PATCH
+        # MUST THEN LEAVE ALONE. It did not. The tiling loop at the end of this
+        # function paints every covered pixel, so one refused hole out of
+        # twenty-six threw away all twenty-five answers with it, and the whole
+        # face came back tiled. That is the "flat dark slots" both judges
+        # called blocking on the widened vending machine every round: the
+        # plate had drawn shelf and grain behind each product (measured grain
+        # 2.2 to 3.3), the background on disk was a flat 26,29,36 rectangle at
+        # every one of them (grain 0.08), and the two facts sat one function
+        # apart. A fallback that also overwrites what it is falling back FROM
+        # is not a fallback.
+        painted = ok
 
     inside = silhouette(ob)
     solid = silhouette(ob, erode=0)      # unroded: what to PAINT, vs what to copy FROM
@@ -357,6 +369,8 @@ def fill_from_panel(ob, boxes, shaped=None, within=None):
             if not covered[x][y] or not solid[x][y]:
                 continue    # only holes, and only inside the prop -- a part box
                             # that overhangs the silhouette must not grow it
+            if painted is not None and painted[x, y] > 128:
+                continue    # the model already drew this hole; see above
             px[x, y] = tp[x % tw, y % th]
     return out
 
