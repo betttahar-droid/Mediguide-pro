@@ -545,9 +545,12 @@ def main():
                 v["looks_good"] = False
         blocking = [f for f in faults
                     if str(f.get("severity", "blocking")).lower() == "blocking"]
+        offered = {p.get("name") for p in ((gem or {}).get("patch") or [])
+                   if p.get("name")}
+        offered |= {p.get("name") for p in v.get("patch", []) if p.get("name")}
         print(f"\n  round {rnd}: looks_good={v.get('looks_good')}  "
               f"{len(blocking)} blocking / {len(faults)} faults, "
-              f"{len(v.get('patch', []))} corrections")
+              f"{len(offered)} corrections")
         for f in faults[:6]:
             print(f"    - [{f.get('severity','?'):8}] {f.get('part')}: {f.get('fault')}")
         # A LOOP NEEDS A BAR ITS JUDGE CAN CLEAR. Asked only "what looks
@@ -591,7 +594,25 @@ def main():
             break
 
         # apply the patch -- narrow schema, so a judge can only reclassify
-        patch = {p.get("name"): p for p in v.get("patch", []) if p.get("name")}
+        #
+        # BOTH JUDGES' PATCHES, NOT JUST THE FIRST ONE'S. Gemini is asked the
+        # same question against the same schema and returns the same shape, and
+        # only its FAULTS were being read: its corrections went on the floor.
+        # So a fault only the second judge saw could block the loop and have no
+        # lever to move -- which is exactly what happened to this cabinet's coin
+        # door, reported by gemini in round after round as hinging upward like
+        # an awning where an arcade coin door swings from the side, never
+        # corrected, while the loop counted it among the blocking faults it
+        # could not act on. All four hinge directions have been supported end
+        # to end the whole time.
+        #
+        # The first judge wins a disagreement: it is the one whose patch the
+        # loop has always applied, and two judges editing the same field in
+        # opposite directions round after round is how a loop oscillates.
+        patch = {p.get("name"): p
+                 for p in ((gem or {}).get("patch") or []) if p.get("name")}
+        patch.update({p.get("name"): p
+                      for p in v.get("patch", []) if p.get("name")})
         # the background is not a part but it IS adjustable; without this the
         # judge's commonest complaint had no lever and the loop stalled on
         # round 0 reporting "no actionable corrections"
