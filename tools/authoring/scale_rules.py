@@ -62,13 +62,19 @@ one of these actually is.
                   {{"n": <part number>, "side": "above"|"below"}}: "above" means
                   the new body is added between that part and whatever is above
                   it, "below" means between it and whatever is below.
-                  A cabinet whose taller_means is "more carcass above the
-                  marquee and below the coin door" gives two entries. Name the
-                  places where a real one of these has PLAIN MATERIAL that
-                  simply gets longer -- never inside a screen, a grille, a sign
-                  or a control deck, and never somewhere the prop has no bare
-                  panel at all. If this prop genuinely has nowhere like that,
-                  give an empty list; that is a real answer.
+                  GIVE EVERY PLACE YOUR OWN taller_means SENTENCE NAMES, and
+                  look for more -- two, three or four, not one. The height is
+                  SHARED between them, so one place has to stretch several
+                  times further than four do, and a single narrow gap cannot
+                  absorb the change at all: it comes back as a band of noise
+                  where the body should be. Prefer the WIDE, EMPTY stretches
+                  of the prop -- a plain lower body, a kick panel, the run
+                  between two fittings -- over a thin gap at the very edge of
+                  the drawing.
+                  Name the places where a real one of these has PLAIN MATERIAL
+                  that simply gets longer -- never inside a screen, a grille, a
+                  sign or a control deck. If this prop genuinely has nowhere
+                  like that, give an empty list; that is a real answer.
   "max_wider"     how many times its own width this prop can sensibly reach
                   before it stops being a {asset}. 1.0 means it should not be
                   widened at all. Typically 1.5 to 2.5.

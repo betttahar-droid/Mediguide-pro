@@ -618,8 +618,11 @@ def main():
     # still computed above and still the answer for a prop the model has no
     # opinion about.
     grow_bands = []
+    max_taller = 1.5
     try:
-        want = json.loads((d / "scale_rules.json").read_text()).get("taller_at")
+        _sr = json.loads((d / "scale_rules.json").read_text())
+        want = _sr.get("taller_at")
+        max_taller = float(_sr.get("max_taller") or 1.5)
     except Exception:
         want = None
     for e in (want or []):
@@ -635,6 +638,58 @@ def main():
                            "px": [a, b],
                            # bottom-up, like everything the renderer eats
                            "band": [round(1 - b / H, 5), round(1 - a / H, 5)]})
+    # AND THE PLACES HAVE TO BE ABLE TO HOLD IT. The renderer lays whole copies
+    # and stops at ten, so bands totalling B rows can absorb about 9B before it
+    # gives up and fills with the flat carcass tile. Being the right place is
+    # not the same as being big enough: the pinball's model named "more backbox
+    # height above the artwork", which is correct and which resolves to the
+    # SEVENTEEN rows between the top of the drawing and the backglass. Half
+    # again the height of a 646-row prop is 323, so it asked for twenty copies,
+    # blew the bound, and the machine grew a column of grey static where its
+    # backbox should be -- both judges, in as many words.
+    #
+    # The measured bare runs are still there and still measured. They are a bad
+    # way to CHOOSE where a prop grows and a perfectly good way to top up
+    # somewhere it already should: taking the biggest of them until the places
+    # can hold the change adds the pinball's lower body and its apron to its
+    # backbox, and the same three fifty-row runs that were never the right
+    # answer on their own become the right answer beside one.
+    need = (max_taller - 1.0) * H / 9.0
+    if grow_bands and sum(g["px"][1] - g["px"][0] for g in grow_bands) < need:
+        spare = []
+        for st in strips:
+            y0, y1 = st["px"]
+            best = run = None
+            for y in range(max(0, y0), min(H, y1)):
+                if occupied[y] <= 0.10 * W:
+                    run = (y, y + 1) if run is None else (run[0], y + 1)
+                    if best is None or run[1] - run[0] > best[1] - best[0]:
+                        best = run
+                else:
+                    run = None
+            # BARE IS THE WHOLE TEST HERE. The body-colour gate belongs to the
+            # decision this is not making: choosing where a prop grows. That is
+            # already decided, by the model, and these runs only add room to
+            # it. Applied here it was a threshold imported from a cabinet --
+            # every strip of the pinball scores under it, because "the colour
+            # of the body" on a machine that is mostly dark playfield and pale
+            # legs is not the colour of anything, so a prop with 165 bare rows
+            # going spare grew a column of static instead.
+            if not best or best[1] - best[0] < 8:
+                continue
+            if any(best[0] < g["px"][1] and best[1] > g["px"][0]
+                   for g in grow_bands):
+                continue                     # already covered by an authored one
+            spare.append(best)
+        spare.sort(key=lambda b: b[0] - b[1])
+        for a, b in spare:
+            if sum(g["px"][1] - g["px"][0] for g in grow_bands) >= need:
+                break
+            grow_bands.append({"part": "(measured)", "side": "run",
+                               "px": [a, b],
+                               "band": [round(1 - b / H, 5), round(1 - a / H, 5)]})
+        grow_bands.sort(key=lambda g: g["px"][0])
+
     if grow_bands:
         # SHARED BY HEIGHT, so every band takes the same number of copies --
         # the allocation that keeps all of them inside the renderer's bound at
@@ -643,8 +698,13 @@ def main():
         for g in grow_bands:
             g["share"] = round((g["px"][1] - g["px"][0]) / tot, 5)
         rows = int(tot)
-        print(f"  taller_at: {len(grow_bands)} authored place(s), {rows} bare "
-              f"rows -- {0.5 * H / max(1, rows) + 1:.1f} copies at 1.5x")
+        auth = sum(1 for g in grow_bands if g["side"] != "run")
+        print(f"  taller_at: {auth} authored place(s)"
+              + (f" + {len(grow_bands) - auth} measured run(s) for room"
+                 if len(grow_bands) > auth else "")
+              + f", {rows} bare rows -- "
+              f"{(max_taller - 1) * H / max(1, rows) + 1:.1f} copies "
+              f"at {max_taller}x")
 
     (d / f"strips_{args.face}.json").write_text(json.dumps(
         {"size": [W, H], "strips": strips, "grow_bands": grow_bands}, indent=1))
