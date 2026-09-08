@@ -139,9 +139,18 @@ EVERY PANEL MUST BE:
     the lettering on a plate, the mesh of a grille, the screwheads, the scuffs
     and the dirt in its corners.
 
-Hand-painted PlayStation-era look, low resolution, muted palette taken from the
-reference. Do not label the panels. Do not draw the whole {asset}.
+Hand-painted PlayStation-era look, low resolution. Take the palette from the
+numbered cut-out and match how strong its colours are: if the cut-out is a
+bright red button, draw a bright red button. Do not label the panels. Do not
+draw the whole {asset}.
 """
+# THE PROMPT USED TO SAY "MUTED PALETTE TAKEN FROM THE REFERENCE", which was
+# right when the reference was an elevation and the model had to be stopped
+# from inventing a garish fitting. With the cut-out beside it the reference
+# carries the palette itself, and "muted" is left fighting it: on a fresh
+# cabinet every refusal in the last two rounds was a bright fitting come back
+# grey -- a red start button at a saturation of 182 redrawn at 34, another at
+# 170 redrawn at 27 -- and the two that scraped through had halved.
 
 
 def wants_detail(q, W, H, small=48, long_side=5.0):
