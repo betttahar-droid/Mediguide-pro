@@ -111,7 +111,33 @@ function hostSpan(q) {
         || q.v[0] < s.v[0] - m || q.v[1] > s.v[1] + m) continue;
     if (!best || (s.u[1] - s.u[0]) < (best.u[1] - best.u[0])) best = s;
   }
-  return best ? placeX(best) : null;
+  if (best) return placeX(best);
+  // A STATION WITH NO NAMED STRUCTURE UNDER IT STANDS ON THE BODY. Requiring a
+  // manifest part to be the host was right in what it refused -- dividing the
+  // whole FACE into bays put a joystick out on the bare flank, clear of the
+  // deck it belongs to -- and wrong in assuming the structure is always a part.
+  // On this cabinet the control deck is not a fitting at all, it is a step in
+  // the body's own profile, so nothing in the manifest spanned under the
+  // joysticks, every station fell back to one bay, and a cabinet built twice
+  // as wide came back from four judges as "two small sets of controls stranded
+  // with huge empty gaps", "the widened deck does not read as a two-player
+  // deck", "blank panel between the two fixed clusters".
+  //
+  // The body at the station's own height is a structure by any reading, and it
+  // is measured: the front profile gives the prop's width at every height. It
+  // is also the RIGHT extent rather than merely an available one -- it is
+  // exactly as wide as the deck the stations stand on, because the deck IS the
+  // body there. Where a deck really is narrower than the prop the manifest part
+  // is found first and this is never reached.
+  if (!fprofile) return null;
+  const y = (q.v[0] + q.v[1]) / 2;
+  const xl = lerpWall(fprofile.left_wall, y, -A / 2);
+  const xr = lerpWall(fprofile.right_wall, y, A / 2);
+  if (!(xr - xl > 0.05 * A)) return null;
+  // the same convention placeX uses for a part that spans: centred, and the
+  // whole of the added width goes to it
+  return { x: 0, w: (xr - xl) + (FW - A),
+           u: [xl / A + 0.5, xr / A + 0.5] };
 }
 
 // WHAT A PART STANDS ON IS WHAT IT MOVES WITH. The anchor is decided per part
