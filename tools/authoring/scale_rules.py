@@ -185,17 +185,23 @@ def main():
             pass
 
     key = _openrouter_key()
-    got = None
-    for retry in range(3):
-        try:
-            got = as_json(glm([{"role": "user", "content": content}],
-                              CRITIC_MODEL, key, max_tokens=12000,
-                              temperature=0.1 + 0.2 * retry))
-            break
-        except Exception as e:
-            print(f"  reply unusable ({type(e).__name__}), retry {retry + 1}/3")
-    if got is None:
-        got = {}
+
+    def ask(note=""):
+        """One reply, optionally with something quoted back at the model."""
+        msg = list(content)
+        if note:
+            msg = msg + [{"type": "text", "text": note}]
+        for retry in range(3):
+            try:
+                return as_json(glm([{"role": "user", "content": msg}],
+                                   CRITIC_MODEL, key, max_tokens=12000,
+                                   temperature=0.1 + 0.2 * retry))
+            except Exception as e:
+                print(f"  reply unusable ({type(e).__name__}), "
+                      f"retry {retry + 1}/3")
+        return None
+
+    got = ask() or {}
 
     def clamp(v, lo, hi, dflt):
         try:
@@ -297,41 +303,138 @@ def main():
     # side, arithmetic turns that into the gap between that fitting and its
     # neighbour, and the band is then chosen inside a place a real one of these
     # actually gets longer rather than anywhere that measures calm.
-    taller_at = []
-    for e in (got.get("taller_at") or []):
-        try:
-            i = int(e.get("n"))
-            side = str(e.get("side", "")).lower()
-        except (TypeError, ValueError, AttributeError):
-            continue
-        if not (1 <= i <= len(parts)) or side not in ("above", "below",
-                                                      "itself"):
-            continue
-        q = parts[i - 1]
-        y0, y1 = q["px"][1], q["px"][3]
-        # A MEMBER THAT LENGTHENS IS ITS OWN PLACE. The height does not always
-        # go into a GAP: a taller pinball machine has longer legs, and the rows
-        # that lengthen are the leg's own. Before this existed its one honest
-        # answer was refused -- the rows are not bare, they are full of leg --
-        # and the height fell back to the measured band in the backbox neck.
-        if side == "itself":
-            if y1 - y0 >= 6:
-                taller_at.append({"part": q["name"], "side": "itself",
-                                  "px": [int(y0), int(y1)]})
-            continue
-        # the gap runs to the nearest edge of any part on the far side of it,
-        # or to the prop's own end -- measured, not asserted
-        if side == "above":
-            lo = max([p["px"][3] for p in parts
-                      if p["px"][3] <= y0 and p is not q] + [0])
-            gap = [lo, y0]
+    def resolve(reply):
+        out = []
+        for e in (reply.get("taller_at") or []):
+            try:
+                i = int(e.get("n"))
+                side = str(e.get("side", "")).lower()
+            except (TypeError, ValueError, AttributeError):
+                continue
+            if not (1 <= i <= len(parts)) or side not in ("above", "below",
+                                                          "itself"):
+                continue
+            q = parts[i - 1]
+            y0, y1 = q["px"][1], q["px"][3]
+            # A MEMBER THAT LENGTHENS IS ITS OWN PLACE. The height does not
+            # always go into a GAP: a taller pinball machine has longer legs,
+            # and the rows that lengthen are the leg's own. Before this existed
+            # its one honest answer was refused -- the rows are not bare, they
+            # are full of leg -- and the height fell back to the measured band
+            # in the backbox neck.
+            if side == "itself":
+                if y1 - y0 >= 6:
+                    out.append({"part": q["name"], "side": "itself",
+                                "px": [int(y0), int(y1)]})
+                continue
+            # the gap runs to the nearest edge of any part on the far side of
+            # it, or to the prop's own end -- measured, not asserted
+            if side == "above":
+                lo = max([p["px"][3] for p in parts
+                          if p["px"][3] <= y0 and p is not q] + [0])
+                gap = [lo, y0]
+            else:
+                hi = min([p["px"][1] for p in parts
+                          if p["px"][1] >= y1 and p is not q] + [H_face])
+                gap = [y1, hi]
+            if gap[1] - gap[0] >= 6:
+                out.append({"part": q["name"], "side": side,
+                            "px": [int(gap[0]), int(gap[1])]})
+        return out
+
+    # AND THE REFUSAL IS QUOTED BACK, RATHER THAN THROWN AWAY.
+    #
+    # strip_slice checks each place is really bare and drops the ones that are
+    # not, and a prop whose places ALL measure occupied falls through to the
+    # blind measured search -- which is the compromise this whole mechanism
+    # exists to replace. That was the standing open fault: the jukebox named
+    # three places, all three sat under its lower decals, all three were
+    # refused, and the search handed back a 295-row band whose flattened tile
+    # is the "dull bare slab" both judges called blocking every round.
+    #
+    # A model told which of its answers failed and why gives a different
+    # answer; that is exactly what detail_sheet does with a refused redraw, and
+    # it is the move CLAUDE.md records as the next step here. The check is the
+    # one strip_slice applies, run at the point the question is asked instead
+    # of two tools downstream, so the file this writes is already verified.
+    W_face = man.get("size", [0, 0])[0] or max([p["px"][2] for p in parts] + [1])
+    occupied = [0] * (H_face + 1)
+    for q in parts:
+        qx0, qy0, qx1, qy1 = q["px"]
+        for y in range(max(0, qy0), min(H_face, qy1)):
+            occupied[y] += max(0, qx1 - qx0)
+
+    def bare_rows(e, grew):
+        """The rows of one place that are actually free, strip_slice's rule."""
+        a, b = int(e["px"][0]), int(e["px"][1])
+        if e["side"] == "itself":
+            wid = sum(q["px"][2] - q["px"][0] for q in parts
+                      if q["name"] in grew)
+            bar = wid + 0.18 * W_face
         else:
-            hi = min([p["px"][1] for p in parts
-                      if p["px"][1] >= y1 and p is not q] + [H_face])
-            gap = [y1, hi]
-        if gap[1] - gap[0] >= 6:
-            taller_at.append({"part": q["name"], "side": side,
-                              "px": [int(gap[0]), int(gap[1])]})
+            bar = 0.10 * W_face
+        return [y for y in range(max(0, a), min(H_face, b))
+                if occupied[y] <= bar]
+
+    def sitting_in(e):
+        """What is drawn across a refused place -- the model's own part names."""
+        a, b = int(e["px"][0]), int(e["px"][1])
+        return [q["name"] for q in parts
+                if q["px"][1] < b and q["px"][3] > a
+                and q["name"] != e["part"]][:6]
+
+    max_taller_0 = clamp(got.get("max_taller"), 1.0, 3.0, 1.6)
+    # the renderer lays whole copies and stops at ten, so the places have to
+    # total at least this many rows for the growth to land in them at all
+    need = (max_taller_0 - 1.0) * H_face / 9.0
+    taller_at, refused = [], []
+    # ONLY taller_at IS RE-ASKED. per_bay, per_tier, spans and the two limits
+    # came back fine and are not what failed; re-reading them off the second
+    # reply would churn decisions nothing complained about.
+    reply = got
+    for attempt in range(3):
+        taller_at, refused = [], []
+        cand = resolve(reply)
+        grew = {e["part"] for e in cand if e["side"] == "itself"}
+        for e in cand:
+            rows = bare_rows(e, grew)
+            if len(rows) < 6:
+                refused.append((e, sitting_in(e)))
+                continue
+            e = dict(e, px=[rows[0], rows[-1] + 1])
+            taller_at.append(e)
+        room = sum(e["px"][1] - e["px"][0] for e in taller_at)
+        if not refused or room >= need or attempt == 2:
+            break
+        lines = "\n".join(
+            f"  - {e['side']} {e['part']} (rows {e['px'][0]}..{e['px'][1]}): "
+            f"that band is not bare, it is covered by "
+            f"{', '.join(names) if names else 'other artwork'}"
+            for e, names in refused)
+        print(f"  {len(refused)} place(s) refused, {room:.0f} of {need:.0f} "
+              f"rows left -- asking again")
+        reply = ask(
+            f"""Your previous answer's taller_at places were checked against the
+artwork and these could not be used:
+
+{lines}
+
+A place only works if the rows are CLEAR -- nothing drawn across them -- because
+those rows get repeated to make the prop taller, and anything sitting in them is
+repeated too. Answer again with the SAME fields.
+
+For taller_at, name different places: gaps with nothing in them, or use
+{{"n": N, "side": "itself"}} for a part that simply gets LONGER when the prop is
+taller -- a leg, a column, an upright, a plinth, a side rail, a base. That is
+often the right answer on a prop whose front is covered edge to edge, and it
+does not need bare rows.
+
+The places you name must together cover at least {need:.0f} rows of this
+{H_face}-row elevation.""") or reply
+    if refused:
+        for e, names in refused:
+            print(f"  refused: {e['side']} {e['part']} rows "
+                  f"{e['px'][0]}..{e['px'][1]} ({', '.join(names) or 'artwork'})")
 
     rules = {
         "wider_means": str(got.get("wider_means", "a wider one of the same thing"))[:300],
