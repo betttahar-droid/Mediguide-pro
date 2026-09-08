@@ -622,6 +622,28 @@ def main():
         # The manifest that produced these renders is the one on disk right now,
         # before the patch below touches it, so that is what gets kept.
         cur = len(blocking)
+        # THE VERDICT GOES ON DISK, NOT ONLY ON STDOUT. Every round's fault
+        # list existed solely in the terminal, so the record of what was wrong
+        # with a prop died with the shell -- twice, to a restarted container,
+        # leaving four finished props whose scores were known and whose faults
+        # were not. Worse, nothing downstream could read them: a run cannot be
+        # compared against the last one, the open faults in CLAUDE.md are
+        # copied out by hand, and the "ask again with the refusal quoted back"
+        # idea that works in detail_sheet has no refusal to quote.
+        #
+        # It is one file per prop, appended each round, and it costs nothing.
+        vpath = d / "verdicts.json"
+        try:
+            log = json.loads(vpath.read_text())
+        except Exception:
+            log = []
+        log.append({"round": rnd, "asset": args.asset,
+                    "looks_good": bool(v.get("looks_good")),
+                    "blocking": len(blocking), "faults": faults,
+                    "patch": sorted(offered),
+                    "wider_means": sr.get("wider_means"),
+                    "taller_means": sr.get("taller_means")})
+        vpath.write_text(json.dumps(log, indent=1))
         if best is None or cur < best[0]:
             best = (cur, rnd, blocking)
             (d / "parts_front.best.json").write_text(
