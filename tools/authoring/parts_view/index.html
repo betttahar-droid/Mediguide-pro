@@ -2036,6 +2036,24 @@ if (p.get('export') === '1') {
   const rig = new THREE.Group();
   rig.name = (dir.split('/').pop() || 'prop');
   for (const child of [...scene.children]) rig.add(child);
+  // AND IT NEEDS NORMALS, WHICH NOTHING HERE EVER ASKED FOR. Every surface on
+  // this prop is unlit -- MeshBasicMaterial samples the artwork and stops --
+  // so no normal was ever computed and none was ever missed. The exported
+  // asset then had POSITION, TEXCOORD_0 and COLOR_0 on all thirty primitives
+  // and NORMAL on none of them, which is a prop that cannot be lit: a glTF
+  // consumer is required to flat-shade what it is given no normals for, and
+  // most pipelines flag it. The renderer's own indifference is not the asset's.
+  //
+  // Every geometry here is non-indexed, so computeVertexNormals gives each
+  // triangle its own face normal -- flat shading by construction, which is
+  // what a faceted period prop wants anyway and what its silhouette already
+  // implies. Done at export because it changes nothing on screen and belongs
+  // to the deliverable rather than to the view.
+  rig.traverse((o) => {
+    if (o.isMesh && o.geometry && !o.geometry.getAttribute('normal')) {
+      o.geometry.computeVertexNormals();
+    }
+  });
   const gltf = await new GLTFExporter().parseAsync(rig, { binary: false });
   globalThis.__gltf = JSON.stringify(gltf);
   console.info(`gltf: ${gltf.nodes?.length ?? 0} nodes, `
