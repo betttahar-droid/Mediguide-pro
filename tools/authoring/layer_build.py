@@ -381,6 +381,12 @@ def rule_y(p, parts, rule):
     # this file exists to overrule it: a joystick asked for spanx_repeat, was
     # demoted to fixed for being per-bay, and then got spanx_repeat back on the
     # other axis from here -- a rule for an axis it does not even name.
+    # A MEMBER THE PROP GETS TALLER BY IS spany WHATEVER IT IS ACROSS. This is
+    # the same split as the display case's, on the other kind of part: a leg
+    # widens not at all and lengthens with the machine, and one enum could say
+    # only one of those.
+    if p.get("lengthens"):
+        return "spany_center"
     tiers = [q for q in parts if q.get("per_tier") and q["name"] != p["name"]]
     if not tiers:
         return rule

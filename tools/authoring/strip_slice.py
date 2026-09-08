@@ -541,6 +541,7 @@ def main():
     # cabinet" means, and it is the free area of the strip -- squared, because
     # the choice should be decisive rather than a nudge.
     occupied = [0] * (H + 1)
+    _pm = {}
     try:
         _pm = json.loads((d / f"parts_{args.face}.json").read_text())
         for q in _pm.get("parts", []):
@@ -693,6 +694,32 @@ def main():
         want = None
     for e in (want or []):
         a, b = int(e["px"][0]), int(e["px"][1])
+        # A LENGTHENING MEMBER'S ROWS ARE NOT MEANT TO BE BARE -- they are full
+        # of the member. What has to be true there is that nothing ELSE is, so
+        # that repeating those rows repeats leg and plain body beside it and
+        # nothing a player could name.
+        if e.get("side") == "itself":
+            # EVERY LENGTHENING MEMBER, NOT JUST THIS ONE. A machine stands on
+            # more than one leg and they occupy the same rows as each other, so
+            # subtracting only the named one still found the rows full -- of
+            # the other leg. What may not be in these rows is a fitting that
+            # does NOT lengthen, because that is what would be repeated.
+            grew = {g.get("part") for g in (want or [])
+                    if g.get("side") == "itself"}
+            wid = sum(q["px"][2] - q["px"][0] for q in _pm.get("parts", [])
+                      if q.get("name") in grew)
+            rows = [y for y in range(max(0, a), min(H, b))
+                    if occupied[y] - wid <= 0.18 * W]
+            if len(rows) < 6:
+                print(f"  {e['part']} lengthening: rows {a}..{b} carry other "
+                      f"fittings -- not growing there")
+                continue
+            a, b = rows[0], rows[-1] + 1
+            grow_bands.append({"part": e["part"], "side": "itself",
+                               "clean": not busy_elsewhere(a, b),
+                               "px": [a, b],
+                               "band": [round(1 - b / H, 5), round(1 - a / H, 5)]})
+            continue
         rows = [y for y in range(max(0, a), min(H, b))
                 if occupied[y] <= 0.10 * W]
         if len(rows) < 6:
@@ -732,6 +759,30 @@ def main():
     # if there is room enough there, and fall back to the rest rather than to
     # nothing. A repeated decal down a flank is bad; a column of static is
     # worse.
+    # TWO PLACES OVER THE SAME ROWS ARE ONE PLACE. A machine stands on two
+    # legs and both lengthen, so both name the same rows; left as two bands the
+    # renderer inserts the growth there twice and the share arithmetic counts
+    # those rows twice over. The same happens to a gap named from both sides --
+    # "below the front panel" and "above the coin mech" are one gap, and the
+    # cabinet's model gave both.
+    grow_bands.sort(key=lambda g: g["px"][0])
+    merged = []
+    for g in grow_bands:
+        if merged and g["px"][0] <= merged[-1]["px"][1]:
+            m = merged[-1]
+            m["px"] = [m["px"][0], max(m["px"][1], g["px"][1])]
+            m["band"] = [round(1 - m["px"][1] / H, 5),
+                         round(1 - m["px"][0] / H, 5)]
+            m["clean"] = m.get("clean") and g.get("clean")
+            if g["part"] not in m["part"]:
+                m["part"] = f"{m['part']}+{g['part']}"
+            continue
+        merged.append(g)
+    if len(merged) != len(grow_bands):
+        print(f"  {len(grow_bands)} place(s) merged to {len(merged)} "
+              f"-- some named the same rows")
+    grow_bands = merged
+
     need = (max_taller - 1.0) * H / 9.0
     _clean = [g for g in grow_bands if g.get("clean")]
     if _clean and sum(g["px"][1] - g["px"][0] for g in _clean) >= need:

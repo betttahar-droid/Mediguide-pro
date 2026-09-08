@@ -59,9 +59,15 @@ one of these actually is.
                   most props it is NOT a taller screen or a taller sign.
   "taller_at"     WHERE on this prop that extra height physically goes, as the
                   outlined parts it goes next to. One entry per place, each
-                  {{"n": <part number>, "side": "above"|"below"}}: "above" means
-                  the new body is added between that part and whatever is above
-                  it, "below" means between it and whatever is below.
+                  {{"n": <part number>, "side": "above"|"below"|"itself"}}:
+                  "above" means the new body is added between that part and
+                  whatever is above it, "below" means between it and whatever
+                  is below, and "itself" means THAT PART gets longer -- use it
+                  for a leg, a column, an upright, a side rail, a plinth: the
+                  members that are simply made longer on a taller one of these
+                  rather than having anything added beside them. A pinball
+                  machine whose taller_means is "longer legs" says
+                  {{"n": <the leg>, "side": "itself"}} for each leg.
                   GIVE EVERY PLACE YOUR OWN taller_means SENTENCE NAMES, and
                   look for more -- two, three or four, not one. The height is
                   SHARED between them, so one place has to stretch several
@@ -298,10 +304,21 @@ def main():
             side = str(e.get("side", "")).lower()
         except (TypeError, ValueError, AttributeError):
             continue
-        if not (1 <= i <= len(parts)) or side not in ("above", "below"):
+        if not (1 <= i <= len(parts)) or side not in ("above", "below",
+                                                      "itself"):
             continue
         q = parts[i - 1]
         y0, y1 = q["px"][1], q["px"][3]
+        # A MEMBER THAT LENGTHENS IS ITS OWN PLACE. The height does not always
+        # go into a GAP: a taller pinball machine has longer legs, and the rows
+        # that lengthen are the leg's own. Before this existed its one honest
+        # answer was refused -- the rows are not bare, they are full of leg --
+        # and the height fell back to the measured band in the backbox neck.
+        if side == "itself":
+            if y1 - y0 >= 6:
+                taller_at.append({"part": q["name"], "side": "itself",
+                                  "px": [int(y0), int(y1)]})
+            continue
         # the gap runs to the nearest edge of any part on the far side of it,
         # or to the prop's own end -- measured, not asserted
         if side == "above":
@@ -338,6 +355,8 @@ def main():
     for p in parts:
         p["per_bay"] = p["name"] in per_bay
         p["per_tier"] = p["name"] in rules["per_tier"]
+        p["lengthens"] = any(e["side"] == "itself" and e["part"] == p["name"]
+                             for e in taller_at)
         p["spans"] = p["name"] in rules["spans"]
     (d / f"parts_{args.face}.json").write_text(json.dumps(man, indent=1))
 
