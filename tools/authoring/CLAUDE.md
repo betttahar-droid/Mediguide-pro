@@ -125,6 +125,20 @@ Authorship supplies the constraint; arithmetic verifies it. That is the same
 division as everywhere else here — it is easy to forget that it applies to
 decisions as well as to geometry.
 
+## Anything that can block the loop must also be able to correct it
+
+Two judges grade every round and a fault either of them calls blocking is
+blocking. Only the first judge's *patch* was being read; the second's went on
+the floor. The result is a loop that can see a defect every round and is
+structurally incapable of acting on it — this cabinet's coin door was reported
+as hinging the wrong way in round after round, counted among the blocking
+faults each time, never corrected, while every hinge direction it needed had
+been supported end to end all along.
+
+When adding a source of faults, check it has a lever, and that the lever is
+read. A blocking channel without a correcting channel does not slow the loop
+down; it stops it converging at all.
+
 ## Some things cannot be measured, and saying so is the answer
 
 Whether a fitting the segmenter declared is actually *there* was measured four
