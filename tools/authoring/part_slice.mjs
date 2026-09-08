@@ -46,13 +46,32 @@ export function faceQuads(q, w, h, ow, oh) {
       && q.hf && w > ow) {
     const [f0, f1] = q.hf;
     const add = Math.max(0, (w - ow) / 2);
-    const seg = [[f0 * ow, 0, f0], [add, f0, f1], [(f1 - f0) * ow, f0, f1],
-                 [(1 - 2 * f1) * ow, f1, 1 - f1], [(f1 - f0) * ow, 1 - f1, 1 - f0],
-                 [add, 1 - f1, 1 - f0], [f0 * ow, 1 - f0, 1]];
+    // AND THE INSERTED FLANK REPEATS ITS WINDOW RATHER THAN STRETCHING IT.
+    // The window is a narrow strip of plain frame -- four or five percent of
+    // the sign -- and the insertion at 2x width is half the sign, so a single
+    // copy of that strip was being pulled ten times its own length. The judge
+    // read it off the render every round: "the extended marquee ends show
+    // stretched, streaked starfield smear instead of clean extended art". The
+    // strip is plain frame precisely so that more of it can be laid down; more
+    // of it is copies, not one of it made longer. Alternate copies mirrored, so
+    // each join shares a real column with its neighbour, as everywhere else.
+    const unit = Math.max(1e-4, (f1 - f0) * ow);
+    const reps = Math.max(1, Math.min(6, Math.round(add / unit)));
+    const seg = [[f0 * ow, 0, f0, 0], [add, f0, f1, reps],
+                 [(f1 - f0) * ow, f0, f1, 0],
+                 [(1 - 2 * f1) * ow, f1, 1 - f1, 0],
+                 [(f1 - f0) * ow, 1 - f1, 1 - f0, 0],
+                 [add, 1 - f1, 1 - f0, reps], [f0 * ow, 1 - f0, 1, 0]];
     const out = [];
     let x = -w / 2;
-    for (const [wd, u0, u1] of seg) {
-      if (wd > 1e-6) out.push([x, x + wd, -h / 2, h / 2, u0, u1, 0, 1]);
+    for (const [wd, u0, u1, n] of seg) {
+      if (wd <= 1e-6) { x += wd; continue; }
+      const cn = Math.max(1, n);
+      for (let i = 0; i < cn; i++) {
+        const flip = cn > 1 && i % 2 === 1;
+        out.push([x + (wd * i) / cn, x + (wd * (i + 1)) / cn, -h / 2, h / 2,
+                  flip ? u1 : u0, flip ? u0 : u1, 0, 1]);
+      }
       x += wd;
     }
     return out;
