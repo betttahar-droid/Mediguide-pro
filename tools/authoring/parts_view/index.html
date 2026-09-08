@@ -528,15 +528,59 @@ function tOfGx(g) {
 // already says where this prop may grow, because that is the cut the texture
 // grows on; the geometry now grows on the same cut, so the two stay registered
 // and a part anchored top or bottom keeps landing where it is drawn.
-const growBand = (() => {
-  const g = strips?.strips?.find((s) => s.grow_y);
-  if (!g) return null;
+// AND MORE THAN ONE STRIP MAY TAKE IT. One strip absorbing the whole change is
+// right when one strip is clearly the place for it, and it is what forces the
+// tool into the corner recorded at the top of strip_slice: where the only bare
+// run on a prop is sixteen rows of six hundred and fifty, absorbing half again
+// the height there needs twenty copies, blows the bound below and falls back to
+// flat carcass. Sixteen rows cannot absorb three hundred; three bands of
+// sixteen absorb a hundred each, seven copies apiece, and the prop gains its
+// own painted panel in three places instead of flat material in one.
+// strip_slice says which bands qualify and how much each takes.
+const growBands = (() => {
+  if (!strips) return [];
   const H = strips.size[1];
-  const r0 = g.px[0] + g.vh[0] * (g.px[1] - g.px[0]);
-  const r1 = g.px[0] + g.vh[1] * (g.px[1] - g.px[0]);
-  const a = Math.min(1 - r0 / H, 1 - r1 / H), b = Math.max(1 - r0 / H, 1 - r1 / H);
-  return b - a > 0.02 ? [a, b] : null;
+  const out = [];
+  for (const s of strips.strips) {
+    const sh = s.grow_share ?? (s.grow_y ? 1 : 0);
+    if (!(sh > 0.005)) continue;
+    const r0 = s.px[0] + s.vh[0] * (s.px[1] - s.px[0]);
+    const r1 = s.px[0] + s.vh[1] * (s.px[1] - s.px[0]);
+    const a = Math.min(1 - r0 / H, 1 - r1 / H);
+    const b = Math.max(1 - r0 / H, 1 - r1 / H);
+    if (b - a > 0.005) out.push([a, b, sh]);
+  }
+  out.sort((p, q) => p[0] - q[0]);
+  const tot = out.reduce((s2, r) => s2 + r[2], 0);
+  if (tot > 0) for (const r of out) r[2] /= tot;
+  return out;
 })();
+
+// the runs, for any number of bands: hold what is between them, and give each
+// band its own share of the extra. With one band this is sliceRuns' single-band
+// path written the same way round.
+function sliceRunsMulti(bands, scale) {
+  if (scale === 1 || !bands.length) return [{ g0: 0, g1: 1, t0: 0, t1: 1 }];
+  const extra = scale - 1;
+  const runs = [];
+  let t = 0, g = 0;
+  const push = (t0, t1, isB, share) => {
+    const len = ((t1 - t0) + (isB ? extra * share : 0)) / scale;
+    if (len <= 1e-9) return;
+    const r = { g0: g, g1: g + len, t0, t1 };
+    if (isB) r.fill = true;
+    runs.push(r);
+    g += len;
+  };
+  for (const [b0, b1, sh] of bands) {
+    const a = Math.max(t, b0);
+    if (a > t) push(t, a, false, 0);
+    if (b1 > a) push(a, b1, true, sh);
+    t = Math.max(t, b1);
+  }
+  if (t < 1) push(t, 1, false, 0);
+  return runs;
+}
 
 // AND THE BAND REPEATS RATHER THAN STRETCHES. Growing on the band alone was
 // only half the answer: the band is chosen for being the most UNIFORM stretch
@@ -614,8 +658,7 @@ function sliceRuns(bandA, bandB, scale, symmetric = false) {
   return runs.filter((r) => r.g1 > r.g0 + 1e-9);
 }
 
-const growRuns = markReps(
-  sliceRuns(growBand?.[0] ?? 0, growBand?.[1] ?? 0, hS), hS);
+const growRuns = markReps(sliceRunsMulti(growBands, hS), hS);
 // a height on the finished prop, read back as a height on the drawing
 function tOfG(g) {
   for (const r of growRuns) {

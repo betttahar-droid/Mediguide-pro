@@ -441,6 +441,7 @@ def main():
         mean = [a / max(1, n) for a in acc]
         dist = sum(abs(a - b) for a, b in zip(mean, panel)) / 3
         like_body = 1.0 / (1.0 + (dist / 22.0) ** 2)
+        st["_like"] = round(like_body, 4)
         return (y1 - y0) * like_body / max(1.0, st["vnoise"])
 
     # A STRIP FULL OF FITTINGS IS NOT CARCASS, however panel-coloured its
@@ -473,13 +474,79 @@ def main():
         cov = sum(min(occupied[y], W) for y in range(y0, min(H, y1)))
         return max(0.0, 1.0 - cov / float(W * (y1 - y0)))
 
-    grow = max(range(len(strips)),
-               key=lambda i: body_score(strips[i]) * (free_frac(strips[i]) ** 2))
+    score = [body_score(s) * (free_frac(s) ** 2) for s in strips]
+    grow = max(range(len(strips)), key=lambda i: score[i])
     for i, s in enumerate(strips):
         s["grow_y"] = (i == grow)
         s["free"] = round(free_frac(s), 3)
     print(f"  grows in strip {grow} "
           f"({100*free_frac(strips[grow]):.0f}% of it is bare carcass)")
+
+    # AND MORE THAN ONE STRIP MAY TAKE IT. Handing the whole change to a single
+    # strip is right when one strip is clearly the place for it, and it is what
+    # forces the tool into the corner recorded at the top of this file: where no
+    # single band is at once tall enough to repeat, bare, quiet and the colour
+    # of the body, the winner is a compromise and the resize is bad however the
+    # score is weighted. On this cabinet the only unoccupied run is sixteen rows
+    # of six hundred and fifty, so at 1.5x it needs twenty copies, blows the
+    # renderer's ten-copy bound and falls back to the plain carcass tile -- a
+    # flat slab where the artwork was.
+    #
+    # Sixteen rows cannot absorb three hundred. Three bands of sixteen absorb a
+    # hundred each, which is seven copies apiece and inside the bound, and the
+    # prop gains its own painted panel in three places instead of flat material
+    # in one. Nothing has to be chosen differently; the change is simply not all
+    # given to one strip.
+    #
+    # A strip shares in it only if its band is somewhere the prop may honestly
+    # grow -- bare of fittings and quiet enough that repeating it duplicates no
+    # feature. Among those, the share is in proportion to the band's own HEIGHT
+    # rather than to its score, because a band twice as tall absorbs twice as
+    # much at the same number of copies: sharing by height gives every band the
+    # same copy count, which is the allocation that keeps all of them inside the
+    # bound at once. Sharing by score does the opposite -- it loads the best
+    # band most heavily, and on this cabinet that alone pushed it back over.
+    #
+    # AND ONLY WHEN THE WINNER CANNOT DO IT ALONE. The first version handed the
+    # share out to whichever bands passed the bar and did not reserve any of it
+    # for the strip the score had actually chosen -- so on a cabinet whose best
+    # band is 72% bare, just under the bar, the whole change went instead to the
+    # one strip that cleared it: thirteen rows up in the grille. A prop that had
+    # been growing correct panel courses in its lower body grew a blank slab
+    # above its screen. Splitting is a relief valve for a band that is too small,
+    # not a re-run of a choice that has already been made.
+    #
+    # Too small is measurable: the renderer lays whole copies and stops at ten,
+    # so at 1.5x a band under about a eighteenth of the height cannot absorb the
+    # change by itself. Above that the winner keeps all of it and nothing here
+    # changes anything.
+    def band_rows(st):
+        y0, y1 = st["px"]
+        return max(0.0, (st["vh"][1] - st["vh"][0]) * (y1 - y0))
+
+    share = [0.0] * len(strips)
+    share[grow] = band_rows(strips[grow])
+    if band_rows(strips[grow]) < H / 18.0:
+        for i, s in enumerate(strips):
+            # and it has to look like the body, which is the same thing asked
+            # of the winner. Bare and quiet alone let the dark gap between a
+            # marquee and a screen take a quarter of the change, and a taller
+            # cabinet grew a blank slab above its monitor -- correct arithmetic
+            # applied to somewhere a cabinet does not get taller.
+            if i != grow and free_frac(s) >= 0.9 \
+                    and s["vnoise"] <= 3.0 * QUIET and score[i] > 0 \
+                    and s.get("_like", 0) >= 0.5:
+                share[i] = band_rows(s)
+    if not any(share):
+        share[grow] = 1.0
+    tot = sum(share)
+    for i, s in enumerate(strips):
+        s["grow_share"] = round(share[i] / tot, 5)
+    taking = [(i, s["grow_share"]) for i, s in enumerate(strips)
+              if s["grow_share"] > 0.01]
+    if len(taking) > 1:
+        print("  the change is shared: "
+              + ", ".join(f"strip {i} {100*f:.0f}%" for i, f in taking))
 
     # AND THE CUT MUST NOT LAND INSIDE A PART. The extra height is inserted at
     # the grow strip's band, and the background is flat there precisely BECAUSE
