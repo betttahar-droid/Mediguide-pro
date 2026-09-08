@@ -214,33 +214,53 @@ def flat_cell(face, n=9):
     return best[1] if best else face
 
 
-def panel_tile(face, want, n=9, size=64):
-    """A tile carved from the prop's own panel, for when the swatch is flat.
+def grain_up(tile, want, size=64):
+    """Give a flat swatch the grain the painted panel has, as noise.
 
-    THE ORDINARY RUN OF THE FACE, not the calmest inch of it. flat_cell picks
-    the single smoothest cell, which is the right question for a colour and the
-    wrong one for a texture -- carving from it would hand back another flat
-    square. The cell whose grain is nearest the panel's own is the one that
-    looks like the panel, and it has the panel's grime, seams and wear in it
-    because it IS the panel.
+    THE SWATCH IS WHAT IS FLAT, SO THE SWATCH IS WHAT TO FIX. Two other answers
+    were tried and both are wrong for the same reason. Carving the cell whose
+    grain matches the panel's puts a fitting in the tile -- this cabinet got its
+    coin-door trim, repeating across the added plinth as a chevron every sixty
+    pixels. Carving a calm cell instead, by grain or by colour, hands back
+    another flat square, because on these props the calm cells ARE flat: the
+    grain in the painting is streaking and panel seams, which at tile scale are
+    features rather than grain. That is the "un-baking a cake" this whole module
+    exists to get away from, and no choice of crop escapes it. Wallpaper is
+    worse than plain and both are avoidable.
+
+    What is actually known here is a colour, which the swatch already has, and
+    an amplitude, which the painting measures. Fine speckle at that amplitude is
+    a plausible period panel and -- unlike any crop of the artwork -- has no
+    feature in it to find again when it repeats. Generated on a torus so it
+    tiles by construction, and scaled in one step because the grain statistic is
+    very nearly linear in the amplitude.
     """
-    W, H = face.size
-    best = None
-    for i in range(n):
-        for j in range(n):
-            box = (int(W * i / n), int(H * j / n),
-                   int(W * (i + 1) / n), int(H * (j + 1) / n))
-            if box[2] - box[0] < 8 or box[3] - box[1] < 8:
-                continue
-            c = face.crop(box)
-            d = abs(grain_px(c) - want)
-            if best is None or d < best[0]:
-                best = (d, c)
-    if not best:
-        return None
-    k = 12
-    big = best[1].convert("RGB").resize((size + k, size + k), Image.LANCZOS)
-    return damp_outliers(make_seamless_overlap(big, size, size, k))
+    import random
+    src = tile.convert("RGB").resize((size, size), Image.LANCZOS)
+    rng = random.Random(12345)
+    raw = [[rng.gauss(0.0, 1.0) for _ in range(size)] for _ in range(size)]
+    # a wrap-around blur, so the field has no edge and the tile still wraps
+    field = [[sum(raw[(x + dx) % size][(y + dy) % size]
+                  for dx in (-1, 0, 1) for dy in (-1, 0, 1)) / 3.0
+              for y in range(size)] for x in range(size)]
+
+    def apply(amp):
+        out = src.copy()
+        px = out.load()
+        for x in range(size):
+            for y in range(size):
+                n = field[x][y] * amp
+                r, g, b = px[x, y]
+                px[x, y] = (max(0, min(255, int(r + n))),
+                            max(0, min(255, int(g + n))),
+                            max(0, min(255, int(b + n))))
+        return out
+
+    have = grain_px(src)
+    probe = apply(10.0)
+    gained = max(1e-6, grain_px(probe) - have)
+    amp = 10.0 * max(0.0, want - have) / gained
+    return apply(max(0.0, min(60.0, amp)))
 
 
 def recolour(tile, target):
@@ -472,16 +492,13 @@ def main():
         # renderer has always had for a missing atlas; it just needed to also
         # be the fallback for an empty one.
         if gotg < want / 3:
-            carved = panel_tile(face, pg)
-            if carved is not None:
-                carved = recolour(carved, target)
-                carved.save(out / f"m{main['n']}.png")
-                mt = carved
-                n2, want, g2 = match_grain(mt, pg, tall=H2)
-                print(f"  {main['name']} came back FLAT ({gotg} against a "
-                      f"panel of {want}) -- carved from the prop's own panel "
-                      f"instead, now {g2}")
-                px_per_tile, gotg = n2, g2
+            grained = grain_up(mt, pg)
+            grained.save(out / f"m{main['n']}.png")
+            mt = grained
+            n2, want, g2 = match_grain(mt, pg, tall=H2)
+            print(f"  {main['name']} came back FLAT ({gotg} against a panel of "
+                  f"{want}) -- grained to match, now {g2}")
+            px_per_tile, gotg = n2, g2
         edge = ("" if lo_hi_clear(px_per_tile, max(16, H2 // 10))
                 else "   (at the end of the range)")
         print(f"  grain: panel {want}, tile {gotg} at {px_per_tile}px "

@@ -425,11 +425,26 @@ const planBand = (() => {
 //
 // The carcass stays for the one case it is still the answer to: a band too
 // thin to be worth repeating, where a thousand copies is not a texture.
+// AND A FEW COPIES IS CONSTRUCTION; TWENTY IS CORDUROY. How many the band
+// needs is not a free choice, it is the drawing's answer -- the band's height
+// divided into the height being added -- and on a prop whose bare strip is
+// small that answer is large. This cabinet's only unoccupied run is the plinth
+// under the coin door, sixteen rows of six hundred and fifty, so making it half
+// again as tall asked for twenty copies of a plinth lip and produced a stack of
+// ribs a metre deep. Stretching had been hiding how little band there was: one
+// copy pulled twenty times over is a smear, and a smear does not look like
+// twenty of anything.
+//
+// A prop that gains four courses of panel looks built. One that gains twenty
+// looks corrugated. Past that the band is too small to be the answer and the
+// carcass tile is -- which is what it is for, and why it stayed.
+const MAX_REPS = 6;
 const repsOf = (r, scale) => {
   if (!r.fill) return 1;
   const band = r.t1 - r.t0;
   if (!(band > 0.01)) return 0;
-  return Math.max(1, Math.round(((r.g1 - r.g0) * scale) / band));
+  const n = Math.max(1, Math.round(((r.g1 - r.g0) * scale) / band));
+  return n > MAX_REPS ? 0 : n;
 };
 const markReps = (runs, scale) => {
   for (const r of runs) {
