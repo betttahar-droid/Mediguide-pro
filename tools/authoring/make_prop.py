@@ -256,11 +256,22 @@ def rebuild(d, face="front", asset=None):
     run([sys.executable, "tools/authoring/strip_slice.py", str(d), "--face", face])
     # synthesise the seamless panel tile the background's middle repeats, cut
     # from the strip that will actually be filled with it
+    # FROM WHERE THE PROP ACTUALLY GROWS. This cut the tile from the strip the
+    # measured search picked, which since taller_at is no longer where the
+    # extra height goes on a prop the model had an answer for -- so the
+    # material the growth falls back to was carved from somewhere the growth
+    # never happens. The authored places win when there are any, and the
+    # measured winner is still the answer when there are not.
     rows = ""
     try:
         st = json.loads((d / f"strips_{face}.json").read_text())
-        g = next(x for x in st["strips"] if x.get("grow_y"))
-        rows = f"{g['px'][0]},{g['px'][1]}"
+        gb = st.get("grow_bands") or []
+        if gb:
+            g = max(gb, key=lambda b: b["px"][1] - b["px"][0])
+            rows = f"{g['px'][0]},{g['px'][1]}"
+        else:
+            g = next(x for x in st["strips"] if x.get("grow_y"))
+            rows = f"{g['px'][0]},{g['px'][1]}"
     except Exception:
         pass
     run([sys.executable, "tools/authoring/seamless_tile.py", str(d), "--face", face]
