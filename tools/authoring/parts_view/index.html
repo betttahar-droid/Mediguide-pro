@@ -516,6 +516,7 @@ function tOfG(g) {
 // a marquee -- a least-squares plane through it is a diagonal through thin
 // air. When the residual says the fit is poor the part keeps the old rule and
 // sits square on the frontmost point, which is what a bridging part wants.
+let lastFit = null;
 function surfacePlane(cx, cy, w, h) {
   const zAt = (dx, dy) => frontZAt(tOfG((cy + dy) / FH + 0.5), cx + dx);
   const N = 6;
@@ -577,7 +578,21 @@ function surfacePlane(cx, cy, w, h) {
     const errs = pts.map(([t, z]) => Math.abs(z - (mid + k * t)))
       .sort((a, b) => a - b);
     const resid = errs[Math.max(0, Math.round(errs.length * 0.68) - 1)];
-    return { k, ok: resid <= 0.12 * span && Math.abs(k) < 6 };
+    // STRAIGHTNESS IS JUDGED AGAINST THE RISE, NOT THE RUN. The tolerance was
+    // 12% of the footprint, which asks "is this surface flat to within a
+    // fraction of the part's own size" -- fine for a panel on a wall, wrong for
+    // anything small on anything steep. A button 0.02 tall on the control deck
+    // sits on a surface that climbs 2.5 units per unit of height: it rises 0.05
+    // across that button, and a 0.005 wobble in the traced polyline is a tenth
+    // of the rise -- straight enough by any reading -- but it was four times a
+    // tolerance computed from the run alone. So three of the four buttons and
+    // both sticks came back "step, not a slope" and stood bolt upright on a
+    // deck that lies back 65 degrees, while the deck panel itself -- same
+    // surface, twenty times the footprint -- was accepted. A test that passes
+    // or fails on the size of the part rather than the shape of the surface is
+    // not measuring what it claims to.
+    const scale = span * Math.max(1, Math.abs(k));
+    return { k, resid, ok: resid <= 0.12 * scale && Math.abs(k) < 6 };
   };
 
   // MEASURED OVER THE PART'S BODY, NOT ITS LAST ROW OF PIXELS. The front
@@ -594,6 +609,8 @@ function surfacePlane(cx, cy, w, h) {
   const across = line(w * IN, (t) => zAt(t, 0));
   const c = down.ok ? down.k : 0;
   const b = across.ok ? across.k : 0;
+  lastFit = { dk: down.k, dok: down.ok, dr: down.resid,
+              ak: across.k, aok: across.ok, ar: across.resid };
 
   // seated on the surface directly under its middle, then pushed out only as
   // far as it takes to clear: the old rule mounted every part at the frontmost
@@ -1365,7 +1382,15 @@ for (const q of man.parts) {
     // so the part hangs off a pivot placed on the edge its motion turns about,
     // and the mesh is offset back by the same amount inside it.
     // each bay lies in the surface under IT, not the one under the first bay
-    const pl = surfacePlane(bx, y, w, h);
+    // A STICK IS FIXED AT ITS FOOT, so that is where its surface is asked for.
+    // The rest of a joystick is ball and shaft standing clear of the deck, and
+    // asking what surface lies under the whole drawn box mixed the deck with
+    // the bezel behind the ball: the median slope came back -0.06 on a deck
+    // that runs at -2.08, the residual then failed, and the stick was mounted
+    // square. A panel is held along its whole face and is asked about all of
+    // it; a stick is held only where it enters the panel.
+    const pl = m === 'stick' ? surfacePlane(bx, y - h * 0.35, w, h * 0.30)
+                             : surfacePlane(bx, y, w, h);
     // ?fit=1 prints what surface each part decided it was lying on. Every
     // mounting fault so far has been invisible in the render and obvious in
     // these four numbers.
@@ -1373,6 +1398,8 @@ for (const q of man.parts) {
       console.log(`fit ${q.name.padEnd(22)} pitch ${(Math.atan(pl.c) * 57.3).toFixed(1).padStart(6)}`
         + `  yaw ${(Math.atan(-pl.b) * 57.3).toFixed(1).padStart(6)}`
         + `  seat ${pl.a.toFixed(3)}  frontmost ${pl.front.toFixed(3)}`
+        + `  |  down k=${lastFit.dk.toFixed(2)} r=${lastFit.dr.toFixed(4)} ${lastFit.dok ? 'ok' : 'NO'}`
+        + ` w=${(w * 0.8).toFixed(3)} h=${(h * 0.8).toFixed(3)}`
         + (pl.fitted ? '' : '   (step, not a slope: mounted square)'));
     }
     // CAPPED AT 45 DEGREES, BEYOND WHICH THE TWO DRAWINGS DISAGREE. With the
@@ -1384,7 +1411,21 @@ for (const q of man.parts) {
     // about what the part is, not a surface to lie in. Holding it square is
     // the safer reading of a disagreement.
     const CAP = Math.PI / 4;
-    const rotX = Math.max(-CAP, Math.min(CAP, Math.atan(pl.c)));
+    // A PANEL LIES IN THE SURFACE; A STICK STANDS OUT OF IT. Both were rotated
+    // the same way, so a joystick on a deck that lies back 65 degrees was laid
+    // back 65 degrees WITH the deck -- a lever lying flat along the panel,
+    // pointing up-slope, instead of rising out of it. The shaft runs along the
+    // part's own +Y, and what a stick wants is for that to be the surface's
+    // NORMAL, which is a quarter turn from the surface's own lean: on a
+    // vertical wall a lever points forward, on a horizontal deck a joystick
+    // points straight up, and on this cabinet's 65-degree deck it stands 26
+    // degrees forward of vertical. Only when the surface was actually found --
+    // an unfitted stick keeps pointing up, which is the safer guess and is
+    // where it stood before.
+    const stick = m === 'stick' && pl.fitted;
+    const rotX = stick
+      ? Math.max(-CAP, Math.min(CAP, Math.atan(pl.c) + Math.PI / 2))
+      : Math.max(-CAP, Math.min(CAP, Math.atan(pl.c)));
     const rotY = Math.max(-CAP, Math.min(CAP, -Math.atan(pl.b)));
     // A SLOPE IS LONGER THAN ITS SHADOW. The elevation measures a part where it
     // projects, so a bezel drawn 0.30 tall covers 0.30/cos of actual slope --
