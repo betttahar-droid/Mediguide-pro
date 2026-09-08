@@ -430,6 +430,7 @@ def main():
         raise SystemExit(f"layer_build produced no manifest for {args.asset} "
                          f"-- see the '!' lines above")
     best = None
+    cur = None
     for rnd in range(args.rounds):
         try:
             sr = json.loads((d / "scale_rules.json").read_text())
@@ -534,8 +535,27 @@ def main():
             print(f"  judge said looks_good but listed {len(blocking)} "
                   f"blocking fault(s) -- not a pass")
             v["looks_good"] = False
-        if best is None or len(blocking) < best[0]:
-            best = (len(blocking), rnd)
+        # KEEP THE BEST ROUND, NOT THE LAST ONE. This count was already being
+        # tracked and then never used: the loop applied whatever patch the
+        # judges last returned and shipped that, however it scored. A
+        # correction loop with no ratchet is a random walk with extra steps,
+        # and on this cabinet it walked the wrong way -- round 0 came back with
+        # seven blocking faults, the patch changed the control deck's span rule,
+        # and round 1 came back with ten. The two graders had contradicted each
+        # other about that very part in the same round: one asked for
+        # spanx_center, the other called spanx_center "severe texture smearing
+        # and tearing". A loop cannot resolve that by applying both, and it
+        # should not have to: it can simply refuse to end worse than it started.
+        #
+        # The manifest that produced these renders is the one on disk right now,
+        # before the patch below touches it, so that is what gets kept.
+        cur = len(blocking)
+        if best is None or cur < best[0]:
+            best = (cur, rnd, blocking)
+            (d / "parts_front.best.json").write_text(
+                (d / "parts_front.json").read_text())
+            (d / "layers_front.best.json").write_text(
+                (d / "layers_front.json").read_text())
         if v.get("looks_good"):
             print("  JUDGE PASSED")
             break
@@ -589,6 +609,22 @@ def main():
         pm["parts"] = keep
         (d / "parts_front.json").write_text(json.dumps(pm, indent=1))
         rebuild(d)
+
+    # AND IF THE LOOP ENDED WORSE THAN ITS BEST ROUND, GO BACK TO IT. Rebuilt
+    # rather than merely copied, because everything downstream of the manifest
+    # -- the background patch, the bands, the tile -- is derived from it.
+    bestf = d / "parts_front.best.json"
+    if best is not None and cur is not None and cur > best[0] and bestf.exists():
+        print(f"\n  round {best[1]} was the best at {best[0]} blocking fault(s); "
+              f"the loop ended at {cur} -- going back to it")
+        (d / "parts_front.json").write_text(bestf.read_text())
+        mm = json.loads((d / "layers_front.best.json").read_text())
+        rebuild(d)
+        cur_m = json.loads((d / "layers_front.json").read_text())
+        if mm.get("background_mode") != cur_m.get("background_mode"):
+            cur_m["background_mode"] = mm.get("background_mode")
+            (d / "layers_front.json").write_text(json.dumps(cur_m, indent=1))
+        outstanding = best[2]
 
     # A PROP THAT EXISTS ONLY AS A PAGE IS NOT AN ASSET. Write the rig out with
     # its hierarchy intact -- one named node per part, its pivot on the edge the
