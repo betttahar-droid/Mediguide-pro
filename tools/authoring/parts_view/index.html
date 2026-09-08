@@ -1549,6 +1549,23 @@ for (const q of man.parts) {
     // it; a stick is held only where it enters the panel.
     const pl = m === 'stick' ? surfacePlane(bx, y - h * 0.35, w, h * 0.30)
                              : surfacePlane(bx, y, w, h);
+    // A RIDER STANDS ON WHAT IT RIDES, NOT ON THE BODY UNDER IT. Every part
+    // was seated on the body's own front surface, so a cashbox flap on a coin
+    // door, or a slot on that flap, sat at exactly the depth the door does and
+    // the two boxes occupied the same space -- "two parts occupying the same
+    // space, boxes passing through one another", "the door geometry is stacked
+    // inside the coin door's face rather than sitting above it as a separate
+    // hinged flap". The relation is already measured: hostOf finds the smallest
+    // part that wholly contains this one, and it is used for anchors and for
+    // bays. A rider is simply that much further out, once per host up the
+    // chain, which is what standing on something means.
+    let ride = 0;
+    for (let hq = hostOf(q), guard = 0; hq && guard < 4;
+         hq = hostOf(hq), guard++) {
+      const hc = hq.depth ?? 'proud';
+      if ((DEPTH[hc] ?? 0) > 0) ride += DEPTH[hc];
+    }
+    pl.a += ride;
     // ?fit=1 prints what surface each part decided it was lying on. Every
     // mounting fault so far has been invisible in the render and obvious in
     // these four numbers.
