@@ -135,6 +135,16 @@ change, or that should be dropped because they are not really a part. Change
 nothing that already looks right; return an empty patch when nothing is
 blocking.
 
+EVERY PATCH ENTRY MUST CHANGE SOMETHING. The list of parts above gives each
+part's CURRENT rule, anchor, depth and motion. Repeating a value a part
+already has is not a correction and does nothing. So if you report that a
+door hinges the wrong way, do not send back the hinge it already has -- send
+the one it should turn about instead.
+
+And every blocking fault that one of these four fields could fix MUST have a
+patch entry. A fault reported with nothing to act on cannot be repaired and
+will simply be reported again next round.
+
   "depth"   "flush" (painted on) | "proud" (stands off a little) |
             "deep" (sticks well out: a joystick, a handle) |
             "recessed" (set into the body: a screen, a vent, a tray)
