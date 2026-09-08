@@ -533,7 +533,19 @@ def main():
             # needed for: the colour they are and the shape of their box. Matching
             # on those, best pair first, gets the assignment from the pictures
             # themselves.
+            #
+            # ORDER IS STILL EVIDENCE, THOUGH, and it was being thrown away
+            # entirely. The fittings are listed in the prompt in order, the
+            # reference numbers them in that order, and cells() now returns
+            # what it found top to bottom and then left to right -- which is
+            # how a model lays out a numbered list whichever way it decides to
+            # run it. That is worth nothing when the sheet came back with a
+            # different number of drawings than were asked for, and worth a
+            # tiebreak when it came back with exactly as many. The weight is
+            # small on purpose: a clearly better resemblance still wins, and
+            # order only decides pairs the pictures cannot.
             pool = list(enumerate(cut))
+            ordered = len(cut) == len(group)
             pairs = []
             rank = []
             for gi, q in enumerate(group):
@@ -542,15 +554,19 @@ def main():
                     continue
                 c0 = Image.open(src0).convert("RGBA")
                 for ci, cell in pool:
-                    rank.append((resemblance(cell, c0), gi, ci))
+                    bias = 0.15 * abs(gi - ci) if ordered else 0.0
+                    look = resemblance(cell, c0)
+                    rank.append((look + bias, look, gi, ci))
             rank.sort()
             used_g, used_c = set(), set()
-            for _cost, gi, ci in rank:
+            for _bias, look, gi, ci in rank:
                 if gi in used_g or ci in used_c:
                     continue
                 used_g.add(gi)
                 used_c.add(ci)
-                pairs.append((group[gi], dict(pool)[ci], _cost))
+                # the bar is checked against the resemblance itself; the order
+                # bias picks the pairing and has no business in the verdict
+                pairs.append((group[gi], dict(pool)[ci], look))
 
             for q, cell, look in pairs:
                 src = kit / f"{q['name']}.png"

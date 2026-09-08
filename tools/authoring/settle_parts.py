@@ -93,7 +93,7 @@ def concentric(small, big, tol=0.25):
     return True
 
 
-def duplicate(a, b, share=0.55, inside=0.60, scale=0.15):
+def duplicate(a, b, share=0.55, inside=0.60, scale=0.30):
     """Are these two boxes one fitting? a and b in either order.
 
     The size floor is what keeps a rider a rider. A joystick covers 61% of
@@ -102,6 +102,17 @@ def duplicate(a, b, share=0.55, inside=0.60, scale=0.15):
     a fourteenth of the deck's area, and a fitting drawn twice is drawn at
     roughly the same size both times. Below the floor the pair is left alone
     whichever way it overlaps.
+
+    A FIFTEENTH WAS NOT ENOUGH OF A FLOOR. Run across every prop in the work
+    tree it took a jukebox's two coin slots -- 110 by 46 boxes straddling the
+    top edge of a 278 by 68 deck, which is a coin mech mounted at the back of
+    the deck and not the deck drawn again. At three tenths they survive, along
+    with a start-button panel, two decals sitting on a speaker grille and a
+    coin door's lower panel, while every pair that was checked by eye against
+    the artwork is still caught: a pad's inner face at 0.31, a strip across a
+    coin door at 0.32, a pad boxed twice at 0.49. Losing a duplicate costs one
+    flat box standing where another box already stands; losing a rider deletes
+    a fitting the prop has. The floor is set where the second cannot happen.
     """
     ov = overlap(a, b)
     small, big = (a, b) if area(a) <= area(b) else (b, a)
