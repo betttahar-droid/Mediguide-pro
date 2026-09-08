@@ -463,6 +463,32 @@ const markReps = (runs, scale) => {
 // slice_bg; using the plan's own flat run instead would let the artwork repeat
 // somewhere the chamfer does not, and the two would slide apart at any width
 // but 1. The plan's flat run is the fallback for a prop with no scan.
+//
+// AND ONE BAND FOR EVERY HEIGHT IS THE OPEN FAULT ON THIS AXIS -- the exact
+// thing strip_slice's own opening paragraph says cannot work: "No single band
+// can avoid the artwork at every height, because the artwork is at different
+// places at different heights." strip_slice was written for that, and it
+// computes a band per strip; the BODY still takes one band for the whole face.
+//
+// Measured on this cabinet, the single band lands at u 0.192..0.312 and its
+// mirror at 0.688..0.808, and between them they cut through the screen, the
+// marquee, both speaker grilles and eight buttons. Widening the prop therefore
+// widens the PAINTED screen opening while the screen part, being fixed, stays
+// its real size in the middle -- which is the "large featureless blank voids
+// flanking the monitor" both graders reported in every round of three
+// consecutive runs. Column coverage is already folded into the scan's score,
+// and it cannot help here: the marquee and the control deck each span 0.047 to
+// 0.962, so every column is occupied and the weighting adds a near-constant.
+// There is no good single answer on a face like this, only a least-bad one.
+//
+// The fix is per-height width runs, and the reason it is not simply done is
+// the paragraph above: the loft reads the plan's depth through tOfGx, the
+// global width mapping, so if the TEXTURE's insertion point varies with height
+// the plan's chamfer has to vary with it or the two slide apart -- which is
+// the fault this comment was written about. Both have to move together, which
+// means widthSamples becomes a function of the ring's height and every ring
+// must still yield the same number of samples for the loft to close. That is
+// the work; it is not a tuning knob.
 const hBand = (() => {
   const h = sliceBg?.h;
   if (h && h[1] - h[0] > 0.02) return [h[0], h[1]];
