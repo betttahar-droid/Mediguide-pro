@@ -239,8 +239,15 @@ def render_solid(d, out):
     return (solid[0] if solid else None), (wire[0] if wire else None)
 
 
-def rebuild(d, face="front"):
+def rebuild(d, face="front", asset=None):
     run([sys.executable, "tools/authoring/layer_build.py", str(d), "--face", face])
+    # THE REDRAWN FITTINGS GO BACK ON, AND ARE NOT RE-BOUGHT. layer_build cuts
+    # every part fresh out of the elevation each time it runs, which is right
+    # and which would silently undo the detail pass on the first rebuild of
+    # the loop. --apply re-lays the cached redraws over the new cuts; the
+    # sheets themselves are drawn once, in step 1c.
+    run([sys.executable, "tools/authoring/detail_sheet.py", str(d),
+         "--face", face, "--apply"])
     run([sys.executable, "tools/authoring/nine_slice.py", str(d / f"bg_{face}.png"),
          "--out", str(d / "slice_bg.json"), "--fallback",
          "--parts", str(d / f"parts_{face}.json")])
@@ -419,6 +426,21 @@ def main():
     # whether the geometry is right was never taken. It only ever looked like a
     # flake because re-running it by hand found the file from the round before.
     outstanding = []
+    run([sys.executable, "tools/authoring/layer_build.py", str(d),
+         "--face", "front"])
+    # [1c] THE SMALL FITTINGS, AT A SIZE WORTH MODELLING. Drawn once, here,
+    # because it needs the parts cut and it must not be re-bought every round
+    # of the judge loop. Everything downstream of the manifest -- the bands,
+    # the tile, the atlas -- is rebuilt from whatever the parts are, so the
+    # redraws have to be in place before rebuild runs, and rebuild re-lays them
+    # from the cache on every later pass.
+    print("[1c] redrawing the small fittings large ...", flush=True)
+    r = run([sys.executable, "tools/authoring/detail_sheet.py", str(d),
+             "--face", "front", "--asset", args.asset])
+    for line in (r.stdout or "").strip().splitlines():
+        if "KEPT" in line or "refused" in line or "redrawn large" in line \
+                or "under 48px" in line:
+            print("   ", line.strip()[:130])
     rebuild(d)
     build_body(d, args.asset)
 
