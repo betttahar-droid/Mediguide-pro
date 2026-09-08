@@ -169,6 +169,36 @@ def fill_from_panel(ob, boxes, shaped=None):
                 for y in range(max(0, y0), min(H, y1)):
                     if mp is None or mp[x - x0, y - y0] > 128:
                         covered[x][y] = True
+        # A HAIRLINE BETWEEN TWO MASKS IS STILL THE FITTING. Every mask is a
+        # boundary, and two masks that meet -- a coin door and the slots
+        # punched out of it, a bezel and its screen -- leave the pixels ON that
+        # boundary belonging to neither. So the panel got patched and its
+        # outline did not: the background kept a thin dark tracery of the door
+        # with a red arc where its coin slot had been. Invisible at size 1,
+        # because the fittings sit back on top of it; the moment the background
+        # repeats, that tracery repeats with it, and both graders described it
+        # exactly -- "smudged red/black marks repeated four times down the
+        # front", "half-cut motifs with stray diagonal streaks".
+        #
+        # Anything within a pixel or two of a mask is that fitting's edge, not
+        # panel. Dilating what counts as covered closes every such seam at once,
+        # and costs only that the patch reaches a hair further into panel it was
+        # going to copy panel over anyway.
+        grow = [[False] * H for _ in range(W)]
+        R = 2
+        for x in range(W):
+            for y in range(H):
+                if not covered[x][y]:
+                    continue
+                for dx in range(-R, R + 1):
+                    nx = x + dx
+                    if not (0 <= nx < W):
+                        continue
+                    for dy in range(-R, R + 1):
+                        ny = y + dy
+                        if 0 <= ny < H:
+                            grow[nx][ny] = True
+        covered = grow
     else:
         for (x0, y0, x1, y1) in boxes:
             for x in range(max(0, x0), min(W, x1)):
