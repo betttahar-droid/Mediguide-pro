@@ -50,6 +50,23 @@ because each fixed one prop by breaking another:
   - stating the two hard conditions as filters -- can absorb it, is bare -- and
     weighing only what survives. Clean, and on a prop where nothing survives it
     falls through to a band with a coin door in it and repeats the door.
+  - treating occupancy as a DISQUALIFICATION rather than a penalty (a fitting's
+    rows are the quietest rows in a strip, because the fitting was cut out and
+    its hole patched flat, so a proportional penalty loses to texture noise),
+    together with a smaller minimum band. This is the one worth reading twice.
+    Measured on the obvious proxy -- rows inside a growth band that a fitting
+    occupies -- it was a large win: 133 such rows across four cabinets became
+    41. Rendered, all four looked WORSE. One lost its panel courses to flat
+    tile because the shorter band blew the copy bound; two moved their band
+    onto a horizontal ledge and repeated it four times, which reads as a chest
+    of drawers.
+
+    The proxy is not the objective. Repeating a patched hole usually looks like
+    panel, because that is what the patch is made of; repeating a bare ledge
+    looks like a shelf, however bare it measures. What must not repeat is a
+    FEATURE, and occupancy does not measure featureness -- the peak row score
+    inside the band, which quiet_window already returns, is much closer to it.
+    Anything that optimises occupancy alone will keep finding this.
 
 The conclusion is that this is not a weighting problem. One band cannot serve a
 prop that has no single good one, and the fix is structural: either let the
