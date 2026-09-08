@@ -164,17 +164,11 @@ function hostOf(q) {
   return best;
 }
 
-function anchorFor(q, depth = 0) {
-  const host = depth < 4 ? hostOf(q) : null;
-  if (host) return anchorFor(host, depth + 1);
-  if (!strips) return q.anchor;
-  const g = strips.strips.find((s) => s.grow_y);
-  if (!g) return q.anchor;
-  const H = strips.size[1];
-  const cutRow = g.px[0] + g.vh[0] * (g.px[1] - g.px[0]);
-  const vCut = 1 - cutRow / H;
-  return ((q.v[0] + q.v[1]) / 2 > vCut) ? 'top' : 'bottom';
-}
+// anchorFor lived here: it decided each part's edge from which side of the
+// growth cut it sat on, and gOfT now answers the same question continuously and
+// for any number of cuts. Left as a note rather than as code, because a
+// superseded model that still runs is a trap -- and the reasoning it carried is
+// preserved on gOfT, where it belongs.
 
 let bodyMeta = null, profile = null;
 try { bodyMeta = await (await fetch(`${dir}/body.json`)).json(); } catch {}
@@ -627,6 +621,36 @@ function tOfG(g) {
   for (const r of growRuns) {
     if (g <= r.g1 + 1e-9) {
       return r.t0 + ((g - r.g0) / Math.max(1e-9, r.g1 - r.g0)) * (r.t1 - r.t0);
+    }
+  }
+  return 1;
+}
+
+// AND THE OTHER WAY: WHERE A DRAWN HEIGHT LANDS ON THE FINISHED PROP.
+//
+// This is the same question the anchors answer, asked directly. A part is
+// placed by holding its distance to whichever edge of the prop it belongs to --
+// top if it is above the growth cut, bottom if below -- and that is exactly
+// right for ONE insertion and only for one. It is the arithmetic of a single
+// cut written out by hand, and it cannot express a second: a part sitting
+// between two insertions belongs to neither edge, and holding it to either
+// leaves it behind by the height the other one added.
+//
+// Running the drawn height through the run mapping says the same thing without
+// assuming how many runs there are. Above the band it reduces to "distance from
+// the top is unchanged" and below it to "distance from the bottom is
+// unchanged", which are the two anchor rules; with two bands it keeps a part
+// between them in step with the artwork either side of it, which no anchor can.
+//
+// It also removes a whole class of fault by construction rather than by patch.
+// A rider used to inherit its host's anchor because assigning them separately
+// tore assemblies in half -- "the coin slots detach and float far above the
+// coin door assembly" -- and two things next to each other in the drawing
+// cannot be given different answers by a continuous map.
+function gOfT(t) {
+  for (const r of growRuns) {
+    if (t <= r.t1 + 1e-9) {
+      return r.g0 + ((t - r.t0) / Math.max(1e-9, r.t1 - r.t0)) * (r.g1 - r.g0);
     }
   }
   return 1;
@@ -1500,8 +1524,7 @@ for (const q of man.parts) {
   if (canX) x = 0;
   else x = xFor(q, w, FW, A);
   if (canY) y = 0;
-  else if (anchorFor(q) === 'bottom') y = -FH / 2 + dBot + h / 2;
-  else y = FH / 2 - dTop - h / 2;
+  else y = (gOfT((q.v[0] + q.v[1]) / 2) - 0.5) * FH;
   // MOUNT ON THE SURFACE, NOT ON A PLANE. With a shaped body the front is at a
   // different depth at every height, so a fixed z floated the control deck in
   // front of the deck it belongs to and buried the marquee in the slope.
