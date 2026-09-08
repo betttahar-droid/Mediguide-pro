@@ -68,6 +68,13 @@ Fill each distinct fitting with its own single FLAT SOLID COLOUR:
     colour, the marquee another, the control deck another, each button cluster,
     each door, each vent, each label, each badge
   - two fittings of the same kind but in different places get DIFFERENT colours
+  - AND THE PROP'S STRUCTURAL MEMBERS TOO, not only the things bolted to it:
+    each leg, each foot, each upright, each column, each rail, each plinth and
+    each bracket gets its own colour, one per member. A pinball machine's four
+    legs are four separate fittings, not part of the body. These are the parts
+    a bigger one of these has MORE of rather than longer ones, and a prop whose
+    legs are painted as body has no legs at all as far as the tool is
+    concerned -- it stretches them instead of adding another.
 
 Rules:
   - flat colour only. No shading, no gradients, no outlines, no highlights, no
