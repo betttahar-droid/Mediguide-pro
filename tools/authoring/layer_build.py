@@ -149,7 +149,7 @@ def silhouette(ob, erode=3):
     return inside
 
 
-def fill_from_panel(ob, boxes, shaped=None):
+def fill_from_panel(ob, boxes, shaped=None, within=None):
     """Paint out the parts using panel taken from directly above or below.
 
     A cabinet panel is vertically streaked -- wear runs down it -- so a column
@@ -226,9 +226,21 @@ def fill_from_panel(ob, boxes, shaped=None):
     def lum(c):
         return 0.299 * c[0] + 0.587 * c[1] + 0.114 * c[2]
 
+    # A HOST'S HOLES ARE FILLED WITH HOST, NOT WITH THE PROP. This searched the
+    # whole elevation for one clean patch and tiled it over every hole, which is
+    # right for the background and wrong for a part's own layer: the vending
+    # machine's display case had its twenty-one products painted out with the
+    # CABINET's dark exterior metal, because that is the prop's modal material.
+    # At the drawn size the products sat back on top and hid it; the moment the
+    # case lengthened to hold another shelf, the fill was all you could see --
+    # a case full of black rectangles. A window's holes are window, a deck's
+    # are deck, and the material for either is inside the part itself.
+    ax0, ay0, ax1, ay1 = within if within else (0, 0, W, H)
+    ax0, ay0 = max(0, ax0), max(0, ay0)
+    ax1, ay1 = min(W, ax1), min(H, ay1)
     tally = _C()
-    for x in range(0, W, 2):
-        for y in range(0, H, 2):
+    for x in range(ax0, ax1, 2):
+        for y in range(ay0, ay1, 2):
             if not covered[x][y] and inside[x][y] and 28 < lum(src[x, y]) < 232:
                 tally[src[x, y]] += 1
     base = tally.most_common(1)[0][0] if tally else (128, 128, 128)
@@ -264,27 +276,29 @@ def fill_from_panel(ob, boxes, shaped=None):
     # smear before it is even repeated. Penalising elongation by the aspect
     # ratio makes a chunky patch beat a wide thin one of the same area.
     best, bw, bh, bscore = None, 0, 0, 0.0
-    for y0 in range(0, H, 4):
-        for x0 in range(0, W, 4):
+    for y0 in range(ay0, ay1, 4):
+        for x0 in range(ax0, ax1, 4):
             if not usable(x0, y0):
                 continue
             x1 = x0
-            while x1 + 1 < W and usable(x1 + 1, y0):
+            while x1 + 1 < ax1 and usable(x1 + 1, y0):
                 x1 += 1
             y1 = y0
-            while y1 + 1 < H and all(usable(x, y1 + 1)
-                                     for x in range(x0, x1 + 1, 3)):
+            while y1 + 1 < ay1 and all(usable(x, y1 + 1)
+                                       for x in range(x0, x1 + 1, 3)):
                 y1 += 1
             w, h = x1 - x0 + 1, y1 - y0 + 1
             # a sliver is not a swatch: a 273x11 strip tiles as horizontal
             # banding whatever it contains, so it must lose to anything chunkier
-            if min(w, h) < 8:
+            if min(w, h) < (5 if within else 8):
                 continue
             score = w * h * (min(w, h) / max(w, h))
             if score > bscore:
                 best, bw, bh, bscore = (x0, y0), w, h, score
     if best is None:
-        return out
+        # nothing inside the part is material enough to copy -- the prop's own
+        # panel is a worse answer than this one and a better one than a hole
+        return fill_from_panel(ob, boxes, shaped) if within else out
     ox, oy = best
     PANEL_PATCH["patch"] = [ox, oy, bw, bh]   # where the clean panel was found
 
@@ -563,7 +577,8 @@ def main():
     for name, kids in riders_of.items():
         clean[name] = fill_from_panel(
             ob, [q["px"] for q in kids],
-            [(q["px"], masks.get(q["name"])) for q in kids])
+            [(q["px"], masks.get(q["name"])) for q in kids],
+            within=next(h["px"] for h in man["parts"] if h["name"] == name))
         print(f"  {name}: {len(kids)} fitting(s) stand on it -- painted out of "
               f"its own layer so they are not drawn twice")
 
