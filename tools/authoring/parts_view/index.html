@@ -168,6 +168,45 @@ const BODY_D = Number(p.get('depth') ?? profile?.depth ?? bodyMeta?.depth ?? 0.3
 // painting the rest a flat brown is invisible head-on and is most of what you
 // see the moment the prop is turned to show its parts are separate objects.
 const bgTex = await load(`${dir}/${man.background}`);
+// WHAT COLOUR THE ARTWORK IS AT A GIVEN HEIGHT. A shelf -- a horizontal step
+// in the front of the body -- is not depicted by any elevation: the front view
+// sees it edge-on as a row or two of pixels and the top view has the prop's
+// own roof in the way. It has to be given the carcass material, and the
+// carcass has to be the colour of the panel it steps out of, which is the
+// artwork immediately above and below the step. One pass over the background
+// at load, medians per row, and any surface that needs a body colour can ask.
+const rowRGB = (() => {
+  try {
+    const im = bgTex.image;
+    const cv = document.createElement('canvas');
+    cv.width = im.width; cv.height = im.height;
+    const cx = cv.getContext('2d', { willReadFrequently: true });
+    cx.drawImage(im, 0, 0);
+    const d = cx.getImageData(0, 0, cv.width, cv.height).data;
+    const rows = [];
+    for (let y = 0; y < cv.height; y++) {
+      const ch = [[], [], []];
+      for (let x = 0; x < cv.width; x++) {
+        const i = (y * cv.width + x) * 4;
+        if (d[i + 3] < 128) continue;
+        for (let c = 0; c < 3; c++) ch[c].push(d[i + c]);
+      }
+      rows.push(ch[0].length
+        ? ch.map((v) => { v.sort((a, b) => a - b); return v[v.length >> 1]; })
+        : null);
+    }
+    return (t) => {
+      // t is measured from the BOTTOM, the image from the top
+      const y = Math.max(0, Math.min(cv.height - 1,
+        Math.round((1 - t) * (cv.height - 1))));
+      for (let k = 0; k < cv.height; k++) {
+        if (rows[Math.min(cv.height - 1, y + k)]) return rows[Math.min(cv.height - 1, y + k)];
+        if (rows[Math.max(0, y - k)]) return rows[Math.max(0, y - k)];
+      }
+      return null;
+    };
+  } catch { return () => null; }
+})();
 const faceTex = {};
 for (const f of ['side', 'back', 'top']) {
   if (bodyMeta?.[f]) faceTex[f] = await load(`${dir}/${bodyMeta[f].image}`);
@@ -831,7 +870,31 @@ function buildLoft() {
             || growRuns[yri[i]]?.fill || growRuns[yri[i + 1]]?.fill);
       const P4 = [[p.x, a.wy, p.z], [q.x, a.wy, q.z],
                   [Q.x, b.wy, Q.z], [P.x, b.wy, P.z]];
-      if (fill) {
+      // AN ELEVATION DOES NOT DEPICT A SHELF. Where the body steps forward --
+      // the ledge under this cabinet's monitor glass, a tenth of its depth in
+      // three thousandths of its height -- the quad that closes the step is a
+      // horizontal surface textured with the two rows of the front elevation
+      // that lie across it, smeared over a hand's breadth of shelf. It came out
+      // as a blank tan band the full width of the prop, streaked vertically,
+      // sitting between the screen and the control panel: the single most
+      // visible untextured area on the model, and no amount of fixing the
+      // artwork can help because the artwork has no pixels there to give.
+      //
+      // The top view cannot help either -- the prop's own roof occludes a
+      // mid-height ledge. So a shelf gets the carcass material at its proper
+      // grain, coloured like the panel it steps out of. Threshold is the
+      // stretch: a face that travels more than three times further across than
+      // it does up is being asked to stretch its texture threefold, which is
+      // where a smear starts to read as one.
+      const rise = Math.abs(b.wy - a.wy);
+      const run2 = Math.max(Math.hypot(P.x - p.x, P.z - p.z),
+                            Math.hypot(Q.x - q.x, Q.z - q.z));
+      const shelf = !fill && f.mi !== 0 && rise * 3 < run2;
+      if (shelf) {
+        const rgb = rowRGB((ys[i] + ys[i + 1]) / 2);
+        quadTo(5, P4, P4.map((v) => [v[0] / tileWorld, v[2] / tileWorld]),
+               tintFor(rgb));
+      } else if (fill) {
         // world-space UVs, so the grain is the same size at any scale and the
         // fill has no period of its own to beat against the prop's
         const byX = wRuns[p.ri]?.fill || wRuns[q.ri]?.fill;
