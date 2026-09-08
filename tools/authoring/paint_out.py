@@ -46,6 +46,32 @@ AND THEN THE FILL IS MEASURED, per hole:
 A hole whose fill fails goes back to the arithmetic patch, so a bad reply
 costs nothing. CACHED, because the loop rebuilds the layers every round and
 this must not be re-bought each time.
+
+TRIED AND REVERTED: THE SAME THING FOR THE SIDE AND BACK. The growth band is
+measured on the front and applied to every face, so a cabinet bare across some
+rows at the front and carrying a rocket across the same rows on its FLANK
+stacks that rocket down a taller prop -- both judges, every round. The obvious
+extension is to paint the graphics off the side too.
+
+It does not work, for two reasons that are worth writing down.
+
+There is no parts_side.json, so there are no holes to composite through and
+none of the safety that gives. The tightest honest scope is the rows the body
+actually repeats -- everything else is untouched -- and compositing a band of
+the reply into the original puts a SEAM at each end of it. The reply is a
+different rendering of the same material, close enough to pass a colour check
+at a distance of 20 and plainly a different grey up against the original: the
+cabinet came back with two dark stripes ruled across its rocket, which is a
+worse fault than the one being fixed and a more obvious one.
+
+And the model did not remove the rocket in any case. Asked to take off decals
+and graphics it took off lettering and kept the artwork, which is a defensible
+reading -- a painted-on rocket is the cabinet's paint.
+
+What this needs is not a better prompt. It needs the side's graphics to be
+LIFTED, the way the front's fittings are, so there are holes to composite
+through and so the decals can be drawn back as their own planes. decal_sheet
+already extracts them; what it does not record is where they were.
 """
 import argparse
 import json
