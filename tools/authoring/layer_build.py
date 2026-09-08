@@ -34,6 +34,7 @@ from identify_parts import object_crop
 
 
 PANEL_PATCH = {}
+PAINTED = {}
 
 
 def bleed(im, rounds=512):
@@ -213,6 +214,31 @@ def fill_from_panel(ob, boxes, shaped=None, within=None):
     # AND THEY MUST BE INSIDE THE PROP. See silhouette(): the sheet showing
     # through a domed top is uncovered too, and on the jukebox it was the modal
     # colour, so "panel" resolved to white.
+    # THE MODEL'S PLATE FIRST, IF THERE IS ONE. paint_out asks the image model
+    # for the prop with its fittings taken off and composites the reply through
+    # the hole mask, so every pixel it offers is one it drew for that exact
+    # spot. Tiling one patch of panel over every hole is a guess about what is
+    # behind a coin door; this is an answer. Only holes are taken from it, and
+    # only holes that passed paint_out's own colour and grain checks -- the
+    # rest fall through to the patch below, so a bad reply costs nothing.
+    if PAINTED.get("im") is not None:
+        pl = PAINTED["im"].load()
+        ok = PAINTED["ok"].load()
+        solid0 = silhouette(ob, erode=0)
+        left = False
+        for x in range(W):
+            for y in range(H):
+                if not (covered[x][y] and solid0[x][y]):
+                    continue
+                if ok[x, y] > 128:
+                    px[x, y] = pl[x, y]
+                else:
+                    left = True            # the plate was refused here
+        if not left:
+            return out
+        # fall through: the holes the plate could not answer for still need the
+        # patch, and `out` already carries the ones it could
+
     inside = silhouette(ob)
     solid = silhouette(ob, erode=0)      # unroded: what to PAINT, vs what to copy FROM
     from collections import Counter as _C
@@ -428,6 +454,20 @@ def main():
     ob = object_crop(d / f"{args.face}.png")
     W, H = ob.size
     assert [W, H] == man["size"], f"size drift {W}x{H} vs {man['size']}"
+    # paint_out leaves this when the model's plate passed its checks; it is the
+    # same elevation with the fittings taken off, at the same coordinates.
+    pnt = d / f"_painted_{args.face}.png"
+    if pnt.exists():
+        try:
+            im = Image.open(pnt).convert("RGB")
+            mk = Image.open(d / f"_painted_{args.face}_mask.png").convert("L")
+            if im.size == (W, H) and mk.size == (W, H):
+                PAINTED["im"], PAINTED["ok"] = im, mk
+                n = sum(1 for v in mk.getdata() if v > 128)
+                print(f"  filling holes from the model's plate "
+                      f"({100 * n / (W * H):.0f}% of the face)")
+        except Exception:
+            pass
 
     # A MASK IS THE SHAPE; A BOX WAS ONLY EVER ITS BOUNDING RECTANGLE. Where
     # segment_sheet has produced masks, the hole cut in the background is the
