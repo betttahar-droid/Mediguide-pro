@@ -329,14 +329,37 @@ def main():
         mean = sum(vals) / len(vals)
         return (sum((v - mean) ** 2 for v in vals) / len(vals)) ** 0.5
 
+    # AND A REGION THE SIZE OF THE PROP IS THE PROP. The flat test above catches
+    # a patch of bare panel the segmenter outlined and nobody named. It does not
+    # catch the same thing NAMED -- "lower_panel", "cabinet_door", "body" -- and
+    # a named region covering the whole width and two fifths of the height is
+    # not a fitting on the cabinet, it is the cabinet. The cost is not cosmetic:
+    # every later stage asks how much of a strip is free carcass in order to
+    # decide where the prop may grow, a part covers whatever it lies on, and
+    # this one covered the entire lower body. So its strip scored 4% free, the
+    # growth went to the next best strip -- the SCREEN BAY -- and a cabinet
+    # built half again as tall put a blank slab between its marquee and its
+    # monitor while its lower body, which is the part of a cabinet that is
+    # actually made taller, kept its exact size.
+    #
+    # A fitting stands ON the body; the body is what is left when the fittings
+    # are taken off. Something that leaves nothing behind is the other one.
     keep = []
     for p in man["parts"]:
+        x0, y0, x1, y1 = p["px"]
+        fw_, fh_ = (x1 - x0) / float(W), (y1 - y0) / float(H)
         if p["name"].startswith("decal"):
             sd = tone_sd(p)
             if sd < 9.0:
                 print(f"  {p['name']}: flat ({sd:.1f} of tone) -- panel, not a "
                       f"fitting; left in the background")
                 continue
+        if fw_ * fh_ > 0.25 and p.get("depth") in ("flush", None) \
+                and p.get("motion", "none") == "none":
+            print(f"  {p['name']}: {100*fw_:.0f}% x {100*fh_:.0f}% of the face, "
+                  f"flush and fixed -- that is the carcass, not a fitting; "
+                  f"left in the background")
+            continue
         keep.append(p)
     man["parts"] = keep
 

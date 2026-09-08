@@ -435,10 +435,19 @@ const planBand = (() => {
 // copy pulled twenty times over is a smear, and a smear does not look like
 // twenty of anything.
 //
-// A prop that gains four courses of panel looks built. One that gains twenty
+// A prop that gains a few courses of panel looks built. One that gains twenty
 // looks corrugated. Past that the band is too small to be the answer and the
 // carcass tile is -- which is what it is for, and why it stayed.
-const MAX_REPS = 6;
+//
+// TEN, WHICH IS THE NUMBER THIS TOOL ALREADY USES for how often a material may
+// repeat before the repeat is the thing you see (material_atlas floors the
+// tile size at a tenth of the prop for exactly that reason). Six was a guess,
+// and it cost: a cabinet built twice as wide needs 7.15 copies of its
+// eight-percent side band, so it fell to the carcass and its whole front face
+// -- panel seams, coin door surround, grime -- became flat tile. Mirroring
+// alternate copies halves the number of joins there are to notice, so ten
+// copies show five, which is a panel, not a pattern.
+const MAX_REPS = 10;
 const repsOf = (r, scale) => {
   if (!r.fill) return 1;
   const band = r.t1 - r.t0;
