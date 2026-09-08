@@ -23,13 +23,22 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw
 
-# The three the judge sees, in the order it sees them. Anchored on what
-# follows the height, because "w-1-h-1-" is also the prefix of "w-1-h-1-5-":
-# matched loosely, the first column showed the TALLER render and the sheet
-# quietly compared a prop against itself.
-ORDER = [("as drawn", re.compile(r"w-1-h-1-[a-z]")),
-         ("2x wider", re.compile(r"w-2[-0]*-h-1-[a-z]")),
-         ("taller", re.compile(r"w-1-h-1-[0-9]"))]
+# THE SCALES ARE READ, NOT MATCHED. Patterns went wrong twice: "w-1-h-1-" is
+# also the prefix of "w-1-h-1-5-", so the as-drawn column showed the TALLER
+# render and the sheet quietly compared a prop against itself; and a pattern
+# for "w-2" misses a jukebox, whose widest sensible size is 1.6, so its wider
+# column came up empty and looked like a failed render. Every prop has its own
+# limits -- that is the whole point of scale_rules -- so the filename's numbers
+# are parsed and the three are told apart by value.
+ORDER = ["as drawn", "wider", "taller"]
+SCALE = re.compile(r"-w-(\d+(?:-\d+)?)-h-(\d+(?:-\d+)?)-")
+
+
+def scales(name):
+    m = SCALE.search(name)
+    if not m:
+        return None
+    return tuple(float(g.replace("-", ".")) for g in m.groups())
 
 
 def latest_round(d):
@@ -42,11 +51,16 @@ def shots_for(d):
     """the three judged renders of one prop, newest round that has them"""
     for r in reversed(sorted([p for p in d.glob("r[0-9]*") if p.is_dir()],
                              key=lambda p: int(p.name[1:] or 0))):
-        found = []
-        for label, pat in ORDER:
-            hit = next((p for p in sorted(r.glob("*.png")) if pat.search(p.name)),
-                       None)
-            found.append((label, hit))
+        found = [(lbl, None) for lbl in ORDER]
+        for p in sorted(r.glob("*.png")):
+            sc = scales(p.name)
+            if sc is None:
+                continue
+            w, h = sc
+            i = 0 if (w == 1 and h == 1) else 1 if w > 1 else 2 if h > 1 else None
+            if i is not None and found[i][1] is None:
+                found[i] = (ORDER[i] + (f"  x{w:g}" if i == 1 else
+                                        f"  x{h:g}" if i == 2 else ""), p)
         if any(h for _, h in found):
             return r.name, found
     return None, [(lbl, None) for lbl, _ in ORDER]
@@ -75,8 +89,10 @@ def main():
     H = head + len(rows) * (C + pad)
     out = Image.new("RGB", (W, H), (26, 26, 30))
     dr = ImageDraw.Draw(out)
-    for i, (label, _) in enumerate(ORDER):
-        dr.text((190 + i * (C + pad) + 4, 6), label, fill=(210, 210, 210))
+    for i, lbl in enumerate(ORDER):
+        head_lbl = next((f[0] for r in rows for f in r[2]
+                         if f[1] is not None and f[0].startswith(lbl)), lbl)
+        dr.text((190 + i * (C + pad) + 4, 6), head_lbl, fill=(210, 210, 210))
     for j, (name, rnd, shots) in enumerate(rows):
         y = head + j * (C + pad)
         dr.text((6, y + C // 2), f"{name}\n{rnd or 'no rounds'}",
