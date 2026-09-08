@@ -111,6 +111,31 @@ function hostSpan(q) {
         || q.v[0] < s.v[0] - m || q.v[1] > s.v[1] + m) continue;
     if (!best || (s.u[1] - s.u[0]) < (best.u[1] - best.u[0])) best = s;
   }
+  // A STATION IS NOT ALWAYS INSIDE ITS STRUCTURE'S BOX. The test above is
+  // containment, and on this cabinet the segmenter drew the joysticks straddling
+  // the deck from below -- boxes at v 0.404..0.488 against a deck at
+  // 0.473..0.517 -- so nothing contained them, no station had a structure, and a
+  // cabinet built twice as wide got a second button cluster with no stick beside
+  // it. Both graders called it, on prop after prop: "the joysticks stay fixed at
+  // the original centre spacing, leaving the added player-side of the deck with
+  // buttons and no stick". What makes a deck a station's structure is that the
+  // station is within its WIDTH and meets it in height -- overlapping it or
+  // sitting right against it -- not that the deck's box happens to swallow the
+  // ball on top of the stick.
+  if (!best) {
+    for (const s of man.parts) {
+      if (!s.spans || s.name === q.name) continue;
+      const m = 0.03;
+      if (q.u[0] < s.u[0] - m || q.u[1] > s.u[1] + m) continue;
+      const near = 0.05;
+      const meets = q.v[0] < s.v[1] + near && q.v[1] > s.v[0] - near;
+      if (!meets) continue;
+      const a = (s.u[1] - s.u[0]) * (s.v[1] - s.v[0]);
+      const b = (q.u[1] - q.u[0]) * (q.v[1] - q.v[0]);
+      if (a <= b * 1.5) continue;          // a structure is bigger than what stands on it
+      if (!best || a < (best.u[1] - best.u[0]) * (best.v[1] - best.v[0])) best = s;
+    }
+  }
   if (best) return placeX(best);
   // A STATION WITH NO NAMED STRUCTURE UNDER IT STANDS ON THE BODY. Requiring a
   // manifest part to be the host was right in what it refused -- dividing the
@@ -1704,10 +1729,31 @@ for (const q of man.parts) {
     // upright than their panel's normal does, so the lean is bounded at 30.
     // On a horizontal deck the normal IS vertical and this never binds.
     const STICK_CAP = Math.PI / 6;
-    const stick = m === 'stick' && pl.fitted;
-    const rotX = stick
-      ? Math.max(-STICK_CAP,
-                 Math.min(STICK_CAP, Math.atan(pl.c) + Math.PI / 2))
+    // A STICK STANDS ON A SURFACE THAT FACES UP. The rule above turns the
+    // surface's lean into the stick's, and it is only meaningful for a surface
+    // a stick could be bolted through. A negative slope is a panel leaning back
+    // as it rises -- a control deck. A POSITIVE one leans forward as it rises,
+    // which is an underside or a front lip, and nothing stands on those.
+    //
+    // On this cabinet the segmenter drew the joystick boxes below the deck
+    // rather than on it, so each stick fitted its own base to the deck's front
+    // LIP and came back at +65 and +68 degrees where the deck itself is -66.
+    // Adding the quarter turn put them at 155, the cap pulled that back to a
+    // tidy-looking 30, and both graders independently reported the same thing:
+    // "mounted under the front edge of the control deck pointing downwards
+    // rather than standing upright on the control panel surface". The clamp was
+    // not protecting against a steep surface, it was disguising the wrong one.
+    // A fit that says the stick is under an overhang is a fit to disbelieve,
+    // and an upright stick is the honest answer to not knowing.
+    const stick = m === 'stick' && pl.fitted && pl.c < 0;
+    // and a stick whose surface was not believed stands UP, rather than
+    // falling through to the panel rule and lying in it: laid into a lip
+    // fitted at +65 degrees it came out leaning 45 forward off the deck's
+    // front edge, which is the fault, not a milder version of it.
+    const rotX = m === 'stick'
+      ? (stick ? Math.max(-STICK_CAP,
+                          Math.min(STICK_CAP, Math.atan(pl.c) + Math.PI / 2))
+               : 0)
       : Math.max(-CAP, Math.min(CAP, Math.atan(pl.c)));
     const rotY = Math.max(-CAP, Math.min(CAP, -Math.atan(pl.b)));
     // A SLOPE IS LONGER THAN ITS SHADOW. The elevation measures a part where it

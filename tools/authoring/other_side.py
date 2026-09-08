@@ -354,22 +354,35 @@ def main():
     # run silently undid the first. A step that is not idempotent is a step
     # that breaks the moment anything re-runs it, which in this pipeline is
     # every round.
-    edit = d / "_side_edit.png"
-    if args.redraw or not edit.exists():
-        generate_image(PROMPT.format(asset=args.asset), edit, load_key(),
-                       refs=[flipped])
-
     # THE MODEL LOCALISES THE LETTERING; THE FLIP IS ARITHMETIC EITHER WAY.
     # Asked outright first, because that does not depend on the model editing
     # rather than repainting; the diff against its attempt is the fallback.
     # Both are bounded before they are believed.
+    #
+    # AND THE FALLBACK'S COST IS ONLY PAID WHEN THE FALLBACK IS USED. The
+    # redraw ran first and unconditionally, which was fine while the diff was
+    # the only way to find the text and is waste now that asking works: an
+    # image generation on every build for a picture the common path never
+    # opens. Worse than waste, it was fatal -- the image model answered
+    # NO_IMAGE on one cabinet, the exception ended the step, and that prop
+    # shipped with its far flank mirrored, which is the whole fault this file
+    # exists to fix. A step must not die obtaining something it may not need.
     M = Image.open(flipped).convert("RGB")
+    edit = d / "_side_edit.png"
     boxes = sane_boxes(ask_boxes(flipped, args.asset), M.size)
     how = "asked for"
     if not boxes:
-        boxes = sane_boxes(text_boxes(M, Image.open(edit).convert("RGB")),
-                           M.size)
-        how = "diffed from the model's edit"
+        try:
+            if args.redraw or not edit.exists():
+                generate_image(PROMPT.format(asset=args.asset), edit,
+                               load_key(), refs=[flipped])
+            boxes = sane_boxes(text_boxes(M, Image.open(edit).convert("RGB")),
+                               M.size)
+            how = "diffed from the model's edit"
+        except Exception as e:
+            print(f"  the redraw fallback is unavailable "
+                  f"({type(e).__name__}) -- no lettering located")
+            how = "none found"
     print(f"  {len(boxes)} lettering region(s), {how}")
     fixed = flip_boxes(M, boxes)
     fixed.save(out)
