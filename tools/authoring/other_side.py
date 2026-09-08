@@ -162,6 +162,81 @@ def text_boxes(a, b, min_frac=0.0008):
     return tight
 
 
+def ask_boxes(path, asset):
+    """Where the lettering is, asked as a question rather than read off a diff.
+
+    THE DIFF ONLY LOCALISES TEXT IF THE MODEL ONLY CHANGED TEXT. On this
+    cabinet it did, and the note above records how well that worked. On the
+    next one it did not: asked to un-mirror the lettering the model repainted
+    the whole flank, so the difference between its attempt and the plain mirror
+    was the whole flank, every pixel of it came back as one enormous "lettering
+    region", flipping that turned the panel inside out and the silhouette check
+    threw the result away -- 61.5% where 86% is the bar. The guard did its job
+    and the step still produced nothing, so the cabinet shipped with GALAXY
+    BLASTER reading YXAJAG on its right side, which is what the judge saw.
+
+    A diff is a way of inferring where the text is from a picture that was
+    supposed to be an edit. Asking is more direct and does not depend on the
+    model showing any restraint: naming and locating things in a picture is the
+    one job these models are unambiguously good at, and a handful of boxes is a
+    small, checkable answer -- unlike a repainted panel, which is neither.
+
+    The diff stays as the fallback for when the ask fails or comes back empty.
+    """
+    try:
+        from gemini_judge import vision_json
+        r, _m = vision_json(
+            f"This is the side panel of a {asset}. Every piece of LETTERING on "
+            "it is printed mirror-reversed.\n\n"
+            "Give me the bounding box of each LINE of lettering -- one box per "
+            "line of text, tight around the glyphs of that line only, not "
+            "around the artwork behind them. Do not include logos, symbols or "
+            "illustration; only text.\n\n"
+            "Coordinates are fractions of the image, 0 to 1, x from the left "
+            'and y from the top. JSON only: '
+            '{"lines": [{"x0":0.0,"y0":0.0,"x1":0.0,"y1":0.0}, ...]}',
+            [path])
+        W, H = Image.open(path).size
+        out = []
+        for b in (r.get("lines") or []):
+            try:
+                x0, y0 = float(b["x0"]) * W, float(b["y0"]) * H
+                x1, y1 = float(b["x1"]) * W, float(b["y1"]) * H
+            except (KeyError, TypeError, ValueError):
+                continue
+            x0, x1 = sorted((max(0, min(W, x0)), max(0, min(W, x1))))
+            y0, y1 = sorted((max(0, min(H, y0)), max(0, min(H, y1))))
+            if x1 - x0 >= 4 and y1 - y0 >= 4:
+                out.append((int(x0), int(y0), int(x1), int(y1)))
+        return out
+    except Exception:
+        return []
+
+
+def sane_boxes(boxes, size, most=0.25, total=0.45):
+    """A line of text is small. Anything that is not, is not a line of text.
+
+    Both ways of finding the lettering can hand back the whole panel -- the
+    diff when the model repaints instead of editing, the ask when it decides
+    the illustrated hero counts as a graphic worth boxing. Flipping a box that
+    size is not a correction, it mirrors the object; and because such a box
+    reaches the panel's edge it takes the silhouette with it, which is how a
+    99% mirror became a 61% one. Neither source is trusted with a box bigger
+    than a quarter of the panel, or with more than a bit under half of it in
+    total, and a set that breaks either bound is dropped whole rather than
+    trimmed -- a wrong box is evidence the whole answer is wrong.
+    """
+    W, H = size
+    area = float(W * H)
+    keep = [b for b in boxes
+            if (b[2] - b[0]) * (b[3] - b[1]) <= most * area]
+    if len(keep) != len(boxes):
+        return []
+    if sum((b[2] - b[0]) * (b[3] - b[1]) for b in keep) > total * area:
+        return []
+    return keep
+
+
 def flip_boxes(im, boxes, feather=10):
     """Turn each box's contents back the right way round, in place.
 
@@ -284,10 +359,18 @@ def main():
         generate_image(PROMPT.format(asset=args.asset), edit, load_key(),
                        refs=[flipped])
 
-    # the model's edit localises the lettering; the flip is done here
+    # THE MODEL LOCALISES THE LETTERING; THE FLIP IS ARITHMETIC EITHER WAY.
+    # Asked outright first, because that does not depend on the model editing
+    # rather than repainting; the diff against its attempt is the fallback.
+    # Both are bounded before they are believed.
     M = Image.open(flipped).convert("RGB")
-    boxes = text_boxes(M, Image.open(edit).convert("RGB"))
-    print(f"  the model's edit localises {len(boxes)} lettering region(s)")
+    boxes = sane_boxes(ask_boxes(flipped, args.asset), M.size)
+    how = "asked for"
+    if not boxes:
+        boxes = sane_boxes(text_boxes(M, Image.open(edit).convert("RGB")),
+                           M.size)
+        how = "diffed from the model's edit"
+    print(f"  {len(boxes)} lettering region(s), {how}")
     fixed = flip_boxes(M, boxes)
     fixed.save(out)
 
