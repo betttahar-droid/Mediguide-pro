@@ -75,6 +75,14 @@ one of these actually is.
                   that simply gets longer -- never inside a screen, a grille, a
                   sign or a control deck. If this prop genuinely has nowhere
                   like that, give an empty list; that is a real answer.
+                  A SECOND IMAGE SHOWS THE PROP'S SIDE, at the same height, and
+                  the place has to be plain on BOTH. The prop grows as one
+                  body, so whatever runs across those heights on the flank gets
+                  longer too: pick a run of heights where the front AND the
+                  side are bare panel. A band that is empty at the front and
+                  crosses a rocket or a title on the side stacks that artwork
+                  down the flank of a taller prop, which is the single fault
+                  reported most often on these.
   "max_wider"     how many times its own width this prop can sensibly reach
                   before it stops being a {asset}. 1.0 means it should not be
                   widened at all. Typically 1.5 to 2.5.
@@ -153,6 +161,22 @@ def main():
     content = [{"type": "text",
                 "text": ASK.format(asset=args.asset, listing=listing)},
                {"type": "image_url", "image_url": {"url": data_uri(tmp)}}]
+    # AND THE SIDE, BECAUSE THE PLACE HAS TO BE PLAIN ON BOTH. Everything here
+    # was decided from the front alone, and the growth it decides is applied to
+    # every face -- so the model was being asked where a cabinet gets longer
+    # while shown only the half of it that could not answer.
+    side = d / "side.png"
+    if side.exists():
+        try:
+            st = d / "_scale_side.png"
+            so = object_crop(side)
+            so = so.resize((max(1, round(so.width * ob.height / so.height)),
+                            ob.height))
+            so.save(st)
+            content.append({"type": "image_url",
+                            "image_url": {"url": data_uri(st)}})
+        except Exception:
+            pass
 
     key = _openrouter_key()
     got = None

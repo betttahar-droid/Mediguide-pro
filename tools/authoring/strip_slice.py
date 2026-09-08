@@ -85,6 +85,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools" / "authoring"))
 from collections import Counter as _Counter  # noqa: E402
 from identify_parts import object_crop  # noqa: E402
+from layer_build import silhouette  # noqa: E402
 from nine_slice import _runs  # noqa: E402
 
 
@@ -335,8 +336,27 @@ def main():
         if not f.exists():
             continue
         try:
+            # INSIDE THE PROP, NOT INSIDE THE CROP. object_crop keeps the sheet
+            # showing past a sloped top or a domed crown, and the boundary
+            # between prop and sheet is the strongest row difference on the
+            # whole face -- so the cabinet's own top and bottom edges measured
+            # as artwork and every growth place near them was refused as
+            # "carrying a decal on another face". Only pixels the prop actually
+            # covers may be compared.
             o = object_crop(f).convert("RGB")
-            rd = row_diff(o)
+            ins = silhouette(o, erode=1)
+            ow, oh = o.size
+            opx = o.load()
+            rd = []
+            for y in range(oh - 1):
+                acc = n = 0
+                for x in range(0, ow, 2):
+                    if not (ins[x][y] and ins[x][y + 1]):
+                        continue
+                    a, b = opx[x, y], opx[x, y + 1]
+                    acc += sum(abs(u - v) for u, v in zip(a, b)) / 3
+                    n += 1
+                rd.append(acc / n if n else 0.0)
             if len(rd) < 8:
                 continue
             # SCALED TO THAT FACE'S OWN GRAIN, NOT TO A CONSTANT. A flat bar
