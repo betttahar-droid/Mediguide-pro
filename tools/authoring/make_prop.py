@@ -272,6 +272,12 @@ def build_body(d, asset):
     run([sys.executable, "tools/authoring/body_faces.py", str(d)])
     run([sys.executable, "tools/authoring/side_profile.py", str(d),
          "--asset", asset])
+    # THE OTHER FLANK, WHICH ONE DRAWING CANNOT PROVIDE. A side elevation ties
+    # its letter direction to which end its nose is on, so on the flank it does
+    # not depict, reading correctly and aligning the nose are mutually
+    # exclusive. Drawing the second panel is the only way to have both.
+    run([sys.executable, "tools/authoring/other_side.py", str(d),
+         "--asset", asset])
     # how wide the prop is at each height, so the body is the intersection of
     # both silhouettes rather than one extrusion with a constant width
     run([sys.executable, "tools/authoring/front_profile.py", str(d)])

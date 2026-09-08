@@ -172,6 +172,11 @@ const faceTex = {};
 for (const f of ['side', 'back', 'top']) {
   if (bodyMeta?.[f]) faceTex[f] = await load(`${dir}/${bodyMeta[f].image}`);
 }
+let otherSideTex = null;
+try {
+  const oj = await (await fetch(`${dir}/side_other.json`)).json();
+  if (oj.usable && oj.cut) otherSideTex = await load(`${dir}/${oj.cut}`);
+} catch {}
 const mirrored = (t) => {
   if (!t) return t;
   const c = t.clone(); c.repeat.x = -1; c.offset.x = 1; c.needsUpdate = true;
@@ -231,8 +236,11 @@ const MAT = [
           : new THREE.MeshBasicMaterial({ color: 0xffffff,
                                           side: THREE.DoubleSide,
                                           vertexColors: true }),
-  // 6  the OTHER flank's copy of the side art, sampled mirrored -- see facet()
-  mapped(mirrored(faceTex.side), 0x6a5a4a),
+  // 6  the OTHER flank. A drawn one if other_side.py produced a usable panel
+  // -- correct lettering AND nose aligned, which no mapping of a single
+  // drawing can give -- and the mirrored original when it did not, which is
+  // the old behaviour and no worse.
+  mapped(otherSideTex || mirrored(faceTex.side), 0x6a5a4a),
 ];
 
 // THE BODY IS THE INTERSECTION OF TWO SILHOUETTES, NOT ONE EXTRUSION.
