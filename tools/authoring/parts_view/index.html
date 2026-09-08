@@ -1879,9 +1879,21 @@ function atlasScene() {
   sheet.generateMipmaps = false;
   sheet.colorSpace = THREE.SRGBColorSpace;
   sheet.needsUpdate = true;
+  // MASKED, NOT BLENDED. Every material on this prop was marked transparent
+  // with an alpha test, and the two are not the same claim: transparent means
+  // "mix me with what is behind", masked means "these texels are absent". The
+  // pixels here are absent -- the cut-out margin of a part, the sheet showing
+  // past a domed outline -- and saying blended costs real things outside this
+  // renderer. glTF writes alphaMode BLEND for it, so the whole prop lands in
+  // an engine's transparent pass: sorted per object rather than per pixel, no
+  // depth write, and a coin door drawn behind the cabinet it is bolted to
+  // depending on which way the camera faces. Dropping `transparent` while
+  // keeping alphaTest changes nothing on screen -- the test discards the same
+  // fragments either way -- and exports as MASK with a cutoff, which is what a
+  // cut-out prop is and what its depth pass wants.
   const atlasMat = new THREE.MeshBasicMaterial(
-    { map: sheet, side: THREE.DoubleSide, transparent: true,
-      alphaTest: 0.5, vertexColors: true });
+    { map: sheet, side: THREE.DoubleSide, alphaTest: 0.5,
+      vertexColors: true });
   atlasMat.name = 'prop_sheet';
 
   const move = (geo, start, count, cell, m) => {
