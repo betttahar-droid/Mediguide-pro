@@ -476,10 +476,46 @@ def main():
                     ap2[xx, yy] = 0
         if p["name"] in masks:                 # cut to the fitting's real shape
             own = masks[p["name"]].load()
-            for xx in range(crop.size[0]):
-                for yy in range(crop.size[1]):
-                    if own[xx, yy] < 128:
-                        ap2[xx, yy] = 0
+            # A HOST'S SURFACE CONTINUES UNDER WHAT STANDS ON IT. The
+            # segmenter draws a control deck and the joysticks on it as
+            # separate regions, so the deck's own mask has the joysticks cut
+            # OUT of it -- and the deck was then built with see-through holes
+            # where its controls sit. At width 1 each hole is exactly covered
+            # by the model standing in it and nothing looks wrong, which is why
+            # this survived; widen the prop and the deck repeats its holes
+            # while the stations repeat on their own reckoning, and the two
+            # stop lining up. The RGB under a rider is already painted out with
+            # panel, one fill per host, precisely so the host has a continuous
+            # surface there -- and then the alpha threw that surface away.
+            # A rider is ON its host, not a hole in it.
+            # A NOTCH THE SHAPE OF A RIDER IS WHERE THE RIDER STANDS. Filling
+            # every ENCLOSED hole is not enough: a joystick pokes above the
+            # deck's lip, so the deck's mask is notched from its top edge and
+            # the notch is not enclosed at all. And filling every hole with
+            # host below it is too much -- it squares off the deck's sloped end
+            # caps, which are genuinely not deck. What is specific is the
+            # rider's own box: within it, and with host material continuing
+            # underneath, the surface is there and something is standing on it.
+            cw, ch = crop.size
+            kid = [q["px"] for q in riders_of.get(p["name"], [])]
+            below = [[False] * ch for _ in range(cw)]
+            for xx in range(cw):
+                seen = False
+                for yy in range(ch - 1, -1, -1):
+                    below[xx][yy] = seen
+                    if own[xx, yy] >= 128:
+                        seen = True
+            for xx in range(cw):
+                gx = x0 + xx
+                for yy in range(ch):
+                    if own[xx, yy] >= 128:
+                        continue
+                    gy = y0 + yy
+                    if below[xx][yy] and any(
+                            k[0] - 2 <= gx < k[2] + 2 and k[1] - 2 <= gy < k[3] + 2
+                            for k in kid):
+                        continue                 # a rider stands here
+                    ap2[xx, yy] = 0
         crop.putalpha(a)
         crop = bleed(crop)
         crop.save(kit / f"{p['name']}.png")
