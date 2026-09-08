@@ -309,6 +309,17 @@ def main():
     content = [{"type": "text",
                 "text": NAME_ASK.format(asset=args.asset, listing=listing)},
                {"type": "image_url", "image_url": {"url": data_uri(tmp)}}]
+    def ask(idx):
+        """Name this subset of the regions. Raises if the reply is not JSON."""
+        sub = "\n".join(f"  {i}. a region {boxes[i-1][2]-boxes[i-1][0]}"
+                        f"x{boxes[i-1][3]-boxes[i-1][1]} px" for i in idx)
+        c = [{"type": "text",
+              "text": NAME_ASK.format(asset=args.asset, listing=sub)},
+             {"type": "image_url", "image_url": {"url": data_uri(tmp)}}]
+        return as_json(glm([{"role": "user", "content": c}],
+                           CRITIC_MODEL, _openrouter_key(), max_tokens=20000,
+                           temperature=0.1))
+
     got = None
     for retry in range(3):
         try:
@@ -318,12 +329,58 @@ def main():
             break
         except Exception as e:
             print(f"  naming unusable ({type(e).__name__}), retry {retry+1}/3")
+    # ASKED IN SMALLER PIECES WHEN THE WHOLE LIST WILL NOT COME BACK. Thirty-one
+    # regions in one question is a long answer, and on this cabinet the model
+    # spent its entire twenty-thousand token budget reasoning aloud about what
+    # region 1 might be -- "Actually looking at the image, region 2 is outlined
+    # at top-left covering the STARFIGHTER text area?" -- and was cut off
+    # mid-sentence having emitted no JSON at all. Three retries of the same
+    # question got the same behaviour three times, which is what a question too
+    # big to answer looks like. Eight at a time is a short answer, and a short
+    # answer arrives.
+    if got is None:
+        merged = []
+        for s in range(0, len(boxes), 8):
+            idx = list(range(s + 1, min(len(boxes), s + 8) + 1))
+            try:
+                r = ask(idx)
+                merged += (r.get("parts") or []) if isinstance(r, dict) else \
+                          (r if isinstance(r, list) else [])
+            except Exception as e:
+                print(f"  regions {idx[0]}-{idx[-1]} unnamed "
+                      f"({type(e).__name__})")
+        if merged:
+            got = {"parts": merged}
+            print(f"  named {len(merged)} of {len(boxes)} in batches of eight")
+    # A LABEL IS NOT THE DECOMPOSITION. This map measured 99.1% on silhouette
+    # and 57.5% on borders and found thirty-one fittings; the naming call then
+    # replied with prose about what it thought region 1 might be, the reply was
+    # not the shape this loop expects, and the WHOLE MAP was lost -- the run
+    # fell back to six measured regions, and the cabinet came out with its
+    # marquee cropped to a third of its width, no joysticks, no buttons and no
+    # grille. Every judge for three rounds reported those as missing bulk, and
+    # they were: the tool had found them and thrown them away.
+    #
+    # The regions are geometry, arrived at by measurement. The names are labels
+    # on top of them. Losing the labels should cost the labels -- a region
+    # becomes an anonymous decal held at its real size, which is exactly what
+    # this file already does for a region the namer SKIPS -- and nothing else.
+    # Anything at all can come back from a model; only the parts of the reply
+    # that are the shape asked for are used.
     by_n = {}
-    for q in (got or {}).get("parts", []):
-        try:
-            by_n[int(q.get("n"))] = q
-        except (TypeError, ValueError):
-            pass
+    if isinstance(got, list):
+        got = {"parts": got}
+    if isinstance(got, dict):
+        for q in (got.get("parts") or []):
+            if not isinstance(q, dict):
+                continue
+            try:
+                by_n[int(q.get("n"))] = q
+            except (TypeError, ValueError):
+                pass
+    if not by_n:
+        print(f"  nothing usable came back from naming -- keeping all "
+              f"{len(boxes)} measured regions as anonymous fittings")
 
     parts, used = [], set()
     for i, b in enumerate(boxes, 1):
@@ -334,7 +391,12 @@ def main():
         # approach exists to remove. "Not worth naming" is not "not there": it
         # becomes an anonymous decal, held at its real size against its nearest
         # edge, exactly like every other detail.
-        skipped = bool(q.get("skip"))
+        # A region the namer never mentioned is in the same position as one it
+        # skipped -- present, measured, unlabelled -- so it gets the same
+        # treatment rather than a bare default of "proud, centred", which on a
+        # whole unnamed map would stand every region off the face and hold none
+        # of them to an edge.
+        skipped = bool(q.get("skip")) or i not in by_n
         if skipped:
             q = {"resize": "fixed", "depth": "flush", "motion": "none",
                  "anchor": "bottom" if (b[1] + b[3]) / 2 > H / 2 else "top"}
