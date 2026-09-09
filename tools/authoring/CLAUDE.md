@@ -164,6 +164,43 @@ wired to anything. They are invisible while the only record of a round is
 scrollback, and obvious the moment four rounds can be read side by side. If a
 loop reports the same fault twice, read the patch it sent — not the fault.
 
+## A grader that cannot separate your worst prop from your best is not grading
+
+The two language judges scored a cabinet carrying **five stacked ARCADE
+marquees** at two blocking faults — exactly what they gave the corrected
+cabinet beside it. They passed a pinball standing on stilts at zero. Both
+graders, both runs.
+
+This matters more than any single fault, because 181 of 306 blocking faults
+across three runs were one sentence in different words: *a repeat, seam, smear
+or band a player could point at*. The judges report that class constantly and
+cannot actually see it. Counting copies of a sign is not what a language model
+is for.
+
+`repeat_score.py` measures it instead — autocorrelation of the row-luminance
+profile, straight off the renders the loop already made. Two decisions make it
+work, and both were wrong first:
+
+- **Control against the prop's own 1× render.** Props are periodic by nature;
+  a bare score punishes a vending machine for having shelves. Only the *rise*
+  counts.
+- **Window it.** A repeat is local. Correlating the whole profile mixes the
+  stacked region with the four fifths that is an ordinary cabinet, and read
+  that way the stacked cabinet scored *below* its own drawn self — the measure
+  ran backwards. Windowed at about three periods, the same pair is 0.55
+  against 0.31.
+
+Swept over 75 rendered rounds it separates every case already judged by eye
+(+0.24, +0.26, +0.44) from every clean one (−0.23 to +0.03).
+
+**And it goes in FRONT of the judges, not behind them.** Appended after they
+reply, its findings were a blocking channel with no correcting one — the loop
+could prove a duplicate and had no way to ask for it to be fixed. That is the
+rule above, walked into one commit after writing the measure. Neither half
+works alone: arithmetic cannot say *which* part is being laid down twice, and
+the readers cannot see that it is happening. The measure points; the reader
+names; the patch acts.
+
 ## A fallback must not overwrite what it is falling back from
 
 `layer_build` composites the model's plate into the background and then tiles an
@@ -197,6 +234,17 @@ pixels, its shooter lane cover 13% and 279, its start button 11% and 120,
 because a small fitting in a crowd of other fittings has a ring made mostly of
 their holes. A 50% bar took 187 parts out of 1544 across the work tree,
 including a cabinet's coin slots and a jukebox's speaker grille.
+
+Whether a band is *already periodic*, and so safe to repeat, was measured by
+autocorrelating the elevation's row profile — the idea being that a grille, a
+vent or a rank of louvres can be laid down again invisibly. It fails and it
+fails inverted: at a minimum period of 3 scanlines everything scores high
+(that is the texel grid), and at 8 and 12 the jukebox's grille — the one band
+it was written to admit — scores *lowest* of every case tried, below the
+marquee that must never repeat. A diamond mesh has no vertical period in its
+row *means*; averaging across a grille's width gives near-constant, which
+reads as flat rather than periodic. The row profile finds repeats that span
+the prop's width and cannot find texture repeating within it.
 
 In each case a threshold picked anyway would delete real work. The answer is to
 stop asking for the thing that cannot be made (`detail_sheet.py` no longer asks
