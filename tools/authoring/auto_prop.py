@@ -143,6 +143,9 @@ hard requirements. A view that breaks any of these is useless to it:
 
 # ----------------------------------------------------------------- OpenRouter
 
+_RETRY = {}
+
+
 def glm(messages, model, key, max_tokens=12000, temperature=0.3, effort="low"):
     """GLM 5.3 is a REASONING model and its thinking is billed against
     max_tokens, so a budget sized for the answer alone comes back with
@@ -166,7 +169,37 @@ def glm(messages, model, key, max_tokens=12000, temperature=0.3, effort="low"):
         with urllib.request.urlopen(req, timeout=600) as r:
             d = json.loads(r.read())
     except urllib.error.HTTPError as e:
-        raise SystemExit(f"{model}: HTTP {e.code} {e.read()[:400].decode(errors='replace')}")
+        detail = e.read()[:600].decode(errors="replace")
+        # A 402 IS A BUDGET, AND IT SAYS WHAT THE BUDGET IS.
+        #
+        # "You requested up to 14000 tokens, but can only afford 6428" ended
+        # four runs in this session -- two of them mid-loop, after the sheets
+        # and the segmentation had already been bought. The account was not
+        # empty; the ASK was too big, and the reply named the number that
+        # would have worked. Raising SystemExit on that is throwing away an
+        # answer the server has already handed over.
+        #
+        # So take it: retry once at what it says it can afford, less a small
+        # margin, and never below a floor where the reply could not be a
+        # complete JSON object anyway. A judge with less room to think is a
+        # worse judge -- the note above is about exactly that -- so this is a
+        # degradation, not a fix, and it says so out loud rather than
+        # pretending the round was normal.
+        m402 = re.search(r"can only afford (\d+)", detail) if e.code == 402 else None
+        if m402 and not _RETRY.get("in"):
+            afford = int(m402.group(1))
+            room = max(0, afford - 200)
+            if room >= 1500:
+                print(f"  ! {model}: out of budget for {max_tokens} tokens, "
+                      f"retrying at {room} -- the reply will be shorter than "
+                      f"this judge normally gets")
+                _RETRY["in"] = True
+                try:
+                    return glm(messages, model, key, max_tokens=room,
+                               temperature=temperature, effort=effort)
+                finally:
+                    _RETRY["in"] = False
+        raise SystemExit(f"{model}: HTTP {e.code} {detail[:400]}")
     if not d.get("choices"):
         # An OpenRouter error comes back 200 with an "error" body and no
         # choices; indexing it raised KeyError and hid the reason.
