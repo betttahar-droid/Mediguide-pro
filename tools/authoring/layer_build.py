@@ -420,8 +420,23 @@ def rule_y(p, parts, rule):
     # the same split as the display case's, on the other kind of part: a leg
     # widens not at all and lengthens with the machine, and one enum could say
     # only one of those.
+    # AND IT REPEATS ITS MIDDLE RATHER THAN STRETCHING IT. "_center" was the
+    # wrong half of the pair here, and faceQuads shows why: the flank-insertion
+    # path that makes "_center" honest exists only on X -- it needs a measured
+    # plain flank (hf) and there is no vertical equivalent -- so a spany_center
+    # part falls through to the nine-slice, where ny is 1 unless the rule is
+    # spany_repeat, and the middle band is STRETCHED to fill the difference.
+    # At 1.5x tall that is a leg's texture pulled half again its length, which
+    # is what both judges report as "stretched-leg banding and mid-length
+    # segmentation".
+    #
+    # A nine-sliced repeat is what a leg actually is: a cast top and a foot
+    # held at their real size in the caps, and a uniform shaft between them
+    # that comes in more of rather than longer. That is the same machinery the
+    # body's own growth band runs on, mirroring alternate copies so each join
+    # shares a real row with its neighbour.
     if p.get("lengthens"):
-        return "spany_center"
+        return "spany_repeat"
     tiers = [q for q in parts if q.get("per_tier") and q["name"] != p["name"]]
     if not tiers:
         return rule
@@ -482,6 +497,37 @@ def tier_band(p, parts):
     if hi - lo < 0.03 or hi - lo > 0.9:
         return None
     return [round(lo, 5), round(hi, 5)]
+
+
+def shaft_band(p):
+    """For a member the prop lengthens by, the unit is a slice of its SHAFT.
+
+    A leg cannot grow without a vertical band -- spansOf refuses the axis
+    without one -- and the measured band is chosen for uniformity, which a leg
+    does not have: it is a lit metal tube with a highlight running its length
+    and a cast top and a foot at its ends. Both of the pinball's legs reported
+    no vertical band at all, so the machine marked them as the place its height
+    goes and then held them at the length they were drawn.
+
+    This is the same move tier_band makes on an enclosure, for the same reason.
+    Uniformity is the wrong question; the right one is what the repeating unit
+    IS, and here the pipeline has already answered it. The model named this
+    part as the thing that gets longer, and what gets longer about a leg is the
+    span between its castings. The middle fifth, held off both ends, is a slice
+    of shaft whatever the shading does along it -- and the renderer mirrors
+    alternate copies, so a highlight that does vary is continuous across every
+    join rather than stepped.
+
+    Deliberately narrow: a fifth means five copies at 2x the part's length,
+    inside the ten the renderer allows, and the caps keep the castings at their
+    real size however far the prop grows.
+    """
+    if not p.get("lengthens"):
+        return None
+    x0, y0, x1, y1 = p["px"]
+    if y1 - y0 < 20:            # too short to have a shaft distinct from ends
+        return None
+    return [0.40, 0.60]
 
 
 def main():
@@ -986,7 +1032,9 @@ def main():
             "scatter": bool(p.get("scatter")),
             # where THIS part may repeat, in its own 0..1 box
             "bands": {"h": (b or {}).get("h"),
-                      "v": tier_band(p, man["parts"]) or (b or {}).get("v")},
+                      "v": (tier_band(p, man["parts"])
+                            or (b or {}).get("v")
+                            or shaft_band(p))},
             "px_size": [x1 - x0, y1 - y0],
             # fractions of the ORIGINAL face; the renderer turns these into
             # world units that do not change when the prop resizes

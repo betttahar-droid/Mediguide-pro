@@ -1680,7 +1680,23 @@ for (const q of man.parts) {
   const canX = sp.x, canY = sp.y;
   // grows by the difference, so at scale 1 it is exactly its own size
   const w = canX ? ow + (FW - A) : ow;
-  const h = canY ? oh + (FH - 1) : oh;
+  // A MEMBER GAINS ITS OWN SHARE OF THE HEIGHT, NOT ALL OF IT. "oh + (FH - 1)"
+  // hands a part the WHOLE prop's added height, which is right for something
+  // that runs the full height and absurd for something that does not: a
+  // pinball's leg is a third of the machine, so at 1.5x tall it gained one and
+  // a half times its own length and the cabinet came back standing on stilts.
+  //
+  // gOfT already maps a drawn height to a grown one -- it is what positions
+  // every part on this axis -- so the honest answer is the grown extent of the
+  // member's own rows. A full-height part gets gOfT(1) - gOfT(0) = 1 and lands
+  // on exactly the old value, so nothing that was right changes.
+  //
+  // Only for a member the body lengthens BY. An enclosure of tiers grows to
+  // hold a shelf the body knows nothing about, and it must keep the old rule.
+  const grownH = (gOfT(q.v[1]) - gOfT(q.v[0])) * FH;
+  const h = !canY ? oh
+    : q.lengthens ? Math.max(oh, grownH)
+    : oh + (FH - 1);
   // STAND-OFF IS RELATIVE TO THE PART, NOT THE PROP. "deep" as a flat 5.5% of
   // the cabinet's height turns a coin slot into a tower, and the judge read
   // exactly that: "a small brown box floats clear off the front face". A part
@@ -1712,7 +1728,10 @@ for (const q of man.parts) {
   // should have moved at all. A part keeps the edge its anchor names and grows
   // away from it, which is what the anchor has always meant on the other axis.
   if (canY && (q.v[1] - q.v[0]) > 0.85) y = 0;
-  else if (canY) {
+  else if (canY && q.lengthens) {
+    // and it sits over the rows it grew into, which is where gOfT put them
+    y = ((gOfT(q.v[0]) + gOfT(q.v[1])) / 2 - 0.5) * FH;
+  } else if (canY) {
     const base = (gOfT((q.v[0] + q.v[1]) / 2) - 0.5) * FH;
     const grew = h - oh;
     y = q.anchor === 'top' ? base - grew / 2

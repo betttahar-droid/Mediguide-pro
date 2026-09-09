@@ -73,6 +73,29 @@ prop that has no single good one, and the fix is structural: either let the
 growth be SPLIT across several bands in different strips, or cut finer strips
 so the bare runs stop being averaged in with the fitted ones. Both are real
 changes to how a resize is composed, not another factor in this product.
+
+TWO MORE, ON THE OTHER SIDE OF THE SAME COIN: what to do when a place is a
+MEMBER that lengthens rather than a gap that repeats. A pinball whose only
+verified places were its two legs put every added row into them -- at 1.5x
+tall the machine stood on stilts with its cabinet and backbox exactly as
+drawn. Both attempts to fix that here were reverted:
+
+  - counting a member's capacity as its own rows ONCE (it may double) instead
+    of nine times, so the places measure short and the measured bare runs top
+    them up. It works, and what it tops up with is the problem: the run it
+    picked was in the BACKBOX, and the taller machine came back with five
+    copies of its speaker panel stacked down the head. Worse than the stilt.
+  - sharing the growth by that capacity rather than by height. Same reversal
+    for the same reason -- it only decides how much goes to a supplement that
+    should not have been chosen.
+
+The missing thing is not a weight, it is a PLACE, and the model is what knows
+where places are. scale_rules now re-asks when every place it got back is a
+member: "all the height would go into those, name a place on the BODY too."
+On this machine that is the difference between two legs and two legs plus the
+run above the coin door. Where the model still has no answer the prop grows
+into its members and looks like it -- and that is an honest limit of the
+drawing, not a threshold to tune.
 """
 import argparse
 import json

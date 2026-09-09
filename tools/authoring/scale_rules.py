@@ -387,7 +387,7 @@ def main():
     # the renderer lays whole copies and stops at ten, so the places have to
     # total at least this many rows for the growth to land in them at all
     need = (max_taller_0 - 1.0) * H_face / 9.0
-    taller_at, refused = [], []
+    taller_at, refused, best_at = [], [], None
     # ONLY taller_at IS RE-ASKED. per_bay, per_tier, spans and the two limits
     # came back fine and are not what failed; re-reading them off the second
     # reply would churn decisions nothing complained about.
@@ -404,18 +404,49 @@ def main():
             e = dict(e, px=[rows[0], rows[-1] + 1])
             taller_at.append(e)
         room = sum(e["px"][1] - e["px"][0] for e in taller_at)
-        if not refused or room >= need or attempt == 2:
+        # A PROP CANNOT PUT ALL OF ITS HEIGHT INTO ITS LEGS.
+        #
+        # Capacity was the only thing re-asked for, and it is not the only way
+        # the answer can be unusable. The pinball's places came back as its two
+        # legs and nothing else, which clears `need` several times over -- and
+        # every added row then goes into the legs, so at 1.5x tall the machine
+        # stands on stilts with its cabinet and backbox untouched above them.
+        # The model had not made that mistake: it wrote "a longer plain lower
+        # body panel and longer legs" in the same sentence, and the body panel
+        # simply never arrived as a place.
+        #
+        # Arithmetic cannot repair this and two attempts to prove it are in the
+        # commit history -- capping what a member may absorb, then sharing the
+        # growth by capacity rather than by height. Both moved the fault rather
+        # than fixing it: the legs came down and the measured supplement that
+        # relieved them landed in the backbox and stacked five copies of the
+        # speaker panel. The missing thing is a PLACE, and the model is the
+        # thing that knows where places are.
+        members = bool(taller_at) and all(e["side"] == "itself"
+                                          for e in taller_at)
+        # AND THE BEST ANSWER IS KEPT, not the last one. Each attempt replaces
+        # the list wholesale, so a prop with usable places that gets a worse
+        # second reply would ship the worse one. A mixed answer beats a
+        # members-only answer; between two of a kind, more room wins.
+        rank = (0 if members else 1, room)
+        if best_at is None or rank > best_at[0]:
+            best_at = (rank, taller_at, refused)
+        if attempt == 2 or ((not refused or room >= need) and not members):
             break
+        if members:
+            print(f"  every place is a member that lengthens -- asking where "
+                  f"the BODY gets longer too")
         lines = "\n".join(
             f"  - {e['side']} {e['part']} (rows {e['px'][0]}..{e['px'][1]}): "
             f"that band is not bare, it is covered by "
             f"{', '.join(names) if names else 'other artwork'}"
-            for e, names in refused)
-        print(f"  {len(refused)} place(s) refused, {room:.0f} of {need:.0f} "
-              f"rows left -- asking again")
+            for e, names in refused) or "  (none -- they were all usable)"
+        if refused:
+            print(f"  {len(refused)} place(s) refused, {room:.0f} of "
+                  f"{need:.0f} rows left -- asking again")
         reply = ask(
             f"""Your previous answer's taller_at places were checked against the
-artwork and these could not be used:
+artwork. These could not be used:
 
 {lines}
 
@@ -428,13 +459,21 @@ For taller_at, name different places: gaps with nothing in them, or use
 taller -- a leg, a column, an upright, a plinth, a side rail, a base. That is
 often the right answer on a prop whose front is covered edge to edge, and it
 does not need bare rows.
-
+""" + ("""
+EVERY PLACE YOU NAMED IS A MEMBER THAT GETS LONGER, and that cannot be the whole
+answer. All of the extra height would go into those members, so at 1.5x this
+prop stands on legs half again as long with its body exactly as drawn -- stilts,
+not a taller machine. Your own taller_means sentence says where the rest goes.
+Name at least ONE place on the BODY as well: a bare gap above or below a
+fitting, where the carcass itself gets longer. Keep the members you named.
+""" if members else "") + f"""
 The places you name must together cover at least {need:.0f} rows of this
 {H_face}-row elevation.""") or reply
-    if refused:
-        for e, names in refused:
-            print(f"  refused: {e['side']} {e['part']} rows "
-                  f"{e['px'][0]}..{e['px'][1]} ({', '.join(names) or 'artwork'})")
+    if best_at is not None:
+        _, taller_at, refused = best_at
+    for e, names in refused:
+        print(f"  refused: {e['side']} {e['part']} rows "
+              f"{e['px'][0]}..{e['px'][1]} ({', '.join(names) or 'artwork'})")
 
     rules = {
         "wider_means": str(got.get("wider_means", "a wider one of the same thing"))[:300],
