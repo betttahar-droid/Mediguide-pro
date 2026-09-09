@@ -643,6 +643,44 @@ def main():
                 faults.append(f)
             if not gem.get("looks_good"):
                 v["looks_good"] = False
+
+        # A THIRD GRADER THAT CANNOT BE TALKED ROUND.
+        #
+        # Both language judges are weakest at the fault they report most. Of
+        # 306 blocking faults across three runs, 181 were "a repeat, seam,
+        # smear or band a player could point at" -- and the pair scored a
+        # cabinet carrying FIVE stacked ARCADE marquees at two blocking
+        # faults, exactly what they gave the corrected cabinet beside it. They
+        # passed a pinball standing on stilts at zero. No prompt fixes that,
+        # because counting copies of a sign is not what a language model is
+        # for.
+        #
+        # It is what autocorrelation is for. repeat_score reads the row
+        # profile straight off the renders the loop has already made, controls
+        # every number against the prop's OWN drawn size so a machine with
+        # shelves is not punished for having shelves, and reports two things:
+        # a period the drawn prop did not have, and a dead flat band it did
+        # not have either. Free, deterministic, and it separated every case in
+        # the work tree that had been judged by eye -- the stacked cabinet at
+        # +0.24, the slab jukebox at +0.44, the vending machine whose whole
+        # display window was laid down twice at +0.26, against -0.23 to +0.03
+        # for every render that was actually clean.
+        #
+        # Its faults are blocking, so no prop is signed off while a duplicate
+        # is measurable, however the two readers feel about it.
+        try:
+            import repeat_score
+            rep = repeat_score.judge(d / f"r{rnd}")
+            if rep and rep["faults"]:
+                for f in rep["faults"]:
+                    f = dict(f)
+                    f["part"] = f"{f.get('part')} (measured)"
+                    faults.append(f)
+                v["looks_good"] = False
+                print(f"  measured: {len(rep['faults'])} duplicate/dead band(s)"
+                      f" -- {rep['sizes']}")
+        except Exception as e:
+            print(f"  repeat measure unavailable ({type(e).__name__})")
         blocking = [f for f in faults
                     if str(f.get("severity", "blocking")).lower() == "blocking"]
         offered = {p.get("name") for p in ((gem or {}).get("patch") or [])
