@@ -108,7 +108,7 @@ def main():
     ap.add_argument("sheet_dir")
     ap.add_argument("--face", default="front")
     ap.add_argument("--asset", default="game prop")
-    ap.add_argument("--tries", type=int, default=2)
+    ap.add_argument("--tries", type=int, default=3)
     args = ap.parse_args()
 
     d = Path(args.sheet_dir)
@@ -156,15 +156,32 @@ def main():
                     off += 1
         return iou, on / max(1, on + off)
 
+    # AND THE ATTEMPTS ARE SPACED. This is the one call in the chain whose
+    # failure costs the whole prop rather than a feature: everything
+    # downstream -- what the parts ARE, which of them repeat per bay, where
+    # the height goes -- is decided from this map, and when it does not come
+    # back the measured finder takes over with a fraction of the detail. On
+    # this vending machine that was 58 fittings against 11, and the run spent
+    # five rounds building a machine whose products were not parts at all, so
+    # a wider one could only be more blank panel.
+    #
+    # Both attempts went out back to back and both hit the same transient
+    # failure, which is what back-to-back retries are for and against. A short
+    # backoff between them makes the second attempt a genuinely new roll.
+    import time
     best = None
     for t in range(max(1, args.tries)):
+        if t:
+            time.sleep(2.0 * (2 ** (t - 1)))
         cand = d / f"_seg_{args.face}_{t}.png"
         try:
             generate_image(ASK.format(asset=args.asset), cand, key, refs=[src])
         except Exception as e:
-            print(f"  draw {t} failed ({type(e).__name__})")
+            print(f"  draw {t} failed ({type(e).__name__}: "
+                  f"{str(e)[:80]}）".replace("）", ")"))
             continue
         if not cand.exists():
+            print(f"  draw {t}: nothing written")
             continue
         im2 = Image.open(cand).convert("RGB")
         if im2.size != (W, H):
