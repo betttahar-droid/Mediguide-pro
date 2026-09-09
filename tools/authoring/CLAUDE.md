@@ -139,6 +139,43 @@ When adding a source of faults, check it has a lever, and that the lever is
 read. A blocking channel without a correcting channel does not slow the loop
 down; it stops it converging at all.
 
+**Three more of these were found by writing the verdicts down**, and none was
+visible from the terminal. `make_prop.py` now appends every round's faults and
+corrections to `verdicts.json`, and a single sweep of four props × four rounds
+showed:
+
+- The judges' commonest complaint is not a seam. It is *"a bigger one of these
+  should have MORE of this, not a stretched one"* — and the patch schema had no
+  field that could say so. The vending machine's judges patched all twenty-four
+  products in every round against "products are fixed, so the widened window
+  gains no columns"; the cabinet patched `control_deck` every round against "no
+  second joystick". Twelve rounds spent re-reporting three faults the loop
+  could see perfectly and could not touch. Hence `count`.
+- The two judges' patches were merged **whole entry at a time**, so the first
+  judge naming a part discarded everything the second said about it, including
+  fields the first never mentioned. Gemini patched the coin door's motion in
+  all four rounds; glm patched the same part's resize; the motion went on the
+  floor every time. Merge field by field.
+- `hostOf()` sat in the renderer, correct and never called, so every door swung
+  open out from under its own fittings.
+
+The pattern in all three: a mechanism that *exists*, is *right*, and is not
+wired to anything. They are invisible while the only record of a round is
+scrollback, and obvious the moment four rounds can be read side by side. If a
+loop reports the same fault twice, read the patch it sent — not the fault.
+
+## A fallback must not overwrite what it is falling back from
+
+`layer_build` composites the model's plate into the background and then tiles an
+arithmetic patch over whatever the model refused. The tiling loop painted every
+covered pixel, so one refused hole out of twenty-six discarded all twenty-five
+answers with it. The plate had grain 2.2–3.3 behind each product; the background
+on disk was a flat 26,29,36 rectangle at every one of them. The two facts sat
+one function apart and neither looked wrong on its own.
+
+Whenever a good source and a fallback source write to the same buffer, the
+fallback needs the predicate, not just the good source.
+
 ## Some things cannot be measured, and saying so is the answer
 
 Whether a fitting the segmenter declared is actually *there* was measured four
@@ -152,10 +189,22 @@ the row and column luminance profiles, the top and bottom luminance deciles, the
 median colour, the saturation percentile. None separates them, because an honest
 redraw differs from its crop about as much as a wrong one does.
 
-In both cases a threshold picked anyway would delete real work. The answer is to
+Whether a part is a *fitting set into a surface* or a *member standing in air*
+was measured two ways — the fraction of the ring around it that is prop rather
+than sheet, and the absolute count of material pixels in that ring. Neither
+separates them, and both get it backwards: a pinball's legs score 20% and 1017
+pixels, its shooter lane cover 13% and 279, its start button 11% and 120,
+because a small fitting in a crowd of other fittings has a ring made mostly of
+their holes. A 50% bar took 187 parts out of 1544 across the work tree,
+including a cabinet's coin slots and a jukebox's speaker grille.
+
+In each case a threshold picked anyway would delete real work. The answer is to
 stop asking for the thing that cannot be made (`detail_sheet.py` no longer asks
-for strips longer than 5:1) or to leave the fault standing and write down that
-it is standing. Do not ship a threshold you cannot defend with numbers.
+for strips longer than 5:1); to leave the fault standing and write down that it
+is standing; or — the third case above — to notice that the pipeline already
+holds the answer in authored form. `scale_rules` had asked the model which
+parts simply get *longer*, and `strip_slice` had already checked the reply
+against the artwork. Do not ship a threshold you cannot defend with numbers.
 
 ## Quiet along one axis is not quiet
 
@@ -187,12 +236,26 @@ just against how bare the band is.
 
 - **Phantom fittings.** A cabinet's right-hand panel carries a vent, a coin slot
   and two buttons over blank wall. Unmeasurable by everything tried; see above.
-- **Body growth where the model has no usable answer.** `taller_at` now names
-  the places and arithmetic verifies them, which handles the props that had no
-  single good band. A prop whose authored places all measure occupied still
-  falls back to the blind search and still lands on a compromise. The next step
-  there is to ask again with the refusal quoted back, the way `detail_sheet`
-  asks again for a refused redraw — not another weighting.
-- **Every part mask is a rectangle** on the props measured, so a round button is
-  modelled as a rectangular cap. The mask pipeline can carry a real shape; the
-  segmentation draws boxes.
+- **Side and back graphics cannot be lifted.** The growth band is measured on
+  the front and applied to every face, so a prop bare across some rows at the
+  front and carrying artwork across the same rows on its flank stacks that
+  artwork down a taller prop. Painting it off the side was tried and reverted
+  (see `paint_out.py`): with no `parts_side.json` there are no holes to
+  composite through, and a band of reply composited into the original seams at
+  both ends. What it needs is for `decal_sheet` to record *where* the decals
+  were, so they can be lifted and re-applied as planes.
+- **The segmenter boxes a cabinet's joysticks onto the flanks**, so the deck
+  reads sparse and the two-player layout never appears.
+
+## Closed, so you do not re-derive them
+
+- **Body growth where the model has no usable answer.** Now closed: the
+  bareness check runs inside `scale_rules`, where the question is asked, and a
+  refused place is quoted back to the model with the part names that are drawn
+  across it. The jukebox named three places under its own decals, was told so,
+  and answered "the base panel and the foot get longer" — 41 verified rows
+  where it had none.
+- **Every part mask is a rectangle.** Measured false: 9 of 22 on the cabinet,
+  22 of 29 on the vending machine, 13 of 25 on the pinball. Rather more than
+  half of all masks carry real shape, and the renderer alpha-cuts them at 0.5,
+  so a round button reads round. Do not go looking for this one.
