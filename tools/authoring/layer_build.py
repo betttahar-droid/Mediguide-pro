@@ -102,9 +102,30 @@ def silhouette(ob, erode=3):
     """
     W, H = ob.size
     px = ob.load()
-    corners = [px[0, 0], px[W - 1, 0], px[0, H - 1], px[W - 1, H - 1]]
+    # THE SHEET COLOUR COMES FROM THE SHEET, where a corner is unambiguously
+    # sheet, and object_crop carries it out on the crop's info. Read off the
+    # CROP's own four corners it is a guess about what the bounding box
+    # clipped, and the pinball is the case: its sheet is painted the same deep
+    # blue as its cabinet, two of the crop's corners carried the prop's dark
+    # edge, and the modal came out (29,52,83) against a true sheet of
+    # (34,67,108) -- 45 against a tolerance of 40, missed by five. Nothing was
+    # outside the prop after that, the gap between its legs filled with panel,
+    # and the machine came back with a blue slab hanging to the floor between
+    # them: "solid geometry fills the void beneath the front legs", blocking,
+    # both judges, every round.
+    #
+    # TRIED AND REVERTED: a k x k PATCH at each corner of the crop instead of a
+    # pixel. It reads as the same idea measured properly and it is worse, for
+    # the reason the pixel version was nearly right -- a tight crop's corner
+    # patch is mostly PROP. Swept across the work tree it moved the estimate to
+    # near-black on some twenty props whose sheet is mid grey, and every one of
+    # them then read as solid to its own bounding box, which is the white-wash
+    # fault below in reverse. One prop fixed, twenty broken.
     from collections import Counter as _C
-    bg = _C(corners).most_common(1)[0][0]
+    bg = ob.info.get("sheet_bg")
+    if bg is None:
+        corners = [px[0, 0], px[W - 1, 0], px[0, H - 1], px[W - 1, H - 1]]
+        bg = _C(corners).most_common(1)[0][0]
 
     def looks_bg(c):
         return sum(abs(a - b) for a, b in zip(c, bg)) < 40

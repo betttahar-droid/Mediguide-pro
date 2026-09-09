@@ -98,7 +98,21 @@ def object_crop(path):
 
     xs = [x for x in range(w) if any(not is_bg(px[x, y]) for y in range(0, h, 2))]
     ys = [y for y in range(h) if any(not is_bg(px[x, y]) for x in range(0, w, 2))]
-    return im.crop((xs[0], ys[0], xs[-1] + 1, ys[-1] + 1))
+    out = im.crop((xs[0], ys[0], xs[-1] + 1, ys[-1] + 1))
+    # AND CARRY THE SHEET COLOUR OUT WITH THE CROP. Everything downstream works
+    # in these coordinates and has to ask the same question again -- which
+    # pixels are sheet showing through a domed top or between two legs -- and
+    # each of them re-derives the answer from the CROP's four corners, which is
+    # the one place it can no longer be read. On a tight crop those corners are
+    # the prop's own dark edge; on the pinball, whose sheet is painted the same
+    # deep blue as its cabinet, that put the estimate five units outside a
+    # tolerance of forty and the gap between its legs came out solid.
+    #
+    # Here it is still the uncropped image, where a corner is unambiguously
+    # sheet. PIL copies info through convert() and crop(), so it survives to
+    # wherever the crop is used.
+    out.info["sheet_bg"] = bg
+    return out
 
 
 def edge_energy(ob):
