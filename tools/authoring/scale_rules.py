@@ -41,6 +41,7 @@ sys.path.insert(0, str(ROOT / "tools" / "authoring"))
 from auto_prop import glm, as_json, data_uri, _openrouter_key, CRITIC_MODEL  # noqa: E402
 from identify_parts import object_crop  # noqa: E402
 from region_parts import annotate  # noqa: E402
+from layer_build import silhouette  # noqa: E402
 
 ASK = """This is the front elevation of a {asset}. The tool has separated it
 into these parts:
@@ -364,6 +365,42 @@ def main():
         for y in range(max(0, qy0), min(H_face, qy1)):
             occupied[y] += max(0, qx1 - qx0)
 
+    # AND BARE MEANS NOTHING DRAWN THERE, NOT MERELY NO PART THERE.
+    #
+    # Occupancy is measured from the part boxes, so a fitting the segmenter
+    # never lifted is invisible to it -- and the arcade cabinet is the case.
+    # Its map came back with four parts and no marquee, so the rows carrying
+    # ARCADE belong to no part, measured perfectly bare, and were accepted as
+    # the one place the cabinet grows. At 1.5x tall the judge got the sign
+    # stacked four times down the front of the machine.
+    #
+    # The artwork itself says otherwise and always did. Those rows run at 11.4
+    # mean row-to-row difference against a face median of 1.96, with a peak of
+    # 99; the vending machine's accepted band runs at 4.6 against a median of
+    # 4.7. Under-decomposition is a separate open fault and will not be fixed
+    # by a threshold -- but a place chosen for repeating can be checked against
+    # the drawing rather than against a list of what was cut out of it.
+    #
+    # GAPS ONLY. A member is not meant to be plain; it is a leg, and it has a
+    # casting and a highlight down it. Its rows are checked for what ELSE is
+    # in them, which is the "itself" rule above.
+    ob_rgb = ob.convert("RGB")
+    sil = silhouette(ob_rgb, erode=1)
+    _px = ob_rgb.load()
+    act = []
+    for y in range(H_face - 1):
+        s = n = 0
+        for x in range(0, W_face, 2):
+            if not (sil[x][y] and sil[x][y + 1]):
+                continue
+            p0, p1 = _px[x, y], _px[x, y + 1]
+            s += sum(abs(u - v) for u, v in zip(p0, p1))
+            n += 1
+        act.append(s / max(1, 3 * n))
+    act.append(0.0)
+    _srt = sorted(act)
+    quiet_bar = max(3.0, 2.0 * _srt[len(_srt) // 2])
+
     def bare_rows(e, grew):
         """The rows of one place that are actually free, strip_slice's rule."""
         a, b = int(e["px"][0]), int(e["px"][1])
@@ -371,10 +408,10 @@ def main():
             wid = sum(q["px"][2] - q["px"][0] for q in parts
                       if q["name"] in grew)
             bar = wid + 0.18 * W_face
-        else:
-            bar = 0.10 * W_face
+            return [y for y in range(max(0, a), min(H_face, b))
+                    if occupied[y] <= bar]
         return [y for y in range(max(0, a), min(H_face, b))
-                if occupied[y] <= bar]
+                if occupied[y] <= 0.10 * W_face and act[y] <= quiet_bar]
 
     def sitting_in(e):
         """What is drawn across a refused place -- the model's own part names."""
@@ -397,11 +434,24 @@ def main():
         cand = resolve(reply)
         grew = {e["part"] for e in cand if e["side"] == "itself"}
         for e in cand:
+            # THE LONGEST UNBROKEN RUN, NOT THE OUTER BOUNDS. Taking the first
+            # and last qualifying row re-admits everything between them, so a
+            # place with sixteen quiet rows scattered above and below a sign
+            # came back as the whole span including the sign -- the band is a
+            # contiguous piece of the drawing and has to be chosen as one. On
+            # the cabinet this is the difference between a band running from
+            # the top of the prop to the screen, marquee and all, and the
+            # sixteen rows of plain carcass that are actually plain.
             rows = bare_rows(e, grew)
-            if len(rows) < 6:
+            run = best = []
+            for y in rows:
+                run = run + [y] if run and y == run[-1] + 1 else [y]
+                if len(run) > len(best):
+                    best = run
+            if len(best) < 6:
                 refused.append((e, sitting_in(e)))
                 continue
-            e = dict(e, px=[rows[0], rows[-1] + 1])
+            e = dict(e, px=[best[0], best[-1] + 1])
             taller_at.append(e)
         room = sum(e["px"][1] - e["px"][0] for e in taller_at)
         # A PROP CANNOT PUT ALL OF ITS HEIGHT INTO ITS LEGS.
