@@ -582,11 +582,44 @@ def main():
             f"{p.get('depth','proud')}, motion {p.get('motion','none')}, "
             f"count {shown[p['name']]}"
             for p in man["parts"])
+        # MEASURE FIRST, THEN HAND THE MEASUREMENT TO THE JUDGE.
+        #
+        # repeat_score runs before the judges rather than after them, and this
+        # is the whole point of it. Appended afterwards its findings were a
+        # blocking channel with no correcting one -- the loop could prove a
+        # duplicate and had no way to ask for it to be fixed, which is the
+        # failure mode CLAUDE.md exists to warn about. Put in front, the
+        # arithmetic tells the readers where to look and they choose the lever:
+        # they have the part list, the count field and the background mode, and
+        # they know what the prop is. Neither half can do this alone -- the
+        # measure cannot say WHICH part is being laid down twice, and the
+        # readers demonstrably cannot see that it is happening at all.
+        rep = None
+        try:
+            import repeat_score
+            rep = repeat_score.judge(d / f"r{rnd}")
+        except Exception as e:
+            print(f"  repeat measure unavailable ({type(e).__name__})")
+        evidence = ""
+        if rep and rep["faults"]:
+            evidence = ("\n\nMEASURED, NOT AN OPINION. The renders above were "
+                        "analysed and the enlarged ones carry something the "
+                        "drawn size does not:\n"
+                        + "\n".join("  - " + f["fault"] for f in rep["faults"])
+                        + "\n\nThis is arithmetic on the pixels and it is not "
+                        "in doubt. Find WHICH part or band is being laid down "
+                        "more than once, or which one is filling with flat "
+                        "material, and patch it -- a part that should be "
+                        "counted rather than stretched gets a \"count\", one "
+                        "that should hold its size gets \"fixed\", and the "
+                        "background itself takes a \"mode\". Report it as a "
+                        "blocking fault and give it a patch entry.")
         content = [{"type": "text",
                     "text": JUDGE.format(asset=args.asset, parts=listing,
                                          wider=sr["wider_means"],
                                          taller=sr["taller_means"],
-                                         wx=sr["max_wider"], hx=sr["max_taller"])}]
+                                         wx=sr["max_wider"],
+                                         hx=sr["max_taller"]) + evidence}]
         for img in [d / "front.png", *shots,
                     *([solid] if solid else []), *([wire] if wire else [])]:
             content.append({"type": "image_url",
@@ -668,19 +701,14 @@ def main():
         #
         # Its faults are blocking, so no prop is signed off while a duplicate
         # is measurable, however the two readers feel about it.
-        try:
-            import repeat_score
-            rep = repeat_score.judge(d / f"r{rnd}")
-            if rep and rep["faults"]:
-                for f in rep["faults"]:
-                    f = dict(f)
-                    f["part"] = f"{f.get('part')} (measured)"
-                    faults.append(f)
-                v["looks_good"] = False
-                print(f"  measured: {len(rep['faults'])} duplicate/dead band(s)"
-                      f" -- {rep['sizes']}")
-        except Exception as e:
-            print(f"  repeat measure unavailable ({type(e).__name__})")
+        if rep and rep["faults"]:
+            for f in rep["faults"]:
+                f = dict(f)
+                f["part"] = f"{f.get('part')} (measured)"
+                faults.append(f)
+            v["looks_good"] = False
+            print(f"  measured: {len(rep['faults'])} duplicate/dead band(s) "
+                  f"-- {rep['sizes']}")
         blocking = [f for f in faults
                     if str(f.get("severity", "blocking")).lower() == "blocking"]
         offered = {p.get("name") for p in ((gem or {}).get("patch") or [])
