@@ -948,6 +948,12 @@ def main():
             "depth": p.get("depth", "proud"), "motion": p.get("motion", "none"),
             "per_bay": bool(p.get("per_bay")),
             "per_tier": bool(p.get("per_tier")),
+            # A MEMBER THAT LENGTHENS IS PART OF THE SAME ANSWER as per_bay and
+            # per_tier -- it is what a bigger prop does with this part instead
+            # of counting more of them -- and it was decided here and never
+            # written down, so the judge was shown a leg and a pillar with no
+            # indication that either was already set to grow.
+            "lengthens": bool(p.get("lengthens")),
             # WHICH PARTS ARE STRUCTURE HAS TO REACH THE RENDERER TOO. It was
             # used here to decide a resize rule and then dropped, so the rig had
             # no way to know that a joystick stands on a control deck -- and it

@@ -130,18 +130,18 @@ it broken, it is blocking, however small.
 
 Set looks_good TRUE only when you would sign this off and ship it.
 
-Then give a PATCH: only parts whose rule, anchor, depth or motion should
-change, or that should be dropped because they are not really a part. Change
-nothing that already looks right; return an empty patch when nothing is
+Then give a PATCH: only parts whose rule, anchor, depth, motion or COUNT
+should change, or that should be dropped because they are not really a part.
+Change nothing that already looks right; return an empty patch when nothing is
 blocking.
 
 EVERY PATCH ENTRY MUST CHANGE SOMETHING. The list of parts above gives each
-part's CURRENT rule, anchor, depth and motion. Repeating a value a part
+part's CURRENT rule, anchor, depth, motion and count. Repeating a value a part
 already has is not a correction and does nothing. So if you report that a
 door hinges the wrong way, do not send back the hinge it already has -- send
 the one it should turn about instead.
 
-And every blocking fault that one of these four fields could fix MUST have a
+And every blocking fault that one of these fields could fix MUST have a
 patch entry. A fault reported with nothing to act on cannot be repaired and
 will simply be reported again next round.
 
@@ -151,12 +151,47 @@ will simply be reported again next round.
   "motion"  "none" | "hinge_left" | "hinge_right" | "hinge_top" |
             "hinge_bottom" | "press" | "stick" | "slide_x" | "slide_y"
             -- name the EDGE a door turns about, not just that it opens
+  "count"   what a BIGGER one of these has more of. This is the answer to
+            "the widened prop should have a second joystick", "the window
+            should gain product columns", "there should be more shelf rows" --
+            those parts are COUNTED, not stretched, and this is what says so.
+            "none"     one of these however big the prop gets: a brand sign,
+                       a screen, a coin door, a maker's plate
+            "per_bay"  a wider prop has MORE of these, side by side
+            "per_tier" a taller prop has MORE of these, stacked
+            "both"     more columns when wider AND more rows when taller
+            "longer"   not counted but STRETCHED along the prop: a leg, a
+                       pillar, an upright, a column, a rail, a plinth, a base.
+                       Use this when the fault is that the extra height went
+                       into smeared background instead of into a member that
+                       should simply have got longer.
 
 JSON only:
 {{"looks_good": false,
   "faults": [{{"part": "...", "fault": "...", "severity": "blocking"}}],
   "patch": [{{"name": "...", "resize": "...", "anchor": "...",
-              "depth": "...", "motion": "...", "drop": false}}]}}"""
+              "depth": "...", "motion": "...", "count": "...",
+              "drop": false}}]}}"""
+
+# WHY "count" EXISTS. CLAUDE.md's rule is that anything which can block the
+# loop must also be able to correct it, and this was the largest violation
+# left. The judges' commonest complaint by far is not a seam -- it is "a
+# bigger one of these should have MORE of this, not a stretched one", and the
+# patch schema had no field that could say so. The verdict logs make it plain:
+# the vending machine's judges patched all twenty-four products in every one
+# of four rounds and reported "products are fixed, so the widened window gains
+# no columns" in every one of four rounds; the cabinet patched control_deck
+# every round against "the repeated middle carries no second joystick"; the
+# jukebox patched its title strips and side pillars every round against "the
+# strips should gain rows" and "the pillars should lengthen". Twelve rounds of
+# a correction loop spent re-reporting three faults it could see perfectly and
+# could not touch.
+#
+# scale_rules already decides all of this from the elevation, and the renderer
+# already instances on per_bay and per_tier and lengthens a member named in
+# taller_at. The only missing piece was a way for a judge looking at the
+# RESULT to overrule the guess made from the drawing.
+COUNTS = {"none", "per_bay", "per_tier", "both", "longer"}
 
 
 def run(cmd, **kw):
@@ -517,9 +552,19 @@ def main():
             raise SystemExit("render failed -- is the dev server up on 5173?")
         solid, wire = render_solid(d, d / f"r{rnd}")
         man = json.loads((d / "layers_front.json").read_text())
+        def _count(p):
+            if p.get("lengthens"):
+                return "longer"
+            if p.get("per_bay") and p.get("per_tier"):
+                return "both"
+            return ("per_bay" if p.get("per_bay") else
+                    "per_tier" if p.get("per_tier") else "none")
+
+        shown = {p["name"]: _count(p) for p in man["parts"]}
         listing = "\n".join(
             f"  {p['name']}: {p['resize']}, anchored {p['anchor']}, "
-            f"{p.get('depth','proud')}, motion {p.get('motion','none')}"
+            f"{p.get('depth','proud')}, motion {p.get('motion','none')}, "
+            f"count {shown[p['name']]}"
             for p in man["parts"])
         content = [{"type": "text",
                     "text": JUDGE.format(asset=args.asset, parts=listing,
@@ -708,6 +753,27 @@ def main():
                     print(f"    {p['name']}: {field} {p.get(field)} -> {q[field]}")
                     p[field] = q[field]
                     changed += 1
+            # THE COUNT LEVER. Three flags, one word, because "this should be
+            # counted rather than stretched" is one thought and a judge that
+            # has to set three booleans consistently will not. A part that
+            # lengthens is not also instanced and vice versa -- they are
+            # answers to the same question -- so setting either clears the
+            # other rather than leaving a stale flag behind.
+            if q and q.get("count") in COUNTS:
+                # AGAINST WHAT THE JUDGE WAS SHOWN, not against the flag on
+                # disk. layer_build vetoes per_bay on a part too big to be a
+                # control, so the manifest can say "none" where parts_front
+                # still says per_bay -- and comparing to the file would score
+                # the judge's correction as a no-op and drop it, which is the
+                # silent-revert shape this schema exists to remove.
+                was = shown.get(p["name"], _count(p))
+                if q["count"] != was:
+                    c = q["count"]
+                    p["per_bay"] = c in ("per_bay", "both")
+                    p["per_tier"] = c in ("per_tier", "both")
+                    p["lengthens"] = c == "longer"
+                    print(f"    {p['name']}: count {was} -> {c}")
+                    changed += 1
             keep.append(p)
         if not changed and not bg_changed:
             # THE BAR IS NOW HIGHER THAN THE LEVERS. Judged as a shipping
@@ -720,6 +786,32 @@ def main():
             break
         pm["parts"] = keep
         (d / "parts_front.json").write_text(json.dumps(pm, indent=1))
+        # AND "longer" HAS TO REACH THE PLACE THE HEIGHT IS SPENT. A part
+        # marked lengthens takes spany_center from rule_y on its own, but the
+        # BODY still has to grow across its rows or the member is stretched
+        # against a background that is not -- which is the jukebox's "pillars
+        # do not lengthen; the extra height is absorbed by smeared background"
+        # exactly. strip_slice reads those rows out of scale_rules' taller_at,
+        # so the flag is synced into it both ways: every lengthening part gets
+        # an "itself" place, and a part the judge stopped calling longer loses
+        # the one it had.
+        try:
+            srp = d / "scale_rules.json"
+            sr2 = json.loads(srp.read_text())
+            want = {p["name"]: p for p in keep if p.get("lengthens")}
+            ta = [e for e in sr2.get("taller_at", [])
+                  if e.get("side") != "itself" or e.get("part") in want]
+            have = {e["part"] for e in ta if e.get("side") == "itself"}
+            for n, p in want.items():
+                if n not in have and p["px"][3] - p["px"][1] >= 6:
+                    ta.append({"part": n, "side": "itself",
+                               "px": [int(p["px"][1]), int(p["px"][3])]})
+            if ta != sr2.get("taller_at"):
+                sr2["taller_at"] = ta
+                srp.write_text(json.dumps(sr2, indent=1))
+                print(f"    taller_at: {len(want)} member(s) lengthen")
+        except Exception as e:
+            print(f"    could not update taller_at ({type(e).__name__})")
         rebuild(d)
 
     # AND IF THE LOOP ENDED WORSE THAN ITS BEST ROUND, GO BACK TO IT. Rebuilt
