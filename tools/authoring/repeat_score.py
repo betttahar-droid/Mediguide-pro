@@ -41,6 +41,34 @@ pass.
 
 Neither number is a taste call and neither needs a model. Both are free,
 both are deterministic, and both run on renders the loop has already made.
+
+TRIED AND REVERTED: THE SAME MEASURE AS A LICENCE RATHER THAN A VETO. A
+growth band is refused unless its rows are bare, and that is too strict on
+its face -- some material is periodic to begin with and repeating THAT is
+invisible. A speaker grille is slats, a vent is louvres, a radiator is fins,
+and laying down more of one is what a taller one of the object has. The
+jukebox is the motivating case: its front is grille edge to edge, every place
+it named was refused for having the grille in it, and the blind fallback grew
+a dead grey slab under the cabinet instead.
+
+So: let a band repeat if it is bare OR already a repeat, using this same
+autocorrelation on the elevation's own rows.
+
+It does not work, and the failure is worth keeping because the idea will
+occur again. At a minimum period of 3 scanlines everything scores high --
+including the ARCADE marquee at 0.80 -- because what is being measured there
+is the texel grid, not slats. Raised to 8 and then 12, the separation does
+not appear; it inverts. The jukebox's GRILLE, the one band this was written
+to license, scores lowest of every case tried (0.27, then 0.18) while the
+marquee that must never repeat scores 0.55 and 0.29 above it.
+
+The reason is that a diamond mesh has no vertical period in its ROW MEANS at
+all -- averaging across the width of a grille gives very nearly a constant,
+which reads as flat rather than as periodic. The row profile is the right
+signal for finding a repeat that spans the prop's width and the wrong one for
+finding texture that repeats within it. Measuring it properly would mean
+2-D autocorrelation on the band's pixels, which is a different tool; a
+threshold on this one would license the marquee.
 """
 import argparse
 import json
