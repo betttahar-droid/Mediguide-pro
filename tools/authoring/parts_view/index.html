@@ -296,9 +296,12 @@ const plain = (c) => new THREE.MeshBasicMaterial({ color: c, side: THREE.DoubleS
 // bounding box. alphaTest rather than blending: these pixels are absent, not
 // translucent, and a cutout that still writes depth keeps the parts in front
 // of it sorting correctly.
+// vertexColors so the wear generator can recolour a face by where it ended up;
+// every quad that does not want it pushes white and multiplies by one
 const mapped = (t, c) => (t
   ? new THREE.MeshBasicMaterial({ map: t, side: THREE.DoubleSide,
-                                  transparent: true, alphaTest: 0.5 })
+                                  transparent: true, alphaTest: 0.5,
+                                  vertexColors: true })
   : plain(c));
 
 // --- the body ---------------------------------------------------------------
@@ -333,7 +336,8 @@ if (tileTex) tileTex.wrapS = tileTex.wrapT = THREE.RepeatWrapping;
 const MAT = [
   mapped(faceTex.side, 0x6a5a4a),          // 0  the two profile caps
   new THREE.MeshBasicMaterial({ map: bgTex, side: THREE.DoubleSide,
-                                transparent: true, alphaTest: 0.5 }), // 1 front
+                                transparent: true, alphaTest: 0.5,
+                                vertexColors: true }), // 1 front
   mapped(faceTex.back, 0x6a5a4a),          // 2  back
   mapped(faceTex.top, 0x6a5a4a),           // 3  top
   plain(0x2a2622),                         // 4  underside, never seen
@@ -1021,8 +1025,94 @@ function buildLoft() {
     const b = bucket.get(mi);
     b.pos.push(...P[0], ...P[1], ...P[2], ...P[0], ...P[2], ...P[3]);
     b.uv.push(...U[0], ...U[1], ...U[2], ...U[0], ...U[2], ...U[3]);
-    const c = C || [1, 1, 1];
-    for (let i = 0; i < 6; i++) b.col.push(c[0], c[1], c[2]);
+    // PER CORNER IF ASKED, so a tint can be a GRADIENT and not a flat wash.
+    // One colour for the whole quad is right for a shelf and wrong for the
+    // wear generator below: a band tinted as a block reads as a step at every
+    // join, which is the banding this is meant to remove.
+    const one = C && !Array.isArray(C[0]) ? C : null;
+    const g = (i) => (one || (C ? C[i] : null) || [1, 1, 1]);
+    for (const i of [0, 1, 2, 0, 2, 3]) b.col.push(...g(i));
+  };
+
+  // ADAPTIVE MATERIAL: THE PROP'S OWN WEAR, RE-EVALUATED AT THE NEW SIZE.
+  //
+  // A painted prop is not uniform down its height. Grime pools at the bottom,
+  // the top is faded, a kick panel is scuffed darker than the panel above it.
+  // seamless_tile removes exactly that -- "the gradient belongs to the prop,
+  // not the material" -- and keeps it only in the nine-slice caps, which never
+  // repeat. So the moment a prop grows, everything new is grain with no grime:
+  // the dead grey slab under a taller jukebox, the flat beige beside a widened
+  // vending machine. The two most-reported faults in the log are this.
+  //
+  // Substance's answer to the same problem is that a material is a base plus
+  // GENERATORS that re-evaluate against the geometry, so rust still pools in
+  // the crevices and wear still sits on the edges after a resize. rowRGB is
+  // already a generator of exactly that kind: it is the body's own colour as a
+  // function of height, measured off this prop's own artwork, and it was built
+  // for shelves and then used for nothing else.
+  //
+  // Applied as a DIFFERENTIAL it is exact. A vertex knows two things: where its
+  // pixels come FROM in the drawing (tSrc) and where it has ended up on the
+  // resized body (tNew). The tint is the ratio of the body colour at those two
+  // heights. At scale 1 every copy sits where it was drawn, tSrc == tNew, the
+  // ratio is one, and the render is untouched -- which is the property that
+  // makes this safe to apply everywhere rather than only to the growth.
+  // Stretched or repeated, each copy is recoloured to the grime it would have
+  // had at the height it now occupies.
+  // GRIME IS A FIXED HEIGHT OFF THE FLOOR, NOT A FRACTION OF THE PROP.
+  //
+  // That is the whole reason a stretched material looks wrong and a generated
+  // one does not. Dirt splashes up from the floor to about the same height on
+  // a small machine and a large one; scale the painting and the dirty band
+  // scales with it, which is why a prop made half again as tall reads as a
+  // photograph pulled out of shape rather than as a taller object.
+  //
+  // The strength is MEASURED off this prop, not invented: how much darker the
+  // bottom of its own artwork is than its middle. A prop drawn clean gets no
+  // grime, which is the right answer -- this adds the object's own character
+  // back where the growth removed it, it does not add character it never had.
+  const GRIME_H = 0.075;                 // world units, ~a splash line
+  const grimeK = (() => {
+    let lo = null, mid = null;
+    for (let i = 0; i <= 20; i++) {
+      const c = rowRGB(i / 20);
+      if (!c) continue;
+      const l = 0.299 * c[0] + 0.587 * c[1] + 0.114 * c[2];
+      if (i / 20 <= 0.10) lo = lo === null ? l : Math.min(lo, l);
+      else if (i / 20 >= 0.30 && i / 20 <= 0.85) mid = (mid ?? 0) + l;
+    }
+    if (lo === null || !mid) return 0;
+    const avg = mid / 12;
+    // only a base that is genuinely DARKER than the body counts, and never
+    // more than a third off, which is grime rather than a black plinth
+    return Math.max(0, Math.min(0.34, 1 - lo / Math.max(1, avg)));
+  })();
+  const grimeAt = (dist) =>
+    1 - grimeK * Math.exp(-Math.max(0, dist) / GRIME_H);
+
+  // AS A DIFFERENTIAL, so it is exactly identity at the drawn size. A vertex
+  // knows how far it was off the floor in the DRAWING and how far it is off
+  // the floor now; the tint is the ratio. At scale 1 those are the same number
+  // and nothing changes at all -- which is what makes it safe to apply to the
+  // whole body rather than only to the material the growth added. Grown, the
+  // panel that used to sit at the skirting is lifted clear and loses its
+  // grime, and whatever ends up at the skirting gains it.
+  // ?wear=0 takes it off, the way ?wire=1 takes the artwork off. A generator
+  // that cannot be switched off cannot be attributed: its contribution is
+  // whatever is left after everything else, which is how a change gets credit
+  // for someone else's fix.
+  const wearOn = p.get('wear') !== '0';
+  const wearAt = (tSrc, wy) => {
+    if (!wearOn || grimeK <= 0.01) return null;
+    // BOTH IN WORLD UNITS, which is the entire point. The drawn body is one
+    // unit tall in this renderer, so a vertex drawn at t was t off the floor;
+    // grown, it is wy + FH/2 off the floor. Measuring either as a FRACTION
+    // would scale the dirty band with the prop and give back exactly the
+    // stretched painting this replaces.
+    const distSrc = tSrc;
+    const distNew = wy + FH / 2;
+    const k = grimeAt(distNew) / Math.max(1e-3, grimeAt(distSrc));
+    return [k, k, k];
   };
   // THE TINT THAT PUTS THE CARCASS ON THE PANEL IT ADJOINS. The tile carries
   // one colour for the whole prop, which is right for a prop with one body
@@ -1172,12 +1262,35 @@ function buildLoft() {
         // world-space UVs, so the grain is the same size at any scale and the
         // fill has no period of its own to beat against the prop's
         const byX = wRuns[p.ri]?.fill || wRuns[q.ri]?.fill;
+        // AND THE CARCASS IS COLOURED BY WHERE IT ENDED UP, not by the band it
+        // came from. The whole fill took one tint -- the colour measured in
+        // the slice band -- so a prop whose growth band lands on a dark plinth
+        // fills its entire new body with plinth grey. That is the jukebox's
+        // dead slab, traced with raycast.mjs: the quad is material 5 at
+        // world-space UVs, the tile is fine, and the tint is the colour of the
+        // wrong part of the prop. A stretched material has no way to know
+        // better; a generated one asks.
+        //
+        // rowRGB is this prop's own body colour as a function of height, so
+        // the fill simply takes the colour of the body it is standing in for.
+        // Per corner, so a tall fill is a gradient and not a step.
+        const g0 = wearAt(ys[i], a.wy), g1 = wearAt(ys[i + 1], b.wy);
+        const ft = (wy) => {
+          const rgb = rowRGB(Math.max(0, Math.min(1, wy / FH + 0.5)));
+          return rgb ? tintFor(rgb) : (byX ? tintX : tintY);
+        };
+        const mul = (t, w) => (w ? [t[0] * w[0], t[1] * w[1], t[2] * w[2]] : t);
+        const fa = mul(ft(a.wy), g0), fb = mul(ft(b.wy), g1);
         quadTo(5, P4, P4.map((v) => [v[0] / tileWorld, v[1] / tileWorld]),
-               byX ? tintX : tintY);
+               [fa, fa, fb, fb]);
       } else {
+        // the two levels of this quad, each recoloured to the body colour at
+        // the height it actually ended up on
+        const c0 = wearAt(ys[i], a.wy), c1 = wearAt(ys[i + 1], b.wy);
         quadTo(f.mi, P4,
                [[f.u(p), ys[i]], [f.u(q), ys[i]],
-                [f.u(Q), ys[i + 1]], [f.u(P), ys[i + 1]]]);
+                [f.u(Q), ys[i + 1]], [f.u(P), ys[i + 1]]],
+               (c0 && c1) ? [c0, c0, c1, c1] : null);
       }
     }
     // NO HORIZONTAL LEDGE HERE. The two-view build closed every change of ring
