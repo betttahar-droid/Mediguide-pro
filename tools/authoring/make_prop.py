@@ -685,7 +685,18 @@ def main():
         log.append({"round": rnd, "asset": args.asset,
                     "looks_good": bool(v.get("looks_good")),
                     "blocking": len(blocking), "faults": faults,
-                    "patch": sorted(offered),
+                    # THE CORRECTIONS THEMSELVES, NOT JUST THE NAMES THEY
+                    # TOUCHED. A log saying "coin_door was patched" four rounds
+                    # running looks like the loop working; the fields would
+                    # have said the motion was being dropped on the floor.
+                    "patch": sorted(
+                        ({"name": p.get("name"),
+                          **{k: val for k, val in p.items()
+                             if k != "name" and val is not None}}
+                         for src in (((gem or {}).get("patch") or []),
+                                     v.get("patch", []))
+                         for p in src if p.get("name")),
+                        key=lambda p: p["name"]),
                     "wider_means": sr.get("wider_means"),
                     "taller_means": sr.get("taller_means")})
         vpath.write_text(json.dumps(log, indent=1))
@@ -715,10 +726,26 @@ def main():
         # The first judge wins a disagreement: it is the one whose patch the
         # loop has always applied, and two judges editing the same field in
         # opposite directions round after round is how a loop oscillates.
-        patch = {p.get("name"): p
-                 for p in ((gem or {}).get("patch") or []) if p.get("name")}
-        patch.update({p.get("name"): p
-                      for p in v.get("patch", []) if p.get("name")})
+        #
+        # BUT ONLY A DISAGREEMENT, AND ONLY FIELD BY FIELD. This merged whole
+        # entries, so the first judge naming a part at all discarded everything
+        # the second said about it -- including fields the first had not
+        # mentioned. That is not resolving a conflict, it is losing an
+        # instruction, and the cabinet is the case: gemini reported "the coin
+        # door remains static with motion none instead of hinging open" in all
+        # four rounds and patched the motion in all four, glm patched the same
+        # part's resize rule, and the motion went on the floor every time --
+        # the very fault the note above says was fixed. Four rounds re-reporting
+        # a correction the loop had been handed and thrown away.
+        patch = {}
+        for src in (((gem or {}).get("patch") or []), v.get("patch", [])):
+            for q in src:
+                n = q.get("name")
+                if not n:
+                    continue
+                # later source wins per field, and only for fields it sets
+                patch[n] = {**patch.get(n, {}),
+                            **{k: val for k, val in q.items() if val is not None}}
         # the background is not a part but it IS adjustable; without this the
         # judge's commonest complaint had no lever and the loop stalled on
         # round 0 reporting "no actionable corrections"
