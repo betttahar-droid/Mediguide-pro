@@ -245,6 +245,42 @@ def main():
     okmask = Image.new("L", (W, H), 0)
     mp = okmask.load()
 
+    # A MEMBER IS NOT A FITTING, and there is nothing behind one to draw. A
+    # fitting is set INTO a surface, and the material around it is what
+    # continues through the hole; a pinball's leg has floor on one side of it
+    # and floor on the other. Asked anyway, the model drew a leg-shaped patch
+    # of something, and the colour check compared it against a ring that is
+    # mostly sheet -- so the machine's only two parts were refused twice each,
+    # the whole plate was discarded ("nothing usable in the plate"), and the
+    # prop ended the run with no model-drawn fill at all.
+    #
+    # Leaving the hole alone is also the RIGHT answer: the gap between two legs
+    # is open air, and filling it is the fault gemini reports as "solid
+    # geometry fills the void beneath the front legs down to the floor".
+    #
+    # MEASURING IT FAILS, and the file this sits beside says why that is worth
+    # writing down. How much of the ring around a hole is prop rather than
+    # sheet separates nothing: the pinball's legs score 20% and 1017 material
+    # pixels, its shooter lane cover 13% and 279, its start button 11% and 120
+    # -- the two seated fittings score BELOW the two members on both, because a
+    # small fitting in a crowd of other fittings has a ring made mostly of
+    # their holes. Swept across the work tree a 50% bar took 187 parts out of
+    # 1544, among them a cabinet's coin slots and a jukebox's speaker grille.
+    #
+    # So ask the pipeline instead of the pixels. scale_rules has already put
+    # this question to the model -- "which parts simply get LONGER when the
+    # prop does" -- and strip_slice has already checked the answer against the
+    # artwork. A leg, a foot, a pillar, a plinth: authored, verified, and sitting
+    # in the manifest by the time this runs.
+    member = [p for p in parts if p.get("lengthens")]
+    for p in member:
+        print(f"    {p['name']:22} is a member the prop lengthens, not a "
+              f"fitting -- nothing behind it to draw")
+    parts = [p for p in parts if not p.get("lengthens")]
+    if not parts:
+        print("  nothing here is a fitting -- nothing to paint out")
+        return
+
     # A REFUSAL IS A VERDICT ON ONE DRAWING, NOT ON THE HOLE. The same rule
     # detail_sheet runs on: ask again, and ask only for what failed, so a
     # second drawing cannot lose a hole the first one got right. Each attempt
