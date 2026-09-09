@@ -198,6 +198,20 @@ def run(cmd, **kw):
     r = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True, **kw)
     if r.returncode != 0:
         print("  ! " + (r.stderr or r.stdout).strip().splitlines()[-1][:160])
+    # EVERY TOOL'S FULL OUTPUT, ON DISK BESIDE ITS PROP. Each step here prints
+    # a handful of its subprocess's last lines and drops the rest, which is
+    # fine while you are watching and useless afterwards -- "0 of 7 fitting(s)
+    # redrawn large" and "nothing usable in the plate" are both summaries of a
+    # per-fitting table that says WHY, and neither table survives the run. This
+    # is the same lesson verdicts.json exists for; the difference is that this
+    # one costs a file append.
+    if BUILD_LOG.get("path"):
+        try:
+            with open(BUILD_LOG["path"], "a") as fh:
+                fh.write(f"\n$ {' '.join(str(c) for c in cmd)}\n")
+                fh.write((r.stdout or "") + (r.stderr or ""))
+        except Exception:
+            pass
     return r
 
 
@@ -285,6 +299,7 @@ def render_solid(d, out):
 
 
 ASSET = {}
+BUILD_LOG = {}
 
 
 def rebuild(d, face="front", asset=None):
@@ -396,6 +411,7 @@ def main():
     d.mkdir(parents=True, exist_ok=True)
     key = _openrouter_key()
     ASSET["name"] = args.asset
+    BUILD_LOG["path"] = str(d / "build.log")
     print(f"=== {args.asset} -> {d} ===")
 
     if not args.skip_sheet:
