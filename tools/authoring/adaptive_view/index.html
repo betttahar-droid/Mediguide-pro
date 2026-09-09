@@ -1,0 +1,124 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Adaptive prop</title>
+<style>html,body{margin:0;background:#8a8a8a;overflow:hidden}canvas{display:block}</style>
+<script type="module">
+// A resizable textured prop: tiling base, anchored fittings, sliced trim.
+//
+// Nine-slicing the whole elevation only works while there is one uniform band
+// per axis, and on this cabinet there is none horizontally at all -- widening
+// it would have to distort the marquee. The layered form has no such limit:
+//
+//   BASE      the plain panel, REPEATED. Repeating is scale-free, so the body
+//             grows on any axis with no smear and no stretch band needed.
+//   FITTINGS  cut from the elevation, each with an anchor and a fixed real
+//             size. A taller cabinet does not grow its screen; it moves it.
+//   SLICE     a fitting that spans the body (a marquee, a control deck) keeps
+//             its ends and repeats its middle -- a 1D nine-slice, which is
+//             what lets it widen without stretching the art on it.
+//
+// This is the arrangement style.js already uses by hand: screws() places a
+// fitting by RULE at a world-unit inset, and nano_atlas.py builds nine-slice
+// patches whose border sits on the image edge. Here the rules are measured
+// rather than typed.
+import * as THREE from 'three';
+
+const p = new URLSearchParams(location.search);
+const dir = p.get('dir') ?? '/tools/img2threejs-work/ps1_arcade';
+const man = await (await fetch(`${dir}/fittings_front.json`)).json();
+const wScale = Number(p.get('w') ?? 1);
+const hScale = Number(p.get('h') ?? 1);
+const naive = p.get('naive') === '1';
+
+const renderer = new THREE.WebGLRenderer({ antialias: false });
+renderer.setSize(1024, 1024);
+document.body.appendChild(renderer.domElement);
+const scene = new THREE.Scene();
+scene.background = new THREE.Color('#8a8a8a');
+
+const load = async (u) => {
+  const t = await new THREE.TextureLoader().loadAsync(u);
+  t.magFilter = THREE.NearestFilter; t.minFilter = THREE.NearestFilter;
+  t.generateMipmaps = false; t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+};
+
+// face size in world units: height 1 at scale 1, width = aspect
+const FW = man.aspect * wScale, FH = 1 * hScale;
+const group = new THREE.Group();
+
+// --- base panel: repeated, never stretched --------------------------------
+const baseTex = await load(`${dir}/${man.base_tile}`);
+baseTex.wrapS = baseTex.wrapT = THREE.RepeatWrapping;
+if (!naive) {
+  // one repeat per unit of ORIGINAL size, so texel density is constant
+  baseTex.repeat.set(FW / man.aspect, FH / 0.476);
+}
+const base = new THREE.Mesh(new THREE.PlaneGeometry(FW, FH),
+  new THREE.MeshBasicMaterial({ map: baseTex }));
+group.add(base);
+
+// --- fittings: anchored, real size, sliced across if they span ------------
+for (const f of man.fittings) {
+  const tex = await load(`${dir}/${f.image}`);
+  const [ax, ay] = f.anchor;
+  const [mu, mv] = f.mode;
+  // width: a spanning fitting follows the body, a fixed one keeps its size
+  const w = naive ? f.size[0] * wScale
+    : (mu === 'slice' ? FW - (f.size[0] - f.size[0]) * 0 : f.size[0]);
+  const h = naive ? f.size[1] * hScale : f.size[1];
+  // 1D NINE-SLICE ACROSS, AS THREE QUADS. A PlaneGeometry has four corner
+  // vertices and nothing in between, so remapping its UVs is still a LINEAR
+  // map -- the first attempt at this "sliced" the marquee and stretched it
+  // anyway, which is why compare.py --margins still found 19% of the edge
+  // strip moving when the cabinet was widened. A slice needs the seams to
+  // exist as geometry: cap, middle, cap, with the caps holding their world
+  // width and their texel width while only the middle takes the change.
+  let geo;
+  if (!naive && mu === 'slice' && w > 2 * f.size[1] * 0.6) {
+    const capW = f.size[1] * 0.6;                 // cap ~ one band tall
+    const capUV = capW / f.size[0];
+    const xs = [-w / 2, -w / 2 + capW, w / 2 - capW, w / 2];
+    const us = [0, capUV, 1 - capUV, 1];
+    const pos = [], uvs = [];
+    for (let s = 0; s < 3; s++) {
+      const [x0, x1, u0, u1] = [xs[s], xs[s + 1], us[s], us[s + 1]];
+      pos.push(x0, -h / 2, 0, x1, -h / 2, 0, x1, h / 2, 0,
+               x0, -h / 2, 0, x1, h / 2, 0, x0, h / 2, 0);
+      uvs.push(u0, 0, u1, 0, u1, 1, u0, 0, u1, 1, u0, 1);
+    }
+    geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+    geo.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
+  } else {
+    geo = new THREE.PlaneGeometry(w, h);
+  }
+
+  // anchor -> position, offsets are world units and never scale
+  let x = 0, y = 0;
+  if (ax === 'left') x = -FW / 2 + f.offset[0] + w / 2;
+  else if (ax === 'right') x = FW / 2 - f.offset[0] - w / 2;
+  else if (ax === 'span') x = 0;
+  else x = f.offset[0];
+  if (ay === 'top') y = FH / 2 - f.offset[1] - h / 2;
+  else if (ay === 'bottom') y = -FH / 2 + f.offset[1] + h / 2;
+  else y = f.offset[1];
+
+  const m = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({
+    map: tex, transparent: false,
+    polygonOffset: true, polygonOffsetFactor: -4, polygonOffsetUnits: -4,
+  }));
+  m.position.set(x, y, 0.001);
+  group.add(m);
+}
+scene.add(group);
+
+const rad = Math.max(FW, FH) * 0.62;
+const cam = new THREE.OrthographicCamera(-rad, rad, rad, -rad, 0.01, 20);
+cam.position.set(0, 0, 5);
+cam.lookAt(0, 0, 0);
+renderer.render(scene, cam);
+console.info(`adaptive: ${man.fittings.length} fittings, w=${wScale} h=${hScale}`
+  + `${naive ? ' NAIVE' : ''}, face ${FW.toFixed(3)}x${FH.toFixed(3)}`);
+globalThis.__done = true;
+</script>

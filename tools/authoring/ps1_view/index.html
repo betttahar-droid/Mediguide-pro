@@ -1,0 +1,201 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>PS1 prop</title>
+<style>html,body{margin:0;background:#8a8a8a;overflow:hidden}canvas{display:block}</style>
+<script type="module">
+// Render the extruded profile with the sheet's own elevations as textures.
+//
+// A PlayStation-era prop is a few dozen flat facets carrying a small
+// low-resolution texture, and for a swept form the reference sheet ALREADY
+// holds those textures: the front elevation is the front face, the side is
+// the sides, the back is the back, the top is the top. Planar-map each onto
+// the face it came from -- box projection by dominant normal -- and the
+// texturing needs no unwrap, no atlas and no search.
+//
+// NearestFilter and no mipmaps are the period-correct part: PS1 had neither
+// bilinear filtering nor mip selection, and that crunch is the look. It is
+// applied at SAMPLE time, which is where pixelation belongs -- not baked into
+// the source art.
+import * as THREE from 'three';
+
+const p = new URLSearchParams(location.search);
+const dir = p.get('dir') ?? '/tools/img2threejs-work/ps1_arcade';
+const model = await (await fetch(`${dir}/model.json`)).json();
+
+const W = 1024, H = 1024;
+const renderer = new THREE.WebGLRenderer({ antialias: false });
+renderer.setSize(W, H);
+document.body.appendChild(renderer.domElement);
+const scene = new THREE.Scene();
+scene.background = new THREE.Color('#8a8a8a');
+
+// --- nine-slice: grow only where the artwork is already uniform ------------
+// AdaptivePropBase calls "length authored as a stretch axis" a CRITICAL
+// failure, and it is right: scaling drags detail with it, so a two-texel trim
+// line becomes a smear and a marquee stretched to twice the width stops being
+// readable. nine_slice.py measures where the elevation is uniform ALONG the
+// stretch axis -- a run of rows identical to their neighbours -- because
+// padding such a band with more copies of itself is invisible by definition.
+//
+// The same map drives the geometry and the UVs, which is what keeps the mesh
+// and its texture locked together at any size. Without the inverse applied to
+// the UVs the texture would slide across a mesh that had moved underneath it.
+let slice = null;
+try { slice = await (await fetch(`${dir}/slice.json`)).json(); } catch { /* optional */ }
+const hScale = Number(p.get('h') ?? 1);
+const naive = p.get('naive') === '1';
+
+function sliceMap(band, scale) {
+  // fwd: original 0..1 -> resized 0..total. inv: resized -> original.
+  if (!band || naive || scale === 1) {
+    return { fwd: (v) => v * scale, inv: (t) => t / scale, total: scale, band: null };
+  }
+  const [a, b] = band;
+  const old = b - a;
+  // A NINE-SLICE HAS A FLOOR. All the change goes into the uniform band, so
+  // the prop cannot shrink past the point where that band reaches zero: here
+  // the band is 19.5% of the height, so 0.805 is as short as this cabinet
+  // gets before the marquee and the screen would have to give way. Asking for
+  // less than that used to fall through to a plain scale and silently distort
+  // -- h=0.7 came back with the screen 43% off its aspect. Clamp and say so.
+  const minScale = 1 - old + 1e-4;
+  if (scale < minScale) {
+    console.warn(`nine-slice: h=${scale} is below the floor of ${minScale.toFixed(3)} `
+      + `(uniform band is ${(100 * old).toFixed(1)}% of height); clamping`);
+    scale = minScale;
+  }
+  const grown = old + (scale - 1);
+  const total = 1 + (scale - 1);
+  return {
+    total,
+    band: [a, b],
+    fwd: (v) => (v <= a ? v : v >= b ? v + (grown - old) : a + (v - a) * (grown / old)),
+    inv: (t) => (t <= a ? t : t >= a + grown ? t - (grown - old) : a + (t - a) * (old / grown)),
+  };
+}
+const vmap = sliceMap(slice && slice.v, hScale);
+
+// --- geometry: extrude the side profile across the measured width ----------
+const shape = new THREE.Shape();
+model.profile.forEach(([u, v], i) => {
+  const y = u * model.depth, z = vmap.fwd(v);       // depth, height (nine-sliced)
+  i ? shape.lineTo(y, z) : shape.moveTo(y, z);
+});
+shape.closePath();
+const geo = new THREE.ExtrudeGeometry(shape, {
+  depth: model.width, bevelEnabled: false, steps: 1,
+}).toNonIndexed();
+// The shape lives in XY as (depth, height) and extrudes along +Z as width.
+// Rotating about Y sends width to X and leaves height on Y. Rotating about X
+// instead -- as this did at first -- swaps height into depth and lays the prop
+// on its back.
+//
+// THE SIGN MATTERS AND -90 IS WRONG. In a LEFT SIDE elevation the object's
+// front points LEFT, so profile u=0 is the front face. rotateY(-90) maps
+// shape-x to +z, which puts the front at LOW z facing AWAY from a camera at
+// +Z -- so the head-on view was the BACK of the mesh wearing the FRONT
+// texture. It reads correctly head-on and is wrong from every other angle.
+// +90 maps shape-x to -z, so the front ends up facing +Z as everything else
+// assumes.
+geo.rotateY(Math.PI / 2);
+geo.computeBoundingBox();
+const c = new THREE.Vector3();
+geo.boundingBox.getCenter(c);
+geo.translate(-c.x, -c.y, -c.z);
+geo.computeVertexNormals();
+
+// --- box-projected UVs, and a material group per face direction ------------
+const pos = geo.attributes.position, nor = geo.attributes.normal;
+const uv = new Float32Array((pos.count) * 2);
+const face = new Array(pos.count / 3);
+const bb = new THREE.Box3().setFromBufferAttribute(pos);
+const size = new THREE.Vector3(); bb.getSize(size);
+for (let t = 0; t < pos.count; t += 3) {
+  // CLASSIFY BY FACING, NOT BY WHICH COMPONENT IS BIGGEST. A swept prop is
+  // mostly slopes -- the marquee leans back, the control panel leans forward
+  // -- and on those the Y component wins, so dominance sent them to the TOP
+  // texture. In the elevation they are plainly front surfaces, and sampling
+  // them from the front image is what makes the marquee art and the control
+  // panel land where the reference has them.
+  const nx = Math.abs(nor.getX(t)), nz = nor.getZ(t);
+  const ny = Math.abs(nor.getY(t));
+  let kind;
+  if (nx >= ny && nx >= Math.abs(nz)) kind = 'side';
+  else if (nz > 0.15) kind = 'front';
+  else if (nz < -0.15) kind = 'back';
+  else kind = 'top';
+  face[t / 3] = kind;
+  for (let k = 0; k < 3; k++) {
+    const i = t + k;
+    const x = pos.getX(i), y = pos.getY(i), z = pos.getZ(i);
+    let u, v;
+    // height runs through the INVERSE slice map, so a texel that belongs to a
+    // fixed cap keeps its size while the uniform band takes the whole stretch
+    // (y - min)/size is 0..1 across the RESIZED mesh, but inv() is defined on
+    // the resized coordinate 0..total. Feeding it the normalised value made
+    // the lookup wrong by the scale factor, which is why a stretched cabinet
+    // came back showing nothing but its coin door.
+    const ty = vmap.inv(((y - bb.min.y) / size.y) * vmap.total);
+    if (kind === 'side') { u = (z - bb.min.z) / size.z; v = ty; }
+    else if (kind === 'top') { u = (x - bb.min.x) / size.x; v = (z - bb.min.z) / size.z; }
+    else { u = (x - bb.min.x) / size.x; v = ty; }
+    if (kind === 'back') u = 1 - u;               // back is seen mirrored
+    uv[i * 2] = u; uv[i * 2 + 1] = v;
+  }
+}
+geo.setAttribute('uv', new THREE.BufferAttribute(uv, 2));
+
+const ORDER = ['front', 'side', 'back', 'top'];
+const tris = [];
+ORDER.forEach((k) => face.forEach((f, i) => { if (f === k) tris.push(i); }));
+const src = geo.clone();
+for (let n = 0; n < tris.length; n++) {
+  for (let k = 0; k < 3; k++) {
+    for (const attr of ['position', 'normal', 'uv']) {
+      const a = geo.attributes[attr], b = src.attributes[attr];
+      for (let c = 0; c < a.itemSize; c++) {
+        a.array[(n * 3 + k) * a.itemSize + c] = b.array[(tris[n] * 3 + k) * a.itemSize + c];
+      }
+    }
+  }
+}
+geo.clearGroups();
+let start = 0;
+ORDER.forEach((k, gi) => {
+  const n = face.filter((f) => f === k).length * 3;
+  if (n) geo.addGroup(start, n, gi);
+  start += n;
+});
+
+// AWAIT THE TEXTURES. TextureLoader.load is asynchronous, so rendering on the
+// next line drew the mesh before a single image had arrived and every face
+// came out black -- with the geometry perfectly correct underneath.
+const loader = new THREE.TextureLoader();
+const mats = await Promise.all(ORDER.map(async (k) => {
+  const tex = await loader.loadAsync(`${dir}/${model.textures[k]}`);
+  tex.magFilter = THREE.NearestFilter;      // PS1 had no bilinear filtering
+  tex.minFilter = THREE.NearestFilter;      // and no mipmaps
+  tex.generateMipmaps = false;
+  tex.colorSpace = THREE.SRGBColorSpace;
+  return new THREE.MeshBasicMaterial({ map: tex });   // textures carry the shading
+}));
+const mesh = new THREE.Mesh(geo, mats);
+scene.add(mesh);
+
+// --- camera ---------------------------------------------------------------
+const yaw = Number(p.get('yaw') ?? 34) * Math.PI / 180;
+const pitch = Number(p.get('pitch') ?? 20) * Math.PI / 180;
+const r = 3.2;
+geo.computeBoundingSphere();
+const rad = geo.boundingSphere.radius * 1.05;
+const cam = new THREE.OrthographicCamera(-rad, rad, rad, -rad, 0.01, 50);
+cam.position.set(r * Math.cos(pitch) * Math.sin(yaw), r * Math.sin(pitch),
+                 r * Math.cos(pitch) * Math.cos(yaw));
+cam.lookAt(0, 0, 0);
+renderer.render(scene, cam);
+
+console.info(`ps1: ${geo.attributes.position.count / 3} triangles, `
+  + `${model.profile.length} profile corners, 4 textures, `
+  + `h=${hScale}${naive ? ' NAIVE' : (vmap.band ? ` sliced ${vmap.band}` : ' unsliced')}`);
+globalThis.__done = true;
+</script>

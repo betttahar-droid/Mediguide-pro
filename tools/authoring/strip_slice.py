@@ -1,0 +1,879 @@
+#!/usr/bin/env python3
+"""Slice the background into horizontal strips, each with its OWN stretch band.
+
+    python3 tools/authoring/strip_slice.py work/ps1 --face front
+
+Authoring tool. NOT a build, CI or runtime dependency.
+
+WHY ONE NINE-SLICE IS NOT ENOUGH. nine_slice gives the whole face a single
+horizontal stretch band -- one vertical strip of the image, applied at every
+height. On an arcade cabinet the quietest such strip ran at x 0.371..0.450,
+which is plain panel down in the cabinet body and straight through the middle
+of the word on the MARQUEE. Widen the prop and that strip is what repeats, so
+the title came out as "TRAIL TRAIL TRAIL" while the panel below it tiled
+perfectly. No single band can avoid the artwork at every height, because the
+artwork is at different places at different heights. The band is the wrong
+shape for the question.
+
+A cabinet is a stack of horizontal bands -- marquee, grille, screen bay,
+control deck, lower panel -- and each has its own idea of where it is allowed
+to grow. The marquee grows in its plain frame either side of the title; the
+lower panel grows almost anywhere; the deck grows between button clusters. So
+measure each strip separately, and let each repeat its own quiet region.
+
+VERTICALLY, ONE STRIP TAKES THE CHANGE. Splitting the extra height between all
+of them would stretch the marquee, and a taller cabinet does not have a taller
+marquee -- it has more cabinet. So the strip with the longest genuinely uniform
+run of rows absorbs the whole difference by repeating its own middle, and every
+other strip keeps its real height. That is what makes a two-metre cabinet look
+like a cabinet rather than a photograph of one pulled out of shape.
+
+AND ONE STRIP IS NOT ALWAYS ENOUGH, WHICH IS AN OPEN FAULT. On a cabinet whose
+lower body is densely fitted -- coin door, two vents, an instruction card, a
+control deck, leaving free runs of 32, 35 and 46 rows in a strip of 344 -- there
+is no band that is at once tall enough to repeat, bare, quiet AND the colour of
+the body. The growth then goes wherever the score's compromise lands, and on
+that cabinet it lands in the SCREEN BAY: a taller prop grows a column of bezel
+surround above its monitor.
+
+Three ways of reweighting the choice were tried and all three were reverted,
+because each fixed one prop by breaking another:
+
+  - scoring the strip on its BAND's height and its BAND's free fraction rather
+    than the whole strip's. The right question, and it picks bands too short to
+    repeat: one cabinet's 22-row band needs 13 copies, blows the ten-copy cap
+    and falls back to the very carcass tile the change was meant to avoid.
+  - adding a term for whether the band CAN absorb the change (band height
+    against a tenth of the prop). Correct and not sufficient: it is outweighed
+    by 1/vnoise, where a sliver of dead panel scores 1.26 against a real band's
+    10.89.
+  - stating the two hard conditions as filters -- can absorb it, is bare -- and
+    weighing only what survives. Clean, and on a prop where nothing survives it
+    falls through to a band with a coin door in it and repeats the door.
+  - treating occupancy as a DISQUALIFICATION rather than a penalty (a fitting's
+    rows are the quietest rows in a strip, because the fitting was cut out and
+    its hole patched flat, so a proportional penalty loses to texture noise),
+    together with a smaller minimum band. This is the one worth reading twice.
+    Measured on the obvious proxy -- rows inside a growth band that a fitting
+    occupies -- it was a large win: 133 such rows across four cabinets became
+    41. Rendered, all four looked WORSE. One lost its panel courses to flat
+    tile because the shorter band blew the copy bound; two moved their band
+    onto a horizontal ledge and repeated it four times, which reads as a chest
+    of drawers.
+
+    The proxy is not the objective. Repeating a patched hole usually looks like
+    panel, because that is what the patch is made of; repeating a bare ledge
+    looks like a shelf, however bare it measures. What must not repeat is a
+    FEATURE, and occupancy does not measure featureness -- the peak row score
+    inside the band, which quiet_window already returns, is much closer to it.
+    Anything that optimises occupancy alone will keep finding this.
+
+The conclusion is that this is not a weighting problem. One band cannot serve a
+prop that has no single good one, and the fix is structural: either let the
+growth be SPLIT across several bands in different strips, or cut finer strips
+so the bare runs stop being averaged in with the fitted ones. Both are real
+changes to how a resize is composed, not another factor in this product.
+
+TWO MORE, ON THE OTHER SIDE OF THE SAME COIN: what to do when a place is a
+MEMBER that lengthens rather than a gap that repeats. A pinball whose only
+verified places were its two legs put every added row into them -- at 1.5x
+tall the machine stood on stilts with its cabinet and backbox exactly as
+drawn. Both attempts to fix that here were reverted:
+
+  - counting a member's capacity as its own rows ONCE (it may double) instead
+    of nine times, so the places measure short and the measured bare runs top
+    them up. It works, and what it tops up with is the problem: the run it
+    picked was in the BACKBOX, and the taller machine came back with five
+    copies of its speaker panel stacked down the head. Worse than the stilt.
+  - sharing the growth by that capacity rather than by height. Same reversal
+    for the same reason -- it only decides how much goes to a supplement that
+    should not have been chosen.
+
+The missing thing is not a weight, it is a PLACE, and the model is what knows
+where places are. scale_rules now re-asks when every place it got back is a
+member: "all the height would go into those, name a place on the BODY too."
+On this machine that is the difference between two legs and two legs plus the
+run above the coin door. Where the model still has no answer the prop grows
+into its members and looks like it -- and that is an honest limit of the
+drawing, not a threshold to tune.
+"""
+import argparse
+import json
+import sys
+from pathlib import Path
+
+from PIL import Image
+
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "tools" / "authoring"))
+from collections import Counter as _Counter  # noqa: E402
+from identify_parts import object_crop  # noqa: E402
+from layer_build import silhouette  # noqa: E402
+from nine_slice import _runs  # noqa: E402
+
+
+def row_diff(im):
+    """Mean absolute difference between each row and the one below it."""
+    W, H = im.size
+    px = im.load()
+    out = []
+    for y in range(H - 1):
+        s = 0
+        for x in range(0, W, 2):
+            a, b = px[x, y], px[x, y + 1]
+            s += abs(a[0] - b[0]) + abs(a[1] - b[1]) + abs(a[2] - b[2])
+        out.append(s / max(1, 3 * len(range(0, W, 2))))
+    return out
+
+
+def col_diff(im, y0, y1):
+    """The same, column-wise, over one strip only."""
+    W, _ = im.size
+    px = im.load()
+    out = []
+    for x in range(W - 1):
+        s = 0
+        for y in range(y0, y1, 2):
+            a, b = px[x, y], px[x + 1, y]
+            s += abs(a[0] - b[0]) + abs(a[1] - b[1]) + abs(a[2] - b[2])
+        out.append(s / max(1, 3 * len(range(y0, y1, 2))))
+    return out
+
+
+def smooth(a, k):
+    return [sum(a[max(0, i - k):i + k + 1]) / len(a[max(0, i - k):i + k + 1])
+            for i in range(len(a))]
+
+
+def quiet_window(diff, frac):
+    """The calmest run of at least `frac` of the axis, and how calm it is.
+
+    _runs finds the longest run under a threshold, which is the right answer
+    when one exists. When nothing clears the bar this still has to return
+    something usable -- a strip that cannot grow at all would leave the
+    renderer with a zero-width middle, and that is what asked for four thousand
+    copies of a zero-width slice and streaked the whole prop.
+    """
+    n = len(diff)
+    if n < 4:
+        return [0.4, 0.6], 999.0
+    sm = smooth(diff, max(1, n // 40))
+    srt = sorted(sm)
+    thresh = max(srt[int(0.35 * (len(srt) - 1))], 3.0)
+    span, a, b = _runs(sm, thresh)
+    if span >= frac * n:
+        inner = sm[a:b] or sm
+        # THE PEAK MATTERS AS MUCH AS THE MEAN. A band holding one warning
+        # label and 240 rows of plain panel averages out quiet, and the lower
+        # cabinet passed on that average and then ran the label six times down
+        # a two-metre prop. What must not repeat is the FEATURE, so score the
+        # band by the worst row in it as well as the typical one.
+        return [a / n, b / n], max(sum(inner) / len(inner), max(inner) / 3.0)
+    k = max(2, int(frac * n))
+    run = sum(sm[:k])
+    best, besti = run, 0
+    for i in range(1, n - k + 1):
+        run += sm[i + k - 1] - sm[i - 1]
+        if run < best:
+            best, besti = run, i
+    win = sm[besti:besti + k] or sm
+    return [besti / n, (besti + k) / n], max(best / k, max(win) / 3.0)
+
+
+def flank_window(diff, w=0.045, lo=0.03, hi=0.47, forbid=None):
+    """The calmest window in the LEFT FLANK -- inside the trim, outside the art.
+
+    Measuring "the outer tenth" instead called every strip busy, because the
+    outer tenth of a cabinet is its side trim and outline, which has the
+    strongest edges on the whole face. The region that actually grows on a
+    marquee is the plain frame between that trim and the title.
+    """
+    n = len(diff)
+    k = max(2, int(w * n))
+    i0, i1 = int(lo * n), max(int(lo * n) + 1, int(hi * n) - k)
+    if n < 8 or i1 <= i0:
+        return (0.15, 0.24), 999.0
+    # THE CUT MUST NOT FALL THROUGH A FITTING. The insertion point is where a
+    # widened prop gains its extra width, and on a marquee the quietest window
+    # was still inside the lettering -- so the title's left half was pushed out
+    # to the frame with a band of panel between it and the rest, reading
+    # "GALACTIC RA ... AIDERS". Columns belonging to a part are struck out
+    # before the search, so the cut lands in plain frame or not at all.
+    def blocked(i):
+        return forbid is not None and any(forbid[j] for j in range(i, i + k))
+
+    best, besti = None, None
+    for i in range(i0, i1):
+        if blocked(i):
+            continue
+        v = sum(diff[i:i + k]) / k
+        if best is None or v < best:
+            best, besti = v, i
+    # NOWHERE SAFE INSIDE MEANS GROW BEHIND THE TRIM, NOT OUTSIDE IT.
+    #
+    # A marquee's artwork runs the full width of its strip, so every interior
+    # cut splits it. The first answer was to pad at x=0 -- and that is why a
+    # widened cabinet came out as the same cabinet with flat slabs bolted to
+    # its flanks: inserting at zero pushes the prop's own EDGE TRIM inboard and
+    # leaves bare material on the outside, which is the one place a cabinet
+    # never has bare material. Its trim is its silhouette.
+    #
+    # The trim is the strongest vertical edge near the border -- on this
+    # cabinet, columns 17..22 of 289 -- so growing just INSIDE it keeps the
+    # trim on the outside where it belongs and widens the panel behind it,
+    # which is what a wider cabinet physically is.
+    if besti is None or best > 2.5 * QUIET:
+        lim = max(2, int(0.18 * n))
+        edge = max(range(lim), key=lambda i: diff[i]) if lim > 1 else 0
+        f0 = min(0.30, (edge + 3) / n)
+        return (f0, f0), 999.0
+    return (besti / n, (besti + k) / n), best
+
+
+# Above this, a region is ARTWORK and repeating it duplicates content a player
+# can name -- a screen, a ship, a row of cans. Measured as mean absolute
+# neighbour difference on 0..255, so it is an absolute bar and not a quantile:
+# every axis has a quietest tenth, and on a busy strip that tenth is still busy.
+QUIET = 2.0
+
+
+def grow_mode(diff, band_noise):
+    """Repeat an interior band, or hold the art and grow its FLANKS?
+
+    A nine-slice can only repeat something INTERIOR: caps at the ends, band in
+    the middle. That is the wrong shape for a marquee, whose artwork is in the
+    centre and whose calm regions are the plain frame either side of it. Asked
+    for its quietest interior window the marquee offered a strip straight
+    through the title, and widening the cabinet tiled it into "TRAIL TRAIL".
+
+    So measure both and pick. Where the flanks are much calmer than the centre,
+    the honest growth is to hold the artwork at its real size and extend the
+    frame outwards on both sides -- which is what a person would do, and what
+    "one title, not three" has meant all along. The flanks are mirrored so the
+    two sides grow by the same amount and the art stays centred.
+    """
+    n = len(diff)
+    if n < 8:
+        return "extend", (0.15, 0.24), False
+    (f0, f1), fn = flank_window(diff)
+    # MEASURE THE BAND YOU ARE ACTUALLY GOING TO REPEAT. This used to re-derive
+    # a 10% window and test that, while the renderer repeated a 25% one -- so a
+    # strip could pass the quiet test and then tile something quite different.
+    # The lower cabinet cleared it and duplicated the coin door's frame and a
+    # warning label six times down a two-metre prop.
+    if band_noise < QUIET:
+        return "repeat", (f0, f1), True
+    # NOTHING INSIDE IS QUIET ENOUGH TO REPEAT. Repeating the best of a busy
+    # strip is how a widened cabinet ended up with three screens, ships cut
+    # mid-sprite and a row of doubled can labels -- the judge called every one
+    # of those a bug a player could point at, and it was right. Hold the
+    # artwork at its real size and grow the flanks instead; and if even the
+    # flanks are busy, grow them from a SINGLE column stretched, which cannot
+    # duplicate anything. A plain extruded band reads as more cabinet. A second
+    # copy of the screen reads as broken.
+    return "extend", (f0, f1), (fn < QUIET)
+
+
+def busy_frac(im, x0, x1, y0, y1):
+    """What fraction of a region is NOT its own dominant colour.
+
+    Row-difference is averaged across the full width, so a warning label twelve
+    pixels tall barely moves it on a 240-pixel-wide strip: the lower cabinet
+    measured as quiet on every difference-based test there is, and then ran
+    that label six times down a two-metre prop. A small feature is invisible to
+    an average by construction -- but it is not invisible to a COUNT. Anything
+    a player could recognise occupies pixels that differ from the panel around
+    it, and if there are more than a few percent of them, this region is not
+    material and must not be repeated.
+    """
+    px = im.load()
+    W, H = im.size
+    x0, x1 = max(0, int(x0)), min(W, int(x1))
+    y0, y1 = max(0, int(y0)), min(H, int(y1))
+    if x1 - x0 < 2 or y1 - y0 < 2:
+        return 1.0
+    tally = _Counter()
+    for x in range(x0, x1, 2):
+        for y in range(y0, y1, 2):
+            tally[px[x, y]] += 1
+    if not tally:
+        return 1.0
+    base = tally.most_common(1)[0][0]
+    n = far = 0
+    for x in range(x0, x1, 2):
+        for y in range(y0, y1, 2):
+            n += 1
+            if sum(abs(a - b) for a, b in zip(px[x, y], base)) > 110:
+                far += 1
+    return far / max(1, n)
+
+
+def strip_colour(im, y0, y1):
+    """The colour a strip should GROW in: its own panel tone.
+
+    Sampling the growth window itself looked right until that window collapsed
+    to zero at the outer edge -- which is where it goes when a strip's artwork
+    runs its full width -- and the sample became the cabinet's blue outline.
+    A widened prop then grew bright blue flanks. A strip's dominant mid-tone is
+    its panel by definition, and that is what more of the prop should be made
+    of; the darkest and lightest few percent are outline and specular.
+    """
+    px = im.load()
+    W, _ = im.size
+    tally = _Counter()
+    for x in range(0, W, 2):
+        for y in range(y0, y1, 2):
+            c = px[x, y]
+            if 28 < 0.299 * c[0] + 0.587 * c[1] + 0.114 * c[2] < 232:
+                tally[c] += 1
+    return list(tally.most_common(1)[0][0]) if tally else [128, 128, 128]
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("sheet_dir")
+    ap.add_argument("--face", default="front")
+    ap.add_argument("--min-strip", type=float, default=0.045,
+                    help="strips thinner than this fraction get merged up")
+    args = ap.parse_args()
+
+    d = Path(args.sheet_dir)
+    rgba = Image.open(d / f"bg_{args.face}.png").convert("RGBA")
+    im = rgba.convert("RGB")
+    W, H = im.size
+    ap = rgba.load()
+
+    # THE BAND IS CHOSEN ON THE FRONT AND APPLIED TO EVERY FACE. A prop grows
+    # as one body, so the rows the front repeats are the rows the side and the
+    # back repeat too -- and nothing here ever looked at them. On this cabinet
+    # the front's lower body is bare and its SIDE carries a BATTLE ZONE decal
+    # across the same rows, so a prop half again as tall came back with the
+    # title stacked three times down its flank. Both judges, every round, and
+    # invisible in everything this file measures.
+    #
+    # A row's activity on another elevation is measured exactly as it is here,
+    # and each face is scaled to this one's height: they are elevations of the
+    # same prop, so the same fraction of the height is the same place on it.
+    other = []
+    for face in ("side", "back"):
+        f = d / f"{face}.png"
+        if not f.exists():
+            continue
+        try:
+            # INSIDE THE PROP, NOT INSIDE THE CROP. object_crop keeps the sheet
+            # showing past a sloped top or a domed crown, and the boundary
+            # between prop and sheet is the strongest row difference on the
+            # whole face -- so the cabinet's own top and bottom edges measured
+            # as artwork and every growth place near them was refused as
+            # "carrying a decal on another face". Only pixels the prop actually
+            # covers may be compared.
+            o = object_crop(f).convert("RGB")
+            ins = silhouette(o, erode=1)
+            ow, oh = o.size
+            opx = o.load()
+            rd = []
+            for y in range(oh - 1):
+                acc = n = 0
+                for x in range(0, ow, 2):
+                    if not (ins[x][y] and ins[x][y + 1]):
+                        continue
+                    a, b = opx[x, y], opx[x, y + 1]
+                    acc += sum(abs(u - v) for u, v in zip(a, b)) / 3
+                    n += 1
+                rd.append(acc / n if n else 0.0)
+            if len(rd) < 8:
+                continue
+            # SCALED TO THAT FACE'S OWN GRAIN, NOT TO A CONSTANT. A flat bar
+            # of 3*QUIET sits around the 75th percentile of an ordinary painted
+            # side panel, so it called most of every prop busy and threw away
+            # three of this cabinet's four growth places -- back to the copy
+            # bound and the flat tile. What marks a decal is being well above
+            # what its own face usually does.
+            mid = sorted(rd)[len(rd) // 2]
+            other.append(([rd[min(len(rd) - 1, int(y * len(rd) / H))]
+                           for y in range(H)], max(6.0, 3.0 * mid)))
+        except Exception:
+            pass
+
+    def busy_elsewhere(a, b):
+        """Does any other elevation carry artwork across these rows?
+
+        Judged on the band's 80th percentile rather than its worst row: one
+        noisy line is grain, and a fifth of the band being loud is a decal.
+        """
+        for rd, bar in other:
+            seg = sorted(rd[max(0, a):max(1, min(H, b))])
+            if seg and seg[int(0.8 * (len(seg) - 1))] > bar:
+                return True
+        return False
+
+    # STRIP BOUNDARIES ARE THE STRONG HORIZONTAL LINES. A cabinet's bands are
+    # drawn with them -- the rail under the marquee, the lip of the deck -- so
+    # the artwork tells us where its own bands are and nothing has to guess.
+    rd = smooth(row_diff(im), max(1, H // 200))
+    srt = sorted(rd)
+    cut = srt[int(0.90 * (len(srt) - 1))]
+    edges = [0]
+    for y, v in enumerate(rd):
+        if v >= cut and y - edges[-1] >= int(args.min_strip * H):
+            edges.append(y + 1)
+    if H - edges[-1] < int(args.min_strip * H) and len(edges) > 1:
+        edges.pop()
+    edges.append(H)
+
+    part_boxes = []
+    try:
+        part_boxes = [q["px"] for q in json.loads(
+            (d / f"parts_{args.face}.json").read_text()).get("parts", [])]
+    except Exception:
+        pass
+
+    strips = []
+    for i in range(len(edges) - 1):
+        y0, y1 = edges[i], edges[i + 1]
+        cd = col_diff(im, y0, y1)
+        hband, noise = quiet_window(cd, 0.10)
+        rows = rd[y0:max(y0 + 2, y1 - 1)]
+        # A ROW A FITTING STANDS IN IS NOT SOMEWHERE TO INSERT HEIGHT, and it
+        # measures quiet precisely BECAUSE the fitting was cut out of the
+        # background and its hole patched flat. So the calmest rows in this
+        # cabinet's lower strip were the inside of its coin door, the band ran
+        # through the door, and once the renderer began repeating that band
+        # rather than stretching it the prop grew a second coin-door surround.
+        # The same weighting nine_slice already gives its columns: coverage
+        # added to the difference score, so busy-ness and occupancy trade off
+        # instead of one vetoing the other. Choosing on occupancy alone put the
+        # band on the control deck's shadow line -- no part there, and sixteen
+        # copies of a black lip turned the cabinet into a radiator -- which is
+        # the same lesson from the other side. The band must be bare AND quiet.
+        cov = [0] * len(rows)
+        for q in part_boxes:
+            for y in range(max(y0, q[1] - 1), min(y0 + len(rows), q[3] + 1)):
+                cov[y - y0] += max(0, q[2] - q[0])
+        if rows and max(cov) > 0:
+            span = float(max(cov))
+            scale = sorted(rows)[int(0.9 * (len(rows) - 1))] * 2.0 + 1.0
+            rows = [v + scale * (c / span) for v, c in zip(rows, cov)]
+        vband, vnoise = quiet_window(rows, 0.25)
+        # THE BACKGROUND NEVER REPEATS ITS OWN ARTWORK. Every threshold tried
+        # here leaked: a marquee's glyphs are a few percent of a thin strip, so
+        # the band measured quiet and a widened cabinet read
+        # "ULTIMA / AMA / ATE". The background is MATERIAL, and the seamless
+        # tile is material -- tinted to the strip's own colour it carries the
+        # same grain with nothing recognisable in it. Repetition earns its keep
+        # on PARTS, where a wider deck should genuinely get more button
+        # clusters, and those have their own measured rules. Here it only ever
+        # duplicated something a player could name.
+        # columns this strip's own parts occupy, so the cut can dodge them
+        forbid = [False] * max(1, len(cd))
+        # THE GAP BETWEEN TWO HALVES OF ONE FITTING IS ALSO FORBIDDEN. A marquee
+        # that measures as marquee_left and marquee_right holds both halves
+        # against the same edge, so they do not move relative to each other --
+        # but the BACKGROUND grows wherever the cut is, and putting the cut
+        # between them pushed a band of panel through the middle of the title.
+        # "Street Fighter cut mid-word with a smeared fragment floating in the
+        # gap" was the judge's description, on sheet after sheet. Blocking every
+        # column from the leftmost part in a row band to the rightmost closes
+        # the gaps as well as the parts.
+        here = [q for q in part_boxes if not (q[3] <= y0 or q[1] >= y1)]
+        if here:
+            lo = min(q[0] for q in here)
+            hi = max(q[2] for q in here)
+            for x in range(max(0, lo - 2), min(len(forbid), hi + 2)):
+                forbid[x] = True
+        hmode, hflank, hrep = "extend", flank_window(cd, forbid=forbid)[0], False
+        vmode, vflank, vrep = "extend", flank_window(rows)[0], False
+        # and the band has to be MATERIAL, not just smooth on average
+        BUSY = 0.05
+        if hrep and busy_frac(im, hband[0] * W, hband[1] * W, y0, y1) > BUSY:
+            hmode, hrep = "extend", False
+        if vrep and busy_frac(im, 0, W, y0 + vband[0] * (y1 - y0),
+                              y0 + vband[1] * (y1 - y0)) > BUSY:
+            vmode, vrep = "extend", False
+        # A FLANK IS NEVER REPEATED. Growth in extend mode is always the
+        # tinted panel tile. The flank is a nine-percent window that has to be
+        # clear of artwork at EVERY height of the strip, and on a marquee it
+        # never is: repeating it put "ULTIMA / AMA / ATE" across a widened
+        # cabinet. The tile is safe by construction and, tinted to the flank's
+        # own colour, carries the same grain -- so repeating the flank was
+        # buying almost nothing and risking the title.
+        hrep = vrep = False
+        # how wide the PROP is across this strip, not how wide its box is: the
+        # inserted band has to match the cabinet's own edges or it steps in and
+        # out of the silhouette as the prop grows
+        xs = [x for x in range(0, W, 2)
+              if any(ap[x, y][3] > 127 for y in range(y0, y1, 4))]
+        strips.append({
+            "xspan": [round((xs[0] if xs else 0) / W, 5),
+                      round(((xs[-1] + 2) if xs else W) / W, 5)],
+            "fill": strip_colour(im, y0, y1),
+            "hmode": hmode, "hf": [round(hflank[0], 5), round(hflank[1], 5)],
+            "hf_repeat": hrep,
+            "vmode": vmode, "vf": [round(vflank[0], 5), round(vflank[1], 5)],
+            "vf_repeat": vrep,
+            # v measured from the BOTTOM, like everything else the renderer eats
+            "v": [round(1 - y1 / H, 5), round(1 - y0 / H, 5)],
+            "h": [round(hband[0], 5), round(hband[1], 5)],
+            "vh": [round(vband[0], 5), round(vband[1], 5)],
+            "noise": round(noise, 3), "vnoise": round(vnoise, 3),
+            "px": [y0, y1],
+        })
+
+    # THE STRIP THAT GROWS MUST BE BODY, NOT MERELY QUIET. Scored on height and
+    # calm alone the winner was the SCREEN BAY -- a big flat dark rectangle is
+    # about as quiet as an image gets -- so a taller cabinet grew a two-metre
+    # screen recess with the deck stranded at the bottom. A prop gets taller by
+    # having more BODY, so the strip must also look like the body: its mean
+    # colour has to match the panel colour the rest of the pipeline already
+    # measures. That is what separates the cabinet's plain lower panel from an
+    # equally smooth sheet of glass.
+    px_im = im.load()
+    tally = _Counter()
+    for x in range(0, W, 2):
+        for y in range(0, H, 2):
+            c = px_im[x, y]
+            if 28 < 0.299 * c[0] + 0.587 * c[1] + 0.114 * c[2] < 232:
+                tally[c] += 1
+    panel = tally.most_common(1)[0][0] if tally else (128, 128, 128)
+
+    def body_score(st):
+        y0, y1 = st["px"]
+        n = 0
+        acc = [0, 0, 0]
+        for x in range(0, W, 3):
+            for y in range(y0, y1, 3):
+                c = px_im[x, y]
+                acc = [a + v for a, v in zip(acc, c)]
+                n += 1
+        mean = [a / max(1, n) for a in acc]
+        dist = sum(abs(a - b) for a, b in zip(mean, panel)) / 3
+        like_body = 1.0 / (1.0 + (dist / 22.0) ** 2)
+        st["_like"] = round(like_body, 4)
+        return (y1 - y0) * like_body / max(1.0, st["vnoise"])
+
+    # A STRIP FULL OF FITTINGS IS NOT CARCASS, however panel-coloured its
+    # leftovers are. body_score rewards a strip for being tall, close to the
+    # panel colour and quiet -- and a strip packed with fittings scores well on
+    # all three, because the fittings were cut out of the background and their
+    # holes patched with panel. So this cabinet chose the band between its
+    # screen and its marquee, and growing it taller inserted bare material into
+    # the busiest part of the prop. Both judges: "the marquee-to-screen region
+    # becomes a blank streaked panel", "large blank flat-coloured voids across
+    # the chassis face".
+    #
+    # Where a prop may grow is where it has nothing on it. That is what "more
+    # cabinet" means, and it is the free area of the strip -- squared, because
+    # the choice should be decisive rather than a nudge.
+    occupied = [0] * (H + 1)
+    _pm = {}
+    try:
+        _pm = json.loads((d / f"parts_{args.face}.json").read_text())
+        for q in _pm.get("parts", []):
+            qx0, qy0, qx1, qy1 = q["px"]
+            for y in range(max(0, qy0), min(H, qy1)):
+                occupied[y] += max(0, qx1 - qx0)
+    except Exception:
+        pass
+
+    def free_frac(st):
+        y0, y1 = st["px"]
+        if y1 <= y0:
+            return 0.0
+        cov = sum(min(occupied[y], W) for y in range(y0, min(H, y1)))
+        return max(0.0, 1.0 - cov / float(W * (y1 - y0)))
+
+    score = [body_score(s) * (free_frac(s) ** 2) for s in strips]
+    grow = max(range(len(strips)), key=lambda i: score[i])
+    for i, s in enumerate(strips):
+        s["grow_y"] = (i == grow)
+        s["free"] = round(free_frac(s), 3)
+    print(f"  grows in strip {grow} "
+          f"({100*free_frac(strips[grow]):.0f}% of it is bare carcass)")
+
+    # AND MORE THAN ONE STRIP MAY TAKE IT. Handing the whole change to a single
+    # strip is right when one strip is clearly the place for it, and it is what
+    # forces the tool into the corner recorded at the top of this file: where no
+    # single band is at once tall enough to repeat, bare, quiet and the colour
+    # of the body, the winner is a compromise and the resize is bad however the
+    # score is weighted. On this cabinet the only unoccupied run is sixteen rows
+    # of six hundred and fifty, so at 1.5x it needs twenty copies, blows the
+    # renderer's ten-copy bound and falls back to the plain carcass tile -- a
+    # flat slab where the artwork was.
+    #
+    # Sixteen rows cannot absorb three hundred. Three bands of sixteen absorb a
+    # hundred each, which is seven copies apiece and inside the bound, and the
+    # prop gains its own painted panel in three places instead of flat material
+    # in one. Nothing has to be chosen differently; the change is simply not all
+    # given to one strip.
+    #
+    # A strip shares in it only if its band is somewhere the prop may honestly
+    # grow -- bare of fittings and quiet enough that repeating it duplicates no
+    # feature. Among those, the share is in proportion to the band's own HEIGHT
+    # rather than to its score, because a band twice as tall absorbs twice as
+    # much at the same number of copies: sharing by height gives every band the
+    # same copy count, which is the allocation that keeps all of them inside the
+    # bound at once. Sharing by score does the opposite -- it loads the best
+    # band most heavily, and on this cabinet that alone pushed it back over.
+    #
+    # AND ONLY WHEN THE WINNER CANNOT DO IT ALONE. The first version handed the
+    # share out to whichever bands passed the bar and did not reserve any of it
+    # for the strip the score had actually chosen -- so on a cabinet whose best
+    # band is 72% bare, just under the bar, the whole change went instead to the
+    # one strip that cleared it: thirteen rows up in the grille. A prop that had
+    # been growing correct panel courses in its lower body grew a blank slab
+    # above its screen. Splitting is a relief valve for a band that is too small,
+    # not a re-run of a choice that has already been made.
+    #
+    # Too small is measurable: the renderer lays whole copies and stops at ten,
+    # so at 1.5x a band under about a eighteenth of the height cannot absorb the
+    # change by itself. Above that the winner keeps all of it and nothing here
+    # changes anything.
+    def band_rows(st):
+        y0, y1 = st["px"]
+        return max(0.0, (st["vh"][1] - st["vh"][0]) * (y1 - y0))
+
+    share = [0.0] * len(strips)
+    share[grow] = band_rows(strips[grow])
+    if band_rows(strips[grow]) < H / 18.0:
+        for i, s in enumerate(strips):
+            # and it has to look like the body, which is the same thing asked
+            # of the winner. Bare and quiet alone let the dark gap between a
+            # marquee and a screen take a quarter of the change, and a taller
+            # cabinet grew a blank slab above its monitor -- correct arithmetic
+            # applied to somewhere a cabinet does not get taller.
+            if i != grow and free_frac(s) >= 0.9 \
+                    and s["vnoise"] <= 3.0 * QUIET and score[i] > 0 \
+                    and s.get("_like", 0) >= 0.5:
+                share[i] = band_rows(s)
+    if not any(share):
+        share[grow] = 1.0
+    tot = sum(share)
+    for i, s in enumerate(strips):
+        s["grow_share"] = round(share[i] / tot, 5)
+    taking = [(i, s["grow_share"]) for i, s in enumerate(strips)
+              if s["grow_share"] > 0.01]
+    if len(taking) > 1:
+        print("  the change is shared: "
+              + ", ".join(f"strip {i} {100*f:.0f}%" for i, f in taking))
+
+    # AND THE CUT MUST NOT LAND INSIDE A PART. The extra height is inserted at
+    # the grow strip's band, and the background is flat there precisely BECAUSE
+    # a part was cut out of it and the hole filled -- so the quietest rows are
+    # often the door's own hole. Inserting there slid the hole out from under
+    # the door, which is anchored to the bottom, and tore the cabinet open. The
+    # cut is nudged to the nearest row no part occupies.
+    pm = {}
+    try:
+        pm = json.loads((d / f"parts_{args.face}.json").read_text())
+        taken = set()
+        for q in pm.get("parts", []):
+            x0, y0, x1, y1 = q["px"]
+            taken.update(range(max(0, y0 - 2), min(H, y1 + 2)))
+    except Exception:
+        taken = set()
+    st = strips[grow]
+    gy0, gy1 = st["px"]
+    cut = int(gy0 + st["vh"][0] * (gy1 - gy0))
+    # NO SECOND OPINION ABOUT THE BAND. There was a guard here that took the
+    # longest run of rows no fitting stands in whenever the chosen band
+    # overlapped a part, and it was written when the row score knew nothing
+    # about fittings. Now that coverage is folded into the score itself the
+    # guard optimises a DIFFERENT objective -- occupancy alone, where the score
+    # trades occupancy against busy-ness -- and the two disagree: the score
+    # picked the bare plinth below the coin door, the guard overruled it with
+    # the one part-free run in the strip, which is the control deck's shadow
+    # line, and sixteen repeats of a black lip turned the cabinet into a
+    # radiator. Two mechanisms answering one question is how a tool oscillates.
+
+    # WHERE THE PROP GETS TALLER IS AUTHORED, NOT SEARCHED FOR.
+    #
+    # Everything above chooses the growth band by measuring the prop for
+    # somewhere quiet, bare and body-coloured, and the note at the top of this
+    # file lists five reweightings of that search, every one reverted, every
+    # one fixing a prop by breaking another. The conclusion recorded there is
+    # that it is not a weighting problem. It is not: it is the wrong question.
+    #
+    # "Somewhere calm" is not what a taller cabinet is. scale_rules has always
+    # asked the model what taller MEANS and always got a straight answer --
+    # "more carcass above the marquee and below the coin door" -- and nothing
+    # downstream could read a sentence, so the sentence was used to judge the
+    # result and never to produce it. Asked for the same thing as a fitting and
+    # a side, it gives this cabinet four places totalling 73 rows where the
+    # blind search found one of 12: four copies each instead of twenty-six, and
+    # the copy bound never comes near. It is the division the rest of the tool
+    # runs on -- the model says where a cabinet gets longer, which it knows,
+    # and arithmetic checks that those rows are really bare, which it can.
+    #
+    # VERIFIED, not taken. A place is used only if the artwork there is clear
+    # of fittings; anything else falls through to the measured band, which is
+    # still computed above and still the answer for a prop the model has no
+    # opinion about.
+    grow_bands = []
+    max_taller = 1.5
+    try:
+        _sr = json.loads((d / "scale_rules.json").read_text())
+        want = _sr.get("taller_at")
+        max_taller = float(_sr.get("max_taller") or 1.5)
+    except Exception:
+        want = None
+    for e in (want or []):
+        a, b = int(e["px"][0]), int(e["px"][1])
+        # A LENGTHENING MEMBER'S ROWS ARE NOT MEANT TO BE BARE -- they are full
+        # of the member. What has to be true there is that nothing ELSE is, so
+        # that repeating those rows repeats leg and plain body beside it and
+        # nothing a player could name.
+        if e.get("side") == "itself":
+            # EVERY LENGTHENING MEMBER, NOT JUST THIS ONE. A machine stands on
+            # more than one leg and they occupy the same rows as each other, so
+            # subtracting only the named one still found the rows full -- of
+            # the other leg. What may not be in these rows is a fitting that
+            # does NOT lengthen, because that is what would be repeated.
+            grew = {g.get("part") for g in (want or [])
+                    if g.get("side") == "itself"}
+            wid = sum(q["px"][2] - q["px"][0] for q in _pm.get("parts", [])
+                      if q.get("name") in grew)
+            rows = [y for y in range(max(0, a), min(H, b))
+                    if occupied[y] - wid <= 0.18 * W]
+            if len(rows) < 6:
+                print(f"  {e['part']} lengthening: rows {a}..{b} carry other "
+                      f"fittings -- not growing there")
+                continue
+            a, b = rows[0], rows[-1] + 1
+            grow_bands.append({"part": e["part"], "side": "itself",
+                               "clean": not busy_elsewhere(a, b),
+                               "px": [a, b],
+                               "band": [round(1 - b / H, 5), round(1 - a / H, 5)]})
+            continue
+        rows = [y for y in range(max(0, a), min(H, b))
+                if occupied[y] <= 0.10 * W]
+        if len(rows) < 6:
+            print(f"  {e['side']} {e['part']}: rows {a}..{b} are not bare "
+                  f"-- not growing there")
+            continue
+        a, b = rows[0], rows[-1] + 1
+        clean = not busy_elsewhere(a, b)
+        if not clean:
+            print(f"  {e['side']} {e['part']}: rows {a}..{b} are bare in front "
+                  f"and carry artwork on another face -- second choice")
+        grow_bands.append({"part": e["part"], "side": e["side"],
+                           "clean": clean, "px": [a, b],
+                           # bottom-up, like everything the renderer eats
+                           "band": [round(1 - b / H, 5), round(1 - a / H, 5)]})
+    # AND THE PLACES HAVE TO BE ABLE TO HOLD IT. The renderer lays whole copies
+    # and stops at ten, so bands totalling B rows can absorb about 9B before it
+    # gives up and fills with the flat carcass tile. Being the right place is
+    # not the same as being big enough: the pinball's model named "more backbox
+    # height above the artwork", which is correct and which resolves to the
+    # SEVENTEEN rows between the top of the drawing and the backglass. Half
+    # again the height of a 646-row prop is 323, so it asked for twenty copies,
+    # blew the bound, and the machine grew a column of grey static where its
+    # backbox should be -- both judges, in as many words.
+    #
+    # The measured bare runs are still there and still measured. They are a bad
+    # way to CHOOSE where a prop grows and a perfectly good way to top up
+    # somewhere it already should: taking the biggest of them until the places
+    # can hold the change adds the pinball's lower body and its apron to its
+    # backbox, and the same three fifty-row runs that were never the right
+    # answer on their own become the right answer beside one.
+    # A VETO WAS TOO STRONG. Refusing every place that carries artwork on
+    # another elevation left this cabinet three of its four places short and
+    # the pinball with seven rows -- forty-seven copies, straight back to the
+    # flat tile that all of this exists to avoid, which is a worse fault than
+    # the one being fixed. It is a PREFERENCE: grow where no face has artwork
+    # if there is room enough there, and fall back to the rest rather than to
+    # nothing. A repeated decal down a flank is bad; a column of static is
+    # worse.
+    # TWO PLACES OVER THE SAME ROWS ARE ONE PLACE. A machine stands on two
+    # legs and both lengthen, so both name the same rows; left as two bands the
+    # renderer inserts the growth there twice and the share arithmetic counts
+    # those rows twice over. The same happens to a gap named from both sides --
+    # "below the front panel" and "above the coin mech" are one gap, and the
+    # cabinet's model gave both.
+    grow_bands.sort(key=lambda g: g["px"][0])
+    merged = []
+    for g in grow_bands:
+        if merged and g["px"][0] <= merged[-1]["px"][1]:
+            m = merged[-1]
+            m["px"] = [m["px"][0], max(m["px"][1], g["px"][1])]
+            m["band"] = [round(1 - m["px"][1] / H, 5),
+                         round(1 - m["px"][0] / H, 5)]
+            m["clean"] = m.get("clean") and g.get("clean")
+            if g["part"] not in m["part"]:
+                m["part"] = f"{m['part']}+{g['part']}"
+            continue
+        merged.append(g)
+    if len(merged) != len(grow_bands):
+        print(f"  {len(grow_bands)} place(s) merged to {len(merged)} "
+              f"-- some named the same rows")
+    grow_bands = merged
+
+    need = (max_taller - 1.0) * H / 9.0
+    _clean = [g for g in grow_bands if g.get("clean")]
+    if _clean and sum(g["px"][1] - g["px"][0] for g in _clean) >= need:
+        if len(_clean) < len(grow_bands):
+            print(f"  {len(grow_bands) - len(_clean)} place(s) dropped: "
+                  f"the ones clear on every face have room enough")
+        grow_bands = _clean
+    if grow_bands and sum(g["px"][1] - g["px"][0] for g in grow_bands) < need:
+        spare = []
+        for st in strips:
+            y0, y1 = st["px"]
+            best = run = None
+            for y in range(max(0, y0), min(H, y1)):
+                if occupied[y] <= 0.10 * W:
+                    run = (y, y + 1) if run is None else (run[0], y + 1)
+                    if best is None or run[1] - run[0] > best[1] - best[0]:
+                        best = run
+                else:
+                    run = None
+            # BARE IS THE WHOLE TEST HERE. The body-colour gate belongs to the
+            # decision this is not making: choosing where a prop grows. That is
+            # already decided, by the model, and these runs only add room to
+            # it. Applied here it was a threshold imported from a cabinet --
+            # every strip of the pinball scores under it, because "the colour
+            # of the body" on a machine that is mostly dark playfield and pale
+            # legs is not the colour of anything, so a prop with 165 bare rows
+            # going spare grew a column of static instead.
+            if not best or best[1] - best[0] < 8:
+                continue
+
+            if any(best[0] < g["px"][1] and best[1] > g["px"][0]
+                   for g in grow_bands):
+                continue                     # already covered by an authored one
+            spare.append(best)
+        spare.sort(key=lambda b: b[0] - b[1])
+        for a, b in spare:
+            if sum(g["px"][1] - g["px"][0] for g in grow_bands) >= need:
+                break
+            grow_bands.append({"part": "(measured)", "side": "run",
+                               "px": [a, b],
+                               "band": [round(1 - b / H, 5), round(1 - a / H, 5)]})
+        grow_bands.sort(key=lambda g: g["px"][0])
+
+    if grow_bands:
+        # SHARED BY HEIGHT, so every band takes the same number of copies --
+        # the allocation that keeps all of them inside the renderer's bound at
+        # once. Sharing by anything else loads one band and blows it.
+        tot = float(sum(g["px"][1] - g["px"][0] for g in grow_bands))
+        for g in grow_bands:
+            g["share"] = round((g["px"][1] - g["px"][0]) / tot, 5)
+        rows = int(tot)
+        auth = sum(1 for g in grow_bands if g["side"] != "run")
+        print(f"  taller_at: {auth} authored place(s)"
+              + (f" + {len(grow_bands) - auth} measured run(s) for room"
+                 if len(grow_bands) > auth else "")
+              + f", {rows} bare rows -- "
+              f"{(max_taller - 1) * H / max(1, rows) + 1:.1f} copies "
+              f"at {max_taller}x")
+
+    (d / f"strips_{args.face}.json").write_text(json.dumps(
+        {"size": [W, H], "strips": strips, "grow_bands": grow_bands}, indent=1))
+    print(f"{args.face}: {len(strips)} strips")
+    for i, s in enumerate(strips):
+        print(f"  {i}: rows {s['px'][0]:4}..{s['px'][1]:4}  {s['hmode']:6} "
+              f"h {s['h'][0]:.3f}..{s['h'][1]:.3f} (noise {s['noise']:6.2f})"
+              f"{'   <- takes the height, ' + s['vmode'] if s['grow_y'] else ''}")
+    print(f"wrote {d / f'strips_{args.face}.json'}")
+
+
+if __name__ == "__main__":
+    main()
