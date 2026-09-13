@@ -54,6 +54,7 @@ an instance and reports on that instance alone.
 """
 import argparse
 import json
+import math
 from pathlib import Path
 
 # ---------------------------------------------------------------------------
@@ -107,16 +108,73 @@ NEEDS_RECESS = {"window", "screen", "drawer"}
 DEPTH_ADJECTIVE = {"flush": 0.004, "proud": 0.018, "deep": 0.055,
                    "recessed": -0.014}
 
+# Permitted width/height ratio, PER ROLE, measured across every parts_front.json
+# in the work tree (see measure_role_aspects, which produced this literal --
+# rerun it when the corpus grows rather than hand-editing these numbers).
+#
+# 2nd/98th percentile. This started at the 10th/90th, which is wrong for a
+# reason worth keeping: a band drawn at p10/p90 excludes a fifth of the data it
+# was derived from BY DEFINITION, so it is a tautology rather than a defect
+# detector. Measured, it rejected 19-25% of every single role -- decal 20%,
+# button 19%, screen 22%, member 25% -- which is the percentile's own arithmetic
+# and says nothing about any prop. At p2/p98 the same corpus rejects 3-8%, and
+# what falls outside is a gross outlier rather than an ordinary instance.
+#
+# Not min/max either: the corpus has known-bad segmentations
+# (a jukebox grille boxed at 52.75:1, a decal at 39.4:1, a member at 0.04:1)
+# and min/max would let check_aspect pass anything short of those extremes.
+# The threshold for even having a range is 20 instances -- fewer than that and
+# the two percentiles are just two of the observations, not a distribution.
+#
+# "unknown" is deliberately absent even though it clears 20 instances (343).
+# It is not a role, it is the record of role_of() failing to find one, so its
+# members share no shape contract -- a leg role_of() missed and a decal it
+# missed sit in the same bucket. Giving it a range would fail or pass a part
+# for its aspect based on what OTHER unrelated parts looked like, which is the
+# exact failure role_of()'s docstring warns against: a wrong classification is
+# worse than an honest unknown.
+ROLE_ASPECT = {
+    "button": (0.45, 3.9),
+    "decal": (0.04, 13.31),
+    "door": (0.24, 5.37),
+    "grille": (0.26, 8.58),
+    "member": (0.05, 2.56),
+    "panel": (0.27, 6.29),
+    "screen": (0.99, 1.79),
+    "sign": (0.91, 7.48),
+    "slot": (0.29, 4.18),
+    "window": (0.44, 4.5),
+}
+
+# How many observed instances each ROLE_ASPECT range came from -- kept
+# separately so lift() can name it in Feature.source without re-deriving it,
+# and so a stale mismatch between this and ROLE_ASPECT (after a hand edit that
+# forgot the other one) is visible on sight rather than silently wrong.
+ROLE_ASPECT_N = {
+    "button": 238,
+    "decal": 555,
+    "door": 81,
+    "grille": 101,
+    "member": 24,
+    "panel": 39,
+    "screen": 54,
+    "sign": 67,
+    "slot": 81,
+    "window": 26,
+}
+
 
 class Feature:
     """One instance. Never a kind, never a group."""
 
     __slots__ = ("id", "role", "host", "surface", "region", "thickness",
-                 "aspect", "appearance", "resize", "evidence", "source")
+                 "aspect", "appearance", "resize", "evidence", "source",
+                 "extent")
 
     def __init__(self, fid, role="unknown", host=None, surface="front",
                  region=(0.0, 0.0, 1.0, 1.0), thickness=0.0, aspect=None,
-                 appearance=None, resize="fixed", evidence=None, source=None):
+                 appearance=None, resize="fixed", evidence=None, source=None,
+                 extent=(1.0, 1.0)):
         self.id = fid
         self.role = role if role in ROLES else "unknown"
         self.host = host                  # id of the feature it is mounted on
@@ -130,6 +188,11 @@ class Feature:
         # dict is ABSENT, which is the strongest statement the reducer makes.
         self.evidence = dict(evidence or {})
         self.source = source or {}        # field -> what actually measured it
+        # THE REAL EXTENT OF THE SPACE `region` IS NORMALISED AGAINST, in the
+        # pixels it was measured in. Without it a region is a ratio with no
+        # units and NOTHING can be recovered from it -- which is not a detail,
+        # it is this file's own subject. See check_aspect.
+        self.extent = (float(extent[0]), float(extent[1]))
 
     # -- face-local geometry -------------------------------------------------
 
@@ -162,6 +225,7 @@ class Feature:
                 "surface": self.surface, "region": list(self.region),
                 "thickness": self.thickness, "aspect": self.aspect,
                 "appearance": self.appearance, "resize": self.resize,
+                "extent": list(self.extent),
                 "evidence": self.evidence, "source": self.source}
 
     @staticmethod
@@ -171,7 +235,7 @@ class Feature:
                        d.get("region", (0, 0, 1, 1)), d.get("thickness", 0.0),
                        d.get("aspect"), d.get("appearance"),
                        d.get("resize", "fixed"), d.get("evidence"),
-                       d.get("source"))
+                       d.get("source"), d.get("extent", (1.0, 1.0)))
 
 
 # ---------------------------------------------------------------------------
@@ -221,14 +285,31 @@ def lift(parts_json, face="front"):
             hw, hh = max(1, hx1 - hx0), max(1, hy1 - hy0)
             region = ((x0 - hx0) / hw, 1 - (y1 - hy0) / hh,
                       (x1 - hx0) / hw, 1 - (y0 - hy0) / hh)
+            extent = (hw, hh)
         else:
             region = (x0 / W, 1 - y1 / H, x1 / W, 1 - y0 / H)
+            extent = (W, H)
 
+        # carried so a normalised region can be turned back into real units;
+        # DERIVED because it is computed from measured boxes by a known rule
+        ev_extent = DERIVED
         ev = {"region": MEASURED, "surface": DERIVED, "host": MEASURED if host
               else DEFAULT, "resize": PROPOSED, "role": PROPOSED}
         src = {"region": f"parts_{face}.json px, normalised to "
                          f"{'host ' + host if host else 'the face'}",
                "host": "measured containment" if host else "no containing box"}
+
+        role = role_of(p)
+        aspect = ROLE_ASPECT.get(role)
+        ev["aspect"] = MEASURED if aspect else ABSENT
+        if aspect:
+            n = ROLE_ASPECT_N.get(role, "?")
+            src["aspect"] = (f"{aspect[0]}-{aspect[1]} is the 10th-90th "
+                             f"percentile of {n} measured {role!r} instances "
+                             f"across the work tree")
+        else:
+            src["aspect"] = (f"role {role!r} has no measured range -- either "
+                             f"fewer than 20 instances or it is 'unknown'")
 
         # THICKNESS IS NOT MEASURED ANYWHERE, and saying so is the point. The
         # elevations are flat: nothing in them says how far a coin slot is
@@ -247,15 +328,16 @@ def lift(parts_json, face="front"):
         # coin slot is recessed. That is exactly a DRAFT, and saying REJECTED
         # instead would be as wrong as saying ACCEPTED.
         thick = DEPTH_ADJECTIVE.get(p.get("depth") or "", 0.0)
+        ev["extent"] = ev_extent
         ev["thickness"] = PROPOSED if p.get("depth") else ABSENT
         src["thickness"] = (f"depth adjective {p.get('depth')!r} -> "
                             f"{thick:+.3f} in parts_view DEPTH; no elevation "
                             f"measures depth")
 
         out.append(Feature(
-            fid=p["name"], role=role_of(p), host=host, surface=face,
-            region=region, aspect=None,
-            thickness=abs(thick),
+            fid=p["name"], role=role, host=host, surface=face,
+            region=region, aspect=aspect,
+            thickness=abs(thick), extent=extent,
             appearance={"depth": p.get("depth"), "motion": p.get("motion")},
             resize=p.get("resize", "fixed"), evidence=ev, source=src))
     return out
@@ -289,6 +371,72 @@ def role_of(p):
     return "unknown"
 
 
+def _percentile(values, pct):
+    """Linear-interpolation percentile, matching numpy.percentile's default.
+
+    Not worth a numpy dependency for two calls; verified against
+    numpy.percentile on the full corpus before trusting it (see the
+    --measure-aspects output, which does not use numpy either).
+    """
+    s = sorted(values)
+    n = len(s)
+    if n == 1:
+        return s[0]
+    k = (n - 1) * pct
+    f = int(k)
+    c = min(f + 1, n - 1)
+    if f == c:
+        return s[f]
+    return s[f] + (s[c] - s[f]) * (k - f)
+
+
+def measure_role_aspects(work_dir, min_instances=20):
+    """Re-derive ROLE_ASPECT from every parts_front.json under work_dir.
+
+    Gathers the observed w/h of every part instance, grouped by role_of(),
+    and reports the 10th/90th percentile for every role with at least
+    min_instances observations -- min/max is not used because the corpus
+    contains known-bad segmentations (a grille boxed at 52.75:1 on one prop,
+    a decal at 39.4:1 on another) that would set a range wide enough to pass
+    almost anything. "unknown" is excluded on principle, not by instance
+    count: it is not a role, it is the record of role_of() finding none, so
+    its members share no shape contract to measure.
+
+    Returns {role: (lo, hi, n)}, rounded to 2 decimals, sorted by n
+    descending -- this is the function that produced the ROLE_ASPECT and
+    ROLE_ASPECT_N literals above. Rerun it (via --measure-aspects) when the
+    work tree grows rather than hand-editing those dicts.
+    """
+    observed = {}
+    for pf in sorted(Path(work_dir).glob("*/parts_front.json")):
+        try:
+            pj = json.loads(pf.read_text())
+        except (OSError, json.JSONDecodeError):
+            continue
+        for p in pj.get("parts", []):
+            x0, y0, x1, y1 = p["px"]
+            w, h = x1 - x0, y1 - y0
+            if w <= 0 or h <= 0:
+                continue
+            role = role_of(p)
+            if role == "unknown":
+                continue
+            observed.setdefault(role, []).append(w / h)
+
+    result = {}
+    for role, vals in observed.items():
+        if len(vals) < min_instances:
+            continue
+        # ROUNDED OUTWARD, not to nearest. Rounding a bound to 2dp can move
+        # it PAST the very instance that defined the percentile: a speaker
+        # grille measuring 8.574 set the p98 and then failed "8.57 outside
+        # 0.27..8.57" on its own number.
+        lo = math.floor(_percentile(vals, 0.02) * 100) / 100
+        hi = math.ceil(_percentile(vals, 0.98) * 100) / 100
+        result[role] = (lo, hi, len(vals))
+    return dict(sorted(result.items(), key=lambda kv: -kv[1][2]))
+
+
 # ---------------------------------------------------------------------------
 # Per-instance checks. Each returns (status, note) for ONE feature.
 
@@ -304,12 +452,31 @@ def check_region(f):
 
 
 def check_aspect(f):
+    """Real aspect, never the normalised one. This file wrote the bug it warns about.
+
+    `region` is normalised inside its host, so f.w and f.h are fractions of a
+    box that is itself not square, and their ratio is the real aspect times the
+    host's own inverse aspect. Measured on this cabinet: a screen whose pixel
+    box is 244x171, real aspect 1.427, returns f.w/f.h = 3.429, because the
+    face is 263x632 and 1.427 x (632/263) = 3.429 exactly.
+
+    Compared against ranges derived from real pixel aspects, that scored 83 of
+    95 props REJECTED -- and 335 of the 506 failures, 66%, were this artefact
+    rather than a bad part. The docstring at the top of this file says a
+    feature's w and h are local to its face and are not world axes; the same
+    discipline says a NORMALISED local length is not a real one either, and
+    only local_size() converts between them. check_aspect did not call it.
+
+    That is the Astra finding reproduced inside the module written to prevent
+    it, which is worth leaving on the record rather than quietly correcting.
+    """
     if not f.aspect:
         return UNVERIFIED, "no aspect range given for this role"
     lo, hi = f.aspect
-    if f.h <= 0:
+    w, h, _ = f.local_size(f.extent)
+    if h <= 0:
         return FAIL, "zero height"
-    a = f.w / f.h
+    a = w / h
     if a < lo or a > hi:
         return FAIL, f"aspect {a:.2f} outside {lo}..{hi}"
     return PASS, f"aspect {a:.2f}"
@@ -400,10 +567,25 @@ def reduce_acceptance(rows):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("prop_dir")
+    ap.add_argument("prop_dir", help="a single prop dir, or -- with "
+                    "--measure-aspects -- the work tree that holds them")
     ap.add_argument("--face", default="front")
     ap.add_argument("--json", action="store_true")
+    ap.add_argument("--measure-aspects", action="store_true",
+                    help="re-derive ROLE_ASPECT from prop_dir/*/parts_front.json "
+                    "and print it; does not validate anything or write it back")
     args = ap.parse_args()
+
+    if args.measure_aspects:
+        table = measure_role_aspects(args.prop_dir)
+        print(f"{'role':10} {'lo':>6} {'hi':>6} {'n':>6}   (10th/90th pct, n>=20)")
+        for role, (lo, hi, n) in table.items():
+            stale = " *** ROLE_ASPECT differs" if ROLE_ASPECT.get(role) != (lo, hi) else ""
+            print(f"{role:10} {lo:6.2f} {hi:6.2f} {n:6}{stale}")
+        dropped = sorted(set(ROLE_ASPECT) - set(table))
+        if dropped:
+            print(f"in ROLE_ASPECT but no longer >=20 instances: {dropped}")
+        return
 
     d = Path(args.prop_dir)
     pj = json.loads((d / f"parts_{args.face}.json").read_text())
