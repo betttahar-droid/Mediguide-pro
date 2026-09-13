@@ -143,6 +143,10 @@ hard requirements. A view that breaks any of these is useless to it:
 
 # ----------------------------------------------------------------- OpenRouter
 
+# Zero-priced vision models that serve at a zero balance, in the order they are
+# tried. Verified by asking each to judge a real render: openrouter/free answered
+# in 4s with usable JSON; nex-agi took 46s; gemma and inkling returned 429/403.
+FREE_VISION = ["openrouter/free", "nex-agi/nex-n2.5-pro:free"]
 _RETRY = {}
 
 
@@ -197,6 +201,39 @@ def glm(messages, model, key, max_tokens=12000, temperature=0.3, effort="low"):
                 try:
                     return glm(messages, model, key, max_tokens=room,
                                temperature=temperature, effort=effort)
+                finally:
+                    _RETRY["in"] = False
+        # AND WHEN THERE IS NO BUDGET AT ALL, DROP TO A FREE MODEL.
+        #
+        # glm-5.3-flash is not expensive -- the benchmark above puts a judge
+        # call at $0.0002, a 190th of opus -- so a run never ends because a
+        # call cost too much. It ends because the balance reached zero, which
+        # is a different thing and happened four times in one session, twice
+        # mid-loop after the sheets and the segmentation had already been paid
+        # for. Losing the round there wastes work that was already bought.
+        #
+        # OpenRouter carries a handful of genuinely zero-priced vision models
+        # that serve at a zero balance, and they are not a token gesture: asked
+        # to judge the cabinet with five stacked ARCADE marquees, openrouter/free
+        # returned blocking=2, "duplicated sign", "tiling repeat" -- which is
+        # the call BOTH paid judges got wrong on that exact image, scoring it
+        # level with the corrected cabinet beside it.
+        #
+        # It is still a fallback and not a default: it is slower, it leaks
+        # reasoning instead of JSON unless given room, and it has not been
+        # benchmarked across the whole judge prompt. It says out loud which
+        # model answered, so a round graded this way is never mistaken for a
+        # normal one.
+        if e.code == 402 and not _RETRY.get("in") and model not in FREE_VISION:
+            for alt in FREE_VISION:
+                print(f"  ! {model}: no budget left -- falling back to {alt}")
+                _RETRY["in"] = True
+                try:
+                    return glm(messages, alt, key,
+                               max_tokens=max(6000, max_tokens),
+                               temperature=temperature, effort=effort)
+                except Exception:
+                    continue
                 finally:
                     _RETRY["in"] = False
         raise SystemExit(f"{model}: HTTP {e.code} {detail[:400]}")
