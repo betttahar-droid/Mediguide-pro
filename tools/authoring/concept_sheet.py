@@ -44,27 +44,38 @@ OR_ENDPOINT = "https://openrouter.ai/api/v1/chat/completions"
 # per ACCEPTED drawing, because a refusal is not free: both tools re-ask, so a
 # cheap model refused twice costs what a dear one costs once.
 #
-#   model                                $/img   accepted   $/accepted   s/call
-#   google/gemini-3.1-flash-lite-image   0.034     14/20        0.0475      4.8
-#   google/gemini-3.1-flash-image        0.067     13/20        0.1056     11.1
-#   google/gemini-2.5-flash-image        0.034      3/6         0.0658      8.2
+#   model                                accepted   $/accepted   s/call
+#   openai/gpt-5-image-mini                 8/8        0.0444     52.0
+#   google/gemini-3.1-flash-lite-image     14/20       0.0475      4.8
+#   google/gemini-2.5-flash-image           3/6        0.0658      8.2
+#   google/gemini-3.1-flash-image          13/20       0.1056     11.1
 #
-# Lite was put second on the argument that a cheaper artist is a different
-# artist and the corpus was measured on the dearer one. The argument is sound
-# and the measurement does not support it: over twenty drawings the two are
-# INDISTINGUISHABLE on the pipeline's own bars, and lite is half the price and
-# less than half the wait. So it leads.
+# THE NANO BANANA MODELS ARE THE EXPENSIVE ONES AND THEY ARE NOT THE BEST. The
+# brief names Nano Banana 2 and that is why it led here, first at full price on
+# the argument that the corpus was measured on it, then at lite price when the
+# measurement said the two were indistinguishable. Widening the field past
+# Google entirely is what actually mattered: gpt-5-image-mini was accepted on
+# EVERY case put to it -- 8 of 8, against 70% for either Nano Banana -- and its
+# published rate is a quarter of lite's. It is slow (52s against 5s), and that
+# is the trade: a drawing that is bought once beats a fast one bought twice.
+#
+# The published per-token rate and the bill are not the same number. Lite is
+# listed at $0.034 an image and mini at $0.009, a factor of four; measured on
+# real asks they land within 7% of each other per ACCEPTED drawing, because
+# mini spends far more tokens per drawing and wastes none of them on refusals.
+# Price per call is the number that misleads here. Price per drawing that
+# survives the check is the one that decides.
 #
 # AND A REFUSAL ESCALATES TO A DIFFERENT MODEL, not just to another drawing
-# from the same one. The two do not fail on the same cases -- lite was refused
-# on v17_jukebox and v44_jukebox where full passed, full on v15's control deck
-# and v45_vending_machine where lite passed -- so "a refusal is a verdict on one
-# drawing" extends a step: a second opinion from a second model is a better
-# second drawing than a second roll from the first. Callers pass the attempt
-# number as `tier`.
+# from the same one. The models do not fail on the same cases -- lite was
+# refused on v17_jukebox and v44_jukebox where full passed, full on v15's
+# control deck and v45_vending_machine where lite passed -- so "a refusal is a
+# verdict on one drawing" extends a step: a second opinion from a second model
+# is a better second drawing than a second roll from the first. Callers pass
+# the attempt number as `tier`.
 OR_LADDER = [
-    "google/gemini-3.1-flash-lite-image",   # Nano Banana 2 Lite
-    "google/gemini-3.1-flash-image",        # Nano Banana 2, the brief's model
+    "openai/gpt-5-image-mini",              # 8/8 accepted, cheapest per drawing
+    "google/gemini-3.1-flash-lite-image",   # Nano Banana 2 Lite, fast
     "google/gemini-2.5-flash-image",        # Nano Banana
 ]
 # When a caller names a Gemini model explicitly, honour it rather than the ladder.
@@ -219,6 +230,41 @@ def _openrouter_key():
 # not a transient.
 _DIRECT_DEAD = {}
 
+# WHAT THIS RUN HAS SPENT ON DRAWINGS, and a floor it will not spend past.
+#
+# Images are the expensive half by two orders of magnitude -- a judge call is
+# $0.0002 and a drawing is $0.04 -- and nothing was counting them. One session
+# of measuring and redrawing took an OpenRouter balance from $8 to $1.21 with
+# no running total anywhere, and the only reason it was noticed is that someone
+# asked. A budget that is never read is not a budget.
+#
+# So: every OpenRouter drawing adds its reported cost here, and below MIN_LEFT
+# the next one refuses rather than draws. Refusing is safe by construction --
+# every caller already handles a drawing that does not arrive, because a model
+# can refuse for its own reasons, and falls back to the arithmetic it had
+# before. Set PROP_IMAGE_BUDGET to change the cap for one run.
+SPENT = {"usd": 0.0, "images": 0}
+MIN_LEFT = float(os.environ.get("PROP_IMAGE_BUDGET", "0") or 0)
+
+
+def _check_balance():
+    """The balance OpenRouter reports, cached for the process. None if unknown."""
+    if "left" in SPENT:
+        return SPENT["left"]
+    SPENT["left"] = None
+    try:
+        key = _openrouter_key()
+        if key:
+            req = urllib.request.Request(
+                "https://openrouter.ai/api/v1/credits",
+                headers={"Authorization": f"Bearer {key}"})
+            with urllib.request.urlopen(req, timeout=30) as r:
+                d = json.load(r)["data"]
+            SPENT["left"] = float(d["total_credits"]) - float(d["total_usage"])
+    except Exception:
+        pass
+    return SPENT["left"]
+
 
 def _spent(code, detail):
     """Is this HTTP failure the account being out of money, rather than the
@@ -277,6 +323,13 @@ def _via_openrouter(prompt, out_path, refs, model, ref_instruction, tier=0):
     # budget failure still has somewhere to go.
     ladder = ladder[min(max(0, int(tier)), len(ladder) - 1):] or ladder
 
+    left = _check_balance()
+    if left is not None and left <= MIN_LEFT:
+        raise RuntimeError(
+            f"image budget: ${left:.2f} left on the OpenRouter key, at or below "
+            f"the ${MIN_LEFT:.2f} floor -- not drawing. Top the key up, or set "
+            f"PROP_IMAGE_BUDGET lower to spend into it deliberately.")
+
     last = None
     for or_model in ladder:
         body = json.dumps({
@@ -300,6 +353,16 @@ def _via_openrouter(prompt, out_path, refs, model, ref_instruction, tier=0):
                       f"measured on")
                 continue
             raise RuntimeError(last)
+
+        usd = float((payload.get("usage") or {}).get("cost") or 0.0)
+        SPENT["usd"] += usd
+        SPENT["images"] += 1
+        if SPENT["left"] is not None:
+            SPENT["left"] = max(0.0, SPENT["left"] - usd)
+        print(f"    [{or_model.split('/')[-1]} ${usd:.4f}; this run "
+              f"${SPENT['usd']:.2f} over {SPENT['images']} drawing(s)"
+              + (f"; ${SPENT['left']:.2f} left" if SPENT["left"] is not None else "")
+              + "]")
 
         for choice in payload.get("choices", []):
             for img in choice.get("message", {}).get("images") or []:

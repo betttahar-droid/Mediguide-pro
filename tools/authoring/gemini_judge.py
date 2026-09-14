@@ -125,6 +125,15 @@ def _via_openrouter(prompt, images, timeout, models=OR_MODELS):
     body = json.dumps({
         "messages": [{"role": "user", "content": content}],
         "max_tokens": 12000, "temperature": 0.2,
+        # AND PIN THE REASONING EFFORT, which `auto_prop.glm` shouts about in
+        # capitals: "Left unpinned, OpenRouter routed this to a provider that
+        # thought for over ten minutes on a prompt-writing task and never
+        # returned." Asked to judge sixteen props through this path,
+        # z-ai/glm-5.3-flash produced nothing at all in ten minutes and the run
+        # had to be killed -- the same failure, in a file that had not been
+        # given the same fix. Gemini ignores the field; a reasoning model does
+        # not, and this path is meant to take any vision model.
+        "reasoning": {"effort": "low"},
     })
 
     last = None
