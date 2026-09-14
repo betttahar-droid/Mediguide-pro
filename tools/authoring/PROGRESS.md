@@ -34,6 +34,7 @@ taller axis was wrong on 33 of 65 props and is now fixed at the cause.
 | `resize_audit.py` | every resize decision, one at a time, against glm-5.3 | **yes** — in front of the judges, findings quoted and patch merged |
 | `image_bench.py` | which image model to buy, on `wide_art`/`tall_body`'s own bars | **yes** — its table is the ladder in `concept_sheet` |
 | `judge_bench.py` | whether a judge can see a repeat `repeat_score` can | diagnostic — the answer is no, for every model tried |
+| `depth_scale.py` | how far a part really stands off, against the side view | **yes** — its sweep set the renderer's `DEPTH` |
 | `raycast.mjs` | names the object under a render pixel | n/a (diagnostic) |
 
 ---
@@ -191,6 +192,31 @@ Roadmap 2b — a three-quarter reference view — is the only way past it.
   truncation, which reads identically. `auto_prop.glm` carries the same finding
   in its docstring one file over. At 12000 both answer; `gemini-2.5-flash-lite`
   still runs past 37k characters and is dropped.
+
+---
+
+### The geometry, measured against the drawings it claims to be
+
+`geometry_audit` renders the model from three axes and scores each outline
+against its elevation. Across 98 props:
+
+```
+front  IoU median 0.9858   min 0.936   below 0.95:  4/98
+side   IoU median 0.9777   min 0.759   below 0.95: 12/98   (was 0.9659, 19/98)
+top    IoU median 0.9650   min 0.870   below 0.95: 26/98
+```
+
+**The body is not the weak part — the parts standing off it were.** Rendering
+the loft with no parts on it at all settles which half is at fault:
+`v8_arcade_cabinet` goes 0.898 → **0.993** on the side with the parts removed,
+`v51_pinball` 0.851 → 0.973, `v48_arcade_cabinet` 0.916 → 0.992. Nine of twelve
+improve by 0.06–0.12. Halving the stand-offs took the side median from 0.966 to
+0.978 and the props below 0.95 from 19 to 12 — 87 better, 5 worse, none by more
+than 0.009.
+
+**The sweep could not choose the number and the pictures could.** Side IoU rises
+monotonically as relief shrinks, all the way to a prop with no relief at all, so
+it is a bound and not an optimum. See `parts_view/index.html`'s `DEPTH`.
 
 ---
 

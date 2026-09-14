@@ -60,8 +60,8 @@ const load = async (u) => {
 const A = man.aspect;
 const FW = A * wS, FH = 1 * hS;
 
-// how far each depth class stands off the body, in units of the prop's height
-const DEPTH = { flush: 0.004, proud: 0.018, deep: 0.055, recessed: -0.014 };
+// ?pd= scales every stand-off at once. See DEPTH, below BODY_D.
+const PD = Number(p.get('pd') ?? 1);
 
 let strips = null;
 try { strips = await (await fetch(`${dir}/strips_front.json`)).json(); } catch {}
@@ -261,6 +261,48 @@ if (p.get('loft') === '0') fprofile = null;
 if (p.get('plan') === '0') tprofile = null;
 if (p.get('box') === '1') profile = null;
 const BODY_D = Number(p.get('depth') ?? profile?.depth ?? bodyMeta?.depth ?? 0.34);
+
+// HOW FAR EACH DEPTH CLASS STANDS OFF THE BODY, AS A FRACTION OF THE BODY'S OWN
+// DEPTH -- which is what a stand-off is a fraction OF.
+//
+// These were constants in units of the prop's HEIGHT, and that is a unit
+// confusion of the shape MISTAKES.md lists: a quantity measured along z,
+// expressed in y. It means a pinball 0.60 deep and a jukebox 0.38 deep give
+// their bezels exactly the same stand-off, so the same number is 3% of one
+// prop's depth and 5% of another's. The values below are today's divided by
+// 0.45, the depth of a typical cabinet, so a cabinet is unchanged and every
+// other prop is now proportional to itself.
+//
+// AND THEY ARE HALVED, WHICH IS MEASURED. geometry_audit scores the model's
+// outline against each elevation, and the SIDE was the weak axis -- median IoU
+// 0.966 against the front's 0.985, nineteen props below 0.95. Rendering the
+// body with no parts on it at all settles which half is at fault, and it is
+// not the loft: v8_arcade_cabinet goes 0.898 -> 0.993 with the parts taken off,
+// v51_pinball 0.851 -> 0.973, v48_arcade_cabinet 0.916 -> 0.992. Nine of twelve
+// improve by 0.06 to 0.12. The body traced from the side elevation matches it
+// almost exactly; the parts standing off it are the error.
+//
+// THE SWEEP CANNOT PICK THE NUMBER AND THE PICTURES CAN. depth_scale.py runs
+// ?pd= from 0 to 1 and the side IoU rises monotonically as the relief shrinks
+// -- 0.904 at pd=1, 0.915, 0.926, 0.936 at pd=0 -- so the outline objective
+// always prefers a flatter prop and would end with every button a sticker,
+// which is the one thing `A BUTTON IS A CAP, NOT A TILE` exists to prevent. So
+// it is read as a bound and not as an optimum: the relief IS too generous, and
+// how much to keep is settled by looking. At pd=1 v15_arcade_cabinet's screen
+// bezel visibly overhangs the cabinet's right-hand corner; at 0.4 it sits
+// inside it and the marquee, deck, coin door and buttons all still read as
+// relief. Half is inside that window and recovers about a third of the gap.
+// `flush` is NOT halved with the others, because it is not relief: it is the
+// hair that keeps a part's face and the body's face from being coplanar, and
+// two coplanar opaque faces z-fight (the vending machine's window came out
+// mottled blue with the cans flickering away). It is converted to the new unit
+// and otherwise left where it was.
+const DEPTH = {
+  flush:    0.009 * BODY_D * PD,      // 0.004 on a 0.45-deep prop, as before
+  proud:    0.020 * BODY_D * PD,      // was 0.018
+  deep:     0.061 * BODY_D * PD,      // was 0.055
+  recessed: -0.016 * BODY_D * PD,     // was -0.014
+};
 
 // --- textures ---------------------------------------------------------------
 // THE SHEET PAID FOR FOUR ELEVATIONS; USE FOUR. Texturing only the front and
