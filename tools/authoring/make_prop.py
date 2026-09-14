@@ -694,6 +694,23 @@ def main():
             rep = repeat_score.judge(d / f"r{rnd}")
         except Exception as e:
             print(f"  repeat measure unavailable ({type(e).__name__})")
+        # AND EVERY RESIZE DECISION IS AUDITED ONE AT A TIME, which is a
+        # different question from the one the judges are asked. They see the
+        # whole prop at three sizes and answer about the prop -- the failure
+        # CLAUDE.md records in numbers, where both graders scored a cabinet
+        # carrying five stacked marquees exactly as they scored the corrected
+        # one beside it. resize_audit frames the camera on ONE part, states what
+        # the tool did to it and why, and asks whether that decision holds. It
+        # also says whether the fault is the part or the body behind it, because
+        # those are fixed in different places and a price label smeared on the
+        # glass is not the product window's fault.
+        aud, aud_patch = [], []
+        try:
+            import resize_audit
+            resize_audit.audit(d, args.asset, "front")
+            aud, aud_patch = resize_audit.faults(d, "front")
+        except Exception as e:
+            print(f"  resize audit unavailable ({type(e).__name__}: {e})")
         # AND WHETHER ANY FEATURE FAILS ITS OWN TYPE. feature_intent checks
         # each instance separately -- four legs are four features, nine slots
         # are nine -- which is the rule the old validation broke by counting
@@ -746,6 +763,18 @@ def main():
                              f"the face to span it, and a part that comes one "
                              f"per bay is counted, not stretched)"
                              for q in _ov))
+        # THE AUDIT'S FINDINGS GO IN FRONT OF THE JUDGES TOO, for the reason
+        # repeat_score does: a channel that can block and cannot correct stops
+        # the loop converging. Its own patch is merged below, and quoting the
+        # findings here lets the readers name a part the audit could only point
+        # at -- the audit sees one decision at a time and cannot know that the
+        # smear it found on the glass belongs to the sign three parts away.
+        if aud:
+            evidence += ("\n\nAUDITED ONE DECISION AT A TIME. Each resize was "
+                         "put to a second model on its own, with the camera on "
+                         "that part and nothing else asked about:\n"
+                         + "\n".join(f"  - {f['part']}: {f['fault']}"
+                                     for f in aud[:8]))
         content = [{"type": "text",
                     "text": JUDGE.format(asset=args.asset, parts=listing,
                                          wider=sr["wider_means"],
@@ -960,7 +989,11 @@ def main():
         # the very fault the note above says was fixed. Four rounds re-reporting
         # a correction the loop had been handed and thrown away.
         patch = {}
-        for src in (((gem or {}).get("patch") or []), v.get("patch", [])):
+        # The audit's patch goes in FIRST, so a judge that looked at the same
+        # part later in the list still wins the field: this is one more opinion
+        # and not an override of the two that see the whole prop.
+        for src in (aud_patch, ((gem or {}).get("patch") or []),
+                    v.get("patch", [])):
             for q in src:
                 n = q.get("name")
                 if not n:
