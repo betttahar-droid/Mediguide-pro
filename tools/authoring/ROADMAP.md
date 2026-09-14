@@ -172,10 +172,41 @@ resize and rebuilding changes nothing about any other part. The premise that "a
 patch rebuilds everything and can break features that were passing" is not true
 of the arithmetic.
 
-**What is left is `paint_out`**, one model call per rebuild, which can come back
-different and repaint holes that were fine. That is the only non-deterministic
-step in `rebuild()`, and the transactional version of it is: re-ask only for the
-holes belonging to features that failed, and keep the rest of the plate.
+**And so is `paint_out`, which was the other half of the premise and was also
+already true.** "One model call per rebuild, which can come back different and
+repaint holes that were fine" is not what happens: `rebuild()` never passes
+`--redraw`, so the plate is bought once and cached, and two consecutive runs
+produce a **byte-identical composite on every prop tried**. The only
+non-deterministic step in `rebuild()` is non-deterministic once, not once a
+round.
+
+**Done anyway, because that safety was the cache's and not the design's.** Two
+changes, both measured:
+
+- **The last round's fills are carried forward** through `_painted_<face>_mask`
+  rather than re-scored from scratch. A part leaves the queue only when every
+  pixel of its *current* hole is already painted, so a part that moved or grew
+  comes back and a hole that no longer exists cannot keep its fill. Verified
+  exactly: adding a fitting to a finished prop changes **3465 pixels, every one
+  of them inside the new hole and none outside it**.
+- **A cached plate is checked against the question it was drawn from**, which is
+  `_plate_in_<face>.png`, sitting on disk beside it. The cache was keyed on the
+  plate *existing*. Across the corpus **4 of 14 props were scoring holes against
+  a plate that had never been shown them** — the plate still has the fitting
+  there, and what it paints is whatever happened to be at those coordinates.
+
+  Honest about the size of this: the colour bar already refuses the loud cases
+  (a fitting 53 away from its surroundings against a bar of 46), and **no prop
+  in the corpus is known to have had a fitting painted back into its
+  background**. What the check closes is the quiet case — a flush, low-contrast
+  fitting, which is the exact thing `MISTAKES.md` records as unmeasurable by
+  every other means.
+
+**The change broke itself first, and the sweep is what caught it.** Writing the
+magenta mask on every attempt overwrote the record of what had bought the plate,
+so a round that carried all but one hole left a one-hole question behind and the
+*next* round re-bought a drawing it already had. Two props. Tested on three, and
+all three were the ones where it did not show.
 
 **Found while measuring this, and fixed separately:** the judge's resize patch
 was being silently discarded for 265 parts across 76 props. See the commit — a

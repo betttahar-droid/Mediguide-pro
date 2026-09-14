@@ -177,6 +177,33 @@ def holes_of(d, face, parts, W, H, grow=2):
     return out
 
 
+def _outside(cut, want, W, H):
+    """How many of the holes we need now were NOT in the question that bought
+    the cached plate. Zero means the plate answers; anything else means it was
+    never shown them, and what sits there is still the fitting.
+
+    The saved _plate_in is the question, in the same coordinates, so this is a
+    direct comparison and not a guess. A missing or unreadable one counts as
+    answering nothing, which buys a drawing rather than trusting a plate whose
+    question is gone."""
+    try:
+        a = Image.open(cut).convert("RGB")
+    except Exception:
+        return sum(1 for col in want for v in col if v)
+    if a.size != (W, H):
+        a = a.resize((W, H), Image.NEAREST)
+    ap = a.load()
+    n = 0
+    for x in range(W):
+        col = want[x]
+        for y in range(H):
+            if col[y]:
+                r, g, b = ap[x, y]
+                if not (r > 200 and b > 200 and g < 60):
+                    n += 1
+    return n
+
+
 def grain(im, box):
     """Mean neighbour difference in one region -- flat fill scores near zero."""
     x0, y0, x1, y1 = box
@@ -288,6 +315,51 @@ def main():
     # also a smaller and easier question than the first attempt's.
     todo = list(parts)
     kept = 0
+
+    # WHAT THE LAST ROUND ALREADY PAINTED IS KEPT, NOT REDRAWN.
+    #
+    # The loop calls this every round because the part list changes between
+    # rounds, and until now every round rebuilt the composite from scratch: a
+    # hole that passed in round 2 was re-scored in round 3 and could fail. In
+    # practice it did not, because the plate is cached and the score is
+    # deterministic -- two consecutive runs are byte-identical on every prop
+    # tried -- but that safety is the CACHE's, and it evaporates the moment the
+    # cache is invalidated below.
+    #
+    # So carry the previous composite forward, through its own mask. A part is
+    # only taken off the list if EVERY pixel of its current hole is already
+    # painted: if the part moved or grew, its new pixels are not, and it goes
+    # back in the queue. Nothing here can keep a fill for a hole that is no
+    # longer there, because the carry is intersected with the current holes.
+    carried = 0
+    prev_p, prev_m = d / f"_painted_{face}.png", d / f"_painted_{face}_mask.png"
+    if not args.redraw and prev_p.exists() and prev_m.exists():
+        try:
+            pv, pm = Image.open(prev_p).convert("RGB"), Image.open(prev_m).convert("L")
+            if pv.size == (W, H) and pm.size == (W, H):
+                pvp, pmp = pv.load(), pm.load()
+                for x in range(W):
+                    for y in range(H):
+                        if pmp[x, y] > 127 and hole[x][y]:
+                            op[x, y] = pvp[x, y]
+                            mp[x, y] = 255
+                still = []
+                for p in todo:
+                    x0, y0, x1, y1 = p["px"]
+                    px = [(x, y)
+                          for x in range(max(0, x0), min(W, x1))
+                          for y in range(max(0, y0), min(H, y1)) if hole[x][y]]
+                    if px and all(mp[x, y] == 255 for x, y in px):
+                        carried += 1
+                    else:
+                        still.append(p)
+                todo = still
+                if carried:
+                    print(f"    {carried} hole(s) kept from the last round's plate")
+        except Exception:
+            pass                     # an unreadable carry is simply no carry
+    kept += carried
+
     for attempt in range(max(1, args.tries)):
         if not todo:
             break
@@ -304,9 +376,46 @@ def main():
                         mk[x, y] = MAGENTA
         sfx = "" if attempt == 0 else f"_{attempt + 1}"
         cut = d / f"_plate_in_{face}{sfx}.png"
-        marked.save(cut)
         plate = d / f"_plate_{face}{sfx}.png"
-        if args.redraw or not plate.exists():
+        # A CACHED PLATE IS ONLY AN ANSWER TO THE QUESTION IT WAS DRAWN FROM.
+        #
+        # The cache was keyed on the plate EXISTING, and the question is the
+        # magenta mask -- which is on disk beside it, as _plate_in. Measured
+        # across the 23 props that have one: the current holes are a SUBSET of
+        # what was asked on all 23, and strictly smaller on 6 (v49_pinball at
+        # 11.9% IoU, v45_pinball 32.8%, v45_arcade_cabinet 40.9%). A plate that
+        # over-answers is harmless -- the extra holes are simply not composited
+        # -- which is why this has never misfired.
+        #
+        # It is the other direction that is not safe, and nothing would have
+        # noticed it. A round that ADDS a fitting -- which is what the judges'
+        # `count` lever and any re-segmentation do -- asks the cached plate for
+        # a hole the model was never shown, so the plate still has the FITTING
+        # sitting there. The colour check compares that against the material
+        # around it and a fitting close to its surroundings passes, painting
+        # the fitting back into the background it was lifted out of.
+        #
+        # Zero props today. The same shape cost this session a full round of
+        # resize_audit findings when shots were matched by mtime instead of by
+        # the question they answered -- an artefact reused because it existed,
+        # not because it answered.
+        have = plate.exists() and not args.redraw
+        stale = _outside(cut, want, W, H) if have else 0
+        if stale:
+            print(f"    the cached plate was never asked about {stale} pixel(s) "
+                  f"of these holes -- drawing again")
+        if have and not stale:
+            pass                     # the plate answers; its question stands
+        else:
+            # AND THE QUESTION IS ONLY REWRITTEN WHEN IT IS ASKED. _plate_in is
+            # the provenance of the plate beside it, not a scratch buffer: it
+            # is what the staleness check above compares against next round.
+            # Saving it unconditionally made this change break itself -- a
+            # round that carried every hole but one wrote a mask covering that
+            # one hole, so the NEXT round measured the full hole set against it
+            # and re-bought a drawing it already had. Two props in the corpus,
+            # found by sweeping instead of trusting the three it was tested on.
+            marked.save(cut)
             try:
                 generate_image(PROMPT.format(asset=args.asset), plate,
                                load_key(), refs=[str(ref), str(cut)])
