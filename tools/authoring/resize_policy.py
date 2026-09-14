@@ -115,18 +115,56 @@ POLICY_RESIZE = {
 }
 
 
-def policy_for(role):
-    return ROLE_POLICY.get(role, (None, None))
+# A FRAME ROLE IS ONLY A FRAME IF IT ACTUALLY FRAMES SOMETHING.
+#
+# The first version gave every window, grille, vent and drawer FRAME on both
+# axes, which is an assumption, and measuring it showed the assumption is
+# wrong for 93% of them: of 154 frame-role features in the corpus, only 11
+# contain two or more countable children. A small round window with nothing
+# inside it is not a frame, it is a shape, and stretching it loses the
+# reference's own proportions for no gain.
+#
+# But "no children" is ambiguous, and the ambiguity is the interesting part. A
+# vending machine's display_window with 19 product children is a frame. The
+# same window with none might be a plain sheet of glass -- or it might be a
+# window whose products were never segmented, which is the single commonest
+# defect in this corpus and the reason a widened machine grows blank panel.
+#
+# segment_audit tells those apart, so the two tools compose: a frame-role
+# feature with no children that segment_audit flags as a SWALLOWED BOX has
+# contents that were never lifted, and no policy can be decided for it until
+# they are. That is an UNVERIFIED, not a guess -- the same vocabulary
+# feature_intent uses, for the same reason.
+COUNTABLE = {"slot", "button", "window", "light", "knob", "label", "decal"}
+FRAME_ROLES = {"window", "grille", "vent", "drawer"}
 
 
-def agrees(f):
+def policy_for(role, kids=None, swallowed=False):
+    """The policy for a role, given what it was measured to contain."""
+    base = ROLE_POLICY.get(role, (None, None))
+    if role not in FRAME_ROLES or kids is None:
+        return base
+    if kids >= 2:
+        return base                       # it really does frame things
+    if swallowed:
+        return (None, None)               # contents not segmented; undecidable
+    # nothing inside it and nothing hidden inside it: hold the drawn shape
+    return (HOLD, HOLD)
+
+
+def agrees(f, kids=None, swallowed=False):
     """Does this feature's stored resize agree with what its role requires?
 
     Returns (status, note). "unknown" roles cannot disagree with anything --
     that is what makes an honest unknown safe to carry.
     """
-    across, up = policy_for(f.role)
+    across, up = policy_for(f.role, kids, swallowed)
     if across is None:
+        if f.role in FRAME_ROLES:
+            return "unverified", (f"{f.role} holds no segmented children and "
+                                  f"segment_audit says something is hidden "
+                                  f"inside it -- its contents decide the "
+                                  f"policy and they were never lifted")
         return "unknown-role", f"{f.role} has no policy"
     r = f.resize or "fixed"
     want = POLICY_RESIZE[across] | POLICY_RESIZE[up]
@@ -141,11 +179,25 @@ def agrees(f):
                         f"({'|'.join(sorted(want))}), stored {r}")
 
 
-def audit(parts_json, face="front"):
+def audit(parts_json, face="front", prop_dir=None):
     feats = lift(parts_json, face)
+    # how many countable children each feature was MEASURED to contain
+    kids = Counter()
+    for f in feats:
+        if f.host and f.role in COUNTABLE:
+            kids[f.host] += 1
+    # and which boxes segment_audit believes are hiding something
+    swallowed = set()
+    if prop_dir:
+        try:
+            import segment_audit
+            r = segment_audit.audit(str(prop_dir), face)
+            swallowed = {b["part"] for b in r.get("swallowed_boxes", [])}
+        except Exception:
+            pass
     rows = []
     for f in feats:
-        st, note = agrees(f)
+        st, note = agrees(f, kids.get(f.id, 0), f.id in swallowed)
         rows.append({"id": f.id, "role": f.role, "resize": f.resize,
                      "status": st, "note": note})
     return rows
@@ -170,7 +222,7 @@ def main():
             if not data.get("parts"):
                 continue
             props += 1
-            rows = audit(data)
+            rows = audit(data, "front", pj.parent)
             n = 0
             for r in rows:
                 tally[r["status"]] += 1
@@ -197,11 +249,15 @@ def main():
 
     d = Path(args.prop_dir)
     rows = audit(json.loads((d / f"parts_{args.face}.json").read_text()),
-                 args.face)
+                 args.face, d)
     bad = [r for r in rows if r["status"] == "disagree"]
-    print(f"{d.name}: {len(bad)} of {len(rows)} features contradict their role")
+    unv = [r for r in rows if r["status"] == "unverified"]
+    print(f"{d.name}: {len(bad)} of {len(rows)} features contradict their role"
+          + (f", {len(unv)} undecidable" if unv else ""))
     for r in bad:
-        print(f"   {r['id']:24} {r['note']}")
+        print(f"   DISAGREE   {r['id']:22} {r['note']}")
+    for r in unv:
+        print(f"   UNVERIFIED {r['id']:22} {r['note']}")
 
 
 if __name__ == "__main__":
