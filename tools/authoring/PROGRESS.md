@@ -35,6 +35,7 @@ taller axis was wrong on 33 of 65 props and is now fixed at the cause.
 | `image_bench.py` | which image model to buy, on `wide_art`/`tall_body`'s own bars | **yes** — its table is the ladder in `concept_sheet` |
 | `judge_bench.py` | whether a judge can see a repeat `repeat_score` can | diagnostic — the answer is no, for every model tried |
 | `depth_scale.py` | how far a part really stands off, against the side view | **yes** — its sweep set the renderer's `DEPTH` |
+| `part_bulge.py` | which single part makes a prop the wrong shape, by name | diagnostic — it named the joystick, the legs and the twist |
 | `raycast.mjs` | names the object under a render pixel | n/a (diagnostic) |
 
 ---
@@ -204,7 +205,7 @@ against its elevation. Across 98 props:
                                                           at the session's start
 front  IoU median 0.9859   min 0.936   below 0.95:  4/98   0.9852  0.934   4
 side   IoU median 0.9792   min 0.763   below 0.95:  9/98   0.9659  0.762  19
-top    IoU median 0.9760   min 0.902   below 0.95: 12/98   0.9628  0.876  22
+top    IoU median 0.9760   min 0.902   below 0.95: 11/98   0.9628  0.876  22
 
 all three faces >= 0.95 on 80 of 98 props; >= 0.97 on 51
 ```
