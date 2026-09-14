@@ -28,6 +28,7 @@ taller axis was wrong on 33 of 65 props and is now fixed at the cause.
 | `segment_audit.py` | boxes that swallowed fittings; bands never lifted | **yes** — one re-draw when `UNDER_SEGMENTED` |
 | `depth_probe.py` | a feature's thickness off the side elevation | **yes** — and its answer is almost always `UNMEASURABLE`, which is the finding |
 | `overlap_cut.py` | drawn pixels claimed by more than one part | **yes** — cuts them out of the larger part after `detail_sheet` |
+| `recompose_score.py` | whether the parts lay back down as the reference | diagnostic — it is 0.00% on 89 of 90 props, so there is nothing to gate on |
 | `raycast.mjs` | names the object under a render pixel | n/a (diagnostic) |
 
 ---
@@ -47,6 +48,9 @@ growth place   44 props moved off the blind band onto a measured bare run
 overlap        88 props, 1462 pairs of parts sharing drawn pixels -- cut
 vertical rule  121 parts held their height that were stretching it
                (56 sign, 28 button, 17 decal, 11 slot, 8 screen, 1 light)
+flank check    75 bands had never been checked against the other elevations -> 0
+recomposition  0.00% on 89 of 90 props, away from part boxes and the outline
+               (the 26% layer_build used to print was sheet and dilation ring)
 ```
 
 **No prop can reach a meaningful ACCEPTED from four elevations**, and that is
@@ -106,6 +110,21 @@ Roadmap 2b — a three-quarter reference view — is the only way past it.
   across-rule, and `faceQuads` **stretches** every Y rule that is not
   `spany_repeat` — so `screen: spanx_center` meant stretch, and a taller cabinet
   grew a taller screen. 121 parts across 65 props.
+- **A part that lengthens is not standing in the way.** `strip_slice`'s
+  occupancy tally counted every part against every row it stands in, including
+  full-height rails that lengthen with the prop. `v50_vending_machine`'s two
+  frames are 63 px of a 297-wide face over all 517 rows, so **no row on the prop
+  was ever bare**: it fell through to the stretch, where its nine per-tier
+  product windows held their size while the background carrying their price
+  labels stretched past them. Excluding lengthening parts it finds 56 bare rows
+  at 6.5 copies. Props stretching: 19 → 16.
+- **A shelf repeats down the case it is in.** `hostSpan`'s body fallback returns
+  `v: [0, 1]` — the honest answer to "how wide", read as a tier span. v50's
+  bottom row of drinks rendered below the push bar, outside the glass;
+  `raycast` named it `product_window_8_tier1_mesh`. When no part is the case,
+  the tiers' own bounding extent is the interior, and the count is the HOST's
+  growth through `gOfT` rather than the prop's — which reduces to `round(FH)`
+  exactly when the host is the whole prop, so nothing else moves.
 - **A growth band may not be made of fittings.** A 1.6× pinball came out with
   four playfields stacked diagonally up its cabinet. Two faults in series: an
   empty `taller_at` outranked a members-only one in `scale_rules` (an empty list
