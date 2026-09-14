@@ -417,8 +417,11 @@ def main():
             # found by sweeping instead of trusting the three it was tested on.
             marked.save(cut)
             try:
+                # The second attempt asks a different model, not the same one
+                # again -- see concept_sheet.OR_LADDER.
                 generate_image(PROMPT.format(asset=args.asset), plate,
-                               load_key(), refs=[str(ref), str(cut)])
+                               load_key(), refs=[str(ref), str(cut)],
+                               tier=attempt)
             except Exception as e:
                 print(f"  plate not drawn ({type(e).__name__}) -- "
                       f"{len(todo)} hole(s) left to the arithmetic fill")

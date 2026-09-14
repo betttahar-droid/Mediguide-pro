@@ -283,9 +283,12 @@ def draw(prop_dir, asset, face="front", redraw=False):
                 "\n\nYOUR LAST ATTEMPT WAS REJECTED, measured against the "
                 f"artwork you were given: {last}\nDraw it again and fix that.")
             try:
+                # Each re-ask goes to a different model -- the ladder in
+                # concept_sheet, in price order. Measured: the models fail on
+                # different parts, so a second opinion beats a second roll.
                 generate_image(
                     PROMPT.format(asset=asset, part=n.replace("_", " ")) + more,
-                    dst, key, refs=[ask_p])
+                    dst, key, refs=[ask_p], tier=attempt)
             except Exception as e:
                 print(f"  {n}: not drawn ({type(e).__name__})")
                 log.append({"part": n, "status": "failed",

@@ -36,17 +36,43 @@ OUT_DIR = ROOT / "docs" / "concept"
 MODEL = "gemini-3.1-flash-image"  # Nano Banana 2, the model the brief names
 ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
 
-# The same model, bought from someone else. See `_via_openrouter` below.
 OR_ENDPOINT = "https://openrouter.ai/api/v1/chat/completions"
+
+# THE LADDER, CHEAPEST FIRST, MEASURED RATHER THAN ARGUED. `image_bench.py`
+# scores candidate models on `wide_art.check` and `tall_body.check` -- the same
+# arithmetic that decides whether a drawing is composited -- and reports dollars
+# per ACCEPTED drawing, because a refusal is not free: both tools re-ask, so a
+# cheap model refused twice costs what a dear one costs once.
+#
+#   model                                $/img   accepted   $/accepted   s/call
+#   google/gemini-3.1-flash-lite-image   0.034     14/20        0.0475      4.8
+#   google/gemini-3.1-flash-image        0.067     13/20        0.1056     11.1
+#   google/gemini-2.5-flash-image        0.034      3/6         0.0658      8.2
+#
+# Lite was put second on the argument that a cheaper artist is a different
+# artist and the corpus was measured on the dearer one. The argument is sound
+# and the measurement does not support it: over twenty drawings the two are
+# INDISTINGUISHABLE on the pipeline's own bars, and lite is half the price and
+# less than half the wait. So it leads.
+#
+# AND A REFUSAL ESCALATES TO A DIFFERENT MODEL, not just to another drawing
+# from the same one. The two do not fail on the same cases -- lite was refused
+# on v17_jukebox and v44_jukebox where full passed, full on v15's control deck
+# and v45_vending_machine where lite passed -- so "a refusal is a verdict on one
+# drawing" extends a step: a second opinion from a second model is a better
+# second drawing than a second roll from the first. Callers pass the attempt
+# number as `tier`.
+OR_LADDER = [
+    "google/gemini-3.1-flash-lite-image",   # Nano Banana 2 Lite
+    "google/gemini-3.1-flash-image",        # Nano Banana 2, the brief's model
+    "google/gemini-2.5-flash-image",        # Nano Banana
+]
+# When a caller names a Gemini model explicitly, honour it rather than the ladder.
 OR_MODEL = {
     "gemini-3.1-flash-image": "google/gemini-3.1-flash-image",
     "gemini-3.1-flash-lite-image": "google/gemini-3.1-flash-lite-image",
     "gemini-2.5-flash-image": "google/gemini-2.5-flash-image",
 }
-# Cheaper stand-ins, tried in order if the first choice is itself out of budget.
-# Both draw; both cost half. They are a different model and so a different
-# drawing, which is why they are a fallback and not the default.
-OR_CHEAPER = ["google/gemini-3.1-flash-lite-image", "google/gemini-2.5-flash-image"]
 
 # The style block. Identical for every module on purpose — consistency across a
 # catalogue comes from this prefix not drifting. Mirrors docs/concept-prompts.md.
@@ -204,19 +230,22 @@ def _spent(code, detail):
     return code == 403 and re.search(r"quota|billing|credit", detail, re.I) is not None
 
 
-def _via_openrouter(prompt, out_path, refs, model, ref_instruction):
-    """The same drawing, bought through OpenRouter instead of from Google.
+def _via_openrouter(prompt, out_path, refs, model, ref_instruction, tier=0):
+    """The drawing, bought through OpenRouter instead of from Google.
 
-    `google/gemini-3.1-flash-image` on OpenRouter IS Nano Banana 2 — the model
-    named in the brief and the one every measurement in PROGRESS.md was taken
-    against — so this fallback changes who is billed and nothing about what
-    comes back. That is the reason it is the first choice here and the reason
-    the cheaper models below are not: half the price for a different artist is
-    a worse trade than full price for the same one, when the corpus numbers
-    were measured on the same one.
+    WHICH MODEL is `OR_LADDER`, cheapest first, and the table above it is where
+    that order comes from — `image_bench.py` scoring candidates on the same
+    arithmetic that decides whether a drawing is used. Nano Banana 2 Lite leads
+    at $0.034 an image because over twenty drawings it is indistinguishable from
+    the model at twice the price, not because it is cheap.
 
-    Measured: $0.067 an image at ~1120 completion tokens, against $0.0002 for a
-    judge call. Images have always been the expensive half of a run.
+    @param tier which rung to start on — the caller's attempt number. A refusal
+      is a verdict on one drawing, and the two models fail on DIFFERENT cases,
+      so the second attempt is better spent on a second model than on a second
+      roll of the first.
+
+    An explicitly named Gemini model still wins over the ladder, so a caller
+    that needs a specific artist can have one.
 
     The response shape is OpenAI's, not Google's: the PNG comes back as a data
     URI in `choices[0].message.images[].image_url.url`, and the model will also
@@ -236,8 +265,17 @@ def _via_openrouter(prompt, out_path, refs, model, ref_instruction):
     content.append({"type": "text",
                     "text": f"{ref_instruction}\n\n{prompt}" if refs else prompt})
 
-    ladder = [OR_MODEL.get(model, f"google/{model}")]
-    ladder += [m for m in OR_CHEAPER if m != ladder[0]]
+    # THE DEFAULT MEANS "WHATEVER DRAWS THIS BEST", NOT "THIS MODEL". Every
+    # caller in the pipeline takes `model=MODEL` without thinking about it, so
+    # reading that as an explicit choice would put the dear model back at the
+    # head of the ladder and the measurement would change nothing. Only a model
+    # a caller actually passed is honoured.
+    named = OR_MODEL.get(model) if model != MODEL else None
+    ladder = ([named] + [m for m in OR_LADDER if m != named] if named
+              else list(OR_LADDER))
+    # Start where the caller's attempt says, and keep the rest below it so a
+    # budget failure still has somewhere to go.
+    ladder = ladder[min(max(0, int(tier)), len(ladder) - 1):] or ladder
 
     last = None
     for or_model in ladder:
@@ -276,7 +314,8 @@ def _via_openrouter(prompt, out_path, refs, model, ref_instruction):
     raise RuntimeError(last or "no OpenRouter image model answered")
 
 
-def generate_image(prompt, out_path, key, refs=(), model=MODEL, ref_instruction=REF_INSTRUCTION):
+def generate_image(prompt, out_path, key, refs=(), model=MODEL,
+                   ref_instruction=REF_INSTRUCTION, tier=0):
     """POST one prompt to the image model and write the PNG it returns.
 
     The single place this project talks to the image API. Everything else —
@@ -312,7 +351,7 @@ def generate_image(prompt, out_path, key, refs=(), model=MODEL, ref_instruction=
     }).encode()
 
     if _DIRECT_DEAD.get("why"):
-        return _via_openrouter(prompt, out_path, refs, model, ref_instruction)
+        return _via_openrouter(prompt, out_path, refs, model, ref_instruction, tier)
 
     req = urllib.request.Request(
         ENDPOINT.format(model=model) + f"?key={key}",
@@ -329,7 +368,7 @@ def generate_image(prompt, out_path, key, refs=(), model=MODEL, ref_instruction=
         _DIRECT_DEAD["why"] = f"HTTP {e.code}"
         print(f"  ! image API: HTTP {e.code} -- drawing through OpenRouter for "
               f"the rest of this run ({detail.strip()[:120]})")
-        return _via_openrouter(prompt, out_path, refs, model, ref_instruction)
+        return _via_openrouter(prompt, out_path, refs, model, ref_instruction, tier)
 
     for cand in payload.get("candidates", []):
         for part in cand.get("content", {}).get("parts", []):

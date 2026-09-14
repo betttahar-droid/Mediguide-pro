@@ -1,0 +1,36 @@
+{
+ "google/gemini-3.1-flash-image": {
+  "accepted": 4,
+  "asked": 6,
+  "usd": 0.4075,
+  "secs": 65.2,
+  "usd_per_accepted": 0.1019,
+  "refusals": [
+   "v15_arcade_cabinet/control_deck: the new ends are 56 away in colour from the artwork they join. Take the palette from the edges of the middle.",
+   "v16_vending_machine/band: the new band has a vertical edge down it: one column differs from the body above and below by 88, where the biggest such step on this machine is 63. Do not draw a border, a frame or a lighter strip at the sides -- the body reaches the edge of the canvas exactly as it does elsewhere."
+  ]
+ },
+ "google/gemini-3.1-flash-lite-image": {
+  "accepted": 4,
+  "asked": 6,
+  "usd": 0.2037,
+  "secs": 30.4,
+  "usd_per_accepted": 0.0509,
+  "refusals": [
+   "v15_arcade_cabinet/control_deck: 901 pixels of the magenta came back unfilled. Every magenta pixel must become part of this object.",
+   "v16_vending_machine/band: the new band has a vertical edge down it: one column differs from the body above and below by 98, where the biggest such step on this machine is 63. Do not draw a border, a frame or a lighter strip at the sides -- the body reaches the edge of the canvas exactly as it does elsewhere."
+  ]
+ },
+ "google/gemini-2.5-flash-image": {
+  "accepted": 3,
+  "asked": 6,
+  "usd": 0.1975,
+  "secs": 49.2,
+  "usd_per_accepted": 0.0658,
+  "refusals": [
+   "v15_arcade_cabinet/marquee: refused: None",
+   "v15_arcade_cabinet/control_deck: the new ends are 149 away in colour from the artwork they join. Take the palette from the edges of the middle.",
+   "v16_vending_machine/band: 15302 pixels of the magenta came back unfilled. Every magenta pixel must become body."
+  ]
+ }
+}

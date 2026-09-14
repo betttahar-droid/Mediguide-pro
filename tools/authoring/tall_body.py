@@ -88,6 +88,11 @@ SEAM_X = 1.0        # times the busiest row in the prop's own drawn background
 # forty-row strips of the real background is 53.8, so the stripe is 3.9x
 # something the drawing does and the interior is 0.34x it.
 COL_X = 1.0         # times the drawn background's own worst column step
+JOIN = 8            # rows of real prop the cut must leave on each side of it,
+                    # the same floor `extra` is clamped to -- a band joins body
+                    # at both ends and cannot join to the sheet
+HALF = 0.5          # of the prop's own median row width: narrower than this and
+                    # the band is a dome tip or a foot, not a place to grow
 MAGENTA = (255, 0, 255)
 
 PROMPT = """The attached image is the front of a {asset} with all of its
@@ -260,8 +265,79 @@ def place_cut(d, band, H, face="front"):
     lo, hi = max(0, min(a, b)), min(H, max(a, b))
     if hi <= lo:
         lo, hi = 0, H
-    cut = min(range(lo, hi + 1),
-              key=lambda y: (cover[y], 0 if y in edges else 1, abs(y - mid)))
+
+    # AND IT MUST BE INSIDE THE PROP, WHICH THE SCORE ABOVE MAKES CERTAIN IT IS
+    # NOT. Row 0 is covered by no part at all and is a part boundary, so it wins
+    # on both keys and loses only the tiebreak -- and a band starting at row 0
+    # hands it the range to win in. v17_jukebox cut at 0 with a band of 0..216,
+    # v18_jukebox at 0 with 0..11, v25_jukebox at 0 with 0..15: three props
+    # opening 269, 264 and 391 rows of new body ABOVE THEIR OWN CROWNS rather
+    # than through them. It surfaced as a crash in check() -- `above` is a
+    # zero-height crop and median_rgb of nothing is None -- which is the only
+    # reason it was seen at all, and the crash is the symptom, not the fault.
+    #
+    # A cut joins new body to old at BOTH its ends, so it needs prop on both
+    # sides. The silhouette says where the prop is; JOIN is the same 8 rows the
+    # extra height is floored at, so the margin is a number already in this file
+    # rather than a new one.
+    wide = None
+    try:
+        import numpy as np
+        from PIL import Image
+        al = np.array(Image.open(d / f"bg_{face}.png").convert("RGBA"))[..., 3] > 128
+        rows = np.flatnonzero(al.any(axis=1))
+        if len(rows):
+            top, bot = int(rows[0]), int(rows[-1])
+            lo, hi = max(lo, top + JOIN), min(hi, bot - JOIN)
+            if hi <= lo:                 # the band lies outside the body
+                lo, hi = top + JOIN, bot - JOIN
+            if hi <= lo:                 # the prop is too short to cut at all
+                return None, 0, False
+
+            # AND WHERE THE PROP IS WIDE, NOT MERELY WHERE IT IS PRESENT.
+            #
+            # The margin above is necessary and not sufficient: clamped to it,
+            # v18_jukebox and v25_jukebox cut at row 8, which is inside the tip
+            # of a domed crown. The band handed to the model spans the whole
+            # canvas width, so at a row where the prop is 20 pixels of 300 the
+            # request is 280 pixels of magenta OUTSIDE the object -- which is
+            # the exact fault this file already records two paragraphs down, the
+            # one that came back with four replies painting the outside white.
+            #
+            # The bar is the prop's OWN median row width, so it needs no
+            # choosing: a cabinet's mid-body is at or above it and a dome tip is
+            # nowhere near. Where the band offers nothing that wide -- a prop
+            # tapered along its whole height -- the widest row in the band is
+            # taken instead, because the band is still where the prop was
+            # measured to grow and a narrower join beats no drawing at all.
+            w = al.sum(axis=1)
+            bar = float(np.median(w[w > 0]))
+            wide = [y for y in range(lo, hi + 1) if w[y] >= bar]
+            if not wide:
+                best = max(range(lo, hi + 1), key=lambda y: w[y])
+                # AND WHERE THE BAND OFFERS NOWHERE WIDE ENOUGH, THERE IS NO
+                # HONEST PLACE TO OPEN ONE. Three props in the corpus have a
+                # band that is wrong at source -- v18_jukebox at rows 0..11 and
+                # v25_jukebox at 0..15 are the crown of a domed arch, a sliver
+                # of prop; v16_vending_machine at 606..617 is the foot strip
+                # under a featureless slab. Their widest rows are 0.37, 0.43
+                # and 0.18 of their own median, against 1.00 or better for
+                # every one of the other fourteen. Drawing there hands the
+                # model a request that is mostly outside the object, which is
+                # the failure two paragraphs down; stretching a slab that
+                # carries no artwork is the better of the two.
+                #
+                # HALF sits in the middle of that gap -- 0.43 to 1.00, a factor
+                # of 2.3 with nothing in it -- and it is a ratio to the prop's
+                # own median rather than a width in pixels.
+                if w[best] < HALF * bar:
+                    return None, 0, False
+                wide = [best]
+    except Exception:
+        pass
+
+    span = wide if wide else list(range(lo, hi + 1))
+    cut = min(span, key=lambda y: (cover[y], 0 if y in edges else 1, abs(y - mid)))
     return cut, cover[cut], (cut in edges)
 
 
@@ -278,7 +354,18 @@ def check(src, got, cut, extra, W, H):
     from strip_slice import row_diff
 
     new = got.crop((0, cut, W, cut + extra))
+    # WHAT THE BAND IS JUDGED AGAINST IS WHAT IT JOINS, AND THERE MAY BE LESS OF
+    # IT THAN extra. This was `cut - extra`, unclamped: on a cut near the top of
+    # the prop it is a zero-height crop, median_rgb of nothing is None, and the
+    # whole check raised TypeError instead of returning a verdict -- three props
+    # scored as refusals by a benchmark that was measuring image models. The cut
+    # is now kept inside the body (see place_cut), so this cannot go to zero;
+    # it is clamped anyway, because a check that crashes reports nothing and a
+    # check that reports nothing is indistinguishable from one that passed.
     above = src.convert("RGB").crop((0, max(0, cut - extra), W, cut))
+    if above.height < 1:
+        return ("the cut sits at the very top of the prop, so the new band has "
+                "no body above it to continue from.")
     a0 = np.asarray(src.convert("RGB")).astype(float)
     g = np.asarray(got).astype(float)
 
@@ -386,6 +473,9 @@ def draw(prop_dir, asset, face="front", redraw=False):
         print(f"  the body's share is {extra} rows: not worth a drawing")
         return None
     cut, ncov, on_edge = place_cut(d, band, H, face)
+    if cut is None:
+        print("  the prop is too short to open a band inside its own body")
+        return None
     print(f"    cut at row {cut} of {H}: {ncov} part(s) cover it"
           + (", and it is a part boundary" if on_edge else ""))
 
@@ -416,8 +506,13 @@ def draw(prop_dir, asset, face="front", redraw=False):
             "\n\nYOUR LAST ATTEMPT WAS REJECTED, measured against this "
             f"machine's own drawing: {last}\nDraw it again and fix that.")
         try:
+            # AND EACH RE-ASK GOES TO A DIFFERENT MODEL. The refusals are
+            # measured to be model-specific rather than case-specific: the two
+            # image models on the ladder fail on different props, so a second
+            # opinion is a better second drawing than a second roll of the same
+            # dice. `tier` is the attempt number; concept_sheet holds the order.
             generate_image(PROMPT.format(asset=asset) + ask_more, dst, key,
-                           refs=[ask_p])
+                           refs=[ask_p], tier=attempt)
         except Exception as e:
             print(f"  not drawn ({type(e).__name__})")
             return None
@@ -498,16 +593,35 @@ def main():
     args = ap.parse_args()
 
     if args.sweep:
+        # THE SWEEP RUNS THE SAME GATES draw() DOES, INCLUDING place_cut. It
+        # stopped at needs(), so after place_cut learned to refuse a band with
+        # nowhere wide enough to open it, the sweep went on reporting 17 props
+        # where 14 would be drawn -- a count that disagrees with the tool it
+        # counts. A sweep is a claim about what the pipeline will do.
+        from PIL import Image
         work = ROOT / "tools" / "img2threejs-work"
-        n = 0
+        n = skipped = 0
         for f in sorted(work.glob(f"strips_{args.face}.json".join(["*/", ""]))):
-            band, hx = needs(f.parent, args.face)
-            if band and hx >= MIN_TALL:
-                n += 1
-                print(f"   {f.parent.name:26} {hx:.2f}x  rows "
+            d = f.parent
+            band, hx = needs(d, args.face)
+            if not band or hx < MIN_TALL:
+                continue
+            bg = d / f"bg_{args.face}.png"
+            cut = None
+            if bg.exists():
+                cut, _c, _e = place_cut(d, band, Image.open(bg).height, args.face)
+            if cut is None:
+                skipped += 1
+                print(f"   {d.name:26} {hx:.2f}x  rows "
                       f"{band['px'][0]}..{band['px'][1]}  "
-                      f"{band['why'][:60]}")
-        print(f"{n} prop(s) would have their extra body drawn")
+                      f"-- nowhere wide enough to open a band; it stretches")
+                continue
+            n += 1
+            print(f"   {d.name:26} {hx:.2f}x  rows "
+                  f"{band['px'][0]}..{band['px'][1]}  cut {cut}  "
+                  f"{band['why'][:48]}")
+        print(f"{n} prop(s) would have their extra body drawn, "
+              f"{skipped} fall through to the stretch")
         return
     draw(Path(args.prop_dir), args.asset, args.face, args.redraw)
 
