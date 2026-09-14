@@ -45,14 +45,8 @@ is the kind of thing this repo has a list of.
 """
 import argparse
 import json
-import os
-import re
-import subprocess
 import sys
 from pathlib import Path
-
-import numpy as np
-from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools" / "authoring"))
@@ -93,26 +87,23 @@ def bulges(d, axis="side"):
     if not names:
         return []
     out = d / "_bulge"
-    out.mkdir(exist_ok=True)
     # `__none__` matches no part, so the first render is the bare body.
     qs = [f"dir=/{d.relative_to(ROOT)}&audit=1&fixcam=1&{AXIS[axis]}&only={n}"
           for n in ["__none__"] + names]
-    subprocess.run(["node", str(ROOT / "tools/authoring/parts_view/shoot.mjs"),
-                    str(out), *qs], cwd=ROOT, capture_output=True,
-                   env={**os.environ})
+    got = ga.shoot(out, qs)
+    # NO RENDER IS NOT NO FAULT. This used to skip a missing PNG and carry on,
+    # so a run with no browser reported "every part earns its place" for every
+    # prop in the corpus -- the most confident possible way to say nothing.
+    if len(got) < len(qs):
+        raise RuntimeError(f"{d.name}: {len(qs) - len(got)} of {len(qs)} "
+                           f"renders never arrived (is the dev server up?)")
     fl = ga.flips(d)[axis]
     base = None
     rows = []
     for n, q in zip(["__none__"] + names, qs):
-        f = out / (re.sub(r"[^a-z0-9]+", "-", q.replace("/", "-"),
-                          flags=re.I) + ".png")
-        if not f.exists():
-            continue
-        iou = ga.compare(f, src, flip_x=fl[0], flip_y=fl[1])[0]
+        iou = ga.compare(got[q], src, flip_x=fl[0], flip_y=fl[1])[0]
         if n == "__none__":
             base = iou
-            continue
-        if base is None:
             continue
         rows.append((iou - base, n))
     rows.sort()

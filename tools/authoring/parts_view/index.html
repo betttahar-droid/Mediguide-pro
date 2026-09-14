@@ -939,7 +939,7 @@ function gOfT(t) {
 // air. When the residual says the fit is poor the part keeps the old rule and
 // sits square on the frontmost point, which is what a bridging part wants.
 let lastFit = null;
-function surfacePlane(cx, cy, w, h) {
+function surfacePlane(cx, cy, w, h, thick = 0) {
   const zAt = (dx, dy) => frontZAt(tOfG((cy + dy) / FH + 0.5), cx + dx);
   const N = 6;
 
@@ -1076,10 +1076,42 @@ function surfacePlane(cx, cy, w, h) {
   const lim = mid2 + 3 * Math.max(mad, 0.002);
   const on = over.filter((v) => v <= lim);
   const need = on.length ? Math.max(...on) : 0;
+  // MINUS THE PART'S OWN THICKNESS, WHICH IS ALREADY IN FRONT OF THIS SEAT.
+  // What comes back from here is where the part's BACK face goes -- the caller
+  // seats the slab at `a` and pushes it out along the normal by d/2, so its
+  // front face lands at a + d. "Not buried" is a statement about that front
+  // face, and `need` was being applied as though the part were a sheet of no
+  // thickness at all, so EVERY part on any surface that is not perfectly flat
+  // floated exactly one thickness further out than it had to. A unit confusion
+  // nothing converted explicitly, which is MISTAKES.md's second shape.
+  //
+  // Measured: it takes v44_pinball's `flipper_button_right` from -0.031 of that
+  // prop's side outline to nothing at all -- the prop now has no part that costs
+  // more than 0.01 -- and v13_jukebox's `grille_bottom` from -0.018 to -0.014.
+  // It does NOT touch that jukebox's arch columns, whose fault is a step in the
+  // wall near their top rather than a clearance, and which are still standing.
   // and a part may never be pushed further out than its own depth however deep
   // the thing it grazes
-  return { a: a + Math.max(0, Math.min(need, 1.5 * Math.max(w, h) * 0.1)),
-           b, c, front, fitted: down.ok || across.ok };
+  const push = Math.max(0, Math.min(need - thick, 1.5 * Math.max(w, h) * 0.1));
+  // NOR PAST THE FRONTMOST THING IT IS CLEARING. Clearing means shifting the
+  // fitted PLANE forward until no sample of the surface pokes through it, and
+  // on a sloped surface that can seat the part's middle ahead of every sample
+  // there is: v51_pinball's right leg spans a quarter of the machine's height
+  // down a front wall that leans 6 degrees and steps, and came out seated at
+  // 0.294 with the frontmost surface under it at 0.283. Eleven thousandths in
+  // front of the cabinet, on a part whose depth class is `flush`.
+  //
+  // It cost 0.057 of that prop's side outline -- far more than its own area,
+  // because the score tight-crops before it compares, so a sliver past the nose
+  // widens the bounding box and shifts the whole silhouette against the
+  // drawing. The leg is drawn in the elevation the body was lofted from; a leg
+  // standing in front of it is the same double-count `depth_scale.py` describes.
+  //
+  // So the clearance is capped at the frontmost sample. There is nothing out
+  // there to clear. This can only ever REDUCE a push, so the step it was
+  // written for -- a monitor over the lip of a control deck -- still clears it.
+  return { a: Math.min(a + push, front), b, c, front,
+           fitted: down.ok || across.ok };
 }
 
 // how far forward the body's front face is at a given height and a given point
@@ -1092,6 +1124,73 @@ function frontZAt(y, x) {
   const x1 = lerpWall(fprofile.right_wall, y, FW / 2 / wS) * wS;
   const g = Math.min(1, Math.max(0, (x - x0) / Math.max(1e-9, x1 - x0)));
   return zb + (zf - zb) * depthAt(planF, tOfGx(g));
+}
+
+// HOW MUCH OF THIS PART'S RELIEF THE BODY ALREADY CARRIES.
+//
+// A SIDE ELEVATION TRACES THE FRONTMOST POINT AT EACH HEIGHT, and the body is
+// lofted from that trace. So the wall a part is mounted on is not a blank
+// carcass with the fittings still to come -- where the drawing shows a control
+// deck jutting out, the lofted body ALREADY juts out, by exactly that much. A
+// deck then mounted on top of its own bulge and given the full `deep` stand-off
+// is the same depth counted twice, and the audit sees it: v48_arcade_cabinet's
+// `control_deck` seats at 0.241 with the frontmost point of the entire cabinet
+// at 0.2475, then adds 0.030 of its own, so the finished prop is 4.7% deeper
+// than any drawing of it. It cost 0.063 of that prop's side outline, the single
+// largest per-part fault in the corpus, and v11_vending_machine's deck another
+// 0.022 the same way.
+//
+// This is the per-part answer to the sweep in `depth_scale.py`, which finds the
+// outline objective monotonically preferring a FLATTER prop at every global
+// scale and would end with every button a sticker. The difference between a
+// deck and a button is not how deep they are, it is whether the body under them
+// is already deep: so compare the wall over the part's own rows against the
+// wall just above and just below it, and subtract only the bulge that is there.
+// A button on a flat panel finds nothing to subtract and keeps every thousandth
+// of its cap, which is what `A BUTTON IS A CAP, NOT A TILE` is protecting.
+//
+// Medians on both sides, and a band on each side rather than one: the wall is
+// stepped, and a single sample or a one-sided window reads a step as a bulge.
+//
+// AND THE NEIGHBOURHOOD IS LOCAL, NOT THE PART'S OWN SIZE. Scaling the bands to
+// `h` reads a tall part against a different machine: a jukebox's bubble tube
+// runs down most of the cabinet, so its comparison bands landed on the dome
+// above and the plinth below -- both a long way back -- and the tube was told
+// the body had already given it 0.020, two and a half times its own stand-off,
+// for being in the middle of a jukebox. A tube IS a tube. Relief is a local
+// feature and the question is what the wall does just outside the part's own
+// edges, so the band is capped at a twelfth of the prop. On a control deck,
+// which is about that tall anyway, nothing changes.
+//
+// Samples off the top or bottom of the prop are dropped rather than clamped:
+// lerpWall holds its last value past the ends, so a part near the floor was
+// being compared against nine copies of the kick panel.
+//
+// AND THE VERSION THAT SCORED BETTER IS THE ONE THAT IS NOT HERE, which is the
+// whole of CLAUDE.md's "the proxy is not the objective" in one number. Swept
+// over all 98 props, bands scaled to the part's own height give a side median
+// of 0.9821 against 0.9818 for the local band, and a top of 0.9800 either way.
+// It wins by flattening more: 32 parts of 204 against 24, the extra ones being
+// a jukebox's bubble tubes and its plinth -- fittings that genuinely stand off
+// the cabinet, told they were part of it because the dome and the base are a
+// long way behind them. It also breaks four props where this breaks two. Three
+// ten-thousandths of a median is not worth a jukebox's bubble tubes.
+const AROUND = 1 / 12;
+function alreadyDrawn(cx, cy, w, h) {
+  if (!profile) return 0;
+  const zAt = (dy) => frontZAt(tOfG((cy + dy) / FH + 0.5), cx);
+  const med = (a) => {
+    const v = a.slice().sort((p, q) => p - q);
+    return v.length ? v[v.length >> 1] : 0;
+  };
+  const inside = (dy) => Math.abs(cy + dy) < FH / 2;
+  const N = 8, band = Math.min(h, AROUND * FH), on = [], off = [];
+  for (let i = 0; i <= N; i++) {
+    on.push(zAt((-h / 2 + (h * i) / N) * 0.8));
+    const t = (band * (i + 1)) / (N + 1);
+    for (const dy of [-h / 2 - t, h / 2 + t]) if (inside(dy)) off.push(zAt(dy));
+  }
+  return off.length ? Math.max(0, med(on) - med(off)) : 0;
 }
 
 function buildLoft() {
@@ -1626,7 +1725,7 @@ async function dressFill() {
     const t = await grab(q);
     // follow the body: a decal on a chamfer or a slope lies in it, by the same
     // surface fit that mounts the parts
-    const pl = surfacePlane(cx, cy, w2, h2);
+    const pl = surfacePlane(cx, cy, w2, h2, 0.004);   // its own lift, below
     // a rolled strip is built long-side-along and then turned, so its artwork
     // runs the way the run does
     const g2 = roll ? new THREE.PlaneGeometry(h2, w2)
@@ -1984,8 +2083,8 @@ for (const q of man.parts) {
   // may stand off about as far as its own smallest dimension allows.
   const CAP = { flush: 0.15, proud: 0.45, deep: 1.0, recessed: 0.45 };
   const cls = q.depth ?? 'proud';
-  const d = Math.max(0.002, Math.min(Math.abs(DEPTH[cls] ?? DEPTH.proud),
-                                     (CAP[cls] ?? 0.45) * Math.min(w, h)));
+  const dClass = Math.max(0.002, Math.min(Math.abs(DEPTH[cls] ?? DEPTH.proud),
+                                          (CAP[cls] ?? 0.45) * Math.min(w, h)));
   // A PART THAT MOVES CANNOT BE BURIED. A recess is drawn as a face a hair
   // proud with its box sunk behind, which is right for a screen and wrong for
   // anything on a hinge: the box is inside the body, so swinging it sweeps
@@ -2031,6 +2130,15 @@ for (const q of man.parts) {
   // shapes the body: a coin door near a chamfered corner sits further back
   // than one at the centre, and sampling only down the height floated it.
   const yFrac = y / FH + 0.5;
+  // AND ITS STAND-OFF IS WHAT THE BODY HAS NOT ALREADY GIVEN IT. See
+  // alreadyDrawn(): the lofted wall carries whatever relief the side elevation
+  // drew, so a deck on its own bulge only needs the part that is missing.
+  // A recess is not corrected -- it goes the other way, and a wall that recedes
+  // over its rows scores zero here anyway.
+  // ?already=0 turns it off, for sweeping it against the audit.
+  const gave = (recessed || p.get('already') === '0')
+    ? 0 : alreadyDrawn(x, y, w, h);
+  const d = Math.max(0.002, dClass - gave);
   // A RECESSED PART CANNOT SIT BEHIND A SOLID FACE. Centring its box at
   // surf - d/2 puts its front face exactly ON the body's, and two coplanar
   // opaque faces z-fight: the vending machine's window came out as mottled
@@ -2119,8 +2227,8 @@ for (const q of man.parts) {
     // that runs at -2.08, the residual then failed, and the stick was mounted
     // square. A panel is held along its whole face and is asked about all of
     // it; a stick is held only where it enters the panel.
-    const pl = m === 'stick' ? surfacePlane(bx, by - h * 0.35, w, h * 0.30)
-                             : surfacePlane(bx, by, w, h);
+    const pl = m === 'stick' ? surfacePlane(bx, by - h * 0.35, w, h * 0.30, d)
+                             : surfacePlane(bx, by, w, h, d);
     // ?fit=1 prints what surface each part decided it was lying on. Every
     // mounting fault so far has been invisible in the render and obvious in
     // these four numbers.
@@ -2128,6 +2236,7 @@ for (const q of man.parts) {
       console.log(`fit ${q.name.padEnd(22)} pitch ${(Math.atan(pl.c) * 57.3).toFixed(1).padStart(6)}`
         + `  yaw ${(Math.atan(-pl.b) * 57.3).toFixed(1).padStart(6)}`
         + `  seat ${pl.a.toFixed(3)}  frontmost ${pl.front.toFixed(3)}`
+        + `  d ${dClass.toFixed(4)}->${d.toFixed(4)} (body gave ${gave.toFixed(4)})`
         + `  |  down k=${lastFit.dk.toFixed(2)} r=${lastFit.dr.toFixed(4)} ${lastFit.dok ? 'ok' : 'NO'}`
         + ` w=${(w * 0.8).toFixed(3)} h=${(h * 0.8).toFixed(3)}`
         + (pl.fitted ? '' : '   (step, not a slope: mounted square)'));

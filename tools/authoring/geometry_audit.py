@@ -40,6 +40,39 @@ VIEWS = {                                        # name: (query, elevation)
 }
 
 
+def stem_of(q):
+    """The filename `shoot.mjs` gives a query. One definition, four callers."""
+    import re as _re
+    return _re.sub(r"[^a-z0-9]+", "-", q.replace("/", "-"), flags=_re.I)
+
+
+def shoot(out, qs):
+    """Render every query into `out`; return {query: Path} for what arrived.
+
+    IT RETURNS WHAT ARRIVED BECAUSE NOTHING ARRIVING IS THE COMMON FAILURE.
+    `shoot.mjs` needs CHROMIUM_PATH and Playwright's own default is not on this
+    box, so a caller that forgets it gets a browser-launch traceback on stderr,
+    which is captured, and zero PNGs. Three tools had the default inline and two
+    did not; in `part_bulge` the empty result came back as an empty list of
+    faults and printed "every part earns its place" for every prop. That is
+    CLAUDE.md's shape exactly -- a missing artefact degrading into something
+    that looks like an answer -- so the launch lives here once and the callers
+    are handed the gap instead of a silence.
+    """
+    out = Path(out)
+    out.mkdir(parents=True, exist_ok=True)
+    env = {**os.environ, "CHROMIUM_PATH": os.environ.get(
+        "CHROMIUM_PATH", "/opt/pw-browsers/chromium-1194/chrome-linux/chrome")}
+    subprocess.run(["node", str(ROOT / "tools/authoring/parts_view/shoot.mjs"),
+                    str(out), *qs], cwd=ROOT, capture_output=True, env=env)
+    got = {}
+    for q in qs:
+        f = out / f"{stem_of(q)}.png"
+        if f.exists():
+            got[q] = f
+    return got
+
+
 def flips(d):
     """Which elevations have to be mirrored before they can be compared.
 
@@ -187,12 +220,8 @@ def compare(model_png, elevation_png, n=160, flip_x=False, flip_y=False):
 
 def measure(d, out, verbose=True):
     """Render the model from three axes and score each against its elevation."""
-    import re as _re
     qs = [f"dir=/{d.relative_to(ROOT)}&audit=1&{q}" for q, _ in VIEWS.values()]
-    env = {**os.environ, "CHROMIUM_PATH": os.environ.get(
-        "CHROMIUM_PATH", "/opt/pw-browsers/chromium-1194/chrome-linux/chrome")}
-    subprocess.run(["node", str(ROOT / "tools/authoring/parts_view/shoot.mjs"),
-                    str(out), *qs], cwd=ROOT, capture_output=True, env=env)
+    shoot(out, qs)
     fl = flips(d)
     rec = reconcile(d)
     # the plan drawing over-reports depth by a known factor, so its proportion
@@ -200,8 +229,7 @@ def measure(d, out, verbose=True):
     inflate = {"top": (rec or {}).get("plan_inflation", 1.0)}
     report = {}
     for (name, (q, elev)), qq in zip(VIEWS.items(), qs):
-        stem = _re.sub(r"[^a-z0-9]+", "-", qq.replace("/", "-"), flags=_re.I)
-        f = out / f"{stem}.png"
+        f = out / f"{stem_of(qq)}.png"
         src = d / f"{elev}.png"
         if not f.exists() or not src.exists():
             if verbose:

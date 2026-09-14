@@ -41,12 +41,42 @@ on v8_arcade_cabinet -- while the outline IoU it is supposed to serve gets
 steadily WORSE, 0.898 -> 0.886 -> 0.881. A prop can have exactly the right
 proportions and the wrong shape. CLAUDE.md's rule, met head on: the measure
 that improves while the thing gets worse is a measure, not the goal.
+
+AND THE SWEEP ITSELF IS THE SAME TRAP, WHICH IS WHY `pd` IS NOT DRIVEN TO 0.
+Re-swept over the eight worst and the eight best props after the loft, the
+footprint and the bezel were fixed, summing front+side+top:
+
+    pd      worst 8    best 8
+    0.00     2.9096     2.9832
+    0.50     2.8965     2.9804
+    1.00     2.8825     2.9773
+    1.50     2.8691     2.9735
+
+Monotone decreasing in `pd` for BOTH groups -- and the earlier sweep, where
+the good props preferred some relief, no longer holds. It is tempting to read
+that as "the stand-off is simply wrong" and set it to zero. It is not, and the
+reason is geometric rather than empirical:
+
+    A SIDE ELEVATION TRACES THE FRONTMOST POINT AT EACH HEIGHT.
+
+So the body's front wall ALREADY CONTAINS the deck, the bezel and the coin
+door -- they were in the drawing the loft was traced from. A part standing
+proud of that wall is not adding depth the drawing omitted; it is counting the
+same depth twice, and the outline objective is right to dock it. The objective
+is therefore blind in exactly one direction: it can see the double-count and
+it cannot see the flattening, because a prop whose every button is a sticker
+scores perfectly from all three axes. `A BUTTON IS A CAP, NOT A TILE` in
+`parts_view/index.html` is the constraint the arithmetic cannot supply, and
+this monotone slope is what it looks like from the arithmetic's side.
+
+What follows is NOT "pd=0". It is that a part's stand-off should be measured
+against what the elevation already accounts for, per part, rather than scaled
+globally -- which is `part_bulge.py`, and which finds the handful of parts that
+genuinely protrude past their own body (legs, arch columns, a control deck)
+instead of docking every cap on every prop.
 """
 import argparse
 import json
-import os
-import re
-import subprocess
 import sys
 from pathlib import Path
 
@@ -60,19 +90,14 @@ WORK = ROOT / "tools" / "img2threejs-work"
 def score(d, extra="", out=None):
     """(side, top, front) outline IoU for one prop at one setting."""
     out = out or (d / "_depth")
-    out.mkdir(parents=True, exist_ok=True)
     qs = [f"dir=/{d.relative_to(ROOT)}&audit=1&{q}{extra}"
           for q, _ in ga.VIEWS.values()]
-    subprocess.run(["node", str(ROOT / "tools/authoring/parts_view/shoot.mjs"),
-                    str(out), *qs], cwd=ROOT, capture_output=True,
-                   env={**os.environ})
+    shots = ga.shoot(out, qs)
     fl = ga.flips(d)
     got = {}
     for (name, (q, elev)), qq in zip(ga.VIEWS.items(), qs):
-        stem = re.sub(r"[^a-z0-9]+", "-", qq.replace("/", "-"), flags=re.I)
-        f = out / f"{stem}.png"
-        src = d / f"{elev}.png"
-        if f.exists() and src.exists():
+        f, src = shots.get(qq), d / f"{elev}.png"
+        if f and src.exists():
             got[name] = ga.compare(f, src, flip_x=fl[name][0],
                                    flip_y=fl[name][1])[0]
     return got
