@@ -236,6 +236,16 @@ def measure(d, out, verbose=True):
         print(f"  !  no top_profile.json -- the body's footprint is a plain "
               f"RECTANGLE. Run top_profile.py; it is worth about +0.013 median "
               f"on the top outline and much more on a chamfered prop.")
+    # AND THE SIDE WALLS, which is the same silence one step worse: with no
+    # profile.json the renderer does not loft at all, it builds a BoxGeometry at
+    # a default depth. The two props in the tree that were missing one had the
+    # two worst side outlines in the corpus by a wide margin, 0.763 and 0.794
+    # against a median of 0.979, and nothing anywhere said why.
+    side = d / "profile.json"
+    report["_side_profile"] = side.exists()
+    if verbose and not side.exists():
+        print(f"  !  no profile.json -- the body is a plain BOX at a default "
+              f"depth, not a loft. Run side_profile.py.")
     report["_reconciled"] = rec
     return report
 

@@ -204,11 +204,17 @@ against its elevation. Across 98 props:
 ```
                                                           at the session's start
 front  IoU median 0.9859   min 0.936   below 0.95:  4/98   0.9852  0.934   4
-side   IoU median 0.9792   min 0.763   below 0.95:  9/98   0.9659  0.762  19
-top    IoU median 0.9760   min 0.902   below 0.95: 11/98   0.9628  0.876  22
+side   IoU median 0.9792   min 0.926   below 0.95:  8/98   0.9659  0.762  19
+top    IoU median 0.9766   min 0.902   below 0.95: 10/98   0.9628  0.876  22
 
-all three faces >= 0.95 on 80 of 98 props; >= 0.97 on 51
+all three faces >= 0.95 on 81 of 98 props; >= 0.97 on 52
 ```
+
+**Two props had no side profile at all**, so the renderer built them as plain
+boxes at a default depth rather than lofting them — and they were the two worst
+side outlines in the corpus by a wide margin, 0.763 and 0.794. Building the
+profiles took them to 0.977 and 0.941. `geometry_audit` now reports a missing
+side profile and a missing plan.
 
 **Every prop in the tree was built with a rectangular footprint.** 100 of 100
 had a `top.png` and none had a `top_profile.json`, so the renderer fell back to
