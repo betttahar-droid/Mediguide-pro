@@ -56,6 +56,35 @@ spec, and the reason (7) exists.
 
 ---
 
+## 2c. Buy the artwork that no rule can make — **BUILT, needs the loop to call it**
+
+Raised by the user as "a big texture that gets unmasked as you scale". There is
+no bigger drawing to unmask — the reference is one elevation at one size — but
+the same idea works as a **purchase**: ask the image model for the missing width
+only, for the parts that provably cannot grow.
+
+**Which parts, measured:** 363 parts across the corpus ask for a span rule; 107
+have no uniform band and no plain flank. Filtered to those that could actually
+use a wider drawing — at least three quarters of the face, and not a role in
+`COUNTABLE` — **21 parts across 17 props**, and the list is `marquee` ×8,
+`backglass`, `arch_marquee`, `control_deck`, `title_strip_panel`.
+
+**Done:** `wide_art.py` builds a canvas at the target aspect with the artwork in
+the middle and the new width as flat magenta, composites the drawn artwork back
+over the middle so only the ends are the model's, and refuses on aspect, on
+leftover magenta, on palette, and on the ends being a copy of the middle. The
+renderer loads it above the ratio it was drawn for. Verified on `v48_jukebox`.
+
+**Still to do:** `make_prop` does not call it — it is a manual step today, so it
+is a lever nothing pulls. It belongs in `rebuild()` after `layer_build`, and it
+should re-ask when the judges report the part still gaping, the way
+`detail_sheet` re-asks.
+
+**And the taller axis has no equivalent.** Same argument, same 107-part
+measurement, nothing built.
+
+---
+
 ## 3. Operators
 
 `slot_array`, `panel/window with a fixed rim and recessed backing`, `handle
