@@ -85,16 +85,27 @@ was reaching the fallback at all.
 
 ---
 
-## 5. Lift side and back decals
+## 5. Lift side and back decals — **half done**
 
 The growth band is measured on the front and applied to every face, so a prop
 bare at the front and carrying artwork on its flank stacks that artwork down a
-taller prop. Painting it off was tried and reverted (see `paint_out.py`): with
-no `parts_side.json` there are no holes to composite through, and a band
-composited into the original seams at both ends.
+taller prop.
 
-**Needs:** `decal_sheet` to record *where* the decals were. It already extracts
-them.
+**Done:** every candidate band is now checked against the other elevations and
+clean ones are preferred. `busy_elsewhere` had answered this since it was
+written and was only ever called on the places the model names — 75 of the
+corpus's 105 bands were measured runs and reached the renderer unasked.
+Unchecked: 75 → 0.
+
+**Still open:** 23 bands are known to carry flank artwork and are used anyway,
+because a prop whose only bare rows are unclean still has to grow somewhere and
+the alternative is the flat carcass or a stretch. Whether that trade is right is
+not measured — nobody has looked at the 23.
+
+**The real fix needs** `decal_sheet` to record *where* the decals were, so they
+can be painted off the flank. Painting off was tried and reverted (see
+`paint_out.py`): with no `parts_side.json` there are no holes to composite
+through, and a band composited into the original seams at both ends.
 
 ---
 
