@@ -1093,10 +1093,28 @@ def main():
         x0, y0, x1, y1 = p["px"]
         piece = Image.open(kit / f"{p['name']}.png")
         check.paste(piece, (x0, y0), piece if piece.mode == "RGBA" else None)
+    # INSIDE THE PROP, NOT INSIDE THE BOX. This sampled the whole bounding
+    # rectangle, and a prop is not a rectangle: the sheet shows through beside
+    # a jukebox's dome and between a pinball's legs, the background layer fills
+    # its box to the corners, and the two disagree everywhere outside the
+    # silhouette. So the headline number for the invariant this file calls "the
+    # test that matters" was mostly a measure of how un-rectangular the prop is
+    # -- the pinball reported 25.80% while reassembling to 0.89%, the jukebox
+    # 12.66% against 2.58%, and the ratio runs from 1x to 30x prop by prop, so
+    # it could not even be used as a ranking.
+    #
+    # The silhouette is already computed above for exactly this reason. Most of
+    # what remains is this file's OWN dilation ring, which is put there on
+    # purpose and is covered by the part at render time; recompose_score.py
+    # excludes it and reports 0.00% on 89 of 90 props, which is the real state
+    # of the invariant and worth knowing.
     a, b = ob.load(), check.load()
-    diff = sum(1 for x in range(0, W, 2) for y in range(0, H, 2)
+    sil_all = silhouette(ob, erode=0)
+    pts = [(x, y) for x in range(0, W, 2) for y in range(0, H, 2)
+           if sil_all[x][y]]
+    diff = sum(1 for x, y in pts
                if sum(abs(m - n) for m, n in zip(a[x, y], b[x, y])) > 12)
-    tot = (W // 2) * (H // 2)
+    tot = max(1, len(pts))
     check.save(d / f"_recomposed_{args.face}.png")
 
     # carry the background mode forward: the loop sets it between rebuilds and
@@ -1114,7 +1132,8 @@ def main():
     (d / f"layers_{args.face}.json").write_text(json.dumps(man2, indent=1))
     print(f"{args.face}: {W}x{H}, {len(out)} parts, background written")
     print(f"  recomposition differs from the reference on "
-          f"{100*diff/tot:.2f}% of sampled pixels")
+          f"{100*diff/tot:.2f}% of the prop's own pixels "
+          f"(recompose_score.py separates the dilation ring from the rest)")
     for o in out:
         print(f"  {o['name']:20} {o['resize']:6} {o['anchor']:7} "
               f"u {o['u'][0]:.3f}..{o['u'][1]:.3f}  v {o['v'][0]:.3f}..{o['v'][1]:.3f}")
