@@ -33,6 +33,7 @@ taller axis was wrong on 33 of 65 props and is now fixed at the cause.
 | `tall_body.py` | props with nowhere bare; draws the extra carcass | **yes** — in `rebuild` after `strip_slice`, and the renderer paints from it |
 | `resize_audit.py` | every resize decision, one at a time, against glm-5.3 | **yes** — in front of the judges, findings quoted and patch merged |
 | `image_bench.py` | which image model to buy, on `wide_art`/`tall_body`'s own bars | **yes** — its table is the ladder in `concept_sheet` |
+| `judge_bench.py` | whether a judge can see a repeat `repeat_score` can | diagnostic — the answer is no, for every model tried |
 | `raycast.mjs` | names the object under a render pixel | n/a (diagnostic) |
 
 ---
@@ -190,6 +191,32 @@ Roadmap 2b — a three-quarter reference view — is the only way past it.
   truncation, which reads identically. `auto_prop.glm` carries the same finding
   in its docstring one file over. At 12000 both answer; `gemini-2.5-flash-lite`
   still runs past 37k characters and is dropped.
+
+---
+
+### The judges cannot see the fault they report most, and now there is a number
+
+`repeat_score` supplies ground truth no model provides. Taking the five props
+whose renders it scores **+0.62 and up** against their own 1×, and the five it
+scores **−0.08 and down** — a gap of 0.86 — and asking each judge the real
+`JUDGE` prompt about the real renders:
+
+```
+google/gemini-3.1-flash-lite   found 5/5 real   false alarm on 5/5 clean
+google/gemini-2.5-flash        found 5/5 real   false alarm on 4/5 clean
+```
+
+flash-lite said "there is a repeat" on **all ten props**. It is not detecting
+anything; it is saying yes, and it finds every real case the way a stopped clock
+is right twice a day. Both sit at chance.
+
+This is CLAUDE.md's existing finding — *the judges report that class constantly
+and cannot actually see it*, from 181 of 306 blocking faults being one sentence
+in different words — arrived at independently and with a measurement behind it.
+It is why `repeat_score` runs in **front** of the judges. It is also an argument
+that a repeat the judges call blocking and the arithmetic does not should not be
+blocking, and **that change has not been made**: ten props, one fault class, and
+*count the props your change breaks* applies to scoring most of all.
 
 ---
 

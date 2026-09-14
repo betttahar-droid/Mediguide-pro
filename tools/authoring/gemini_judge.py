@@ -65,14 +65,31 @@ MODELS = ("gemini-flash-latest", "gemini-2.5-flash", "gemini-3.1-flash-image")
 # 2.5-flash-lite is dropped: it does not run out of room, it runs on, and no
 # budget this loop can afford gets a closing brace out of it.
 #
-# WHAT IS NOT SETTLED is which of the two survivors judges BETTER. They differ
-# by a factor of three in faults and six in parts patched on the same prop, and
-# nothing here says whether that is thoroughness or noise. It matters, because
-# this repo's measured complaint about its judges is that they are too LAX --
-# both scored a cabinet carrying five stacked marquees level with the corrected
-# one beside it. Settling it needs renders whose faults are known independently,
-# which `repeat_score` supplies for the commonest fault class. Until then the
-# order is by price among models that answer, and the cheaper one leads.
+# WHICH OF THE TWO JUDGES BETTER WAS THEN MEASURED, AND THE ANSWER IS NEITHER.
+# `judge_bench.py` puts them against ground truth no model supplies -- the props
+# whose renders `repeat_score` scores +0.62 and up against their own 1x, and the
+# props it scores -0.08 and down. Ten props each:
+#
+#   google/gemini-3.1-flash-lite   found 5/5 real   false alarm on 5/5 clean
+#   google/gemini-2.5-flash        found 5/5 real   false alarm on 4/5 clean
+#
+# flash-lite answered "there is a repeat" on all ten. It is not detecting
+# anything, it is saying yes, and it finds every real case the way a stopped
+# clock is right twice a day. 2.5-flash disagreed once in ten. Both sit at
+# chance across a ground-truth gap of 0.86.
+#
+# So this axis cannot rank them, and the order stays by PRICE among models that
+# answer in the schema -- a weak basis, now a measured weak basis rather than an
+# assumed one.
+#
+# The larger finding belongs to the loop and not to this file. CLAUDE.md already
+# says the judges "report that class constantly and cannot actually see it",
+# from 181 of 306 blocking faults being one sentence in different words. This is
+# that finding again, on an independent axis, with a number against it. It is
+# why `repeat_score` runs in FRONT of the judges, and it is an argument that a
+# repeat the judges call blocking and the arithmetic does not should not BE
+# blocking. That change is not made here: ten props, one fault class, and
+# "count the props your change breaks" applies to scoring most of all.
 OR_MODELS = (
     "google/gemini-3.1-flash-lite",     # $0.25/$1.50 per Mtok
     "google/gemini-2.5-flash",          # $0.30/$2.50, slower, much more verbose
