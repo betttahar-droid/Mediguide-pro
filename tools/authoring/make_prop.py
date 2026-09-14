@@ -317,6 +317,20 @@ def rebuild(d, face="front", asset=None):
         for line in (r.stdout or "").strip().splitlines():
             if "painted out by the model" in line or "arithmetic fill stands" in line:
                 print("   ", line.strip()[:120])
+    # A RESIZE RULE THAT CONTRADICTS WHAT THE PART IS gets corrected before the
+    # layers are cut, because every stage after this reads it. Only the
+    # unambiguous roles are touched -- artwork that must hold, fittings that
+    # must be counted -- and every correction is written to policy_log.json,
+    # since the disagreement says either the role is wrong or the rule is and
+    # overwriting it silently destroys the ability to tell which.
+    try:
+        import intent_gate
+        for c in intent_gate.apply_resize_policy(d, face):
+            print(f"    policy: {c['part']} ({c['role']}) "
+                  f"{c['was']} -> {c['now']}"
+                  + (f", {c['also']}" if c.get("also") else ""))
+    except Exception as e:
+        print(f"    resize policy unavailable ({type(e).__name__})")
     run([sys.executable, "tools/authoring/layer_build.py", str(d), "--face", face])
     # THE REDRAWN FITTINGS GO BACK ON, AND ARE NOT RE-BOUGHT. layer_build cuts
     # every part fresh out of the elevation each time it runs, which is right
@@ -508,6 +522,38 @@ def main():
     for line in (r2.stdout or "").strip().splitlines()[:8]:
         print("   ", line[:120])
 
+    # AND A DECOMPOSITION THAT SWALLOWED ITS CONTENTS IS CAUGHT HERE, before
+    # anything is built on it. The existing guard only fires when segmentation
+    # returns FEWER parts than measurement; it cannot see a plausible count
+    # where one box covers half the prop and hides the fittings inside it.
+    # That is what left a cabinet with no marquee -- so its rows measured bare,
+    # the growth band landed on them, and ARCADE came back stacked five times.
+    #
+    # One re-draw, not a loop: segment_sheet is already the most expensive call
+    # in the chain and its variance is the reason it has --tries at all. If the
+    # second decomposition is no better the run continues on it and says so,
+    # because a worse prop built knowingly beats a run that stops.
+    try:
+        import intent_gate
+        sv = intent_gate.segmentation_verdict(d, "front")
+        if sv.get("verdict") == "UNDER_SEGMENTED":
+            print(f"    under-segmented: {sv.get('swallowed') or ''} "
+                  f"{sv.get('bands') or 0} band(s) never lifted -- re-drawing")
+            before = len(json.loads(
+                (d / "parts_front.json").read_text()).get("parts", []))
+            run([sys.executable, "tools/authoring/segment_sheet.py", str(d),
+                 "--face", "front", "--asset", args.asset, "--tries", "2"])
+            after = len(json.loads(
+                (d / "parts_front.json").read_text()).get("parts", []))
+            again = intent_gate.segmentation_verdict(d, "front")
+            print(f"    re-drawn: {before} -> {after} parts, "
+                  f"now {again.get('verdict')}")
+        elif sv.get("verdict") == "LEAD":
+            print(f"    segmentation lead (unsettleable by measurement): "
+                  f"{sv.get('leads')}")
+    except Exception as e:
+        print(f"    segmentation audit unavailable ({type(e).__name__})")
+
     print("[3] what resizing this prop means ...", flush=True)
     r = run([sys.executable, "tools/authoring/scale_rules.py", str(d),
              "--face", "front", "--asset", args.asset])
@@ -600,6 +646,19 @@ def main():
             rep = repeat_score.judge(d / f"r{rnd}")
         except Exception as e:
             print(f"  repeat measure unavailable ({type(e).__name__})")
+        # AND WHETHER ANY FEATURE FAILS ITS OWN TYPE. feature_intent checks
+        # each instance separately -- four legs are four features, nine slots
+        # are nine -- which is the rule the old validation broke by counting
+        # kinds. Its verdict is three-valued and the middle one matters most:
+        # DRAFT means nothing failed but something rests on a guess, and a
+        # prop in that state complies with the prompt without being a fitted
+        # reconstruction. It is reported, never hidden, and never called a pass.
+        acc = None
+        try:
+            import intent_gate
+            acc = intent_gate.acceptance(d, "front")
+        except Exception as e:
+            print(f"  acceptance unavailable ({type(e).__name__})")
         evidence = ""
         if rep and rep["faults"]:
             evidence = ("\n\nMEASURED, NOT AN OPINION. The renders above were "
@@ -709,6 +768,13 @@ def main():
             v["looks_good"] = False
             print(f"  measured: {len(rep['faults'])} duplicate/dead band(s) "
                   f"-- {rep['sizes']}")
+        if acc:
+            faults.extend(acc["faults"])
+            if acc["faults"]:
+                v["looks_good"] = False
+            print(f"  acceptance: {acc['verdict']}  ({acc['instances']} "
+                  f"instances, {len(acc['faults'])} blocking, "
+                  f"{acc['unverified']} unverified)")
         blocking = [f for f in faults
                     if str(f.get("severity", "blocking")).lower() == "blocking"]
         offered = {p.get("name") for p in ((gem or {}).get("patch") or [])
@@ -765,6 +831,7 @@ def main():
         except Exception:
             log = []
         log.append({"round": rnd, "asset": args.asset,
+                    "acceptance": (acc or {}).get("verdict"),
                     "looks_good": bool(v.get("looks_good")),
                     "blocking": len(blocking), "faults": faults,
                     # THE CORRECTIONS THEMSELVES, NOT JUST THE NAMES THEY
