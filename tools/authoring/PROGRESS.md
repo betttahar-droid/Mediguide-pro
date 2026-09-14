@@ -17,8 +17,8 @@ measurement tool is now wired to a lever. The widening axis is right; the
 taller axis was wrong on 33 of 65 props and is fixed at the cause.
 
 **The geometry is now measured against the drawings it claims to be**, and the
-worst face on any prop in the corpus is 0.902 where it was 0.762. 81 of 98 props
-agree with all three of their own elevations to better than 0.95, 52 to better
+worst face on any prop in the corpus is 0.926 where it was 0.762. 88 of 98 props
+agree with all three of their own elevations to better than 0.95, 59 to better
 than 0.97. Most of that came from three artefacts that were simply missing, not
 from any threshold — see below, and `prop_complete.py`, which exists so the next
 one is reported rather than rendered.
@@ -211,11 +211,11 @@ against its elevation. Across 98 props:
 
 ```
                                                           at the session's start
-front  IoU median 0.9859   min 0.936   below 0.95:  4/98   0.9852  0.934   4
-side   IoU median 0.9792   min 0.926   below 0.95:  8/98   0.9659  0.762  19
-top    IoU median 0.9766   min 0.902   below 0.95: 10/98   0.9628  0.876  22
+front  IoU median 0.9887   min 0.957   below 0.95:  0/98   0.9852  0.934   4
+side   IoU median 0.9789   min 0.926   below 0.95:  9/98   0.9659  0.762  19
+top    IoU median 0.9772   min 0.940   below 0.95:  4/98   0.9628  0.876  22
 
-all three faces >= 0.95 on 81 of 98 props; >= 0.97 on 52
+all three faces >= 0.95 on 88 of 98 props; >= 0.97 on 59
 ```
 
 **Two props had no side profile at all**, so the renderer built them as plain

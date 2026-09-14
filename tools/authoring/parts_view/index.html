@@ -1819,8 +1819,21 @@ function recessGeometry(q, w, h, d) {
   }
   // the bezel: flaring outward as it comes forward, sampling the artwork's own
   // border the way the rims do, so the frame is lined in the part's colour
-  const F = 1.10;
-  const RX = X * F, RY = Y * F;
+  //
+  // A CONSTANT RIM, NOT A PERCENTAGE. This flared to 1.10x the PART's size,
+  // which is fine for a small screen and absurd for a large one: v20_jukebox's
+  // `title_strip_panel` is recessed and spans 96% of the prop's width, so a 10%
+  // flare made it WIDER THAN THE PROP -- 0.475 against a body of 0.44 -- and
+  // from directly above it is a bar standing in front of a plan that has no
+  // such bar. It cost that prop 0.088 of its top outline, the largest single
+  // part cost in the corpus, and the same fault is `speaker_grille` on
+  // v16_jukebox at 0.081 and `dome_window` on v17_jukebox at 0.057.
+  //
+  // A bezel is a rim of roughly constant width whatever it surrounds, and the
+  // width it has is the depth it is set back by: a 45-degree chamfer out of a
+  // recess `d` deep is `d` wide. So the flare is now additive.
+  const RIM = Math.abs(d);
+  const RX = X + RIM, RY = Y + RIM;
   quad([[-X, Y, fz], [X, Y, fz], [RX, RY, Z], [-RX, RY, Z]],
        [[0, 1], [1, 1], [1, 1], [0, 1]]);
   quad([[X, -Y, fz], [-X, -Y, fz], [-RX, -RY, Z], [RX, -RY, Z]],
