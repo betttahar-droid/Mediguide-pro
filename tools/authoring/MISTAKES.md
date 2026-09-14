@@ -4,21 +4,26 @@
 produced them, with the numbers, so a future session can recognise the shape of
 one before repeating it.
 
-Entries are ordered by how expensive they were.
+Entries were first written in order of cost, and keep their numbers once
+assigned because the closing section refers to them. A new entry goes at the
+end however expensive it was; #11 belongs at the top.
 
 ---
 
 ## 1. Building a measurement and wiring it to nothing
 
-**Open. This is the current top mistake.**
+**Closed.** `intent_gate` is the correcting channel: `apply_resize_policy`
+rewrites contradictory rules for the roles whose policy is unambiguous,
+`segmentation_verdict` forces a re-draw before anything is built on a bad
+decomposition, and `acceptance` reaches the judge loop as faults.
 
-Four measurement tools exist; one is wired into the loop. `feature_intent`,
-`resize_policy` and `segment_audit` between them find 230 role contradictions,
+Four measurement tools existed; one was wired into the loop. `feature_intent`,
+`resize_policy` and `segment_audit` between them found 230 role contradictions,
 33 under-segmented props and 291 unverified thicknesses, and **nothing in the
-pipeline reads any of it.**
+pipeline read any of it.**
 
-This is the exact failure Astra diagnosed, in a new costume: the system now
-knows a great deal more than it did and behaves identically. It also breaks the
+That was the exact failure Astra diagnosed, in a new costume: the system knew a
+great deal more than it did before and behaved identically. It also broke the
 repo's own rule that anything which can block must be able to correct.
 
 I did the same thing in miniature one commit after writing `repeat_score`:
@@ -189,12 +194,79 @@ worst case above the best, it is not measuring that class. Measure it directly.
 
 ---
 
+## 11. A correcting channel where NOTHING outranks what it replaced
+
+**The most expensive single line so far.** `scale_rules` re-asks the model when
+every `taller_at` place is a member that lengthens, because a prop cannot put
+all of its height into its legs. The best of the three attempts is kept, ranked
+`(0 if members else 1, room)`.
+
+`members` is `bool(taller_at) and all(...)`. For an **empty** list it is False —
+there is no member in it to be all of — so a reply whose every place was refused
+ranked `(1, 0)` and beat two perfectly good legs at `(0, 286)`. Every prop that
+reached the re-ask shipped `taller_at: []` afterwards. Three for three:
+`v49_arcade_cabinet`, `v49_pinball`, `v50_vending_machine`.
+
+The channel existed only to improve a members-only answer and made it strictly
+worse **every time it fired**.
+
+What made it expensive is what empty means downstream. It does not mean "grow
+nowhere"; it means "the renderer decides", and the renderer's per-strip fallback
+is the one path in the chain that never checks what it is about to repeat.
+`free_frac` scores a whole strip, and the band it lays copies of is a sub-run of
+that strip — the pinball's winning strip is rows 160..621 at 10% bare, and the
+band inside it is rows 263..378, **85% of the playfield.** A 1.6× pinball came
+out with four playfields stacked diagonally up its cabinet. Swept: **33 of the
+65 props** reaching that fallback had a band more than half covered by fittings.
+
+**Instead:** when a fallback ranks candidate answers, check what an EMPTY
+candidate scores. Write the tiers out as tiers rather than as a boolean, and
+order them by what each costs downstream — here: a body place, then members
+only, then nothing, which is worse than both.
+
+**And:** an empty result handed to a consumer is a decision delegated, not a
+decision deferred. Name what the consumer will do with it.
+
+---
+
+## 12. `repeat_score` cannot see a repeat that moves sideways
+
+Recorded as a measured blind spot, with its numbers, because the fix for #11 was
+a precondition rather than a better detector and the detector is still blind.
+
+On the pinball's four stacked playfields — as gross an instance of the class as
+the corpus contains — every autocorrelation channel reported the broken render
+as *less* periodic than the correct one:
+
+| render | row luminance | silhouette width | left edge |
+|---|---|---|---|
+| as drawn | 0.53 | 0.53 | 0.53 |
+| 1.5× wide (good) | — | 0.31 | 0.59 |
+| 1.6× tall (**four stacked playfields**) | **0.31** | 0.46 | 0.34 |
+
+A *negative* rise, on all three. The copies climb diagonally and each sits at a
+different x, so no row-indexed profile is periodic: row luminance mixes a
+growing share of background, the silhouette width changes as the zigzag widens,
+and the left edge is the zigzag itself.
+
+**Not fixed by a fourth channel.** The cause is now caught before the render —
+a growth band must be bare, which is checked in `strip_slice` from the parts
+file with no render and no model. Adding a detector for the effect after fixing
+the cause is the second mechanism this repo keeps being bitten by.
+
+**Instead:** prefer a precondition on the input to a detector on the output when
+both are available. The precondition is cheaper, earlier, and cannot disagree
+with the thing that produced the fault.
+
+---
+
 ## The pattern underneath most of these
 
-Nearly every entry is one of three shapes:
+Nearly every entry is one of four shapes:
 
 1. **A number that describes the method, not the subject** (2, 8).
 2. **A unit confusion that survives because nothing converts explicitly** (3).
 3. **A signal that exists and reaches nothing** (1, and the near-miss in 1).
+4. **A correction that can return nothing, where nothing wins** (11).
 
-Checking for those three directly is cheaper than rediscovering them.
+Checking for those four directly is cheaper than rediscovering them.

@@ -8,49 +8,51 @@ something that measures and calling it finished.
 
 ---
 
-## 1. Wire the three standalone tools into the loop
+## 1. Wire the three standalone tools into the loop — **DONE**
 
-**Why first.** `feature_intent`, `resize_policy` and `segment_audit` find 230
-role contradictions, 33 under-segmented props and 291 unverified thicknesses,
-and nothing reads any of it. A system that knows more and behaves identically
-is the failure this whole redesign was meant to remove.
-
-**Each needs a lever, not just a verdict.** The levers already exist:
-
-| finding | lever |
-|---|---|
-| `resize_policy` disagree | rewrite the stored `resize`; 56 signs are the safest batch |
-| `segment_audit` UNDER_SEGMENTED | re-run `segment_sheet` on that prop before building |
-| `feature_intent` REJECTED | block the round, the way `repeat_score` does |
-| `feature_intent` DRAFT | never call it accepted; it is the honest ceiling today |
-
-**Done when:** a run that starts with a role contradiction ends without one, and
-the verdict log shows the correction that removed it.
-
-**Do not** let the policy silently overwrite a model's answer without recording
-that it did. The disagreement is data — losing it loses the ability to tell a
-bad role from a bad resize.
+`intent_gate` is the correcting channel. `apply_resize_policy` rewrites
+contradictory rules for the unambiguous roles and logs every change to
+`policy_log.json`; `segmentation_verdict` forces one re-draw before anything is
+built on a bad decomposition; `acceptance` reaches the judge loop as faults and
+is recorded in `verdicts.json`. Verified live on `v50_vending_machine`:
+under-segmented → re-drawn 30→27 parts → two policy corrections → `REJECTED`
+carried into round 0.
 
 ---
 
-## 2. Measure depth from the reference
+## 2. Measure depth from the reference — **DONE, and the answer is "you cannot"**
 
-**Why second.** It is the only route to a meaningful `ACCEPTED`. Every opening
-and every recess in this corpus rests on one of four adjectives mapped to four
-constants. A grade nothing can score is not a grade.
+Three approaches, all swept, all recorded in `depth_probe.py`: edge shading
+(recessed 9.64 / flush 8.08 / proud 8.92 — no separation at all), `profile.json`
+(a simplified polyline, 1.0% MEASURED), and the raw side silhouette (6 of 1700,
+every one a body section).
 
-**Where the evidence might be.** The side elevation sees depth edge-on; the top
-view sees plan depth. `geometry_audit` already cross-checks the two ("side says
-depth 0.60, plan says 0.83"), so the machinery for comparing them exists.
+**A side silhouette traces the frontmost point at each height, so a recess never
+touches it.** That is a fact about the reference format, not a threshold to
+loosen. `UNMEASURABLE` and `FORMAT_LIMITS` exist so the verdict *declares* the
+limit instead of blocking on it; 88 of 95 props now do.
 
-**Done when:** at least one role's thickness carries `MEASURED` evidence and
-the acceptance sweep shows a prop reaching `ACCEPTED` on a feature that must
-open or recess.
+**The one way out, not yet built:** a three-quarter reference view, which shows a
+recess directly. That is a change to what the tool asks the image model for, and
+it is the next thing worth spending money on.
 
-**Expect this to be partly impossible.** A flat elevation may simply not
-contain the depth of a coin slot. If so, say which roles can be measured and
-which cannot, and leave the rest `UNVERIFIED` — that is a result, and the
-corpus has three precedents for it.
+---
+
+## 2b. A three-quarter reference view
+
+**The only route past (2), and therefore past a meaningful `ACCEPTED`.** Four
+orthographic elevations cannot show a recess; one three-quarter view can. Every
+`NEEDS_RECESS` role — window, screen, drawer — is stuck at `UNVERIFIED` until
+one exists.
+
+**Done when:** `depth_probe` returns `MEASURED` for a feature whose role
+requires a recess, and the acceptance sweep shows a prop reaching `ACCEPTED` on
+it.
+
+**The risk to watch:** a generated three-quarter view is a *fifth* source that
+can contradict the other four. It must be fitted as evidence with its own
+residual, never used to overwrite an elevation — which is requirement 10 of the
+spec, and the reason (7) exists.
 
 ---
 
@@ -61,7 +63,7 @@ with a real positive opening`, `analog scale with deterministic ticks`.
 
 **Why third.** A role currently carries a requirement (`NEEDS_OPENING`) that
 nothing can satisfy — there is no code that builds an opening. Operators are
-what turn a label into buildable geometry, and they need (2) to know how deep
+what turn a label into buildable geometry, and they need (2b) to know how deep
 to cut.
 
 **Done when:** a `slot_array` intent compiles to geometry with N real openings
