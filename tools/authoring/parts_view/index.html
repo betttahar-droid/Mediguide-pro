@@ -183,10 +183,30 @@ function hostSpan(q) {
   const xl = lerpWall(fprofile.left_wall, y, -A / 2);
   const xr = lerpWall(fprofile.right_wall, y, A / 2);
   if (!(xr - xl > 0.05 * A)) return null;
+  // AND THE BODY IS A STRUCTURE ACROSS, NEVER DOWN. Everything above this line
+  // is about WIDTH -- the body at the station's own height is exactly as wide
+  // as the deck, because the deck IS the body there -- and `v: [0, 1]` was
+  // only ever the honest answer to "how wide". Read as a TIER span it says the
+  // shelves repeat down the whole machine, which is how v50_vending_machine's
+  // bottom row of drinks ended up below the push bar, outside the case, on the
+  // plain base panel. raycast named it product_window_8_tier1_mesh.
+  //
+  // A shelf repeats down the case it is in. When no part in the manifest is
+  // that case -- v50's glass is background, not a fitting -- the tiers
+  // themselves say where it is: their own bounding extent IS the interior.
+  const tv = (() => {
+    if (!q.per_tier) return [0, 1];
+    let a = q.v[0], b = q.v[1];
+    for (const s of man.parts) {
+      if (!s.per_tier) continue;
+      a = Math.min(a, s.v[0]); b = Math.max(b, s.v[1]);
+    }
+    return (b - a > 1e-3) ? [a, b] : [0, 1];
+  })();
   // the same convention placeX uses for a part that spans: centred, and the
   // whole of the added width goes to it
   return { x: 0, w: (xr - xl) + (FW - A),
-           u: [xl / A + 0.5, xr / A + 0.5], v: [0, 1] };
+           u: [xl / A + 0.5, xr / A + 0.5], v: tv };
 }
 
 // WHAT A PART STANDS ON IS WHAT IT MOVES WITH. The anchor is decided per part
@@ -1919,9 +1939,19 @@ for (const q of man.parts) {
   // they are in, not down the whole prop -- and the part keeps its offset
   // within its tier so a strip mounted near the top of one shelf stays near
   // the top of every shelf.
-  const tiers = (q.per_tier && host) ? Math.max(1, Math.round(FH)) : 1;
+  // AND IT IS THE HOST THAT GREW, NOT THE PROP. `round(FH)` is the prop's own
+  // height, and it is only the right count when the host grows with the prop --
+  // which was always true while the fallback host was the whole prop, and is
+  // the assumption that put a row of drinks in the base. A case sitting between
+  // two growth bands does not get taller at all, however tall the machine gets,
+  // and a case that takes the whole change gets taller than the machine. gOfT
+  // already answers this: it maps a drawn height to a grown one, so the host's
+  // own growth factor falls straight out of it and reduces to round(FH) exactly
+  // when the host is the whole prop.
   const hv = host?.v ?? [0, 1];
   const hy0 = (gOfT(hv[0]) - 0.5) * FH, hy1 = (gOfT(hv[1]) - 0.5) * FH;
+  const grew = (hy1 - hy0) / Math.max(1e-6, hv[1] - hv[0]);
+  const tiers = (q.per_tier && host) ? Math.max(1, Math.round(grew)) : 1;
   const tierH = (hy1 - hy0) / tiers;
   const oy = y - (hy0 + (hy1 - hy0) / 2);
 
