@@ -32,6 +32,7 @@ taller axis was wrong on 33 of 65 props and is now fixed at the cause.
 | `wide_art.py` | parts no rule can widen; buys the missing width | **yes** — in `rebuild`, and the renderer loads it above the drawn ratio |
 | `tall_body.py` | props with nowhere bare; draws the extra carcass | **yes** — in `rebuild` after `strip_slice`, and the renderer paints from it |
 | `resize_audit.py` | every resize decision, one at a time, against glm-5.3 | **yes** — in front of the judges, findings quoted and patch merged |
+| `image_bench.py` | which image model to buy, on `wide_art`/`tall_body`'s own bars | **yes** — its table is the ladder in `concept_sheet` |
 | `raycast.mjs` | names the object under a render pixel | n/a (diagnostic) |
 
 ---
@@ -167,6 +168,28 @@ Roadmap 2b — a three-quarter reference view — is the only way past it.
   "tiling repeat") — the call **both paid judges got wrong**. No `z-ai/glm`
   model is free at any size.
 - `glm-5.3-flash` costs **$0.0002** per judge call. Cost was never the problem.
+- **One account running out of credit stopped ten tools that know nothing about
+  billing** — nine that draw, plus the second judge. All of them go through two
+  functions, `concept_sheet.generate_image` and `gemini_judge.vision_json`, so
+  the fallback to OpenRouter lives in those two and nowhere else.
+- **The drawing model is now chosen by measurement, not by argument.**
+  `image_bench` scores candidates on the same arithmetic that decides whether a
+  drawing is composited, and reports **dollars per ACCEPTED drawing** — the
+  metric that matters when a refusal buys another call:
+
+  ```
+  google/gemini-3.1-flash-lite-image   $0.034/img   14/20   $0.0475/accepted   4.8s
+  google/gemini-3.1-flash-image        $0.067/img   13/20   $0.1056/accepted  11.1s
+  ```
+
+  Indistinguishable on quality over twenty drawings, half the price, half the
+  wait. And because the two fail on **different** cases, a refusal now escalates
+  to a different model rather than re-rolling the same one.
+- **The judges were nearly written off for a budget fault.** Two Gemini models
+  returned unparseable JSON at `max_tokens=4096` — not schema failures,
+  truncation, which reads identically. `auto_prop.glm` carries the same finding
+  in its docstring one file over. At 12000 both answer; `gemini-2.5-flash-lite`
+  still runs past 37k characters and is dropped.
 
 ---
 
