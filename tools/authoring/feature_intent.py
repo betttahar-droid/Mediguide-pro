@@ -501,8 +501,15 @@ def check_aspect(f):
     if h <= 0:
         return FAIL, "zero height"
     a = w / h
+    # ENOUGH PRECISION TO SHOW THE DIFFERENCE. At two decimals a value of 0.0499
+    # against a bound of 0.05 printed as "aspect 0.05 outside 0.05..2.56", which
+    # is arithmetically impossible as written and reached the judge loop as a
+    # blocking fault twice in one run. A reader cannot act on a fault whose
+    # numbers say it is not a fault, and the first thing they will do is
+    # disbelieve the checker.
     if a < lo or a > hi:
-        return FAIL, f"aspect {a:.2f} outside {lo}..{hi}"
+        return FAIL, (f"aspect {a:.4g} is {'below' if a < lo else 'above'} the "
+                      f"{lo}..{hi} measured for this role")
     return PASS, f"aspect {a:.2f}"
 
 

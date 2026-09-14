@@ -993,6 +993,41 @@ def main():
                 s["grow_y"] = False
                 s["grow_share"] = 0.0
 
+    # AND A PROP WHOSE EVERY PLACE IS A MEMBER GAINS NO BODY AT ALL.
+    #
+    # scale_rules already re-asks for this state -- "all the height would go
+    # into those, name a place on the BODY too" -- and where the model still has
+    # no answer the prop grows into its members and looks like it. That was an
+    # honest limit of the drawing while the only alternatives were repeating and
+    # stretching. It is not one any more: the body can be DRAWN.
+    #
+    # v52_jukebox is the case, and three channels agree on it. Both judges: "the
+    # extra body height went into a blank smeared wood panel between the title
+    # strips and the lower grille". resize_audit, independently: "the stretched
+    # body shows blank wood patches and smeared seams in the inserted
+    # midsection". And the render: the bubbler tubes run the full height as
+    # stripes while the middle is bare wood with the selection display floating
+    # in it. The members lengthen correctly; it is the body behind them that has
+    # nothing to gain, because what repeats there is the patched hole the
+    # members were lifted out of.
+    #
+    # So the band is recorded for tall_body even though the growth is not
+    # vetoed, and the two share the height.
+    if grow_bands and all(g.get("side") == "itself" for g in grow_bands):
+        st0 = strips[grow]
+        gy0, gy1 = st0["px"]
+        stretch_band = {
+            "px": [int(gy0 + st0["vh"][0] * (gy1 - gy0)),
+                   int(gy0 + st0["vh"][1] * (gy1 - gy0))],
+            "covered": None,
+            "with_members": True,
+            "why": "every place is a member that lengthens, so the body itself "
+                   "gains nothing; draw it here instead of repeating the hole "
+                   "the members were lifted out of"}
+        print(f"  every place is a member: the body gains nothing by repeating, "
+              f"so rows {stretch_band['px'][0]}..{stretch_band['px'][1]} are "
+              f"marked to be DRAWN")
+
     if grow_bands:
         # SHARED BY HEIGHT, so every band takes the same number of copies --
         # the allocation that keeps all of them inside the renderer's bound at

@@ -125,10 +125,16 @@ def needs(prop_dir, face="front"):
     except Exception:
         return None, 1.0
     hx = float(sr.get("max_taller") or 1.0)
-    if s.get("grow_bands"):
-        return None, hx            # it has somewhere to repeat: leave it alone
     band = s.get("stretch_band")
     if not band:
+        return None, hx
+    # A PROP WITH BANDS IS LEFT ALONE -- unless every one of them is a MEMBER.
+    # Then the members lengthen, correctly, and the body behind them gains
+    # nothing: what repeats there is the patched hole the members were lifted
+    # out of, which is why v52_jukebox came back with its bubbler tubes running
+    # the full height over a blank wood midsection, called by both judges and by
+    # resize_audit independently. strip_slice marks that case `with_members`.
+    if s.get("grow_bands") and not band.get("with_members"):
         return None, hx
     return band, hx
 
@@ -273,6 +279,23 @@ def draw(prop_dir, asset, face="front", redraw=False):
     src = Image.open(bg).convert("RGBA")
     W, H = src.size
     extra = int(round((hx - 1.0) * H))
+    # SHARED BY HEIGHT WITH THE MEMBERS, which is strip_slice's own convention
+    # for dividing growth between places. The members keep lengthening; the body
+    # takes the rest, so a prop does not both grow its tubes to full height AND
+    # gain a full band of new carcass.
+    if band.get("with_members"):
+        try:
+            gb = json.loads((d / f"strips_{face}.json").read_text())["grow_bands"]
+            mem = sum(g["px"][1] - g["px"][0] for g in gb)
+            own = abs(int(band["px"][1]) - int(band["px"][0]))
+            extra = int(round(extra * own / float(max(1, own + mem))))
+            print(f"    sharing with {len(gb)} member band(s) by height: "
+                  f"{extra} rows to the body")
+        except Exception:
+            pass
+    if extra < 8:
+        print(f"  the body's share is {extra} rows: not worth a drawing")
+        return None
     cut, ncov, on_edge = place_cut(d, band, H, face)
     print(f"    cut at row {cut} of {H}: {ncov} part(s) cover it"
           + (", and it is a part boundary" if on_edge else ""))
