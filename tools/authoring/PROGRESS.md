@@ -43,9 +43,13 @@ taller axis was wrong on 33 of 65 props and is now fixed at the cause.
 ```
 acceptance     53 DRAFT   42 REJECTED   3 ACCEPTED   90 declaring the depth limit
 overlap        90 props, 1555 pairs of parts sharing drawn pixels -- cut
-growth place   81 props repeat a measured band; 17 stretch, 14 of those because
-               their bands need more than the renderer's 10 copies
-               (of the 17, the ones with a stretch_band now have it DRAWN)
+growth place   72 props repeat a measured band; 26 stretch -- 8 because their
+               bands need more than the renderer's 10 copies, 8 with nowhere
+               bare at all, and 10 whose every place is a MEMBER
+member bands   of those 10, 5 gain drawn body and 5 gain nothing, and the line
+               between them is every pinball in the corpus: a leg has no body
+               behind it to go blank (tall_body.body_behind)
+tall body      17 props have their extra carcass DRAWN rather than stretched
 wide art       21 parts across 17 props that no rule can widen -- bought
 resize audit   229 adaptations across 68 props, median 3 per prop
 recomposition  0.00% on 89 of 90 props, away from part boxes and the outline

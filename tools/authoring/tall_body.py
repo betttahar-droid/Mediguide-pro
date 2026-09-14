@@ -136,7 +136,96 @@ def needs(prop_dir, face="front"):
     # resize_audit independently. strip_slice marks that case `with_members`.
     if s.get("grow_bands") and not band.get("with_members"):
         return None, hx
+    # AND A MEMBER WITH NO BODY BEHIND IT GAINS NOTHING EITHER.
+    #
+    # The clause above was shipped one prop wide and flagged as an over-reach in
+    # its own commit message, because "every growth place is a member" is true
+    # of 10 props and every pinball in the corpus is among them -- and the
+    # pinball's taller render is RIGHT. A leg has nothing behind it to go blank.
+    if s.get("grow_bands") and not body_behind(d, s["grow_bands"], face):
+        return None, hx
     return band, hx
+
+
+# The two thresholds below are the whole of the distinction, and they are set
+# from the 12 member bands that exist -- which is the entire population this
+# question is asked of, so this is a full sweep and not a fit to one prop.
+#
+#        behind  solid   prop                  the band
+#          0.0%  53.0%   v45_pinball           cabinet_body
+#          0.4%  99.6%   v49_pinball           backglass
+#          0.5%  50.9%   v47_pinball           cabinet_front
+#          0.5%  50.9%   v49_pinball           coin_door_panel
+#          4.9%  21.4%   v44_pinball           leg_left+leg_right
+#          8.7%  24.8%   v46_pinball           leg_left+leg_right
+#       -------------------------------------- draw nothing above this line
+#         10.6%  99.6%   v45_arcade_cabinet    coin_door+control_deck+cabinet_door
+#         34.2%  68.3%   v52_jukebox           bottom_rail
+#         63.4%  96.5%   v52_jukebox           bubbler tubes x10
+#         69.3%  96.1%   v45_jukebox           side_pillar x4
+#         77.1%  96.4%   v46_jukebox           bubble_tube x4
+#         83.2%  99.7%   v45_vending_machine   coin_return_door
+#
+# Every pinball above the line, every other prop below it, and the renders
+# agree: v44's band is the gap between two legs and is magenta from edge to
+# edge; v52's is the middle of a solid cabinet with tubes lying on it.
+#
+# ONE threshold would do it -- behind < 0.10 separates 8.7 from 10.6 -- and it
+# is not used, because a 1.9-point gap is a number fitted to this corpus. Two
+# rules each sit in the middle of a wide one, and each states a different
+# physical fact about why there is no carcass to draw.
+AIR = 0.45      # of the band's rows is not prop at all: nothing stands there
+OWN = 0.02      # of the band's rows is prop that is not the member: it IS the body
+
+
+def body_behind(d, bands, face="front"):
+    """Is there carcass behind these members for a taller prop to gain?
+
+    Two ways the answer is no, and they are not the same shape:
+
+      NOTHING STANDS THERE. The band's rows are mostly air -- a pinball's legs
+      with the floor showing between them, 21% and 25% solid against 68% and up
+      for everything else. Growing the body means growing the legs, which the
+      member rule already does.
+
+      THE MEMBER IS THE BODY. Every solid pixel at those rows belongs to the
+      member itself -- `cabinet_body` on v45_pinball, which is the cabinet. The
+      member lengthening IS the body lengthening; there is no second thing.
+
+    Read off bg_front.png and NOT front.png. front.png is the uncropped RGB
+    elevation, sheet and all, opaque at every pixel: the first version of this
+    measured its alpha, got "100% solid" for every row of every prop, and ranked
+    the pinball's legs as having MORE body behind them than a jukebox's bubbler
+    tubes. A silhouette measured off an image with no silhouette in it.
+    """
+    from PIL import Image
+    import numpy as np
+    try:
+        alpha = np.array(Image.open(d / f"bg_{face}.png").convert("RGBA"))[..., 3] > 128
+        pf = json.loads((d / f"parts_{face}.json").read_text())
+    except Exception:
+        return True          # cannot tell: leave the band alone, do not skip it
+    H, W = alpha.shape
+    if tuple(pf.get("size", ())) != (W, H):
+        return True          # different frames; the boxes would not line up
+    box = {p["name"]: p["px"] for p in pf.get("parts", []) if p.get("px")}
+
+    for b in bands:
+        y0, y1 = max(0, int(b["px"][0])), min(H, int(b["px"][1]))
+        if y1 <= y0:
+            continue
+        own = np.zeros((H, W), bool)
+        for nm in str(b.get("part", "")).split("+"):
+            bx = box.get(nm)
+            if bx:
+                x0, by0, x1, by1 = [int(v) for v in bx]
+                own[max(0, by0):min(H, by1), max(0, x0):min(W, x1)] = True
+        strip = alpha[y0:y1]
+        solid = strip.mean()
+        behind = (strip & ~own[y0:y1]).mean()
+        if solid < AIR or behind < OWN:
+            return False
+    return True
 
 
 def place_cut(d, band, H, face="front"):
