@@ -75,10 +75,13 @@ over the middle so only the ends are the model's, and refuses on aspect, on
 leftover magenta, on palette, and on the ends being a copy of the middle. The
 renderer loads it above the ratio it was drawn for. Verified on `v48_jukebox`.
 
-**Still to do:** `make_prop` does not call it — it is a manual step today, so it
-is a lever nothing pulls. It belongs in `rebuild()` after `layer_build`, and it
-should re-ask when the judges report the part still gaping, the way
-`detail_sheet` re-asks.
+**Wired:** `rebuild()` calls it after `overlap_cut`, cached per part, so a prop
+with no such part costs no call at all.
+
+**Still to do:** it does not re-ask when the judges report the part still gaping,
+the way `detail_sheet` re-asks a refused fitting. A refusal is a verdict on one
+drawing, not on the part — that rule is in `CLAUDE.md` and this does not follow
+it yet.
 
 **And the taller axis has no equivalent.** Same argument, same 107-part
 measurement, nothing built.

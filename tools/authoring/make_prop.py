@@ -363,6 +363,30 @@ def rebuild(d, face="front", asset=None):
             print(f"      LEAD {l['part']}: {l['why']}")
     except Exception as e:
         print(f"    overlap cut unavailable ({type(e).__name__}: {e})")
+    # AND THE ARTWORK NO RULE CAN MAKE IS BOUGHT. A part whose own band scan
+    # finds nothing uniform to insert more of cannot be widened by any rule
+    # between chunks -- stretching smears it, repeating doubles it, holding it
+    # leaves the panel gaping -- and 21 parts across the corpus are in that
+    # state, eight of them marquees. wide_art asks for the missing width only,
+    # on a magenta canvas at the target shape, and composites the drawn artwork
+    # back over the middle so only the ends are the model's.
+    #
+    # Cached per part: the second rebuild of a round costs nothing, and a prop
+    # with no such part costs no call at all.
+    if asset:
+        try:
+            import wide_art
+            got = wide_art.draw(d, asset, face)
+            kept = [g for g in got if g["status"] == "kept"]
+            if kept:
+                print(f"    wider artwork bought for {len(kept)} part(s): "
+                      + ", ".join(g["part"] for g in kept))
+            for g in got:
+                if g["status"] == "refused":
+                    print(f"      {g['part']}: refused "
+                          f"({g.get('why') or 'checks'}) -- the drawn part stands")
+        except Exception as e:
+            print(f"    wide art unavailable ({type(e).__name__}: {e})")
     run([sys.executable, "tools/authoring/nine_slice.py", str(d / f"bg_{face}.png"),
          "--out", str(d / "slice_bg.json"), "--fallback",
          "--parts", str(d / f"parts_{face}.json")])
