@@ -693,6 +693,7 @@ def main():
     kit = d / "parts"
     kit.mkdir(exist_ok=True)
     out = []
+    dropped = []
     # EVERY PART GETS ITS OWN NINE-SLICE. A part that spans the face was being
     # scaled as a plain quad, so a wider prop stretched its artwork -- the very
     # thing AdaptivePropBase calls a CRITICAL failure, applied to parts instead
@@ -813,6 +814,29 @@ def main():
                             for k in kid):
                         continue                 # a rider stands here
                     ap2[xx, yy] = 0
+        # AND A PART THE OUTLINE CLIPPED TO NOTHING WAS NEVER ON THE PROP.
+        #
+        # The cut above is the check, run backwards. Every part is already
+        # clipped to the prop's silhouette, and it works -- 1760 of 1763 built
+        # textures across the corpus are within 1% of the outline. The three
+        # that are not came out with ZERO opaque pixels: v44_pinball's
+        # foot_left, foot_right and decal_7, boxed by the segmenter over the
+        # open air between two legs. They went on into the manifest as parts,
+        # took a slot in the atlas and a mesh in the scene, and drew nothing.
+        #
+        # This is worth saying because MISTAKES.md records "whether a fitting
+        # the segmenter declared is actually THERE" as measured four ways and
+        # separable by none of them -- the step across each box side, interior
+        # spread against a ring, edge energy in against out. Those all ask
+        # whether the artwork looks like a fitting. This asks whether there is
+        # any PROP underneath it, which is a different question with an exact
+        # answer, and it needs no threshold: the clip either leaves pixels or it
+        # does not.
+        if not a.getbbox():
+            print(f"    {p['name']}: the prop's outline clips it to nothing -- "
+                  f"it is boxed over open air, so it is not a part")
+            dropped.append(p["name"])
+            continue
         crop.putalpha(a)
         crop = bleed(crop)
         crop.save(kit / f"{p['name']}.png")
@@ -1165,6 +1189,7 @@ def main():
             pass
     man2 = {"face": args.face, "size": [W, H], "aspect": round(W / H, 5),
             "background": f"bg_{args.face}.png", "background_mode": mode,
+            **({"dropped_off_prop": dropped} if dropped else {}),
             "parts": out}
     (d / f"layers_{args.face}.json").write_text(json.dumps(man2, indent=1))
     print(f"{args.face}: {W}x{H}, {len(out)} parts, background written")

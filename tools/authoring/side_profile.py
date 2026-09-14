@@ -256,6 +256,14 @@ def main():
             rows.append((y, run[0], run[-1]))
     if not rows:
         raise SystemExit("side elevation has no silhouette")
+    # AND THE SAME CLEAN-UP THE FRONT PROFILE NEEDS, for the same reason on the
+    # same axis of the same crop: a terminal row that is a quarter of its
+    # neighbour's depth is antialiasing or a drop shadow, and a lone narrow row
+    # between two full ones is a band the silhouette lost. Either one puts a
+    # spike in the polyline and a spike in the body. front_profile.py carries
+    # the measurement; this is the depth wall rather than the width wall.
+    from front_profile import _trim_ends
+    rows = _trim_ends(rows, "side")
 
     # in prop units: y measured from the BOTTOM, 0..1 over the front's height;
     # z measured forward from the body's centre
