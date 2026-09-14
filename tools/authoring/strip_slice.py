@@ -909,6 +909,7 @@ def main():
                                "band": [round(1 - b / H, 5), round(1 - a / H, 5)]})
         grow_bands.sort(key=lambda g: g["px"][0])
 
+    stretch_band = None
     # AND WHEN THERE IS NOWHERE, THE ANSWER IS NOWHERE.
     #
     # An empty grow_bands does not mean "grow nowhere". It means "the renderer
@@ -946,6 +947,16 @@ def main():
         print(f"  nowhere bare to grow: no place named and no bare run found, "
               f"and the blind band (rows {ba}..{bb}) is {100*frac:.0f}% "
               f"fittings -- the body stretches rather than repeat them")
+        # AND THE BAND IS RECORDED, NOT THROWN AWAY. The bar this band failed is
+        # about REPEATING: copies of rows carrying artwork duplicate it. Nothing
+        # about it forbids DRAWING new body there, and a place too busy to
+        # repeat is exactly the place a taller one of this prop gains height --
+        # it is where the score said the body is. tall_body.py asks the image
+        # model to draw the extra carcass into these rows, which needs the
+        # place and not the bareness.
+        stretch_band = {"px": [ba, bb], "covered": round(frac, 4),
+                        "why": "chosen by the body score; too covered to "
+                               "repeat, which is not a reason not to draw"}
 
     # AND A BAND TOO SMALL TO ABSORB THE CHANGE IS ALSO NOWHERE.
     #
@@ -969,6 +980,14 @@ def main():
                   f"{_reps:.1f} copies at {max_taller}x against the renderer's "
                   f"10 -- it would fill them with flat tile, so the body "
                   f"stretches instead")
+            st0 = strips[grow]
+            gy0, gy1 = st0["px"]
+            stretch_band = {
+                "px": [int(gy0 + st0["vh"][0] * (gy1 - gy0)),
+                       int(gy0 + st0["vh"][1] * (gy1 - gy0))],
+                "covered": None,
+                "why": f"the places found total {_rows} rows and need "
+                       f"{_reps:.1f} copies against the renderer's 10"}
             grow_bands = []
             for s in strips:
                 s["grow_y"] = False
@@ -991,7 +1010,8 @@ def main():
               f"at {max_taller}x")
 
     (d / f"strips_{args.face}.json").write_text(json.dumps(
-        {"size": [W, H], "strips": strips, "grow_bands": grow_bands}, indent=1))
+        {"size": [W, H], "strips": strips, "grow_bands": grow_bands,
+         **({"stretch_band": stretch_band} if stretch_band else {})}, indent=1))
     print(f"{args.face}: {len(strips)} strips")
     for i, s in enumerate(strips):
         print(f"  {i}: rows {s['px'][0]:4}..{s['px'][1]:4}  {s['hmode']:6} "
