@@ -217,6 +217,25 @@ def measure(d, out, verbose=True):
                     f"  [drawing tilted, x{inflate[name]:.2f}]")
             print(f"  {'OK ' if ok else 'OFF'} {name:6} outline {100*iou:5.1f}%"
                   f"   proportions {ar:.3f}x the elevation's{tilt}")
+    # AND SAY WHETHER THE BODY HAS A PLAN AT ALL, because not having one is a
+    # silent downgrade that this audit is otherwise the only thing positioned
+    # to notice.
+    #
+    # The renderer shapes the footprint from top_profile.json and falls back to
+    # a plain RECTANGLE when there is none -- quietly, because a rectangular
+    # plan is a perfectly valid body and nothing about it looks broken from the
+    # front. Every prop in the work tree was in that state: 100 of 100 had a
+    # top.png and 0 had a top_profile.json, so every one was built with square
+    # corners while its own plan drawing showed them chamfered. Building the
+    # plans took the top outline from a median of 0.963 to 0.976, its worst from
+    # 0.876 to 0.902, and the props below 0.95 from 22 to 15 -- 66 better, 10
+    # worse. Nothing in the pipeline had said a word.
+    plan = d / "top_profile.json"
+    report["_plan"] = plan.exists()
+    if verbose and not plan.exists():
+        print(f"  !  no top_profile.json -- the body's footprint is a plain "
+              f"RECTANGLE. Run top_profile.py; it is worth about +0.013 median "
+              f"on the top outline and much more on a chamfered prop.")
     report["_reconciled"] = rec
     return report
 

@@ -201,10 +201,18 @@ Roadmap 2b — a three-quarter reference view — is the only way past it.
 against its elevation. Across 98 props:
 
 ```
-front  IoU median 0.9858   min 0.936   below 0.95:  4/98
-side   IoU median 0.9777   min 0.759   below 0.95: 12/98   (was 0.9659, 19/98)
-top    IoU median 0.9650   min 0.870   below 0.95: 26/98
+                                                          at the session's start
+front  IoU median 0.9858   min 0.936   below 0.95:  4/98   0.9852  0.934   4
+side   IoU median 0.9753   min 0.763   below 0.95: 12/98   0.9659  0.762  19
+top    IoU median 0.9755   min 0.902   below 0.95: 15/98   0.9628  0.876  22
 ```
+
+**Every prop in the tree was built with a rectangular footprint.** 100 of 100
+had a `top.png` and none had a `top_profile.json`, so the renderer fell back to
+square corners while each prop's own plan drawing showed them chamfered — and
+nothing said so, because a rectangular plan looks like a body rather than like a
+bug. Building the plans is most of the top column above. `geometry_audit` now
+reports when a prop has no plan.
 
 **The body is not the weak part — the parts standing off it were.** Rendering
 the loft with no parts on it at all settles which half is at fault:
