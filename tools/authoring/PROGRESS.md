@@ -202,11 +202,11 @@ against its elevation. Across 98 props:
 
 ```
                                                           at the session's start
-front  IoU median 0.9858   min 0.936   below 0.95:  4/98   0.9852  0.934   4
-side   IoU median 0.9764   min 0.763   below 0.95: 10/98   0.9659  0.762  19
-top    IoU median 0.9757   min 0.902   below 0.95: 13/98   0.9628  0.876  22
+front  IoU median 0.9859   min 0.936   below 0.95:  4/98   0.9852  0.934   4
+side   IoU median 0.9792   min 0.763   below 0.95:  9/98   0.9659  0.762  19
+top    IoU median 0.9760   min 0.902   below 0.95: 12/98   0.9628  0.876  22
 
-all three faces >= 0.95 on 79 of 98 props; >= 0.97 on 45
+all three faces >= 0.95 on 80 of 98 props; >= 0.97 on 51
 ```
 
 **Every prop in the tree was built with a rectangular footprint.** 100 of 100

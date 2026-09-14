@@ -2151,7 +2151,42 @@ for (const q of man.parts) {
                           Math.min(STICK_CAP, Math.atan(pl.c) + Math.PI / 2))
                : 0)
       : Math.max(-CAP, Math.min(CAP, Math.atan(pl.c)));
-    const rotY = Math.max(-CAP, Math.min(CAP, -Math.atan(pl.b)));
+    // THE TWIST IS CAPPED TIGHTER THAN THE SLOPE, and separately from it.
+    //
+    // rotX is the pitch, read down the height off the side profile, and it is a
+    // real measurement: a bezel leans back 17 degrees and the screen has to lean
+    // with it. rotY is the twist, read across the width off the PLAN, and at a
+    // rounded corner the plan turns through ninety degrees in a few pixels. A
+    // part whose box reaches into that turn gets a yaw of sixty degrees, and it
+    // is then a flat rectangle standing edge-on to the front of the machine.
+    //
+    // MEASURED, over the fourteen worst side outlines and the twelve best:
+    // holding every part square (?twist=0) gains a mean of +0.014 side+top on
+    // the worst -- v52_jukebox +0.045 and +0.035, v13_jukebox +0.047 on the top,
+    // v5_vending_machine +0.017 and +0.021 -- and costs a mean of 0.002 on the
+    // best, where it is exactly 0.000 on ten of twelve. So the twist is mostly
+    // wrong and occasionally right, which is a cap and not an abolition:
+    // v13_vending_machine loses 0.013 on the top without it, so its chamfer is
+    // real. TWIST_CAP is swept by depth_scale.py's sibling experiment.
+    //
+    // ?twist=0 holds every part square, which is how the numbers above were got,
+    // and ?twistcap= sweeps it. Swept over the eight worst props and the eight
+    // best, scoring side+top:
+    //
+    //   cap        worst 8     best 8
+    //     0 deg     1.8363     1.9816
+    //    10 deg     1.8353     1.9828
+    //    15 deg     1.8343     1.9828
+    //    25 deg     1.8322     1.9828
+    //    45 deg     1.8291     1.9828      <- what it was
+    //
+    // The worst props want it gone and the best want SOME. Ten degrees is where
+    // those meet: it is the smallest cap that gives the best props everything
+    // they get from an uncapped twist, and it keeps most of what the worst props
+    // gain from having none. It beats 45 everywhere and beats 0 on the best.
+    const TWIST_CAP = Number(p.get('twistcap') ?? 0.17);   // 10 degrees
+    const rotY = p.get('twist') === '0' ? 0
+      : Math.max(-TWIST_CAP, Math.min(TWIST_CAP, -Math.atan(pl.b)));
     // A SLOPE IS LONGER THAN ITS SHADOW. The elevation measures a part where it
     // projects, so a bezel drawn 0.30 tall covers 0.30/cos of actual slope --
     // laid in the plane at its drawn size the screen fell short of its own
