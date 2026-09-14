@@ -315,12 +315,21 @@ just against how bare the band is.
 - **`PROGRESS.md`** — what exists, what it measured, and which tools are
   actually wired into the loop rather than merely built.
 - **`MISTAKES.md`** — the specific errors that produced the practices in this
-  file, with their numbers. Three shapes recur: a number that describes the
+  file, with their numbers. Six shapes recur: a number that describes the
   method rather than the subject, a unit confusion nothing converts explicitly,
-  and a signal that reaches nothing.
+  a signal that reaches nothing, a correction that can return nothing where
+  nothing wins, a property checked only where it cannot fail, and a test that
+  rejects every candidate and gets blamed on the candidates.
 - **`ROADMAP.md`** — what to do next, in order, with what "done" means for each.
 
 The rule these four exist to enforce: **a measurement is not finished when it
 measures, it is finished when something acts on it.** Four measurement tools
 were built in one session and one was wired in. Name the lever before writing
 the check.
+
+And its twin, learned the same way: **a lever is not finished when it writes,
+it is finished when what it writes survives.** The judges' resize patches were
+applied to `parts_front.json` and then overruled by `layer_build` on 265 parts
+across 76 props, so the loop re-reported faults it had already been handed the
+fix for — round after round, by its own verdict logs. When you add a channel,
+patch something through it end to end and check the far end changed.
