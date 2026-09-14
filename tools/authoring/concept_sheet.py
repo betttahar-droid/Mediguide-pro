@@ -25,7 +25,9 @@ import argparse
 import base64
 import json
 import os
+import re
 import sys
+import urllib.error
 import urllib.request
 from pathlib import Path
 
@@ -33,6 +35,18 @@ ROOT = Path(__file__).resolve().parents[2]
 OUT_DIR = ROOT / "docs" / "concept"
 MODEL = "gemini-3.1-flash-image"  # Nano Banana 2, the model the brief names
 ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
+
+# The same model, bought from someone else. See `_via_openrouter` below.
+OR_ENDPOINT = "https://openrouter.ai/api/v1/chat/completions"
+OR_MODEL = {
+    "gemini-3.1-flash-image": "google/gemini-3.1-flash-image",
+    "gemini-3.1-flash-lite-image": "google/gemini-3.1-flash-lite-image",
+    "gemini-2.5-flash-image": "google/gemini-2.5-flash-image",
+}
+# Cheaper stand-ins, tried in order if the first choice is itself out of budget.
+# Both draw; both cost half. They are a different model and so a different
+# drawing, which is why they are a fallback and not the default.
+OR_CHEAPER = ["google/gemini-3.1-flash-lite-image", "google/gemini-2.5-flash-image"]
 
 # The style block. Identical for every module on purpose — consistency across a
 # catalogue comes from this prefix not drifting. Mirrors docs/concept-prompts.md.
@@ -117,8 +131,16 @@ def load_key():
                 k, v = line.split("=", 1)
                 os.environ.setdefault(k.strip(), v.strip())
     key = os.environ.get("GEMINI_API_KEY", "").strip()
+    # NO GEMINI KEY IS NOT NO IMAGE MODEL. This exited, which put the exit in
+    # front of the fallback rather than behind it -- a run with only an
+    # OpenRouter key would have died here without ever reaching the code that
+    # can draw. Say which way the images are going and carry on.
     if not key:
-        sys.exit("No GEMINI_API_KEY. Copy .env.example to .env and put your key in it.")
+        if not _openrouter_key():
+            sys.exit("No GEMINI_API_KEY and no OPENROUTER_API_KEY. "
+                     "Copy .env.example to .env and put a key in it.")
+        _DIRECT_DEAD["why"] = "no GEMINI_API_KEY"
+        print("  ! no GEMINI_API_KEY -- drawing through OpenRouter")
     return key
 
 
@@ -145,6 +167,115 @@ REF_INSTRUCTION = (
 )
 
 
+def _write(out_path, data_b64):
+    out_path = Path(out_path)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_bytes(base64.b64decode(data_b64))
+    return out_path
+
+
+def _openrouter_key():
+    """The key `auto_prop` already loads. Read here rather than imported,
+    because importing auto_prop from here would be a cycle."""
+    env = ROOT / ".env"
+    if env.exists():
+        for line in env.read_text().splitlines():
+            line = line.strip()
+            if line and not line.startswith("#") and "=" in line:
+                k, v = line.split("=", 1)
+                if k.strip() == "OPENROUTER_API_KEY":
+                    return v.strip()
+    return ""
+
+
+# Set once the direct endpoint has said it has no credit, so the rest of a run
+# does not spend a round trip per image rediscovering it. A depleted balance is
+# not a transient.
+_DIRECT_DEAD = {}
+
+
+def _spent(code, detail):
+    """Is this HTTP failure the account being out of money, rather than the
+    request being wrong? 429 RESOURCE_EXHAUSTED covers both a depleted
+    prepayment and a per-minute rate limit, and the two want the same thing
+    here — draw it somewhere else — so they are not separated."""
+    if code in (402, 429):
+        return True
+    return code == 403 and re.search(r"quota|billing|credit", detail, re.I) is not None
+
+
+def _via_openrouter(prompt, out_path, refs, model, ref_instruction):
+    """The same drawing, bought through OpenRouter instead of from Google.
+
+    `google/gemini-3.1-flash-image` on OpenRouter IS Nano Banana 2 — the model
+    named in the brief and the one every measurement in PROGRESS.md was taken
+    against — so this fallback changes who is billed and nothing about what
+    comes back. That is the reason it is the first choice here and the reason
+    the cheaper models below are not: half the price for a different artist is
+    a worse trade than full price for the same one, when the corpus numbers
+    were measured on the same one.
+
+    Measured: $0.067 an image at ~1120 completion tokens, against $0.0002 for a
+    judge call. Images have always been the expensive half of a run.
+
+    The response shape is OpenAI's, not Google's: the PNG comes back as a data
+    URI in `choices[0].message.images[].image_url.url`, and the model will also
+    write prose in `content` that nothing here reads.
+    """
+    key = _openrouter_key()
+    if not key:
+        raise RuntimeError("image API is out of credit and there is no "
+                           "OPENROUTER_API_KEY in .env to fall back to")
+
+    content = []
+    for ref in refs:
+        path = Path(ref)
+        mime = MIME.get(path.suffix.lower(), "image/png")
+        content.append({"type": "image_url", "image_url": {
+            "url": f"data:{mime};base64," + base64.b64encode(path.read_bytes()).decode()}})
+    content.append({"type": "text",
+                    "text": f"{ref_instruction}\n\n{prompt}" if refs else prompt})
+
+    ladder = [OR_MODEL.get(model, f"google/{model}")]
+    ladder += [m for m in OR_CHEAPER if m != ladder[0]]
+
+    last = None
+    for or_model in ladder:
+        body = json.dumps({
+            "model": or_model,
+            "modalities": ["image", "text"],
+            "messages": [{"role": "user", "content": content}],
+        }).encode()
+        req = urllib.request.Request(
+            OR_ENDPOINT, data=body, method="POST",
+            headers={"Content-Type": "application/json",
+                     "Authorization": f"Bearer {key}"})
+        try:
+            with urllib.request.urlopen(req, timeout=300) as r:
+                payload = json.load(r)
+        except urllib.error.HTTPError as e:
+            detail = e.read()[:600].decode(errors="replace")
+            last = f"{or_model}: HTTP {e.code} {detail}"
+            if _spent(e.code, detail) and or_model != ladder[-1]:
+                print(f"  ! {or_model}: no budget -- trying a cheaper model, "
+                      f"which draws differently from the one the corpus was "
+                      f"measured on")
+                continue
+            raise RuntimeError(last)
+
+        for choice in payload.get("choices", []):
+            for img in choice.get("message", {}).get("images") or []:
+                url = img.get("image_url", {}).get("url", "")
+                if "," in url:
+                    return _write(out_path, url.split(",", 1)[1])
+        # A refusal is a verdict on one drawing. Report it as one, with the
+        # model's own words, so the caller's re-ask has something to quote.
+        msg = payload.get("choices", [{}])[0].get("message", {})
+        raise RuntimeError(f"no image from {or_model}: "
+                           f"{(msg.get('refusal') or msg.get('content') or json.dumps(payload))[:400]}")
+    raise RuntimeError(last or "no OpenRouter image model answered")
+
+
 def generate_image(prompt, out_path, key, refs=(), model=MODEL, ref_instruction=REF_INSTRUCTION):
     """POST one prompt to the image model and write the PNG it returns.
 
@@ -152,6 +283,15 @@ def generate_image(prompt, out_path, key, refs=(), model=MODEL, ref_instruction=
     concept sheets, texture atlases, shape references — is a prompt and an
     output path handed to this function, so there is one timeout, one response
     shape to get wrong, and one place to fix it.
+
+    That is also why the out-of-credit fallback lives here and nowhere else.
+    When the Gemini prepayment ran dry mid-session, NINE tools stopped at once —
+    `tall_body`, `wide_art`, `quarter_view`, `paint_out`, `detail_sheet`,
+    `segment_sheet`, `ps1_sheet`, `material_atlas`, `decal_sheet` — and not one
+    of them had anything to do with billing. They all come through here, so one
+    fallback restores all nine and none of them is changed. Adding a retry to
+    any individual caller would have been the same fix nine times, eight of
+    them wrong by the time the ninth was written.
 
     @param refs image paths used as STYLE reference, sent FIRST so the model
       reads them as context for the text. Several at once is the point: one
@@ -171,22 +311,31 @@ def generate_image(prompt, out_path, key, refs=(), model=MODEL, ref_instruction=
         "generationConfig": {"responseModalities": ["IMAGE"]},
     }).encode()
 
+    if _DIRECT_DEAD.get("why"):
+        return _via_openrouter(prompt, out_path, refs, model, ref_instruction)
+
     req = urllib.request.Request(
         ENDPOINT.format(model=model) + f"?key={key}",
         data=body,
         headers={"Content-Type": "application/json"},
     )
-    with urllib.request.urlopen(req, timeout=180) as r:
-        payload = json.load(r)
+    try:
+        with urllib.request.urlopen(req, timeout=180) as r:
+            payload = json.load(r)
+    except urllib.error.HTTPError as e:
+        detail = e.read()[:600].decode(errors="replace")
+        if not _spent(e.code, detail):
+            raise
+        _DIRECT_DEAD["why"] = f"HTTP {e.code}"
+        print(f"  ! image API: HTTP {e.code} -- drawing through OpenRouter for "
+              f"the rest of this run ({detail.strip()[:120]})")
+        return _via_openrouter(prompt, out_path, refs, model, ref_instruction)
 
     for cand in payload.get("candidates", []):
         for part in cand.get("content", {}).get("parts", []):
             blob = part.get("inlineData") or part.get("inline_data")
             if blob:
-                out_path = Path(out_path)
-                out_path.parent.mkdir(parents=True, exist_ok=True)
-                out_path.write_bytes(base64.b64decode(blob["data"]))
-                return out_path
+                return _write(out_path, blob["data"])
     raise RuntimeError(f"no image in response: {json.dumps(payload)[:500]}")
 
 
