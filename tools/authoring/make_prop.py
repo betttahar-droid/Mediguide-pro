@@ -338,6 +338,13 @@ def rebuild(d, face="front", asset=None):
         # what parts_front.json says here.
         for c in intent_gate.apply_side_names(d, face):
             print(f"    side: {c['was']} -> {c['now']}")
+        # AND A PART THAT PIVOTS LIKE A STICK HAS TO BE SHAPED LIKE ONE. The
+        # renderer builds a stick as an upright standing off the surface; given
+        # a box ten times wider than tall it builds a slab, which on
+        # v8_arcade_cabinet was 18% of the prop's entire side silhouette.
+        for c in intent_gate.apply_stick_shape(d, face):
+            print(f"    stick: {c['part']} {c['w_over_h']}x wider than tall "
+                  f"-- motion none")
     except Exception as e:
         print(f"    resize policy unavailable ({type(e).__name__})")
     run([sys.executable, "tools/authoring/layer_build.py", str(d), "--face", face])
