@@ -301,14 +301,59 @@ support, and check it there.
 
 ---
 
+## 15. An answer to one axis reused as the answer to the other
+
+Twice in one afternoon, in two files.
+
+`rule_y` (#13) answered "how does this grow DOWN" with the across-rule, and a
+nine-slice stretches every Y rule that is not `spany_repeat`.
+
+`hostSpan`'s body fallback returns the prop's own width at the part's height —
+correct, measured, and its note argues only about WIDTH. It carries `v: [0, 1]`
+because that is the honest answer to "how wide". Read as a TIER span it says the
+shelves repeat down the whole machine, and `v50_vending_machine` rendered its
+bottom row of drinks below the push bar, outside the glass, on the base panel.
+`raycast` named it `product_window_8_tier1_mesh` in one call.
+
+The count had the same shape: `tiers = round(FH)` is the PROP's growth, right
+only while the host grows with the prop — which was always true while the
+fallback host *was* the whole prop.
+
+**Instead:** when a value is reused across axes, check the consumer on both. A
+field that is a correct answer to one question is not thereby a safe default for
+the other, and "it was already there" is how it gets reused.
+
+---
+
+## 16. A bar a part cannot get out of the way of
+
+`strip_slice`'s occupancy tally counted every part against every row it stands
+in, including parts that LENGTHEN with the prop. `v50_vending_machine`'s
+`frame_left` and `frame_right` run all 517 rows at `spany_repeat`, 63 px of a
+297-wide face, so every row read 21% occupied against a 10% bar and **no row on
+the prop was ever bare**. It named no place, found no run, and fell through to
+the stretch.
+
+The reasoning against it was already written, three hundred lines away in the
+same file, for the `side == "itself"` branch: "a lengthening member's rows are
+not meant to be bare, they are full of the member; what has to be true there is
+that nothing ELSE is."
+
+**Instead:** when a test comes back empty for every candidate, suspect the test
+before the candidates. And when a file already argues a case in one branch,
+check whether the other branches know.
+
+---
+
 ## The pattern underneath most of these
 
 Nearly every entry is one of four shapes:
 
 1. **A number that describes the method, not the subject** (2, 8).
-2. **A unit confusion that survives because nothing converts explicitly** (3, 13).
+2. **A unit confusion that survives because nothing converts explicitly** (3, 13, 15).
 3. **A signal that exists and reaches nothing** (1, and the near-miss in 1).
 4. **A correction that can return nothing, where nothing wins** (11).
 5. **A property checked only where it cannot fail** (14).
+6. **A test that rejects everything, blamed on the candidates** (16).
 
-Checking for those five directly is cheaper than rediscovering them.
+Checking for those six directly is cheaper than rediscovering them.
