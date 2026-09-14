@@ -133,10 +133,121 @@ def needs(prop_dir, face="front"):
     return band, hx
 
 
+def place_cut(d, band, H, face="front"):
+    """Where to insert, which must not be inside a part.
+
+    strip_slice says this about its own cut in as many words: "Inserting there
+    slid the hole out from under the door, which is anchored to the bottom, and
+    tore the cabinet open." Taking the band's midpoint put the jukebox's 416 new
+    rows through the middle of speaker_grille -- the grille slid to the floor and
+    the new body opened between the song list and the selection display, which is
+    nowhere a jukebox gains height.
+
+    On these props EVERY row is inside some part, because having nowhere bare is
+    why they are here at all. So the cut goes where the FEWEST parts cover, and a
+    tie goes to a part BOUNDARY: a row where one part ends or the next begins is
+    a seam the drawing already has, and inserting at it slides parts apart rather
+    than through them.
+    """
+    a, b = int(band["px"][0]), int(band["px"][1])
+    mid = (a + b) // 2
+    cover = [0] * (H + 1)
+    edges = set()
+    try:
+        pj = json.loads((d / f"parts_{face}.json").read_text())
+        for q in pj.get("parts", []):
+            x0, y0, x1, y1 = q["px"]
+            for y in range(max(0, y0), min(H, y1)):
+                cover[y] += 1
+            edges.add(max(0, y0)); edges.add(min(H, y1))
+    except Exception:
+        pass
+    lo, hi = max(0, min(a, b)), min(H, max(a, b))
+    if hi <= lo:
+        lo, hi = 0, H
+    cut = min(range(lo, hi + 1),
+              key=lambda y: (cover[y], 0 if y in edges else 1, abs(y - mid)))
+    return cut, cover[cut], (cut in edges)
+
+
+def check(src, got, cut, extra, W, H):
+    """Why this drawing is not usable, as a sentence, or None if it is.
+
+    Every one of these is quoted back to the model on the next attempt, so each
+    has to say what is wrong in terms the model can act on -- and each bar comes
+    from the prop's OWN drawing rather than from a number chosen here.
+    """
+    import numpy as np
+    from PIL import Image
+    from detail_sheet import resemblance, median_rgb
+    from strip_slice import row_diff
+
+    new = got.crop((0, cut, W, cut + extra))
+    above = src.convert("RGB").crop((0, max(0, cut - extra), W, cut))
+    a0 = np.asarray(src.convert("RGB")).astype(float)
+    g = np.asarray(got).astype(float)
+
+    left = int(((np.abs(g[:, :, 0] - 255) < 40) & (g[:, :, 1] < 60)
+                & (np.abs(g[:, :, 2] - 255) < 40)).sum())
+    if left > 0.02 * extra * W:
+        return (f"{left} pixels of the magenta came back unfilled. Every "
+                f"magenta pixel must become body.")
+
+    # THE SEAM, which no palette or similarity test can see. The first reply
+    # passed both of those at 0.99 and 0 and had drawn a distinct PANEL let into
+    # the body with a hard rule across each join -- the one thing the prompt
+    # forbids in as many words. row_diff at the joins came back 46.3 and 40.3
+    # against a median of 0.98. The bar needs no choosing: the prop's own
+    # busiest row is 8.30.
+    worst_row = max(row_diff(src.convert("RGB")) or [1.0])
+    rd = row_diff(got)
+    joins = [max(rd[max(0, y - 3):y + 4] or [0])
+             for y in (cut, cut + extra) if 0 < y < len(rd)]
+    seam = max(joins) if joins else 0.0
+    if seam > SEAM_X * worst_row:
+        return (f"the top and bottom of the new band are hard horizontal "
+                f"lines -- a row difference of {seam:.0f} where the strongest "
+                f"line anywhere on this machine is {worst_row:.0f}. You drew a "
+                f"separate panel let into the body. The body must run THROUGH "
+                f"the band with nothing to see where it joins.")
+
+    # AND ACROSS IT AS WELL AS ALONG IT -- "quiet along one axis is not quiet".
+    # A row-wise test cannot see a vertical line, and a reply that painted its
+    # left four columns white scored 209 there against an interior max of 18.
+    #
+    # AGAINST THE ORIGINAL'S ROWS, NEVER THE REPLY'S. Compared to its own
+    # neighbours the white reply agreed with itself at 10 and passed. Comparing
+    # a reply against itself measures its consistency, not its correctness.
+    band = g[cut:cut + extra].mean(axis=(0, 2))
+    ref = np.r_[a0[max(0, cut - 40):cut], a0[cut:cut + 40]].mean(axis=(0, 2))
+    col = float(np.abs(band - ref).max()) if len(ref) else 0.0
+    steps = [float(np.abs(a0[y - 40:y].mean(axis=(0, 2))
+                          - a0[y:y + 40].mean(axis=(0, 2))).max())
+             for y in range(40, a0.shape[0] - 40, 20)]
+    worst_col = max(steps) if steps else 255.0
+    if col > COL_X * worst_col:
+        return (f"the new band has a vertical edge down it: one column differs "
+                f"from the body above and below by {col:.0f}, where the biggest "
+                f"such step on this machine is {worst_col:.0f}. Do not draw a "
+                f"border, a frame or a lighter strip at the sides -- the body "
+                f"reaches the edge of the canvas exactly as it does elsewhere.")
+
+    unlike = resemblance(new, above)
+    tint = sum(abs(x - y) for x, y in zip(median_rgb(new), median_rgb(above))) / 3
+    if unlike < MIN_UNLIKE:
+        return (f"the new band is a copy of the rows just above it. It should "
+                f"be a continuation of the body, not a repeat of a piece of it.")
+    if tint > MAX_TINT:
+        return (f"the new band's colour is {tint:.0f} away from the body it "
+                f"joins. Take the palette from the rows either side of it.")
+    return None
+
+
 def draw(prop_dir, asset, face="front", redraw=False):
     from PIL import Image
+    import numpy as np
     from concept_sheet import generate_image, load_key
-    from detail_sheet import resemblance, median_rgb
+    from detail_sheet import median_rgb
 
     d = Path(prop_dir)
     band, hx = needs(d, face)
@@ -154,13 +265,18 @@ def draw(prop_dir, asset, face="front", redraw=False):
     dst = d / f"bg_{face}_tall.png"
     if dst.exists() and not redraw:
         print("  already drawn")
-        return json.loads((d / "tall_body.json").read_text())
+        try:
+            return json.loads((d / "tall_body.json").read_text())
+        except Exception:
+            return None
 
     src = Image.open(bg).convert("RGBA")
     W, H = src.size
     extra = int(round((hx - 1.0) * H))
-    a, b = int(band["px"][0]), int(band["px"][1])
-    cut = max(0, min(H, (a + b) // 2))
+    cut, ncov, on_edge = place_cut(d, band, H, face)
+    print(f"    cut at row {cut} of {H}: {ncov} part(s) cover it"
+          + (", and it is a part boundary" if on_edge else ""))
+
     # THE ONLY MAGENTA IS THE BAND. This composited the RGBA background over a
     # magenta base, and bg_front is transparent wherever the prop is not -- the
     # jukebox's domed top, its tapered plinth -- so every one of those pixels
@@ -175,139 +291,88 @@ def draw(prop_dir, asset, face="front", redraw=False):
     ask_p = d / f"_tall_ask_{face}.png"
     ask.save(ask_p)
 
-    try:
-        generate_image(PROMPT.format(asset=asset), dst, load_key(), refs=[ask_p])
-    except Exception as e:
-        print(f"  not drawn ({type(e).__name__})")
+    # A REFUSAL IS A VERDICT ON ONE DRAWING, NOT ON THE PROP. CLAUDE.md's rule,
+    # and detail_sheet already follows it: "the same pad scored a colour
+    # distance of 10 on one sheet and 82 on the next from an identical prompt."
+    # Every check above is a sentence the model can act on, so it is quoted back
+    # instead of thrown away, and the prop falls through to a stretch only after
+    # three drawings have failed.
+    key = load_key()
+    got = last = None
+    for attempt in range(3):
+        ask_more = "" if not last else (
+            "\n\nYOUR LAST ATTEMPT WAS REJECTED, measured against this "
+            f"machine's own drawing: {last}\nDraw it again and fix that.")
+        try:
+            generate_image(PROMPT.format(asset=asset) + ask_more, dst, key,
+                           refs=[ask_p])
+        except Exception as e:
+            print(f"  not drawn ({type(e).__name__})")
+            return None
+        raw = Image.open(dst)
+        want = W / float(H + extra)
+        ar = raw.width / float(raw.height)
+        if abs(ar - want) / want > 0.12:
+            last = (f"it came back {ar:.2f} wide for its height against the "
+                    f"{want:.2f} of the canvas you were given. Fill the canvas "
+                    f"you are given, edge to edge.")
+        else:
+            cand = raw.convert("RGB").resize((W, H + extra), Image.LANCZOS)
+            last = check(src, cand, cut, extra, W, H)
+            if last is None:
+                got = cand
+                break
+        print(f"  attempt {attempt + 1} refused: {last[:96]}")
+    if got is None:
+        print("  three drawings refused; the body stretches instead")
+        dst.rename(d / f"_tall_refused_{face}.png")
+        ask_p.unlink(missing_ok=True)
         return None
 
-    raw = Image.open(dst)
-    want = W / float(H + extra)
-    ar = raw.width / float(raw.height)
-    if abs(ar - want) / want > 0.12:
-        print(f"  refused -- came back at aspect {ar:.2f} against {want:.2f} "
-              f"asked; it copied the reference's shape")
-        dst.unlink(missing_ok=True)
-        return None
-    got = raw.convert("RGB").resize((W, H + extra), Image.LANCZOS)
-    new = got.crop((0, cut, W, cut + extra))
-    above = src.convert("RGB").crop((0, max(0, cut - extra), W, cut))
-    left = sum(1 for p in new.getdata()
-               if abs(p[0] - 255) < 40 and p[1] < 60 and abs(p[2] - 255) < 40)
-    if left > 0.02 * extra * W:
-        print(f"  refused -- {left} px of magenta came back unfilled")
-        dst.unlink(missing_ok=True); ask_p.unlink(missing_ok=True)
-        return None
-    # the seam check, before the others: it is the one that caught the first
-    # reply and the one a palette test structurally cannot see
-    from strip_slice import row_diff
-    drawn_rd = row_diff(src.convert("RGB"))
-    got_rd = row_diff(got)
-    worst_drawn = max(drawn_rd) if drawn_rd else 1.0
-    joins = [max(got_rd[max(0, y - 3):y + 4] or [0])
-             for y in (cut, cut + extra) if 0 < y < len(got_rd)]
-    seam = max(joins) if joins else 0.0
-    if seam > SEAM_X * worst_drawn:
-        print(f"  refused -- the joins are a hard line: row difference {seam:.1f} "
-              f"against {worst_drawn:.1f}, the busiest row this prop actually "
-              f"has ({seam / max(0.01, worst_drawn):.1f}x). It drew a panel let "
-              f"into the body rather than continuing it")
-        dst.rename(d / f"_tall_refused_{face}.png")
-        ask_p.unlink(missing_ok=True)
-        return None
-    # and across it: a bright edge where the new material meets the border
-    import numpy as _np
-    _g = _np.asarray(got).astype(float)
-    # AGAINST THE ORIGINAL'S ROWS, NEVER THE REPLY'S. This first compared the
-    # new band to the reply's OWN rows above and below it -- and the reply had
-    # painted its left four columns pure white through the whole image, band and
-    # neighbours alike, so the two agreed at 10 and the check passed a stripe
-    # that is 255 against a body of (57,46,36). Comparing a reply against itself
-    # measures its consistency, not its correctness; the drawn background is the
-    # only thing here that is known good.
-    _a0 = _np.asarray(src.convert("RGB")).astype(float)
-    _band = _g[cut:cut + extra].mean(axis=(0, 2))
-    _ref = _np.r_[_a0[max(0, cut - 40):cut],
-                  _a0[cut:cut + 40]].mean(axis=(0, 2))
-    col = float(_np.abs(_band - _ref).max()) if len(_ref) else 0.0
-    steps = [float(_np.abs(_a0[y - 40:y].mean(axis=(0, 2))
-                           - _a0[y:y + 40].mean(axis=(0, 2))).max())
-             for y in range(40, _a0.shape[0] - 40, 20)]
-    worst_col = max(steps) if steps else 255.0
-    if col > COL_X * worst_col:
-        print(f"  refused -- the new band has an edge across it: a column "
-              f"differs from its neighbours by {col:.0f} against {worst_col:.0f}, "
-              f"the biggest column step this prop's own drawing has "
-              f"({col / max(0.01, worst_col):.1f}x)")
-        dst.rename(d / f"_tall_refused_{face}.png")
-        ask_p.unlink(missing_ok=True)
-        return None
-    unlike = resemblance(new, above)
-    tint = sum(abs(x - y) for x, y in
-               zip(median_rgb(new), median_rgb(above))) / 3
-    if unlike < MIN_UNLIKE or tint > MAX_TINT:
-        why = ("the new band is a copy of the rows above it"
-               if unlike < MIN_UNLIKE else "the palette does not match")
-        print(f"  refused -- {why} ({unlike:.2f} unlike, floor {MIN_UNLIKE}; "
-              f"tint {tint:.0f}, bar {MAX_TINT}); the prop stretches instead")
-        dst.rename(d / f"_tall_refused_{face}.png")
-        ask_p.unlink(missing_ok=True)
-        return None
+    # AND THE BAND IS TONED TO ITS NEIGHBOURS, by arithmetic rather than by
+    # asking again. The reply comes back the right material and the right grain
+    # and a different exposure -- a median 11 lighter than the body it joins,
+    # inside the palette bar and still reading as a lighter panel let into the
+    # wood. A level is the one thing here that does not need a model: the
+    # renderer already tints its carcass to rowRGB for exactly this reason.
+    a0 = np.asarray(flat).astype(float)
+    bm = median_rgb(got.crop((0, cut, W, cut + extra)))
+    nb = median_rgb(Image.fromarray(
+        np.r_[a0[max(0, cut - 60):cut], a0[cut:cut + 60]].astype("uint8")))
+    sh = [int(round(n - b)) for n, b in zip(nb, bm)]
+    if any(abs(v) > 1 for v in sh):
+        arr = np.asarray(got).astype(int)
+        arr[cut:cut + extra] = np.clip(
+            arr[cut:cut + extra] + np.array(sh, dtype=int), 0, 255)
+        got = Image.fromarray(arr.astype("uint8"))
+        print(f"    band toned to its neighbours by {tuple(sh)}")
 
     # THE DRAWN BODY GOES BACK OVER EVERYTHING OUTSIDE THE BAND, exactly. Only
     # the new rows are the model's, for the reason wide_art gives: a generated
     # body that quietly redraws the panel lines has lost fidelity to the
     # reference at the size the reference was drawn, and that is not tradeable.
-    # AND THE BAND IS TONED TO ITS NEIGHBOURS, by arithmetic rather than by
-    # asking again. The reply comes back the right material and the right grain
-    # and a different exposure -- a median 11 lighter than the body it joins,
-    # which is inside the palette bar and still reads as a lighter panel let
-    # into the wood. That is a level, and a level is the one thing here that
-    # does not need a model: the renderer already tints its carcass to rowRGB
-    # for exactly this reason. Shift the band so its median matches the rows it
-    # sits between, and the drawn structure survives untouched.
-    _bm = median_rgb(got.crop((0, cut, W, cut + extra)))
-    _nb = median_rgb(Image.fromarray(
-        _np.r_[_a0[max(0, cut - 60):cut],
-               _a0[cut:cut + 60]].astype("uint8")))
-    _sh = [int(round(n - b)) for n, b in zip(_nb, _bm)]
-    if any(abs(v) > 1 for v in _sh):
-        _bn = _np.asarray(got).astype(int)
-        _bn[cut:cut + extra] = _np.clip(
-            _bn[cut:cut + extra] + _np.array(_sh, dtype=int), 0, 255)
-        got = Image.fromarray(_bn.astype("uint8"))
-        print(f"    band toned to its neighbours by {tuple(_sh)}")
     out = got.convert("RGBA")
     out.paste(src.crop((0, 0, W, cut)), (0, 0))
     out.paste(src.crop((0, cut, W, H)), (0, cut + extra))
     # AND THE SILHOUETTE IS CARRIED THROUGH THE BAND. The drawn background is
     # transparent outside the prop; the new rows must be too, or a taller prop
-    # gains a rectangle of body where its outline tapers. The alpha at the cut
-    # row is what the prop's outline is doing there, so it is what the inserted
-    # rows get.
+    # gains a rectangle of body where its outline tapers.
     al = src.split()[3]
-    band_a = al.crop((0, max(0, cut - 1), W, max(1, cut))).resize((W, extra))
     full = Image.new("L", (W, H + extra), 255)
     full.paste(al.crop((0, 0, W, cut)), (0, 0))
-    full.paste(band_a, (0, cut))
+    full.paste(al.crop((0, max(0, cut - 1), W, max(1, cut)))
+               .resize((W, extra)), (0, cut))
     full.paste(al.crop((0, cut, W, H)), (0, cut + extra))
     out.putalpha(full)
     out.save(dst)
     ask_p.unlink(missing_ok=True)
     rec = {"face": face, "ratio": hx, "cut": cut, "extra": extra,
-           "seam": round(seam, 2), "worst_drawn_row": round(worst_drawn, 2),
-           "col": round(col, 1), "worst_drawn_col": round(worst_col, 1),
            "size": [W, H + extra], "drawn_size": [W, H],
-           # where the height went, in the DRAWN texture's own 0..1 from the
-           # bottom, which is the convention grow_bands already uses
-           "band": [round(1 - cut / H, 5), round(1 - cut / H, 5)],
-           "unlike": round(unlike, 3), "tint": round(tint, 1),
-           "evidence": "proposed"}
+           "cover_at_cut": ncov, "on_part_boundary": on_edge,
+           "attempts": attempt + 1, "evidence": "proposed"}
     (d / "tall_body.json").write_text(json.dumps(rec, indent=1))
     print(f"  {extra} rows of new body drawn at row {cut} of {H} "
-          f"(joins {seam:.1f} of {worst_drawn:.1f}, edges {col:.0f} of "
-          f"{worst_col:.0f}, {unlike:.2f} unlike, tint {tint:.0f}) "
-          f"-- the drawn body kept")
+          f"on attempt {attempt + 1} -- the drawn body kept")
     return rec
 
 

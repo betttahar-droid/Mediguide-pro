@@ -251,6 +251,12 @@ try { sliceBg = await (await fetch(`${dir}/slice_bg.json`)).json(); } catch {}
 // ratio. Absent on every prop that never needed any, which is most of them.
 let wideArt = null;
 try { wideArt = await (await fetch(`${dir}/wide_art.json`)).json(); } catch {}
+// THE BODY DRAWN TALLER, for the props with nowhere bare to repeat. tall_body
+// asks the image model for the extra carcass at the band strip_slice chose and
+// vetoed, and composites the drawn background back over everything outside it.
+// Present only on the props that needed it, which is sixteen of ninety-seven.
+let tallBody = null;
+try { tallBody = await (await fetch(`${dir}/tall_body.json`)).json(); } catch {}
 if (p.get('loft') === '0') fprofile = null;
 if (p.get('plan') === '0') tprofile = null;
 if (p.get('box') === '1') profile = null;
@@ -260,7 +266,14 @@ const BODY_D = Number(p.get('depth') ?? profile?.depth ?? bodyMeta?.depth ?? 0.3
 // THE SHEET PAID FOR FOUR ELEVATIONS; USE FOUR. Texturing only the front and
 // painting the rest a flat brown is invisible head-on and is most of what you
 // see the moment the prop is turned to show its parts are separate objects.
-const bgTex = await load(`${dir}/${man.background}`);
+// AND ABOVE THE RATIO IT WAS DRAWN FOR, THE TALLER ONE. The drawn band and
+// gOfT agree by construction -- the texture has exactly the rows the band
+// inserts, at exactly the place it inserts them -- so the parts placed through
+// gOfT and the body painted from this texture land on each other. At 1x, and on
+// every prop that has somewhere to repeat, this is the drawn background.
+const useTall = !!tallBody && hS > 1.0 + (tallBody.ratio - 1) * 0.4;
+const bgTex = await load(
+  `${dir}/${useTall ? `bg_${tallBody.face}_tall.png` : man.background}`);
 // WHAT COLOUR THE ARTWORK IS AT A GIVEN HEIGHT. A shelf -- a horizontal step
 // in the front of the body -- is not depicted by any elevation: the front view
 // sees it edge-on as a row or two of pixels and the top view has the prop's
@@ -774,7 +787,17 @@ function sliceRuns(bandA, bandB, scale, symmetric = false) {
   return runs.filter((r) => r.g1 > r.g0 + 1e-9);
 }
 
-const growRuns = markReps(sliceRunsMulti(growBands, hS), hS);
+// A DRAWN BAND IS A GROWTH BAND THAT DOES NOT REPEAT. It tells gOfT where the
+// height went -- so the parts above and below hold and simply move apart, which
+// is what they do on a prop that repeats -- and the body takes its rows from the
+// taller drawing instead of from copies. One insertion, at the cut.
+const drawnBand = useTall
+  ? [[Math.max(0, 1 - (tallBody.cut + 1) / tallBody.drawn_size[1]),
+      1 - tallBody.cut / tallBody.drawn_size[1], 1]]
+  : null;
+const growRuns = markReps(
+  sliceRunsMulti(drawnBand ?? growBands, hS), hS);
+if (drawnBand) for (const r of growRuns) { r.reps = 1; r.carcass = false; }
 // a height on the finished prop, read back as a height on the drawing
 function tOfG(g) {
   for (const r of growRuns) {
@@ -1311,9 +1334,17 @@ function buildLoft() {
         // the two levels of this quad, each recoloured to the body colour at
         // the height it actually ended up on
         const c0 = wearAt(ys[i], a.wy), c1 = wearAt(ys[i + 1], b.wy);
+        // `ys` is the height on the DRAWING and `gs` is where that height ended
+        // up. They are the same thing while the texture is the drawn one, and
+        // when the body has been drawn taller the texture's rows ARE grown
+        // positions -- so V is gs, and the inserted rows are read rather than
+        // copied. Only the front takes this: the flanks are still the drawn
+        // side elevation.
+        const V0 = (useTall && f.mi === 1) ? gs[i] : ys[i];
+        const V1 = (useTall && f.mi === 1) ? gs[i + 1] : ys[i + 1];
         quadTo(f.mi, P4,
-               [[f.u(p), ys[i]], [f.u(q), ys[i]],
-                [f.u(Q), ys[i + 1]], [f.u(P), ys[i + 1]]],
+               [[f.u(p), V0], [f.u(q), V0],
+                [f.u(Q), V1], [f.u(P), V1]],
                (c0 && c1) ? [c0, c0, c1, c1] : null);
       }
     }
