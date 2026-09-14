@@ -563,11 +563,49 @@ def main():
     # Where a prop may grow is where it has nothing on it. That is what "more
     # cabinet" means, and it is the free area of the strip -- squared, because
     # the choice should be decisive rather than a nudge.
+    # A PART THAT LENGTHENS WITH THE PROP IS NOT IN THE WAY.
+    #
+    # The reasoning is already written out in the `side == "itself"` branch
+    # below: a lengthening member's rows are not meant to be bare, they are full
+    # of the member, and what has to be true there is that nothing ELSE is. The
+    # occupancy tally never learned it, so a full-height rail counted against
+    # every row it stands in -- which is all of them.
+    #
+    # v50_vending_machine is the case. Its frame_left and frame_right run the
+    # entire 517 rows at spany_repeat, 63 px of a 297-wide face, so every row on
+    # the prop reads 21% occupied against a 10% bar and NO ROW IS EVER BARE. It
+    # named no place, found no run, and fell through to the stretch -- where its
+    # nine per-tier product windows hold their drawn size while the background
+    # carrying their price labels stretches past them. The result has the rows
+    # scattered, the prices detached from the products and the bottom row
+    # clipped by the push bar.
+    #
+    # A part that lengthens is repeated correctly by its own rule, whatever the
+    # band does. Counting it as an obstruction only hides the rows beside it.
     occupied = [0] * (H + 1)
     _pm = {}
     try:
         _pm = json.loads((d / f"parts_{args.face}.json").read_text())
-        for q in _pm.get("parts", []):
+        _parts = _pm.get("parts", [])
+        try:
+            from layer_build import rule_y as _rule_y
+        except Exception:
+            _rule_y = None
+
+        def _lengthens(q):
+            if q.get("lengthens"):
+                return True
+            if _rule_y is None:
+                return False
+            try:
+                return _rule_y(dict(q), _parts,
+                               q.get("resize") or "fixed") == "spany_repeat"
+            except Exception:
+                return False
+
+        for q in _parts:
+            if _lengthens(q):
+                continue
             qx0, qy0, qx1, qy1 = q["px"]
             for y in range(max(0, qy0), min(H, qy1)):
                 occupied[y] += max(0, qx1 - qx0)
