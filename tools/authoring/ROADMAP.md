@@ -71,14 +71,17 @@ and per-instance validation counts N, not "there is a slot".
 
 ---
 
-## 4. The jukebox grey slab
+## 4. The jukebox grey slab — **DONE, from the other end**
 
-Still open, and half traced. The extra height fills with dead grey; `raycast`
-named it the carcass fill (world-space UVs, material 5), and the correct brown
-tint *computes* — `rowRGB [53,43,33]` against a tile median of `[59,74,92]` —
-and does not reach the screen. Not the atlas: `sheet=0` renders identically.
+The slab was the renderer's `MAX_REPS` fallback: eleven bare rows needed
+twenty-eight copies at 1.7×, the run was marked `carcass`, and flat tile filled
+half the cabinet. That choice was made between *repeating* and *flat*, because
+stretching was not something `strip_slice` could ask for. It is now, and the
+same prop is its own wood all the way down.
 
-**Done when:** a taller jukebox's new body is its own wood colour.
+The tint path itself turned out to be sound — `tintFor(rowRGB(...))` is applied
+per corner and `materials.json` does carry the `median` it needs. What was wrong
+was reaching the fallback at all.
 
 ---
 

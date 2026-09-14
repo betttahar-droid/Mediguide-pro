@@ -27,6 +27,7 @@ taller axis was wrong on 33 of 65 props and is now fixed at the cause.
 | `resize_policy.py` | whether a feature's resize contradicts its role | **yes** — via `intent_gate.apply_resize_policy`, before the layers are cut |
 | `segment_audit.py` | boxes that swallowed fittings; bands never lifted | **yes** — one re-draw when `UNDER_SEGMENTED` |
 | `depth_probe.py` | a feature's thickness off the side elevation | **yes** — and its answer is almost always `UNMEASURABLE`, which is the finding |
+| `overlap_cut.py` | drawn pixels claimed by more than one part | **yes** — cuts them out of the larger part after `detail_sheet` |
 | `raycast.mjs` | names the object under a render pixel | n/a (diagnostic) |
 
 ---
@@ -42,6 +43,10 @@ segmentation   33 of 95 flagged (23 swallowed boxes, 18 missing bands; 6 are scr
 unverified     407 aspect (was 1673)   291 thickness (UNMEASURABLE, declared)
 growth place   44 props moved off the blind band onto a measured bare run
                9 props have nowhere bare at all and now stretch instead
+               10 more had bands too small for the renderer's 10-copy bound
+overlap        88 props, 1462 pairs of parts sharing drawn pixels -- cut
+vertical rule  121 parts held their height that were stretching it
+               (56 sign, 28 button, 17 decal, 11 slot, 8 screen, 1 light)
 ```
 
 **No prop can reach a meaningful ACCEPTED from four elevations**, and that is
@@ -87,6 +92,20 @@ Roadmap 2b — a three-quarter reference view — is the only way past it.
 - **A member can lengthen at all** — `shaft_band`, `spany_repeat` instead of
   `spany_center`, and its own share of the height via `gOfT` rather than the
   whole prop's.
+- **One drawn region belongs to one part.** `layer_build` cuts each part out of
+  the elevation at its own box, so overlapping boxes put the same artwork in
+  both textures. Invisible at 1x, where the copies coincide — a 1.7x jukebox
+  rendered its song list **three times**, and `raycast` named the copies
+  `arch_lights_mesh`, `title_strip_mesh`, `speaker_grille_mesh`. 88 props, 1462
+  pairs. `overlap_cut` erases the rider's alpha shape from the larger part and
+  leaves a hole, because behind the rider is the body and `paint_out` has
+  already painted it clean. Dilating that hole was tried and reverted: unfilled,
+  a dilated hole is larger than the thing covering it, and half the 1x change
+  measured was rim (4.23→2.70, 1.85→1.03, 1.08→0.56, 1.29→0.66 per cent).
+- **Artwork holds its height, not just its width.** `rule_y` fell back to the
+  across-rule, and `faceQuads` **stretches** every Y rule that is not
+  `spany_repeat` — so `screen: spanx_center` meant stretch, and a taller cabinet
+  grew a taller screen. 121 parts across 65 props.
 - **A growth band may not be made of fittings.** A 1.6× pinball came out with
   four playfields stacked diagonally up its cabinet. Two faults in series: an
   empty `taller_at` outranked a members-only one in `scale_rules` (an empty list

@@ -260,13 +260,55 @@ with the thing that produced the fault.
 
 ---
 
+## 13. A rule for an axis it does not name
+
+`rule_y` answered "how does this part grow DOWN" with the part's ACROSS rule
+whenever nothing more specific applied. That reads as a harmless default and is
+not one: `faceQuads` gives `ny = 1` to every rule that is not `spany_repeat`,
+and a nine-slice with `ny = 1` **stretches** its middle band to make up the
+difference. So `screen: resize_y = spanx_center` does not mean "hold", it means
+"stretch", and a 1.5× taller cabinet grew a screen half again as tall.
+
+The comment "a taller cabinet is more cabinet, not a bigger screen" is twenty
+lines from the code that did this. It was written about the body. The parts were
+never held to it, so the fault the whole growth-band design exists to prevent
+came back through the other axis.
+
+121 parts across 65 props carried a stretching Y rule they should not have: 56
+signs, 28 buttons, 17 decals, 11 slots, 8 screens, 1 light.
+
+**Instead:** an enum whose values name one axis must not be used as the default
+for the other. When a field falls back to a sibling's value, check what the
+CONSUMER does with it — "the same rule" and "no rule" are different, and the
+consumer decides which one a copied value means.
+
+---
+
+## 14. Two parts can own the same pixels, and it only shows when they move
+
+`layer_build` cuts each part straight out of the elevation at its own box, so
+wherever two boxes overlap, both textures carry the same artwork. A 1.7× jukebox
+rendered its song list **three times**; `raycast` named the copies
+`arch_lights_mesh`, `title_strip_mesh` and `speaker_grille_mesh`. 88 props have
+at least one such pair, 1462 pairs in all.
+
+It survived because it is invisible at 1×, where the copies land exactly on each
+other — the size every "is this lossless?" check is run at.
+
+**Instead:** a correctness property checked only at the identity transform is
+not checked. Ask what the invariant is under the transforms the thing exists to
+support, and check it there.
+
+---
+
 ## The pattern underneath most of these
 
 Nearly every entry is one of four shapes:
 
 1. **A number that describes the method, not the subject** (2, 8).
-2. **A unit confusion that survives because nothing converts explicitly** (3).
+2. **A unit confusion that survives because nothing converts explicitly** (3, 13).
 3. **A signal that exists and reaches nothing** (1, and the near-miss in 1).
 4. **A correction that can return nothing, where nothing wins** (11).
+5. **A property checked only where it cannot fail** (14).
 
-Checking for those four directly is cheaper than rediscovering them.
+Checking for those five directly is cheaper than rediscovering them.
