@@ -14,7 +14,14 @@ ways it has gone wrong, and this file for what actually exists.
 The pipeline makes props end to end and its best judged scores went from
 6/4/5/6 blocking faults to **2/3/2/3** across the four reference props. Every
 measurement tool is now wired to a lever. The widening axis is right; the
-taller axis was wrong on 33 of 65 props and is now fixed at the cause.
+taller axis was wrong on 33 of 65 props and is fixed at the cause.
+
+**The geometry is now measured against the drawings it claims to be**, and the
+worst face on any prop in the corpus is 0.902 where it was 0.762. 81 of 98 props
+agree with all three of their own elevations to better than 0.95, 52 to better
+than 0.97. Most of that came from three artefacts that were simply missing, not
+from any threshold — see below, and `prop_complete.py`, which exists so the next
+one is reported rather than rendered.
 
 ---
 
