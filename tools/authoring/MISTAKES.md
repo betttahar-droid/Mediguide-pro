@@ -1,0 +1,200 @@
+# Mistakes, and what to do instead
+
+`CLAUDE.md` holds the practices. This file holds the specific errors that
+produced them, with the numbers, so a future session can recognise the shape of
+one before repeating it.
+
+Entries are ordered by how expensive they were.
+
+---
+
+## 1. Building a measurement and wiring it to nothing
+
+**Open. This is the current top mistake.**
+
+Four measurement tools exist; one is wired into the loop. `feature_intent`,
+`resize_policy` and `segment_audit` between them find 230 role contradictions,
+33 under-segmented props and 291 unverified thicknesses, and **nothing in the
+pipeline reads any of it.**
+
+This is the exact failure Astra diagnosed, in a new costume: the system now
+knows a great deal more than it did and behaves identically. It also breaks the
+repo's own rule that anything which can block must be able to correct.
+
+I did the same thing in miniature one commit after writing `repeat_score`:
+appended its findings *after* both judges had already replied, which made it a
+blocking channel with no correcting one. Caught and fixed by moving it in
+front of them, as evidence.
+
+**Instead:** a measurement is not done when it measures. It is done when
+something acts on it. Name the lever before writing the check.
+
+---
+
+## 2. Thresholds that are tautologies
+
+`ROLE_ASPECT` was first derived at the 10th/90th percentile. A band drawn at
+p10/p90 excludes a fifth of its own data **by definition**, and that is exactly
+what it did — 19–25% of every single role (decal 20%, button 19%, screen 22%,
+member 25%). That is the percentile's arithmetic and says nothing about any
+prop. At p2/p98 the same corpus rejects 3–8% and what falls outside is a gross
+outlier.
+
+Related, same file: rounding a bound to *nearest* moved it past the very
+instance that defined it — a grille measuring 8.574 set the p98 and then failed
+`8.57 outside 0.27..8.57` on its own number. Bounds round **outward**.
+
+**Instead:** before believing a derived threshold, ask what fraction of the
+source data it rejects. If that number is the percentile you chose, you have
+measured nothing.
+
+---
+
+## 3. Confusing normalised local units with real ones
+
+`Feature.region` is normalised inside its host, so `f.w/f.h` is the real aspect
+times the host's *inverse* aspect. A screen with a 244×171 pixel box — real
+aspect 1.427 — returned 3.429, because the face is 263×632 and
+1.427 × (632/263) = 3.429 exactly. Checked against ranges derived from real
+aspects that scored **83 of 95 props REJECTED**, and 335 of the 506 failures
+were the artefact rather than a bad part.
+
+This is the Astra finding — face-local dimensions confused with world axes —
+reproduced *inside the module written to prevent it*. The docstring said w and
+h are not world axes; the same discipline says a normalised local length is not
+a real one either, and only `local_size()` converts. `check_aspect` never
+called it.
+
+**Instead:** any value that is a ratio must carry the extent it was normalised
+against, or nothing can be recovered from it. A `Feature` now carries `extent`.
+
+---
+
+## 4. Overclaiming in the direction you are guarding against
+
+Having written a module whose whole purpose is to refuse to say "accepted"
+without evidence, I set thickness to `0` and failed every opening for "being
+paint" — scoring **86 props REJECTED**. But the renderer *does* build a
+stand-off from the depth adjective, so the geometry is there; it simply isn't
+measured. The true verdict is DRAFT.
+
+**Instead:** the overclaim has two directions. Guarding one does not protect
+the other, and the vocabulary you built to be honest can be used to be wrong.
+`DEPTH_ADJECTIVE` now quotes the renderer's real constants so they cannot drift.
+
+---
+
+## 5. Fixing one prop and breaking twenty
+
+Estimating the sheet background from a k×k *patch* at each crop corner reads as
+"the same idea measured properly". It is worse, for the reason the single-pixel
+version was nearly right: a tight crop's corner patch is mostly **prop**. Swept
+across the work tree it moved the estimate to near-black on ~20 props whose
+sheet is mid grey, and every one then read as solid to its own bounding box.
+
+One prop fixed, twenty broken. The fix was to take the colour from the
+*uncropped* image, where a corner is unambiguously sheet.
+
+**Instead:** sweep before believing. The sweep is one command and it has caught
+this class three times now.
+
+---
+
+## 6. Moving a fault instead of fixing it
+
+A pinball put all its added height into its legs and stood on stilts. Two
+arithmetic fixes were tried and both reverted:
+
+- capping what a member may absorb → pulled in a measured run that stacked
+  **five speaker panels** down the backbox
+- sharing the growth by capacity → only changed how much went to that same bad
+  supplement
+
+The missing thing was not a weight. It was a **place**, and the model is what
+knows where places are. `scale_rules` now re-asks when every place it gets back
+is a member.
+
+**Instead:** when two consecutive changes move a fault from one prop to
+another, the count of broken props is flat and the fix is structural. Revert
+and say so. (This is `CLAUDE.md`'s rule; it was re-derived the hard way anyway.)
+
+---
+
+## 7. Theorising instead of identifying
+
+Six theories about a white band — vertex tint, cap chamfer, shelf material,
+carcass swatch, missing texture, atlas, decal — each tested by rendering. A
+raycast named `control_deck` at uv 0.24,0.50 in a minute.
+
+It happened again this session: I spent several renders theorising about a grey
+slab before raycasting it, which returned world-space UVs of −0.17 and −5.56 —
+the quad's own coordinates divided by `tileWorld`, naming the carcass fill and
+killing a theory about the front face in one call.
+
+`raycast.mjs` now exists so nobody writes it in a scratch file again. A trap is
+baked into it: a multi-material mesh hands back the material **array**, and
+`Array.prototype` has a `.map`, so "does this have a texture" answers yes for
+everything until you index by `face.materialIndex`.
+
+**Instead:** ask the scene first. It is always cheaper than a theory.
+
+---
+
+## 8. Assumptions that were never measured
+
+`ROLE_POLICY` gave every window, grille, vent and drawer `FRAME` on both axes.
+Measured: of 154 frame-role features in the corpus, **only 11 contain two or
+more countable children.** The assumption was wrong for 93% of them.
+
+The fix composed two tools rather than picking a threshold: a frame-role
+feature with no children that `segment_audit` independently flags as a
+swallowed box has contents that were never lifted, and no policy is decidable
+until they are — an `UNVERIFIED`, not a guess. Disagreements fell 286 → 230,
+and the drop landed exactly where the assumption was weakest (grille 85 → 38).
+
+**Instead:** when you write a rule that applies to a whole category, count the
+category first.
+
+---
+
+## 9. Trusting a grader that cannot see the fault it reports
+
+Both language judges scored a cabinet carrying **five stacked ARCADE marquees**
+at two blocking faults — exactly what they gave the corrected cabinet beside
+it. They passed a pinball standing on stilts at **zero**. Meanwhile 181 of 306
+blocking faults across three runs were that same class.
+
+A judge's pass is not evidence. `repeat_score` exists because of this, and a
+free model (`openrouter/free`) got the call right where both paid judges did not.
+
+**Instead:** when a grader reports a fault class constantly and cannot rank the
+worst case above the best, it is not measuring that class. Measure it directly.
+
+---
+
+## 10. Small operational ones, kept because they cost real time
+
+- `pkill -f "make_prop.py"` matches its own shell. Use `[m]ake_prop.py`.
+- A filename pattern `w-1-h-1-` is also the prefix of `w-1-h-1-5-`, so the
+  as-drawn column showed the *taller* render and the sheet compared a prop
+  against itself. Parse the numbers; do not match patterns.
+- A mask is not always its box. `segment_sheet` writes it at the region's size
+  and a later pass may move the box; indexing by the box walks off the end. The
+  box is the authority.
+- Reading `front.png` raw instead of `object_crop` made a whole stage silently
+  a no-op — right picture, wrong size, size check failed quietly.
+- Two retries back to back hit the same transient failure. Space them; one
+  failed segmentation draw cost a prop 58 fittings against 11 and five rounds
+  were built on the wrong decomposition.
+
+---
+
+## The pattern underneath most of these
+
+Nearly every entry is one of three shapes:
+
+1. **A number that describes the method, not the subject** (2, 8).
+2. **A unit confusion that survives because nothing converts explicitly** (3).
+3. **A signal that exists and reaches nothing** (1, and the near-miss in 1).
+
+Checking for those three directly is cheaper than rediscovering them.

@@ -307,3 +307,20 @@ just against how bare the band is.
   22 of 29 on the vending machine, 13 of 25 on the pinball. Rather more than
   half of all masks carry real shape, and the renderer alpha-cuts them at 0.5,
   so a round button reads round. Do not go looking for this one.
+
+## The four files, and which one to open
+
+- **`ARCHITECTURE.md`** — how the Astra findings graft onto the pipeline that
+  works, and the model split. Read first.
+- **`PROGRESS.md`** — what exists, what it measured, and which tools are
+  actually wired into the loop rather than merely built.
+- **`MISTAKES.md`** — the specific errors that produced the practices in this
+  file, with their numbers. Three shapes recur: a number that describes the
+  method rather than the subject, a unit confusion nothing converts explicitly,
+  and a signal that reaches nothing.
+- **`ROADMAP.md`** — what to do next, in order, with what "done" means for each.
+
+The rule these four exist to enforce: **a measurement is not finished when it
+measures, it is finished when something acts on it.** Four measurement tools
+were built in one session and one was wired in. Name the lever before writing
+the check.
