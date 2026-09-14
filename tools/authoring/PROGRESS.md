@@ -36,6 +36,7 @@ taller axis was wrong on 33 of 65 props and is now fixed at the cause.
 | `judge_bench.py` | whether a judge can see a repeat `repeat_score` can | diagnostic — the answer is no, for every model tried |
 | `depth_scale.py` | how far a part really stands off, against the side view | **yes** — its sweep set the renderer's `DEPTH` |
 | `part_bulge.py` | which single part makes a prop the wrong shape, by name | diagnostic — it named the joystick, the legs and the twist |
+| `prop_complete.py` | artefacts the build should have produced and did not | **yes** — runs at the end of `build_body`, 94/98 clean |
 | `raycast.mjs` | names the object under a render pixel | n/a (diagnostic) |
 
 ---

@@ -492,6 +492,20 @@ def build_body(d, asset):
             env=_env())
     for line in (r.stdout or "").strip().splitlines()[-5:]:
         print("   ", line.strip()[:110])
+    # AND SAY WHAT THE BUILD DID NOT PRODUCE. Three separate faults this session
+    # were an artefact that was simply absent, with the renderer falling back to
+    # something that looks like a body rather than like a bug: no plan on 100 of
+    # 100 props, so every footprint was a rectangle; no side profile on two, so
+    # they were boxes and had the two worst side outlines in the corpus; a drawn
+    # tall band short of the ratio it is rendered at, so it stretched fourfold.
+    # None of them is a wrong number and none of them had an owner.
+    try:
+        import prop_complete
+        gaps = prop_complete.check(d)
+        for sev, m in gaps:
+            print(f"    [{sev}] {m}")
+    except Exception as e:
+        print(f"    completeness check unavailable ({type(e).__name__})")
 
 
 def main():
