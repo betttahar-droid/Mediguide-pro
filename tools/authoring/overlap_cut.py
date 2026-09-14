@@ -209,8 +209,19 @@ def apply(prop_dir, face="front"):
                 loaded[n] = None
                 continue
             loaded[n] = Image.open(p).convert("RGBA")
+    # AND A RIDER IS ALWAYS ITS ORIGINAL SHAPE, NEVER ITS CUT ONE. Boxes nest --
+    # a decal inside a title strip inside a grille -- so the same part is a host
+    # in one pair and a rider in another. Cutting the decal out of the strip
+    # first and then using the STRIP to cut the grille would hand the grille a
+    # strip with a decal-shaped hole in it, so the grille keeps the decal's
+    # pixels and grows a ghost of it the moment the two come apart. That is the
+    # fault this file exists to remove, reintroduced by the order of a loop.
+    #
+    # What a part owns is what it was cut as, so riders read from a pristine set
+    # and only hosts accumulate.
+    orig = dict(loaded)
     for c in r["cuts"]:
-        h, ri = loaded.get(c["host"]), loaded.get(c["rider"])
+        h, ri = loaded.get(c["host"]), orig.get(c["rider"])
         if h is None or ri is None:
             continue
         new, n = _cut(h, box[c["host"]], ri, box[c["rider"]], tuple(c["box"]))
