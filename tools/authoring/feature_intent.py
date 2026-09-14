@@ -66,8 +66,32 @@ DERIVED = "derived"         # computed from measured values by a known rule
 PROPOSED = "proposed"       # the model's answer; plausible, not evidence
 DEFAULT = "default"         # the tool's fallback; weaker than proposed
 ABSENT = "absent"           # nothing said at all
+# A FIFTH STATE, AND THE DIFFERENCE MATTERS. "absent" means nobody has
+# measured it yet and someone could. UNMEASURABLE means the reference FORMAT
+# cannot contain it, so no amount of work on this prop will ever produce it.
+#
+# Depth is the case, established by depth_probe: a side elevation's front edge
+# at a height is the frontmost point across the whole width, so only what juts
+# out furthest defines it. A recess never touches the silhouette by
+# definition. Probed across the corpus, exactly 6 of 1700 features returned a
+# measurable depth and every one of them is a BODY SECTION -- a cabinet's
+# bezel at 70-84px, a pinball's whole backbox at 190.6px -- not a fitting.
+#
+# Treating that as "absent" made ACCEPTED permanently unreachable for every
+# role that must open or recess, which is not a high standard, it is a broken
+# one: a grade nothing can ever score measures nothing.
+UNMEASURABLE = "unmeasurable"
 
-EVIDENCE_RANK = {MEASURED: 3, DERIVED: 2, PROPOSED: 1, DEFAULT: 0, ABSENT: -1}
+EVIDENCE_RANK = {MEASURED: 3, DERIVED: 2, PROPOSED: 1, DEFAULT: 0,
+                 UNMEASURABLE: 0, ABSENT: -1}
+
+# What the four orthographic elevations structurally cannot show, and why.
+# A field listed here is declared on the verdict rather than blocking it.
+FORMAT_LIMITS = {
+    "thickness": "a front/side/back/top set cannot show a recess: the side "
+                 "silhouette traces whatever juts out furthest at each height, "
+                 "and a recessed feature never touches it",
+}
 
 PASS, FAIL, UNVERIFIED = "PASS", "FAIL", "UNVERIFIED"
 REJECTED, DRAFT, ACCEPTED = "REJECTED", "DRAFT", "ACCEPTED"
@@ -492,14 +516,14 @@ def check_thickness(f):
     if f.role not in NEEDS_OPENING and f.role not in NEEDS_RECESS:
         return PASS, "role needs no opening"
     e = f.ev("thickness")
-    if e == ABSENT:
+    if e in (ABSENT, UNMEASURABLE):
         return UNVERIFIED, (f"{f.role} must be a real "
                             f"{'opening' if f.role in NEEDS_OPENING else 'recess'}"
-                            f" and no thickness is recorded")
+                            f" and its depth is {FORMAT_LIMITS['thickness']}")
     if f.thickness <= 0:
         return FAIL, f"{f.role} has thickness {f.thickness}, so it is paint"
     if e != MEASURED:
-        return UNVERIFIED, f"thickness is {e}; no elevation measures depth"
+        return UNVERIFIED, f"thickness is {e}: {FORMAT_LIMITS['thickness']}"
     return PASS, ""
 
 
@@ -557,9 +581,19 @@ def reduce_acceptance(rows):
                 fails.append((r["id"], cname, c["note"]))
             elif c["status"] == UNVERIFIED:
                 unver.append((r["id"], cname, c["note"]))
-    verdict = REJECTED if fails else (DRAFT if unver else ACCEPTED)
+    # WHAT THE FORMAT CANNOT SHOW IS DECLARED, NOT COUNTED AGAINST. An
+    # unverified that no reference of this kind could ever resolve is a
+    # property of the input, and blocking on it forever means the grade stops
+    # discriminating between props -- every one fails for the same reason that
+    # has nothing to do with any of them. It is still stated on every verdict,
+    # so "accepted" never quietly means "accepted apart from the depths".
+    limits = sorted({c for _, c, _ in unver if c in FORMAT_LIMITS})
+    open_unver = [u for u in unver if u[1] not in FORMAT_LIMITS]
+    verdict = REJECTED if fails else (DRAFT if open_unver else ACCEPTED)
     return {"verdict": verdict, "instances": len(rows),
-            "failed": fails, "unverified": unver}
+            "failed": fails, "unverified": unver,
+            "format_limits": {c: FORMAT_LIMITS[c] for c in limits},
+            "open_unverified": len(open_unver)}
 
 
 
