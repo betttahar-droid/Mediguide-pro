@@ -38,22 +38,21 @@ taller axis was wrong on 33 of 65 props and is now fixed at the cause.
 
 ## The corpus, as currently measured
 
-95 props, 1673 feature instances.
+98 props with a part list, 1776 feature instances. Re-measured, not remembered.
 
 ```
-acceptance     53 DRAFT   40 REJECTED   3 ACCEPTED   88 declaring the depth limit
-resize policy  65% agree  20% unknown-role  14% disagree  0.4% unverified
-segmentation   33 of 95 flagged (23 swallowed boxes, 18 missing bands; 6 are screens -> LEAD)
-unverified     407 aspect (was 1673)   291 thickness (UNMEASURABLE, declared)
-growth place   44 props moved off the blind band onto a measured bare run
-               9 props have nowhere bare at all and now stretch instead
-               10 more had bands too small for the renderer's 10-copy bound
-overlap        88 props, 1462 pairs of parts sharing drawn pixels -- cut
+acceptance     53 DRAFT   42 REJECTED   3 ACCEPTED   90 declaring the depth limit
+overlap        90 props, 1555 pairs of parts sharing drawn pixels -- cut
+growth place   81 props repeat a measured band; 17 stretch, 14 of those because
+               their bands need more than the renderer's 10 copies
+               (of the 17, the ones with a stretch_band now have it DRAWN)
+wide art       21 parts across 17 props that no rule can widen -- bought
+resize audit   229 adaptations across 68 props, median 3 per prop
+recomposition  0.00% on 89 of 90 props, away from part boxes and the outline
+               (the 26% layer_build used to print was sheet and dilation ring)
 vertical rule  121 parts held their height that were stretching it
                (56 sign, 28 button, 17 decal, 11 slot, 8 screen, 1 light)
 flank check    75 bands had never been checked against the other elevations -> 0
-recomposition  0.00% on 89 of 90 props, away from part boxes and the outline
-               (the 26% layer_build used to print was sheet and dilation ring)
 ```
 
 **No prop can reach a meaningful ACCEPTED from four elevations**, and that is
