@@ -116,13 +116,24 @@ through, and a band composited into the original seams at both ends.
 
 ---
 
-## 6. Transactional per-feature repair
+## 6. Transactional per-feature repair — **smaller than it looked**
 
-Today a patch rebuilds everything and can break features that were passing.
-Unlock only the failed feature and its necessary ancestors.
+**Measured, and the deterministic half is already transactional.** Two identical
+rebuilds produce **38 byte-identical artefacts** — every part texture, the
+background, the layer manifest, the strips, the slice. Patching one part's
+resize and rebuilding changes nothing about any other part. The premise that "a
+patch rebuilds everything and can break features that were passing" is not true
+of the arithmetic.
 
-**Done when:** a repair round can be shown to leave every previously-passing
-instance byte-identical.
+**What is left is `paint_out`**, one model call per rebuild, which can come back
+different and repaint holes that were fine. That is the only non-deterministic
+step in `rebuild()`, and the transactional version of it is: re-ask only for the
+holes belonging to features that failed, and keep the rest of the plate.
+
+**Found while measuring this, and fixed separately:** the judge's resize patch
+was being silently discarded for 265 parts across 76 props. See the commit — a
+judge that looked at the render has evidence the namer did not, and a patch the
+geometry genuinely refuses is now quoted back instead of vanishing.
 
 ---
 
