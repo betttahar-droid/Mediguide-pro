@@ -98,6 +98,13 @@ def apply_resize_policy(prop_dir, face="front"):
         fixed.append({"part": p["name"], "role": f.role,
                       "was": p.get("resize"), "now": new, "why": r["note"]})
         p["resize"] = new
+        # AND THE PATCH MARK GOES WITH IT. layer_build lets a judge's rule
+        # survive the structure guard -- a judge looked at the render, the
+        # namer did not -- which would otherwise let a judge make a SIGN repeat
+        # and put it past the one check that catches that. A rule this file has
+        # just overruled is no longer the judge's, so it must not carry the
+        # judge's exemption.
+        p.pop("patched_resize", None)
         # A COUNT ROLE THAT WAS STRETCHED IS USUALLY ALSO COUNTED, and the two
         # together multiply it twice. v49_vending_machine/decal_1 was patched
         # resize=spanx_repeat AND count=both in one round, which is how a decal

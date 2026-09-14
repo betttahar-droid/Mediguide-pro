@@ -697,6 +697,31 @@ def main():
                         "that should hold its size gets \"fixed\", and the "
                         "background itself takes a \"mode\". Report it as a "
                         "blocking fault and give it a patch entry.")
+        # AND A PATCH THE GEOMETRY REFUSED IS TOLD TO THE JUDGE. Two guards in
+        # layer_build overrule a rule on what it can do rather than on who
+        # wrote it -- a part narrower than three quarters of the face cannot
+        # span it, a per-bay part is counted rather than stretched -- and both
+        # stand. Without saying so the loop discards the correction in silence
+        # and the judge asks for the same thing again: the verdict logs show the
+        # vending machine's judges patching all twenty-four products in every
+        # one of four rounds. A refusal quoted back is the one thing that stops
+        # that, and it is the same trick detail_sheet already uses.
+        try:
+            _ov = [q for q in json.loads(
+                (d / "layers_front.json").read_text())["parts"]
+                if q.get("patch_overruled")]
+        except Exception:
+            _ov = []
+        if _ov:
+            evidence += ("\n\nASKED FOR AND REFUSED LAST ROUND. These rules "
+                         "were applied and the prop's own geometry would not "
+                         "take them, so do not ask again:\n"
+                         + "\n".join(
+                             f"  - {q['name']}: {q['patch_overruled']} refused,"
+                             f" it is {q['resize']} (a part must run most of "
+                             f"the face to span it, and a part that comes one "
+                             f"per bay is counted, not stretched)"
+                             for q in _ov))
         content = [{"type": "text",
                     "text": JUDGE.format(asset=args.asset, parts=listing,
                                          wider=sr["wider_means"],
@@ -943,6 +968,14 @@ def main():
             if q and q.get("resize") in RESIZES and q["resize"] != p["resize"]:
                 print(f"    {p['name']}: {p['resize']} -> {q['resize']}")
                 p["resize"] = q["resize"]
+                # MARKED, SO layer_build KNOWS WHO WROTE IT. That file demotes
+                # any non-structure part's rule back to `fixed` -- rightly,
+                # against a namer that saw one fitting alone -- and the patch
+                # lands in the same field, so a correction made while looking at
+                # the resized render was discarded by a guard aimed at a guess
+                # made without one. 123 of the judges' 285 patch entries name a
+                # part in that state.
+                p["patched_resize"] = True
                 changed += 1
             if q and q.get("anchor") in ANCHORS and q["anchor"] != p["anchor"]:
                 print(f"    {p['name']}: anchor {p['anchor']} -> {q['anchor']}")

@@ -910,9 +910,32 @@ def main():
             print(f"  {p['name']}: {len(on)} fitting(s) stand on it "
                   f"({', '.join(q['name'] for q in on[:3])}) -- structure")
             p["spans"] = True
+        # A JUDGE THAT LOOKED AT THE RENDER HAS EVIDENCE THE NAMER DID NOT.
+        #
+        # This guard is right about what it distrusts: the namer sees one
+        # fitting in isolation and called a SCREEN spanx_repeat, so a widened
+        # cabinet showed three copies of the same ship. But it applies to the
+        # stored rule whoever wrote it, and the judge's patch writes into the
+        # same field -- so a correction made while LOOKING AT THE RESIZED PROP
+        # is thrown away by a guard built to catch a guess made without one.
+        # 265 parts across 76 props ask for a rule here and get `fixed`; of the
+        # judges' 285 patch entries, 123 name a part in that state. The loop
+        # then re-reports the fault next round with no lever that moves, which
+        # is the failure CLAUDE.md's rule names: anything that can block must be
+        # able to correct.
+        #
+        # So a patched rule survives, and only a patched one. The check that
+        # used to be here still runs on everything else, and the class it
+        # protects against has its own guard now anyway -- intent_gate rewrites
+        # a HOLD role that asks to repeat, before this file is reached, for
+        # exactly the roles whose policy is unambiguous.
         if not p.get("spans") and not p.get("per_bay") and rule != "fixed":
-            print(f"  {p['name']}: not named as structure, {rule} -> fixed")
-            rule = "fixed"
+            if p.get("patched_resize"):
+                print(f"  {p['name']}: {rule} kept -- a judge set it looking "
+                      f"at the render, not at the part alone")
+            else:
+                print(f"  {p['name']}: not named as structure, {rule} -> fixed")
+                rule = "fixed"
 
 
         # A FRAME IS STRUCTURE AND MUST WIDEN WITH THE PROP. The width guard
@@ -1050,9 +1073,23 @@ def main():
                           f"edge -- nowhere to grow, held at real size")
             except Exception:
                 hf = None
+        # AND IF A PATCH STILL DID NOT SURVIVE, SAY SO. The structure guard now
+        # lets a judge's rule through, but the width and per-bay guards are
+        # different claims -- what a rule can do geometrically, and what the
+        # prop's own per-bay answer says -- and neither is about who wrote it.
+        # They stand. What must not stand is the loop discarding a correction in
+        # silence and then re-reporting the same fault next round with no lever
+        # that moves. Recorded on the entry so the judge loop can carry it.
+        overruled = (p.get("patched_resize")
+                     and rule != (p.get("resize") or "fixed"))
+        if overruled:
+            print(f"  {p['name']}: the judge asked for "
+                  f"{p.get('resize')} and the geometry refuses it -- "
+                  f"{rule} stands")
         out.append({
             "name": p["name"], "image": f"parts/{p['name']}.png",
             "hf": hf,
+            **({"patch_overruled": p.get("resize")} if overruled else {}),
             "resize": rule, "resize_y": rule_y(p, man["parts"], rule),
             "anchor": p["anchor"],
             "depth": p.get("depth", "proud"), "motion": p.get("motion", "none"),
