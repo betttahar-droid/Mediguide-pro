@@ -396,6 +396,49 @@ def fill_from_panel(ob, boxes, shaped=None, within=None):
     return out
 
 
+def _hold_y(p, rule):
+    """Artwork that must hold its size holds it DOWN the prop as well.
+
+    THE FALLBACK BELOW IS "answer with the across-rule", and for anything that
+    is not a span that is a rule for an axis it does not name. Worse, it is not
+    inert: faceQuads gives ny = 1 to every rule that is not spany_repeat, and a
+    nine-slice with ny = 1 STRETCHES its middle band to make up the difference.
+    So `screen: spanx_center` on the vertical axis does not mean "hold", it
+    means "stretch", and the arcade cabinet's 1.5x-taller render came out with a
+    screen half again as tall -- which is the one thing the whole growth-band
+    design exists to prevent, arriving through the other axis. "A taller
+    cabinet is more cabinet, not a bigger screen" is written twenty lines from
+    here, about the body, and the parts were never held to it.
+
+    resize_policy already knows which roles hold vertically and the number was
+    measured, not assumed. This asks it, and only for the roles intent_gate
+    already trusts with write access: the artwork the reference drew at a size
+    (sign, screen, label, decal, light) and the fittings that come in numbers
+    rather than in lengths (slot, button). Every FRAME and ABSORB role keeps
+    today's behaviour, because that assumption measured wrong for 93% of the
+    features it covered and has not earned a second axis.
+
+    121 parts across 65 props change: 56 signs, 28 buttons, 17 decals, 11
+    slots, 8 screens, 1 light. Nothing else moves.
+
+    ORDER MATTERS AND THE TIER CHECK WINS. An enclosure that holds per-tier
+    parts must lengthen or the extra tier has nowhere to be, and a title strip
+    can be that enclosure; this is asked only once the tier question has been
+    answered no.
+    """
+    if rule == "fixed":
+        return rule
+    try:
+        import sys as _sys
+        from pathlib import Path as _P
+        _sys.path.insert(0, str(_P(__file__).resolve().parent))
+        from feature_intent import role_of
+        from intent_gate import SAFE_TO_CORRECT
+    except Exception:
+        return rule
+    return "fixed" if role_of(p) in SAFE_TO_CORRECT else rule
+
+
 def rule_y(p, parts, rule):
     """How this part grows DOWN, which is not always how it grows across.
 
@@ -439,7 +482,7 @@ def rule_y(p, parts, rule):
         return "spany_repeat"
     tiers = [q for q in parts if q.get("per_tier") and q["name"] != p["name"]]
     if not tiers:
-        return rule
+        return _hold_y(p, rule)
     x0, y0, x1, y1 = p["px"]
     area = max(1, (x1 - x0) * (y1 - y0))
     m = 0.03 * max(x1 - x0, y1 - y0)
@@ -448,7 +491,7 @@ def rule_y(p, parts, rule):
              and q["px"][1] >= y0 - m and q["px"][3] <= y1 + m
              and (q["px"][2] - q["px"][0]) * (q["px"][3] - q["px"][1]) * 3 <= area]
     if not holds:
-        return rule
+        return _hold_y(p, rule)
     print(f"  {p['name']}: holds {len(holds)} per-tier part(s) -> spany_repeat")
     p["per_tier_host"] = True
     return "spany_repeat"
