@@ -302,6 +302,114 @@ def apply_stick_shape(prop_dir, face="front"):
     return fixed
 
 
+# A MEMBER STANDING IN AIR IS STRUCTURE, NOT RELIEF -- AND IT HAS TO BE NARROW.
+#
+# Two conditions, because either one alone picks up the wrong things. `solid` is
+# how much of the prop is there across the member's own rows; `share` is how much
+# of that the member is.
+#
+#                                        solid   share
+#   v51_pinball/leg_left                  53%      9%   <- legs
+#   v51_pinball/leg_right                 39%     12%
+#   v44_pinball/leg_left                  38%     14%
+#   v46_pinball/leg_right                 39%     12%
+#   ................................................... both conditions
+#   v45_pinball/cabinet_body              53%     96%   <- in air, but it IS
+#   v47_pinball/cabinet_front             51%     96%      the cabinet
+#   v49_pinball/coin_door_panel           51%     96%
+#   v52_jukebox/bubbler_tube_left         96%      6%   <- narrow, but stuck
+#   v45_jukebox/side_pillar_left          96%      9%      on a solid body
+#   v52_jukebox/bottom_rail               68%     65%
+#
+# `solid` alone confuses a leg with a whole cabinet: a pinball's cabinet is
+# narrower than its backbox, so half the image at those rows is sheet and the
+# cabinet reads as "in air". Shipping that condition alone flattened
+# v45_pinball's `cabinet_body` and cost it 0.949 on the front, which is how the
+# second condition was found. `share` alone confuses a leg with a bubbler tube.
+# Together they take the six legs in the corpus and nothing else.
+#
+# tall_body.body_behind draws the same distinction with AIR = 0.45, and that
+# number is deliberately not reused: it was fitted to twelve growth BANDS, and
+# on this per-PART population v51's leg_left sits at 53% and would fall the
+# wrong side of it. Same idea, its own measurement.
+MEMBER_AIR = 0.60
+MEMBER_SHARE = 0.30
+
+
+def apply_member_depth(prop_dir, face="front"):
+    """A leg is not a badge stuck on the front of the cabinet.
+
+    Every part is mounted on the surface under it and pushed out along that
+    surface's normal by its depth class, which is right for a fitting: a coin
+    door, a bezel, a button all sit ON a face. A pinball's LEG does not. It is a
+    post under the cabinet, inside the machine's own depth, and standing it
+    proud of the front face makes the prop deeper than it is.
+
+    Measured on v51_pinball, which had the worst side outline of any real prop
+    in the corpus: adding `leg_right` alone takes the model's side width:height
+    from 0.994 of the elevation's -- very nearly exact -- to 1.075, and costs
+    0.122 of outline agreement. Mounting the legs flush takes the prop from
+    0.864 to 0.926 on the side and 0.927 to 0.960 on the top.
+
+    WHICH MEMBERS, THOUGH. Doing this to every part marked `lengthens` is wrong:
+    a jukebox's bubbler tubes and side pillars lengthen too, and they really are
+    stuck on the front of the cabinet -- flattening them costs v52_jukebox 0.004.
+    The separation is the one already measured for tall_body: a leg has air
+    around it and a tube has cabinet behind it. Every prop with a member in air
+    gains (+0.096, +0.015, +0.012, +0.007, +0.004) and every prop without one is
+    untouched.
+    """
+    from PIL import Image
+    import numpy as np
+    d = Path(prop_dir)
+    pj_path = d / f"parts_{face}.json"
+    bg = d / f"bg_{face}.png"
+    try:
+        pj = json.loads(pj_path.read_text())
+        al = np.array(Image.open(bg).convert("RGBA"))[..., 3] > 128
+    except Exception:
+        return []
+    H, W = al.shape
+    if tuple(pj.get("size", ())) != (W, H):
+        return []
+    fixed = []
+    for p in pj.get("parts", []):
+        if not p.get("lengthens") or p.get("depth") == "flush" or not p.get("px"):
+            continue
+        y0, y1 = max(0, int(p["px"][1])), min(H, int(p["px"][3]))
+        if y1 <= y0:
+            continue
+        solid = float(al[y0:y1].mean())
+        if solid >= MEMBER_AIR:
+            continue
+        wide = int(al[y0:y1].any(axis=0).sum())          # the prop, at its rows
+        mine = min(W, int(p["px"][2])) - max(0, int(p["px"][0]))
+        share = mine / max(1, wide)
+        if share >= MEMBER_SHARE:
+            continue                    # it is not a member in air, it IS the prop
+        fixed.append({"part": p["name"], "was": p.get("depth"), "now": "flush",
+                      "solid": round(solid, 3), "share": round(share, 3),
+                      "why": f"only {100 * solid:.0f}% of the prop is solid "
+                             f"across its rows and this is {100 * share:.0f}% of "
+                             f"that, so it stands in air: structure inside the "
+                             f"depth, not relief on a face"})
+        p["depth"] = "flush"
+    if not fixed:
+        return []
+    pj_path.write_text(json.dumps(pj, indent=1))
+    log = d / "policy_log.json"
+    try:
+        prev = json.loads(log.read_text())
+    except Exception:
+        prev = []
+    prev.append({"face": face, "member_depth": fixed})
+    log.write_text(json.dumps(prev, indent=1))
+    for c in fixed:
+        print(f"    member: {c['part']} stands in air "
+              f"({100 * c['solid']:.0f}% solid) -- mounted flush")
+    return fixed
+
+
 def segmentation_verdict(prop_dir, face="front"):
     """UNDER_SEGMENTED / LEAD / OK, with the parts named."""
     try:

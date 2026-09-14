@@ -95,7 +95,7 @@ def bulges(d, axis="side"):
     out = d / "_bulge"
     out.mkdir(exist_ok=True)
     # `__none__` matches no part, so the first render is the bare body.
-    qs = [f"dir=/{d.relative_to(ROOT)}&audit=1&{AXIS[axis]}&only={n}"
+    qs = [f"dir=/{d.relative_to(ROOT)}&audit=1&fixcam=1&{AXIS[axis]}&only={n}"
           for n in ["__none__"] + names]
     subprocess.run(["node", str(ROOT / "tools/authoring/parts_view/shoot.mjs"),
                     str(out), *qs], cwd=ROOT, capture_output=True,

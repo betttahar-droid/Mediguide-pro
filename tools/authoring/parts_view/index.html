@@ -2512,9 +2512,30 @@ function atlasScene() {
 }
 if (p.get('sheet') !== '0') atlasScene();
 
+// ?fixcam=1 FRAMES THE BODY, NOT THE SCENE, so that two renders of the same
+// prop with different parts in them are directly comparable.
+//
+// The frame is measured off the scene's bounding box, which is right for
+// looking at a prop and wrong for differencing two of them. part_bulge renders
+// the body alone and then the body plus one part, and a part that reaches past
+// the body moves the bounding box -- so the camera pulls back and recentres,
+// and EVERY pixel of the prop shifts. Differencing the two silhouettes then
+// shows a red fringe down one side of the whole machine and a blue fringe down
+// the other, backbox included, for a part that is a leg. That is the camera
+// moving, not the leg.
+//
+// With this on, the frame comes from FW, FH and BODY_D -- the prop's own
+// dimensions, which no part can change -- and the centre from the body's own
+// box. Swung-open doors and exploded parts can then fall outside the frame,
+// which is exactly why it is not the default: the normal view has to show what
+// is actually there.
 const bb = new THREE.Box3().setFromObject(scene);
 const size = bb.getSize(new THREE.Vector3());
 const mid = bb.getCenter(new THREE.Vector3());
+if (p.get('fixcam') === '1') {
+  size.set(FW, FH, BODY_D);
+  mid.set(0, 0, 0);
+}
 const rad = Number(p.get('frame')
   ?? Math.max(size.x, size.y, size.z) * 0.5 * 1.12);
 const cam = new THREE.OrthographicCamera(-rad, rad, rad, -rad, 0.01, 40);

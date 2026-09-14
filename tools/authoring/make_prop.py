@@ -345,6 +345,12 @@ def rebuild(d, face="front", asset=None):
         for c in intent_gate.apply_stick_shape(d, face):
             print(f"    stick: {c['part']} {c['w_over_h']}x wider than tall "
                   f"-- motion none")
+        # AND A LEG IS NOT A BADGE STUCK ON THE FRONT OF THE CABINET. A member
+        # standing in air is structure inside the prop's own depth; standing it
+        # proud of a face makes the machine deeper than it is. v51_pinball's
+        # side outline went 0.864 -> 0.926 on this one field.
+        for c in intent_gate.apply_member_depth(d, face):
+            print(f"    member: {c['part']} stands in air -- flush")
     except Exception as e:
         print(f"    resize policy unavailable ({type(e).__name__})")
     run([sys.executable, "tools/authoring/layer_build.py", str(d), "--face", face])
