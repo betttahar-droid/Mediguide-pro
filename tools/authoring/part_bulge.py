@@ -9,27 +9,21 @@ Authoring tool. NOT a build, CI or runtime dependency. Needs the dev server up.
 WHY. `geometry_audit` says a prop's side outline is 0.889 against its own
 elevation. That is a number about the whole machine, and CLAUDE.md's second rule
 is "identify the object before theorising about the cause" -- so this renders the
-body ALONE, then the body plus each part in turn, and differences the
-silhouettes. What comes out is a list of parts with the pixels each one adds
-beyond the bare body, which is as specific as it gets.
+body ALONE, then the body plus each part in turn, and scores each render against
+the elevation. What comes out is a list of parts with what each one does to the
+agreement, which is as specific as it gets.
 
-It found the case it was written for on the first run. v8_arcade_cabinet:
+It found the case it was written for on the first run: v8_arcade_cabinet's
+`joystick_left`, which by itself cost 0.086 of the side outline. Its box turned
+out to be 0.556 of the prop's width -- the segmenter had boxed most of the
+control panel and called it a joystick, and the renderer had dutifully built it
+as an upright standing off a sloped deck. Correcting that one field took the
+prop's side outline from 0.889 to 0.975 and its top from 0.909 to 0.963.
 
-    joystick_left        48410 px   17.97% of the whole side silhouette
-    coin_door             4040 px    1.50%
-    buttons_lower_right   3718 px    1.38%
-
-One part, ten times the next, and its box turned out to be 0.556 of the prop's
-width -- the segmenter had boxed most of the control panel and called it a
-joystick, and the renderer had dutifully built it as an upright standing off a
-sloped deck. Correcting that one field took the prop's side outline from 0.889
-to 0.975 and its top from 0.909 to 0.963.
-
-READ IT AS A POINTER, NOT A VERDICT. A part SHOULD add to the silhouette -- that
-is what relief is -- so a big number here is a question and not a fault. The
-question it asks is worth asking in this order, because the answer is usually
-either "that part's box is wrong" or "that part's motion is wrong", and both are
-cheap to check once you have the name.
+READ IT AS A POINTER, NOT A VERDICT. A negative score says a part makes its prop
+look less like its own drawing, and that is a question rather than a fault --
+the answer is usually either "that part's box is wrong" or "that part's motion
+is wrong", and both are cheap to check once you have the name.
 
 IT IS SLOW ON PURPOSE. One render per part, from the axis you name. That is
 minutes for a prop with eighty parts, which is why it takes a --worst list off
