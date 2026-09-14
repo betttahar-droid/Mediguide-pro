@@ -478,7 +478,27 @@ def main():
         # the list wholesale, so a prop with usable places that gets a worse
         # second reply would ship the worse one. A mixed answer beats a
         # members-only answer; between two of a kind, more room wins.
-        rank = (0 if members else 1, room)
+        #
+        # NO ANSWER IS THE WORST ANSWER, and writing that down cost the corpus
+        # three props. `members` is False for an EMPTY list -- there is no
+        # member in it to be all of -- so the first spelling of this rank,
+        # `0 if members else 1`, scored a reply whose every place was refused
+        # at (1, 0) and a reply naming two good legs at (0, 286). The empty one
+        # won. Every prop that reached the members-only re-ask shipped
+        # taller_at: [] afterwards: v49_arcade_cabinet, v49_pinball,
+        # v50_vending_machine, three for three. The re-ask exists to IMPROVE a
+        # members-only answer and made it strictly worse every time it fired,
+        # which is the correcting channel running backwards.
+        #
+        # Downstream the damage is not a missing feature, it is a wrong one.
+        # strip_slice writes no grow_bands, the renderer falls through to its
+        # blind per-strip band, and on the pinball that band is rows 263..378 --
+        # 85% of the playfield -- repeated. A 1.6x pinball came out with four
+        # stacked playfields. So the three tiers are ordered by what they cost:
+        # a body place is the answer, members-only puts the prop on stilts, and
+        # nothing at all repeats whatever the drawing happens to have there.
+        tier = 2 if (taller_at and not members) else (1 if taller_at else 0)
+        rank = (tier, room)
         if best_at is None or rank > best_at[0]:
             best_at = (rank, taller_at, refused)
         if attempt == 2 or ((not refused or room >= need) and not members):

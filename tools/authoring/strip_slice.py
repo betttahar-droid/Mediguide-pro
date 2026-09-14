@@ -813,7 +813,16 @@ def main():
             print(f"  {len(grow_bands) - len(_clean)} place(s) dropped: "
                   f"the ones clear on every face have room enough")
         grow_bands = _clean
-    if grow_bands and sum(g["px"][1] - g["px"][0] for g in grow_bands) < need:
+    # AND IT SUPPLIES ROOM FROM ZERO, not only tops it up. This ran only `if
+    # grow_bands`, so a prop the model gave no usable place for wrote an EMPTY
+    # grow_bands -- and empty is not "grow nowhere", it is "the renderer
+    # decides". The renderer's fallback is the per-strip search, and that one
+    # measures free_frac over the WHOLE STRIP while the band it then repeats is
+    # a sub-run of it: the pinball's winning strip is rows 160..621 at 10% bare,
+    # and the band inside it is rows 263..378, which is 85% of the playfield.
+    # The one search here that actually tests the band's own rows was gated
+    # behind having a band already.
+    if sum(g["px"][1] - g["px"][0] for g in grow_bands) < need:
         spare = []
         for st in strips:
             y0, y1 = st["px"]
@@ -848,6 +857,44 @@ def main():
                                "px": [a, b],
                                "band": [round(1 - b / H, 5), round(1 - a / H, 5)]})
         grow_bands.sort(key=lambda g: g["px"][0])
+
+    # AND WHEN THERE IS NOWHERE, THE ANSWER IS NOWHERE.
+    #
+    # An empty grow_bands does not mean "grow nowhere". It means "the renderer
+    # decides", and the renderer's fallback is the per-strip band, which is the
+    # one path in the whole chain that never checks what it is about to repeat.
+    # free_frac scores the WHOLE STRIP; the band it then lays copies of is a
+    # sub-run of that strip, and the two are not the same question. The pinball
+    # is the proof: its winning strip is rows 160..621, 10% bare, and the band
+    # inside it is rows 263..378 -- 85% of the playfield -- so a 1.6x pinball
+    # came out with four playfields stacked up its cabinet. Swept across the
+    # corpus, 33 of the 65 props that reach this fallback have a band more than
+    # half covered by fittings.
+    #
+    # NO NEW THRESHOLD IS NEEDED TO SAY SO. Reaching here with grow_bands still
+    # empty means the model named no usable place AND the search above found no
+    # run of eight rows anywhere on the prop that is bare by this file's own
+    # bar. A prop with nowhere bare has nowhere bare in the blind band either --
+    # the conclusion is already carried by the two searches that just failed,
+    # and asserting it again with a number of its own would be the second
+    # opinion this file warns about three screens up.
+    #
+    # So clear the per-strip flags and let the body stretch. A stretched carcass
+    # is a mild fault that every judge has words for; a repeated playfield is
+    # the prop not being the object any more.
+    if not grow_bands and any(s.get("grow_y") for s in strips):
+        st = strips[grow]
+        gy0, gy1 = st["px"]
+        ba = int(gy0 + st["vh"][0] * (gy1 - gy0))
+        bb = int(gy0 + st["vh"][1] * (gy1 - gy0))
+        cov = sum(min(occupied[y], W) for y in range(max(0, ba), min(H, bb)))
+        frac = cov / max(1.0, W * (bb - ba))
+        for s in strips:
+            s["grow_y"] = False
+            s["grow_share"] = 0.0
+        print(f"  nowhere bare to grow: no place named and no bare run found, "
+              f"and the blind band (rows {ba}..{bb}) is {100*frac:.0f}% "
+              f"fittings -- the body stretches rather than repeat them")
 
     if grow_bands:
         # SHARED BY HEIGHT, so every band takes the same number of copies --
