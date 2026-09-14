@@ -36,19 +36,30 @@ are; what flows between them changes.
 segment_sheet ─┐
 region_parts  ─┴─► parts_front.json      measured pixels, unchanged
                         │
+                 segment_audit           a box that swallowed its contents
+                        │                -> ONE re-draw, before anything is built
                         ▼
                    feature_intent.lift()  ← typed, face-local, evidenced
                         │
+                 intent_gate              a rule contradicting an unambiguous
+                        │                 role is rewritten, and logged
         ┌───────────────┼────────────────┐
         ▼               ▼                ▼
     operators       layer_build      validate()
    (geometry)       (textures)      per instance
-        └───────────────┼────────────────┘
+                        │
+                 overlap_cut              a drawn region belongs to ONE part;
+                        │                 cut it out of every larger one
+                        └───────┬────────┘
                         ▼
                reduce_acceptance()  REJECTED / DRAFT / ACCEPTED
                         │
+                repeat_score, as evidence, BEFORE the judges are asked
+                        │
                         ▼
                    the judge loop
+                        │
+                 a patch the geometry refuses is quoted back next round
 ```
 
 Three rules govern the graft:
@@ -60,7 +71,14 @@ Three rules govern the graft:
    written in CLAUDE.md, and the reason `repeat_score` runs *in front* of the
    judges rather than behind them. An acceptance verdict with no lever is a
    loop that cannot converge.
-3. **A reverted idea stays reverted.** The failure lists in the docstrings are
+3. **A drawn pixel has exactly one owner, at every level.** `layer_build` has
+   always painted the fittings out of the background; `overlap_cut` extends the
+   same rule between parts. This is the dual of the spec's per-instance
+   validation — one visible knob must not satisfy two knobs, and one drawn knob
+   must not be cut into two textures. It is invisible at 1x, where the copies
+   land on each other, which is why it survived: a correctness property checked
+   only at the identity transform is not checked.
+4. **A reverted idea stays reverted.** The failure lists in the docstrings are
    live constraints. Any Astra-shaped change that re-proposes one of them has
    to beat the numbers already recorded against it.
 
