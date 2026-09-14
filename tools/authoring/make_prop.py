@@ -339,6 +339,30 @@ def rebuild(d, face="front", asset=None):
     # sheets themselves are drawn once, in step 1c.
     run([sys.executable, "tools/authoring/detail_sheet.py", str(d),
          "--face", face, "--apply"])
+    # ONE DRAWN REGION BELONGS TO ONE PART, and until this ran nothing enforced
+    # it between parts -- only between a part and the background. layer_build
+    # cuts each part straight out of the elevation at its own box, so wherever
+    # two boxes overlap both textures carry the same pixels. Invisible at 1x,
+    # where the copies land on each other; a 1.7x jukebox rendered its song list
+    # THREE times, in arch_lights, title_strip and speaker_grille, because those
+    # three boxes overlap and the parts hold their drawn size while the body
+    # stretches. 73 of 96 props have at least one such pair.
+    #
+    # AFTER detail_sheet, not before: layer_build re-cuts every part from the
+    # elevation on each rebuild and --apply re-lays the redraws over those cuts,
+    # so a cut made any earlier is thrown away on the next round.
+    try:
+        import overlap_cut
+        r = overlap_cut.apply(d, face)
+        if r["cuts"]:
+            print(f"    overlap: {len(r['cuts'])} region(s) cut out of the "
+                  f"larger part")
+            for c in r["cuts"][:4]:
+                print(f"      {c['rider']} taken out of {c['host']}")
+        for l in r["leads"]:
+            print(f"      LEAD {l['part']}: {l['why']}")
+    except Exception as e:
+        print(f"    overlap cut unavailable ({type(e).__name__}: {e})")
     run([sys.executable, "tools/authoring/nine_slice.py", str(d / f"bg_{face}.png"),
          "--out", str(d / "slice_bg.json"), "--fallback",
          "--parts", str(d / f"parts_{face}.json")])

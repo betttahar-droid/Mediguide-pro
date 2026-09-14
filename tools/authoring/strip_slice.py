@@ -896,6 +896,33 @@ def main():
               f"and the blind band (rows {ba}..{bb}) is {100*frac:.0f}% "
               f"fittings -- the body stretches rather than repeat them")
 
+    # AND A BAND TOO SMALL TO ABSORB THE CHANGE IS ALSO NOWHERE.
+    #
+    # The renderer lays whole copies and stops at ten (MAX_REPS), and past that
+    # the run is marked `carcass` and filled with flat tile. That is a
+    # deliberate choice and the right one when the alternative is twenty visible
+    # courses -- but it was made between REPEATING and FLAT, because stretching
+    # was not a thing this file could ask for. It is now, and the jukebox is the
+    # comparison: at 1.7x its eleven bare rows needed twenty-eight copies, fell
+    # to carcass, and filled the bottom half of the cabinet with a dead grey
+    # slab -- the fault that has sat on the roadmap for weeks. Stretched, the
+    # same prop is its own wood all the way down.
+    #
+    # The number is the renderer's own, not a new one: shares are by height, so
+    # every band takes the same count, and one division answers for all of them.
+    if grow_bands:
+        _rows = sum(g["px"][1] - g["px"][0] for g in grow_bands)
+        _reps = (max_taller - 1.0) * H / max(1, _rows) + 1
+        if _reps > 10:
+            print(f"  the growth places are too small: {_rows} bare rows need "
+                  f"{_reps:.1f} copies at {max_taller}x against the renderer's "
+                  f"10 -- it would fill them with flat tile, so the body "
+                  f"stretches instead")
+            grow_bands = []
+            for s in strips:
+                s["grow_y"] = False
+                s["grow_share"] = 0.0
+
     if grow_bands:
         # SHARED BY HEIGHT, so every band takes the same number of copies --
         # the allocation that keeps all of them inside the renderer's bound at
