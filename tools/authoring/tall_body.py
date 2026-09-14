@@ -471,20 +471,30 @@ def draw(prop_dir, asset, face="front", redraw=False):
     src = Image.open(bg).convert("RGBA")
     W, H = src.size
     extra = int(round((hx - 1.0) * H))
-    # SHARED BY HEIGHT WITH THE MEMBERS, which is strip_slice's own convention
-    # for dividing growth between places. The members keep lengthening; the body
-    # takes the rest, so a prop does not both grow its tubes to full height AND
-    # gain a full band of new carcass.
-    if band.get("with_members"):
-        try:
-            gb = json.loads((d / f"strips_{face}.json").read_text())["grow_bands"]
-            mem = sum(g["px"][1] - g["px"][0] for g in gb)
-            own = abs(int(band["px"][1]) - int(band["px"][0]))
-            extra = int(round(extra * own / float(max(1, own + mem))))
-            print(f"    sharing with {len(gb)} member band(s) by height: "
-                  f"{extra} rows to the body")
-        except Exception:
-            pass
+    # THE BAND CARRIES THE WHOLE GROWTH, because the renderer gives it the whole
+    # growth. This used to be SHARED with the members -- the members keep
+    # lengthening, so the body was given only its own fraction of the extra
+    # height, on the reasoning that a prop should not both grow its tubes to
+    # full height and gain a full band of new carcass.
+    #
+    # That reasoning is about how much new material to SHOW. The renderer is not
+    # having that conversation. `drawnBand` replaces the member bands in gOfT
+    # outright and is handed a share of 1.0, so the band absorbs every row the
+    # prop grows by; the members lengthen separately, through their own parts'
+    # spany_repeat, and contribute nothing to the body's height. So a texture
+    # drawn for a fraction of the growth gets stretched to cover all of it.
+    #
+    # v52_jukebox is the case, and it is severe. Its band was drawn 90 rows tall
+    # against a 594-row prop -- enough for 1.151x -- and at the 1.6x its own
+    # scale rule asks for it is stretched FOUR TIMES over. Rendered at exactly
+    # 1.151x the prop is perfect: arch, dome, song list, selection display,
+    # grille and scroll all at their drawn sizes. Rendered at 1.6x the middle is
+    # a smeared blank panel with the grille pulled out of shape, which is the
+    # fault this file was written to remove, reintroduced by its own arithmetic.
+    #
+    # A band is now drawn for the full (max_taller - 1) x H. It is a bigger ask
+    # of the model -- 356 rows of new body on a 594-row jukebox -- and check()
+    # still refuses a bad one, which is the right place for that judgement.
     if extra < 8:
         print(f"  the body's share is {extra} rows: not worth a drawing")
         return None

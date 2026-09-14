@@ -313,7 +313,29 @@ const DEPTH = {
 // inserts, at exactly the place it inserts them -- so the parts placed through
 // gOfT and the body painted from this texture land on each other. At 1x, and on
 // every prop that has somewhere to repeat, this is the drawn background.
-const useTall = !!tallBody && hS > 1.0 + (tallBody.ratio - 1) * 0.4;
+// AND THE TEXTURE HAS TO COVER THE RATIO IT IS BEING USED AT. The band in the
+// drawn background is a FIXED number of rows -- `extra` of them -- and gOfT
+// hands that band every row the prop grows by, so asking for more growth than
+// the band was drawn for stretches it, silently, by exactly the ratio of the
+// two. v52_jukebox's band was drawn 90 rows against a 594-row prop, which is
+// 1.151x, and its own scale rule asks for 1.6x: the band came out stretched
+// FOUR TIMES, as a smeared blank panel through the middle of the machine, which
+// is the fault this whole path exists to remove. tall_body no longer under-draws
+// the band; this refuses to use one that is short anyway, because a stretched
+// drawn band is worse than the repeat it replaced and looks like a texture bug.
+// The tolerance is 2%, not zero: `extra` is a whole number of rows, so a band
+// drawn for 1.6x on a 594-row prop covers 950/594 = 1.5993 and an exact
+// comparison would throw its own texture away on the rounding.
+const tallCovers = (tallBody
+  ? tallBody.size[1] / tallBody.drawn_size[1] : 1) * 1.02;
+const useTall = !!tallBody && hS > 1.0 + (tallBody.ratio - 1) * 0.4
+  && hS <= tallCovers;
+if (tallBody && hS > tallCovers && hS > 1.0) {
+  console.log(`  ! bg_${tallBody.face}_tall covers ${tallCovers.toFixed(3)}x `
+    + `and this is ${hS}x -- not used, it would stretch `
+    + `${((hS - 1) / Math.max(1e-9, tallCovers - 1)).toFixed(1)}x. `
+    + `Redraw it with tall_body.py.`);
+}
 const bgTex = await load(
   `${dir}/${useTall ? `bg_${tallBody.face}_tall.png` : man.background}`);
 // WHAT COLOUR THE ARTWORK IS AT A GIVEN HEIGHT. A shelf -- a horizontal step
