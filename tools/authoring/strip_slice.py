@@ -1028,6 +1028,47 @@ def main():
               f"so rows {stretch_band['px'][0]}..{stretch_band['px'][1]} are "
               f"marked to be DRAWN")
 
+    # AND A BAND THAT IS BARE HERE AND BUSY ON A FLANK IS NOT A PLACE TO REPEAT.
+    #
+    # `clean` has been measured per band since the flank check went in, and it
+    # has only ever been a SORT KEY -- deliberately, because ROADMAP records
+    # that vetoing unclean bands is much worse: forced onto its one clean band,
+    # v50's display window detached and slid up the machine. So the band stays.
+    #
+    # What changes is what happens when EVERY band is unclean. There is then no
+    # ranking left to do: whichever is chosen, the prop repeats rows that carry
+    # a rocket or a title on its side, and the judges have reported exactly that
+    # every round -- "the side GALACTIC decal is smeared and garbled". Measured
+    # across the corpus: 38 of 98 props repeat or stretch rows that are busy on
+    # a flank, and 35 of those have a measured band on the front, so nothing
+    # downstream was ever going to save them.
+    #
+    # Marking it for tall_body is not a veto either. The front still repeats its
+    # bare band; what the mark buys is a DRAWN band on the side and back at the
+    # same cut, so the flank gains plain body instead of a second rocket. If the
+    # drawing is refused three times the prop falls back to exactly what it does
+    # today, which is why this can be turned on without a threshold to tune.
+    # EVERY BAND IS SCORED, not just the measured runs. `clean` was written by
+    # the two places that build runs, so an authored band -- a member, a side --
+    # carried no such key at all and `g.get("clean") is False` was False for it.
+    # 19 props have no flank-clean band anywhere; read that way only 7 of them
+    # were seen. A key that some rows have and others do not is not a predicate.
+    for g in grow_bands:
+        if "clean" not in g:
+            g["clean"] = not busy_elsewhere(int(g["px"][0]), int(g["px"][1]))
+
+    if grow_bands and not stretch_band and all(
+            g.get("clean") is False for g in grow_bands):
+        a = min(int(g["px"][0]) for g in grow_bands)
+        b = max(int(g["px"][1]) for g in grow_bands)
+        stretch_band = {
+            "px": [a, b], "covered": None, "flank_busy": True,
+            "why": "every place it can repeat carries artwork on the side or "
+                   "back, so repeating there stacks that artwork down the "
+                   "flank; draw the flanks instead"}
+        print(f"  every place is busy on a flank: rows {a}..{b} marked so the "
+              f"side and back are DRAWN rather than repeated")
+
     if grow_bands:
         # SHARED BY HEIGHT, so every band takes the same number of copies --
         # the allocation that keeps all of them inside the renderer's bound at

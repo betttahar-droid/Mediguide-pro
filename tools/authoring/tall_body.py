@@ -139,7 +139,16 @@ def needs(prop_dir, face="front"):
     # out of, which is why v52_jukebox came back with its bubbler tubes running
     # the full height over a blank wood midsection, called by both judges and by
     # resize_audit independently. strip_slice marks that case `with_members`.
-    if s.get("grow_bands") and not band.get("with_members"):
+    # ... or every one of them is BUSY ON A FLANK. strip_slice marks that
+    # `flank_busy`: the front's band is bare and repeating it is fine for the
+    # front, but the side and back carry artwork across those same rows and a
+    # taller prop stacks it. Drawing the band makes every face agree -- gOfT
+    # reads the drawn rows rather than copying, on the flanks exactly as on the
+    # front -- which is why the front is drawn here too rather than left to
+    # repeat while the flanks are drawn. Two growth models on one prop would put
+    # the flank's inserted rows somewhere gOfT does not have them.
+    if s.get("grow_bands") and not (band.get("with_members")
+                                    or band.get("flank_busy")):
         return None, hx
     # AND A MEMBER WITH NO BODY BEHIND IT GAINS NOTHING EITHER.
     #
@@ -147,7 +156,14 @@ def needs(prop_dir, face="front"):
     # its own commit message, because "every growth place is a member" is true
     # of 10 props and every pinball in the corpus is among them -- and the
     # pinball's taller render is RIGHT. A leg has nothing behind it to go blank.
-    if s.get("grow_bands") and not body_behind(d, s["grow_bands"], face):
+    #
+    # SCOPED TO MEMBER BANDS, because that is the entire population its two
+    # thresholds were set from -- 12 bands, all of them `side: itself`. A
+    # flank_busy band is a measured RUN, whose `part` is "(measured)" and whose
+    # boxes therefore match nothing, so `behind` collapses to `solid` and the
+    # check silently becomes a different one. Whether a run band has body to
+    # grow is already answered by place_cut's width test.
+    if band.get("with_members") and not body_behind(d, s["grow_bands"], face):
         return None, hx
     return band, hx
 
@@ -577,10 +593,160 @@ def draw(prop_dir, asset, face="front", redraw=False):
            "size": [W, H + extra], "drawn_size": [W, H],
            "cover_at_cut": ncov, "on_part_boundary": on_edge,
            "attempts": attempt + 1, "evidence": "proposed"}
+    rec["flanks"] = draw_flanks(d, asset, cut, extra, H, redraw)
     (d / "tall_body.json").write_text(json.dumps(rec, indent=1))
     print(f"  {extra} rows of new body drawn at row {cut} of {H} "
           f"on attempt {attempt + 1} -- the drawn body kept")
     return rec
+
+
+FLANK_PROMPT = """IMAGE 1 is the {face} elevation of a {asset}, drawn flat and
+straight on.
+
+A FLAT MAGENTA BAND runs across it. This is the same {asset} built TALLER, and
+the magenta is the extra height, seen from the {face}.
+
+FILL THE MAGENTA, and change nothing else.
+
+  - Continue the body through it. Whatever runs into the band from above and
+    below should run through and MEET: a panel line, a moulding, a seam, a wood
+    grain, a streak of grime, a colour gradient.
+  - THE REST OF THE IMAGE MUST COME BACK EXACTLY AS IT IS. Do not redraw it, do
+    not move anything, do not recolour it.
+  - Do NOT add fittings, lettering, badges, logos or graphics. This is PLAIN
+    BODY: the machine is taller, not better decorated.
+  - Do NOT repeat a graphic that appears once above or below the band. If a
+    decal or a title sits above the band, it stays there, once.
+  - No magenta may remain anywhere in the result.
+
+FLAT ORTHOGRAPHIC VIEW, filling the canvas edge to edge. No perspective, no
+drop shadow, no frame. Hand-painted PlayStation-era look, low resolution, the
+palette taken from the body around the band."""
+
+
+def draw_flanks(d, asset, cut, extra, H, redraw=False):
+    """The side and back grown the same way, at the same cut.
+
+    WHY THIS EXISTS. The growth band is measured on the FRONT and applied to
+    every face, and the renderer says so in as many words: "Only the front takes
+    this: the flanks are still the drawn side elevation." So a prop bare across
+    some rows at the front and carrying a rocket across the same rows on its
+    FLANK either stacks that rocket (when the rows repeat) or stretches it (when
+    the body is drawn taller and the flank is left to be scaled into the new
+    height). Measured across the corpus with strip_slice's own busy_elsewhere
+    arithmetic: 38 of 98 props repeat or stretch rows that are busy on a flank.
+
+    TRIED AND REVERTED BEFORE, AND THIS IS NOT THAT. `paint_out.py` records an
+    attempt to paint the graphics OFF the side, which failed twice over -- with
+    no parts_side.json there are no holes to composite through, and a band of
+    reply composited into the original seams at each end. This asks the opposite
+    question. Nothing is removed: a band of NEW BODY is opened between the
+    flank's own rows, exactly as on the front, so the rocket is never repeated,
+    never stretched and never touched. And the seam that sank the earlier
+    attempt is the thing `check` measures and refuses on, against the prop's own
+    busiest row.
+
+    THE CUT IS THE FRONT'S CUT, and that is what keeps the prop a prop. Every
+    face is drawn at the same height, so inserting at the same row on each means
+    a rail that runs from the front round the corner still meets itself. Letting
+    each face grow where it is individually barest would give a better band on
+    every face and a discontinuity at every corner.
+    """
+    from PIL import Image
+    import numpy as np
+    from concept_sheet import generate_image, load_key
+    from detail_sheet import median_rgb
+
+    try:
+        meta = json.loads((d / "body.json").read_text())
+    except Exception:
+        return []
+    out = []
+    for face in ("side", "back"):
+        info = meta.get(face) or {}
+        src_p = d / str(info.get("image") or f"body_{face}.png")
+        if not src_p.exists():
+            continue
+        src = Image.open(src_p).convert("RGBA")
+        W, Hf = src.size
+        if Hf != H:
+            # The faces are drawn at the prop's height, so this should not
+            # happen -- if it does, the front's cut row means nothing here.
+            print(f"    {face}: {Hf} rows against the front's {H} -- not drawn")
+            continue
+        dst = d / f"body_{face}_tall.png"
+        if dst.exists() and not redraw:
+            out.append({"face": face, "image": dst.name, "cached": True})
+            continue
+
+        flat = src.convert("RGB")
+        ask = Image.new("RGB", (W, H + extra), MAGENTA)
+        ask.paste(flat.crop((0, 0, W, cut)), (0, 0))
+        ask.paste(flat.crop((0, cut, W, H)), (0, cut + extra))
+        ask_p = d / f"_tall_ask_{face}.png"
+        ask.save(ask_p)
+
+        key = load_key()
+        got = last = None
+        for attempt in range(3):
+            more = "" if not last else (
+                "\n\nYOUR LAST ATTEMPT WAS REJECTED, measured against this "
+                f"machine's own drawing: {last}\nDraw it again and fix that.")
+            try:
+                generate_image(FLANK_PROMPT.format(asset=asset, face=face) + more,
+                               dst, key, refs=[ask_p], tier=attempt)
+            except Exception as e:
+                print(f"    {face}: not drawn ({type(e).__name__})")
+                break
+            raw = Image.open(dst)
+            want = W / float(H + extra)
+            ar = raw.width / float(raw.height)
+            if abs(ar - want) / want > 0.12:
+                last = (f"it came back {ar:.2f} wide for its height against the "
+                        f"{want:.2f} of the canvas you were given. Fill the "
+                        f"canvas you are given, edge to edge.")
+            else:
+                cand = raw.convert("RGB").resize((W, H + extra), Image.LANCZOS)
+                last = check(src, cand, cut, extra, W, H)
+                if last is None:
+                    got = cand
+                    break
+            print(f"    {face}: attempt {attempt + 1} refused: {last[:78]}")
+        if got is None:
+            print(f"    {face}: refused -- this flank stretches")
+            dst.unlink(missing_ok=True)
+            ask_p.unlink(missing_ok=True)
+            out.append({"face": face, "status": "refused"})
+            continue
+
+        a0 = np.asarray(flat).astype(float)
+        bm = median_rgb(got.crop((0, cut, W, cut + extra)))
+        nb = median_rgb(Image.fromarray(
+            np.r_[a0[max(0, cut - 60):cut], a0[cut:cut + 60]].astype("uint8")))
+        sh = [int(round(n - b)) for n, b in zip(nb, bm)]
+        if any(abs(v) > 1 for v in sh):
+            arr = np.asarray(got).astype(int)
+            arr[cut:cut + extra] = np.clip(
+                arr[cut:cut + extra] + np.array(sh, dtype=int), 0, 255)
+            got = Image.fromarray(arr.astype("uint8"))
+
+        res = got.convert("RGBA")
+        res.paste(src.crop((0, 0, W, cut)), (0, 0))
+        res.paste(src.crop((0, cut, W, H)), (0, cut + extra))
+        al = src.split()[3]
+        full = Image.new("L", (W, H + extra), 255)
+        full.paste(al.crop((0, 0, W, cut)), (0, 0))
+        full.paste(al.crop((0, max(0, cut - 1), W, max(1, cut)))
+                   .resize((W, extra)), (0, cut))
+        full.paste(al.crop((0, cut, W, H)), (0, cut + extra))
+        res.putalpha(full)
+        res.save(dst)
+        ask_p.unlink(missing_ok=True)
+        out.append({"face": face, "image": dst.name, "size": [W, H + extra],
+                    "attempts": attempt + 1})
+        print(f"    {face}: {extra} rows of new body drawn on attempt "
+              f"{attempt + 1}")
+    return out
 
 
 def main():

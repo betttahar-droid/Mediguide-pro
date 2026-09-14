@@ -313,9 +313,22 @@ const rowRGB = (() => {
     };
   } catch { return () => null; }
 })();
+// AND THE FLANKS GROW THE SAME WAY THE FRONT DOES, WHEN THEY HAVE BEEN DRAWN.
+// This loaded the drawn side and back unconditionally, which is why the comment
+// further down says "only the front takes this: the flanks are still the drawn
+// side elevation" -- so a rocket on a cabinet's flank was stacked when the rows
+// repeated and stretched when the body was drawn taller. 38 of 98 props repeat
+// or stretch rows that are busy on a flank. tall_body now opens the same band
+// in body_side and body_back at the SAME cut, so their rows are grown rows and
+// V reads them exactly as the front's does.
+const tallFlank = {};
+for (const f of (tallBody?.flanks ?? [])) if (f.image) tallFlank[f.face] = f.image;
 const faceTex = {};
 for (const f of ['side', 'back', 'top']) {
-  if (bodyMeta?.[f]) faceTex[f] = await load(`${dir}/${bodyMeta[f].image}`);
+  if (!bodyMeta?.[f]) continue;
+  const grown = useTall && tallFlank[f];
+  faceTex[f] = await load(`${dir}/${grown ? tallFlank[f] : bodyMeta[f].image}`);
+  if (grown) faceTex[f + '_isTall'] = true;
 }
 let otherSideTex = null;
 try {
@@ -1338,10 +1351,19 @@ function buildLoft() {
         // up. They are the same thing while the texture is the drawn one, and
         // when the body has been drawn taller the texture's rows ARE grown
         // positions -- so V is gs, and the inserted rows are read rather than
-        // copied. Only the front takes this: the flanks are still the drawn
-        // side elevation.
-        const V0 = (useTall && f.mi === 1) ? gs[i] : ys[i];
-        const V1 = (useTall && f.mi === 1) ? gs[i + 1] : ys[i + 1];
+        // copied.
+        //
+        // EVERY FACE THAT HAS BEEN DRAWN TALLER TAKES THIS, not just the front.
+        // mi 1 is the front, 2 the back, 0 and 5 the two flanks, and each reads
+        // grown rows exactly when its own texture carries them -- which is why
+        // faceTex records `_isTall` per face rather than one flag for the prop.
+        // A flank tall_body refused still falls back to `ys` and stretches, so
+        // one refused drawing costs that flank and nothing else.
+        const tallHere = useTall && (f.mi === 1
+          || (f.mi === 2 && faceTex.back_isTall)
+          || ((f.mi === 0 || f.mi === 5) && faceTex.side_isTall));
+        const V0 = tallHere ? gs[i] : ys[i];
+        const V1 = tallHere ? gs[i + 1] : ys[i + 1];
         quadTo(f.mi, P4,
                [[f.u(p), V0], [f.u(q), V0],
                 [f.u(Q), V1], [f.u(P), V1]],
