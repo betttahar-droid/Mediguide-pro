@@ -247,6 +247,10 @@ try { fprofile = await (await fetch(`${dir}/front_profile_front.json`)).json(); 
 try { tprofile = await (await fetch(`${dir}/top_profile.json`)).json(); } catch {}
 let sliceBg = null;
 try { sliceBg = await (await fetch(`${dir}/slice_bg.json`)).json(); } catch {}
+// the record of which parts had wider artwork bought for them, and at what
+// ratio. Absent on every prop that never needed any, which is most of them.
+let wideArt = null;
+try { wideArt = await (await fetch(`${dir}/wide_art.json`)).json(); } catch {}
 if (p.get('loft') === '0') fprofile = null;
 if (p.get('plan') === '0') tprofile = null;
 if (p.get('box') === '1') profile = null;
@@ -1800,7 +1804,21 @@ const movers = [];
 const placed = new Map();          // part name -> the pivots it was placed as
 for (const q of man.parts) {
   if (only && q.name !== only) continue;
-  const tex = await load(`${dir}/${q.image}`);
+  // THE BOUGHT ARTWORK, WHEN THE PROP IS WIDE ENOUGH TO NEED IT. wide_art asks
+  // the image model for the parts whose own band scan proves they cannot grow
+  // -- a marquee, a backglass, an arch -- and composites the drawn artwork back
+  // over the middle, so only the ends are new. Using it here is what makes the
+  // difference between an arch stretched to the wrong proportions and an arch
+  // at its drawn size with more panel beside it.
+  //
+  // Only above the ratio it was drawn for, and only ever on the WIDER render:
+  // at 1x the original stands, because the prop's fidelity to its reference at
+  // the size the reference was drawn is not tradeable for this.
+  const _wa = wideArt?.parts?.find(
+    (p) => p.part === q.name && p.status === 'kept');
+  const useWide = _wa && FW / A > 1.0 + (_wa.ratio - 1) * 0.4;
+  const tex = await load(
+    `${dir}/${useWide ? `parts_wide/${q.name}.png` : q.image}`);
   const ow = (q.u[1] - q.u[0]) * A, oh = q.v[1] - q.v[0];
   const R = q.resize || 'fixed';
   // A PART WITH NOTHING UNIFORM ON ITS SPAN AXIS MUST NOT SPAN. Told to run
