@@ -187,11 +187,50 @@ def candidates(prop_dir, face="front"):
     return out, wide
 
 
+def check(crop, got, pad, W2):
+    """Why this drawing is not usable, as a sentence, or None if it is.
+
+    Each is quoted back to the model on the next attempt, so each has to say
+    what is wrong in terms it can act on.
+    """
+    from detail_sheet import resemblance, median_rgb
+    rgb = crop.convert("RGB")
+    H = crop.height
+    # EACH END AGAINST ITS OWN SIDE. Both were compared against the drawn part's
+    # LEFT strip, which asks the new right-hand trim to look like the left-hand
+    # trim -- true of a symmetrical marquee, false of anything with a corner
+    # detail on one side only. A continuation is judged against what it
+    # continues.
+    w = max(4, min(pad, crop.width // 3))
+    pairs = [(got.crop((0, 0, pad, H)), rgb.crop((0, 0, w, H))),
+             (got.crop((W2 - pad, 0, W2, H)),
+              rgb.crop((crop.width - w, 0, crop.width, H)))]
+    left = max(sum(1 for q in e.convert("RGB").getdata()
+                   if abs(q[0] - 255) < 40 and q[1] < 60
+                   and abs(q[2] - 255) < 40) for e, _ in pairs)
+    if left > 0.02 * pad * H:
+        return (f"{left} pixels of the magenta came back unfilled. Every "
+                f"magenta pixel must become part of this object.")
+    # detail_sheet's own bars, on the NEW MATERIAL only -- the middle is about
+    # to be overwritten with the drawn artwork, so judging it would be judging a
+    # picture that is not going to be used.
+    unlike = max(resemblance(e, r) for e, r in pairs)
+    tint = max(sum(abs(x - y) for x, y in zip(median_rgb(e), median_rgb(r))) / 3
+               for e, r in pairs)
+    if unlike < MIN_UNLIKE:
+        return ("the new material at the ends is a copy of what is already "
+                "there. It should CONTINUE the border and the field outwards, "
+                "not repeat a motif that appears once.")
+    if tint > MAX_TINT:
+        return (f"the new ends are {tint:.0f} away in colour from the artwork "
+                f"they join. Take the palette from the edges of the middle.")
+    return None
+
+
 def draw(prop_dir, asset, face="front", redraw=False):
     """Ask for each candidate composed wider; refuse the ones that came back wrong."""
     from PIL import Image
     from concept_sheet import generate_image, load_key
-    from detail_sheet import resemblance, median_rgb
 
     d = Path(prop_dir)
     names, wide = candidates(d, face)
@@ -216,79 +255,74 @@ def draw(prop_dir, asset, face="front", redraw=False):
             log.append({"part": n, "status": "cached"})
             continue
         crop = Image.open(src).convert("RGBA")
+        H = crop.height
         # the canvas IS the request: the target shape, the artwork in the
         # middle, the missing width shown rather than described
         W2 = max(crop.width + 8, int(round(crop.width * wide)))
         pad = (W2 - crop.width) // 2
-        ask = Image.new("RGBA", (W2, crop.height), MAGENTA + (255,))
-        ask.alpha_composite(crop, (pad, 0))
+        # AND THE ONLY MAGENTA IS THE ENDS. This composited the part's RGBA over
+        # a magenta base, so every transparent pixel of a SHAPED part -- and
+        # more than half of all masks carry real shape -- came out magenta too.
+        # The model was shown magenta tracing the part's outline as well as
+        # standing at its ends, which is the fault tall_body was caught by: it
+        # reads the lot as "fill this" and paints outside the object. The ends
+        # are the request; the silhouette is not.
+        ask = Image.new("RGB", (W2, H), MAGENTA)
+        ask.paste(crop.convert("RGB"), (pad, 0))
         ask_p = outdir / f"{n}.ask.png"
-        ask.convert("RGB").save(ask_p)
-        try:
-            generate_image(
-                PROMPT.format(asset=asset, part=n.replace("_", " ")),
-                dst, key, refs=[ask_p])
-        except Exception as e:
-            print(f"  {n}: not drawn ({type(e).__name__})")
-            log.append({"part": n, "status": "failed", "why": type(e).__name__})
-            continue
-        got = Image.open(dst).convert("RGB").resize((W2, crop.height),
-                                                    Image.LANCZOS)
-        # THE ASPECT IS NOW A HARD REFUSAL. It is the thing the first version
-        # could not see and the thing the model got wrong, so it is checked
-        # before anything else: a reply whose shape is the drawn part's shape is
-        # a copy, whatever it looks like.
-        raw = Image.open(dst)
-        want = W2 / float(crop.height)
-        ar = raw.width / float(raw.height)
-        if abs(ar - want) / want > 0.12:
-            print(f"  {n}: refused -- came back at aspect {ar:.2f} against "
-                  f"{want:.2f} asked; it copied the reference's shape")
-            dst.unlink(missing_ok=True)
+        ask.save(ask_p)
+
+        # A REFUSAL IS A VERDICT ON ONE DRAWING, NOT ON THE PART. CLAUDE.md's
+        # rule, which detail_sheet follows and this did not: it gave up after
+        # one reply. tall_body, built the same way an hour later, was refused
+        # twice for drawing hard joins and passed on the third attempt with the
+        # measurement quoted back at it.
+        got = last = None
+        for attempt in range(3):
+            more = "" if not last else (
+                "\n\nYOUR LAST ATTEMPT WAS REJECTED, measured against the "
+                f"artwork you were given: {last}\nDraw it again and fix that.")
+            try:
+                generate_image(
+                    PROMPT.format(asset=asset, part=n.replace("_", " ")) + more,
+                    dst, key, refs=[ask_p])
+            except Exception as e:
+                print(f"  {n}: not drawn ({type(e).__name__})")
+                log.append({"part": n, "status": "failed",
+                            "why": type(e).__name__})
+                last = None
+                break
+            raw = Image.open(dst)
+            want = W2 / float(H)
+            ar = raw.width / float(raw.height)
+            # THE ASPECT IS A HARD REFUSAL. It is the thing the first version
+            # could not see and the thing the model got wrong -- asked for 2.571
+            # against a marquee drawn at 1.607 it returned 1.608, a sharper copy
+            # -- because `resemblance` puts both at a common size before
+            # correlating, which is what makes it a test of composition.
+            if abs(ar - want) / want > 0.12:
+                last = (f"it came back {ar:.2f} wide for its height against the "
+                        f"{want:.2f} of the canvas you were given. Fill the "
+                        f"canvas you are given, edge to edge.")
+            else:
+                cand = raw.convert("RGB").resize((W2, H), Image.LANCZOS)
+                last = check(crop, cand, pad, W2)
+                if last is None:
+                    got = cand
+                    break
+            print(f"  {n}: attempt {attempt + 1} refused: {last[:90]}")
+        if got is None:
+            if last is not None:
+                print(f"  {n}: three drawings refused; the drawn part stands")
+                # THE REFUSED REPLY IS KEPT, not deleted. A refusal with the
+                # picture thrown away cannot be checked, and two of this repo's
+                # thresholds were wrong the first time they were set.
+                if dst.exists():
+                    dst.rename(outdir / f"{n}.refused.png")
+                log.append({"part": n, "status": "refused", "why": last[:120]})
             ask_p.unlink(missing_ok=True)
-            log.append({"part": n, "status": "refused", "why": "aspect",
-                        "got": round(ar, 3), "wanted": round(want, 3)})
             continue
-        # EACH END AGAINST ITS OWN SIDE. Both were compared against the drawn
-        # part's LEFT strip, which asks the new right-hand trim to look like the
-        # left-hand trim -- true of a symmetrical marquee and false of anything
-        # with a corner detail on one side only. A continuation is judged
-        # against what it continues.
-        rgb = crop.convert("RGB")
-        w = max(4, min(pad, crop.width // 3))
-        pairs = [(got.crop((0, 0, pad, crop.height)),
-                  rgb.crop((0, 0, w, crop.height))),
-                 (got.crop((W2 - pad, 0, W2, crop.height)),
-                  rgb.crop((crop.width - w, 0, crop.width, crop.height)))]
-        # detail_sheet's own bars, on the NEW MATERIAL only -- the middle is
-        # about to be overwritten with the drawn artwork, so judging it would be
-        # judging a picture that is not going to be used.
-        unlike = max(resemblance(e, r) for e, r in pairs)
-        tint = max(sum(abs(x - y) for x, y in zip(median_rgb(e), median_rgb(r)))
-                   / 3 for e, r in pairs)
-        left = max(sum(1 for p in e.convert("RGB").getdata()
-                       if abs(p[0] - 255) < 40 and p[1] < 60
-                       and abs(p[2] - 255) < 40) for e, _ in pairs)
-        if left > 0.02 * pad * crop.height:
-            print(f"  {n}: refused -- {left} px of the magenta came back "
-                  f"unfilled; the drawn part stands")
-            dst.unlink(missing_ok=True); ask_p.unlink(missing_ok=True)
-            log.append({"part": n, "status": "refused", "why": "magenta left"})
-            continue
-        if unlike < MIN_UNLIKE or tint > MAX_TINT:
-            why = ("the new ends are a copy of the middle"
-                   if unlike < MIN_UNLIKE else "the palette does not match")
-            print(f"  {n}: refused -- {why} ({unlike:.2f} unlike, floor "
-                  f"{MIN_UNLIKE}; tint {tint:.0f}, bar {MAX_TINT}); "
-                  f"the drawn part stands")
-            # THE REFUSED REPLY IS KEPT, not deleted. A refusal with the
-            # picture thrown away cannot be checked, and two of this repo's
-            # thresholds were wrong the first time they were set.
-            dst.rename(outdir / f"{n}.refused.png")
-            ask_p.unlink(missing_ok=True)
-            log.append({"part": n, "status": "refused",
-                        "unlike": round(unlike, 3), "tint": round(tint, 1)})
-            continue
+
         # AND THE DRAWN ARTWORK GOES BACK OVER THE MIDDLE, exactly. Only the
         # ends are the model's. The alpha comes from the original stretched to
         # the new width at the ends and copied at the middle, so a shaped part
@@ -296,20 +330,18 @@ def draw(prop_dir, asset, face="front", redraw=False):
         out = got.convert("RGBA")
         out.paste(crop, (pad, 0))
         a = crop.split()[3]
-        wa = Image.new("L", (W2, crop.height), 255)
-        wa.paste(a.crop((0, 0, 1, crop.height)).resize((pad, crop.height)), (0, 0))
+        wa = Image.new("L", (W2, H), 255)
+        wa.paste(a.crop((0, 0, 1, H)).resize((pad, H)), (0, 0))
         wa.paste(a, (pad, 0))
-        wa.paste(a.crop((crop.width - 1, 0, crop.width, crop.height))
-                 .resize((W2 - pad - crop.width, crop.height)),
-                 (pad + crop.width, 0))
+        wa.paste(a.crop((crop.width - 1, 0, crop.width, H))
+                 .resize((W2 - pad - crop.width, H)), (pad + crop.width, 0))
         out.putalpha(wa)
         out.save(dst)
         ask_p.unlink(missing_ok=True)
-        print(f"  {n}: {2*pad}px of new material at the ends, "
-              f"{unlike:.2f} unlike, tint {tint:.0f} -- the drawn middle kept")
+        print(f"  {n}: {2*pad}px of new material at the ends on attempt "
+              f"{attempt + 1} -- the drawn middle kept")
         log.append({"part": n, "status": "kept", "ratio": wide,
-                    "new_px": 2 * pad,
-                    "unlike": round(unlike, 3), "tint": round(tint, 1),
+                    "new_px": 2 * pad, "attempts": attempt + 1,
                     "evidence": "proposed"})
     (d / "wide_art.json").write_text(json.dumps(
         {"face": face, "ratio": wide, "parts": log}, indent=1))
