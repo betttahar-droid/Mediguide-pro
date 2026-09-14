@@ -97,10 +97,17 @@ written and was only ever called on the places the model names — 75 of the
 corpus's 105 bands were measured runs and reached the renderer unasked.
 Unchecked: 75 → 0.
 
-**Still open:** 23 bands are known to carry flank artwork and are used anyway,
-because a prop whose only bare rows are unclean still has to grow somewhere and
-the alternative is the flat carcass or a stretch. Whether that trade is right is
-not measured — nobody has looked at the 23.
+**Still open:** 23 bands are known to carry flank artwork and are used anyway.
+**Looked at, and the trade is right.** `v49_vending_machine` uses an unclean
+band below its dispenser flap; `raycast` confirms the repeated bars are
+`materialIndex 0`, the side texture, so this is the fault exactly. Forcing it to
+the clean band alone — which is 17 rows against the 54 it needs, so it falls to
+a stretch — is **much worse**: the display window detaches and slides up, a
+blank panel floats across the DRINKS sign, and the products compress. Four
+stacked bin lips and a duplicated flank vent is the better of the two.
+
+So do not veto unclean bands. The gain here is only that they are now *known*,
+and the real fix is below.
 
 **The real fix needs** `decal_sheet` to record *where* the decals were, so they
 can be painted off the flank. Painting off was tried and reverted (see
