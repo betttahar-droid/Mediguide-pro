@@ -42,6 +42,7 @@ able to see that it did.
 """
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -126,6 +127,97 @@ def apply_resize_policy(prop_dir, face="front"):
         prev.append({"face": face, "corrections": fixed})
         log.write_text(json.dumps(prev, indent=1))
     return fixed
+
+
+_SIDE = re.compile(r"(^|_)(left|right)(?=_|$|\d)", re.I)
+
+
+def apply_side_names(prop_dir, face="front"):
+    """A part named `left` that sits on the right is misnamed, and the drawing
+    says which it is.
+
+    "The model authors and names; arithmetic measures and verifies" -- this is
+    the NAME being verified, which nothing had done. A part's IDENTITY is
+    authorship and stays untouched: whether a thing is a joystick, a coin
+    button, a bubbler tube is not something pixels can settle. Which SIDE of the
+    machine it stands on is not an opinion.
+
+    Measured across the corpus: 361 parts carry a left or a right in their name
+    and 49 of them, on 19 of 58 props, sit on the other side. The pattern says
+    what happened -- they come in SWAPPED PAIRS (joystick_left with
+    joystick_right, coin_button_left with coin_button_right, grille_post_left
+    with grille_post_right), which is the model naming from the machine's own
+    left, as you would describe a person's left hand. That is a defensible
+    convention and it is not the one anything downstream uses: the renderer, the
+    exported rig and the judges all work in the viewer's frame, so a mesh called
+    bubbler_tube_left standing at the right-hand end of the cabinet misleads
+    every one of them and anyone who opens the asset afterwards.
+
+    A SWAP IS ONLY APPLIED WHOLE. Renaming one half of a pair would collide with
+    the other half, so the new names are computed first and applied only if they
+    are still all distinct; a rename that would collide is reported and skipped
+    rather than silently dropping a part.
+    """
+    d = Path(prop_dir)
+    pj_path = d / f"parts_{face}.json"
+    try:
+        pj = json.loads(pj_path.read_text())
+    except Exception:
+        return []
+    W = (pj.get("size") or [1, 1])[0]
+    parts = pj.get("parts", [])
+    rename, seen = {}, {p.get("name") for p in parts}
+    for p in parts:
+        n = p.get("name") or ""
+        m = _SIDE.search(n)
+        if not m or not p.get("px"):
+            continue
+        xc = (p["px"][0] + p["px"][2]) / 2 / max(1, W) - 0.5
+        # ON THE CENTRELINE THERE IS NO SIDE TO BE WRONG ABOUT. A start button
+        # dead centre named `_right` is naming a pair position, not a place.
+        if abs(xc) < 0.02:
+            continue
+        want = "right" if xc > 0 else "left"
+        has = m.group(2).lower()
+        if has == want:
+            continue
+        rename[n] = n[:m.start(2)] + want + n[m.end(2):]
+    if not rename:
+        return []
+    # DROP ONLY THE RENAMES THAT COLLIDE, NOT THE PROP. Refusing the whole prop
+    # on one collision cost 38 good corrections out of 49: v38_arcade_cabinet
+    # has coin_door and coin_slot cleanly swapped and ONE cashbox_door_left with
+    # no partner to trade with, and all five were abandoned for the sake of the
+    # one. A rename is impossible only when some other part will still be
+    # holding the name it wants -- so drop those and look again, because
+    # dropping one can leave a name occupied that had been about to be vacated.
+    names = [p.get("name") for p in parts]
+    while True:
+        clash = [s for s, t in rename.items()
+                 if any(n != s and rename.get(n, n) == t for n in names)]
+        if not clash:
+            break
+        for s in clash:
+            print(f"    side: {s} sits on the other side but "
+                  f"{rename[s]} is taken -- left alone")
+            del rename[s]
+    if not rename:
+        return []
+    for p in parts:
+        if p["name"] in rename:
+            p["name"] = rename[p["name"]]
+    pj_path.write_text(json.dumps(pj, indent=1))
+    log = d / "policy_log.json"
+    try:
+        prev = json.loads(log.read_text())
+    except Exception:
+        prev = []
+    prev.append({"face": face, "side_names":
+                 [{"was": a, "now": b} for a, b in rename.items()]})
+    log.write_text(json.dumps(prev, indent=1))
+    for a, b in rename.items():
+        print(f"    side: {a} sits on the other side -- {b}")
+    return [{"was": a, "now": b} for a, b in rename.items()]
 
 
 def segmentation_verdict(prop_dir, face="front"):

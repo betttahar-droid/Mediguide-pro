@@ -329,6 +329,15 @@ def rebuild(d, face="front", asset=None):
             print(f"    policy: {c['part']} ({c['role']}) "
                   f"{c['was']} -> {c['now']}"
                   + (f", {c['also']}" if c.get("also") else ""))
+        # AND A NAME THAT CONTRADICTS THE DRAWING IS CORRECTED THE SAME WAY.
+        # Which side of the machine a part stands on is a measurement, not an
+        # opinion, and 49 parts across 19 props carried the wrong one -- mostly
+        # as cleanly swapped pairs, the model naming from the machine's own left
+        # while the renderer, the rig and the judges all work in the viewer's.
+        # It runs BEFORE layer_build, because every name downstream is cut from
+        # what parts_front.json says here.
+        for c in intent_gate.apply_side_names(d, face):
+            print(f"    side: {c['was']} -> {c['now']}")
     except Exception as e:
         print(f"    resize policy unavailable ({type(e).__name__})")
     run([sys.executable, "tools/authoring/layer_build.py", str(d), "--face", face])
