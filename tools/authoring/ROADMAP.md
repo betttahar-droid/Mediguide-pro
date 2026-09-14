@@ -83,8 +83,23 @@ the way `detail_sheet` re-asks a refused fitting. A refusal is a verdict on one
 drawing, not on the part — that rule is in `CLAUDE.md` and this does not follow
 it yet.
 
-**And the taller axis has no equivalent.** Same argument, same 107-part
-measurement, nothing built.
+**And the taller axis needed something different, which is the finding.** Of 31
+parts across the corpus carrying a `spany` rule, **zero** are tall,
+non-countable and without a vertical band — the symmetry does not hold, because
+a part that must lengthen is a leg, a column, a rail or a tube and those are
+uniform along their length by what they are. The parts that carry art are wide.
+
+The whole taller-axis need is the **body**: 16 props with nowhere bare to
+repeat, whose carcass stretches. `tall_body.py` draws the extra carcass into the
+band `strip_slice` vetoed — the bar that band failed is about *copying* rows
+that carry artwork, and nothing in it forbids *drawing* new body there. Wired
+into `rebuild()` and into the renderer; a drawn band is a growth band that does
+not repeat, so `gOfT` places the parts and the taller texture paints the body,
+and the two agree by construction.
+
+Verified on `v49_jukebox` at 1.7×: the whole upper assembly at its drawn
+proportions, the extra height as plain body beneath. Five faults were found
+building it and all are in the file with their numbers.
 
 ---
 

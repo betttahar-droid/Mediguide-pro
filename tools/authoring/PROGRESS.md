@@ -29,6 +29,9 @@ taller axis was wrong on 33 of 65 props and is now fixed at the cause.
 | `depth_probe.py` | a feature's thickness off the side elevation | **yes** — and its answer is almost always `UNMEASURABLE`, which is the finding |
 | `overlap_cut.py` | drawn pixels claimed by more than one part | **yes** — cuts them out of the larger part after `detail_sheet` |
 | `recompose_score.py` | whether the parts lay back down as the reference | diagnostic — it is 0.00% on 89 of 90 props, so there is nothing to gate on |
+| `wide_art.py` | parts no rule can widen; buys the missing width | **yes** — in `rebuild`, and the renderer loads it above the drawn ratio |
+| `tall_body.py` | props with nowhere bare; draws the extra carcass | **yes** — in `rebuild` after `strip_slice`, and the renderer paints from it |
+| `resize_audit.py` | every resize decision, one at a time, against glm-5.3 | **yes** — in front of the judges, findings quoted and patch merged |
 | `raycast.mjs` | names the object under a render pixel | n/a (diagnostic) |
 
 ---

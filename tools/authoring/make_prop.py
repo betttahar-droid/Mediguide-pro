@@ -393,6 +393,22 @@ def rebuild(d, face="front", asset=None):
     # per-strip stretch bands: one band for a whole face cannot miss the
     # artwork at every height, and the marquee is where that shows
     run([sys.executable, "tools/authoring/strip_slice.py", str(d), "--face", face])
+    # AND WHERE THERE IS NOWHERE TO REPEAT, THE EXTRA BODY IS DRAWN. strip_slice
+    # has just said so, and recorded the band it vetoed: the bar that band failed
+    # is about copying rows that carry artwork, and nothing in it forbids drawing
+    # new carcass there. Sixteen props reach the renderer with no band at all and
+    # stretch instead, which is what turns a jukebox's semicircular arch into a
+    # bullet. AFTER strip_slice, because it reads that file; cached, so a prop
+    # that has somewhere to repeat costs no call.
+    if asset:
+        try:
+            import tall_body
+            rec = tall_body.draw(d, asset, face)
+            if rec:
+                print(f"    taller body drawn: {rec['extra']} rows at "
+                      f"{rec['cut']} (attempt {rec.get('attempts', 1)})")
+        except Exception as e:
+            print(f"    tall body unavailable ({type(e).__name__}: {e})")
     # synthesise the seamless panel tile the background's middle repeats, cut
     # from the strip that will actually be filled with it
     # FROM WHERE THE PROP ACTUALLY GROWS. This cut the tile from the strip the
