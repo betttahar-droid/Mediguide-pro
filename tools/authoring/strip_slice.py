@@ -849,11 +849,24 @@ def main():
                    for g in grow_bands):
                 continue                     # already covered by an authored one
             spare.append(best)
-        spare.sort(key=lambda b: b[0] - b[1])
+        # AND A MEASURED RUN IS CHECKED AGAINST THE OTHER FACES TOO. The growth
+        # band is measured on the front and applied to EVERY face, so a band
+        # bare at the front that carries a decal on the flank stacks that decal
+        # down a taller prop. busy_elsewhere has answered exactly this question
+        # since it was written -- and only for the places the MODEL names. 75 of
+        # the corpus's 105 bands are measured runs, so three quarters of them
+        # reached the renderer having never been asked.
+        #
+        # Clean first, then longest. It is a preference and not a bar, because a
+        # prop whose only bare rows carry artwork on the flank still has to grow
+        # somewhere, and a repeated flank decal is a smaller fault than the flat
+        # carcass or the stretch it would otherwise fall to.
+        spare.sort(key=lambda r: (busy_elsewhere(r[0], r[1]), r[0] - r[1]))
         for a, b in spare:
             if sum(g["px"][1] - g["px"][0] for g in grow_bands) >= need:
                 break
             grow_bands.append({"part": "(measured)", "side": "run",
+                               "clean": not busy_elsewhere(a, b),
                                "px": [a, b],
                                "band": [round(1 - b / H, 5), round(1 - a / H, 5)]})
         grow_bands.sort(key=lambda g: g["px"][0])
