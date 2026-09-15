@@ -86,6 +86,75 @@ def bleed(im, rounds=512):
     return im
 
 
+def sheet_mask(keep, W, H, grow=0):
+    """Which pixels are actually SHEET: reachable from the edge, minus a margin.
+
+    `silhouette` answers "is this pixel prop-coloured", and cutting on that
+    answer alone gets two things wrong, both of which put holes in a finished
+    prop and neither of which is visible from the front.
+
+    ENCLOSED IS NOT OUTSIDE. A dark trim strip down the flank of a machine is
+    not prop-coloured -- v16_jukebox's side elevation has 46 interior columns
+    that fail the test, v11_vending_machine 37 -- and cut, they become
+    transparent columns the renderer's alphaTest turns into slits running the
+    prop's whole height. Sheet is what SURROUNDS the prop; a region with prop on
+    every side of it is a panel, however pale or dark. One flood fill settles
+    it, and nothing correctly cut before stops being cut.
+
+    TRIED AND REVERTED: GROWING THE PROP TO COVER THE GEOMETRY. `grow` is here
+    and it defaults to 0. The idea is sound on its face -- front_profile and
+    top_profile trace this same silhouette into polylines, a polyline smooths a
+    ragged edge in both directions, and where it smooths OUTWARD there is body
+    with no art on it, which the alphaTest cuts into a stepped magenta fringe.
+    v11_vending_machine had one down both sides of its front face.
+
+    It does not survive the sweep. At 3 pixels the flank texture reaches past
+    the profile the body is lofted to and that prop's side outline falls from
+    0.948 to 0.939 -- the cure becoming the disease on the axis it was meant to
+    fix. At 2 it closes the side holes and costs the FRONT, which is the axis
+    nothing else touches: across the corpus the front median falls 0.9896 to
+    0.9875, its mean by 0.0023, props below 0.97 go from 3 to 6 and props good
+    on all three axes from 95 to 92 -- twelve props worse for one prop's fringe.
+    A silhouette two pixels fat everywhere is a worse error than a fringe on
+    three props, and it is exactly the trade CLAUDE.md says to count.
+
+    The fringe is a disagreement between the traced polyline and the art it was
+    traced from, and it should be settled where the polyline is built, not by
+    painting over it here.
+    """
+    seen = [[False] * H for _ in range(W)]
+    stack = []
+    for x in range(W):
+        for y in (0, H - 1):
+            if not keep[x][y] and not seen[x][y]:
+                seen[x][y] = True
+                stack.append((x, y))
+    for y in range(H):
+        for x in (0, W - 1):
+            if not keep[x][y] and not seen[x][y]:
+                seen[x][y] = True
+                stack.append((x, y))
+    while stack:
+        x, y = stack.pop()
+        for nx, ny in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):
+            if 0 <= nx < W and 0 <= ny < H and not keep[nx][ny] \
+                    and not seen[nx][ny]:
+                seen[nx][ny] = True
+                stack.append((nx, ny))
+    if grow <= 0:
+        return seen
+    # erode the sheet by `grow`, which is the same as growing the prop by it
+    from PIL import ImageFilter as _IF
+    im = Image.new("L", (W, H))
+    ip = im.load()
+    for x in range(W):
+        for y in range(H):
+            ip[x, y] = 255 if seen[x][y] else 0
+    im = im.filter(_IF.MinFilter(2 * grow + 1))
+    ip = im.load()
+    return [[ip[x, y] > 127 for y in range(H)] for x in range(W)]
+
+
 def silhouette(ob, erode=3):
     """Which pixels are the PROP, as opposed to sheet behind it.
 
@@ -673,13 +742,18 @@ def main():
     # pixels, so the prop's outline is its own silhouette rather than its
     # bounding box -- and it costs nothing, because those pixels were never
     # part of the prop.
+    # CUT WHAT IS SHEET, NOT WHAT IS PALE, AND LEAVE A MARGIN -- see
+    # sheet_mask(). The outline the body is lofted from is traced from this same
+    # silhouette and smoothed, so the cut has to be the looser of the two or the
+    # body shows through wherever the polyline bulges past the art.
     bg = bg.convert("RGBA")
-    mask = silhouette(ob, erode=0)
+    gone = sheet_mask(silhouette(ob, erode=0), W, H)
+    mask = [[not gone[x][y] for y in range(H)] for x in range(W)]
     ap_ = bg.load()
     cut = 0
     for x in range(W):
         for y in range(H):
-            if not mask[x][y]:
+            if gone[x][y]:
                 r, g, b, _ = ap_[x, y]
                 ap_[x, y] = (r, g, b, 0)
                 cut += 1
