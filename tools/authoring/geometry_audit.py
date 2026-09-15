@@ -215,7 +215,49 @@ def compare(model_png, elevation_png, n=160, flip_x=False, flip_y=False):
     # aspect is compared separately, since the IoU above normalises it away
     ar_model = (b[2] - b[0]) / max(1, b[3] - b[1])
     ar_elev = ew / eh
-    return inter / max(1, union), ar_model / max(1e-6, ar_elev)
+    return (inter / max(1, union), ar_model / max(1e-6, ar_elev),
+            daylight(a, e, n))
+
+
+def daylight(a, e, n):
+    """Fraction of the drawing the model shows the background THROUGH.
+
+    An IoU is a comparison of two outlines and a hole in the middle of a prop
+    barely moves it -- v17_vending_machine had two slits running its full height
+    and scored 0.930, which reads as a shape that is slightly wrong rather than
+    as a machine you can see through. From the front it is invisible; from the
+    side it is the most obvious defect the prop has.
+
+    A hole is not an outline mismatch, so the two are separated here: this
+    counts only pixels the DRAWING says are solid, the model renders as
+    background, and the model surrounds on both axes. The gap between a
+    pinball's legs is drawn as background and is not counted; a slit through a
+    vending machine's flank is.
+
+    The cause, in every case found: body_faces cut the flank texture on "is this
+    pixel prop-coloured", and a dark trim strip down a machine's side is not.
+    Cutting on what is REACHABLE FROM THE EDGE instead took the corpus from six
+    props to three. What is left is small and is listed in ROADMAP.
+    """
+    A = [[a[x, y] > 127 for y in range(n)] for x in range(n)]
+    E = [[e[x, y] > 127 for y in range(n)] for x in range(n)]
+    rows, cols = [], []
+    for y in range(n):
+        xs = [x for x in range(n) if A[x][y]]
+        rows.append((xs[0], xs[-1]) if xs else None)
+    for x in range(n):
+        ys = [y for y in range(n) if A[x][y]]
+        cols.append((ys[0], ys[-1]) if ys else None)
+    hole = tot = 0
+    for x in range(n):
+        for y in range(n):
+            if E[x][y]:
+                tot += 1
+                if (not A[x][y] and rows[y] and cols[x]
+                        and rows[y][0] <= x <= rows[y][1]
+                        and cols[x][0] <= y <= cols[x][1]):
+                    hole += 1
+    return hole / max(1, tot)
 
 
 def measure(d, out, verbose=True):
@@ -235,16 +277,19 @@ def measure(d, out, verbose=True):
             if verbose:
                 print(f"  {name:6} -- no render or no {elev}.png")
             continue
-        iou, raw = compare(f, src, flip_x=fl[name][0], flip_y=fl[name][1])
+        iou, raw, day = compare(f, src, flip_x=fl[name][0], flip_y=fl[name][1])
         ar = raw / inflate.get(name, 1.0)
         report[name] = {"iou": round(iou, 4), "aspect_ratio": round(ar, 4),
-                        "aspect_ratio_raw": round(raw, 4)}
+                        "aspect_ratio_raw": round(raw, 4),
+                        "daylight": round(day, 4)}
         if verbose:
-            ok = iou >= 0.90 and 0.9 <= ar <= 1.1
+            ok = iou >= 0.90 and 0.9 <= ar <= 1.1 and day < 0.004
             tilt = ("" if abs(inflate.get(name, 1.0) - 1) < 0.02 else
                     f"  [drawing tilted, x{inflate[name]:.2f}]")
+            hole = "" if day < 0.004 else \
+                f"   HOLES: {100*day:.1f}% of the prop is see-through"
             print(f"  {'OK ' if ok else 'OFF'} {name:6} outline {100*iou:5.1f}%"
-                  f"   proportions {ar:.3f}x the elevation's{tilt}")
+                  f"   proportions {ar:.3f}x the elevation's{tilt}{hole}")
     # AND SAY WHETHER THE BODY HAS A PLAN AT ALL, because not having one is a
     # silent downgrade that this audit is otherwise the only thing positioned
     # to notice.

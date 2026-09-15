@@ -32,6 +32,45 @@ from identify_parts import object_crop  # noqa: E402
 from layer_build import silhouette  # noqa: E402
 
 
+def outside(keep, W, H):
+    """The background REACHABLE FROM THE EDGE. Everything else is the prop.
+
+    `silhouette` answers "is this pixel prop-coloured", and a dark trim strip
+    down the flank of a machine is not: v16_jukebox's side elevation has 46
+    interior columns it calls background, v11_vending_machine 37, v5's cabinet
+    29. Cut on that answer alone and the body's own texture comes out with slits
+    through it, which the renderer alpha-tests away -- so the finished prop has
+    daylight running its full height, from any angle, through solid carcass.
+    Six props in the corpus had it and it is invisible from the front.
+
+    Enclosed is the word the measurement was missing. Sheet is what surrounds
+    the prop; a pale or dark region with prop on every side of it is a panel,
+    however little it looks like one. One flood fill from the border settles it,
+    and nothing that was correctly cut before stops being cut -- the sheet is
+    connected to the edge by construction.
+    """
+    seen = [[False] * H for _ in range(W)]
+    stack = []
+    for x in range(W):
+        for y in (0, H - 1):
+            if not keep[x][y] and not seen[x][y]:
+                seen[x][y] = True
+                stack.append((x, y))
+    for y in range(H):
+        for x in (0, W - 1):
+            if not keep[x][y] and not seen[x][y]:
+                seen[x][y] = True
+                stack.append((x, y))
+    while stack:
+        x, y = stack.pop()
+        for nx, ny in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):
+            if 0 <= nx < W and 0 <= ny < H and not keep[nx][ny] \
+                    and not seen[nx][ny]:
+                seen[nx][ny] = True
+                stack.append((nx, ny))
+    return seen
+
+
 def cut_to_silhouette(im):
     """Make the sheet showing past the prop's outline transparent.
 
@@ -42,18 +81,22 @@ def cut_to_silhouette(im):
     painting over a shape problem. Now that the body is extruded to the side
     profile, the honest answer is that those pixels are not the prop and must
     not be drawn.
+
+    CUT WHAT IS OUTSIDE, NOT WHAT IS PALE -- see outside(), above.
     """
     keep = silhouette(im, erode=0)
     out = im.convert("RGBA")
+    W, H = out.size
+    gone = outside(keep, W, H)
     px = out.load()
     n = 0
-    for x in range(out.width):
-        for y in range(out.height):
-            if not keep[x][y]:
+    for x in range(W):
+        for y in range(H):
+            if gone[x][y]:
                 r, g, b, _ = px[x, y]
                 px[x, y] = (r, g, b, 0)
                 n += 1
-    return out, n / max(1, out.width * out.height)
+    return out, n / max(1, W * H)
 
 
 def main():

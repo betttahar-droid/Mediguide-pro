@@ -57,6 +57,9 @@ def sweep(props, extra="", write_json=True):
             (d / "geometry_audit.json").write_text(json.dumps(report, indent=1))
         out[d.name] = {k: v["iou"] for k, v in report.items()
                        if isinstance(v, dict) and "iou" in v}
+        for k, v in report.items():
+            if isinstance(v, dict) and v.get("daylight", 0) >= 0.004:
+                out[d.name][f"_holes_{k}"] = v["daylight"]
         if i % 10 == 9:
             print(f"  .. {i + 1}/{len(props)}  {time.time() - t0:.0f}s",
                   flush=True)
@@ -76,13 +79,23 @@ def summarise(now):
     ok = sum(1 for r in now.values() if all(r.get(a, 0) >= 0.95 for a in AXES))
     ok7 = sum(1 for r in now.values() if all(r.get(a, 0) >= 0.97 for a in AXES))
     print(f"  all three >= 0.95: {ok}/{len(now)}   >= 0.97: {ok7}/{len(now)}")
+    # AND HOLES SEPARATELY, because an IoU barely notices one. See
+    # geometry_audit.daylight(): two slits down the whole height of a vending
+    # machine moved its side outline by seven points and were the most obvious
+    # thing about the prop.
+    hol = [(k, a, v) for k, r in now.items() for a, v in r.items()
+           if a.startswith("_holes_")]
+    if hol:
+        print(f"\n  {len(set(k for k, _, _ in hol))} props you can see through:")
+        for k, a, v in sorted(hol, key=lambda t: -t[2]):
+            print(f"    {k:26} {a[7:]:6} {100*v:5.2f}% of the drawing")
 
 
 def diff(old, now, bar=0.003):
     rows, tot, n = [], {a: 0.0 for a in AXES}, 0
     for k, r in now.items():
         o = old.get(k)
-        if not o:
+        if not o or not all(a in r for a in AXES):
             continue
         n += 1
         for a in AXES:
