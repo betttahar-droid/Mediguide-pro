@@ -534,6 +534,27 @@ def generate_image(prompt, out_path, key, refs=(), model=MODEL,
       reads them as context for the text. Several at once is the point: one
       image gives you one object's quirks, a set gives you the style underneath.
     """
+    # A LOCAL COMFYUI, WHEN ONE IS ASKED FOR. Same seam as the OpenRouter
+    # fallback below and for the same reason: nine tools come through here and
+    # none of them should know or care. See comfy_backend -- the magenta region
+    # `paint_out`, `wide_art` and `tall_body` already paint IS an inpainting
+    # mask, so those three asks map onto a local graph without changing a line
+    # of the tools that make them.
+    #
+    # IT DOES NOT FALL BACK TO A PAID API. Someone who set PROP_IMAGE_BACKEND
+    # asked for local; turning a misconfigured ComfyUI into an OpenRouter bill
+    # is the opposite of what they asked for, so the error is raised and the
+    # caller handles a drawing that did not arrive, which every caller already
+    # does.
+    try:
+        import comfy_backend
+    except Exception:                                         # noqa: BLE001
+        comfy_backend = None
+    if comfy_backend is not None and comfy_backend.enabled():
+        return comfy_backend.generate(
+            f"{ref_instruction}\n\n{prompt}" if refs else prompt,
+            out_path, refs)
+
     parts = []
     for ref in refs:
         path = Path(ref)

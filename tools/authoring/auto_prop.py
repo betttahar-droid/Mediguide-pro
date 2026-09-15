@@ -161,6 +161,19 @@ def glm(messages, model, key, max_tokens=12000, temperature=0.3, effort="low"):
     never returned; effort=low answers the same prompt in about eleven
     seconds. None of the calls here need deep reasoning -- they are "write
     four prompts" and "name what is wrong in this picture"."""
+    # A LOCAL OLLAMA, WHEN ONE IS ASKED FOR. Same seam, same reasoning as the
+    # image backend: fifteen tools call this and none of them should know.
+    # See local_llm -- the calls whose replies arithmetic VERIFIES are the ones
+    # safe to move local; the judges, which nothing grades, are not.
+    try:
+        import local_llm
+    except Exception:                                         # noqa: BLE001
+        local_llm = None
+    if local_llm is not None and local_llm.enabled():
+        has_img = any(not isinstance(m.get("content"), str) for m in messages)
+        return local_llm.chat(messages, max_tokens=max_tokens,
+                              temperature=temperature, has_images=has_img)
+
     body = json.dumps({"model": model, "messages": messages,
                        "max_tokens": max_tokens, "temperature": temperature,
                        "reasoning": {"effort": effort}}).encode()

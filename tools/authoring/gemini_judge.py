@@ -99,6 +99,28 @@ _DIRECT_DEAD = {}
 
 def _via_openrouter(prompt, images, timeout, models=OR_MODELS):
     """The same question, same family, bought from OpenRouter."""
+    # A LOCAL VISION MODEL, WHEN ONE IS ASKED FOR. Note what this costs: the
+    # judges are the one channel nothing checks, so a weaker model here
+    # degrades silently. That is already true of the paid judges -- judge_bench
+    # puts both at chance on the fault class it can score -- so this is not a
+    # step down so much as the same unmeasured channel, run locally. Read
+    # local_llm's docstring before deciding it is fine.
+    try:
+        import local_llm
+    except Exception:                                         # noqa: BLE001
+        local_llm = None
+    if local_llm is not None and local_llm.enabled():
+        d = local_llm.chat(
+            [{"role": "user", "content": local_llm.as_content(prompt, images)}],
+            has_images=True, temperature=0.2, timeout=timeout)
+        msg = (d.get("choices") or [{}])[0].get("message", {}) or {}
+        text = (msg.get("content") or "") or (msg.get("reasoning") or "")
+        m = re.search(r"\{.*\}", text, re.S)
+        if not m:
+            raise RuntimeError(f"no JSON from {local_llm.vision_model()}: "
+                               f"{text[:200]}")
+        return json.loads(m.group(0)), local_llm.vision_model()
+
     key = _openrouter_key()
     if not key:
         raise RuntimeError("the vision endpoint is out of credit and there is "
