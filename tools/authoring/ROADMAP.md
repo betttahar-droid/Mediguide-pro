@@ -230,18 +230,22 @@ side    median       0.9659     0.9817
 top     median       0.9628     0.9832
         below .95        22          1
 all three >= 0.95    ~76/98     95/98
-resize promises kept     --      84/98     scale_check.py
+resize promises kept     --      94/98     scale_check.py
 props you can see through --       3/98     geometry_audit `daylight`
 ```
 
 **What is left, in the order it is worth doing:**
 
-1. **25 span rules that cannot act** (`scale_check`). No measured band and no
-   plain flank, so the part holds. 12 `spany_repeat`, 9 `spanx_center`, 4
-   `spanx_repeat`, and the wide ones are the `wide_art` list almost exactly —
-   `marquee`, `title_strip_panel`, `backglass`, `arch_marquee`, `dome_window`.
-   **Done when:** each is either bought, grown from the carcass instead, or
-   written down as `fixed`, and `scale_check` reports none.
+1. **4 span rules that cannot act** (`scale_check`), down from 25. What closed
+   the other 21 was not artwork but three levers that had written and whose
+   writing did not survive: the renderer squashed bought art back to the drawn
+   width, `wide_art` relabelled its own cache so the renderer stopped using it,
+   and `wide_art` and `spansOf` used different tests for "can this part span".
+   The four left are `count` decisions rather than purchases — a jukebox's dome
+   window and a cabinet's vent grille are COUNTABLE by role, so a bigger one has
+   MORE of them, and nothing has said whether that is true of THIS prop.
+   **Done when:** the judges have answered each with a `count` or a `fixed`,
+   through the `scale_check` evidence that now reaches them.
 2. **Three props you can see through**, worst 0.99%: a fringe where the traced
    polyline and the art it was traced from disagree by a pixel or two. Growing
    the alpha cut was measured and reverted — twelve props worse for one prop's

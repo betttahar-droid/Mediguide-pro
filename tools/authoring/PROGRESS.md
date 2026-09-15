@@ -25,11 +25,13 @@ exists so the next one is reported rather than rendered — and the second half
 from one sentence: *a side elevation traces the frontmost point at each height,
 so the body already contains whatever the drawing shows standing out of it.*
 
-**And the prop is now measured RESIZED, which is what it is for.** 84 of 98 keep
-every promise their own rules make at 2× wide and 1.5× tall — a `fixed` part the
-same size, a span rule that does something, nothing mounted outside the prop.
-That number did not exist before `scale_check.py`; the judges are shown three
-sizes and provably cannot see it.
+**And the prop is now measured RESIZED, which is what it is for.** **94 of 98**
+keep every promise their own rules make at 2× wide and 1.5× tall — a `fixed`
+part the same size, a span rule that does something, nothing mounted outside the
+prop. That number did not exist before `scale_check.py`; the judges are shown
+three sizes and provably cannot see it. It went 82 → 84 → 87 → 88 → 93 → 94 as
+each thing it named was fixed, and the last three of those were levers that had
+written and whose writing did not survive.
 
 ---
 
@@ -84,10 +86,14 @@ geometry       front  median 0.9896  min 0.9565  below .95: 0  below .97:  3
                side   median 0.9817  min 0.9454  below .95: 2  below .97: 14
                top    median 0.9832  min 0.9423  below .95: 1  below .97: 14
                all three >= 0.95: 95/98      >= 0.97: 74/98
-resize rules   84 of 98 props keep every promise at 2x wide and 1.5x tall.
-               25 parts carry a span rule the geometry cannot act on -- no
-               measured band and no plain flank -- which is the honest answer
-               for the PART and still a promise the PROP cannot keep
+resize rules   94 of 98 props keep every promise at 2x wide and 1.5x tall.
+               4 parts still carry a rule that does nothing, and none of them
+               is a purchase: a dome window and a vent grille are COUNTABLE by
+               role -- a bigger one has MORE, not wider -- which is the `count`
+               lever and a judgement per prop
+wide artwork   bought for 8 more parts across 6 props ($0.74, ~20 drawings,
+               every one checked against wide_art's own bars). 1 refused three
+               times and the drawn part stands, which is the designed answer
 holes          3 props you can see through, worst 0.99% of the drawing; it was
                6 and 3.28% before body_faces stopped calling an enclosed dark
                strip "sheet"
