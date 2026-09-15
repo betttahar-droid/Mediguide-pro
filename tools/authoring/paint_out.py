@@ -232,6 +232,31 @@ def mean_rgb(im, box, want, skip=None):
     return [a / n for a in acc] if n else None
 
 
+def mean_abs_diff(a, b, box, hole):
+    """Mean per-channel |a - b| over the HOLE pixels of one box.
+
+    Per-pixel, not per-mean: a fitting redrawn in place has almost exactly the
+    original's average colour, so comparing means would score it zero-different
+    from a fill that genuinely replaced it. The question is whether the same
+    picture is still there, which only a pixelwise comparison asks.
+
+    Restricted to the hole, because the box's corners are the material around
+    the fitting and are identical in both by construction -- including them
+    dilutes the score toward "unchanged" exactly on the small fittings where
+    the distinction matters most.
+    """
+    pa, pb = a.convert("RGB").load(), b.convert("RGB").load()
+    s = n = 0
+    for x in range(max(0, box[0]), min(a.width, b.width, box[2])):
+        for y in range(max(0, box[1]), min(a.height, b.height, box[3])):
+            if hole is not None and not hole[x][y]:
+                continue
+            ca, cb = pa[x, y], pb[x, y]
+            s += abs(ca[0] - cb[0]) + abs(ca[1] - cb[1]) + abs(ca[2] - cb[2])
+            n += 1
+    return s / (3 * n) if n else None
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("sheet_dir")
@@ -241,6 +266,12 @@ def main():
     ap.add_argument("--ring", type=int, default=10,
                     help="how far around a hole counts as its surroundings")
     ap.add_argument("--colour-bar", type=float, default=46.0)
+    # Below this mean pixel change the fill is still the fitting. Set from the
+    # corpus: 469 accepted holes split bimodally, a cluster under 5 and the
+    # bulk past 20, median 24.5 and p25 4.6. 6.0 sits in the gap and refuses
+    # 28% of holes -- every one of which falls back to the arithmetic fill,
+    # which is where this tool started.
+    ap.add_argument("--same-bar", type=float, default=6.0)
     ap.add_argument("--tries", type=int, default=2,
                     help="how many drawings to ask for; each one is only ever "
                          "asked to fill the holes the last one failed")
@@ -458,10 +489,50 @@ def main():
             left = mean_rgb(got, (x0, y0, x1, y1), True, want)
             mag = (left is not None
                    and left[0] > 170 and left[2] > 170 and left[1] < 90)
-            ok = dist <= args.colour_bar and g >= 0.6 and not mag
+            # AND IT MUST NOT STILL BE THE FITTING, which is the check this
+            # file was missing and the most expensive gap in the pipeline.
+            #
+            # `covered` asks whether something is there and `material` whether
+            # its colour suits the surroundings. A model that simply REDRAWS
+            # the coin door passes both by construction: something is there,
+            # and its colour matches the wall because it is the same coin door
+            # that was there before. Nothing asked the one question the call
+            # was made to answer -- is the thing gone?
+            #
+            # Measured over all 469 accepted holes in the corpus, comparing the
+            # fill against the ORIGINAL drawing inside the same hole:
+            #
+            #     median 24.5    p25 4.6    p10 3.2    p75 42.0
+            #     under  4:  94 holes, 20.0%
+            #     under  8: 155 holes, 33.0%
+            #
+            # The distribution is bimodal -- a cluster at nearly zero and a
+            # cluster past 20 -- and the near-zero cluster is the fitting still
+            # sitting in its own hole. v46_pinball's `decal_2` scores 0.00:
+            # the fill is the drawing, pixel for pixel.
+            #
+            # IT IS THE ROOT OF THE JUDGES' COMMONEST COMPLAINT. The plate is
+            # what a widened or heightened prop repeats, so a fitting left in
+            # the plate is a fitting laid down again and again. v45_jukebox has
+            # the worst plate in the corpus and carries 41 of the corpus's 75
+            # "duplicated and mirrored" faults -- more than every other prop put
+            # together -- and its title strips, record stack and grille arch are
+            # all in holes that passed colour and grain.
+            #
+            # A refused hole falls back to the arithmetic fill, which is where
+            # this tool started and is explicitly "no worse". So the cost of the
+            # bar being slightly tight is a tiled patch; the cost of it being
+            # absent is the fitting stamped down the prop.
+            same = mean_abs_diff(src, got, (x0, y0, x1, y1), hole)
+            unchanged = same is not None and same < args.same_bar
+            ok = (dist <= args.colour_bar and g >= 0.6 and not mag
+                  and not unchanged)
+            why = ("magenta left" if mag
+                   else "STILL THE FITTING" if unchanged
+                   else "PAINTED" if ok else "refused")
             print(f"    {p['name']:22} {x1-x0:3}x{y1-y0:<3}  colour {dist:5.1f}"
-                  f"  grain {g:5.2f}  "
-                  f"{'magenta left' if mag else 'PAINTED' if ok else 'refused'}")
+                  f"  grain {g:5.2f}  changed {(-1 if same is None else same):5.1f}"
+                  f"  {why}")
             if not ok:
                 still.append(p)
                 continue
