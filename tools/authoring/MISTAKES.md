@@ -345,9 +345,65 @@ check whether the other branches know.
 
 ---
 
+## 17. One sample standing in for a distribution
+
+`surfacePlane` estimates four things about the surface under a part. Three of
+them are robust by construction and carry long comments explaining why: the
+slope is the **median** of the pairwise slopes, because "a contaminated
+estimator cannot be used to find its own contamination"; the trim is a **median**
+of residuals; the clearance is cut at a **median absolute deviation**, because
+"a minority on a cliff must not move the answer".
+
+The fourth was `zAt(0, 0)` — whatever happens to be directly under the part's
+middle.
+
+On a surface the fit has already REFUSED as a step that sample means nothing.
+v44_pinball's right leg spans the break between the playfield and the floor, the
+fit came back "step, not a slope", and the one sample at its centre sits at
+−0.132 while the surface under it runs to 0.253. The leg was hung off the back
+of the machine, and once the mesh followed the wall and the old clearance no
+longer accidentally rescued it, that one part took the prop's side outline from
+0.935 to **0.657** — the worst number this audit has ever produced.
+
+The median of the same samples costs one sort. It had been argued for three
+times in the same function, forty lines up.
+
+**Instead:** when a function reaches for a robust estimator anywhere, check every
+other quantity it computes from the same samples.
+
+---
+
+## 18. An allowance applied past the thing it is an allowance for
+
+Two parts left their props when the props were resized, and they looked like
+unrelated bugs until both were written down.
+
+`bh = h / cos(rotX)` is the cover allowance — "a slope is longer than its
+shadow", so a bezel drawn 0.30 tall covers 0.30/cos of actual slope. Correct,
+and unbounded: v52_jukebox's base trim sits on the floor, and on a cabinet twice
+as wide the allowance for the steep bit of profile it lies in pushed it 0.026
+BELOW the floor.
+
+`oh + (FH - 1)` is the enclosure rule — a case grows to hold a shelf the body
+knows nothing about, so it takes the whole of the prop's added height. Also
+correct, and also unbounded: v46_vending_machine's drink window covers 53% of
+the drawn machine, and half again as tall it came out 1.03 units high on a prop
+1.5 high and rose 0.054 clear of its own roof.
+
+Neither allowance is wrong. Both were applied without the one statement that
+bounds them: the prop is 1 by FH by BODY_D and nothing mounted on it is outside
+that. Clamping the BUILT extent rather than the position keeps each part's near
+edge where it was drawn and takes the overhang off the far one, and at the drawn
+size it is a no-op — mean change across 98 props, +0.00006 side.
+
+**Instead:** every allowance needs the invariant that bounds it written at the
+same place, or it will be correct in the small and absurd in the large.
+
+---
+
 ## The pattern underneath most of these
 
-Nearly every entry is one of four shapes:
+Nearly every entry is one of these shapes:
 
 1. **A number that describes the method, not the subject** (2, 8).
 2. **A unit confusion that survives because nothing converts explicitly** (3, 13, 15).
@@ -355,5 +411,7 @@ Nearly every entry is one of four shapes:
 4. **A correction that can return nothing, where nothing wins** (11).
 5. **A property checked only where it cannot fail** (14).
 6. **A test that rejects everything, blamed on the candidates** (16).
+7. **One sample standing in for a distribution** (17).
+8. **An allowance applied past the thing it is an allowance for** (18).
 
-Checking for those six directly is cheaper than rediscovering them.
+Checking for those eight directly is cheaper than rediscovering them.

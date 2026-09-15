@@ -272,6 +272,58 @@ along the axis of growth and not across it.
 Whenever something is chosen for being uniform, ask uniform *along what*, and
 whether that is the direction it will be repeated in.
 
+## The reference format is a constraint, not a nuisance
+
+The single most productive sentence of the geometry work is a fact about what an
+elevation *is*:
+
+> A side elevation traces the FRONTMOST point at each height.
+
+Two large consequences, both already paid for:
+
+- **A recess never touches the silhouette**, so its depth is unmeasurable from
+  four elevations. `depth_probe` says `UNMEASURABLE` on 291 features and the
+  verdict declares the limit rather than blocking on it.
+- **The body is lofted from that trace, so it ALREADY CONTAINS whatever the
+  drawing shows standing out of it.** A control deck mounted on its own bulge
+  and given the full `deep` stand-off is the same depth counted twice — 4.7% too
+  deep on a cabinet, and the largest single per-part cost in the corpus.
+
+Whenever a measurement disagrees with a drawing, ask what the drawing can and
+cannot depict before changing the measurement.
+
+## The tight crop makes a sliver cost more than its area
+
+`geometry_audit.compare` crops both silhouettes tight and normalises them into
+the same n×n box, which is what makes scores comparable across props. It also
+means one protruding sliver widens the bounding box and shifts the WHOLE
+silhouette against the drawing. v51_pinball's leg protruded 2.9% of the prop's
+depth and cost 0.057; v7_vending_machine's recess bezel adds eight pixels to a
+338-pixel plan and costs 0.030.
+
+That is right when the protrusion is an error and wrong when it is not, and the
+metric cannot tell. So: a small negative from `part_bulge` on a part whose wall
+is flat under it (`body gave 0.0000` in `?fit=1`) is the objective being blind,
+not the prop being wrong. Act on 0.03 and up. The corollary is the one
+`depth_scale.py` opens with — the outline objective is monotone in the stand-off
+and would end with every button a sticker if you let it drive.
+
+## Count what a renderer change breaks, across all of them
+
+`geometry_sweep.py` re-audits all 98 props and diffs against a saved baseline in
+about eight minutes. Until it existed there was nothing that counted, and three
+changes in one session each looked right on the prop that motivated them.
+
+It decided two of them against the median. `alreadyDrawn`'s neighbourhood band
+scaled to the part's own height scored **0.0003 better** on the side median than
+the local band that replaced it, and bought that by telling a jukebox's bubble
+tubes they were already part of the cabinet; it also broke four props where the
+other broke two. Growing the alpha cut to cover the lofted outline fixed one
+prop's fringe and cost twelve props on the front.
+
+Read the diff and the pictures, not the median. A change that moves the median
+up by flattening every part made the props worse and the median cannot say so.
+
 ## The renderer's bounds are part of the design
 
 `MAX_REPS` is 10. A band that needs more copies than that silently falls back to
@@ -294,6 +346,16 @@ just against how bare the band is.
   were, so they can be lifted and re-applied as planes.
 - **The segmenter boxes a cabinet's joysticks onto the flanks**, so the deck
   reads sparse and the two-player layout never appears.
+- **25 parts carry a span rule the geometry cannot act on** — no measured band
+  and no plain flank, so the part holds its drawn size. That is the honest
+  answer for the PART and it still means the PROP promises something it will not
+  do. `scale_check.py` lists them; the levers are `wide_art` (buy the wider
+  artwork), `tall_body` (grow the carcass instead), or writing the rule down as
+  `fixed`. 12 are `spany_repeat`, 9 `spanx_center`, 4 `spanx_repeat`.
+- **Three props can still be seen through**, worst 0.99% of the drawing: a
+  fringe where the traced polyline and the art it was traced from disagree by a
+  pixel or two. Growing the alpha cut to cover it was measured and reverted (see
+  `layer_build.sheet_mask`); it belongs to whoever builds the polyline.
 
 ## Closed, so you do not re-derive them
 
@@ -315,11 +377,13 @@ just against how bare the band is.
 - **`PROGRESS.md`** — what exists, what it measured, and which tools are
   actually wired into the loop rather than merely built.
 - **`MISTAKES.md`** — the specific errors that produced the practices in this
-  file, with their numbers. Six shapes recur: a number that describes the
+  file, with their numbers. Eight shapes recur: a number that describes the
   method rather than the subject, a unit confusion nothing converts explicitly,
   a signal that reaches nothing, a correction that can return nothing where
-  nothing wins, a property checked only where it cannot fail, and a test that
-  rejects every candidate and gets blamed on the candidates.
+  nothing wins, a property checked only where it cannot fail, a test that
+  rejects every candidate and gets blamed on the candidates, ONE SAMPLE STANDING
+  IN FOR A DISTRIBUTION in a function whose every other estimate is robust, and
+  AN ALLOWANCE APPLIED PAST THE THING IT IS AN ALLOWANCE FOR.
 - **`ROADMAP.md`** — what to do next, in order, with what "done" means for each.
 
 The rule these four exist to enforce: **a measurement is not finished when it

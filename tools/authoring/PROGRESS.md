@@ -17,11 +17,19 @@ measurement tool is now wired to a lever. The widening axis is right; the
 taller axis was wrong on 33 of 65 props and is fixed at the cause.
 
 **The geometry is now measured against the drawings it claims to be**, and the
-worst face on any prop in the corpus is 0.926 where it was 0.762. 88 of 98 props
-agree with all three of their own elevations to better than 0.95, 59 to better
-than 0.97. Most of that came from three artefacts that were simply missing, not
-from any threshold — see below, and `prop_complete.py`, which exists so the next
-one is reported rather than rendered.
+worst face on any prop in the corpus is 0.942 where it was 0.762. **95 of 98
+props** agree with all three of their own elevations to better than 0.95, **74**
+to better than 0.97. Most of the first half of that came from three artefacts
+that were simply missing, not from any threshold — see `prop_complete.py`, which
+exists so the next one is reported rather than rendered — and the second half
+from one sentence: *a side elevation traces the frontmost point at each height,
+so the body already contains whatever the drawing shows standing out of it.*
+
+**And the prop is now measured RESIZED, which is what it is for.** 84 of 98 keep
+every promise their own rules make at 2× wide and 1.5× tall — a `fixed` part the
+same size, a span rule that does something, nothing mounted outside the prop.
+That number did not exist before `scale_check.py`; the judges are shown three
+sizes and provably cannot see it.
 
 ---
 
@@ -42,9 +50,12 @@ one is reported rather than rendered.
 | `image_bench.py` | which image model to buy, on `wide_art`/`tall_body`'s own bars | **yes** — its table is the ladder in `concept_sheet` |
 | `judge_bench.py` | whether a judge can see a repeat `repeat_score` can | diagnostic — the answer is no, for every model tried |
 | `depth_scale.py` | how far a part really stands off, against the side view | **yes** — its sweep set the renderer's `DEPTH` |
-| `part_bulge.py` | which single part makes a prop the wrong shape, by name | diagnostic — it named the joystick, the legs and the twist |
+| `part_bulge.py` | which single part makes a prop the wrong shape, by name | **yes** — in front of the judges, on the worse axis, when it is below 0.97 |
 | `prop_complete.py` | artefacts the build should have produced and did not | **yes** — runs at the end of `build_body`, 94/98 clean |
+| `geometry_sweep.py` | all 98 props before and after a renderer change | **no** — the gate a human runs; nothing else counts what a change breaks |
+| `scale_check.py` | whether a resized prop keeps its own resize rules | **yes** — in front of the judges, three renders, no model call |
 | `raycast.mjs` | names the object under a render pixel | n/a (diagnostic) |
+| `probe.mjs` | every part's box, footprint, count and rules, at any size | n/a (diagnostic; `scale_check` is built on it) |
 
 ---
 
@@ -69,6 +80,36 @@ recomposition  0.00% on 89 of 90 props, away from part boxes and the outline
 vertical rule  121 parts held their height that were stretching it
                (56 sign, 28 button, 17 decal, 11 slot, 8 screen, 1 light)
 flank check    75 bands had never been checked against the other elevations -> 0
+geometry       front  median 0.9896  min 0.9565  below .95: 0  below .97:  3
+               side   median 0.9817  min 0.9454  below .95: 2  below .97: 14
+               top    median 0.9832  min 0.9423  below .95: 1  below .97: 14
+               all three >= 0.95: 95/98      >= 0.97: 74/98
+resize rules   84 of 98 props keep every promise at 2x wide and 1.5x tall.
+               25 parts carry a span rule the geometry cannot act on -- no
+               measured band and no plain flank -- which is the honest answer
+               for the PART and still a promise the PROP cannot keep
+holes          3 props you can see through, worst 0.99% of the drawing; it was
+               6 and 3.28% before body_faces stopped calling an enclosed dark
+               strip "sheet"
+export         glTF sound on 8 props sampled: 2 materials, 2 textures, every
+               node named, POSITION/NORMAL/TEXCOORD_0/COLOR_0 on every
+               primitive, no degenerate or non-unit normal in 57154, 610-11062
+               triangles. Following the wall instead of approximating it costs
+               +7.2% triangles across those eight
+```
+
+### The geometry, session over session
+
+```
+                     before        after      what closed it
+front   median       0.9852       0.9896      the bezel, the footprint
+        below .95         4            0
+side    median       0.9659       0.9817      the seat, the stand-off, the mesh
+        min           0.762        0.945
+        below .95        19            2
+top     median       0.9628       0.9832      top_profile, the bezel, the mesh
+        below .95        22            1
+all three >= 0.95    ~76/98        95/98
 ```
 
 **No prop can reach a meaningful ACCEPTED from four elevations**, and that is
@@ -81,6 +122,73 @@ Roadmap 2b — a three-quarter reference view — is the only way past it.
 ---
 
 ## What was fixed, with the evidence
+
+### Geometry: the body already contains what stands out of it
+
+One sentence closed most of the remaining outline error, and it is a fact about
+the *reference format* rather than about any threshold:
+
+> A side elevation traces the FRONTMOST point at each height, and the body is
+> lofted from that trace. So the wall a part is mounted on is not a blank
+> carcass with the fittings still to come — where the drawing shows a control
+> deck jutting out, the lofted body already juts out, by exactly that much.
+
+Three faults were the same double-count, and `part_bulge` named each by part:
+
+- **The clearance that stops a part being buried was computed for a sheet.** It
+  is added to the part's BACK face and the part's own depth is already in front
+  of that, so every part on a surface that is not perfectly flat floated one
+  thickness too far out. v44_pinball's flipper button: −0.031 → nothing.
+- **The same clearance shifts the fitted PLANE forward**, which on a sloped wall
+  can seat a part ahead of every sample there is. v51_pinball's right leg sat at
+  0.294 with the frontmost surface under it at 0.283 — eleven thousandths in
+  front of the machine, on a part whose depth class is `flush`, for 0.057 of the
+  prop's side outline.
+- **The stand-off itself**, now measured per part against what the wall already
+  does over the part's own rows (`alreadyDrawn`). v48_arcade_cabinet's control
+  deck was seated at 0.241 with the frontmost point of the whole cabinet at
+  0.2475 and then added 0.030 of its own: −0.063, the largest per-part cost in
+  the corpus, and gone. 24 parts of 204 sampled are affected; 179 untouched.
+
+**And then the part stopped being flat.** `surfacePlane` spent its whole length
+choosing the least-bad flat place to put a slab — a median slope, a trimmed fit,
+a robust clearance, a cap on the twist — and of the 24 parts still costing more
+than 0.01, TWENTY ran to an edge of the face (u within 0.04 of 0 or 1) against a
+base rate of 39%. That is where the body stops being flat. One `meshQuad`
+helper, shared by the face, the back, the rims, a cap's chamfer and a recess's
+bezel, subdivides a quad only as far as it takes to follow the wall to within
+0.0015 — so a part on a flat panel is still two triangles and one wrapping a
+chamfer costs a few dozen, +7.2% over the corpus.
+
+Four things are not skins, and three of them cost a prop before they were found:
+
+| not a skin | what it did | how it is known |
+|---|---|---|
+| a footprint spanning >0.40 of the body's depth | grew a six-step wedge out of the underside of v45_pinball's playfield, −0.167 | measured over 311 parts: median 0.002, p90 0.108, every value above 0.44 a leg or a playfield decal, every value below 0.37 a real panel |
+| `press` and `stick` | put a 0.033-wide, 0.032-deep cube 0.03 clear of the front of v44_pinball, −0.070 | they build an OBJECT, not a panel |
+| a recess | v20_jukebox lost its title strip and both arches into the carcass; v48's monitor became two grey rectangles | its face is 0.0015 proud BY CONSTRUCTION and LIFT_EPS is 0.0015 — the whole margin |
+| — | — | the audit called v20_jukebox the best improvement in the corpus, **+0.059**, while its render lost the front of the machine. The pictures said so and the numbers did not. |
+
+**The seat was one sample in a function whose slope, trim and clearance are all
+medians.** On a surface the fit had already refused as a step that sample means
+nothing: v44_pinball's right leg had its centre sample at −0.132 with the
+surface under it running to 0.253, so the leg hung off the back of the machine
+and took the prop's side outline to **0.657** — by far the worst number this
+audit has produced. It is the median of the same samples now.
+
+**Daylight through a prop is not an outline error.** v17_vending_machine scored
+0.930 and had two magenta slits running its entire height. An IoU compares two
+outlines and a hole in the middle barely moves one, so `geometry_audit` reports
+`daylight` separately: the fraction of the drawing the model renders as
+background while surrounding it on both axes. The cause was `body_faces` cutting
+the flank on *is this pixel prop-coloured*, and a dark trim strip is not —
+v16_jukebox's side elevation has 46 interior columns it calls background.
+Enclosed was the missing word. 6 props → 3, worst 3.28% → 0.99%.
+
+**Reverted, with the numbers** (`sheet_mask(grow=)`): growing the kept region to
+cover the lofted outline closes the remaining fringe and costs the front — at 2
+px the corpus front median falls 0.9896 → 0.9875, props below 0.97 go 3 → 6 and
+props good on all three axes 95 → 92. Twelve props worse for one prop's fringe.
 
 ### Texturing and fill
 

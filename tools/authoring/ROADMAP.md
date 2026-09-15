@@ -215,6 +215,50 @@ geometry genuinely refuses is now quoted back instead of vanishing.
 
 ---
 
+## 6b. The geometry, and what is left of it — **mostly DONE**
+
+The outline against the prop's own three elevations, and the resize promises
+against the prop's own rules. Both are arithmetic and both now have tools.
+
+```
+                     start        now      gate
+front   median       0.9852     0.9896     geometry_sweep.py --save, then diff
+        below .95         4          0
+side    median       0.9659     0.9817
+        min           0.762      0.945
+        below .95        19          2
+top     median       0.9628     0.9832
+        below .95        22          1
+all three >= 0.95    ~76/98     95/98
+resize promises kept     --      84/98     scale_check.py
+props you can see through --       3/98     geometry_audit `daylight`
+```
+
+**What is left, in the order it is worth doing:**
+
+1. **25 span rules that cannot act** (`scale_check`). No measured band and no
+   plain flank, so the part holds. 12 `spany_repeat`, 9 `spanx_center`, 4
+   `spanx_repeat`, and the wide ones are the `wide_art` list almost exactly —
+   `marquee`, `title_strip_panel`, `backglass`, `arch_marquee`, `dome_window`.
+   **Done when:** each is either bought, grown from the carcass instead, or
+   written down as `fixed`, and `scale_check` reports none.
+2. **Three props you can see through**, worst 0.99%: a fringe where the traced
+   polyline and the art it was traced from disagree by a pixel or two. Growing
+   the alpha cut was measured and reverted — twelve props worse for one prop's
+   fringe — so this belongs where the polyline is built, in `front_profile` /
+   `top_profile`. **Done when:** `daylight` is under 0.004 on every prop.
+3. **The pinballs**, which are six of the ten worst props on both the side and
+   the top. Their plans include a plunger rod the model does not build, and the
+   tight crop makes that stub rescale the whole plan. **Done when:** a pinball's
+   top outline is above 0.97 without special-casing the metric.
+
+**What is NOT worth doing**, with the numbers, so it is not re-derived: chasing
+`part_bulge` findings below about 0.03. On a flat-fronted prop the wall carries
+no relief, so every part's stand-off is depth the elevation does not show, and
+the objective is monotone in it. See `depth_scale.py` and `part_bulge.py`.
+
+---
+
 ## 7. Staged reference fitting
 
 Camera and root proportions → structural regions → feature placement → texture
