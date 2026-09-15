@@ -318,6 +318,38 @@ not the prop being wrong. Act on 0.03 and up. The corollary is the one
 `depth_scale.py` opens with — the outline objective is monotone in the stand-off
 and would end with every button a sticker if you let it drive.
 
+## The first explanation of a fault is usually the wrong generalisation of it
+
+`screen_bezel_bottom`, 187×28, failed an aspect band of 0.99..1.79. The
+explanation was immediate and wrong twice over:
+
+- **"`role_of` matches `screen` before `bezel`, and a bezel is trim."** Swept:
+  eleven parts in the corpus carry both a role word and a shape qualifier and
+  **ten of them pass** — `screen_bezel` runs 1.05 to 1.42 on six props, because
+  a bezel *around* a screen is screen-shaped. The fix disables ten working
+  checks to repair one.
+- **"Then skip the check when the name carries a side word."** 405 parts carry
+  one and **393 pass.** The same trade, forty times over.
+
+What the failures actually shared was invisible from the failing part alone:
+each is one of a **mirror pair** the segmenter cut down the middle, and the
+union lands inside its band in five different roles against percentiles
+measured long before. Eight of ten failures, no threshold fitted to anything.
+
+Both wrong answers came from generalising the property the failing case happens
+to *have* (it contains "bezel"; it contains "bottom"). The right one came from
+asking what the failing cases share **that the passing ones do not** — which is
+a different question, and only the sweep can answer it.
+
+So: when a fault suggests a rule, run the rule over the corpus and count the
+parts it would newly reject *before* believing it. A rule that fires on 405
+parts to fix one is not a fix.
+
+**And prefer a rescue to a reclassification.** This one runs only after the
+ordinary check has already failed, so it can turn a FAIL into a PASS and never
+the reverse — no prop that passes today can break on it. A change shaped that
+way needs no sweep to prove it is safe, only to prove it is useful.
+
 ## A benchmark is only as good as the shapes it asks for
 
 `image_bench.py` scores image models on the same arithmetic that decides

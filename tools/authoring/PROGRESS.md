@@ -66,14 +66,24 @@ written and whose writing did not survive.
 98 props with a part list, 1776 feature instances. Re-measured, not remembered.
 
 ```
-acceptance     84 DRAFT    9 REJECTED   5 ACCEPTED   90 declaring the depth limit
-               (it was 53/42/3: every failed check in the corpus is `aspect`,
-               a p2/p98 band rejects 4% of parts by construction, and 31 of the
-               42 REJECTED props had exactly ONE failing part. The verdict was
-               reporting the percentile. The 9 that remain are 4 with more
-               outliers than their part count explains and 6 with one part far
-               enough outside to be a segmentation error -- a 211x4 "grille",
-               a decal one pixel wide, a button seven times taller than wide)
+acceptance     89 DRAFT    3 REJECTED   6 ACCEPTED   90 declaring the depth limit
+               (it was 53/42/3, then 84/9/5, now this. Three separate faults,
+               all in the VERDICT rather than in the props:
+                 - every failed check in the corpus is `aspect`, and a p2/p98
+                   band rejects 4% of parts by construction; 31 of the 42
+                   REJECTED props had exactly ONE failing part, so the verdict
+                   was reporting the percentile. A binomial tail took it to 9.
+                 - three of the remaining gross outliers were one pixel wide at
+                   the LAST COLUMN of their sheet -- the edge of the drawing,
+                   which has no prop outside it to mount on. settle_parts drops
+                   them; swept, it matches 5 records of 3465 and nothing else.
+                 - eight more were one half of a MIRROR PAIR the segmenter cut
+                   down the middle, measured against a band built from wholes.
+                   marquee_left 0.83 and marquee_right 0.85 are the marquee at
+                   3.25, inside 0.91..7.48. check_aspect now tries the union as
+                   a rescue after the part's own aspect fails.
+               The 3 that remain are real questions: a 211x4 "grille", a 155x8
+               "slot", and a bezel side with no other side to pair with)
 overlap        90 props, 1555 pairs of parts sharing drawn pixels -- cut
 growth place   72 props repeat a measured band; 26 stretch -- 8 because their
                bands need more than the renderer's 10 copies, 8 with nowhere
