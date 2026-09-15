@@ -111,6 +111,42 @@ from identify_parts import object_crop  # noqa: E402
 from layer_build import silhouette  # noqa: E402
 from nine_slice import _runs  # noqa: E402
 
+# HOW MANY COPIES OF THE BAND A RESIZE MAY NEED, which sets how many rows the
+# bands have to total. It was 9, one under the renderer's MAX_REPS, on the
+# reasoning that anything under the bound is fine. THAT REASONING IS WRONG AND
+# THE COST OF IT IS THE LARGEST SINGLE FAULT IN THE CORPUS.
+#
+# Measured, by rendering all 98 props at 1x and at 1.5x tall and scoring the
+# rise in `repeat_score.autocorr_peak` -- the same arithmetic that runs in front
+# of the judges, and the same 0.22 bar it blocks at:
+#
+#   copies needed    props banding
+#     0 - 4            2 of 20      median rise -0.001
+#     4 - 6           17 of 23      median rise +0.408
+#     6 - 8           26 of 27      median rise +0.503
+#     over 8          11 of 12      median rise +0.572
+#
+#   corr(copies needed, rise) = +0.731
+#
+# 57 of 98 props band when made taller, against 4 of 98 when made wider. The
+# width axis is solved and the height axis is not, and this constant is why:
+# the bound that matters is about FOUR, and the tool was sizing its bands for
+# nine. MAX_REPS=10 is where the renderer gives up and fills with a flat tile;
+# it is not where a repeat becomes visible, and the two had been conflated.
+#
+# Six or seven copies of a 27-row strip is a stripe pattern whatever the strip
+# is made of. Four copies of a 79-row band reads as more machine -- that is
+# v14_vending_machine, rise 0.000, and its band is the corpus's tallest.
+#
+# THE ROOM IS THERE. Across the corpus the bands total a median of 46 rows
+# while a median of 110 bare rows go spare, so the top-up below simply stopped
+# early: 62 of 98 props can reach four copies out of rows already measured as
+# bare, and the rest get as close as their bare rows allow, which is still
+# nearer than nine. This does not change WHERE a prop grows -- that is the
+# model's answer and five attempts to compute it are recorded above -- only how
+# much of the already-bare, already-verified material is taken.
+COPY_TARGET = 4.0
+
 
 def row_diff(im):
     """Mean absolute difference between each row and the one below it."""
@@ -844,7 +880,7 @@ def main():
               f"-- some named the same rows")
     grow_bands = merged
 
-    need = (max_taller - 1.0) * H / 9.0
+    need = (max_taller - 1.0) * H / COPY_TARGET
     _clean = [g for g in grow_bands if g.get("clean")]
     if _clean and sum(g["px"][1] - g["px"][0] for g in _clean) >= need:
         if len(_clean) < len(grow_bands):
