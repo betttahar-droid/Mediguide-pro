@@ -49,6 +49,41 @@ across its top, the panel rather than the slot drawn inside it. And it is the
 safe direction regardless -- the union of the two is closer to the larger, so
 keeping it leaves less of the artwork unclaimed.
 
+TRIED AND REVERTED: DROPPING THE STRIP THAT TRACES ITS HOST'S OWN RIM.
+
+Two of the three parts the acceptance gate still calls gross outliers look, in
+the drawing, like the edge of the thing they sit inside rather than a fitting on
+it: v50_vending_machine's `push_bar_slot` is 155x8 along the top rim of the
+delivery flap, and v26_arcade_cabinet's `screen_bezel_bottom` is 187x28 along
+the bottom of the screen. `concentric()` above lets both through on purpose,
+because a box hugging an edge is how this file tells a RIDER from a duplicate --
+and a rim strip is the one kind of rider that is neither.
+
+The rule that separates them reads well: contained, thin against the host,
+spanning nearly all of it, and flush to one edge. Swept over the 624 parts in
+the work tree that lie inside a larger part, at thin<=0.30, span>=0.85,
+hug<=0.12, it matches seven:
+
+  v25_vending_machine  price_strip_row3    in display_window    REAL
+  v5_arcade_cabinet    control_deck        in screen_bezel      a containment
+                                                                error, not a rim
+  v50_vending_machine  push_bar_slot       in delivery_flap     the target
+  prop_vending_machine coin_slot_label     in coin_slot_panel   REAL
+  v26_arcade_cabinet   coin_return_tray    in coin_door_panel   REAL
+  v17_arcade_cabinet   marquee             in decal_1           REAL
+  v52_jukebox          title_board_header  in dome_window       REAL
+
+Five real fittings deleted to remove one spurious box, and `screen_bezel_bottom`
+-- half the reason for writing it -- does not even match. A price strip across a
+vending machine's shelf, a label across a coin panel and a marquee across a
+decal are all exactly "thin, spanning, flush to an edge", because that is what a
+strip of lettering on a panel IS.
+
+No threshold in that family survives, for the reason the docstring below gives
+about phantom fittings: the geometry of a rim and the geometry of a caption are
+the same geometry. The two boxes stand, and the gate naming them is the right
+outcome -- it is a question for whoever segments, not a number to tune here.
+
 WHAT THIS DOES NOT DO is decide whether a fitting is there at all. The
 cabinet's right-hand panel carries a vent, a coin slot and two buttons over
 what is, in the elevation, blank wall. That is a real fault and a different

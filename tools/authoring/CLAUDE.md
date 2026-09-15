@@ -428,6 +428,18 @@ just against how bare the band is.
   do. `scale_check.py` lists them; the levers are `wide_art` (buy the wider
   artwork), `tall_body` (grow the carcass instead), or writing the rule down as
   `fixed`. 12 are `spany_repeat`, 9 `spanx_center`, 4 `spanx_repeat`.
+- **Three boxes the acceptance gate calls gross outliers, deliberately left.**
+  v48_vending_machine's `vent_grille` is 211×4 — a shadow line under a panel,
+  with no louvres in it; v50's `push_bar_slot` is 155×8 along the top rim of the
+  delivery flap; v26_arcade_cabinet's `screen_bezel_bottom` is 187×28 across the
+  bottom of the screen glass. Two of the three are a strip tracing the rim of
+  the part they sit inside, and the rule for dropping those was written, swept
+  and reverted: of the seven parts in the corpus it matches, **five are real
+  fittings** — a price strip across a shelf, a label across a coin panel, a
+  marquee across a decal — because a caption on a panel has exactly the geometry
+  of a rim. See `settle_parts.py`. They are a question for whoever segments.
+  They matter more once the openings operator lands: a 211×4 `grille` is a
+  `NEEDS_OPENING` role, and cutting it would slit the machine.
 - **Three props can still be seen through**, worst 0.99% of the drawing: a
   fringe where the traced polyline and the art it was traced from disagree by a
   pixel or two. Growing the alpha cut to cover it was measured and reverted (see
