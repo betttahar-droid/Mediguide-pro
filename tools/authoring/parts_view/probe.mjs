@@ -66,7 +66,7 @@ const out = await page.evaluate(() => {
     if (!isFinite(b.min.x)) return;
     const e = parts[u.part] || (parts[u.part] = {
       n: 0, resize: u.resize, resize_y: u.resize_y, lengthens: u.lengthens,
-      drawn: u.drawn,
+      drawn: u.drawn, reach: u.reach,
       anchor: u.anchor, depth: u.depth,
       motion: u.motion, bays: u.bays || 1, tiers: u.tiers || 1, boxes: [],
     });

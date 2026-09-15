@@ -1921,6 +1921,39 @@ await dressFill();
 // drawn, and the shaft samples a narrow column at its own height. That is the
 // same trick the rims use, and it means a red ball on a chrome shaft comes out
 // red on chrome without anything here knowing what a joystick looks like.
+// THE BOUGHT ARTWORK IS WIDER THAN THE PART, AND THE PART OPENS ONTO IT.
+//
+// wide_art draws a marquee 1.6x as wide as it was drawn, with the ORIGINAL
+// artwork composited back over the middle so only the ends are the model's, and
+// proves the ends are not a copy of the middle before it keeps the file. The
+// renderer then loaded that drawing and built the part at its DRAWN width --
+// so the whole purchase was squashed back into the size it was bought to
+// escape. v48_jukebox's arch marquee and v20_jukebox's title strip are both
+// `kept`, both on disk, and `scale_check` reports both as parts whose span rule
+// does nothing. A lever is not finished when it writes; it is finished when
+// what it writes survives, and this one did not.
+//
+// The window is the honest way to use it, and it is continuous: at the drawn
+// width the part shows only the drawn middle, at `ratio` times it shows the
+// whole file, and in between it opens symmetrically from the centre. The drawn
+// artwork is always at 1:1 -- nothing is ever stretched -- and the bought ends
+// come in as the prop actually needs them.
+// AND THE NINE-SLICE IS TURNED OFF ON THAT AXIS, because the bought file IS the
+// wider artwork -- slicing it again cuts the thing that was bought to avoid
+// being cut. The first version only remapped the UVs, and widening the part was
+// enough on its own to take faceQuads down its `w > ow` branch for the first
+// time: v20_jukebox's title strip came back as a stack of horizontal bars with
+// its diamond grille gone. So the quads are asked for at the part's DRAWN width
+// -- which is the branch that does no slicing -- and the x coordinates are
+// scaled out to the real one afterwards. Any rule on the other axis still runs.
+function faceQuadsFor(q, w, h, ow, oh, win) {
+  if (!win) return faceQuads(q, w, h, ow, oh);
+  const [a, b] = win, k = b - a, sx = w / Math.max(1e-6, ow);
+  return faceQuads(q, ow, h, ow, oh).map(
+    (r) => [r[0] * sx, r[1] * sx, r[2], r[3],
+            a + r[4] * k, a + r[5] * k, r[6], r[7]]);
+}
+
 // A PART LIES IN THE SURFACE, IT DOES NOT LIE ON A PLANE FITTED TO THE SURFACE.
 //
 // Every part mesh was a flat slab, and `surfacePlane` spent its whole length
@@ -2046,14 +2079,15 @@ function stickGeometry(w, h, d) {
 // forward and outward from its edge to a rim standing off by the part's own
 // depth. From any angle a player will see, it reads as an opening with a
 // bezel; and the art is in front of the body, so it is never occluded.
-function recessGeometry(q, w, h, d, lift) {
+function recessGeometry(q, w, h, d, lift, win) {
   const pos = [], uv = [];
   const quad = meshQuad(pos, uv, lift);
   const X = w / 2, Y = h / 2, Z = d / 2;
   const ow = (q.u[1] - q.u[0]) * A, oh = q.v[1] - q.v[0];
   // the face, a hair proud of the body so the two are never coplanar
   const fz = -Z + 0.0015;
-  for (const [x0, x1, y0, y1, u0, u1, v0, v1] of faceQuads(q, w, h, ow, oh)) {
+  for (const [x0, x1, y0, y1, u0, u1, v0, v1] of
+       faceQuadsFor(q, w, h, ow, oh, win)) {
     quad([[x0, y0, fz], [x1, y0, fz], [x1, y1, fz], [x0, y1, fz]],
          [[u0, v0], [u1, v0], [u1, v1], [u0, v1]]);
   }
@@ -2105,13 +2139,14 @@ function recessGeometry(q, w, h, d, lift) {
 // stays round and a rectangular one stays rectangular, and the chamfer samples
 // the art just inside its own edge so it is lined in the cap's own colour
 // rather than in whatever the border row happens to hold.
-function capGeometry(q, w, h, d, lift) {
+function capGeometry(q, w, h, d, lift, win) {
   const pos = [], uv = [];
   const quad = meshQuad(pos, uv, lift);
   const X = w / 2, Y = h / 2, Z = d / 2;
   const ow = (q.u[1] - q.u[0]) * A, oh = q.v[1] - q.v[0];
   const F = 0.82;
-  for (const [x0, x1, y0, y1, u0, u1, v0, v1] of faceQuads(q, w, h, ow, oh)) {
+  for (const [x0, x1, y0, y1, u0, u1, v0, v1] of
+       faceQuadsFor(q, w, h, ow, oh, win)) {
     quad([[x0 * F, y0 * F, Z], [x1 * F, y0 * F, Z],
           [x1 * F, y1 * F, Z], [x0 * F, y1 * F, Z]],
          [[u0, v0], [u1, v0], [u1, v1], [u0, v1]]);
@@ -2132,14 +2167,15 @@ function capGeometry(q, w, h, d, lift) {
   return g;
 }
 
-function partGeometry(q, w, h, d, lift) {
+function partGeometry(q, w, h, d, lift, win) {
   if ((q.motion || 'none') === 'stick') return stickGeometry(w, h, d);
-  if ((q.motion || 'none') === 'press') return capGeometry(q, w, h, d, lift);
+  if ((q.motion || 'none') === 'press') return capGeometry(q, w, h, d, lift, win);
   const pos = [], uv = [];
   const quad = meshQuad(pos, uv, lift);
   const X = w / 2, Y = h / 2, Z = d / 2;
   const ow = (q.u[1] - q.u[0]) * A, oh = q.v[1] - q.v[0];
-  for (const [x0, x1, y0, y1, u0, u1, v0, v1] of faceQuads(q, w, h, ow, oh)) {
+  for (const [x0, x1, y0, y1, u0, u1, v0, v1] of
+       faceQuadsFor(q, w, h, ow, oh, win)) {
     quad([[x0, y0, Z], [x1, y0, Z], [x1, y1, Z], [x0, y1, Z]],
          [[u0, v0], [u1, v0], [u1, v1], [u0, v1]]);
     // the back face, for a part swung open on a hinge -- same art, mirrored,
@@ -2178,12 +2214,19 @@ for (const q of man.parts) {
   // Only above the ratio it was drawn for, and only ever on the WIDER render:
   // at 1x the original stands, because the prop's fidelity to its reference at
   // the size the reference was drawn is not tradeable for this.
+  const ow = (q.u[1] - q.u[0]) * A, oh = q.v[1] - q.v[0];
   const _wa = wideArt?.parts?.find(
-    (p) => p.part === q.name && p.status === 'kept');
-  const useWide = _wa && FW / A > 1.0 + (_wa.ratio - 1) * 0.4;
+    (p) => p.part === q.name && p.status === 'kept' && p.ratio > 1.001);
+  // AT ANY WIDTH ABOVE THE DRAWN ONE, because the window below shows only as
+  // much of the bought file as the prop has asked for. The old bar -- 40% of
+  // the way to the drawn ratio -- existed to stop generated art appearing on a
+  // prop barely wider than its reference, and with a window there is nothing to
+  // stop: at 1x the part shows the drawn middle at 1:1 and the purchase is
+  // invisible, which is the property that bar was protecting.
+  // ?wide=0 renders as if nothing had been bought, for comparison
+  const useWide = !!_wa && FW > A * 1.001 && p.get('wide') !== '0';
   const tex = await load(
     `${dir}/${useWide ? `parts_wide/${q.name}.png` : q.image}`);
-  const ow = (q.u[1] - q.u[0]) * A, oh = q.v[1] - q.v[0];
   const R = q.resize || 'fixed';
   // A PART WITH NOTHING UNIFORM ON ITS SPAN AXIS MUST NOT SPAN. Told to run
   // the full width with no band to absorb the difference, the only thing left
@@ -2193,8 +2236,17 @@ for (const q of man.parts) {
   // not grow, and inventing pixels to make it grow is worse than not growing.
   const sp = spansOf(q);
   const canX = sp.x, canY = sp.y;
-  // grows by the difference, so at scale 1 it is exactly its own size
-  const w = canX ? ow + (FW - A) : ow;
+  // grows by the difference, so at scale 1 it is exactly its own size.
+  // A PART WITH BOUGHT ARTWORK CAN SPAN, up to the width that artwork covers --
+  // that is the entire reason it was bought. Without this the drawing was
+  // loaded and rendered at the part's drawn size, which is the purchase undone.
+  const w = canX ? ow + (FW - A)
+    : useWide ? Math.min(ow * _wa.ratio, ow + (FW - A))
+    : ow;
+  // and the window onto it opens symmetrically from the middle
+  const uwin = useWide
+    ? [(1 - (w / ow) / _wa.ratio) / 2, 1 - (1 - (w / ow) / _wa.ratio) / 2]
+    : null;
   // A MEMBER GAINS ITS OWN SHARE OF THE HEIGHT, NOT ALL OF IT. "oh + (FH - 1)"
   // hands a part the WHOLE prop's added height, which is right for something
   // that runs the full height and absurd for something that does not: a
@@ -2532,8 +2584,8 @@ for (const q of man.parts) {
     const liftOn = p.get('lift') !== '0' && pl.onWall
       && !recessed && m !== 'stick' && m !== 'press';
     const liftFn = liftOn ? (lx, ly) => pl.lift(lx * cY, ly * cX) : null;
-    const geo = recessed ? recessGeometry(q, bw, bh, d, liftFn)
-                        : partGeometry(q, bw, bh, d, liftFn);
+    const geo = recessed ? recessGeometry(q, bw, bh, d, liftFn, uwin)
+                        : partGeometry(q, bw, bh, d, liftFn, uwin);
     const inst = new THREE.Mesh(geo, new THREE.MeshBasicMaterial(
       { map: tex, transparent: true, alphaTest: 0.5,
         side: THREE.DoubleSide }));
@@ -2568,6 +2620,15 @@ for (const q of man.parts) {
     pivot.userData = { part: q.name, motion: m, depth: q.depth ?? 'proud',
                        resize: R, resize_y: q.resize_y || R,
                        lengthens: !!q.lengthens, anchor: q.anchor,
+                       // AND HOW MUCH OF THE PROP'S GROWTH LANDED ON THIS
+                       // PART'S OWN ROWS. `grownH` is the drawn extent mapped
+                       // through gOfT, so 1.0 means the height went somewhere
+                       // else entirely. Without it a checker cannot tell a
+                       // broken rule from a part the growth never reached --
+                       // v52_jukebox's bubbler tube segments hold their length
+                       // and ride up with the assembly whose column does grow,
+                       // and the render is right.
+                       reach: oh > 1e-6 ? grownH / oh : 1,
                        // THE FOOTPRINT ON THE FACE, BEFORE THE 1/cos COVER
                        // ALLOWANCE. `bw` and `bh` are longer than this by
                        // however far the surface leans, which is a property of

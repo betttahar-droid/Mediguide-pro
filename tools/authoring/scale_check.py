@@ -128,7 +128,17 @@ def check(d):
             if held and k > 1 + TOL:
                 out.append(("odd", part, f"{name}: `{rule}` holds on {axis}, "
                                          f"and it grew {k:.2f}x"))
-            if not held and k < 1 + TOL and a["n"] <= b["n"]:
+            # A RULE THAT DID NOTHING IS ONLY A FAULT IF IT COULD HAVE DONE
+            # SOMETHING. The growth is inserted at particular rows, and a part
+            # outside them rides up with the prop rather than growing -- which
+            # is the right answer, not a broken rule. v52_jukebox's bubbler tube
+            # segments hold their drawn length while the column they belong to
+            # doubles, and the render of that prop at 1.5x is correct. `reach`
+            # is the part's own drawn extent mapped through gOfT, so 1.0 means
+            # the prop's added height never arrived at these rows at all.
+            reach = (a.get("reach") if axis == "y" else None)
+            if not held and k < 1 + TOL and a["n"] <= b["n"] \
+                    and not (reach is not None and reach < 1 + TOL):
                 out.append(("odd", part, f"{name}: `{rule}` spans {axis}, and "
                                          f"nothing happened ({k:.2f}x, "
                                          f"{a['n']} placed)"))
