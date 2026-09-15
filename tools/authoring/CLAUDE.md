@@ -125,6 +125,52 @@ Authorship supplies the constraint; arithmetic verifies it. That is the same
 division as everywhere else here — it is easy to forget that it applies to
 decisions as well as to geometry.
 
+## Where a model authors and arithmetic verifies, a cheap model is safe
+
+The division this repo runs on has a practical consequence worth stating
+outright: **an ask whose answer is checked by arithmetic can be given to a much
+weaker model than an ask whose answer is taken on trust.**
+
+`scale_rules` shows a model an annotated elevation and asks where a taller one
+of this machine gains body. `strip_slice` then verifies the named rows are
+really bare before using them, and drops the ones that are not. A wrong answer
+is rejected, not propagated — so the cost of a weak model is a wasted call, not
+a bad prop. The judge is the opposite: nothing checks it, so its errors reach
+the verdict directly.
+
+Measured. `inclusionai/ling-3.0-flash-vl:free`, one call, 60 seconds, $0, on
+v24_arcade_cabinet:
+
+```
+paid glm-5.3-flash   taller_at: null
+free ling-3.0-vl     taller_at: [{control_deck, below, [370,382]}]
+                     "more plain cabinet panel below the screen and more
+                      plain cabinet panel below the control deck"
+```
+
+which is correct, and is the *opposite* of where the measured runs had put the
+growth — a louvre block above the screen, repeated five times. Rendered, that
+prop went `+0.527 → +0.480 (band fixes) → +0.102`: the authored place alone did
+more than both arithmetic fixes together.
+
+**And authorship is worth more than any band-choosing heuristic**, which is the
+five-times-reverted lesson in `strip_slice` stated as a number:
+
+```
+props with an authored place    n=19   median rise +0.104   over bar  5/19
+props with only measured runs   n=62   median rise +0.193   over bar 25/62
+```
+
+25 of the 31 props still banding have no authored place. The fix is to ask, not
+to weight.
+
+**The free models' real limit is rate, not capability.** Ten free vision models
+exist on OpenRouter; four answer this schema. One call succeeds; six sequential
+calls fail five times on throttling, and the identical failing call made alone
+succeeds — so a *bench* over them is impractical while the *pipeline*, which
+makes one call per prop, is not. Do not read a batch failure as a capability
+failure without retrying the call on its own.
+
 ## Anything that can block the loop must also be able to correct it
 
 Two judges grade every round and a fault either of them calls blocking is
