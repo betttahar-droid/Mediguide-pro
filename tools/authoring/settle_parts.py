@@ -136,19 +136,71 @@ def duplicate(a, b, share=0.55, inside=0.60, scale=0.30):
     return True
 
 
-def settle(parts):
-    """The list with each fitting once, largest box of each kept."""
+# A part this thin, flush against that same side of the sheet, is the edge of
+# the drawing rather than something drawn on it.
+#
+# NOT A SIZE FLOOR, AND THE DIFFERENCE IS THE WHOLE POINT. This file's own
+# docstring and CLAUDE.md both record what a size floor did here: 0.15, fitted
+# on the arcade cabinet where it was right, swept across the work tree and it
+# deleted a jukebox's two coin slots, a start-button panel and a coin door's
+# lower panel. A bare thinness test would do it again -- v51_pinball has a real
+# decal 56x2 and v32_arcade_cabinet one 2x64, and both are in the middle of
+# their props where a player can see them.
+#
+# The conjunction is what makes it safe. Thin AND flush to that same edge is a
+# column or row of the image itself, which cannot be a fitting because there is
+# no prop outside it to mount on. Swept over all 3465 part records in the work
+# tree it matches FIVE, being three parts on two props, every one of them named
+# `decal` and every one of them one pixel wide at the last column of its sheet:
+#
+#   v25_arcade_cabinet  decal     1x177 @ x=234  sheet 235 wide
+#   v25_arcade_cabinet  decal_2   1x220 @ x=234  sheet 235 wide
+#   v43_arcade_cabinet  decal_7   1x107 @ x=261  sheet 262 wide
+#
+# and it leaves all four of the thin interior decals alone. Those three are
+# also three of the seven parts `feature_intent`'s acceptance gate calls gross
+# outliers, at 7.1x, 8.8x and 4.3x outside their role's aspect band -- so the
+# gate had already named them from a completely different direction.
+EDGE_THIN = 2
+
+
+def edge_sliver(px, sheet):
+    """Which side of the drawing this box IS, or None if it is a fitting."""
+    if not sheet:
+        return None
+    sw, sh = sheet
+    x0, y0, x1, y1 = px
+    if x1 - x0 <= EDGE_THIN and (x0 <= 1 or x1 >= sw - 1):
+        return "left" if x0 <= 1 else "right"
+    if y1 - y0 <= EDGE_THIN and (y0 <= 1 or y1 >= sh - 1):
+        return "top" if y0 <= 1 else "bottom"
+    return None
+
+
+def settle(parts, sheet=None):
+    """The list with each fitting once, largest box of each kept.
+
+    @param sheet (w, h) of the drawing these boxes are measured in. Without it
+      the edge test cannot run and is skipped rather than guessed -- a part
+      list with no `size` is one this cannot answer for, and inventing a sheet
+      size to have something to compare against is how a check comes to reject
+      real work.
+    """
     order = sorted(range(len(parts)),
                    key=lambda i: -area(parts[i]["px"]))
-    keep, dropped = [], []
+    keep, dropped, edges = [], [], []
     for i in order:
         b = parts[i]["px"]
+        side = edge_sliver(b, sheet)
+        if side:
+            edges.append((parts[i]["name"], side))
+            continue
         hit = next((k for k in keep if duplicate(parts[k]["px"], b)), None)
         if hit is None:
             keep.append(i)
         else:
             dropped.append((parts[i]["name"], parts[hit]["name"]))
-    return [parts[i] for i in sorted(keep)], dropped
+    return [parts[i] for i in sorted(keep)], dropped, edges
 
 
 def main():
@@ -161,11 +213,14 @@ def main():
     d = Path(args.sheet_dir)
     f = d / f"parts_{args.face}.json"
     man = json.loads(f.read_text())
-    kept, dropped = settle(man["parts"])
+    kept, dropped, edges = settle(man["parts"], man.get("size"))
     for name, host in dropped:
         print(f"    {name:22} is {host} listed twice -- dropped")
+    for name, side in edges:
+        print(f"    {name:22} is the {side} edge of the drawing, "
+              f"{EDGE_THIN}px or thinner and flush to it -- dropped")
     print(f"  {len(kept)} of {len(man['parts'])} fittings are distinct")
-    if dropped and not args.dry_run:
+    if (dropped or edges) and not args.dry_run:
         man["parts"] = kept
         f.write_text(json.dumps(man, indent=1))
 
