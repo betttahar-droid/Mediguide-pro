@@ -2472,7 +2472,35 @@ for (const q of man.parts) {
     // laid in the plane at its drawn size the screen fell short of its own
     // opening by exactly the amount the cabinet leans.
     const bw = w / Math.max(0.35, Math.cos(rotY));
-    const bh = h / Math.max(0.35, Math.cos(rotX));
+    // A PART CANNOT LEAVE THE PROP, and two separate rules above can send one
+    // off the end of it.
+    //
+    // v46_vending_machine's drink window carries `spany_repeat` with no
+    // `lengthens`, so it takes the enclosure rule -- `oh + (FH - 1)`, the
+    // WHOLE of the prop's added height, which is right for a case that grows to
+    // hold another shelf and says nothing about where the body actually grew.
+    // Half again as tall, a window covering 53% of the drawn machine came out
+    // 1.03 units high on a prop 1.5 high, and rose 0.054 clear of its own roof.
+    //
+    // v52_jukebox's base trim is the other one: `fixed` on both axes, sitting
+    // on the floor, and the 1/cos cover allowance for the steep bit of profile
+    // it lies in pushed it 0.026 BELOW the floor on a cabinet twice as wide.
+    //
+    // Both are the same statement -- the prop is 1 by FH by BODY_D and nothing
+    // mounted on it is outside that. Clamping the built extent rather than the
+    // position keeps the part's near edge where it was drawn and takes the
+    // overhang off the far one, which is what both faults actually are: an
+    // allowance, extended past the thing it is an allowance for.
+    let bh = h / Math.max(0.35, Math.cos(rotX));
+    let byFit = by;
+    {
+      const top = Math.min(by + bh / 2, FH / 2);
+      const bot = Math.max(by - bh / 2, -FH / 2);
+      if (top - bot < bh - 1e-6) {
+        bh = Math.max(1e-4, top - bot);
+        byFit = (top + bot) / 2;
+      }
+    }
     // THE MESH FOLLOWS THE WALL, so the seat is the plane itself with no
     // clearance added -- the clearance existed to stop a FLAT part being buried
     // and there is nothing flat left to bury. `lift` is in the surface's own
@@ -2521,7 +2549,7 @@ for (const q of man.parts) {
     // stands off the slope rather than off the world
     const nrm = new THREE.Vector3(-pl.b, -pl.c, 1).normalize();
     const k = d / 2 + explode * 0.6;
-    const seat = new THREE.Vector3(bx, by, liftOn ? pl.flat : pl.a)
+    const seat = new THREE.Vector3(bx, byFit, liftOn ? pl.flat : pl.a)
       .addScaledVector(nrm, k);
     // the hinge edge is an edge of the PART, so its offset turns with the part
     const offW = new THREE.Vector3(...off).applyEuler(pivot.rotation);
