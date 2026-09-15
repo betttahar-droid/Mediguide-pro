@@ -32,6 +32,30 @@ plan is a perspective view: the camera is above AND in front, so the silhouette
 is the top plus a foreshortened slice of the front face, and the true plan is
 not in the picture at all.
 
+AND THE "PERSPECTIVE VIEW" READING ABOVE IS AN INFERENCE, NOT A MEASUREMENT --
+MEASURED, IT DOES NOT HOLD. If a tilted plan were a camera above and in front,
+its silhouette would be a TRAPEZOID: the near edge wider than the far one. That
+is directly testable off the drawing, independently of the model, by comparing
+the silhouette's median width over its front sixth against its back sixth. Over
+all 98 plans the taper runs 0.43 to 1.16 and its correlation with the top
+outline is **-0.180** -- near nothing. The counterexamples are flat:
+
+    v14_jukebox    taper 0.43 (the most tapered plan in the corpus)  top 0.9845
+    all 7 pinballs taper 0.88 +- 0.004, inflation 1.43               top 0.9673-0.9747
+
+v14_jukebox is the most extreme taper there is and scores above the corpus
+median; the pinballs' 0.88 is a cabinet genuinely wider at the backbox than at
+the front, which is a real shape and not a projection. So the plans are drawn
+as honest orthographic outlines that DISAGREE ABOUT SCALE with the elevations
+beside them -- one number wrong, not one viewpoint wrong.
+
+(The first version of that test measured nothing at all and reported taper
+1.000 for all 98, because it built its own mask with a luminance cut and
+`top.png` has no white background and no alpha: `frac<245` is 1.000, so the
+mask selected the whole image. Use `object_crop` and `silhouette` from this
+module, which is what `compare` uses. A test whose every answer is exactly 1.00
+is not a finding, it is MISTAKES.md's signal that reaches nothing.)
+
 RECTIFYING IT WAS TRIED AND IS NOT POSSIBLE FROM ONE SCALAR. If the extra were a
 strip hanging off the front edge it could be cropped back to the reconciled
 depth, and `top_profile` already records which edge is the front. Measured over
