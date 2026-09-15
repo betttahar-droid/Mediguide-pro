@@ -108,6 +108,31 @@ OR_LADDER = [
     "google/gemini-2.5-flash-image",        # Nano Banana; a different second opinion
     "openai/gpt-5-image-mini",              # cheapest per token, 0/6 on a wide canvas
 ]
+# MOVING IT TO THE BACK IS NOT ENOUGH, AND NOTICING THAT IS THE ACTUAL SAVING.
+#
+# `wide_art` and `tall_body` both try three times, and the attempt number IS the
+# rung. So with mini merely demoted, the THIRD attempt on every difficult part
+# lands on the one model measured 0 of 6 at this exact kind of ask -- a call
+# that cannot succeed, bought at $0.044, on precisely the parts that have
+# already cost two. Reordering the ladder moves the waste from the common case
+# to the hard case; it does not remove it.
+#
+# So the rule is about the ASK, not about the rung. A model that will not fill
+# the canvas it is handed is disqualified from canvas asks and from nothing
+# else: a concept sheet from a bare text prompt has no canvas to honour, mini
+# draws those perfectly well, and at a quarter of the price it should have
+# them. `_ladder_for` drops these models when, and only when, the reference is
+# far enough from square that the shape is part of the request.
+#
+# Named after the failure rather than the vendor: this is a list of models
+# observed not to honour a supplied canvas, and membership is a measurement.
+# Take one off it when `image_ledger --by aspect` says it belongs off.
+NO_CANVAS = {"openai/gpt-5-image-mini"}
+# Below this the ask is square enough that the shape is not really the request,
+# and every model is eligible. `wide_art` and `tall_body` refuse at 12% off the
+# asked aspect; 1.3 is comfortably past that and still admits a concept sheet,
+# which is drawn near 1:1.
+CANVAS_AR = 1.3
 # When a caller names a Gemini model explicitly, honour it rather than the ladder.
 OR_MODEL = {
     "gemini-3.1-flash-image": "google/gemini-3.1-flash-image",
@@ -239,6 +264,44 @@ def _write(out_path, data_b64):
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_bytes(base64.b64decode(data_b64))
     return out_path
+
+
+def _ladder_for(ladder, refs):
+    """The ladder with the models that will not fill a canvas taken out, when
+    the ask actually has one.
+
+    The whole ask, on every tool but this one, is a reference image with a
+    magenta region to complete -- the canvas IS the request. A model that
+    returns a square against a 7.53:1 canvas cannot answer that at any price,
+    and leaving it on the ladder does not merely put it last: `wide_art` and
+    `tall_body` pass the ATTEMPT NUMBER as the rung, so the last rung is what
+    the hardest parts get, having already paid for two drawings.
+
+    A text-only ask has no canvas to honour and keeps the full ladder, which is
+    the point of the test rather than a concession to it -- a concept sheet is
+    drawn near 1:1 and the cheap model draws it well.
+
+    If every model is disqualified the ladder stands unchanged: refusing to buy
+    anything because the evidence is inconvenient would be worse than buying the
+    drawing that has a chance.
+    """
+    if not refs:
+        return ladder
+    try:
+        here = str(Path(__file__).resolve().parent)
+        if here not in sys.path:
+            sys.path.insert(0, here)
+        import image_ledger as il
+        wh = il.png_size(refs[0])
+        if not wh:
+            return ladder
+        ar = wh[0] / float(wh[1] or 1)
+        if max(ar, 1 / max(ar, 1e-6)) < CANVAS_AR:
+            return ladder
+    except Exception:                                         # noqa: BLE001
+        return ladder
+    kept = [m for m in ladder if m not in NO_CANVAS]
+    return kept or ladder
 
 
 def _ledger(kind, model, usd, path, refs=(), note=""):
@@ -376,6 +439,7 @@ def _via_openrouter(prompt, out_path, refs, model, ref_instruction, tier=0):
     named = OR_MODEL.get(model) if model != MODEL else None
     ladder = ([named] + [m for m in OR_LADDER if m != named] if named
               else list(OR_LADDER))
+    ladder = _ladder_for(ladder, refs)
     # Start where the caller's attempt says, and keep the rest below it so a
     # budget failure still has somewhere to go.
     ladder = ladder[min(max(0, int(tier)), len(ladder) - 1):] or ladder
