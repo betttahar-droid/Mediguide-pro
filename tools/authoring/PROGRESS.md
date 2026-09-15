@@ -17,9 +17,9 @@ measurement tool is now wired to a lever. The widening axis is right; the
 taller axis was wrong on 33 of 65 props and is fixed at the cause.
 
 **The geometry is now measured against the drawings it claims to be**, and the
-worst face on any prop in the corpus is 0.942 where it was 0.762. **95 of 98
-props** agree with all three of their own elevations to better than 0.95, **74**
-to better than 0.97. Most of the first half of that came from three artefacts
+worst face on any prop in the corpus is 0.947 where it was 0.762. **97 of 98
+props** agree with all three of their own elevations to better than 0.95, **77**
+to better than 0.97, and no prop is below 0.95 on its front or its side. Most of the first half of that came from three artefacts
 that were simply missing, not from any threshold — see `prop_complete.py`, which
 exists so the next one is reported rather than rendered — and the second half
 from one sentence: *a side elevation traces the frontmost point at each height,
@@ -82,10 +82,10 @@ recomposition  0.00% on 89 of 90 props, away from part boxes and the outline
 vertical rule  121 parts held their height that were stretching it
                (56 sign, 28 button, 17 decal, 11 slot, 8 screen, 1 light)
 flank check    75 bands had never been checked against the other elevations -> 0
-geometry       front  median 0.9896  min 0.9565  below .95: 0  below .97:  3
-               side   median 0.9817  min 0.9454  below .95: 2  below .97: 14
-               top    median 0.9832  min 0.9423  below .95: 1  below .97: 14
-               all three >= 0.95: 95/98      >= 0.97: 74/98
+geometry       front  median 0.9892  min 0.9550  below .95: 0  below .97:  4
+               side   median 0.9839  min 0.9515  below .95: 0  below .97: 11
+               top    median 0.9831  min 0.9470  below .95: 1  below .97: 13
+               all three >= 0.95: 97/98      >= 0.97: 77/98
 resize rules   94 of 98 props keep every promise at 2x wide and 1.5x tall.
                4 parts still carry a rule that does nothing, and none of them
                is a purchase: a dome window and a vent grille are COUNTABLE by
@@ -94,9 +94,12 @@ resize rules   94 of 98 props keep every promise at 2x wide and 1.5x tall.
 wide artwork   bought for 8 more parts across 6 props ($0.74, ~20 drawings,
                every one checked against wide_art's own bars). 1 refused three
                times and the drawn part stands, which is the designed answer
-holes          3 props you can see through, worst 0.99% of the drawing; it was
+holes          3 props you can see through, worst 1.04% of the drawing; it was
                6 and 3.28% before body_faces stopped calling an enclosed dark
-               strip "sheet"
+               strip "sheet". What is left is a jagged TRACE, not a fitting
+               error -- v11_vending_machine's right edge runs 277, 256, 277 on
+               consecutive rows ten times over -- and smoothing it was measured
+               three ways and kept none (front_profile._smooth)
 export         glTF sound on 8 props sampled: 2 materials, 2 textures, every
                node named, POSITION/NORMAL/TEXCOORD_0/COLOR_0 on every
                primitive, no degenerate or non-unit normal in 57154, 610-11062
@@ -115,8 +118,14 @@ side    median       0.9659       0.9817      the seat, the stand-off, the mesh
         below .95        19            2
 top     median       0.9628       0.9832      top_profile, the bezel, the mesh
         below .95        22            1
-all three >= 0.95    ~76/98        95/98
+all three >= 0.95    ~76/98        97/98
+all three >= 0.97      ~40/98        77/98
 ```
+
+The three that closed the side, in order of what they were worth: the seat
+became a median rather than one sample, a part's mesh follows the wall instead
+of approximating it, and the traced polyline may sit inside the art it clothes
+but never outside it.
 
 **No prop can reach a meaningful ACCEPTED from four elevations**, and that is
 now a stated result rather than a gap. A side silhouette traces the frontmost
