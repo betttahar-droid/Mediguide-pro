@@ -1432,6 +1432,17 @@ function buildLoft() {
     return rgb.map((v, i) => Math.max(0.25, Math.min(2.5,
       v / Math.max(1, tileMed[i]))));
   };
+  // AND THIS IS WHY `tiles_front.json` IS NOT READ HERE, which looks like a
+  // lever with nothing on the end of it and is not. seamless_tile --per-strip
+  // cuts one tile per material band -- 58 props in the corpus have between four
+  // and eight -- and `layer_view` uses them, because a flat canvas can afford a
+  // texture per band. This is the file that EXPORTS, and every extra tile is
+  // another texture and another material in the glTF: the asset is two
+  // materials and two textures today, which is most of what makes it usable.
+  // One tile multiplied by the band's own measured colour is the trade -- right
+  // hue, one grain -- and it is a trade, not an oversight. If the grain ever
+  // has to differ per band, the way to pay for it is an atlas the carcass can
+  // tile within, not eight more materials.
   const tintX = tintFor(sliceBg?.h_rgb), tintY = tintFor(sliceBg?.v_rgb);
   const ring = (y, g) => ({
     x0: lerpWall(fprofile.left_wall, y, -FW / 2) * wS,
