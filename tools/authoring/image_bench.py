@@ -32,6 +32,17 @@ model that wins here by one drawing has not won. What the table can settle is a
 factor-of-two difference; what it cannot settle is a close one, and when it is
 close the tie goes to the model the corpus was measured on, because changing the
 artist invalidates comparisons that are already written down.
+
+AND IT WAS WRONG ONCE, WHICH IS THE MORE USEFUL LIMIT. It scored
+gpt-5-image-mini 8 of 8 and that model went to the front of `OR_LADDER`. On the
+next six live `wide_art` purchases it was refused six times, every one for
+returning a SQUARE when handed a canvas of 7.53:1, 8.71:1, 21.10:1 -- and every
+ask this pipeline makes is a non-square canvas with magenta to fill, because
+that is the mechanism. The bench had not put an extreme aspect to it.
+
+So: a bench is only as good as the shapes it asks for. Run it on the cases that
+are actually hard -- the widest and the tallest canvases in the corpus, not the
+median ones -- or it will rank a model on asks the pipeline never makes.
 """
 import argparse
 import base64

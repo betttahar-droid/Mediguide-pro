@@ -54,17 +54,21 @@ OR_ENDPOINT = "https://openrouter.ai/api/v1/chat/completions"
 # brief names Nano Banana 2 and that is why it led here, first at full price on
 # the argument that the corpus was measured on it, then at lite price when the
 # measurement said the two were indistinguishable. Widening the field past
-# Google entirely is what actually mattered: gpt-5-image-mini was accepted on
-# EVERY case put to it -- 8 of 8, against 70% for either Nano Banana -- and its
-# published rate is a quarter of lite's. It is slow (52s against 5s), and that
-# is the trade: a drawing that is bought once beats a fast one bought twice.
+# Google entirely LOOKED like the answer: `image_bench` scored gpt-5-image-mini
+# 8 of 8 against 70% for either Nano Banana, at a published rate a quarter of
+# lite's, and it went to the front of the ladder on that.
 #
-# The published per-token rate and the bill are not the same number. Lite is
-# listed at $0.034 an image and mini at $0.009, a factor of four; measured on
-# real asks they land within 7% of each other per ACCEPTED drawing, because
-# mini spends far more tokens per drawing and wastes none of them on refusals.
-# Price per call is the number that misleads here. Price per drawing that
-# survives the check is the one that decides.
+# It did not survive contact with the real asks. See the note on OR_LADDER: six
+# live `wide_art` purchases, six refusals, every one for returning a square when
+# handed a canvas of 7.53:1 or 21.10:1. The bench's cases were not the cases the
+# pipeline makes.
+#
+# The published per-token rate and the bill are not the same number, and that
+# part still stands -- lite is listed at $0.034 an image and mini at $0.009, and
+# mini's calls measured $0.043-$0.045 because it spends far more tokens per
+# drawing. Price per call is the number that misleads. Price per drawing that
+# SURVIVES THE CHECK, on the asks this pipeline actually makes, is the one that
+# decides -- and on those, mini's price per accepted drawing is undefined.
 #
 # AND A REFUSAL ESCALATES TO A DIFFERENT MODEL, not just to another drawing
 # from the same one. The models do not fail on the same cases -- lite was
@@ -73,10 +77,36 @@ OR_ENDPOINT = "https://openrouter.ai/api/v1/chat/completions"
 # verdict on one drawing" extends a step: a second opinion from a second model
 # is a better second drawing than a second roll from the first. Callers pass
 # the attempt number as `tier`.
+# AND THE ORDER ABOVE WAS WRONG, WHICH SIX LIVE PURCHASES SAID AND THE BENCH DID
+# NOT. `image_bench` scored gpt-5-image-mini 8 of 8 and put it first. On the next
+# six real `wide_art` asks it was refused SIX times out of six, always for the
+# same thing, and lite was accepted on the very next attempt every time:
+#
+#   canvas 7.53:1  -> came back 1.00   $0.0448   then lite, accepted
+#   canvas 7.26:1  -> came back 1.00   $0.0447   then lite, accepted
+#   canvas 2.49:1  -> came back 1.00   $0.0434   then lite, accepted
+#   canvas 8.71:1  -> came back 1.00             then lite, accepted
+#   canvas 21.10:1 -> came back 1.00   $0.0437   then lite, accepted
+#
+# It does not honour the canvas aspect. It returns a square whatever shape it is
+# handed, and EVERY ask this pipeline makes of an image model is a non-square
+# canvas with magenta to fill -- that is the whole mechanism (`the canvas IS the
+# request`). So the first rung was refused by construction, and it cost $0.177 of
+# a $0.74 run, 24% of the bill, for nothing.
+#
+# The bench was not wrong about price per accepted drawing; it was wrong about
+# which cases it measured. A model that is cheap per token and cannot hold an
+# aspect ratio is infinitely expensive on this pipeline, and no per-token table
+# can show that. Cheapest ACCEPTED, on the asks actually made, is the only rank.
+#
+# mini stays on the ladder rather than being removed, at the back: a refusal is a
+# verdict on one drawing, its rate really is a quarter of lite's, and if the
+# aspect is ever fixed upstream it is the right first rung again. Re-measure with
+# image_bench --cases before promoting it, on wide_art cases and not on squares.
 OR_LADDER = [
-    "openai/gpt-5-image-mini",              # 8/8 accepted, cheapest per drawing
-    "google/gemini-3.1-flash-lite-image",   # Nano Banana 2 Lite, fast
-    "google/gemini-2.5-flash-image",        # Nano Banana
+    "google/gemini-3.1-flash-lite-image",   # Nano Banana 2 Lite; 6/6 accepted
+    "google/gemini-2.5-flash-image",        # Nano Banana; a different second opinion
+    "openai/gpt-5-image-mini",              # cheapest per token, 0/6 on a wide canvas
 ]
 # When a caller names a Gemini model explicitly, honour it rather than the ladder.
 OR_MODEL = {
