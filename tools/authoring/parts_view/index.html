@@ -2538,7 +2538,15 @@ for (const q of man.parts) {
       : q.name;
     inst.name = `${pivot.name}_mesh`;
     pivot.userData = { part: q.name, motion: m, depth: q.depth ?? 'proud',
-                       resize: R, anchor: q.anchor,
+                       resize: R, resize_y: q.resize_y || R,
+                       lengthens: !!q.lengthens, anchor: q.anchor,
+                       // THE FOOTPRINT ON THE FACE, BEFORE THE 1/cos COVER
+                       // ALLOWANCE. `bw` and `bh` are longer than this by
+                       // however far the surface leans, which is a property of
+                       // the SURFACE and changes when the prop is resized -- so
+                       // neither the built mesh nor its world box can answer
+                       // "did this part keep its drawn size". This can.
+                       drawn: [w, h],
                        ...(bays > 1 ? { bay: bi + 1, bays } : {}),
                        ...(tiers > 1 ? { tier: ti + 1, tiers } : {}) };
     scene.add(pivot);
