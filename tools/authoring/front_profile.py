@@ -120,8 +120,10 @@ def main():
     right, rtol, rerr = fit([(a, c) for a, _, c in rows], args.want, H)
     # AND NEVER OUTSIDE THE ART -- see pull_inside(). Half of a symmetric
     # tolerance is body with no texture on it, and the renderer cuts that away.
-    left, lp = pull_inside(left, [(a, b) for a, b, _ in rows], +1, args.want / H)
-    right, rp = pull_inside(right, [(a, c) for a, _, c in rows], -1, args.want / H)
+    left, lp = pull_inside(left, [(a, b) for a, b, _ in rows], +1,
+                            max(args.want, lerr) / H)
+    right, rp = pull_inside(right, [(a, c) for a, _, c in rows], -1,
+                             max(args.want, rerr) / H)
     if max(lp, rp) * W > 0.5:
         print(f"  front trace: pulled the walls in by up to "
               f"{max(lp, rp) * W:.1f}px so the body is nowhere wider than the "

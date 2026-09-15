@@ -237,7 +237,7 @@ def pull_inside(poly, pts, sign, cap=None):
     `fit` was solved to. Anything past that is a spike in the TRACE, which is
     `_trim_ends`'s business and not this function's.
     """
-    need = [0.0] * len(poly)
+    seg = [[] for _ in range(max(1, len(poly) - 1))]
     for y, f in pts:
         for i in range(len(poly) - 1):
             y0, x0 = poly[i]
@@ -245,11 +245,19 @@ def pull_inside(poly, pts, sign, cap=None):
             lo, hi = (y0, y1) if y0 <= y1 else (y1, y0)
             if lo - 1e-9 <= y <= hi + 1e-9:
                 t = 0.0 if abs(y1 - y0) < 1e-12 else (y - y0) / (y1 - y0)
-                d = sign * (f - (x0 + t * (x1 - x0)))
-                if d > 0:
-                    need[i] = max(need[i], d)
-                    need[i + 1] = max(need[i + 1], d)
+                seg[i].append(max(0.0, sign * (f - (x0 + t * (x1 - x0)))))
                 break
+    # THE EIGHTIETH PERCENTILE OF A SEGMENT'S VIOLATIONS, NOT THE WORST. The
+    # worst is one row, and one row is how the uncapped version took a jukebox
+    # to 0.736. A bulge worth removing is a bulge most of the segment sits in.
+    need = [0.0] * len(poly)
+    for i, v in enumerate(seg):
+        if not v:
+            continue
+        v = sorted(v)
+        d = v[min(len(v) - 1, int(0.8 * len(v)))]
+        need[i] = max(need[i], d)
+        need[i + 1] = max(need[i + 1], d)
     if cap is not None:
         need = [min(n, cap) for n in need]
     return ([(y, x + sign * n) for (y, x), n in zip(poly, need)],
@@ -344,8 +352,10 @@ def main():
     # AND NEVER OUTSIDE THE ART -- see pull_inside(). The front wall's material
     # lies BEHIND it and the back wall's in front, so the signs are the other
     # way round from the front elevation's left and right.
-    fw, fp_ = pull_inside(fw, [(p[0], p[1]) for p in prof], -1, args.want / H)
-    bw, bp_ = pull_inside(bw, [(p[0], p[2]) for p in prof], +1, args.want / H)
+    fw, fp_ = pull_inside(fw, [(p[0], p[1]) for p in prof], -1,
+                          max(args.want, ferr) / H)
+    bw, bp_ = pull_inside(bw, [(p[0], p[2]) for p in prof], +1,
+                          max(args.want, berr) / H)
     if max(fp_, bp_) * H > 0.5:
         print(f"  side trace: pulled the walls in by up to "
               f"{max(fp_, bp_) * H:.1f}px so the body is nowhere deeper than "

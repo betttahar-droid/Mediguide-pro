@@ -149,8 +149,10 @@ def main():
     # cut -- so it was swept: with it, 77 of 98 props are good on all three axes
     # and the side median is 0.9837; without, 76 and 0.9828. Small, and the same
     # direction, so it stays.
-    front_wall, pf = pull_inside(front_wall, t_front, -1, args.want / H)
-    back_wall, pb = pull_inside(back_wall, t_back, +1, args.want / H)
+    front_wall, pf = pull_inside(front_wall, t_front, -1,
+                                 max(args.want, nerr, ferr) / H)
+    back_wall, pb = pull_inside(back_wall, t_back, +1,
+                                max(args.want, nerr, ferr) / H)
     if max(pf, pb) * H > 0.5:
         print(f"  plan trace: pulled the walls in by up to {max(pf, pb) * H:.1f}"
               f"px so the footprint is nowhere outside the plan")
