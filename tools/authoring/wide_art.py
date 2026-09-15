@@ -248,6 +248,7 @@ def draw(prop_dir, asset, face="front", redraw=False):
     """Ask for each candidate composed wider; refuse the ones that came back wrong."""
     from PIL import Image
     from concept_sheet import generate_image, load_key
+    import image_ledger
 
     d = Path(prop_dir)
     names, wide = candidates(d, face)
@@ -345,7 +346,14 @@ def draw(prop_dir, asset, face="front", redraw=False):
                 last = check(crop, cand, pad, W2)
                 if last is None:
                     got = cand
-                    break
+            # THE VERDICT GOES IN THE SPEND LEDGER, because the price of this
+            # drawing was recorded when it was bought and is worthless on its
+            # own. A model is cheap or dear per drawing that SURVIVES this
+            # line, and until both halves were written down the ladder was
+            # ordered by a bench that had never asked for a 7:1 canvas.
+            image_ledger.verdict(dst, last is None, last or "")
+            if got is not None:
+                break
             print(f"  {n}: attempt {attempt + 1} refused: {last[:90]}")
         if got is None:
             if last is not None:

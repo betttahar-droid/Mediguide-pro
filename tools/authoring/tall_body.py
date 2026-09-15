@@ -445,6 +445,7 @@ def draw(prop_dir, asset, face="front", redraw=False):
     from PIL import Image
     import numpy as np
     from concept_sheet import generate_image, load_key
+    import image_ledger
     from detail_sheet import median_rgb
 
     d = Path(prop_dir)
@@ -554,7 +555,12 @@ def draw(prop_dir, asset, face="front", redraw=False):
             last = check(src, cand, cut, extra, W, H)
             if last is None:
                 got = cand
-                break
+        # The price of this drawing was recorded when it was bought; this is
+        # the other half. See image_ledger -- a model is cheap or dear per
+        # drawing that survives THIS line, not per call.
+        image_ledger.verdict(dst, last is None, last or "")
+        if got is not None:
+            break
         print(f"  attempt {attempt + 1} refused: {last[:96]}")
     if got is None:
         print("  three drawings refused; the body stretches instead")
@@ -665,6 +671,7 @@ def draw_flanks(d, asset, cut, extra, H, redraw=False):
     from PIL import Image
     import numpy as np
     from concept_sheet import generate_image, load_key
+    import image_ledger
     from detail_sheet import median_rgb
 
     try:
@@ -720,7 +727,9 @@ def draw_flanks(d, asset, cut, extra, H, redraw=False):
                 last = check(src, cand, cut, extra, W, H)
                 if last is None:
                     got = cand
-                    break
+            image_ledger.verdict(dst, last is None, last or "")
+            if got is not None:
+                break
             print(f"    {face}: attempt {attempt + 1} refused: {last[:78]}")
         if got is None:
             print(f"    {face}: refused -- this flank stretches")

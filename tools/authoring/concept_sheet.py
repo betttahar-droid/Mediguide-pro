@@ -241,6 +241,33 @@ def _write(out_path, data_b64):
     return out_path
 
 
+def _ledger(kind, model, usd, path, refs=(), note=""):
+    """Write one line to the spend ledger, and never let it matter if it fails.
+
+    Lazily imported and wrapped, because this is the one module in the project
+    that talks to the image API and NINE tools go through it. A receipt that
+    could raise would turn a bought drawing into a crash, which is strictly
+    worse than no receipt at all.
+
+    The canvas asked for is the reference image's own size -- `the canvas IS
+    the request` is the whole mechanism of `wide_art` and `tall_body`, so the
+    ask's aspect is a fact about the ref, not something a caller has to pass.
+    """
+    try:
+        here = str(Path(__file__).resolve().parent)
+        if here not in sys.path:
+            sys.path.insert(0, here)
+        import image_ledger as il
+        canvas = il.png_size(refs[0]) if refs else None
+        got = il.png_size(path) if kind == "buy" else None
+        il.buy(model, usd, path, canvas=canvas, got=got,
+               note=note if kind != "buy" else "")
+        if kind != "buy":
+            il.verdict(path, False, f"no image returned: {note}")
+    except Exception:                                         # noqa: BLE001
+        pass
+
+
 def _openrouter_key():
     """The key `auto_prop` already loads. Read here rather than imported,
     because importing auto_prop from here would be a cycle."""
@@ -398,12 +425,26 @@ def _via_openrouter(prompt, out_path, refs, model, ref_instruction, tier=0):
             for img in choice.get("message", {}).get("images") or []:
                 url = img.get("image_url", {}).get("url", "")
                 if "," in url:
-                    return _write(out_path, url.split(",", 1)[1])
+                    p = _write(out_path, url.split(",", 1)[1])
+                    # AND THE RECEIPT, WHICH OUTLIVES THE PROCESS. `SPENT`
+                    # above counts this run and dies with it; the question
+                    # that actually gets asked is "which model is cheaper per
+                    # drawing that SURVIVED", and answering it needs the price,
+                    # the canvas and the caller's later verdict in one place.
+                    # See image_ledger's docstring for the $0.177 this was
+                    # written after.
+                    _ledger("buy", or_model, usd, p, refs)
+                    return p
         # A refusal is a verdict on one drawing. Report it as one, with the
         # model's own words, so the caller's re-ask has something to quote.
         msg = payload.get("choices", [{}])[0].get("message", {})
-        raise RuntimeError(f"no image from {or_model}: "
-                           f"{(msg.get('refusal') or msg.get('content') or json.dumps(payload))[:400]}")
+        why = (msg.get("refusal") or msg.get("content")
+               or json.dumps(payload))[:400]
+        # A CALL THAT RETURNED NO PICTURE WAS STILL BILLED, and leaving it out
+        # of the ledger is how a model comes to look cheap: six of these in a
+        # row is exactly what put gpt-5-image-mini at the head of the ladder.
+        _ledger("none", or_model, usd, out_path, refs, note=why)
+        raise RuntimeError(f"no image from {or_model}: {why}")
     raise RuntimeError(last or "no OpenRouter image model answered")
 
 
@@ -467,7 +508,14 @@ def generate_image(prompt, out_path, key, refs=(), model=MODEL,
         for part in cand.get("content", {}).get("parts", []):
             blob = part.get("inlineData") or part.get("inline_data")
             if blob:
-                return _write(out_path, blob["data"])
+                p = _write(out_path, blob["data"])
+                # Google bills the prepayment, not the call, so there is no
+                # per-call price to record here. The row still goes in: it is
+                # how many drawings came from the direct route rather than the
+                # ladder, and a $0.00 route is exactly the thing a "which is
+                # cheaper" question wants to see counted.
+                _ledger("buy", f"google/{model}", 0.0, p, refs)
+                return p
     raise RuntimeError(f"no image in response: {json.dumps(payload)[:500]}")
 
 

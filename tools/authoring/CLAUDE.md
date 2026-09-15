@@ -318,6 +318,40 @@ not the prop being wrong. Act on 0.03 and up. The corollary is the one
 `depth_scale.py` opens with — the outline objective is monotone in the stand-off
 and would end with every button a sticker if you let it drive.
 
+## A benchmark is only as good as the shapes it asks for
+
+`image_bench.py` scores image models on the same arithmetic that decides
+whether a drawing is composited, and reports dollars per *accepted* drawing
+rather than per call — which is the right question, and it still got the answer
+wrong. It scored `gpt-5-image-mini` **8 of 8** and put it at the head of
+`OR_LADDER`. On the next six live `wide_art` purchases that model was refused
+**six times out of six**, every one for returning a 1.00 square against a canvas
+of 7.53:1, 7.26:1, 2.49:1, 8.71:1 or 21.10:1, while `gemini-3.1-flash-lite-image`
+was accepted on the very next attempt every time. It cost **$0.177 of a $0.74
+run — 24% of the bill — for nothing.**
+
+The bench's cases were near-square. Every ask this pipeline actually makes is a
+non-square canvas with magenta to fill — *the canvas IS the request*, which is
+the entire mechanism of `wide_art`, `tall_body` and `paint_out`. A model that
+cannot hold an aspect ratio is infinitely expensive here whatever its per-token
+rate says, and no price table can show that.
+
+So: **benchmark on the extremes of the corpus, not its middle.** The widest and
+tallest canvases anything really asks for are the ones that separate the
+candidates; the median ones are the ones every candidate passes.
+
+And the reason it took a human question to find: **the price and the verdict
+lived in different files and were never joined.** `concept_sheet` printed the
+per-call cost to scrollback and counted it in a dict that died with the process;
+`wide_art` knew whether the drawing survived and never said what it had cost.
+`image_ledger.py` now appends both to one JSONL — the model, the price, the
+canvas aspect asked for, the aspect that arrived, the calling tool, and the
+caller's own accept-or-refuse — so `--by model` answers "which is cheaper" from
+a real run in a second. A billed call that returned no picture gets a row too;
+leaving those out is precisely how a model comes to look cheap.
+
+The next time the ladder's order is argued about, argue it from `--by model`.
+
 ## Count what a renderer change breaks, across all of them
 
 `geometry_sweep.py` re-audits all 98 props and diffs against a saved baseline in
