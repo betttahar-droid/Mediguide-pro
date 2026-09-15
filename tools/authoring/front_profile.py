@@ -29,7 +29,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools" / "authoring"))
 from identify_parts import object_crop  # noqa: E402
 from layer_build import silhouette  # noqa: E402
-from side_profile import fit  # noqa: E402
+from side_profile import fit, pull_inside  # noqa: E402
 
 
 # A FOURFOLD COLLAPSE IN ONE ROW IS NOT THE PROP.
@@ -118,6 +118,14 @@ def main():
     # SHORT, and what is short on a cabinet is its plinth step and its hood
     left, ltol, lerr = fit([(a, b) for a, b, _ in rows], args.want, H)
     right, rtol, rerr = fit([(a, c) for a, _, c in rows], args.want, H)
+    # AND NEVER OUTSIDE THE ART -- see pull_inside(). Half of a symmetric
+    # tolerance is body with no texture on it, and the renderer cuts that away.
+    left, lp = pull_inside(left, [(a, b) for a, b, _ in rows], +1, args.want / H)
+    right, rp = pull_inside(right, [(a, c) for a, _, c in rows], -1, args.want / H)
+    if max(lp, rp) * W > 0.5:
+        print(f"  front trace: pulled the walls in by up to "
+              f"{max(lp, rp) * W:.1f}px so the body is nowhere wider than the "
+              f"artwork that covers it")
 
     aspect = W / H
     out = {

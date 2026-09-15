@@ -201,6 +201,61 @@ def fit(pts, want_px, span_px, cap=40):
     return under or (simplify(pts, tol), tol, max_dev(pts, simplify(pts, tol)) * span_px)
 
 
+def pull_inside(poly, pts, sign, cap=None):
+    """Move the polyline until it is nowhere OUTSIDE the edge it was traced from.
+
+    `fit` simplifies to within `want_px` of the traced edge, and a tolerance is
+    symmetric: half the error is the polyline bulging past the art. The body is
+    lofted from this polyline and clothed in that art, so wherever it bulges
+    there is body with no texture on it -- and the renderer alpha-tests those
+    texels away, which is DAYLIGHT THROUGH THE PROP. 4.2% of all rows in the
+    corpus are in that state, up to 9 pixels on v11_vending_machine, which is
+    the prop with the worst remaining hole.
+
+    Growing the art to cover the body was tried first and reverted, with the
+    numbers, in `layer_build.sheet_mask`: a silhouette two pixels fat everywhere
+    costs twelve props on the front to fix a fringe on three. This is the same
+    disagreement settled from the other side, where it belongs -- the art is the
+    reference and the polyline is the approximation, so the approximation moves.
+
+    One pass is exact. Pushing BOTH endpoints of a segment inward by that
+    segment's worst violation moves the interpolant inward by at least as much
+    everywhere along it, because the interpolant is linear in its endpoints.
+
+    sign is +1 for a wall whose material lies to the RIGHT of the value (a left
+    wall, a back wall) and -1 for one whose material lies to the left.
+
+    AND CAPPED AT THE TOLERANCE THAT CAUSED IT, which is the whole difference
+    between this working and this being a disaster. Uncapped, the push is the
+    WORST violation on a segment, and one traced row is enough to carry it: the
+    first version moved v45_jukebox's walls far enough to take its side outline
+    from 0.983 to 0.736 and its top from 0.985 to 0.839, and 40 of 98 props were
+    worse. One sample moving a whole estimate -- MISTAKES.md's seventeenth entry,
+    walked into while fixing something else.
+    The correction is bounded by construction: the bulge this exists to remove
+    is simplification error, so it can never legitimately exceed the tolerance
+    `fit` was solved to. Anything past that is a spike in the TRACE, which is
+    `_trim_ends`'s business and not this function's.
+    """
+    need = [0.0] * len(poly)
+    for y, f in pts:
+        for i in range(len(poly) - 1):
+            y0, x0 = poly[i]
+            y1, x1 = poly[i + 1]
+            lo, hi = (y0, y1) if y0 <= y1 else (y1, y0)
+            if lo - 1e-9 <= y <= hi + 1e-9:
+                t = 0.0 if abs(y1 - y0) < 1e-12 else (y - y0) / (y1 - y0)
+                d = sign * (f - (x0 + t * (x1 - x0)))
+                if d > 0:
+                    need[i] = max(need[i], d)
+                    need[i + 1] = max(need[i + 1], d)
+                break
+    if cap is not None:
+        need = [min(n, cap) for n in need]
+    return ([(y, x + sign * n) for (y, x), n in zip(poly, need)],
+            max(need) if need else 0.0)
+
+
 def max_dev(pts, poly):
     """The worst gap between the traced edge and the polyline standing in for it.
 
@@ -286,6 +341,15 @@ def main():
     # only as far as its own shape survives, measured in pixels of the drawing
     fw, ftol, ferr = fit([(p[0], p[1]) for p in prof], args.want, H)
     bw, btol, berr = fit([(p[0], p[2]) for p in prof], args.want, H)
+    # AND NEVER OUTSIDE THE ART -- see pull_inside(). The front wall's material
+    # lies BEHIND it and the back wall's in front, so the signs are the other
+    # way round from the front elevation's left and right.
+    fw, fp_ = pull_inside(fw, [(p[0], p[1]) for p in prof], -1, args.want / H)
+    bw, bp_ = pull_inside(bw, [(p[0], p[2]) for p in prof], +1, args.want / H)
+    if max(fp_, bp_) * H > 0.5:
+        print(f"  side trace: pulled the walls in by up to "
+              f"{max(fp_, bp_) * H:.1f}px so the body is nowhere deeper than "
+              f"the artwork that covers it")
 
     out = {
         "depth": round(depth, 5),

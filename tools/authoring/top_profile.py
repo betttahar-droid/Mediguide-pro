@@ -35,7 +35,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools" / "authoring"))
 from identify_parts import object_crop  # noqa: E402
 from layer_build import silhouette  # noqa: E402
-from side_profile import fit  # noqa: E402
+from side_profile import fit, pull_inside  # noqa: E402
 
 
 def relief(rows, W):
@@ -62,6 +62,9 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("sheet_dir")
     ap.add_argument("--asset", default="game prop")
+    ap.add_argument("--reask", action="store_true",
+                    help="ask the model which edge is the front "
+                         "again, rather than reusing the answer")
     ap.add_argument("--want", type=float, default=2.0,
                     help="how close the polyline must sit to the traced edge, "
                          "in pixels of the elevation")
@@ -90,7 +93,20 @@ def main():
     # rectangle, where the answer does not matter but must still be made.
     r = relief(cols, W)
     said = None
+    # ASKED ONCE PER PROP, NOT ONCE PER RUN. The answer is a property of the
+    # drawing and the drawing does not change, so a re-trace -- after a fix to
+    # the fitting, say -- was buying the same sentence again across the whole
+    # corpus. `--reask` forces it if the drawing really has been redrawn.
     try:
+        said = json.loads((d / "top_profile.json").read_text()).get(
+            "front_edge_said") or None
+    except Exception:
+        said = None
+    if said and not args.reask:
+        print(f"  front edge: reusing the recorded answer ({said})")
+    try:
+        if said and not args.reask:
+            raise StopIteration
         from auto_prop import glm, as_json, data_uri, _openrouter_key, CRITIC_MODEL
         tmp = d / "_top_obj.png"
         ob.save(tmp)
@@ -105,6 +121,8 @@ def main():
         v = str(got.get("front", "")).strip().lower()
         if v in ("top", "bottom"):
             said = v
+    except StopIteration:
+        pass
     except Exception as e:
         print(f"  front-edge call failed ({type(e).__name__}), using the relief")
     by_relief = "top" if r > 0 else "bottom" if r < 0 else None
@@ -117,10 +135,25 @@ def main():
 
     # a plan's shaping IS its short features -- a chamfer, a rounded corner --
     # so it is fitted to the drawing rather than to a tolerance
-    near, ntol, nerr = fit([(u, frac(a)) for u, a, _ in cols], args.want, H)
-    far, ftol, ferr = fit([(u, frac(b)) for u, _, b in cols], args.want, H)
-    front_wall = near if front_top else far
-    back_wall = far if front_top else near
+    tn = [(u, frac(a)) for u, a, _ in cols]
+    tf = [(u, frac(b)) for u, _, b in cols]
+    near, ntol, nerr = fit(tn, args.want, H)
+    far, ftol, ferr = fit(tf, args.want, H)
+    front_wall, t_front = (near, tn) if front_top else (far, tf)
+    back_wall, t_back = (far, tf) if front_top else (near, tn)
+    # AND NEVER OUTSIDE THE PLAN -- see side_profile.pull_inside(). `frac` puts
+    # the nose at 1 and the tail at 0, so the front wall's material lies BELOW
+    # its value and the back wall's above, whichever way round the drawing is.
+    # ON FOR THE PLAN TOO, MEASURED BOTH WAYS. It is the smallest of the three
+    # and the only one where the argument is weaker -- a plan is not an alpha
+    # cut -- so it was swept: with it, 77 of 98 props are good on all three axes
+    # and the side median is 0.9837; without, 76 and 0.9828. Small, and the same
+    # direction, so it stays.
+    front_wall, pf = pull_inside(front_wall, t_front, -1, args.want / H)
+    back_wall, pb = pull_inside(back_wall, t_back, +1, args.want / H)
+    if max(pf, pb) * H > 0.5:
+        print(f"  plan trace: pulled the walls in by up to {max(pf, pb) * H:.1f}"
+              f"px so the footprint is nowhere outside the plan")
 
     out = {
         "front_edge": "top" if front_top else "bottom",
