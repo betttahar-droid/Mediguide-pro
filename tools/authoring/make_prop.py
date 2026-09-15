@@ -809,7 +809,12 @@ def main():
             if worst[0] < 0.97:
                 bulge = [(v, n, worst[1])
                          for v, n in part_bulge.bulges(d, worst[1])
-                         if v < -0.012][:5]
+                         # 0.03, NOT 0.01. Below that the number is mostly the
+                         # objective's own blindness -- see part_bulge's
+                         # docstring -- and handing the judges a list of parts
+                         # that are correct is how a loop learns to flatten a
+                         # prop. Above it the fault is usually a box or a motion.
+                         if v < -0.03][:5]
         except Exception as e:
             print(f"  part bulge unavailable ({type(e).__name__}: {e})")
         evidence = ""

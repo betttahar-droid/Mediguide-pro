@@ -29,19 +29,44 @@ IT IS SLOW ON PURPOSE. One render per part, from the axis you name. That is
 minutes for a prop with eighty parts, which is why it takes a --worst list off
 the last audit rather than sweeping everything.
 
-WHAT IT HAS FOUND SO FAR, over the fourteen worst side outlines: 25 parts that
-cost more than 0.01 of agreement, and they are not scattered. 17 of the 25 sit
-at an EDGE of the face -- more than 0.3 of the width from the centreline, or
-within 6% of the top or bottom -- against a base rate of 38.9% for all 1760
-parts in the corpus. P(17 or more of 25 by chance) = 0.003.
+WHAT IT FOUND, AND WHAT CAME OF IT. Over the fourteen worst side outlines it
+listed 25 parts costing more than 0.01, and they were not scattered: TWENTY ran
+to an EDGE of the face, u within 0.04 of 0 or 1, against a base rate of 39% for
+all 1760 parts in the corpus. They were legs, base trims, arch columns, feet and
+control decks -- the parts standing where the body stops being flat. Three
+changes came out of that and they closed almost all of it: the seat became a
+median rather than one sample, the stand-off is measured against what the
+elevation already draws, and a part's mesh follows the wall instead of
+approximating it. v13_jukebox's arch columns went from -0.057 and -0.070 to
+nothing at all.
 
-They are legs, base trims, arch columns, feet, control decks: the parts whose
-position in DEPTH the front elevation cannot show, mounted on a surface that is
-receding under them. A part in the middle of a flat face has nowhere to go
-wrong; a part on a rounded corner is being asked a question the drawing does not
-answer. That is the next thing to fix and it is written down here rather than
-guessed at, because the obvious repair -- shrink the stand-off at the edges --
-is the kind of thing this repo has a list of.
+AND NOW READ THE REST OF THIS BEFORE ACTING ON A SMALL NEGATIVE NUMBER.
+
+What is left is mostly NOT a fault, and the tool cannot tell you that, so this
+has to. On a prop whose front is flat -- a vending machine, a plain cabinet --
+`body gave 0.0000` in the ?fit=1 log, meaning the lofted wall carries no relief
+at those rows, and a control deck standing 0.010 proud of a body 0.50 deep is 2%
+of depth that the side elevation genuinely does not show. It is also a control
+deck. `depth_scale.py` has the sweep: the outline objective is monotone in the
+stand-off and would end with every button a sticker, because it can see a
+double-count and cannot see a flattening.
+
+So a small negative score on a part whose wall is flat under it is the OBJECTIVE
+being blind, not the prop being wrong. What IS worth acting on:
+
+  - more than about 0.03, which is usually a box or a motion that is wrong
+    rather than relief that is right -- v8_arcade_cabinet's `joystick_left` at
+    -0.086 was most of the control panel built as an upright
+  - a ?fit=1 line showing `body gave` well above the part's own depth class, or
+    a `range` above 0.40D, which means the surface under it is not a wall
+  - a part that costs its prop on BOTH the side and the top
+
+A recess is the clearest case of the blindness: its bezel stands proud by
+construction -- there is no hole in the body to sink into -- so from directly
+above it is a bump the plan does not draw. v7_vending_machine's `price_display`
+adds eight pixels of depth to a 338-pixel plan and costs 0.030, because the
+score tight-crops before it compares and one local bump rescales everything
+else. Nothing about that part is wrong.
 """
 import argparse
 import json
