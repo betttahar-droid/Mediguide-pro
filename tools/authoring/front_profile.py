@@ -64,6 +64,68 @@ from side_profile import fit, pull_inside  # noqa: E402
 JUMP = 4.0
 
 
+def _smooth(rows, k=3, what="front"):
+    """Median-filter each bracketing edge down the rows.
+
+    A silhouette traced off PAINTED artwork is jagged wherever the prop's own
+    edge is dark: on v11_vending_machine's right wall the trace runs 277, 256,
+    276 on three consecutive rows, and does it ten times down the machine. That
+    is the segmentation losing a column of dark trim, not a feature -- and no
+    polyline can follow it, so `fit` spends its whole point budget failing to
+    and settles twelve pixels away from a trace whose real shape is a straight
+    line. The body then bulges past its own artwork and the renderer cuts the
+    bulge away: 1.04% of that prop is see-through, the worst left in the corpus.
+
+    `_trim_ends` below is the same idea for one spike, and it cannot see this
+    one, because its test is on the prop's WIDTH and here only one edge moves --
+    277 to 256 and back takes 21 pixels off the right and puts none on the left,
+    so the width barely changes.
+
+    TRIED, MEASURED THREE WAYS, AND NOT CALLED. Every version fixes the prop it
+    was written for -- v11_vending_machine's front goes 0.957 to 0.971, its fit
+    error 12.5px to 3.3px and its front holes close -- and none of them survives
+    the corpus:
+
+        window   all three >= 0.95   >= 0.97   better / worse
+        none            97              77          --
+        5 rows, front and side
+                        95              74        21 / 22
+        5 rows, front only
+                        95              77        12 / 11
+        3 rows, front only
+                        96              77         8 /  8
+
+    On the SIDE elevation it is worse than useless: `relief` decides which edge
+    is the prop's FRONT off the same trace, and a median filter flips its sign
+    on a prop whose two walls are nearly equally busy -- v11_vending_machine
+    went from agreeing with the vision model to disagreeing with it.
+
+    On the front it is a straight trade, one prop for another, which CLAUDE.md
+    names as the signature of a fix that is not structural. The jagged trace is
+    real and this is the wrong place to answer it: what makes v11's right wall
+    jump 277, 256, 277 is the SEGMENTATION losing a column of dark trim, and it
+    should be fixed where the silhouette is decided, not smoothed over here.
+
+    Kept, with its numbers, so the next person does not re-derive it.
+    """
+    if len(rows) < k:
+        return rows
+    h = k // 2
+    out, moved = [], 0
+    for i, r in enumerate(rows):
+        lo, hi = max(0, i - h), min(len(rows), i + h + 1)
+        a = sorted(x[1] for x in rows[lo:hi])
+        b = sorted(x[2] for x in rows[lo:hi])
+        m = (r[0], a[len(a) // 2], b[len(b) // 2])
+        if abs(m[1] - r[1]) > 1e-9 or abs(m[2] - r[2]) > 1e-9:
+            moved += 1
+        out.append(m)
+    if moved:
+        print(f"  {what} trace: {moved} of {len(rows)} rows had an edge that "
+              f"disagreed with its neighbours and was taken from them instead")
+    return out
+
+
 def _trim_ends(rows, what="front"):
     """rows is [(height, left, right)] top-first, or any triple whose last two
     entries bracket the prop. Drop degenerate ends and interior spikes."""

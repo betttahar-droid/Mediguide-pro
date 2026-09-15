@@ -325,6 +325,14 @@ def main():
     # between two full ones is a band the silhouette lost. Either one puts a
     # spike in the polyline and a spike in the body. front_profile.py carries
     # the measurement; this is the depth wall rather than the width wall.
+    # NOT SMOOTHED, MEASURED. `_smooth` is right for the front elevation and
+    # wrong here, and the reason is specific to this file: `relief` decides
+    # WHICH EDGE IS THE FRONT off the same trace, and a median filter changes
+    # its sign on a prop whose two walls are nearly equally busy --
+    # v11_vending_machine flipped from right to left and came back disagreeing
+    # with the vision model it had agreed with. Applied to both elevations the
+    # corpus went from 97 props good on all three axes to 95, and from 3 props
+    # you can see through to 4; applied to the front alone it goes to 97 and 2.
     from front_profile import _trim_ends
     rows = _trim_ends(rows, "side")
 
