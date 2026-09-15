@@ -174,10 +174,27 @@ def candidates(prop_dir, face="front"):
         p = P.get(q["name"])
         if not p:
             continue
-        a = p.get("resize") or "fixed"
+        # THE RULE THE RENDERER WILL ACTUALLY READ, which is the manifest's and
+        # not parts_front's -- layer_build rewrites it, and buying against the
+        # pre-rewrite value buys for a part that will be built by another rule.
+        a = q.get("resize") or p.get("resize") or "fixed"
         if not a.startswith("spanx") and not q.get("spans"):
             continue
-        if b.get("h") or q.get("hf"):
+        # THE SAME TEST THE RENDERER USES, NOT A SIMILAR ONE. `spansOf` in
+        # part_slice.mjs is the authority and it is not symmetric: `_repeat`
+        # needs a measured band OR a plain flank, because it instances a uniform
+        # unit; `_center` needs the FLANK specifically, because its job is to
+        # hold one piece of artwork at its real size and insert at the plain
+        # ends. This asked for "a band or a flank" for both, so a `_center` part
+        # with a band and no flank was skipped here as answerable and then
+        # refused there as unanswerable, and nothing widened it at all.
+        # v47_jukebox's `dome_window` and v48_jukebox's `arch_marquee` are both
+        # that case. part_slice.mjs says it in as many words: two places
+        # deciding whether a part can span, by different tests, is one decision
+        # with a bug in it.
+        can_span = bool(q.get("hf")) if a.endswith("_center") \
+            else bool(b.get("h") or q.get("hf"))
+        if can_span:
             continue                      # a rule can answer: leave it alone
         if (p["px"][2] - p["px"][0]) / float(W) < 0.75:
             continue                      # a fitting, and it may not span anyway
@@ -251,8 +268,24 @@ def draw(prop_dir, asset, face="front", redraw=False):
             continue
         dst = outdir / f"{n}.png"
         if dst.exists() and not redraw:
-            print(f"  {n}: already drawn")
-            log.append({"part": n, "status": "cached"})
+            # A CACHED DRAWING IS A KEPT DRAWING, AND IT HAS TO SAY SO. This
+            # wrote `{"status": "cached"}` and the renderer only uses a part
+            # whose status is `kept` -- and it needs the `ratio` besides, to
+            # know how far the part may open. So a second run over a prop that
+            # already had its artwork QUIETLY TOOK IT BACK OUT of the build:
+            # v20_jukebox's title strip was bought, verified, on disk, and
+            # dropped by the run that came after it and found nothing to do.
+            # Same shape as the plate mask in paint_out, one file along.
+            #
+            # The ratio is measured off the file rather than remembered, so this
+            # is right even for a drawing whose log entry was lost.
+            w0 = Image.open(src).width
+            log.append({"part": n, "status": "kept", "attempts": 0,
+                        "ratio": round(Image.open(dst).width / max(1, w0), 4),
+                        "new_px": Image.open(dst).width - w0,
+                        "evidence": "cached"})
+            print(f"  {n}: already drawn "
+                  f"({log[-1]['ratio']:.2f}x, kept)")
             continue
         crop = Image.open(src).convert("RGBA")
         H = crop.height
