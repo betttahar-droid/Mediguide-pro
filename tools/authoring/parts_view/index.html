@@ -1039,17 +1039,40 @@ function surfacePlane(cx, cy, w, h, thick = 0) {
   // point it spanned, which is what put the screen in mid-air in front of the
   // bezel. A part must not be buried by the surface -- it need not float above
   // it either.
-  const a = zAt(0, 0);
-  const over = [];
+  //
+  // SEATED ON THE MEDIAN OF THE SURFACE, NOT ON ONE SAMPLE OF IT. The slope is
+  // a median of pairwise slopes, the trim is a median of residuals, the
+  // clearance is cut at a median absolute deviation -- and the height the whole
+  // plane hangs from was `zAt(0, 0)`, whatever happens to be directly under the
+  // part's middle. On a surface the fit has already REFUSED as a step that
+  // sample means nothing: v44_pinball's right leg spans the break between the
+  // playfield and the legs, the fit came back "step, not a slope", and the one
+  // sample at its centre sits at -0.132 while the surface under it runs to
+  // 0.253 -- so the leg was hung off the back of the machine. With the mesh
+  // following the wall the old clearance no longer rescued it, and that one
+  // part took the prop's side outline from 0.935 to 0.657, by far the worst
+  // number this audit has ever produced.
+  //
+  // The median of the same samples costs one sort and cannot be moved by a
+  // minority on a cliff, which is the rule this function already applies three
+  // times over. It also makes `over` residuals about the robust plane, so the
+  // MAD below is measured against something the outliers did not help draw.
+  const med2 = (arr) => {
+    const v = arr.slice().sort((x, y2) => x - y2);
+    return v.length ? v[v.length >> 1] : 0;
+  };
+  const flat = [];
   let front = -Infinity;
   for (let i = 0; i <= N; i++) {
     for (let j = 0; j <= N; j++) {
       const dx = (-w / 2 + (w * j) / N) * IN, dy = (-h / 2 + (h * i) / N) * IN;
       const z = zAt(dx, dy);
       front = Math.max(front, z);
-      over.push(z - (a + b * dx + c * dy));
+      flat.push(z - (b * dx + c * dy));
     }
   }
+  const a = med2(flat);
+  const over = flat.map((v) => v - a);
   // CLEARED AGAINST THE SURFACE IT LIES IN, NOT THE ONE IT OVERHANGS. This
   // asked for the 92nd percentile of the residuals, which was meant to stop a
   // single sample on a step from deciding where a whole panel sits. It does
@@ -1067,11 +1090,7 @@ function surfacePlane(cx, cy, w, h, thick = 0) {
   // is left. If the far samples really are the majority then they are not a
   // step, the median moves with them, and nothing is discarded. Same rule as
   // the slope fit above: a minority on a cliff must not move the answer.
-  const med2 = (arr) => {
-    const v = arr.slice().sort((x, y2) => x - y2);
-    return v.length ? v[v.length >> 1] : 0;
-  };
-  const mid2 = med2(over);
+  const mid2 = med2(over);                       // zero by construction now
   const mad = med2(over.map((v) => Math.abs(v - mid2)));
   const lim = mid2 + 3 * Math.max(mad, 0.002);
   const on = over.filter((v) => v <= lim);
@@ -1110,7 +1129,67 @@ function surfacePlane(cx, cy, w, h, thick = 0) {
   // So the clearance is capped at the frontmost sample. There is nothing out
   // there to clear. This can only ever REDUCE a push, so the step it was
   // written for -- a monitor over the lip of a control deck -- still clears it.
-  return { a: Math.min(a + push, front), b, c, front,
+  //
+  // AND `lift` IS WHAT MAKES THE PUSH UNNECESSARY. It is the residual this
+  // whole function is trying to paper over: how far the real surface is from
+  // the flat plane, at any point under the part, in the part's own frame. A
+  // mesh built with it does not need clearing, because it is not flat -- see
+  // meshQuad().
+  //
+  // BOUNDED BY THE SAME MAD THE CLEARANCE USES, and this is not a safety rail,
+  // it is the whole discrimination. A part follows the surface where the
+  // surface is a SHAPE; where a minority of its footprint is a cliff, the
+  // footprint is wrong and following it builds the error in three dimensions
+  // instead of one. v45_pinball's `cabinet_body` is 96% of the width and 62% of
+  // the height, so its lower rows hang over the LEGS, where the wall is a third
+  // of the machine forward of the cabinet -- and the first version of this
+  // grew a stepped wedge out of the underside of the playfield, six segments
+  // tall, and cost that prop 0.167 of its side outline. Nothing else in the
+  // corpus came close; it was the only part whose box is mostly over air.
+  //
+  // The residuals already know the difference. A chamfer varies smoothly across
+  // the part, so the median absolute deviation is large and the bound is loose;
+  // a cliff under a minority of the footprint leaves the median where the
+  // surface is and the MAD small, so it is clamped flat. Same rule, same
+  // numbers, as the slope fit and the clearance above: a minority on a cliff
+  // must not move the answer.
+  const span = 3 * Math.max(mad, 0.002);
+  const lo = mid2 - span, hi = mid2 + span;
+  const lift = (lx, ly) => Math.max(lo, Math.min(hi,
+    zAt(lx, ly) - (a + b * lx + c * ly)));
+  // AND A PART WHOSE FOOTPRINT SPANS THE MACHINE IS NOT ON A WALL AT ALL.
+  //
+  // The MAD bound above stops a part following a cliff that a MINORITY of its
+  // footprint sits on. It cannot stop one whose footprint is half on each side
+  // of the break, because then the two clusters are the same size, the median
+  // sits in one of them and the deviation to the other IS the median deviation:
+  // v44_pinball's right leg spans the gap between the playfield and the floor,
+  // where `frontZAt` interpolates across a plan that has nothing in it, and the
+  // samples run the full 0.38 depth of the machine. Bimodal is exactly the case
+  // a MAD cannot see, and that leg took the prop's side outline to 0.657.
+  //
+  // MEASURED, over 311 parts on the fourteen props this audit cares most about,
+  // as a fraction of the body's own depth:
+  //
+  //     median 0.002    p90 0.108    p98 0.625    max 0.831
+  //
+  //     0.83 0.83 0.82  leg_left, leg_right, leg_right
+  //     0.78 0.75       decal_3 (playfield), leg_left
+  //     0.64 0.63 0.57  decal_28, decal_35, decal   (all on the playfield break)
+  //     0.44            decal_2
+  //     ------------------------------------------------ 0.40
+  //     0.37 0.32 0.31  cabinet_body, decal_2, decal
+  //     0.25 0.24 0.22  base_trim_left, marquee, screen
+  //
+  // Nine tenths of all parts are under 0.11 -- they sit on flat wall and have
+  // no lift to take. The ones above 0.44 are, every one, a leg or a decal
+  // straddling a pinball's playfield break; the ones below 0.37 are, every one,
+  // a panel on a real surface. The gap is wide and it is not a fitted number:
+  // half the body's depth is a step by any reading, and a chamfer that takes a
+  // wall back further than that is not a chamfer.
+  const range = Math.max(...over) - Math.min(...over);
+  return { a: Math.min(a + push, front), flat: a, lift, b, c, front, range,
+           onWall: range <= 0.40 * BODY_D,
            fitted: down.ok || across.ok };
 }
 
@@ -1842,6 +1921,71 @@ await dressFill();
 // drawn, and the shaft samples a narrow column at its own height. That is the
 // same trick the rims use, and it means a red ball on a chrome shaft comes out
 // red on chrome without anything here knowing what a joystick looks like.
+// A PART LIES IN THE SURFACE, IT DOES NOT LIE ON A PLANE FITTED TO THE SURFACE.
+//
+// Every part mesh was a flat slab, and `surfacePlane` spent its whole length
+// choosing the least-bad flat place to put one: a median slope, a trimmed fit,
+// a robust clearance, a cap on the twist. All of that is the machinery of an
+// approximation, and the approximation is what the audit keeps reporting. Of
+// the 24 parts that still cost their props more than 0.01 of outline agreement
+// after the seat was fixed, TWENTY run to an edge of the face -- u within 0.04
+// of 0 or 1 -- against a base rate of 39% for all 1760 parts in the corpus.
+//
+// They are there because that is where the body stops being flat. The plan
+// chamfers the front corners, so a vending machine's price display at u 0.78 to
+// 0.99 spans a wall that turns through most of a right angle; a flat rectangle
+// across it stands proud at one end however it is seated, and from above it is
+// a straight bar in front of a rounded plan. The twist cap exists to stop that
+// rectangle standing edge-on, which is choosing between two wrong answers.
+//
+// So the quad knows about the wall. `lift` gives the residual of the real
+// surface from the fitted plane at any point in the part's own frame, and this
+// subdivides a quad only as far as it takes to follow that to within a
+// thousandth and a half -- so a part on a flat panel is still exactly two
+// triangles, and one wrapping a chamfer costs a few dozen. It is the same
+// helper for the face, the back, the rims, a cap's chamfer and a recess's
+// bezel, which is why a bezel around a chamfered window now turns with it.
+const LIFT_EPS = 0.0015;
+
+function segments(lift, x0, y0, x1, y1) {
+  const z0 = lift(x0, y0), z1 = lift(x1, y1);
+  let dev = 0;
+  for (let i = 1; i < 5; i++) {
+    const t = i / 5;
+    dev = Math.max(dev, Math.abs(
+      lift(x0 + (x1 - x0) * t, y0 + (y1 - y0) * t) - (z0 + (z1 - z0) * t)));
+  }
+  return dev < LIFT_EPS ? 1
+    : Math.min(6, Math.max(2, Math.round(dev / LIFT_EPS)));
+}
+
+// corners in ring order: (x0,y0) (x1,y0) (x1,y1) (x0,y1)
+function meshQuad(pos, uv, lift) {
+  return (P, U) => {
+    const at = (s, t) => {
+      const wg = [(1 - s) * (1 - t), s * (1 - t), s * t, (1 - s) * t];
+      const p = [0, 0, 0], u = [0, 0];
+      for (let k = 0; k < 4; k++) {
+        p[0] += P[k][0] * wg[k]; p[1] += P[k][1] * wg[k];
+        p[2] += P[k][2] * wg[k];
+        u[0] += U[k][0] * wg[k]; u[1] += U[k][1] * wg[k];
+      }
+      if (lift) p[2] += lift(p[0], p[1]);
+      return [p, u];
+    };
+    const nx = lift ? segments(lift, P[0][0], P[0][1], P[1][0], P[1][1]) : 1;
+    const ny = lift ? segments(lift, P[0][0], P[0][1], P[3][0], P[3][1]) : 1;
+    for (let i = 0; i < nx; i++) {
+      for (let j = 0; j < ny; j++) {
+        const A = at(i / nx, j / ny), B = at((i + 1) / nx, j / ny);
+        const C = at((i + 1) / nx, (j + 1) / ny), D = at(i / nx, (j + 1) / ny);
+        pos.push(...A[0], ...B[0], ...C[0], ...A[0], ...C[0], ...D[0]);
+        uv.push(...A[1], ...B[1], ...C[1], ...A[1], ...C[1], ...D[1]);
+      }
+    }
+  };
+}
+
 function stickGeometry(w, h, d) {
   const pos = [], uv = [];
   const tri = (P, U) => { for (let i = 0; i < 3; i++) { pos.push(...P[i]); uv.push(...U[i]); } };
@@ -1902,12 +2046,9 @@ function stickGeometry(w, h, d) {
 // forward and outward from its edge to a rim standing off by the part's own
 // depth. From any angle a player will see, it reads as an opening with a
 // bezel; and the art is in front of the body, so it is never occluded.
-function recessGeometry(q, w, h, d) {
+function recessGeometry(q, w, h, d, lift) {
   const pos = [], uv = [];
-  const quad = (P, U) => {
-    pos.push(...P[0], ...P[1], ...P[2], ...P[0], ...P[2], ...P[3]);
-    uv.push(...U[0], ...U[1], ...U[2], ...U[0], ...U[2], ...U[3]);
-  };
+  const quad = meshQuad(pos, uv, lift);
   const X = w / 2, Y = h / 2, Z = d / 2;
   const ow = (q.u[1] - q.u[0]) * A, oh = q.v[1] - q.v[0];
   // the face, a hair proud of the body so the two are never coplanar
@@ -1964,12 +2105,9 @@ function recessGeometry(q, w, h, d) {
 // stays round and a rectangular one stays rectangular, and the chamfer samples
 // the art just inside its own edge so it is lined in the cap's own colour
 // rather than in whatever the border row happens to hold.
-function capGeometry(q, w, h, d) {
+function capGeometry(q, w, h, d, lift) {
   const pos = [], uv = [];
-  const quad = (P, U) => {
-    pos.push(...P[0], ...P[1], ...P[2], ...P[0], ...P[2], ...P[3]);
-    uv.push(...U[0], ...U[1], ...U[2], ...U[0], ...U[2], ...U[3]);
-  };
+  const quad = meshQuad(pos, uv, lift);
   const X = w / 2, Y = h / 2, Z = d / 2;
   const ow = (q.u[1] - q.u[0]) * A, oh = q.v[1] - q.v[0];
   const F = 0.82;
@@ -1994,14 +2132,11 @@ function capGeometry(q, w, h, d) {
   return g;
 }
 
-function partGeometry(q, w, h, d) {
+function partGeometry(q, w, h, d, lift) {
   if ((q.motion || 'none') === 'stick') return stickGeometry(w, h, d);
-  if ((q.motion || 'none') === 'press') return capGeometry(q, w, h, d);
+  if ((q.motion || 'none') === 'press') return capGeometry(q, w, h, d, lift);
   const pos = [], uv = [];
-  const quad = (P, U) => {
-    pos.push(...P[0], ...P[1], ...P[2], ...P[0], ...P[2], ...P[3]);
-    uv.push(...U[0], ...U[1], ...U[2], ...U[0], ...U[2], ...U[3]);
-  };
+  const quad = meshQuad(pos, uv, lift);
   const X = w / 2, Y = h / 2, Z = d / 2;
   const ow = (q.u[1] - q.u[0]) * A, oh = q.v[1] - q.v[0];
   for (const [x0, x1, y0, y1, u0, u1, v0, v1] of faceQuads(q, w, h, ow, oh)) {
@@ -2237,6 +2372,7 @@ for (const q of man.parts) {
         + `  yaw ${(Math.atan(-pl.b) * 57.3).toFixed(1).padStart(6)}`
         + `  seat ${pl.a.toFixed(3)}  frontmost ${pl.front.toFixed(3)}`
         + `  d ${dClass.toFixed(4)}->${d.toFixed(4)} (body gave ${gave.toFixed(4)})`
+        + `  range ${(pl.range / BODY_D).toFixed(3)}D`
         + `  |  down k=${lastFit.dk.toFixed(2)} r=${lastFit.dr.toFixed(4)} ${lastFit.dok ? 'ok' : 'NO'}`
         + ` w=${(w * 0.8).toFixed(3)} h=${(h * 0.8).toFixed(3)}`
         + (pl.fitted ? '' : '   (step, not a slope: mounted square)'));
@@ -2337,8 +2473,39 @@ for (const q of man.parts) {
     // opening by exactly the amount the cabinet leans.
     const bw = w / Math.max(0.35, Math.cos(rotY));
     const bh = h / Math.max(0.35, Math.cos(rotX));
-    const geo = recessed ? recessGeometry(q, bw, bh, d)
-                        : partGeometry(q, bw, bh, d);
+    // THE MESH FOLLOWS THE WALL, so the seat is the plane itself with no
+    // clearance added -- the clearance existed to stop a FLAT part being buried
+    // and there is nothing flat left to bury. `lift` is in the surface's own
+    // dx,dy; the part's local axes are longer than their footprint by exactly
+    // the 1/cos above, so they are divided back out on the way in.
+    // ?lift=0 restores the flat slab, for sweeping this against the audit.
+    const cX = Math.max(0.35, Math.cos(rotX)), cY = Math.max(0.35, Math.cos(rotY));
+    // A SKIN FOLLOWS THE WALL; A SOLID DOES NOT. `stick` and `press` are the
+    // two builders that model an OBJECT rather than a panel -- a shaft and a
+    // ball, a cap with a chamfer -- and an object does not bend to the lip it
+    // overhangs. v44_pinball's `flipper_button_right` is 0.033 across and 0.032
+    // deep, very nearly a cube, and its box hangs over the front lip of the
+    // apron: following the wall carried its outer corner out to the lip's own
+    // front face and then added the cap's full depth on top of that, so the
+    // button stood 0.03 clear of the frontmost point of the machine. On a prop
+    // whose silhouette the audit tight-crops, that one button cost 0.070 of the
+    // side outline. It is the same fault as the leg, at a twentieth the size --
+    // small enough to pass the on-wall test above, and a cube either way.
+    // AND A RECESS IS NOT A SKIN EITHER, WHICH THE NUMBERS DID NOT SAY AND THE
+    // PICTURES DID. `recessGeometry` puts its face exactly 0.0015 in front of
+    // the body -- deliberately, because there is no hole to sink into and two
+    // coplanar opaque faces z-fight. A lifted mesh follows the wall to within
+    // LIFT_EPS, which is 0.0015: the whole margin, spent. v48_arcade_cabinet's
+    // monitor came back as two grey rectangles and v20_jukebox's title strip
+    // and arches sank into the carcass, both of which read as a texture fault
+    // and are not one. The audit called that prop the best improvement in the
+    // corpus, +0.059, while its render lost the entire front of the machine.
+    // CLAUDE.md's rule with a picture attached: look at the output.
+    const liftOn = p.get('lift') !== '0' && pl.onWall
+      && !recessed && m !== 'stick' && m !== 'press';
+    const liftFn = liftOn ? (lx, ly) => pl.lift(lx * cY, ly * cX) : null;
+    const geo = recessed ? recessGeometry(q, bw, bh, d, liftFn)
+                        : partGeometry(q, bw, bh, d, liftFn);
     const inst = new THREE.Mesh(geo, new THREE.MeshBasicMaterial(
       { map: tex, transparent: true, alphaTest: 0.5,
         side: THREE.DoubleSide }));
@@ -2354,7 +2521,8 @@ for (const q of man.parts) {
     // stands off the slope rather than off the world
     const nrm = new THREE.Vector3(-pl.b, -pl.c, 1).normalize();
     const k = d / 2 + explode * 0.6;
-    const seat = new THREE.Vector3(bx, by, pl.a).addScaledVector(nrm, k);
+    const seat = new THREE.Vector3(bx, by, liftOn ? pl.flat : pl.a)
+      .addScaledVector(nrm, k);
     // the hinge edge is an edge of the PART, so its offset turns with the part
     const offW = new THREE.Vector3(...off).applyEuler(pivot.rotation);
     pivot.position.copy(seat.clone().add(offW));
