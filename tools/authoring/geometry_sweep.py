@@ -60,6 +60,12 @@ def sweep(props, extra="", write_json=True):
         for k, v in report.items():
             if isinstance(v, dict) and v.get("daylight", 0) >= 0.004:
                 out[d.name][f"_holes_{k}"] = v["daylight"]
+        # AND THE PLAN'S TILT, so a weak top score is read with the reason next
+        # to it. See geometry_audit's docstring: a tilted plan is a perspective
+        # view and the props that have one score 0.007 lower on the top.
+        infl = (report.get("_reconciled") or {}).get("plan_inflation")
+        if infl and abs(infl - 1) > 0.10:
+            out[d.name]["_plan_tilt"] = round(infl, 3)
         if i % 10 == 9:
             print(f"  .. {i + 1}/{len(props)}  {time.time() - t0:.0f}s",
                   flush=True)
@@ -83,6 +89,14 @@ def summarise(now):
     # geometry_audit.daylight(): two slits down the whole height of a vending
     # machine moved its side outline by seven points and were the most obvious
     # thing about the prop.
+    tilt = [(k, r["_plan_tilt"]) for k, r in now.items()
+            if "_plan_tilt" in r and r.get("top", 1) < 0.97]
+    if tilt:
+        print(f"\n  {len(tilt)} of the props below 0.97 on the top have a "
+              f"plan drawn at an angle, which is the drawing and not the model:")
+        for k, v in sorted(tilt, key=lambda t: -abs(t[1] - 1)):
+            print(f"    {k:26} plan claims {v:.2f}x the depth the other "
+                  f"elevations agree on")
     hol = [(k, a, v) for k, r in now.items() for a, v in r.items()
            if a.startswith("_holes_")]
     if hol:

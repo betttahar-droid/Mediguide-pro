@@ -18,6 +18,32 @@ profile alone, so its width is constant at every height. Any prop that tapers,
 domes or steps in plan -- a jukebox's crown, a cabinet's plinth -- is too wide
 somewhere, and the front view is where that shows as a number even when the
 textured render looks convincing.
+
+THE TOP IS THE WEAKEST AXIS AND THE DRAWING IS WHY, WHICH IS WORTH KNOWING
+BEFORE CHASING IT. `reconcile` computes `plan_inflation` -- how much more depth
+the plan claims than the side and back elevations, which vouch for each other.
+62 of 98 props have a plan more than 10% off, and they score differently:
+
+    plan more than 10% off   62 props   top outline median 0.9802
+    plan square              36 props                     0.9868
+
+and 10 of the 13 props below 0.97 on the top are in the first group. A tilted
+plan is a perspective view: the camera is above AND in front, so the silhouette
+is the top plus a foreshortened slice of the front face, and the true plan is
+not in the picture at all.
+
+RECTIFYING IT WAS TRIED AND IS NOT POSSIBLE FROM ONE SCALAR. If the extra were a
+strip hanging off the front edge it could be cropped back to the reconciled
+depth, and `top_profile` already records which edge is the front. Measured over
+the ten worst: two props improve (v20_jukebox +0.022, v16_jukebox +0.008) and
+eight get worse, v16_arcade_cabinet by 0.165. The distortion is projective and a
+crop is not its inverse; undoing it needs the tilt angle, which no view supplies.
+
+So the number is reported with the tilt beside it and the tilt is not divided
+out of the IoU -- only out of the proportion score, where it genuinely is one
+scalar. A top outline of 0.96 on a prop whose plan is 1.4x inflated is not the
+same fault as 0.96 on a prop whose plan is square, and the difference belongs to
+the drawing.
 """
 import argparse
 import json
