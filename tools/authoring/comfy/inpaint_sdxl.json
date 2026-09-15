@@ -1,0 +1,82 @@
+{
+  "_comment": "API-format ComfyUI workflow for the prop maker's inpainting asks (paint_out, wide_art, tall_body). Import with tools/setup/local-setup.sh, which fills in CHECKPOINT from what you actually have installed. The four placeholders {PROMPT} {IMAGE} {MASK} {SEED} are substituted by comfy_backend.py at call time.",
+
+  "1": {
+    "class_type": "CheckpointLoaderSimple",
+    "inputs": { "ckpt_name": "CHECKPOINT" },
+    "_meta": { "title": "checkpoint (an inpainting model is best)" }
+  },
+
+  "2": {
+    "class_type": "LoadImage",
+    "inputs": { "image": "{IMAGE}", "upload": "image" },
+    "_meta": { "title": "the elevation, hole flooded with neighbour colour" }
+  },
+
+  "3": {
+    "class_type": "LoadImage",
+    "inputs": { "image": "{MASK}", "upload": "image" },
+    "_meta": { "title": "the mask: white is what the model may draw" }
+  },
+
+  "4": {
+    "class_type": "ImageToMask",
+    "inputs": { "image": ["3", 0], "channel": "red" },
+    "_meta": { "title": "mask image -> MASK channel" }
+  },
+
+  "5": {
+    "class_type": "CLIPTextEncode",
+    "inputs": { "text": "{PROMPT}", "clip": ["1", 1] },
+    "_meta": { "title": "positive: the calling tool's own words" }
+  },
+
+  "6": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "text": "photograph, 3d render, perspective, drop shadow, glow, frame, border, watermark, text caption, smooth gradient, blurry",
+      "clip": ["1", 1]
+    },
+    "_meta": { "title": "negative: keep it flat, orthographic and PS1-era" }
+  },
+
+  "7": {
+    "class_type": "VAEEncodeForInpaint",
+    "inputs": {
+      "pixels": ["2", 0],
+      "vae": ["1", 2],
+      "mask": ["4", 0],
+      "grow_mask_by": 6
+    },
+    "_meta": { "title": "only the masked latent is free to change" }
+  },
+
+  "8": {
+    "class_type": "KSampler",
+    "inputs": {
+      "seed": "{SEED}",
+      "steps": 28,
+      "cfg": 6.0,
+      "sampler_name": "dpmpp_2m",
+      "scheduler": "karras",
+      "denoise": 1.0,
+      "model": ["1", 0],
+      "positive": ["5", 0],
+      "negative": ["6", 0],
+      "latent_image": ["7", 0]
+    },
+    "_meta": { "title": "denoise 1.0 is correct here: the hole is empty" }
+  },
+
+  "9": {
+    "class_type": "VAEDecode",
+    "inputs": { "samples": ["8", 0], "vae": ["1", 2] },
+    "_meta": { "title": "decode" }
+  },
+
+  "10": {
+    "class_type": "SaveImage",
+    "inputs": { "images": ["9", 0], "filename_prefix": "propmaker" },
+    "_meta": { "title": "comfy_backend reads the first image this writes" }
+  }
+}
