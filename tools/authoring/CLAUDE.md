@@ -400,13 +400,66 @@ prop's fringe and cost twelve props on the front.
 Read the diff and the pictures, not the median. A change that moves the median
 up by flattening every part made the props worse and the median cannot say so.
 
-## The renderer's bounds are part of the design
+## The renderer's bounds are part of the design — and they are not the quality bar
 
 `MAX_REPS` is 10. A band that needs more copies than that silently falls back to
 the flat carcass tile, which reads as a slab where artwork should be. Any change
 that makes growth bands shorter must be checked against the copy count it
 implies at the scales the judges actually render (1.5× taller, 2× wider), not
 just against how bare the band is.
+
+**But MAX_REPS is where the renderer gives up, not where a repeat becomes
+visible, and conflating the two was the largest single fault in the corpus.**
+`strip_slice` sized its bands for nine copies on the reasoning that anything
+under the bound is fine. Rendering all 98 props at 1× and 1.5× tall says
+otherwise:
+
+```
+copies needed    props banding      median rise
+  0 - 4            2 of 20            -0.001
+  4 - 6           17 of 23            +0.408
+  6 - 8           26 of 27            +0.503
+  over 8          11 of 12            +0.572
+corr(copies, rise) = +0.731
+```
+
+Six copies of a 27-row strip is a stripe pattern whatever the strip is made of.
+`COPY_TARGET` is now 4, and the room was already there — bands totalled a median
+46 rows while 110 bare rows went spare. Corpus effect: **57 of 98 props banding
+→ 31, median rise +0.380 → +0.119, 50 better and 4 worse, with the 1× render
+bit-identical.**
+
+The axes were never equally healthy and nothing had measured them separately:
+**tall 57 of 98 banding, wide 4 of 98.** When a resize fault is reported, ask
+which axis before reaching for the renderer.
+
+## "Bare" must mean bare in the artwork, not bare in the part list
+
+`strip_slice`'s occupancy tally is built from part boxes, so a row is bare when
+the *segmenter* put nothing there. That is a different claim from the drawing
+being bare, and the gap is a whole fault class.
+
+v48_arcade_cabinet's first part is `speaker_grille` at row 83. Rows 0–83 carry
+no box, so all of them read bare and three of its four growth bands went there.
+What is drawn across rows 29–62 is the word ARCADE. The cabinet grew four
+stacked marquees — the fault the grader section above opens with — and every
+arithmetic gate in the pipeline said those rows were empty.
+
+The test is horizontal contrast against the prop's **own** median row, because a
+sign is letters and letters are horizontal structure. Over 205 bands: median
+0.63, p90 1.05, max 2.44 — and the max is v48's marquee band. A bar at 1.5×
+rejects 5% of bands and takes the worst offender first.
+
+**And the score went the wrong way, which is the lesson.** Before: 4 stacked
+signs, rise +0.725. Copy target alone: 3 stacked signs, rise **+0.151, which
+passes the blocking bar**. With the artwork test: **one** sign, rise **+0.669,
+the worst of the three.** The picture is plainly best where the number is worst,
+because the growth moved into a louvre band that autocorrelates strongly — and
+louvres repeating is correct.
+
+So **`repeat_score` cannot see a duplicated sign**, the fault class it was built
+for, and its docstring's claim to separate every case judged by eye now has a
+counterexample. The artwork test was kept on the pictures, not on the score.
 
 ## Open faults, deliberately left
 

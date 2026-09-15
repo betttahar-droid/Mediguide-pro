@@ -84,6 +84,28 @@ acceptance     89 DRAFT    3 REJECTED   6 ACCEPTED   90 declaring the depth limi
                    a rescue after the part's own aspect fails.
                The 3 that remain are real questions: a 211x4 "grille", a 155x8
                "slot", and a bezel side with no other side to pair with)
+resize repeat  the two axes measured separately for the first time, by
+               rendering all 98 props at 1x, 2x wide and 1.5x tall and scoring
+               the rise in repeat_score.autocorr_peak at its own 0.22 bar:
+
+                 tall   57 of 98 banding  median +0.380   ->  31 of 98, +0.119
+                 wide    4 of 98          median -0.008   ->   4 of 98, -0.008
+
+               The width axis was already solved and the height axis was the
+               tool's largest fault. Cause: strip_slice sized its bands for
+               NINE copies, one under the renderer's MAX_REPS, and the corpus
+               breaks down above FOUR (corr(copies, rise) = +0.731). MAX_REPS
+               is where the renderer gives up, not where a repeat becomes
+               visible. COPY_TARGET = 4; 50 props better, 4 worse, and the 1x
+               render is bit-identical (max base delta 0.0000).
+
+               A SECOND FAULT UNDER IT: "bare" was measured from part boxes, so
+               v48_arcade_cabinet's unsegmented ARCADE sign read as empty rows
+               and grew four stacked marquees. A row is now bare only if the
+               ARTWORK is quiet too -- horizontal contrast against the prop's
+               own median row, a bar at 1.5x that rejects 11 of 205 bands.
+               Its own score got WORSE (+0.151 passing -> +0.669) while the
+               render went from three signs to one; see CLAUDE.md.
 overlap        90 props, 1555 pairs of parts sharing drawn pixels -- cut
 growth place   72 props repeat a measured band; 26 stretch -- 8 because their
                bands need more than the renderer's 10 copies, 8 with nowhere
