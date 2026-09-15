@@ -564,14 +564,15 @@ counterexample. The artwork test was kept on the pictures, not on the score.
 - **`PROGRESS.md`** — what exists, what it measured, and which tools are
   actually wired into the loop rather than merely built.
 - **`MISTAKES.md`** — the specific errors that produced the practices in this
-  file, with their numbers. Eight shapes recur: a number that describes the
+  file, with their numbers. Ten shapes recur: a number that describes the
   method rather than the subject, a unit confusion nothing converts explicitly,
   a signal that reaches nothing, a correction that can return nothing where
   nothing wins, a property checked only where it cannot fail, a test that
   rejects every candidate and gets blamed on the candidates, ONE SAMPLE STANDING
   IN FOR A DISTRIBUTION in a function whose every other estimate is robust, AN
-  ALLOWANCE APPLIED PAST THE THING IT IS AN ALLOWANCE FOR, and A VERDICT
-  COMPARED AGAINST ZERO WHEN ITS CHECK HAS A KNOWN BASE RATE.
+  ALLOWANCE APPLIED PAST THE THING IT IS AN ALLOWANCE FOR, A VERDICT
+  COMPARED AGAINST ZERO WHEN ITS CHECK HAS A KNOWN BASE RATE, and A REPLY THAT
+  RETURNS THE WHOLE DOCUMENT OVERWRITING THE FIELDS IT WAS NOT ASKED ABOUT.
 - **`ROADMAP.md`** — what to do next, in order, with what "done" means for each.
 
 The rule these four exist to enforce: **a measurement is not finished when it

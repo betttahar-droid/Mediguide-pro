@@ -430,6 +430,45 @@ unusual fitting.
 
 ---
 
+## 20. A reply that returns the whole document overwrites what you did not ask about
+
+**Shape:** an ask aimed at *one* field, answered with a *whole* record, written
+back whole — so every other field silently takes the new model's opinion too.
+
+`scale_rules.json` carries `max_wider`, `max_taller`, `per_bay`, `per_tier`,
+`spans`, `wider_means` and `taller_at`. A batch was run to fill in `taller_at`
+on the 42 props where the paid model had returned null, using a free vision
+model. That trade is sound — `strip_slice` verifies the places and rejects bad
+ones, so the model authors and arithmetic checks. The reply was written back as
+the whole file.
+
+Checked after five props, against the paid baseline:
+
+```
+v14_arcade_cabinet   max_wider 2.0 -> 1.5   max_taller 1.5 -> 1.3
+v16_arcade_cabinet   max_wider 2.0 -> 1.5   per_bay 3 -> 8, ZERO overlap
+                     per_bay kept 7 of 15 entries across the five props
+```
+
+The tool was quietly promising **less resize than before**, bought with a call
+meant to *add* one field. And it would have gone unnoticed: every downstream
+check would have passed, because a prop that promises 1.5× and delivers 1.5× is
+correct. The loss is invisible to everything except a comparison with what the
+prop used to promise.
+
+Nothing was wrong with the free model's places. What went wrong is that its
+answer was allowed to speak to questions it had not been asked to improve on.
+
+**The fix is not a better model, it is a narrower write.** Take
+`taller_at`/`taller_means` from the new reply; restore every other field from
+the answer already there. Generally: when a cheap source is introduced to
+supplement an expensive one, merge the field you went for and keep the rest —
+an overwrite makes the cheap source authoritative on everything it happened to
+mention.
+
+This is the twin of *a lever is not finished when it writes, it is finished when
+what it writes survives*. Here what survived was too much.
+
 ## The pattern underneath most of these
 
 Nearly every entry is one of these shapes:
