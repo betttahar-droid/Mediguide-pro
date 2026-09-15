@@ -193,6 +193,16 @@ work, and both were wrong first:
 Swept over 75 rendered rounds it separates every case already judged by eye
 (+0.24, +0.26, +0.44) from every clean one (−0.23 to +0.03).
 
+**The arithmetic graders can fail the same way, and one did.** `feature_intent`'s
+acceptance gate called 42 of 98 props REJECTED, and every failed check in the
+whole corpus was `aspect` — against a 2nd/98th percentile band that rejects 4%
+of parts *by construction*, which its own docstring says. 31 of those 42 props
+had exactly one failing part. A verdict built on a check with a known base rate
+has to compare against that rate, not against zero; a binomial tail took it to
+9, and those 9 name real segmentation errors (a 211×4 "grille", a decal one
+pixel wide). Before trusting a grader, ask what it scores on a prop with nothing
+wrong.
+
 **And it goes in FRONT of the judges, not behind them.** Appended after they
 reply, its findings were a blocking channel with no correcting one — the loop
 could prove a duplicate and had no way to ask for it to be fixed. That is the
@@ -382,8 +392,9 @@ just against how bare the band is.
   a signal that reaches nothing, a correction that can return nothing where
   nothing wins, a property checked only where it cannot fail, a test that
   rejects every candidate and gets blamed on the candidates, ONE SAMPLE STANDING
-  IN FOR A DISTRIBUTION in a function whose every other estimate is robust, and
-  AN ALLOWANCE APPLIED PAST THE THING IT IS AN ALLOWANCE FOR.
+  IN FOR A DISTRIBUTION in a function whose every other estimate is robust, AN
+  ALLOWANCE APPLIED PAST THE THING IT IS AN ALLOWANCE FOR, and A VERDICT
+  COMPARED AGAINST ZERO WHEN ITS CHECK HAS A KNOWN BASE RATE.
 - **`ROADMAP.md`** — what to do next, in order, with what "done" means for each.
 
 The rule these four exist to enforce: **a measurement is not finished when it

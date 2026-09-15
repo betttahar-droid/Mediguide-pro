@@ -401,6 +401,35 @@ same place, or it will be correct in the small and absurd in the large.
 
 ---
 
+## 19. A grader reporting its own percentile
+
+`ROLE_ASPECT` is a 2nd/98th percentile band per role, and its docstring says
+plainly why it is not the 10th/90th: a p10/p90 band "excludes a fifth of the
+data it was derived from BY DEFINITION, so it is a tautology rather than a
+defect detector". It then records that p2/p98 rejects 3-8% of every role.
+
+Nothing asked what that does to a verdict taken over a whole PROP.
+
+Measured: every failed check in the entire work tree is `aspect` -- 60 of 1830
+parts, 3.28%. At that rate a prop with the median twelve parts has a 33% chance
+of carrying one outlier from the band alone, and 43% of props carry one. Of the
+42 props called REJECTED, **31 had exactly one failing part**. The acceptance
+gate was a restatement of the percentile with a prop's name attached.
+
+It is the same fault as entry 2 one level up: a number that describes the
+method rather than the subject. What makes it worse is that the method's own
+documentation states the rate -- the arithmetic needed to see this was written
+down forty lines above the check, in the file that does it.
+
+**Instead:** when a check has a KNOWN base failure rate, a verdict built on it
+must compare against that rate, not against zero. A binomial tail costs ten
+lines and took the corpus from 42 REJECTED to 9 -- and the 9 are specific: four
+props with more outliers than their part count explains, and six with a single
+part so far outside its band that it is a segmentation error rather than an
+unusual fitting.
+
+---
+
 ## The pattern underneath most of these
 
 Nearly every entry is one of these shapes:
@@ -413,5 +442,6 @@ Nearly every entry is one of these shapes:
 6. **A test that rejects everything, blamed on the candidates** (16).
 7. **One sample standing in for a distribution** (17).
 8. **An allowance applied past the thing it is an allowance for** (18).
+9. **A verdict compared against zero when the check has a known base rate** (19).
 
-Checking for those eight directly is cheaper than rediscovering them.
+Checking for those nine directly is cheaper than rediscovering them.

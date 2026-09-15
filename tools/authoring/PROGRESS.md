@@ -66,7 +66,14 @@ written and whose writing did not survive.
 98 props with a part list, 1776 feature instances. Re-measured, not remembered.
 
 ```
-acceptance     53 DRAFT   42 REJECTED   3 ACCEPTED   90 declaring the depth limit
+acceptance     84 DRAFT    9 REJECTED   5 ACCEPTED   90 declaring the depth limit
+               (it was 53/42/3: every failed check in the corpus is `aspect`,
+               a p2/p98 band rejects 4% of parts by construction, and 31 of the
+               42 REJECTED props had exactly ONE failing part. The verdict was
+               reporting the percentile. The 9 that remain are 4 with more
+               outliers than their part count explains and 6 with one part far
+               enough outside to be a segmentation error -- a 211x4 "grille",
+               a decal one pixel wide, a button seven times taller than wide)
 overlap        90 props, 1555 pairs of parts sharing drawn pixels -- cut
 growth place   72 props repeat a measured band; 26 stretch -- 8 because their
                bands need more than the renderer's 10 copies, 8 with nowhere
