@@ -255,6 +255,15 @@ def generate(prompt, out_path, refs=()):
     stem = uuid.uuid4().hex[:10]
     iname = upload(init, f"prop_{stem}.png") if init is not None else None
     mname = upload(mask, f"prop_{stem}_mask.png") if mask is not None else None
+    # TWO UPLOADS MUST NOT COME BACK AS ONE FILE. ComfyUI answers with the name
+    # it actually saved under, and a server that dedupes or rewrites names
+    # could hand back the same one twice -- after which the graph would use the
+    # elevation as its own mask and inpaint the entire canvas, silently. It is
+    # two lines to refuse, and the failure is invisible otherwise.
+    if mname is not None and mname == iname:
+        raise RuntimeError(
+            f"ComfyUI returned the same filename for the image and the mask "
+            f"({iname!r}); the graph would use the elevation as its own mask")
     g = fill(load_workflow(mask is not None), prompt, iname, mname,
              random.randint(1, 2**31 - 1))
     data = run(g)
