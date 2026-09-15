@@ -648,6 +648,55 @@ def main():
     except Exception:
         pass
 
+    # AND BARE IN THE ARTWORK, NOT ONLY IN THE PART LIST. `occupied` is built
+    # from part boxes, so a row is "bare" when the SEGMENTER put nothing there
+    # -- which is a different claim from the drawing being bare, and the gap
+    # between the two is a whole fault.
+    #
+    # v48_arcade_cabinet is the case and it survived the copy-target fix. Its
+    # first part is `speaker_grille` at row 83; rows 0..83 carry no box at all,
+    # so all of them read bare and three of its four growth bands were put
+    # there. What is actually drawn across rows 29..62 is the word ARCADE. The
+    # cabinet grew four stacked marquees, which is the single fault CLAUDE.md
+    # opens its grader section with, and every arithmetic gate in the pipeline
+    # said the rows were empty.
+    #
+    # Measured horizontally, because a sign is letters and letters are
+    # horizontal structure -- "quiet along one axis is not quiet", which this
+    # repo has three separate faults for. Over all 205 bands in the corpus, as
+    # a ratio of each prop's OWN median row (self-normalising, the way
+    # repeat_score controls against the prop's own 1x render):
+    #
+    #     median 0.63    p90 1.05    max 2.44
+    #     over 1.5x: 11 of 205
+    #
+    # and the max is v48's band [29,62] -- the ARCADE lettering is the busiest
+    # growth band in the entire work tree. A bar at 1.5x rejects 5% of bands and
+    # takes the worst offender first, which is what a defect detector should do
+    # and what the p10/p90 band in feature_intent did not.
+    #
+    # Rejecting rows makes the bands SHORTER, which is the fault just fixed
+    # above -- so this is only safe because the top-up further down draws from
+    # the spare bare runs and will simply take different rows. It removes rows
+    # from the candidate pool; it does not remove them from the budget.
+    BUSY_X = 1.5
+    busy_row = [0.0] * (H + 1)
+    try:
+        import numpy as _np
+        _im = object_crop(d / f"{args.face}.png").convert("L")
+        _a = _np.asarray(_im, dtype=float)
+        _b = _np.abs(_np.diff(_a, axis=1)).mean(1)
+        _sc = len(_b) / max(1, H)
+        _med = float(_np.median(_b)) or 1e-6
+        for y in range(H):
+            busy_row[y] = float(_b[min(len(_b) - 1, int(y * _sc))]) / _med
+    except Exception:
+        pass            # no drawing to read: fall back to the part-box test
+
+    def bare(y, bar=0.10):
+        """Bare in the part list AND quiet in the artwork."""
+        return occupied[y] <= bar * W and busy_row[y] <= BUSY_X
+
     def free_frac(st):
         y0, y1 = st["px"]
         if y1 <= y0:
@@ -818,7 +867,7 @@ def main():
                                "band": [round(1 - b / H, 5), round(1 - a / H, 5)]})
             continue
         rows = [y for y in range(max(0, a), min(H, b))
-                if occupied[y] <= 0.10 * W]
+                if bare(y)]
         if len(rows) < 6:
             print(f"  {e['side']} {e['part']}: rows {a}..{b} are not bare "
                   f"-- not growing there")
@@ -902,7 +951,7 @@ def main():
             y0, y1 = st["px"]
             best = run = None
             for y in range(max(0, y0), min(H, y1)):
-                if occupied[y] <= 0.10 * W:
+                if bare(y):
                     run = (y, y + 1) if run is None else (run[0], y + 1)
                     if best is None or run[1] - run[0] > best[1] - best[0]:
                         best = run
