@@ -55,6 +55,7 @@ an instance and reports on that instance alone.
 import argparse
 import json
 import math
+import re
 from pathlib import Path
 
 # ---------------------------------------------------------------------------
@@ -481,7 +482,73 @@ def check_region(f):
     return PASS, ""
 
 
-def check_aspect(f):
+# HALF A FITTING IS NOT A FITTING, AND ITS NAME SAYS SO.
+#
+# `marquee_left` is 62x75 and its role's band is 0.91..7.48, so it fails; so
+# does `marquee_right` at 64x75. Together they are the marquee, 3.25 wide for
+# its height, comfortably inside. The check was asking a half to look like a
+# whole.
+#
+# THE OBVIOUS FIX IS THE WRONG ONE, and it took a sweep to see. The first
+# reading of `screen_bezel_bottom` (187x28 against the screen band 0.99..1.79)
+# was that `role_of` matches "screen" before "bezel" and a bezel should be trim.
+# Swept: ELEVEN parts in the corpus carry both a role word and a shape
+# qualifier, and TEN of them pass -- `screen_bezel` runs 1.05 to 1.42 on six
+# props, because a bezel around a screen is screen-shaped. Re-roling them all
+# would have disabled ten checks that work to fix one.
+#
+# NOR IS THE SIDE WORD ITSELF THE ANSWER. 405 parts carry one and 393 pass.
+# Skipping the check on all of them is the same trade, forty times over.
+#
+# What the failures actually share is that each is ONE OF A MIRROR PAIR, and the
+# pair is one fitting the segmenter cut down the middle. Measured on the union:
+#
+#   v13_jukebox        grille_post_left/right    0.21,0.22 -> 1.27   band 0.26-8.58
+#   v38_arcade_cabinet coin_door_left/right      0.20,0.21 -> 0.43   band 0.24-5.37
+#   v46_pinball        flipper_button_left/right 0.14      -> 2.75   band 0.45-3.90
+#   v49_arcade_cabinet marquee_left/right        0.83,0.85 -> 3.25   band 0.91-7.48
+#   v52_jukebox        bubbler_tube_left/right   0.05      -> 0.13   band 0.05-2.56
+#
+# Eight of the ten failures, in FIVE different roles, against bands measured
+# independently of any of this, and the union lands inside every one. That is
+# not a threshold fitted to the cases; it is the cases turning out to be one
+# object each.
+#
+# IT RUNS ONLY AS A RESCUE, after the part's own aspect has already failed.
+# Measuring the union first would change all 405, and this can then only turn a
+# FAIL into a PASS and never the reverse -- so no prop that passes today can
+# break on it. "Count the props your change breaks" is why it is written this
+# way round rather than as the more natural precomputation.
+#
+# TWO FAILURES ARE LEFT STANDING and are not covered by this: v26's
+# `screen_bezel_bottom` has no `screen_bezel_top` to pair with, and v46_jukebox's
+# `bubble_tube_right_1` has no `bubble_tube_left_1`. A twin that is not in the
+# list is a real question about the segmentation and inventing one would be the
+# correction-that-returns-nothing shape MISTAKES.md already carries.
+SIDE_WORD = re.compile(r"(^|_)(top|bottom|left|right|upper|lower)(_|$)")
+MIRROR = {"left": "right", "right": "left", "top": "bottom",
+          "bottom": "top", "upper": "lower", "lower": "upper"}
+
+
+def mirror_twin(f, by_id):
+    """The feature this one is the other half of, or None.
+
+    Same role as well as the mirrored name: a `side_panel` next to a
+    `side_window` is not a pair, and pairing across roles would let any two
+    parts rescue each other.
+    """
+    if not by_id:
+        return None
+    n = f.id.lower()
+    m = SIDE_WORD.search(n)
+    if not m:
+        return None
+    want = n[:m.start(2)] + MIRROR[m.group(2)] + n[m.end(2):]
+    t = next((g for g in by_id.values() if g.id.lower() == want), None)
+    return t if t is not None and t.role == f.role and t.region else None
+
+
+def check_aspect(f, by_id=None):
     """Real aspect, never the normalised one. This file wrote the bug it warns about.
 
     `region` is normalised inside its host, so f.w and f.h are fractions of a
@@ -514,6 +581,19 @@ def check_aspect(f):
     # numbers say it is not a fault, and the first thing they will do is
     # disbelieve the checker.
     if a < lo or a > hi:
+        # BEFORE FAILING IT, ASK WHETHER IT IS HALF OF SOMETHING. See the note
+        # above mirror_twin: eight of the ten failures in the corpus are one of
+        # a left/right pair the segmenter cut down the middle, and the pair
+        # measured together lands inside its band every time.
+        t = mirror_twin(f, by_id)
+        if t is not None:
+            ux0, uy0 = min(f.region[0], t.region[0]), min(f.region[1], t.region[1])
+            ux1, uy1 = max(f.region[2], t.region[2]), max(f.region[3], t.region[3])
+            ew, eh = f.extent or (1.0, 1.0)
+            ua = ((ux1 - ux0) * ew) / max(1e-9, (uy1 - uy0) * eh)
+            if lo <= ua <= hi:
+                return PASS, (f"aspect {a:.2f} alone, but {f.id} and {t.id} are "
+                              f"one fitting and together measure {ua:.2f}")
         # HOW FAR OUTSIDE, recorded on the feature, because the reducer needs to
         # tell a marginal instance from a different object. The band is a
         # percentile, so its ordinary failure is just outside it -- the median
@@ -569,7 +649,11 @@ def validate(features):
     for f in features:
         res = {}
         for name, fn in CHECKS:
-            res[name] = fn(f)
+            # check_aspect needs the siblings to spot a mirror pair, the same
+            # way check_host needs them to find a host. Passed by name rather
+            # than to every check, so a check that does not want the set is not
+            # handed one it might come to depend on.
+            res[name] = (fn(f, by_id) if name == "aspect" else fn(f))
         res["host"] = check_host(f, by_id)
         rows.append({"id": f.id, "role": f.role, "surface": f.surface,
                      "aspect_over": getattr(f, "_aspect_over", None),
