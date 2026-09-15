@@ -776,6 +776,42 @@ def main():
             acc = intent_gate.acceptance(d, "front")
         except Exception as e:
             print(f"  acceptance unavailable ({type(e).__name__})")
+        # AND WHETHER THE PROP KEEPS ITS OWN RESIZE PROMISES, which is the one
+        # thing the judges are looked at three sizes for and provably cannot
+        # see. `fixed` means the same size on a cabinet twice as wide; a span
+        # rule means something actually happens; nothing mounted on the prop is
+        # outside it. All three are bounding boxes rather than opinions, and
+        # scale_check found two parts leaving their props on its first run.
+        #
+        # It is in FRONT of the judges for the same reason repeat_score is: the
+        # arithmetic knows a rule did nothing and cannot know whether the right
+        # answer is to buy wider artwork, count the part per bay, or write the
+        # rule down as `fixed` because the part genuinely holds. The readers can
+        # choose; they just cannot measure.
+        scale = []
+        try:
+            import scale_check
+            scale = scale_check.check(d)
+        except Exception as e:
+            print(f"  scale check unavailable ({type(e).__name__}: {e})")
+        # AND WHICH PART IS MAKING THE PROP THE WRONG SHAPE, BY NAME. The audit
+        # says the side outline is 0.94; part_bulge renders the body alone and
+        # then the body plus each part in turn and says which one costs that.
+        # Only on the axis that is actually poor, because it is one render per
+        # part -- and only then is the cost worth it, because what it returns is
+        # a part name and a number, which is exactly what a patch needs.
+        bulge = []
+        try:
+            import part_bulge
+            rep_j = json.loads((d / "geometry_audit.json").read_text())
+            worst = min((rep_j[k]["iou"], k) for k in ("side", "top")
+                        if isinstance(rep_j.get(k), dict))
+            if worst[0] < 0.97:
+                bulge = [(v, n, worst[1])
+                         for v, n in part_bulge.bulges(d, worst[1])
+                         if v < -0.012][:5]
+        except Exception as e:
+            print(f"  part bulge unavailable ({type(e).__name__}: {e})")
         evidence = ""
         if rep and rep["faults"]:
             evidence = ("\n\nMEASURED, NOT AN OPINION. The renders above were "
@@ -827,6 +863,37 @@ def main():
                          "that part and nothing else asked about:\n"
                          + "\n".join(f"  - {f['part']}: {f['fault']}"
                                      for f in aud[:8]))
+        if scale:
+            evidence += (
+                "\n\nMEASURED ON THE RESIZED MODELS THEMSELVES, by bounding "
+                "box, not by eye. The prop was built at 2x wide and 1.5x tall "
+                "and every part's box compared with its own at the drawn "
+                "size:\n"
+                + "\n".join(f"  - {p}: {m}" for _, p, m in scale[:8])
+                + "\n\nA rule that does nothing is the prop promising something "
+                "its geometry will not do, and it has three honest answers: "
+                "the part should be counted rather than stretched (give it a "
+                "\"count\"), or it genuinely holds its drawn size and the rule "
+                "should say \"fixed\", or it needs artwork nobody has drawn "
+                "yet. Pick one per part and patch it. A part that leaves the "
+                "prop is always blocking.")
+        if bulge:
+            evidence += (
+                "\n\nAND WHICH PART IS MAKING IT THE WRONG SHAPE. The body was "
+                "rendered alone and then with each part added in turn, and "
+                f"scored against the prop's own {bulge[0][2]} elevation. These "
+                "parts make the prop look LESS like its own drawing:\n"
+                + "\n".join(f"  - {n}: costs {-v:.3f} of the outline"
+                            for v, n, _ in bulge)
+                + "\n\nThat is a question, not a verdict, and the two usual "
+                "answers are both in the schema. Either the part is built as "
+                "something it is not -- a joystick standing upright out of a "
+                "region that is really most of the control panel, a door on a "
+                "hinge that does not open -- and its \"motion\" should be "
+                "\"none\"; or it is not on the prop at all and should be "
+                "dropped. A part that is genuinely there and genuinely stands "
+                "off the face is not a fault, however it scores: look at it in "
+                "the renders above before you patch it.")
         content = [{"type": "text",
                     "text": JUDGE.format(asset=args.asset, parts=listing,
                                          wider=sr["wider_means"],
