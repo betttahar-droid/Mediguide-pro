@@ -191,9 +191,14 @@ ROLE_ASPECT_N = {
 class Feature:
     """One instance. Never a kind, never a group."""
 
+    # `_aspect_over` is how far outside its role's band a failing aspect is,
+    # written by check_aspect and read by reduce_acceptance. It is a slot
+    # because this class has __slots__: setting it without declaring one raises
+    # AttributeError, and the sweep that found that was swallowing the raise in
+    # a `except Exception: continue` and reporting 56 props where there are 98.
     __slots__ = ("id", "role", "host", "surface", "region", "thickness",
                  "aspect", "appearance", "resize", "evidence", "source",
-                 "extent")
+                 "extent", "_aspect_over")
 
     def __init__(self, fid, role="unknown", host=None, surface="front",
                  region=(0.0, 0.0, 1.0, 1.0), thickness=0.0, aspect=None,
@@ -217,6 +222,7 @@ class Feature:
         # units and NOTHING can be recovered from it -- which is not a detail,
         # it is this file's own subject. See check_aspect.
         self.extent = (float(extent[0]), float(extent[1]))
+        self._aspect_over = None          # set by check_aspect when it fails
 
     # -- face-local geometry -------------------------------------------------
 
@@ -508,8 +514,15 @@ def check_aspect(f):
     # numbers say it is not a fault, and the first thing they will do is
     # disbelieve the checker.
     if a < lo or a > hi:
+        # HOW FAR OUTSIDE, recorded on the feature, because the reducer needs to
+        # tell a marginal instance from a different object. The band is a
+        # percentile, so its ordinary failure is just outside it -- the median
+        # over the corpus is 1.22x -- and a part 8.8x outside a range that
+        # already spans 0.04 to 13.3 is not a decal at all.
+        f._aspect_over = a / hi if a > hi else lo / max(1e-9, a)
         return FAIL, (f"aspect {a:.4g} is {'below' if a < lo else 'above'} the "
-                      f"{lo}..{hi} measured for this role")
+                      f"{lo}..{hi} measured for this role "
+                      f"({f._aspect_over:.1f}x outside it)")
     return PASS, f"aspect {a:.2f}"
 
 
@@ -559,6 +572,7 @@ def validate(features):
             res[name] = fn(f)
         res["host"] = check_host(f, by_id)
         rows.append({"id": f.id, "role": f.role, "surface": f.surface,
+                     "aspect_over": getattr(f, "_aspect_over", None),
                      "checks": {k: {"status": s, "note": n}
                                 for k, (s, n) in res.items()}})
     return rows
@@ -566,6 +580,25 @@ def validate(features):
 
 # ---------------------------------------------------------------------------
 # The central acceptance reducer.
+
+# The share of parts a p2/p98 band rejects on this corpus, measured: 60 of 1830.
+# Close to the 4% the percentile implies, which is the point -- it is a property
+# of the band and not of any prop. See reduce_acceptance.
+ASPECT_RATE = 0.0328
+
+
+def _binom_tail(k, n, p):
+    """P(at least k failures in n trials at rate p). No numpy, like the rest."""
+    if k <= 0 or n <= 0:
+        return 1.0
+    if k > n:
+        return 0.0
+    below = 0.0
+    c = (1 - p) ** n
+    for i in range(k):
+        below += c
+        c *= (n - i) / (i + 1) * p / max(1e-12, 1 - p)
+    return max(0.0, min(1.0, 1 - below))
 
 def reduce_acceptance(rows):
     """One verdict for the prop, and it is three-valued on purpose.
@@ -580,6 +613,32 @@ def reduce_acceptance(rows):
     had two states and therefore called a prop built from synthesised parts a
     success, because the parts were there and were of the right type. Counting
     is not fitting.
+
+    AND A SINGLE ASPECT OUTLIER IS THE BAND'S OWN ARITHMETIC, NOT A DEFECT.
+    `ROLE_ASPECT` is a 2nd/98th percentile, so it rejects about 4% of parts BY
+    CONSTRUCTION -- its own docstring says so. Measured over the corpus: 60 of
+    1830 parts fail, 3.28%, and every single failed check in the whole work tree
+    is `aspect`. With a median of 12 parts per prop that gives a 33% chance of
+    at least one outlier from the band alone, and 43% of props have one. Of the
+    42 props this used to call REJECTED, 31 had exactly ONE failing part.
+
+    So the prop-level verdict was reporting the percentile and not the prop --
+    MISTAKES.md's first shape, a number that describes the method rather than
+    the subject, and its sixth, a test that rejects nearly everything and gets
+    blamed on the candidates.
+
+    The fix is not a count. It is to compare each prop's own failure rate
+    against the rate the band produces, which is a binomial tail: a prop is
+    REJECTED when the chance of seeing that many outliers among that many parts,
+    at the corpus rate, is below one in twenty. It clears the cases that are
+    plainly average -- v45_vending_machine's 4 of 88 is p=0.32, v46_jukebox's 3
+    of 66 is p=0.38 -- and keeps the ones that are not: v13_jukebox's 3 of 7 is
+    p=0.003 and v50_vending_machine's 4 of 27 is p=0.012. Every failure is still
+    listed on the verdict, so nothing is hidden; what changes is whether one
+    part in the outer four per cent condemns the prop it is on.
+
+    ASPECT_RATE is measured, like the ranges themselves. Re-measure it with the
+    ranges (--measure-aspects) rather than adjusting it to taste.
     """
     fails, unver = [], []
     for r in rows:
@@ -596,9 +655,25 @@ def reduce_acceptance(rows):
     # so "accepted" never quietly means "accepted apart from the depths".
     limits = sorted({c for _, c, _ in unver if c in FORMAT_LIMITS})
     open_unver = [u for u in unver if u[1] not in FORMAT_LIMITS]
-    verdict = REJECTED if fails else (DRAFT if open_unver else ACCEPTED)
+    # see the docstring: an aspect outlier at the corpus rate is the band, not
+    # the prop, so it blocks only when there are more of them than that rate
+    # explains. Every other check still blocks on its first failure.
+    other = [f for f in fails if f[1] != "aspect"]
+    n_asp = len(fails) - len(other)
+    p_asp = _binom_tail(n_asp, len(rows), ASPECT_RATE) if n_asp else 1.0
+    # AND ONE PART FAR ENOUGH OUTSIDE IS NOT A MARGINAL INSTANCE. The band's
+    # ordinary failure sits just past it -- 1.22x is the corpus median -- and
+    # 7 of the 60 are past 3x, which is a segmentation error rather than an
+    # unusual fitting. Those still block alone, so the statistical rule above
+    # cannot excuse a grille boxed at 52:1 by pointing at how many parts the
+    # prop has.
+    gross = [r["id"] for r in rows if (r.get("aspect_over") or 0) > 3.0]
+    blocking = bool(other) or bool(gross) or p_asp < 0.05
+    verdict = REJECTED if blocking else (DRAFT if open_unver else ACCEPTED)
     return {"verdict": verdict, "instances": len(rows),
             "failed": fails, "unverified": unver,
+            "aspect_outliers": n_asp, "aspect_p": round(p_asp, 4),
+            "aspect_gross": gross,
             "format_limits": {c: FORMAT_LIMITS[c] for c in limits},
             "open_unverified": len(open_unver)}
 
