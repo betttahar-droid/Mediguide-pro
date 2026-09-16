@@ -147,6 +147,8 @@ def main():
     ap.add_argument("sheet_dir")
     ap.add_argument("--face", default="front")
     ap.add_argument("--asset", default="game prop")
+    ap.add_argument("--only-places", action="store_true",
+                    help="keep the existing answer; take only taller_at/taller_means from this reply")
     args = ap.parse_args()
 
     d = Path(args.sheet_dir)
@@ -561,6 +563,35 @@ The places you name must together cover at least {need:.0f} rows of this
         # a part cannot be both the frame and the thing bolted into it
         "spans": [n for n in spans if n not in per_bay],
     }
+    # --only-places KEEPS THE ANSWER THAT IS ALREADY THERE, except the places.
+    #
+    # This file's reply is a whole document -- max_wider, max_taller, per_bay,
+    # per_tier, spans, wider_means, taller_at -- and the commonest reason to
+    # re-run it is to fill in ONE field: the growth places, on the props where
+    # they came back null. Writing the whole reply then lets the new model
+    # overrule six fields nobody asked it about.
+    #
+    # It is MISTAKES #20 and it has now happened twice. The first time, a batch
+    # over 42 props cut max_wider from 2.0 to 1.5 and rewrote per_bay with zero
+    # overlap before it was caught at five props. The second time was a one-off
+    # script written to redo a single prop, which simply did not carry the merge
+    # the batch had grown -- v15_arcade_cabinet lost max_taller 1.6 -> 1.5, two
+    # per_bay entries and its wider_means.
+    #
+    # Twice is a structural answer, not a discipline problem: the merge belongs
+    # HERE, where the file is written, so that no caller can forget it.
+    if args.only_places and (d / "scale_rules.json").exists():
+        try:
+            prev = json.loads((d / "scale_rules.json").read_text())
+            keep = dict(prev)
+            for k in ("taller_at", "taller_means"):
+                if rules.get(k) is not None:
+                    keep[k] = rules[k]
+            rules = keep
+            print("  --only-places: kept the previous answer except the places")
+        except Exception as e:                                # noqa: BLE001
+            print(f"  --only-places: previous answer unreadable ({e}) -- "
+                  f"writing the whole reply")
     (d / "scale_rules.json").write_text(json.dumps(rules, indent=1))
 
     # the manifest carries the flag, so the renderer needs nothing else

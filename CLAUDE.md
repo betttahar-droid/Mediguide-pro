@@ -60,8 +60,12 @@ bash tools/setup/local-setup.sh --pull
 Geometry is healthy (outline medians ~0.98–0.99 against the props' own
 elevations). The open work is resizing and the stages that feed it:
 
-- **Tall axis**: props that band when made 1.5× taller went 57/98 → 31/98 after
-  `strip_slice`'s copy target was measured and corrected from 9 to 4.
+- **Tall axis**: props that band when made 1.5× taller went **57/98 → 24/98**,
+  median rise +0.380 → +0.069, in three steps — `strip_slice`'s copy target
+  measured and corrected from 9 to 4, a bareness test that reads the *artwork*
+  and not just the part list, and growth places authored by a free local vision
+  model (which `strip_slice` verifies, so a weak model is safe there). 55 props
+  better, 5 worse, and the 1× render never moved (max delta 0.0000).
 - **Wide axis**: the judges' commonest complaint is a fitting duplicated and
   mirrored across a widened prop. Root cause found and gated, not yet repaired:
   `paint_out` was accepting a fill that had simply **redrawn** the fitting

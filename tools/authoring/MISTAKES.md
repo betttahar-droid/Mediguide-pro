@@ -469,6 +469,16 @@ mention.
 This is the twin of *a lever is not finished when it writes, it is finished when
 what it writes survives*. Here what survived was too much.
 
+**It then happened a second time, which is what made it structural.** The batch
+grew the merge; a one-off script written later to redo a single prop did not
+carry it, and `v15_arcade_cabinet` lost `max_taller` 1.6 → 1.5, two `per_bay`
+entries and its `wider_means` — to a call made only to restore one place.
+
+Twice is not a discipline problem. The merge now lives in `scale_rules.py`
+itself, behind `--only-places`, at the point where the file is written, so no
+caller can forget it. **When a rule has to be remembered by every caller, move
+it to the one place they all pass through.**
+
 ## The pattern underneath most of these
 
 Nearly every entry is one of these shapes:
