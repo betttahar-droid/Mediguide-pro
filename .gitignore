@@ -33,3 +33,4 @@ http:/
 # regenerable and large; the packed atlas-nano.png is what the renderer reads
 tools/voxel-fridge/.cache/
 tools/voxel-fridge/views/
+.env.local
