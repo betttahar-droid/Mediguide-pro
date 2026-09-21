@@ -1,0 +1,146 @@
+{
+ "asset": "vending machine",
+ "px_per_tile": 56,
+ "materials": [
+  {
+   "n": 1,
+   "image": "materials/m1.png",
+   "seam_before": 1.784,
+   "seam_after": 1.046,
+   "median": [
+    82,
+    100,
+    107
+   ],
+   "tiles": true,
+   "name": "body_panel",
+   "main": true
+  },
+  {
+   "n": 2,
+   "image": "materials/m2.png",
+   "seam_before": 1.267,
+   "seam_after": 1.11,
+   "median": [
+    90,
+    67,
+    49
+   ],
+   "tiles": true,
+   "name": "wood",
+   "main": false
+  },
+  {
+   "n": 3,
+   "image": "materials/m3.png",
+   "seam_before": 1.564,
+   "seam_after": 1.148,
+   "median": [
+    90,
+    105,
+    112
+   ],
+   "tiles": true,
+   "name": "metal_panel",
+   "main": false
+  },
+  {
+   "n": 4,
+   "image": "materials/m4.png",
+   "seam_before": 1.236,
+   "seam_after": 0.982,
+   "median": [
+    90,
+    67,
+    49
+   ],
+   "tiles": true,
+   "name": "wood_panel",
+   "main": false
+  },
+  {
+   "n": 5,
+   "image": "materials/m5.png",
+   "seam_before": 1.47,
+   "seam_after": 1.01,
+   "median": [
+    95,
+    91,
+    84
+   ],
+   "tiles": true,
+   "name": "metal_trim",
+   "main": false
+  },
+  {
+   "n": 6,
+   "image": "materials/m6.png",
+   "seam_before": 1.844,
+   "seam_after": 0.956,
+   "median": [
+    93,
+    91,
+    88
+   ],
+   "tiles": true,
+   "name": "vent_mesh",
+   "main": false
+  },
+  {
+   "n": 7,
+   "image": "materials/m7.png",
+   "seam_before": 3.078,
+   "seam_after": 1.207,
+   "median": [
+    32,
+    31,
+    29
+   ],
+   "tiles": true,
+   "name": "dark_rubber",
+   "main": false
+  },
+  {
+   "n": 8,
+   "image": "materials/m8.png",
+   "seam_before": 2.122,
+   "seam_after": 1.201,
+   "median": [
+    87,
+    101,
+    107
+   ],
+   "tiles": true,
+   "name": "worn_panel",
+   "main": false
+  },
+  {
+   "n": 9,
+   "image": "materials/m9.png",
+   "seam_before": 2.084,
+   "seam_after": 1.194,
+   "median": [
+    31,
+    31,
+    29
+   ],
+   "tiles": true,
+   "name": "black_plastic",
+   "main": false
+  },
+  {
+   "n": 10,
+   "image": "materials/m10.png",
+   "seam_before": 2.209,
+   "seam_after": 1.287,
+   "median": [
+    86,
+    99,
+    104
+   ],
+   "tiles": false,
+   "name": "worn_paint",
+   "main": false
+  }
+ ]
+}

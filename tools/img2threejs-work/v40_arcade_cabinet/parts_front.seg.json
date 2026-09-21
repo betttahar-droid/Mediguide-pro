@@ -1,0 +1,261 @@
+{
+ "face": "front",
+ "size": [
+  242,
+  601
+ ],
+ "parts": [
+  {
+   "name": "marquee",
+   "px": [
+    11,
+    12,
+    232,
+    63
+   ],
+   "mask": "masks/1.png",
+   "resize": "spanx_center",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "screen",
+   "px": [
+    50,
+    139,
+    192,
+    243
+   ],
+   "mask": "masks/2.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "joystick_left",
+   "px": [
+    32,
+    262,
+    55,
+    298
+   ],
+   "mask": "masks/3.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "deep",
+   "motion": "stick"
+  },
+  {
+   "name": "joystick_right",
+   "px": [
+    140,
+    262,
+    163,
+    297
+   ],
+   "mask": "masks/4.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "deep",
+   "motion": "stick"
+  },
+  {
+   "name": "control_deck",
+   "px": [
+    2,
+    276,
+    240,
+    314
+   ],
+   "mask": "masks/5.png",
+   "resize": "spanx_repeat",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "start_button",
+   "px": [
+    77,
+    283,
+    101,
+    300
+   ],
+   "mask": "masks/6.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "press"
+  },
+  {
+   "name": "button",
+   "px": [
+    189,
+    286,
+    203,
+    299
+   ],
+   "mask": "masks/7.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "press"
+  },
+  {
+   "name": "button_2",
+   "px": [
+    205,
+    286,
+    219,
+    299
+   ],
+   "mask": "masks/8.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "press"
+  },
+  {
+   "name": "button_3",
+   "px": [
+    96,
+    287,
+    109,
+    299
+   ],
+   "mask": "masks/9.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "press"
+  },
+  {
+   "name": "button_4",
+   "px": [
+    65,
+    288,
+    78,
+    301
+   ],
+   "mask": "masks/10.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "press"
+  },
+  {
+   "name": "button_5",
+   "px": [
+    173,
+    288,
+    187,
+    302
+   ],
+   "mask": "masks/11.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "press"
+  },
+  {
+   "name": "decal",
+   "px": [
+    47,
+    320,
+    195,
+    347
+   ],
+   "mask": "masks/12.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "coin_door",
+   "px": [
+    80,
+    385,
+    162,
+    566
+   ],
+   "mask": "masks/13.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "coin_slot_upper_left",
+   "px": [
+    98,
+    398,
+    116,
+    421
+   ],
+   "mask": "masks/14.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "coin_slot_upper_right",
+   "px": [
+    121,
+    398,
+    141,
+    422
+   ],
+   "mask": "masks/15.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "coin_slot",
+   "px": [
+    104,
+    400,
+    115,
+    420
+   ],
+   "mask": "masks/16.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "coin_slot_lower_left",
+   "px": [
+    97,
+    448,
+    117,
+    469
+   ],
+   "mask": "masks/17.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "coin_slot_lower_right",
+   "px": [
+    121,
+    448,
+    141,
+    470
+   ],
+   "mask": "masks/18.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none"
+  }
+ ]
+}

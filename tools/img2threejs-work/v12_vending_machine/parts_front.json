@@ -1,0 +1,165 @@
+{
+ "face": "front",
+ "size": [
+  276,
+  476
+ ],
+ "parts": [
+  {
+   "name": "bottle",
+   "px": [
+    18,
+    23,
+    56,
+    72
+   ],
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "can_tall",
+   "px": [
+    170,
+    57,
+    193,
+    100
+   ],
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "cans_pair",
+   "px": [
+    118,
+    107,
+    209,
+    172
+   ],
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "keypad",
+   "px": [
+    216,
+    110,
+    263,
+    257
+   ],
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "proud",
+   "motion": "press"
+  },
+  {
+   "name": "can_left",
+   "px": [
+    64,
+    131,
+    93,
+    167
+   ],
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "can_right",
+   "px": [
+    30,
+    131,
+    59,
+    172
+   ],
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "snack_bag_large",
+   "px": [
+    155,
+    171,
+    206,
+    241
+   ],
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "can_back",
+   "px": [
+    18,
+    182,
+    49,
+    215
+   ],
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "snack_bag_small",
+   "px": [
+    134,
+    199,
+    161,
+    244
+   ],
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "bottle_small",
+   "px": [
+    32,
+    206,
+    58,
+    244
+   ],
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "front_sign",
+   "px": [
+    23,
+    269,
+    149,
+    351
+   ],
+   "resize": "fixed",
+   "anchor": "left",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "dispensing_tray",
+   "px": [
+    27,
+    370,
+    198,
+    411
+   ],
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "recessed",
+   "motion": "press"
+  }
+ ]
+}

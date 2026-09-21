@@ -1,0 +1,2430 @@
+[
+ {
+  "face": "front",
+  "cuts": [
+   {
+    "host": "backglass_art",
+    "rider": "decal",
+    "box": [
+     18,
+     17,
+     46,
+     43
+    ],
+    "pixels": 210
+   },
+   {
+    "host": "backglass_art",
+    "rider": "decal_2",
+    "box": [
+     44,
+     17,
+     109,
+     47
+    ],
+    "pixels": 1319
+   },
+   {
+    "host": "backglass_art",
+    "rider": "decal_3",
+    "box": [
+     121,
+     17,
+     138,
+     31
+    ],
+    "pixels": 160
+   },
+   {
+    "host": "backglass_art",
+    "rider": "decal_4",
+    "box": [
+     146,
+     17,
+     177,
+     27
+    ],
+    "pixels": 310
+   },
+   {
+    "host": "backglass_art",
+    "rider": "decal_5",
+    "box": [
+     176,
+     17,
+     192,
+     45
+    ],
+    "pixels": 112
+   },
+   {
+    "host": "backglass_art",
+    "rider": "decal_6",
+    "box": [
+     196,
+     17,
+     226,
+     42
+    ],
+    "pixels": 40
+   },
+   {
+    "host": "backglass_art",
+    "rider": "decal_7",
+    "box": [
+     126,
+     30,
+     165,
+     57
+    ],
+    "pixels": 503
+   },
+   {
+    "host": "backglass_art",
+    "rider": "decal_8",
+    "box": [
+     158,
+     38,
+     237,
+     69
+    ],
+    "pixels": 135
+   },
+   {
+    "host": "backglass_art",
+    "rider": "decal_9",
+    "box": [
+     18,
+     39,
+     61,
+     69
+    ],
+    "pixels": 14
+   },
+   {
+    "host": "backglass_art",
+    "rider": "decal_10",
+    "box": [
+     80,
+     42,
+     119,
+     69
+    ],
+    "pixels": 141
+   },
+   {
+    "host": "backglass_art",
+    "rider": "decal_12",
+    "box": [
+     98,
+     55,
+     144,
+     69
+    ],
+    "pixels": 95
+   },
+   {
+    "host": "decal_9",
+    "rider": "decal_2",
+    "box": [
+     44,
+     39,
+     61,
+     47
+    ],
+    "pixels": 15
+   },
+   {
+    "host": "decal_2",
+    "rider": "decal_10",
+    "box": [
+     80,
+     42,
+     109,
+     47
+    ],
+    "pixels": 37
+   },
+   {
+    "host": "decal_8",
+    "rider": "decal_7",
+    "box": [
+     158,
+     38,
+     165,
+     57
+    ],
+    "pixels": 93
+   },
+   {
+    "host": "decal_12",
+    "rider": "decal_7",
+    "box": [
+     126,
+     55,
+     144,
+     57
+    ],
+    "pixels": 20
+   },
+   {
+    "host": "decal_10",
+    "rider": "decal_12",
+    "box": [
+     98,
+     55,
+     119,
+     80
+    ],
+    "pixels": 160
+   },
+   {
+    "host": "backglass_art_2",
+    "rider": "decal_10",
+    "box": [
+     80,
+     76,
+     119,
+     80
+    ],
+    "pixels": 2
+   },
+   {
+    "host": "decal_12",
+    "rider": "decal_14",
+    "box": [
+     106,
+     61,
+     128,
+     79
+    ],
+    "pixels": 78
+   },
+   {
+    "host": "backglass_art_2",
+    "rider": "decal_12",
+    "box": [
+     98,
+     76,
+     144,
+     85
+    ],
+    "pixels": 160
+   },
+   {
+    "host": "backglass_art_2",
+    "rider": "decal_17",
+    "box": [
+     161,
+     79,
+     222,
+     125
+    ],
+    "pixels": 34
+   },
+   {
+    "host": "backglass_art_2",
+    "rider": "decal_19",
+    "box": [
+     121,
+     81,
+     146,
+     99
+    ],
+    "pixels": 142
+   },
+   {
+    "host": "backglass_art_2",
+    "rider": "decal_20",
+    "box": [
+     142,
+     88,
+     169,
+     104
+    ],
+    "pixels": 28
+   },
+   {
+    "host": "backglass_art_2",
+    "rider": "decal_23",
+    "box": [
+     130,
+     101,
+     161,
+     130
+    ],
+    "pixels": 263
+   },
+   {
+    "host": "backglass_art_2",
+    "rider": "backglass_art_3",
+    "box": [
+     56,
+     120,
+     214,
+     143
+    ],
+    "pixels": 337
+   },
+   {
+    "host": "backglass_art_3",
+    "rider": "decal_17",
+    "box": [
+     161,
+     120,
+     214,
+     125
+    ],
+    "pixels": 24
+   },
+   {
+    "host": "backglass_art_3",
+    "rider": "decal_23",
+    "box": [
+     130,
+     120,
+     161,
+     130
+    ],
+    "pixels": 13
+   },
+   {
+    "host": "backglass_art_3",
+    "rider": "decal_24",
+    "box": [
+     36,
+     120,
+     45,
+     176
+    ],
+    "pixels": 84
+   },
+   {
+    "host": "backglass_art_3",
+    "rider": "decal_26",
+    "box": [
+     162,
+     125,
+     209,
+     136
+    ],
+    "pixels": 357
+   },
+   {
+    "host": "decal_27",
+    "rider": "backglass_title_2",
+    "box": [
+     65,
+     227,
+     68,
+     229
+    ],
+    "pixels": 6
+   },
+   {
+    "host": "decal_28",
+    "rider": "decal_29",
+    "box": [
+     30,
+     251,
+     31,
+     263
+    ],
+    "pixels": 9
+   },
+   {
+    "host": "backglass_art_4",
+    "rider": "decal_28",
+    "box": [
+     30,
+     264,
+     31,
+     328
+    ],
+    "pixels": 64
+   },
+   {
+    "host": "decal_29",
+    "rider": "decal_31",
+    "box": [
+     40,
+     252,
+     64,
+     258
+    ],
+    "pixels": 113
+   },
+   {
+    "host": "decal_29",
+    "rider": "decal_32",
+    "box": [
+     82,
+     252,
+     93,
+     263
+    ],
+    "pixels": 50
+   },
+   {
+    "host": "decal_30",
+    "rider": "decal_32",
+    "box": [
+     105,
+     252,
+     114,
+     263
+    ],
+    "pixels": 99
+   },
+   {
+    "host": "decal_33",
+    "rider": "decal_30",
+    "box": [
+     130,
+     252,
+     136,
+     265
+    ],
+    "pixels": 78
+   },
+   {
+    "host": "backglass_art_4",
+    "rider": "decal_30",
+    "box": [
+     105,
+     264,
+     136,
+     265
+    ],
+    "pixels": 31
+   },
+   {
+    "host": "decal_33",
+    "rider": "decal_34",
+    "box": [
+     181,
+     252,
+     185,
+     263
+    ],
+    "pixels": 44
+   },
+   {
+    "host": "backglass_art_4",
+    "rider": "decal_33",
+    "box": [
+     130,
+     264,
+     185,
+     265
+    ],
+    "pixels": 49
+   },
+   {
+    "host": "lockdown_bar",
+    "rider": "decal_36",
+    "box": [
+     52,
+     341,
+     108,
+     343
+    ],
+    "pixels": 112
+   },
+   {
+    "host": "playfield_art",
+    "rider": "flipper_button_left",
+    "box": [
+     94,
+     364,
+     116,
+     389
+    ],
+    "pixels": 550
+   },
+   {
+    "host": "playfield_art",
+    "rider": "flipper_button_right",
+    "box": [
+     138,
+     365,
+     161,
+     389
+    ],
+    "pixels": 504
+   },
+   {
+    "host": "playfield_art",
+    "rider": "coin_slot",
+    "box": [
+     111,
+     395,
+     144,
+     415
+    ],
+    "pixels": 660
+   },
+   {
+    "host": "playfield_art",
+    "rider": "decal_39",
+    "box": [
+     164,
+     396,
+     177,
+     409
+    ],
+    "pixels": 169
+   },
+   {
+    "host": "playfield_art",
+    "rider": "coin_slot_left",
+    "box": [
+     93,
+     421,
+     115,
+     443
+    ],
+    "pixels": 484
+   },
+   {
+    "host": "playfield_art",
+    "rider": "coin_slot_right",
+    "box": [
+     138,
+     421,
+     160,
+     443
+    ],
+    "pixels": 484
+   },
+   {
+    "host": "leg_left",
+    "rider": "decal_40",
+    "box": [
+     18,
+     503,
+     32,
+     539
+    ],
+    "pixels": 35
+   },
+   {
+    "host": "decal_40",
+    "rider": "decal_42",
+    "box": [
+     26,
+     563,
+     32,
+     584
+    ],
+    "pixels": 126
+   },
+   {
+    "host": "decal_43",
+    "rider": "decal_42",
+    "box": [
+     26,
+     584,
+     30,
+     592
+    ],
+    "pixels": 32
+   }
+  ],
+  "leads": []
+ },
+ {
+  "face": "front",
+  "cuts": [
+   {
+    "host": "backglass_art",
+    "rider": "decal",
+    "box": [
+     18,
+     17,
+     46,
+     43
+    ],
+    "pixels": 210
+   },
+   {
+    "host": "backglass_art",
+    "rider": "decal_2",
+    "box": [
+     44,
+     17,
+     109,
+     47
+    ],
+    "pixels": 1319
+   },
+   {
+    "host": "backglass_art",
+    "rider": "decal_3",
+    "box": [
+     121,
+     17,
+     138,
+     31
+    ],
+    "pixels": 160
+   },
+   {
+    "host": "backglass_art",
+    "rider": "decal_4",
+    "box": [
+     146,
+     17,
+     177,
+     27
+    ],
+    "pixels": 310
+   },
+   {
+    "host": "backglass_art",
+    "rider": "decal_5",
+    "box": [
+     176,
+     17,
+     192,
+     45
+    ],
+    "pixels": 112
+   },
+   {
+    "host": "backglass_art",
+    "rider": "decal_6",
+    "box": [
+     196,
+     17,
+     226,
+     42
+    ],
+    "pixels": 40
+   },
+   {
+    "host": "backglass_art",
+    "rider": "decal_7",
+    "box": [
+     126,
+     30,
+     165,
+     57
+    ],
+    "pixels": 503
+   },
+   {
+    "host": "backglass_art",
+    "rider": "decal_8",
+    "box": [
+     158,
+     38,
+     237,
+     69
+    ],
+    "pixels": 135
+   },
+   {
+    "host": "backglass_art",
+    "rider": "decal_9",
+    "box": [
+     18,
+     39,
+     61,
+     69
+    ],
+    "pixels": 14
+   },
+   {
+    "host": "backglass_art",
+    "rider": "decal_10",
+    "box": [
+     80,
+     42,
+     119,
+     69
+    ],
+    "pixels": 141
+   },
+   {
+    "host": "backglass_art",
+    "rider": "decal_12",
+    "box": [
+     98,
+     55,
+     144,
+     69
+    ],
+    "pixels": 95
+   },
+   {
+    "host": "decal_9",
+    "rider": "decal_2",
+    "box": [
+     44,
+     39,
+     61,
+     47
+    ],
+    "pixels": 15
+   },
+   {
+    "host": "decal_2",
+    "rider": "decal_10",
+    "box": [
+     80,
+     42,
+     109,
+     47
+    ],
+    "pixels": 37
+   },
+   {
+    "host": "decal_8",
+    "rider": "decal_7",
+    "box": [
+     158,
+     38,
+     165,
+     57
+    ],
+    "pixels": 93
+   },
+   {
+    "host": "decal_12",
+    "rider": "decal_7",
+    "box": [
+     126,
+     55,
+     144,
+     57
+    ],
+    "pixels": 20
+   },
+   {
+    "host": "decal_10",
+    "rider": "decal_12",
+    "box": [
+     98,
+     55,
+     119,
+     80
+    ],
+    "pixels": 160
+   },
+   {
+    "host": "backglass_art_2",
+    "rider": "decal_10",
+    "box": [
+     80,
+     76,
+     119,
+     80
+    ],
+    "pixels": 2
+   },
+   {
+    "host": "decal_12",
+    "rider": "decal_14",
+    "box": [
+     106,
+     61,
+     128,
+     79
+    ],
+    "pixels": 78
+   },
+   {
+    "host": "backglass_art_2",
+    "rider": "decal_12",
+    "box": [
+     98,
+     76,
+     144,
+     85
+    ],
+    "pixels": 160
+   },
+   {
+    "host": "backglass_art_2",
+    "rider": "decal_17",
+    "box": [
+     161,
+     79,
+     222,
+     125
+    ],
+    "pixels": 34
+   },
+   {
+    "host": "backglass_art_2",
+    "rider": "decal_19",
+    "box": [
+     121,
+     81,
+     146,
+     99
+    ],
+    "pixels": 142
+   },
+   {
+    "host": "backglass_art_2",
+    "rider": "decal_20",
+    "box": [
+     142,
+     88,
+     169,
+     104
+    ],
+    "pixels": 28
+   },
+   {
+    "host": "backglass_art_2",
+    "rider": "decal_23",
+    "box": [
+     130,
+     101,
+     161,
+     130
+    ],
+    "pixels": 263
+   },
+   {
+    "host": "backglass_art_2",
+    "rider": "backglass_art_3",
+    "box": [
+     56,
+     120,
+     214,
+     143
+    ],
+    "pixels": 337
+   },
+   {
+    "host": "backglass_art_3",
+    "rider": "decal_17",
+    "box": [
+     161,
+     120,
+     214,
+     125
+    ],
+    "pixels": 24
+   },
+   {
+    "host": "backglass_art_3",
+    "rider": "decal_23",
+    "box": [
+     130,
+     120,
+     161,
+     130
+    ],
+    "pixels": 13
+   },
+   {
+    "host": "backglass_art_3",
+    "rider": "decal_24",
+    "box": [
+     36,
+     120,
+     45,
+     176
+    ],
+    "pixels": 84
+   },
+   {
+    "host": "backglass_art_3",
+    "rider": "decal_26",
+    "box": [
+     162,
+     125,
+     209,
+     136
+    ],
+    "pixels": 357
+   },
+   {
+    "host": "decal_27",
+    "rider": "backglass_title_2",
+    "box": [
+     65,
+     227,
+     68,
+     229
+    ],
+    "pixels": 6
+   },
+   {
+    "host": "decal_28",
+    "rider": "decal_29",
+    "box": [
+     30,
+     251,
+     31,
+     263
+    ],
+    "pixels": 9
+   },
+   {
+    "host": "backglass_art_4",
+    "rider": "decal_28",
+    "box": [
+     30,
+     264,
+     31,
+     328
+    ],
+    "pixels": 64
+   },
+   {
+    "host": "decal_29",
+    "rider": "decal_31",
+    "box": [
+     40,
+     252,
+     64,
+     258
+    ],
+    "pixels": 113
+   },
+   {
+    "host": "decal_29",
+    "rider": "decal_32",
+    "box": [
+     82,
+     252,
+     93,
+     263
+    ],
+    "pixels": 50
+   },
+   {
+    "host": "decal_30",
+    "rider": "decal_32",
+    "box": [
+     105,
+     252,
+     114,
+     263
+    ],
+    "pixels": 99
+   },
+   {
+    "host": "decal_33",
+    "rider": "decal_30",
+    "box": [
+     130,
+     252,
+     136,
+     265
+    ],
+    "pixels": 78
+   },
+   {
+    "host": "backglass_art_4",
+    "rider": "decal_30",
+    "box": [
+     105,
+     264,
+     136,
+     265
+    ],
+    "pixels": 31
+   },
+   {
+    "host": "decal_33",
+    "rider": "decal_34",
+    "box": [
+     181,
+     252,
+     185,
+     263
+    ],
+    "pixels": 44
+   },
+   {
+    "host": "backglass_art_4",
+    "rider": "decal_33",
+    "box": [
+     130,
+     264,
+     185,
+     265
+    ],
+    "pixels": 49
+   },
+   {
+    "host": "lockdown_bar",
+    "rider": "decal_36",
+    "box": [
+     52,
+     341,
+     108,
+     343
+    ],
+    "pixels": 112
+   },
+   {
+    "host": "playfield_art",
+    "rider": "flipper_button_left",
+    "box": [
+     94,
+     364,
+     116,
+     389
+    ],
+    "pixels": 550
+   },
+   {
+    "host": "playfield_art",
+    "rider": "flipper_button_right",
+    "box": [
+     138,
+     365,
+     161,
+     389
+    ],
+    "pixels": 504
+   },
+   {
+    "host": "playfield_art",
+    "rider": "coin_slot_left",
+    "box": [
+     93,
+     421,
+     115,
+     443
+    ],
+    "pixels": 484
+   },
+   {
+    "host": "playfield_art",
+    "rider": "coin_slot_right",
+    "box": [
+     138,
+     421,
+     160,
+     443
+    ],
+    "pixels": 484
+   }
+  ],
+  "leads": []
+ },
+ {
+  "face": "front",
+  "cuts": [
+   {
+    "host": "backglass_art",
+    "rider": "decal_2",
+    "box": [
+     44,
+     17,
+     109,
+     47
+    ],
+    "pixels": 1319
+   },
+   {
+    "host": "backglass_art",
+    "rider": "decal_3",
+    "box": [
+     121,
+     17,
+     138,
+     31
+    ],
+    "pixels": 160
+   },
+   {
+    "host": "backglass_art",
+    "rider": "decal_4",
+    "box": [
+     146,
+     17,
+     177,
+     27
+    ],
+    "pixels": 310
+   },
+   {
+    "host": "backglass_art",
+    "rider": "decal_5",
+    "box": [
+     176,
+     17,
+     192,
+     45
+    ],
+    "pixels": 112
+   },
+   {
+    "host": "backglass_art",
+    "rider": "decal_6",
+    "box": [
+     196,
+     17,
+     226,
+     42
+    ],
+    "pixels": 40
+   },
+   {
+    "host": "backglass_art",
+    "rider": "decal_7",
+    "box": [
+     126,
+     30,
+     165,
+     57
+    ],
+    "pixels": 503
+   },
+   {
+    "host": "backglass_art",
+    "rider": "decal_8",
+    "box": [
+     158,
+     38,
+     237,
+     69
+    ],
+    "pixels": 135
+   },
+   {
+    "host": "backglass_art",
+    "rider": "decal_9",
+    "box": [
+     18,
+     39,
+     61,
+     69
+    ],
+    "pixels": 14
+   },
+   {
+    "host": "backglass_art",
+    "rider": "decal_10",
+    "box": [
+     80,
+     42,
+     119,
+     69
+    ],
+    "pixels": 141
+   },
+   {
+    "host": "backglass_art",
+    "rider": "decal_12",
+    "box": [
+     98,
+     55,
+     144,
+     69
+    ],
+    "pixels": 95
+   },
+   {
+    "host": "decal_9",
+    "rider": "decal_2",
+    "box": [
+     44,
+     39,
+     61,
+     47
+    ],
+    "pixels": 15
+   },
+   {
+    "host": "decal_2",
+    "rider": "decal_10",
+    "box": [
+     80,
+     42,
+     109,
+     47
+    ],
+    "pixels": 37
+   },
+   {
+    "host": "decal_8",
+    "rider": "decal_7",
+    "box": [
+     158,
+     38,
+     165,
+     57
+    ],
+    "pixels": 93
+   },
+   {
+    "host": "decal_12",
+    "rider": "decal_7",
+    "box": [
+     126,
+     55,
+     144,
+     57
+    ],
+    "pixels": 20
+   },
+   {
+    "host": "decal_10",
+    "rider": "decal_12",
+    "box": [
+     98,
+     55,
+     119,
+     80
+    ],
+    "pixels": 160
+   },
+   {
+    "host": "backglass_art_2",
+    "rider": "decal_10",
+    "box": [
+     80,
+     76,
+     119,
+     80
+    ],
+    "pixels": 2
+   },
+   {
+    "host": "decal_12",
+    "rider": "decal_14",
+    "box": [
+     106,
+     61,
+     128,
+     79
+    ],
+    "pixels": 78
+   },
+   {
+    "host": "backglass_art_2",
+    "rider": "decal_12",
+    "box": [
+     98,
+     76,
+     144,
+     85
+    ],
+    "pixels": 160
+   },
+   {
+    "host": "backglass_art_2",
+    "rider": "decal_17",
+    "box": [
+     161,
+     79,
+     222,
+     125
+    ],
+    "pixels": 34
+   },
+   {
+    "host": "backglass_art_2",
+    "rider": "decal_19",
+    "box": [
+     121,
+     81,
+     146,
+     99
+    ],
+    "pixels": 142
+   },
+   {
+    "host": "backglass_art_2",
+    "rider": "decal_20",
+    "box": [
+     142,
+     88,
+     169,
+     104
+    ],
+    "pixels": 28
+   },
+   {
+    "host": "backglass_art_2",
+    "rider": "decal_23",
+    "box": [
+     130,
+     101,
+     161,
+     130
+    ],
+    "pixels": 263
+   },
+   {
+    "host": "backglass_art_2",
+    "rider": "backglass_art_3",
+    "box": [
+     56,
+     120,
+     214,
+     143
+    ],
+    "pixels": 337
+   },
+   {
+    "host": "backglass_art_3",
+    "rider": "decal_17",
+    "box": [
+     161,
+     120,
+     214,
+     125
+    ],
+    "pixels": 24
+   },
+   {
+    "host": "backglass_art_3",
+    "rider": "decal_23",
+    "box": [
+     130,
+     120,
+     161,
+     130
+    ],
+    "pixels": 13
+   },
+   {
+    "host": "backglass_art_3",
+    "rider": "decal_24",
+    "box": [
+     36,
+     120,
+     45,
+     176
+    ],
+    "pixels": 84
+   },
+   {
+    "host": "backglass_art_3",
+    "rider": "decal_26",
+    "box": [
+     162,
+     125,
+     209,
+     136
+    ],
+    "pixels": 357
+   },
+   {
+    "host": "decal_27",
+    "rider": "backglass_title_2",
+    "box": [
+     65,
+     227,
+     68,
+     229
+    ],
+    "pixels": 6
+   },
+   {
+    "host": "decal_28",
+    "rider": "decal_29",
+    "box": [
+     30,
+     251,
+     31,
+     263
+    ],
+    "pixels": 9
+   },
+   {
+    "host": "backglass_art_4",
+    "rider": "decal_28",
+    "box": [
+     30,
+     264,
+     31,
+     328
+    ],
+    "pixels": 64
+   },
+   {
+    "host": "decal_29",
+    "rider": "decal_31",
+    "box": [
+     40,
+     252,
+     64,
+     258
+    ],
+    "pixels": 113
+   },
+   {
+    "host": "decal_29",
+    "rider": "decal_32",
+    "box": [
+     82,
+     252,
+     93,
+     263
+    ],
+    "pixels": 50
+   },
+   {
+    "host": "decal_30",
+    "rider": "decal_32",
+    "box": [
+     105,
+     252,
+     114,
+     263
+    ],
+    "pixels": 99
+   },
+   {
+    "host": "decal_33",
+    "rider": "decal_30",
+    "box": [
+     130,
+     252,
+     136,
+     265
+    ],
+    "pixels": 78
+   },
+   {
+    "host": "backglass_art_4",
+    "rider": "decal_30",
+    "box": [
+     105,
+     264,
+     136,
+     265
+    ],
+    "pixels": 31
+   },
+   {
+    "host": "decal_33",
+    "rider": "decal_34",
+    "box": [
+     181,
+     252,
+     185,
+     263
+    ],
+    "pixels": 44
+   },
+   {
+    "host": "backglass_art_4",
+    "rider": "decal_33",
+    "box": [
+     130,
+     264,
+     185,
+     265
+    ],
+    "pixels": 49
+   },
+   {
+    "host": "lockdown_bar",
+    "rider": "decal_36",
+    "box": [
+     52,
+     341,
+     108,
+     343
+    ],
+    "pixels": 112
+   },
+   {
+    "host": "playfield_art",
+    "rider": "flipper_button_left",
+    "box": [
+     94,
+     364,
+     116,
+     389
+    ],
+    "pixels": 550
+   },
+   {
+    "host": "playfield_art",
+    "rider": "flipper_button_right",
+    "box": [
+     138,
+     365,
+     161,
+     389
+    ],
+    "pixels": 504
+   },
+   {
+    "host": "playfield_art",
+    "rider": "coin_slot_left",
+    "box": [
+     93,
+     421,
+     115,
+     443
+    ],
+    "pixels": 484
+   },
+   {
+    "host": "playfield_art",
+    "rider": "coin_slot_right",
+    "box": [
+     138,
+     421,
+     160,
+     443
+    ],
+    "pixels": 484
+   }
+  ],
+  "leads": []
+ },
+ {
+  "face": "front",
+  "cuts": [
+   {
+    "host": "backglass_art",
+    "rider": "decal_2",
+    "box": [
+     44,
+     17,
+     109,
+     47
+    ],
+    "pixels": 1319
+   },
+   {
+    "host": "backglass_art",
+    "rider": "decal_3",
+    "box": [
+     121,
+     17,
+     138,
+     31
+    ],
+    "pixels": 160
+   },
+   {
+    "host": "backglass_art",
+    "rider": "decal_4",
+    "box": [
+     146,
+     17,
+     177,
+     27
+    ],
+    "pixels": 310
+   },
+   {
+    "host": "backglass_art",
+    "rider": "decal_5",
+    "box": [
+     176,
+     17,
+     192,
+     45
+    ],
+    "pixels": 112
+   },
+   {
+    "host": "backglass_art",
+    "rider": "decal_6",
+    "box": [
+     196,
+     17,
+     226,
+     42
+    ],
+    "pixels": 40
+   },
+   {
+    "host": "backglass_art",
+    "rider": "decal_7",
+    "box": [
+     126,
+     30,
+     165,
+     57
+    ],
+    "pixels": 503
+   },
+   {
+    "host": "backglass_art",
+    "rider": "decal_8",
+    "box": [
+     158,
+     38,
+     237,
+     69
+    ],
+    "pixels": 135
+   },
+   {
+    "host": "backglass_art",
+    "rider": "decal_9",
+    "box": [
+     18,
+     39,
+     61,
+     69
+    ],
+    "pixels": 14
+   },
+   {
+    "host": "backglass_art",
+    "rider": "decal_10",
+    "box": [
+     80,
+     42,
+     119,
+     69
+    ],
+    "pixels": 141
+   },
+   {
+    "host": "backglass_art",
+    "rider": "decal_12",
+    "box": [
+     98,
+     55,
+     144,
+     69
+    ],
+    "pixels": 95
+   },
+   {
+    "host": "decal_9",
+    "rider": "decal_2",
+    "box": [
+     44,
+     39,
+     61,
+     47
+    ],
+    "pixels": 15
+   },
+   {
+    "host": "decal_2",
+    "rider": "decal_10",
+    "box": [
+     80,
+     42,
+     109,
+     47
+    ],
+    "pixels": 37
+   },
+   {
+    "host": "decal_8",
+    "rider": "decal_7",
+    "box": [
+     158,
+     38,
+     165,
+     57
+    ],
+    "pixels": 93
+   },
+   {
+    "host": "decal_12",
+    "rider": "decal_7",
+    "box": [
+     126,
+     55,
+     144,
+     57
+    ],
+    "pixels": 20
+   },
+   {
+    "host": "decal_10",
+    "rider": "decal_12",
+    "box": [
+     98,
+     55,
+     119,
+     80
+    ],
+    "pixels": 160
+   },
+   {
+    "host": "backglass_art_2",
+    "rider": "decal_10",
+    "box": [
+     80,
+     76,
+     119,
+     80
+    ],
+    "pixels": 2
+   },
+   {
+    "host": "decal_12",
+    "rider": "decal_14",
+    "box": [
+     106,
+     61,
+     128,
+     79
+    ],
+    "pixels": 78
+   },
+   {
+    "host": "backglass_art_2",
+    "rider": "decal_12",
+    "box": [
+     98,
+     76,
+     144,
+     85
+    ],
+    "pixels": 160
+   },
+   {
+    "host": "backglass_art_2",
+    "rider": "decal_17",
+    "box": [
+     161,
+     79,
+     222,
+     125
+    ],
+    "pixels": 34
+   },
+   {
+    "host": "backglass_art_2",
+    "rider": "decal_19",
+    "box": [
+     121,
+     81,
+     146,
+     99
+    ],
+    "pixels": 142
+   },
+   {
+    "host": "backglass_art_2",
+    "rider": "decal_20",
+    "box": [
+     142,
+     88,
+     169,
+     104
+    ],
+    "pixels": 28
+   },
+   {
+    "host": "backglass_art_2",
+    "rider": "decal_23",
+    "box": [
+     130,
+     101,
+     161,
+     130
+    ],
+    "pixels": 263
+   },
+   {
+    "host": "backglass_art_2",
+    "rider": "backglass_art_3",
+    "box": [
+     56,
+     120,
+     214,
+     143
+    ],
+    "pixels": 337
+   },
+   {
+    "host": "backglass_art_3",
+    "rider": "decal_17",
+    "box": [
+     161,
+     120,
+     214,
+     125
+    ],
+    "pixels": 24
+   },
+   {
+    "host": "backglass_art_3",
+    "rider": "decal_23",
+    "box": [
+     130,
+     120,
+     161,
+     130
+    ],
+    "pixels": 13
+   },
+   {
+    "host": "backglass_art_3",
+    "rider": "decal_24",
+    "box": [
+     36,
+     120,
+     45,
+     176
+    ],
+    "pixels": 84
+   },
+   {
+    "host": "backglass_art_3",
+    "rider": "decal_26",
+    "box": [
+     162,
+     125,
+     209,
+     136
+    ],
+    "pixels": 357
+   },
+   {
+    "host": "decal_27",
+    "rider": "backglass_title_2",
+    "box": [
+     65,
+     227,
+     68,
+     229
+    ],
+    "pixels": 6
+   },
+   {
+    "host": "decal_28",
+    "rider": "decal_29",
+    "box": [
+     30,
+     251,
+     31,
+     263
+    ],
+    "pixels": 9
+   },
+   {
+    "host": "backglass_art_4",
+    "rider": "decal_28",
+    "box": [
+     30,
+     264,
+     31,
+     328
+    ],
+    "pixels": 64
+   },
+   {
+    "host": "decal_29",
+    "rider": "decal_31",
+    "box": [
+     40,
+     252,
+     64,
+     258
+    ],
+    "pixels": 113
+   },
+   {
+    "host": "decal_29",
+    "rider": "decal_32",
+    "box": [
+     82,
+     252,
+     93,
+     263
+    ],
+    "pixels": 50
+   },
+   {
+    "host": "decal_30",
+    "rider": "decal_32",
+    "box": [
+     105,
+     252,
+     114,
+     263
+    ],
+    "pixels": 99
+   },
+   {
+    "host": "decal_33",
+    "rider": "decal_30",
+    "box": [
+     130,
+     252,
+     136,
+     265
+    ],
+    "pixels": 78
+   },
+   {
+    "host": "backglass_art_4",
+    "rider": "decal_30",
+    "box": [
+     105,
+     264,
+     136,
+     265
+    ],
+    "pixels": 31
+   },
+   {
+    "host": "decal_33",
+    "rider": "decal_34",
+    "box": [
+     181,
+     252,
+     185,
+     263
+    ],
+    "pixels": 44
+   },
+   {
+    "host": "backglass_art_4",
+    "rider": "decal_33",
+    "box": [
+     130,
+     264,
+     185,
+     265
+    ],
+    "pixels": 49
+   },
+   {
+    "host": "lockdown_bar",
+    "rider": "decal_36",
+    "box": [
+     52,
+     341,
+     108,
+     343
+    ],
+    "pixels": 112
+   },
+   {
+    "host": "playfield_art",
+    "rider": "flipper_button_left",
+    "box": [
+     94,
+     364,
+     116,
+     389
+    ],
+    "pixels": 550
+   },
+   {
+    "host": "playfield_art",
+    "rider": "flipper_button_right",
+    "box": [
+     138,
+     365,
+     161,
+     389
+    ],
+    "pixels": 504
+   },
+   {
+    "host": "playfield_art",
+    "rider": "coin_slot_left",
+    "box": [
+     93,
+     421,
+     115,
+     443
+    ],
+    "pixels": 484
+   },
+   {
+    "host": "playfield_art",
+    "rider": "coin_slot_right",
+    "box": [
+     138,
+     421,
+     160,
+     443
+    ],
+    "pixels": 484
+   }
+  ],
+  "leads": []
+ },
+ {
+  "face": "front",
+  "cuts": [
+   {
+    "host": "backglass_art",
+    "rider": "decal",
+    "box": [
+     18,
+     17,
+     46,
+     43
+    ],
+    "pixels": 210
+   },
+   {
+    "host": "backglass_art",
+    "rider": "decal_2",
+    "box": [
+     44,
+     17,
+     109,
+     47
+    ],
+    "pixels": 1319
+   },
+   {
+    "host": "backglass_art",
+    "rider": "decal_3",
+    "box": [
+     121,
+     17,
+     138,
+     31
+    ],
+    "pixels": 160
+   },
+   {
+    "host": "backglass_art",
+    "rider": "decal_4",
+    "box": [
+     146,
+     17,
+     177,
+     27
+    ],
+    "pixels": 310
+   },
+   {
+    "host": "backglass_art",
+    "rider": "decal_5",
+    "box": [
+     176,
+     17,
+     192,
+     45
+    ],
+    "pixels": 112
+   },
+   {
+    "host": "backglass_art",
+    "rider": "decal_6",
+    "box": [
+     196,
+     17,
+     226,
+     42
+    ],
+    "pixels": 40
+   },
+   {
+    "host": "backglass_art",
+    "rider": "decal_7",
+    "box": [
+     126,
+     30,
+     165,
+     57
+    ],
+    "pixels": 503
+   },
+   {
+    "host": "backglass_art",
+    "rider": "decal_8",
+    "box": [
+     158,
+     38,
+     237,
+     69
+    ],
+    "pixels": 135
+   },
+   {
+    "host": "backglass_art",
+    "rider": "decal_9",
+    "box": [
+     18,
+     39,
+     61,
+     69
+    ],
+    "pixels": 14
+   },
+   {
+    "host": "backglass_art",
+    "rider": "decal_10",
+    "box": [
+     80,
+     42,
+     119,
+     69
+    ],
+    "pixels": 141
+   },
+   {
+    "host": "backglass_art",
+    "rider": "decal_12",
+    "box": [
+     98,
+     55,
+     144,
+     69
+    ],
+    "pixels": 95
+   },
+   {
+    "host": "decal_9",
+    "rider": "decal_2",
+    "box": [
+     44,
+     39,
+     61,
+     47
+    ],
+    "pixels": 15
+   },
+   {
+    "host": "decal_2",
+    "rider": "decal_10",
+    "box": [
+     80,
+     42,
+     109,
+     47
+    ],
+    "pixels": 37
+   },
+   {
+    "host": "decal_8",
+    "rider": "decal_7",
+    "box": [
+     158,
+     38,
+     165,
+     57
+    ],
+    "pixels": 93
+   },
+   {
+    "host": "decal_12",
+    "rider": "decal_7",
+    "box": [
+     126,
+     55,
+     144,
+     57
+    ],
+    "pixels": 20
+   },
+   {
+    "host": "decal_10",
+    "rider": "decal_12",
+    "box": [
+     98,
+     55,
+     119,
+     80
+    ],
+    "pixels": 160
+   },
+   {
+    "host": "backglass_art_2",
+    "rider": "decal_10",
+    "box": [
+     80,
+     76,
+     119,
+     80
+    ],
+    "pixels": 2
+   },
+   {
+    "host": "decal_12",
+    "rider": "decal_14",
+    "box": [
+     106,
+     61,
+     128,
+     79
+    ],
+    "pixels": 78
+   },
+   {
+    "host": "backglass_art_2",
+    "rider": "decal_12",
+    "box": [
+     98,
+     76,
+     144,
+     85
+    ],
+    "pixels": 160
+   },
+   {
+    "host": "backglass_art_2",
+    "rider": "decal_17",
+    "box": [
+     161,
+     79,
+     222,
+     125
+    ],
+    "pixels": 34
+   },
+   {
+    "host": "backglass_art_2",
+    "rider": "decal_19",
+    "box": [
+     121,
+     81,
+     146,
+     99
+    ],
+    "pixels": 142
+   },
+   {
+    "host": "backglass_art_2",
+    "rider": "decal_20",
+    "box": [
+     142,
+     88,
+     169,
+     104
+    ],
+    "pixels": 28
+   },
+   {
+    "host": "backglass_art_2",
+    "rider": "decal_23",
+    "box": [
+     130,
+     101,
+     161,
+     130
+    ],
+    "pixels": 263
+   },
+   {
+    "host": "backglass_art_2",
+    "rider": "backglass_art_3",
+    "box": [
+     56,
+     120,
+     214,
+     143
+    ],
+    "pixels": 337
+   },
+   {
+    "host": "backglass_art_3",
+    "rider": "decal_17",
+    "box": [
+     161,
+     120,
+     214,
+     125
+    ],
+    "pixels": 24
+   },
+   {
+    "host": "backglass_art_3",
+    "rider": "decal_23",
+    "box": [
+     130,
+     120,
+     161,
+     130
+    ],
+    "pixels": 13
+   },
+   {
+    "host": "backglass_art_3",
+    "rider": "decal_24",
+    "box": [
+     36,
+     120,
+     45,
+     176
+    ],
+    "pixels": 84
+   },
+   {
+    "host": "backglass_art_3",
+    "rider": "decal_26",
+    "box": [
+     162,
+     125,
+     209,
+     136
+    ],
+    "pixels": 357
+   },
+   {
+    "host": "decal_27",
+    "rider": "backglass_title_2",
+    "box": [
+     65,
+     227,
+     68,
+     229
+    ],
+    "pixels": 6
+   },
+   {
+    "host": "decal_28",
+    "rider": "decal_29",
+    "box": [
+     30,
+     251,
+     31,
+     263
+    ],
+    "pixels": 9
+   },
+   {
+    "host": "backglass_art_4",
+    "rider": "decal_28",
+    "box": [
+     30,
+     264,
+     31,
+     328
+    ],
+    "pixels": 64
+   },
+   {
+    "host": "decal_29",
+    "rider": "decal_31",
+    "box": [
+     40,
+     252,
+     64,
+     258
+    ],
+    "pixels": 113
+   },
+   {
+    "host": "decal_29",
+    "rider": "decal_32",
+    "box": [
+     82,
+     252,
+     93,
+     263
+    ],
+    "pixels": 50
+   },
+   {
+    "host": "decal_30",
+    "rider": "decal_32",
+    "box": [
+     105,
+     252,
+     114,
+     263
+    ],
+    "pixels": 99
+   },
+   {
+    "host": "decal_33",
+    "rider": "decal_30",
+    "box": [
+     130,
+     252,
+     136,
+     265
+    ],
+    "pixels": 78
+   },
+   {
+    "host": "backglass_art_4",
+    "rider": "decal_30",
+    "box": [
+     105,
+     264,
+     136,
+     265
+    ],
+    "pixels": 31
+   },
+   {
+    "host": "decal_33",
+    "rider": "decal_34",
+    "box": [
+     181,
+     252,
+     185,
+     263
+    ],
+    "pixels": 44
+   },
+   {
+    "host": "backglass_art_4",
+    "rider": "decal_33",
+    "box": [
+     130,
+     264,
+     185,
+     265
+    ],
+    "pixels": 49
+   },
+   {
+    "host": "lockdown_bar",
+    "rider": "decal_36",
+    "box": [
+     52,
+     341,
+     108,
+     343
+    ],
+    "pixels": 112
+   },
+   {
+    "host": "playfield_art",
+    "rider": "flipper_button_left",
+    "box": [
+     94,
+     364,
+     116,
+     389
+    ],
+    "pixels": 550
+   },
+   {
+    "host": "playfield_art",
+    "rider": "flipper_button_right",
+    "box": [
+     138,
+     365,
+     161,
+     389
+    ],
+    "pixels": 504
+   },
+   {
+    "host": "playfield_art",
+    "rider": "coin_slot_left",
+    "box": [
+     93,
+     421,
+     115,
+     443
+    ],
+    "pixels": 484
+   },
+   {
+    "host": "playfield_art",
+    "rider": "coin_slot_right",
+    "box": [
+     138,
+     421,
+     160,
+     443
+    ],
+    "pixels": 484
+   }
+  ],
+  "leads": []
+ }
+]

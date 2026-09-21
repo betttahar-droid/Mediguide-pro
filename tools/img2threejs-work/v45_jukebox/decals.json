@@ -1,0 +1,635 @@
+{
+ "asset": "jukebox",
+ "decals": [
+  {
+   "n": 1,
+   "image": "decals/d1.png",
+   "px": [
+    440,
+    169
+   ],
+   "keyed": 0.148,
+   "median": [
+    107,
+    118,
+    110
+   ],
+   "name": "price_plate",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.04
+  },
+  {
+   "n": 2,
+   "image": "decals/d2.png",
+   "px": [
+    115,
+    64
+   ],
+   "keyed": 0.556,
+   "median": [
+    160,
+    44,
+    73
+   ],
+   "name": "decal_2",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.04
+  },
+  {
+   "n": 3,
+   "image": "decals/d3.png",
+   "px": [
+    152,
+    35
+   ],
+   "keyed": 0.279,
+   "median": [
+    185,
+    47,
+    124
+   ],
+   "name": "decal_3",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.04
+  },
+  {
+   "n": 4,
+   "image": "decals/d4.png",
+   "px": [
+    132,
+    37
+   ],
+   "keyed": 0.404,
+   "median": [
+    193,
+    53,
+    137
+   ],
+   "name": "decal_4",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.04
+  },
+  {
+   "n": 5,
+   "image": "decals/d5.png",
+   "px": [
+    154,
+    39
+   ],
+   "keyed": 0.386,
+   "median": [
+    183,
+    44,
+    121
+   ],
+   "name": "logo",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.1
+  },
+  {
+   "n": 6,
+   "image": "decals/d6.png",
+   "px": [
+    326,
+    273
+   ],
+   "keyed": 0.291,
+   "median": [
+    99,
+    74,
+    65
+   ],
+   "name": "decal_6",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.08
+  },
+  {
+   "n": 7,
+   "image": "decals/d7.png",
+   "px": [
+    243,
+    293
+   ],
+   "keyed": 0.595,
+   "median": [
+    90,
+    89,
+    84
+   ],
+   "name": "pinstripe",
+   "rule": "along",
+   "where": "front",
+   "size": 0.01
+  },
+  {
+   "n": 8,
+   "image": "decals/d8.png",
+   "px": [
+    610,
+    127
+   ],
+   "keyed": 0.1,
+   "median": [
+    97,
+    95,
+    85
+   ],
+   "name": "rivet",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.01
+  },
+  {
+   "n": 9,
+   "image": "decals/d9.png",
+   "px": [
+    49,
+    55
+   ],
+   "keyed": 0.211,
+   "median": [
+    111,
+    91,
+    67
+   ],
+   "name": "decal_9",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.01
+  },
+  {
+   "n": 10,
+   "image": "decals/d10.png",
+   "px": [
+    52,
+    57
+   ],
+   "keyed": 0.402,
+   "median": [
+    92,
+    73,
+    54
+   ],
+   "name": "decal_10",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.01
+  },
+  {
+   "n": 11,
+   "image": "decals/d11.png",
+   "px": [
+    64,
+    58
+   ],
+   "keyed": 0.233,
+   "median": [
+    83,
+    73,
+    53
+   ],
+   "name": "decal_11",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.01
+  },
+  {
+   "n": 12,
+   "image": "decals/d12.png",
+   "px": [
+    54,
+    58
+   ],
+   "keyed": 0.392,
+   "median": [
+    82,
+    67,
+    53
+   ],
+   "name": "decal_12",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.01
+  },
+  {
+   "n": 13,
+   "image": "decals/d13.png",
+   "px": [
+    44,
+    58
+   ],
+   "keyed": 0.253,
+   "median": [
+    86,
+    73,
+    55
+   ],
+   "name": "decal_13",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.01
+  },
+  {
+   "n": 14,
+   "image": "decals/d14.png",
+   "px": [
+    49,
+    61
+   ],
+   "keyed": 0.28,
+   "median": [
+    99,
+    86,
+    62
+   ],
+   "name": "decal_14",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.01
+  },
+  {
+   "n": 15,
+   "image": "decals/d15.png",
+   "px": [
+    52,
+    65
+   ],
+   "keyed": 0.433,
+   "median": [
+    87,
+    68,
+    53
+   ],
+   "name": "decal_15",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.01
+  },
+  {
+   "n": 16,
+   "image": "decals/d16.png",
+   "px": [
+    64,
+    66
+   ],
+   "keyed": 0.294,
+   "median": [
+    83,
+    72,
+    52
+   ],
+   "name": "decal_16",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.01
+  },
+  {
+   "n": 17,
+   "image": "decals/d17.png",
+   "px": [
+    55,
+    66
+   ],
+   "keyed": 0.41,
+   "median": [
+    79,
+    65,
+    53
+   ],
+   "name": "decal_17",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.01
+  },
+  {
+   "n": 18,
+   "image": "decals/d18.png",
+   "px": [
+    44,
+    66
+   ],
+   "keyed": 0.273,
+   "median": [
+    84,
+    72,
+    55
+   ],
+   "name": "decal_18",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.01
+  },
+  {
+   "n": 19,
+   "image": "decals/d19.png",
+   "px": [
+    49,
+    62
+   ],
+   "keyed": 0.272,
+   "median": [
+    113,
+    84,
+    59
+   ],
+   "name": "decal_19",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.01
+  },
+  {
+   "n": 20,
+   "image": "decals/d20.png",
+   "px": [
+    52,
+    65
+   ],
+   "keyed": 0.443,
+   "median": [
+    92,
+    70,
+    51
+   ],
+   "name": "decal_20",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.01
+  },
+  {
+   "n": 21,
+   "image": "decals/d21.png",
+   "px": [
+    64,
+    66
+   ],
+   "keyed": 0.296,
+   "median": [
+    91,
+    68,
+    50
+   ],
+   "name": "decal_21",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.01
+  },
+  {
+   "n": 22,
+   "image": "decals/d22.png",
+   "px": [
+    54,
+    65
+   ],
+   "keyed": 0.409,
+   "median": [
+    88,
+    69,
+    53
+   ],
+   "name": "decal_22",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.01
+  },
+  {
+   "n": 23,
+   "image": "decals/d23.png",
+   "px": [
+    44,
+    65
+   ],
+   "keyed": 0.276,
+   "median": [
+    93,
+    72,
+    54
+   ],
+   "name": "decal_23",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.01
+  },
+  {
+   "n": 24,
+   "image": "decals/d24.png",
+   "px": [
+    49,
+    51
+   ],
+   "keyed": 0.205,
+   "median": [
+    104,
+    102,
+    100
+   ],
+   "name": "decal_24",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.01
+  },
+  {
+   "n": 25,
+   "image": "decals/d25.png",
+   "px": [
+    52,
+    53
+   ],
+   "keyed": 0.383,
+   "median": [
+    89,
+    76,
+    68
+   ],
+   "name": "decal_25",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.01
+  },
+  {
+   "n": 26,
+   "image": "decals/d26.png",
+   "px": [
+    64,
+    53
+   ],
+   "keyed": 0.225,
+   "median": [
+    92,
+    83,
+    74
+   ],
+   "name": "decal_26",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.01
+  },
+  {
+   "n": 27,
+   "image": "decals/d27.png",
+   "px": [
+    55,
+    53
+   ],
+   "keyed": 0.349,
+   "median": [
+    86,
+    76,
+    70
+   ],
+   "name": "warning_label",
+   "rule": "hold",
+   "where": "back",
+   "size": 0.03
+  },
+  {
+   "n": 28,
+   "image": "decals/d28.png",
+   "px": [
+    44,
+    53
+   ],
+   "keyed": 0.215,
+   "median": [
+    91,
+    79,
+    73
+   ],
+   "name": "decal_28",
+   "rule": "hold",
+   "where": "back",
+   "size": 0.03
+  },
+  {
+   "n": 29,
+   "image": "decals/d29.png",
+   "px": [
+    270,
+    55
+   ],
+   "keyed": 0.061,
+   "median": [
+    141,
+    48,
+    48
+   ],
+   "name": "decal_29",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.03
+  },
+  {
+   "n": 30,
+   "image": "decals/d30.png",
+   "px": [
+    254,
+    205
+   ],
+   "keyed": 0.516,
+   "median": [
+    139,
+    51,
+    42
+   ],
+   "name": "decal_30",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.03
+  },
+  {
+   "n": 31,
+   "image": "decals/d31.png",
+   "px": [
+    170,
+    53
+   ],
+   "keyed": 0.504,
+   "median": [
+    68,
+    10,
+    65
+   ],
+   "name": "decal_31",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.03
+  },
+  {
+   "n": 32,
+   "image": "decals/d32.png",
+   "px": [
+    287,
+    51
+   ],
+   "keyed": 0.2,
+   "median": [
+    93,
+    21,
+    90
+   ],
+   "name": "decal_32",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.03
+  },
+  {
+   "n": 33,
+   "image": "decals/d33.png",
+   "px": [
+    175,
+    61
+   ],
+   "keyed": 0.583,
+   "median": [
+    41,
+    9,
+    39
+   ],
+   "name": "decal_33",
+   "rule": "hold",
+   "where": "back",
+   "size": 0.03
+  },
+  {
+   "n": 34,
+   "image": "decals/d34.png",
+   "px": [
+    279,
+    65
+   ],
+   "keyed": 0.376,
+   "median": [
+    229,
+    79,
+    182
+   ],
+   "name": "decal_34",
+   "rule": "hold",
+   "where": "any",
+   "size": 0.04
+  },
+  {
+   "n": 35,
+   "image": "decals/d35.png",
+   "px": [
+    263,
+    273
+   ],
+   "keyed": 0.149,
+   "median": [
+    122,
+    134,
+    127
+   ],
+   "name": "decal_35",
+   "rule": "hold",
+   "where": "any",
+   "size": 0.04
+  }
+ ]
+}

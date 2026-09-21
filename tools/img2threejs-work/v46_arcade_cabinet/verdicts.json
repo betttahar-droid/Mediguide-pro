@@ -1,0 +1,70 @@
+[
+ {
+  "round": 0,
+  "asset": "arcade cabinet",
+  "looks_good": false,
+  "blocking": 4,
+  "faults": [
+   {
+    "part": "background",
+    "fault": "When widened, the background texture smears and streaks across the extra width \u2014 the speaker grille and vent areas on the left turn into stretched grey smudges instead of clean panel, and the lower carcass shows banded stretching. A player could point straight at it.",
+    "severity": "blocking"
+   },
+   {
+    "part": "decal_2",
+    "fault": "When the cabinet is made taller, the side 'SPACE WARP' decal tiles vertically \u2014 the text and ship art appear three times, doubled and mirrored mid-decal. A side decal is a single fixed sticker, not a repeating pattern; this reads as a tiling bug.",
+    "severity": "blocking"
+   },
+   {
+    "part": "screen",
+    "fault": "In the widened render the screen and its bezel stretch with the body instead of staying one CRT-sized unit in the centre, leaving a smeared, over-wide screen with blank bezel either side. A widened two-player cabinet keeps one screen of real size.",
+    "severity": "blocking"
+   },
+   {
+    "part": "speaker_grille_left",
+    "fault": "In the widened render the speaker grille does not appear as clean additional per-bay grilles; it shows as smeared half-stretched grille copies with ragged edges rather than a second crisp grille.",
+    "severity": "blocking"
+   }
+  ],
+  "patch": [
+   {
+    "name": "background",
+    "resize": "mirror",
+    "anchor": "top",
+    "depth": "flush",
+    "motion": "none",
+    "count": "none",
+    "drop": false
+   },
+   {
+    "name": "decal_2",
+    "resize": "fixed",
+    "anchor": "top",
+    "depth": "flush",
+    "motion": "none",
+    "count": "none",
+    "drop": false
+   },
+   {
+    "name": "screen",
+    "resize": "fixed",
+    "anchor": "top",
+    "depth": "recessed",
+    "motion": "none",
+    "count": "none",
+    "drop": false
+   },
+   {
+    "name": "speaker_grille_left",
+    "resize": "fixed",
+    "anchor": "top",
+    "depth": "recessed",
+    "motion": "none",
+    "count": "per_bay",
+    "drop": false
+   }
+  ],
+  "wider_means": "a wider arcade cabinet is a two-player cabinet -- a second joystick and button cluster beside the first, plus the wider deck and body to carry them.",
+  "taller_means": "a taller arcade cabinet has more plain lower body -- a longer bare cabinet carcass and kick area between the control deck and the floor, with the same single screen, marquee and coin door."
+ }
+]

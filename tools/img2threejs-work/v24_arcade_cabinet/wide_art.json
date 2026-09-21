@@ -1,0 +1,11 @@
+{
+ "face": "front",
+ "ratio": 2.0,
+ "parts": [
+  {
+   "part": "marquee",
+   "status": "refused",
+   "why": "it came back 4.00 wide for its height against the 8.71 of the canvas you were given. Fill the canvas you are given, edge"
+  }
+ ]
+}

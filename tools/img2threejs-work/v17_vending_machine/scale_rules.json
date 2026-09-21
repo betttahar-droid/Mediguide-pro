@@ -1,0 +1,38 @@
+{
+ "wider_means": "more product columns behind the same glass front, so the cabinet widens to hold additional facing lanes of drinks.",
+ "taller_means": "A taller vending machine has a taller display body and a taller base trim.",
+ "max_wider": 1.6,
+ "max_taller": 1.5,
+ "per_bay": [],
+ "spans": [
+  "display_window",
+  "delivery_tray",
+  "base_trim"
+ ],
+ "taller_at": [
+  {
+   "part": "display_window",
+   "side": "below",
+   "px": [
+    327,
+    341
+   ]
+  },
+  {
+   "part": "delivery_tray",
+   "side": "above",
+   "px": [
+    386,
+    399
+   ]
+  },
+  {
+   "part": "base_trim",
+   "side": "itself",
+   "px": [
+    475,
+    496
+   ]
+  }
+ ]
+}

@@ -1,0 +1,139 @@
+{
+ "face": "front",
+ "size": [
+  234,
+  593
+ ],
+ "parts": [
+  {
+   "name": "speaker_grille_right",
+   "px": [
+    176,
+    12,
+    224,
+    61
+   ],
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "speaker_grille_left",
+   "px": [
+    16,
+    12,
+    55,
+    43
+   ],
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "marquee",
+   "px": [
+    57,
+    12,
+    177,
+    61
+   ],
+   "resize": "spanx_center",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "speaker_panel",
+   "px": [
+    38,
+    133,
+    204,
+    169
+   ],
+   "resize": "spanx_center",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "screen",
+   "px": [
+    38,
+    145,
+    194,
+    259
+   ],
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "control_deck_left",
+   "px": [
+    7,
+    306,
+    52,
+    361
+   ],
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "control_deck_right",
+   "px": [
+    178,
+    300,
+    223,
+    361
+   ],
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "control_buttons",
+   "px": [
+    52,
+    313,
+    179,
+    344
+   ],
+   "resize": "spanx_repeat",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "coin_door",
+   "px": [
+    78,
+    382,
+    154,
+    505
+   ],
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "cabinet_door_lower",
+   "px": [
+    84,
+    467,
+    146,
+    555
+   ],
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none"
+  }
+ ]
+}

@@ -1,0 +1,173 @@
+[
+ {
+  "face": "front",
+  "cuts": [
+   {
+    "host": "arch_lights",
+    "rider": "title_strip",
+    "box": [
+     81,
+     188,
+     267,
+     205
+    ],
+    "pixels": 3162
+   },
+   {
+    "host": "arch_lights",
+    "rider": "decal_1",
+    "box": [
+     7,
+     203,
+     24,
+     205
+    ],
+    "pixels": 34
+   },
+   {
+    "host": "arch_lights",
+    "rider": "decal_5",
+    "box": [
+     25,
+     203,
+     61,
+     205
+    ],
+    "pixels": 72
+   },
+   {
+    "host": "arch_lights",
+    "rider": "decal_8",
+    "box": [
+     67,
+     184,
+     83,
+     205
+    ],
+    "pixels": 302
+   },
+   {
+    "host": "arch_lights",
+    "rider": "decal_11",
+    "box": [
+     276,
+     203,
+     297,
+     205
+    ],
+    "pixels": 42
+   },
+   {
+    "host": "arch_lights",
+    "rider": "decal_16",
+    "box": [
+     300,
+     203,
+     311,
+     205
+    ],
+    "pixels": 22
+   },
+   {
+    "host": "arch_lights",
+    "rider": "decal_18",
+    "box": [
+     313,
+     203,
+     330,
+     205
+    ],
+    "pixels": 34
+   },
+   {
+    "host": "speaker_grille",
+    "rider": "title_strip",
+    "box": [
+     81,
+     225,
+     255,
+     273
+    ],
+    "pixels": 8352
+   },
+   {
+    "host": "title_strip",
+    "rider": "decal_8",
+    "box": [
+     81,
+     188,
+     83,
+     259
+    ],
+    "pixels": 142
+   },
+   {
+    "host": "speaker_grille",
+    "rider": "decal_2",
+    "box": [
+     7,
+     226,
+     24,
+     234
+    ],
+    "pixels": 136
+   },
+   {
+    "host": "speaker_grille",
+    "rider": "decal_6",
+    "box": [
+     26,
+     226,
+     38,
+     234
+    ],
+    "pixels": 96
+   },
+   {
+    "host": "speaker_grille",
+    "rider": "decal_7",
+    "box": [
+     39,
+     226,
+     61,
+     234
+    ],
+    "pixels": 176
+   },
+   {
+    "host": "speaker_grille",
+    "rider": "decal_8",
+    "box": [
+     67,
+     225,
+     83,
+     259
+    ],
+    "pixels": 476
+   },
+   {
+    "host": "light_tube_right",
+    "rider": "decal_13",
+    "box": [
+     282,
+     455,
+     289,
+     456
+    ],
+    "pixels": 7
+   },
+   {
+    "host": "light_tube_right",
+    "rider": "decal_19",
+    "box": [
+     313,
+     234,
+     328,
+     236
+    ],
+    "pixels": 30
+   }
+  ],
+  "leads": []
+ }
+]

@@ -1,0 +1,981 @@
+{
+ "face": "front",
+ "size": [
+  297,
+  517
+ ],
+ "parts": [
+  {
+   "name": "marquee",
+   "px": [
+    25,
+    23,
+    274,
+    75
+   ],
+   "mask": "masks/1.png",
+   "resize": "spanx_center",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": true
+  },
+  {
+   "name": "drink_window",
+   "px": [
+    25,
+    81,
+    276,
+    353
+   ],
+   "mask": "masks/2.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": true
+  },
+  {
+   "name": "decal",
+   "px": [
+    190,
+    82,
+    250,
+    136
+   ],
+   "mask": "masks/3.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "decal_2",
+   "px": [
+    116,
+    85,
+    144,
+    93
+   ],
+   "mask": "masks/4.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "decal_3",
+   "px": [
+    44,
+    86,
+    59,
+    97
+   ],
+   "mask": "masks/5.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "decal_4",
+   "px": [
+    63,
+    86,
+    80,
+    97
+   ],
+   "mask": "masks/6.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "decal_5",
+   "px": [
+    25,
+    94,
+    41,
+    137
+   ],
+   "mask": "masks/7.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "drink_row1_left",
+   "px": [
+    46,
+    96,
+    84,
+    148
+   ],
+   "mask": "masks/8.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "drink_row1_center",
+   "px": [
+    100,
+    96,
+    136,
+    146
+   ],
+   "mask": "masks/9.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": true,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "decal_6",
+   "px": [
+    152,
+    96,
+    191,
+    148
+   ],
+   "mask": "masks/10.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "drink_row1_right",
+   "px": [
+    147,
+    102,
+    153,
+    131
+   ],
+   "mask": "masks/11.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": true,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "decal_7",
+   "px": [
+    247,
+    104,
+    263,
+    121
+   ],
+   "mask": "masks/12.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "decal_8",
+   "px": [
+    83,
+    116,
+    100,
+    140
+   ],
+   "mask": "masks/13.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "decal_9",
+   "px": [
+    238,
+    128,
+    260,
+    161
+   ],
+   "mask": "masks/14.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "decal_10",
+   "px": [
+    182,
+    144,
+    208,
+    207
+   ],
+   "mask": "masks/15.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "decal_11",
+   "px": [
+    25,
+    146,
+    42,
+    169
+   ],
+   "mask": "masks/16.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "drink_row2_left",
+   "px": [
+    50,
+    149,
+    78,
+    165
+   ],
+   "mask": "masks/17.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": true,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "drink_row2_center",
+   "px": [
+    102,
+    149,
+    133,
+    164
+   ],
+   "mask": "masks/18.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": true,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "decal_12",
+   "px": [
+    61,
+    150,
+    78,
+    159
+   ],
+   "mask": "masks/19.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": true,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "drink_row2_right",
+   "px": [
+    158,
+    150,
+    185,
+    162
+   ],
+   "mask": "masks/20.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": true,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "decal_13",
+   "px": [
+    119,
+    161,
+    158,
+    223
+   ],
+   "mask": "masks/21.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "decal_14",
+   "px": [
+    88,
+    166,
+    106,
+    179
+   ],
+   "mask": "masks/22.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "drink_row3_left",
+   "px": [
+    46,
+    175,
+    83,
+    226
+   ],
+   "mask": "masks/23.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": true,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "drink_row3_center",
+   "px": [
+    99,
+    175,
+    136,
+    227
+   ],
+   "mask": "masks/24.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": true,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "drink_row3_right",
+   "px": [
+    154,
+    175,
+    191,
+    227
+   ],
+   "mask": "masks/25.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": true,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "coin_mechanism",
+   "px": [
+    224,
+    176,
+    269,
+    273
+   ],
+   "mask": "masks/26.png",
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "decal_15",
+   "px": [
+    92,
+    186,
+    100,
+    217
+   ],
+   "mask": "masks/27.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "decal_16",
+   "px": [
+    26,
+    196,
+    36,
+    211
+   ],
+   "mask": "masks/28.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "price_tag_row2_left",
+   "px": [
+    48,
+    227,
+    78,
+    242
+   ],
+   "mask": "masks/29.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": true,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "price_tag_row2_right",
+   "px": [
+    157,
+    227,
+    187,
+    242
+   ],
+   "mask": "masks/30.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": true,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "price_tag_row3_center",
+   "px": [
+    102,
+    228,
+    132,
+    243
+   ],
+   "mask": "masks/31.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": true,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "drink_row4_left",
+   "px": [
+    45,
+    254,
+    83,
+    304
+   ],
+   "mask": "masks/32.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": true,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "drink_row4_right",
+   "px": [
+    153,
+    254,
+    191,
+    306
+   ],
+   "mask": "masks/33.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": true,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "drink_row4_center",
+   "px": [
+    100,
+    255,
+    137,
+    306
+   ],
+   "mask": "masks/34.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": true,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "keypad_panel",
+   "px": [
+    222,
+    288,
+    277,
+    352
+   ],
+   "mask": "masks/36.png",
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": true
+  },
+  {
+   "name": "keypad_button_1",
+   "px": [
+    239,
+    297,
+    260,
+    309
+   ],
+   "mask": "masks/37.png",
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "flush",
+   "motion": "press",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "price_tag_row4_right",
+   "px": [
+    157,
+    306,
+    185,
+    321
+   ],
+   "mask": "masks/38.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": true,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "price_tag_row4_center",
+   "px": [
+    104,
+    307,
+    131,
+    321
+   ],
+   "mask": "masks/39.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": true,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "price_tag_row4_left",
+   "px": [
+    50,
+    308,
+    78,
+    322
+   ],
+   "mask": "masks/40.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": true,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "coin_return_slot",
+   "px": [
+    261,
+    309,
+    274,
+    349
+   ],
+   "mask": "masks/41.png",
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "keypad_button_2",
+   "px": [
+    239,
+    310,
+    260,
+    321
+   ],
+   "mask": "masks/42.png",
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "flush",
+   "motion": "press",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "keypad_button_3",
+   "px": [
+    238,
+    320,
+    260,
+    332
+   ],
+   "mask": "masks/43.png",
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "flush",
+   "motion": "press",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "keypad_button_4",
+   "px": [
+    165,
+    323,
+    187,
+    337
+   ],
+   "mask": "masks/44.png",
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "flush",
+   "motion": "press",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "keypad_button_5",
+   "px": [
+    238,
+    332,
+    260,
+    344
+   ],
+   "mask": "masks/45.png",
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "flush",
+   "motion": "press",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "keypad_button_6",
+   "px": [
+    222,
+    334,
+    232,
+    352
+   ],
+   "mask": "masks/46.png",
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "flush",
+   "motion": "press",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "decal_18",
+   "px": [
+    27,
+    378,
+    41,
+    400
+   ],
+   "mask": "masks/47.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "push_bar_housing",
+   "px": [
+    38,
+    378,
+    207,
+    449
+   ],
+   "mask": "masks/48.png",
+   "resize": "spanx_center",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": true
+  },
+  {
+   "name": "decal_19",
+   "px": [
+    38,
+    389,
+    53,
+    419
+   ],
+   "mask": "masks/50.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "coin_return_door",
+   "px": [
+    246,
+    403,
+    273,
+    427
+   ],
+   "mask": "masks/52.png",
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "recessed",
+   "motion": "hinge_top",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "coin_return_flap",
+   "px": [
+    249,
+    410,
+    263,
+    423
+   ],
+   "mask": "masks/53.png",
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "recessed",
+   "motion": "press",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "decal_20",
+   "px": [
+    100,
+    414,
+    128,
+    439
+   ],
+   "mask": "masks/54.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "dispenser_tray",
+   "px": [
+    33,
+    483,
+    263,
+    512
+   ],
+   "mask": "masks/56.png",
+   "resize": "spanx_center",
+   "anchor": "bottom",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": true
+  },
+  {
+   "name": "decal_21",
+   "px": [
+    6,
+    484,
+    30,
+    512
+   ],
+   "mask": "masks/57.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "decal_22",
+   "px": [
+    266,
+    484,
+    292,
+    512
+   ],
+   "mask": "masks/58.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  }
+ ]
+}

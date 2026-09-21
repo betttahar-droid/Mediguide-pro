@@ -1,0 +1,30 @@
+{
+ "front_size": [
+  276,
+  476
+ ],
+ "aspect": 0.57983,
+ "side": {
+  "image": "body_side.png",
+  "size": [
+   226,
+   476
+  ]
+ },
+ "back": {
+  "image": "body_back.png",
+  "size": [
+   269,
+   476
+  ]
+ },
+ "top": {
+  "image": "body_top.png",
+  "size": [
+   276,
+   224
+  ]
+ },
+ "depth_from_top": 0.4901,
+ "depth": 0.4748
+}

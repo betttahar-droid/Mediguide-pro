@@ -1,0 +1,48 @@
+{
+ "face": "front",
+ "size": [
+  343,
+  607
+ ],
+ "parts": [
+  {
+   "name": "marquee",
+   "px": [
+    70,
+    69,
+    272,
+    139
+   ],
+   "resize": "spanx_center",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "record_viewer",
+   "px": [
+    79,
+    174,
+    250,
+    289
+   ],
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "title_strip",
+   "px": [
+    114,
+    389,
+    228,
+    506
+   ],
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none"
+  }
+ ]
+}

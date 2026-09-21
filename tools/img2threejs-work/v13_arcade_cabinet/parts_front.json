@@ -1,0 +1,87 @@
+{
+ "face": "front",
+ "size": [
+  264,
+  640
+ ],
+ "parts": [
+  {
+   "name": "marquee_art_left",
+   "px": [
+    0,
+    13,
+    80,
+    86
+   ],
+   "resize": "fixed",
+   "anchor": "left",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "marquee_title",
+   "px": [
+    109,
+    35,
+    208,
+    85
+   ],
+   "resize": "spanx_center",
+   "anchor": "left",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "screen",
+   "px": [
+    12,
+    84,
+    263,
+    293
+   ],
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "joystick_left",
+   "px": [
+    51,
+    292,
+    100,
+    324
+   ],
+   "resize": "fixed",
+   "anchor": "left",
+   "depth": "deep",
+   "motion": "none"
+  },
+  {
+   "name": "buttons_right",
+   "px": [
+    160,
+    292,
+    247,
+    324
+   ],
+   "resize": "fixed",
+   "anchor": "left",
+   "depth": "proud",
+   "motion": "press"
+  },
+  {
+   "name": "coin_door",
+   "px": [
+    0,
+    368,
+    263,
+    636
+   ],
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "recessed",
+   "motion": "hinge_left"
+  }
+ ]
+}

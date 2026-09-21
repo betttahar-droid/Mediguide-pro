@@ -1,0 +1,406 @@
+[
+ {
+  "round": 0,
+  "asset": "pinball machine",
+  "acceptance": "REJECTED",
+  "looks_good": false,
+  "blocking": 14,
+  "faults": [
+   {
+    "part": "leg_left",
+    "fault": "In the solid and wireframe views the legs read as flat single-sided ribbons with no thickness and no proper rail profile; they hang off the cabinet as thin planes rather than the angled metal legs the elevation shows, so the silhouette does not read as a pinball machine's leg in three dimensions.",
+    "severity": "blocking"
+   },
+   {
+    "part": "leg_right",
+    "fault": "Same flat-ribbon geometry as the left leg: no bulk, no thickness, standing off the body as a card. In the taller render the stretched version makes the flatness unmistakable.",
+    "severity": "blocking"
+   },
+   {
+    "part": "playfield_glass",
+    "fault": "Wireframe shows stacked doubled faces across the playfield slope \u2014 overlapping coplanar boxes rather than a single recessed glass plane.",
+    "severity": "blocking"
+   },
+   {
+    "part": "background (gemini)",
+    "fault": "The vertical resize (image 4) has created a large, smeared area of background texture between the bottom of the cabinet and the top of the legs, rather than making the legs longer or the cabinet body taller. This looks like a bug.",
+    "severity": "blocking"
+   },
+   {
+    "part": "leg_left (gemini)",
+    "fault": "The legs are not extending to fill the extra height in image 4, leaving a gap filled with smeared background.",
+    "severity": "blocking"
+   },
+   {
+    "part": "leg_right (gemini)",
+    "fault": "The legs are not extending to fill the extra height in image 4, leaving a gap filled with smeared background.",
+    "severity": "blocking"
+   },
+   {
+    "part": "coin_slot (gemini)",
+    "fault": "This part appears to be a duplicate of the coin door assembly, which is already represented by coin_slot_left and coin_slot_right. It should be dropped.",
+    "severity": "blocking"
+   },
+   {
+    "part": "decal_38 (gemini)",
+    "fault": "This decal is part of the coin door assembly and should not be a separate part.",
+    "severity": "blocking"
+   },
+   {
+    "part": "decal_39 (gemini)",
+    "fault": "This decal is part of the coin door assembly and should not be a separate part.",
+    "severity": "blocking"
+   },
+   {
+    "part": "decal_40 (gemini)",
+    "fault": "This decal is part of the coin door assembly and should not be a separate part.",
+    "severity": "blocking"
+   },
+   {
+    "part": "decal_41 (gemini)",
+    "fault": "This decal is part of the coin door assembly and should not be a separate part.",
+    "severity": "blocking"
+   },
+   {
+    "part": "decal_42 (gemini)",
+    "fault": "This decal is part of the coin door assembly and should not be a separate part.",
+    "severity": "blocking"
+   },
+   {
+    "part": "decal_43 (gemini)",
+    "fault": "This decal is part of the coin door assembly and should not be a separate part.",
+    "severity": "blocking"
+   },
+   {
+    "part": "decal_36 (intent)",
+    "severity": "blocking",
+    "fault": "aspect: aspect 28.00 outside 0.04..13.31"
+   }
+  ],
+  "patch": [
+   {
+    "name": "background",
+    "mode": "mirror"
+   },
+   {
+    "name": "coin_slot",
+    "drop": true
+   },
+   {
+    "name": "decal_38",
+    "drop": true
+   },
+   {
+    "name": "decal_39",
+    "drop": true
+   },
+   {
+    "name": "decal_40",
+    "drop": true
+   },
+   {
+    "name": "decal_41",
+    "drop": true
+   },
+   {
+    "name": "decal_42",
+    "drop": true
+   },
+   {
+    "name": "decal_43",
+    "drop": true
+   },
+   {
+    "name": "leg_left",
+    "count": "longer"
+   },
+   {
+    "name": "leg_left",
+    "resize": "fixed",
+    "anchor": "left",
+    "depth": "deep",
+    "motion": "none",
+    "count": "longer",
+    "drop": false
+   },
+   {
+    "name": "leg_right",
+    "count": "longer"
+   },
+   {
+    "name": "leg_right",
+    "resize": "fixed",
+    "anchor": "right",
+    "depth": "deep",
+    "motion": "none",
+    "count": "longer",
+    "drop": false
+   },
+   {
+    "name": "playfield_glass",
+    "resize": "fixed",
+    "anchor": "center",
+    "depth": "recessed",
+    "motion": "none",
+    "count": "none",
+    "drop": false
+   }
+  ],
+  "wider_means": "A wider pinball machine is simply a wider cabinet and backbox with the same single playfield, wider side rails and a proportionally wider backglass and lockdown bar -- there is no second player station on a pinball machine.",
+  "taller_means": "A taller pinball machine has longer legs and a taller plain lower cabinet body below the lockdown bar; the backbox and playfield stay the same size."
+ },
+ {
+  "round": 1,
+  "asset": "pinball machine",
+  "acceptance": "REJECTED",
+  "looks_good": false,
+  "blocking": 9,
+  "faults": [
+   {
+    "part": "background",
+    "fault": "When the cabinet is widened the backbox texture tiles instead of extending: the score displays read '00.00' doubled and the backglass art is repeated/cut across the extra width. A wider machine gets one wider backglass, not two smeared halves.",
+    "severity": "blocking"
+   },
+   {
+    "part": "backglass_art",
+    "fault": "Fixed while the backbox widens, so the artwork gaps/doubles rather than widening as a single backglass with the cabinet.",
+    "severity": "blocking"
+   },
+   {
+    "part": "backglass_title",
+    "fault": "Title sits fixed and centred while the backbox widens around it; the widened render shows the PINBALL lettering doubled and offset. Must stay one title, centred, with the panel extending at the ends.",
+    "severity": "blocking"
+   },
+   {
+    "part": "leg_left",
+    "fault": "At 1.5x height the legs stretch correctly but the leg texture streaks along the new length; acceptable elongation, the smear on the member itself is what reads as a bug.",
+    "severity": "minor"
+   },
+   {
+    "part": "playfield_art (gemini)",
+    "fault": "Playfield geometry is severely distorted and warped along the cabinet slope.",
+    "severity": "blocking"
+   },
+   {
+    "part": "backglass_art (gemini)",
+    "fault": "Backglass art fails to scale with the cabinet width, causing misaligned framing.",
+    "severity": "blocking"
+   },
+   {
+    "part": "leg_left (gemini)",
+    "fault": "Vertical scaling produces redundant tiered crossbars and overlapping geometry.",
+    "severity": "blocking"
+   },
+   {
+    "part": "leg_right (gemini)",
+    "fault": "Vertical scaling produces redundant tiered crossbars and overlapping geometry.",
+    "severity": "blocking"
+   },
+   {
+    "part": "decal (gemini)",
+    "fault": "Fragmented backbox decals create redundant overlapping geometry across the backglass.",
+    "severity": "blocking"
+   },
+   {
+    "part": "decal_36 (intent)",
+    "severity": "blocking",
+    "fault": "aspect: aspect 28.00 outside 0.04..13.31"
+   }
+  ],
+  "patch": [
+   {
+    "name": "backglass_art",
+    "resize": "spanx_center",
+    "anchor": "top",
+    "depth": "flush",
+    "motion": "none",
+    "count": "none",
+    "drop": false
+   },
+   {
+    "name": "backglass_art",
+    "resize": "spanx_center",
+    "anchor": "top",
+    "depth": "flush",
+    "motion": "none",
+    "count": "none",
+    "drop": false
+   },
+   {
+    "name": "backglass_title",
+    "resize": "spanx_center",
+    "anchor": "center",
+    "depth": "flush",
+    "motion": "none",
+    "count": "none",
+    "drop": false
+   },
+   {
+    "name": "backglass_title_2",
+    "resize": "spanx_center",
+    "anchor": "center",
+    "depth": "flush",
+    "motion": "none",
+    "count": "none",
+    "drop": false
+   },
+   {
+    "name": "background",
+    "resize": "fixed",
+    "anchor": "top",
+    "depth": "flush",
+    "motion": "none",
+    "count": "none",
+    "drop": false,
+    "mode": "mirror"
+   },
+   {
+    "name": "decal",
+    "resize": "fixed",
+    "anchor": "top",
+    "depth": "flush",
+    "motion": "none",
+    "count": "none",
+    "drop": true
+   },
+   {
+    "name": "leg_left",
+    "resize": "fixed",
+    "anchor": "bottom",
+    "depth": "deep",
+    "motion": "none",
+    "count": "longer",
+    "drop": false
+   },
+   {
+    "name": "leg_right",
+    "resize": "fixed",
+    "anchor": "bottom",
+    "depth": "deep",
+    "motion": "none",
+    "count": "longer",
+    "drop": false
+   },
+   {
+    "name": "playfield_art",
+    "resize": "fixed",
+    "anchor": "bottom",
+    "depth": "flush",
+    "motion": "none",
+    "count": "none",
+    "drop": false
+   }
+  ],
+  "wider_means": "A wider pinball machine is simply a wider cabinet and backbox with the same single playfield, wider side rails and a proportionally wider backglass and lockdown bar -- there is no second player station on a pinball machine.",
+  "taller_means": "A taller pinball machine has longer legs and a taller plain lower cabinet body below the lockdown bar; the backbox and playfield stay the same size."
+ },
+ {
+  "round": 2,
+  "asset": "pinball machine",
+  "acceptance": "REJECTED",
+  "looks_good": false,
+  "blocking": 10,
+  "faults": [
+   {
+    "part": "background",
+    "fault": "At 1.3x wider the background panel behind the backbox stretches and repeats: the side-art decals and robot/rocket motifs appear doubled and smeared along the widened backbox, and streak bands run down the widened cabinet sides. A wider machine should have a proportionally wider backglass and side art, not mirrored echo copies.",
+    "severity": "blocking"
+   },
+   {
+    "part": "leg_left",
+    "fault": "At 1.5x taller the legs stretch far beyond a believable leg length and their texture streaks into vertical banding; the cross-members and leveller feet are smeared with them. The legs also visibly detach from the cabinet body, leaving stretched sliver geometry between body and floor.",
+    "severity": "blocking"
+   },
+   {
+    "part": "background",
+    "fault": "At 1.5x taller the extra height goes almost entirely into the legs; the plain lower cabinet body below the lockdown bar stays the same height, so the silhouette is a normal cabinet perched on stilts instead of a taller cabinet. The stretched lower-panel texture bands and smears to compensate.",
+    "severity": "blocking"
+   },
+   {
+    "part": "background",
+    "fault": "Small magenta debris polygons float clear of the body near the floor in both resized renders (1.3x and 1.5x) -- stray geometry a player could point at.",
+    "severity": "blocking"
+   },
+   {
+    "part": "leg_right",
+    "fault": "Same stretched, banded, detached leg geometry as leg_left at 1.5x; the foot smears out at the base instead of terminating cleanly.",
+    "severity": "blocking"
+   },
+   {
+    "part": "backglass_art (gemini)",
+    "fault": "Art does not scale across the wider backbox, leaving empty side borders.",
+    "severity": "blocking"
+   },
+   {
+    "part": "playfield_glass (gemini)",
+    "fault": "Geometry is severely clipped and warped beneath the upper cabinet.",
+    "severity": "blocking"
+   },
+   {
+    "part": "leg_left (gemini)",
+    "fault": "Leg extrusion produces duplicated cross-braces and floating artifacts when scaled tall.",
+    "severity": "blocking"
+   },
+   {
+    "part": "leg_right (gemini)",
+    "fault": "Leg extrusion produces duplicated cross-braces and floating artifacts when scaled tall.",
+    "severity": "blocking"
+   },
+   {
+    "part": "decal_36 (intent)",
+    "severity": "blocking",
+    "fault": "aspect: aspect 28.00 outside 0.04..13.31"
+   }
+  ],
+  "patch": [
+   {
+    "name": "backglass_art",
+    "resize": "spanx_center",
+    "anchor": "top",
+    "depth": "flush",
+    "motion": "none",
+    "count": "none",
+    "drop": false
+   },
+   {
+    "name": "background",
+    "resize": "fixed",
+    "anchor": "fixed",
+    "depth": "flush",
+    "motion": "none",
+    "count": "none",
+    "drop": false,
+    "mode": "mirror"
+   },
+   {
+    "name": "leg_left",
+    "resize": "spany_center",
+    "anchor": "bottom",
+    "depth": "deep",
+    "motion": "none",
+    "count": "none",
+    "drop": false
+   },
+   {
+    "name": "leg_right",
+    "resize": "spany_center",
+    "anchor": "bottom",
+    "depth": "deep",
+    "motion": "none",
+    "count": "none",
+    "drop": false
+   },
+   {
+    "name": "playfield_glass",
+    "resize": "spanx_center",
+    "anchor": "center",
+    "depth": "flush",
+    "motion": "none",
+    "count": "none",
+    "drop": false
+   }
+  ],
+  "wider_means": "A wider pinball machine is simply a wider cabinet and backbox with the same single playfield, wider side rails and a proportionally wider backglass and lockdown bar -- there is no second player station on a pinball machine.",
+  "taller_means": "A taller pinball machine has longer legs and a taller plain lower cabinet body below the lockdown bar; the backbox and playfield stay the same size."
+ }
+]

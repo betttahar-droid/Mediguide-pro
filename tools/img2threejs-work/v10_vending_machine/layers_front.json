@@ -1,0 +1,371 @@
+{
+ "face": "front",
+ "size": [
+  296,
+  568
+ ],
+ "aspect": 0.52113,
+ "background": "bg_front.png",
+ "background_mode": "mirror",
+ "parts": [
+  {
+   "name": "soda_can_label_red",
+   "image": "parts/soda_can_label_red.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": [
+     0.7531,
+     0.9259
+    ]
+   },
+   "px_size": [
+    60,
+    82
+   ],
+   "u": [
+    0.08108,
+    0.28378
+   ],
+   "v": [
+    0.7993,
+    0.94366
+   ]
+  },
+  {
+   "name": "bottle_label",
+   "image": "parts/bottle_label.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    64,
+    82
+   ],
+   "u": [
+    0.42568,
+    0.64189
+   ],
+   "v": [
+    0.7993,
+    0.94366
+   ]
+  },
+  {
+   "name": "soda_can_label_green",
+   "image": "parts/soda_can_label_green.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": [
+     0.7407,
+     0.9136
+    ]
+   },
+   "px_size": [
+    96,
+    82
+   ],
+   "u": [
+    0.20946,
+    0.53378
+   ],
+   "v": [
+    0.7993,
+    0.94366
+   ]
+  },
+  {
+   "name": "soda_can_label_orange",
+   "image": "parts/soda_can_label_orange.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    34,
+    59
+   ],
+   "u": [
+    0.64527,
+    0.76014
+   ],
+   "v": [
+    0.7993,
+    0.90317
+   ]
+  },
+  {
+   "name": "soda_can_label_white",
+   "image": "parts/soda_can_label_white.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    42,
+    39
+   ],
+   "u": [
+    0.30405,
+    0.44595
+   ],
+   "v": [
+    0.73239,
+    0.80106
+   ]
+  },
+  {
+   "name": "soda_can_label_green2",
+   "image": "parts/soda_can_label_green2.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": [
+     0.6857,
+     0.9286
+    ]
+   },
+   "px_size": [
+    75,
+    70
+   ],
+   "u": [
+    0.07095,
+    0.32432
+   ],
+   "v": [
+    0.67782,
+    0.80106
+   ]
+  },
+  {
+   "name": "soda_can_label_blue",
+   "image": "parts/soda_can_label_blue.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    54,
+    59
+   ],
+   "u": [
+    0.0777,
+    0.26014
+   ],
+   "v": [
+    0.5757,
+    0.67958
+   ]
+  },
+  {
+   "name": "soda_can_label_purple",
+   "image": "parts/soda_can_label_purple.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": [
+     0.7,
+     0.8667
+    ]
+   },
+   "px_size": [
+    154,
+    90
+   ],
+   "u": [
+    0.20946,
+    0.72973
+   ],
+   "v": [
+    0.5088,
+    0.66725
+   ]
+  },
+  {
+   "name": "dispense_flaps",
+   "image": "parts/dispense_flaps.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    115,
+    41
+   ],
+   "u": [
+    0.08108,
+    0.46959
+   ],
+   "v": [
+    0.48415,
+    0.55634
+   ]
+  },
+  {
+   "name": "front_sign_panel",
+   "image": "parts/front_sign_panel.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "center",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.1126,
+     0.6821
+    ],
+    "v": [
+     0.2,
+     0.8235
+    ]
+   },
+   "px_size": [
+    151,
+    85
+   ],
+   "u": [
+    0.10473,
+    0.61486
+   ],
+   "v": [
+    0.27465,
+    0.4243
+   ]
+  },
+  {
+   "name": "push_flap",
+   "image": "parts/push_flap.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "hinge_top",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    183,
+    53
+   ],
+   "u": [
+    0.125,
+    0.74324
+   ],
+   "v": [
+    0.13908,
+    0.23239
+   ]
+  }
+ ]
+}

@@ -1,0 +1,392 @@
+{
+ "face": "front",
+ "size": [
+  235,
+  586
+ ],
+ "aspect": 0.40102,
+ "background": "bg_front.png",
+ "background_mode": "mirror",
+ "parts": [
+  {
+   "name": "marquee",
+   "image": "parts/marquee.png",
+   "hf": [
+    0.027649769585253458,
+    0.06912442396313365
+   ],
+   "resize": "spanx_center",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": true,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    218,
+    59
+   ],
+   "u": [
+    0.0383,
+    0.96596
+   ],
+   "v": [
+    0.87201,
+    0.9727
+   ]
+  },
+  {
+   "name": "speaker_grille_left",
+   "image": "parts/speaker_grille_left.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.0,
+     0.1837
+    ],
+    "v": null
+   },
+   "px_size": [
+    61,
+    27
+   ],
+   "u": [
+    0.04255,
+    0.30213
+   ],
+   "v": [
+    0.81229,
+    0.85836
+   ]
+  },
+  {
+   "name": "speaker_grille_right",
+   "image": "parts/speaker_grille_right.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.7736,
+     0.9811
+    ],
+    "v": null
+   },
+   "px_size": [
+    62,
+    26
+   ],
+   "u": [
+    0.69787,
+    0.9617
+   ],
+   "v": [
+    0.81229,
+    0.85666
+   ]
+  },
+  {
+   "name": "screen",
+   "image": "parts/screen.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    159,
+    118
+   ],
+   "u": [
+    0.1617,
+    0.8383
+   ],
+   "v": [
+    0.55973,
+    0.76109
+   ]
+  },
+  {
+   "name": "player1_start_button",
+   "image": "parts/player1_start_button.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.0,
+     0.2222
+    ],
+    "v": [
+     0.4688,
+     0.6875
+    ]
+   },
+   "px_size": [
+    18,
+    32
+   ],
+   "u": [
+    0.12766,
+    0.20426
+   ],
+   "v": [
+    0.49317,
+    0.54778
+   ]
+  },
+  {
+   "name": "player2_start_button",
+   "image": "parts/player2_start_button.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.2308,
+     0.4615
+    ],
+    "v": [
+     0.45,
+     0.6
+    ]
+   },
+   "px_size": [
+    13,
+    20
+   ],
+   "u": [
+    0.6,
+    0.65532
+   ],
+   "v": [
+    0.51195,
+    0.54608
+   ]
+  },
+  {
+   "name": "control_button",
+   "image": "parts/control_button.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.75,
+     0.9167
+    ],
+    "v": null
+   },
+   "px_size": [
+    12,
+    18
+   ],
+   "u": [
+    0.59149,
+    0.64255
+   ],
+   "v": [
+    0.49147,
+    0.52218
+   ]
+  },
+  {
+   "name": "control_deck",
+   "image": "parts/control_deck.png",
+   "hf": [
+    0.05045871559633028,
+    0.09174311926605505
+   ],
+   "resize": "spanx_repeat",
+   "resize_y": "spanx_repeat",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": true,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": [
+     0.1148,
+     0.5738
+    ]
+   },
+   "px_size": [
+    219,
+    61
+   ],
+   "u": [
+    0.03404,
+    0.96596
+   ],
+   "v": [
+    0.41126,
+    0.51536
+   ]
+  },
+  {
+   "name": "coin_door_credit_panel",
+   "image": "parts/coin_door_credit_panel.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": [
+     0.043,
+     0.4946
+    ]
+   },
+   "px_size": [
+    84,
+    186
+   ],
+   "u": [
+    0.3234,
+    0.68085
+   ],
+   "v": [
+    0.04266,
+    0.36007
+   ]
+  },
+  {
+   "name": "price_badge",
+   "image": "parts/price_badge.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "center",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    37,
+    28
+   ],
+   "u": [
+    0.72766,
+    0.88511
+   ],
+   "v": [
+    0.25427,
+    0.30205
+   ]
+  },
+  {
+   "name": "coin_door_lower_panel",
+   "image": "parts/coin_door_lower_panel.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.1389,
+     0.7639
+    ],
+    "v": [
+     0.0698,
+     0.4302
+    ]
+   },
+   "px_size": [
+    72,
+    86
+   ],
+   "u": [
+    0.34468,
+    0.65106
+   ],
+   "v": [
+    0.05461,
+    0.20137
+   ]
+  }
+ ]
+}

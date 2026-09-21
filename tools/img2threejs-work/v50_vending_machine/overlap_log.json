@@ -1,0 +1,830 @@
+[
+ {
+  "face": "front",
+  "cuts": [
+   {
+    "host": "frame_left",
+    "rider": "decal",
+    "box": [
+     7,
+     0,
+     31,
+     12
+    ],
+    "pixels": 18
+   },
+   {
+    "host": "frame_right",
+    "rider": "decal",
+    "box": [
+     265,
+     0,
+     292,
+     12
+    ],
+    "pixels": 19
+   },
+   {
+    "host": "decal",
+    "rider": "decal_2",
+    "box": [
+     12,
+     10,
+     283,
+     12
+    ],
+    "pixels": 542
+   },
+   {
+    "host": "frame_right",
+    "rider": "coin_mech_panel",
+    "box": [
+     265,
+     285,
+     280,
+     355
+    ],
+    "pixels": 825
+   },
+   {
+    "host": "frame_right",
+    "rider": "base_vent",
+    "box": [
+     265,
+     484,
+     266,
+     511
+    ],
+    "pixels": 25
+   },
+   {
+    "host": "coin_mech_panel",
+    "rider": "coin_return_slot",
+    "box": [
+     264,
+     286,
+     280,
+     338
+    ],
+    "pixels": 96
+   },
+   {
+    "host": "coin_mech_panel",
+    "rider": "selection_button_1",
+    "box": [
+     239,
+     297,
+     261,
+     307
+    ],
+    "pixels": 220
+   },
+   {
+    "host": "coin_mech_panel",
+    "rider": "selection_button_2",
+    "box": [
+     239,
+     321,
+     261,
+     331
+    ],
+    "pixels": 220
+   },
+   {
+    "host": "coin_mech_panel",
+    "rider": "selection_button_3",
+    "box": [
+     239,
+     333,
+     260,
+     342
+    ],
+    "pixels": 189
+   },
+   {
+    "host": "coin_mech_panel",
+    "rider": "selection_button_4",
+    "box": [
+     253,
+     341,
+     274,
+     352
+    ],
+    "pixels": 150
+   },
+   {
+    "host": "delivery_flap",
+    "rider": "decal_3",
+    "box": [
+     27,
+     384,
+     207,
+     391
+    ],
+    "pixels": 334
+   },
+   {
+    "host": "delivery_flap",
+    "rider": "push_bar_slot",
+    "box": [
+     40,
+     389,
+     195,
+     397
+    ],
+    "pixels": 720
+   }
+  ],
+  "leads": []
+ },
+ {
+  "face": "front",
+  "cuts": [
+   {
+    "host": "frame_left",
+    "rider": "decal",
+    "box": [
+     7,
+     0,
+     31,
+     12
+    ],
+    "pixels": 18
+   },
+   {
+    "host": "frame_right",
+    "rider": "decal",
+    "box": [
+     265,
+     0,
+     292,
+     12
+    ],
+    "pixels": 19
+   },
+   {
+    "host": "decal",
+    "rider": "decal_2",
+    "box": [
+     12,
+     10,
+     283,
+     12
+    ],
+    "pixels": 542
+   },
+   {
+    "host": "frame_right",
+    "rider": "coin_mech_panel",
+    "box": [
+     265,
+     285,
+     280,
+     355
+    ],
+    "pixels": 825
+   },
+   {
+    "host": "frame_right",
+    "rider": "base_vent",
+    "box": [
+     265,
+     484,
+     266,
+     511
+    ],
+    "pixels": 25
+   },
+   {
+    "host": "coin_mech_panel",
+    "rider": "coin_return_slot",
+    "box": [
+     264,
+     286,
+     280,
+     338
+    ],
+    "pixels": 96
+   },
+   {
+    "host": "coin_mech_panel",
+    "rider": "selection_button_1",
+    "box": [
+     239,
+     297,
+     261,
+     307
+    ],
+    "pixels": 220
+   },
+   {
+    "host": "coin_mech_panel",
+    "rider": "selection_button_2",
+    "box": [
+     239,
+     321,
+     261,
+     331
+    ],
+    "pixels": 220
+   },
+   {
+    "host": "coin_mech_panel",
+    "rider": "selection_button_3",
+    "box": [
+     239,
+     333,
+     260,
+     342
+    ],
+    "pixels": 189
+   },
+   {
+    "host": "coin_mech_panel",
+    "rider": "selection_button_4",
+    "box": [
+     253,
+     341,
+     274,
+     352
+    ],
+    "pixels": 150
+   },
+   {
+    "host": "delivery_flap",
+    "rider": "decal_3",
+    "box": [
+     27,
+     384,
+     207,
+     391
+    ],
+    "pixels": 334
+   },
+   {
+    "host": "delivery_flap",
+    "rider": "push_bar_slot",
+    "box": [
+     40,
+     389,
+     195,
+     397
+    ],
+    "pixels": 720
+   }
+  ],
+  "leads": []
+ },
+ {
+  "face": "front",
+  "cuts": [
+   {
+    "host": "frame_left",
+    "rider": "decal",
+    "box": [
+     7,
+     0,
+     31,
+     12
+    ],
+    "pixels": 18
+   },
+   {
+    "host": "frame_right",
+    "rider": "decal",
+    "box": [
+     265,
+     0,
+     292,
+     12
+    ],
+    "pixels": 19
+   },
+   {
+    "host": "decal",
+    "rider": "decal_2",
+    "box": [
+     12,
+     10,
+     283,
+     12
+    ],
+    "pixels": 542
+   },
+   {
+    "host": "frame_right",
+    "rider": "coin_mech_panel",
+    "box": [
+     265,
+     285,
+     280,
+     355
+    ],
+    "pixels": 825
+   },
+   {
+    "host": "frame_right",
+    "rider": "base_vent",
+    "box": [
+     265,
+     484,
+     266,
+     511
+    ],
+    "pixels": 25
+   },
+   {
+    "host": "coin_mech_panel",
+    "rider": "coin_return_slot",
+    "box": [
+     264,
+     286,
+     280,
+     338
+    ],
+    "pixels": 96
+   },
+   {
+    "host": "coin_mech_panel",
+    "rider": "selection_button_1",
+    "box": [
+     239,
+     297,
+     261,
+     307
+    ],
+    "pixels": 220
+   },
+   {
+    "host": "coin_mech_panel",
+    "rider": "selection_button_2",
+    "box": [
+     239,
+     321,
+     261,
+     331
+    ],
+    "pixels": 220
+   },
+   {
+    "host": "coin_mech_panel",
+    "rider": "selection_button_3",
+    "box": [
+     239,
+     333,
+     260,
+     342
+    ],
+    "pixels": 189
+   },
+   {
+    "host": "coin_mech_panel",
+    "rider": "selection_button_4",
+    "box": [
+     253,
+     341,
+     274,
+     352
+    ],
+    "pixels": 150
+   },
+   {
+    "host": "delivery_flap",
+    "rider": "decal_3",
+    "box": [
+     27,
+     384,
+     207,
+     391
+    ],
+    "pixels": 334
+   },
+   {
+    "host": "delivery_flap",
+    "rider": "push_bar_slot",
+    "box": [
+     40,
+     389,
+     195,
+     397
+    ],
+    "pixels": 720
+   }
+  ],
+  "leads": []
+ },
+ {
+  "face": "front",
+  "cuts": [
+   {
+    "host": "frame_left",
+    "rider": "decal",
+    "box": [
+     7,
+     0,
+     31,
+     12
+    ],
+    "pixels": 18
+   },
+   {
+    "host": "frame_right",
+    "rider": "decal",
+    "box": [
+     265,
+     0,
+     292,
+     12
+    ],
+    "pixels": 19
+   },
+   {
+    "host": "decal",
+    "rider": "decal_2",
+    "box": [
+     12,
+     10,
+     283,
+     12
+    ],
+    "pixels": 542
+   },
+   {
+    "host": "frame_right",
+    "rider": "coin_mech_panel",
+    "box": [
+     265,
+     285,
+     280,
+     355
+    ],
+    "pixels": 825
+   },
+   {
+    "host": "frame_right",
+    "rider": "base_vent",
+    "box": [
+     265,
+     484,
+     266,
+     511
+    ],
+    "pixels": 25
+   },
+   {
+    "host": "coin_mech_panel",
+    "rider": "coin_return_slot",
+    "box": [
+     264,
+     286,
+     280,
+     338
+    ],
+    "pixels": 96
+   },
+   {
+    "host": "coin_mech_panel",
+    "rider": "selection_button_1",
+    "box": [
+     239,
+     297,
+     261,
+     307
+    ],
+    "pixels": 220
+   },
+   {
+    "host": "coin_mech_panel",
+    "rider": "selection_button_2",
+    "box": [
+     239,
+     321,
+     261,
+     331
+    ],
+    "pixels": 220
+   },
+   {
+    "host": "coin_mech_panel",
+    "rider": "selection_button_3",
+    "box": [
+     239,
+     333,
+     260,
+     342
+    ],
+    "pixels": 189
+   },
+   {
+    "host": "coin_mech_panel",
+    "rider": "selection_button_4",
+    "box": [
+     253,
+     341,
+     274,
+     352
+    ],
+    "pixels": 150
+   },
+   {
+    "host": "delivery_flap",
+    "rider": "decal_3",
+    "box": [
+     27,
+     384,
+     207,
+     391
+    ],
+    "pixels": 334
+   },
+   {
+    "host": "delivery_flap",
+    "rider": "push_bar_slot",
+    "box": [
+     40,
+     389,
+     195,
+     397
+    ],
+    "pixels": 720
+   }
+  ],
+  "leads": []
+ },
+ {
+  "face": "front",
+  "cuts": [
+   {
+    "host": "frame_left",
+    "rider": "decal",
+    "box": [
+     7,
+     0,
+     31,
+     12
+    ],
+    "pixels": 18
+   },
+   {
+    "host": "frame_right",
+    "rider": "decal",
+    "box": [
+     265,
+     0,
+     292,
+     12
+    ],
+    "pixels": 19
+   },
+   {
+    "host": "decal",
+    "rider": "decal_2",
+    "box": [
+     12,
+     10,
+     283,
+     12
+    ],
+    "pixels": 542
+   },
+   {
+    "host": "frame_right",
+    "rider": "coin_mech_panel",
+    "box": [
+     265,
+     285,
+     280,
+     355
+    ],
+    "pixels": 825
+   },
+   {
+    "host": "frame_right",
+    "rider": "base_vent",
+    "box": [
+     265,
+     484,
+     266,
+     511
+    ],
+    "pixels": 25
+   },
+   {
+    "host": "coin_mech_panel",
+    "rider": "coin_return_slot",
+    "box": [
+     264,
+     286,
+     280,
+     338
+    ],
+    "pixels": 96
+   },
+   {
+    "host": "coin_mech_panel",
+    "rider": "selection_button_1",
+    "box": [
+     239,
+     297,
+     261,
+     307
+    ],
+    "pixels": 220
+   },
+   {
+    "host": "coin_mech_panel",
+    "rider": "selection_button_2",
+    "box": [
+     239,
+     321,
+     261,
+     331
+    ],
+    "pixels": 220
+   },
+   {
+    "host": "coin_mech_panel",
+    "rider": "selection_button_3",
+    "box": [
+     239,
+     333,
+     260,
+     342
+    ],
+    "pixels": 189
+   },
+   {
+    "host": "coin_mech_panel",
+    "rider": "selection_button_4",
+    "box": [
+     253,
+     341,
+     274,
+     352
+    ],
+    "pixels": 150
+   },
+   {
+    "host": "delivery_flap",
+    "rider": "decal_3",
+    "box": [
+     27,
+     384,
+     207,
+     391
+    ],
+    "pixels": 334
+   },
+   {
+    "host": "delivery_flap",
+    "rider": "push_bar_slot",
+    "box": [
+     40,
+     389,
+     195,
+     397
+    ],
+    "pixels": 720
+   }
+  ],
+  "leads": []
+ },
+ {
+  "face": "front",
+  "cuts": [
+   {
+    "host": "frame_left",
+    "rider": "decal",
+    "box": [
+     7,
+     0,
+     31,
+     12
+    ],
+    "pixels": 18
+   },
+   {
+    "host": "frame_right",
+    "rider": "decal",
+    "box": [
+     265,
+     0,
+     292,
+     12
+    ],
+    "pixels": 19
+   },
+   {
+    "host": "decal",
+    "rider": "decal_2",
+    "box": [
+     12,
+     10,
+     283,
+     12
+    ],
+    "pixels": 542
+   },
+   {
+    "host": "frame_right",
+    "rider": "coin_mech_panel",
+    "box": [
+     265,
+     285,
+     280,
+     355
+    ],
+    "pixels": 825
+   },
+   {
+    "host": "frame_right",
+    "rider": "base_vent",
+    "box": [
+     265,
+     484,
+     266,
+     511
+    ],
+    "pixels": 25
+   },
+   {
+    "host": "coin_mech_panel",
+    "rider": "coin_return_slot",
+    "box": [
+     264,
+     286,
+     280,
+     338
+    ],
+    "pixels": 96
+   },
+   {
+    "host": "coin_mech_panel",
+    "rider": "selection_button_1",
+    "box": [
+     239,
+     297,
+     261,
+     307
+    ],
+    "pixels": 220
+   },
+   {
+    "host": "coin_mech_panel",
+    "rider": "selection_button_2",
+    "box": [
+     239,
+     321,
+     261,
+     331
+    ],
+    "pixels": 220
+   },
+   {
+    "host": "coin_mech_panel",
+    "rider": "selection_button_3",
+    "box": [
+     239,
+     333,
+     260,
+     342
+    ],
+    "pixels": 189
+   },
+   {
+    "host": "coin_mech_panel",
+    "rider": "selection_button_4",
+    "box": [
+     253,
+     341,
+     274,
+     352
+    ],
+    "pixels": 150
+   },
+   {
+    "host": "delivery_flap",
+    "rider": "decal_3",
+    "box": [
+     27,
+     384,
+     207,
+     391
+    ],
+    "pixels": 334
+   },
+   {
+    "host": "delivery_flap",
+    "rider": "push_bar_slot",
+    "box": [
+     40,
+     389,
+     195,
+     397
+    ],
+    "pixels": 720
+   }
+  ],
+  "leads": []
+ }
+]

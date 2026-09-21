@@ -1,0 +1,1213 @@
+{
+ "face": "front",
+ "size": [
+  336,
+  594
+ ],
+ "parts": [
+  {
+   "name": "crest_left",
+   "px": [
+    99,
+    3,
+    167,
+    66
+   ],
+   "mask": "masks/1.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "crest_center",
+   "px": [
+    141,
+    3,
+    194,
+    52
+   ],
+   "mask": "masks/2.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "crest_right",
+   "px": [
+    170,
+    3,
+    224,
+    66
+   ],
+   "mask": "masks/3.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "arch_glass_right",
+   "px": [
+    205,
+    15,
+    326,
+    173
+   ],
+   "mask": "masks/4.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "arch_glass_left",
+   "px": [
+    10,
+    16,
+    132,
+    170
+   ],
+   "mask": "masks/5.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "decal",
+   "px": [
+    27,
+    34,
+    130,
+    183
+   ],
+   "mask": "masks/6.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "arch_glass_right_2",
+   "px": [
+    207,
+    34,
+    308,
+    182
+   ],
+   "mask": "masks/7.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "decal_2",
+   "px": [
+    198,
+    39,
+    304,
+    185
+   ],
+   "mask": "masks/8.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "decal_3",
+   "px": [
+    118,
+    42,
+    134,
+    63
+   ],
+   "mask": "masks/9.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "arch_glass_left_2",
+   "px": [
+    48,
+    45,
+    121,
+    121
+   ],
+   "mask": "masks/10.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "dome_window",
+   "px": [
+    69,
+    70,
+    269,
+    178
+   ],
+   "mask": "masks/11.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "dome_glass_left",
+   "px": [
+    47,
+    107,
+    63,
+    129
+   ],
+   "mask": "masks/12.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "title_strip_left_top",
+   "px": [
+    83,
+    125,
+    180,
+    164
+   ],
+   "mask": "masks/13.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "decal_4",
+   "px": [
+    35,
+    129,
+    60,
+    187
+   ],
+   "mask": "masks/14.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "decal_5",
+   "px": [
+    170,
+    139,
+    188,
+    162
+   ],
+   "mask": "masks/15.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "decal_6",
+   "px": [
+    319,
+    146,
+    329,
+    170
+   ],
+   "mask": "masks/16.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "title_board_header",
+   "px": [
+    72,
+    152,
+    264,
+    179
+   ],
+   "mask": "masks/17.png",
+   "resize": "spanx_center",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "decal_7",
+   "px": [
+    2,
+    174,
+    58,
+    199
+   ],
+   "mask": "masks/18.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "decal_8",
+   "px": [
+    278,
+    174,
+    335,
+    198
+   ],
+   "mask": "masks/19.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "title_strip_left",
+   "px": [
+    68,
+    188,
+    82,
+    263
+   ],
+   "mask": "masks/20.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "speaker_grille_center",
+   "px": [
+    157,
+    188,
+    180,
+    262
+   ],
+   "mask": "masks/21.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "title_strip_right",
+   "px": [
+    255,
+    188,
+    269,
+    262
+   ],
+   "mask": "masks/22.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "decal_9",
+   "px": [
+    82,
+    191,
+    156,
+    199
+   ],
+   "mask": "masks/23.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "decal_10",
+   "px": [
+    208,
+    191,
+    254,
+    207
+   ],
+   "mask": "masks/24.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "title_strip_right_page",
+   "px": [
+    184,
+    195,
+    217,
+    256
+   ],
+   "mask": "masks/25.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "title_strip_right_page_2",
+   "px": [
+    220,
+    196,
+    252,
+    233
+   ],
+   "mask": "masks/26.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "title_text_line",
+   "px": [
+    7,
+    197,
+    52,
+    208
+   ],
+   "mask": "masks/27.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "title_text_line_2",
+   "px": [
+    126,
+    197,
+    147,
+    209
+   ],
+   "mask": "masks/28.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "title_text_line_3",
+   "px": [
+    301,
+    197,
+    332,
+    208
+   ],
+   "mask": "masks/29.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "title_text_line_4",
+   "px": [
+    286,
+    198,
+    322,
+    205
+   ],
+   "mask": "masks/30.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "title_text_line_5",
+   "px": [
+    2,
+    206,
+    58,
+    219
+   ],
+   "mask": "masks/31.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "title_text_line_6",
+   "px": [
+    279,
+    207,
+    335,
+    220
+   ],
+   "mask": "masks/32.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "title_text_line_7",
+   "px": [
+    86,
+    209,
+    118,
+    221
+   ],
+   "mask": "masks/33.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "title_text_line_8",
+   "px": [
+    130,
+    210,
+    147,
+    221
+   ],
+   "mask": "masks/34.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "title_text_block",
+   "px": [
+    186,
+    211,
+    256,
+    259
+   ],
+   "mask": "masks/35.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "title_text_line_9",
+   "px": [
+    6,
+    218,
+    29,
+    229
+   ],
+   "mask": "masks/36.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "title_text_line_10",
+   "px": [
+    27,
+    218,
+    47,
+    227
+   ],
+   "mask": "masks/37.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "title_text_line_11",
+   "px": [
+    288,
+    219,
+    322,
+    229
+   ],
+   "mask": "masks/38.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "title_text_block_2",
+   "px": [
+    122,
+    221,
+    155,
+    244
+   ],
+   "mask": "masks/39.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "title_text_line_12",
+   "px": [
+    89,
+    222,
+    115,
+    233
+   ],
+   "mask": "masks/40.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "title_text_line_13",
+   "px": [
+    2,
+    228,
+    58,
+    241
+   ],
+   "mask": "masks/41.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "title_text_line_14",
+   "px": [
+    278,
+    228,
+    335,
+    240
+   ],
+   "mask": "masks/42.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "title_text_block_3",
+   "px": [
+    220,
+    233,
+    252,
+    256
+   ],
+   "mask": "masks/43.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "title_text_line_15",
+   "px": [
+    86,
+    234,
+    117,
+    244
+   ],
+   "mask": "masks/44.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "title_strip_right_bottom",
+   "px": [
+    82,
+    238,
+    157,
+    260
+   ],
+   "mask": "masks/45.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "decal_11",
+   "px": [
+    303,
+    239,
+    311,
+    274
+   ],
+   "mask": "masks/46.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "bubbler_tube_left_outer",
+   "px": [
+    34,
+    240,
+    52,
+    462
+   ],
+   "mask": "masks/47.png",
+   "resize": "spany_center",
+   "anchor": "left",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "bubbler_tube_right_outer",
+   "px": [
+    286,
+    240,
+    304,
+    463
+   ],
+   "mask": "masks/48.png",
+   "resize": "spany_center",
+   "anchor": "right",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "bubbler_column_left",
+   "px": [
+    6,
+    241,
+    29,
+    463
+   ],
+   "mask": "masks/49.png",
+   "resize": "spany_center",
+   "anchor": "left",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "decal_12",
+   "px": [
+    28,
+    241,
+    35,
+    273
+   ],
+   "mask": "masks/50.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "bubbler_tube_left_inner",
+   "px": [
+    309,
+    241,
+    330,
+    311
+   ],
+   "mask": "masks/51.png",
+   "resize": "spany_center",
+   "anchor": "left",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "title_text_line_16",
+   "px": [
+    86,
+    245,
+    118,
+    256
+   ],
+   "mask": "masks/52.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "decal_13",
+   "px": [
+    134,
+    246,
+    153,
+    256
+   ],
+   "mask": "masks/53.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "bubbler_tube_left",
+   "px": [
+    310,
+    250,
+    330,
+    460
+   ],
+   "mask": "masks/54.png",
+   "resize": "spany_center",
+   "anchor": "left",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "speaker_grille",
+   "px": [
+    117,
+    267,
+    222,
+    321
+   ],
+   "mask": "masks/55.png",
+   "resize": "spanx_center",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "decal_14",
+   "px": [
+    118,
+    274,
+    124,
+    311
+   ],
+   "mask": "masks/56.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "decal_15",
+   "px": [
+    123,
+    274,
+    129,
+    310
+   ],
+   "mask": "masks/57.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "selector_button_right",
+   "px": [
+    78,
+    277,
+    116,
+    305
+   ],
+   "mask": "masks/58.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "press"
+  },
+  {
+   "name": "selector_button_right_2",
+   "px": [
+    222,
+    277,
+    260,
+    305
+   ],
+   "mask": "masks/59.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "press"
+  },
+  {
+   "name": "bubbler_tube_left_2",
+   "px": [
+    28,
+    279,
+    34,
+    324
+   ],
+   "mask": "masks/60.png",
+   "resize": "spany_center",
+   "anchor": "left",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "grille_slot_row",
+   "px": [
+    134,
+    280,
+    204,
+    294
+   ],
+   "mask": "masks/61.png",
+   "resize": "spanx_center",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "bubbler_tube_right",
+   "px": [
+    303,
+    280,
+    311,
+    454
+   ],
+   "mask": "masks/62.png",
+   "resize": "spany_center",
+   "anchor": "right",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "coin_slot",
+   "px": [
+    83,
+    283,
+    106,
+    299
+   ],
+   "mask": "masks/63.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "push_button_left",
+   "px": [
+    78,
+    285,
+    104,
+    305
+   ],
+   "mask": "masks/64.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "press"
+  },
+  {
+   "name": "grille_frame",
+   "px": [
+    117,
+    296,
+    209,
+    321
+   ],
+   "mask": "masks/65.png",
+   "resize": "spanx_center",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "push_button_left_2",
+   "px": [
+    86,
+    305,
+    111,
+    321
+   ],
+   "mask": "masks/66.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "press"
+  },
+  {
+   "name": "push_button_right",
+   "px": [
+    222,
+    305,
+    251,
+    319
+   ],
+   "mask": "masks/67.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "press"
+  },
+  {
+   "name": "decal_16",
+   "px": [
+    324,
+    319,
+    330,
+    380
+   ],
+   "mask": "masks/68.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "decal_17",
+   "px": [
+    28,
+    320,
+    33,
+    347
+   ],
+   "mask": "masks/69.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "lower_grille_fretwork",
+   "px": [
+    110,
+    320,
+    227,
+    504
+   ],
+   "mask": "masks/70.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "bubbler_tube_right_inner",
+   "px": [
+    227,
+    321,
+    256,
+    441
+   ],
+   "mask": "masks/71.png",
+   "resize": "spany_center",
+   "anchor": "right",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "bubbler_tube_right_2",
+   "px": [
+    81,
+    322,
+    111,
+    441
+   ],
+   "mask": "masks/72.png",
+   "resize": "spany_center",
+   "anchor": "right",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "bubbler_tube_right_3",
+   "px": [
+    28,
+    354,
+    36,
+    455
+   ],
+   "mask": "masks/73.png",
+   "resize": "spany_center",
+   "anchor": "right",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "bubbler_tube_right_4",
+   "px": [
+    314,
+    383,
+    330,
+    461
+   ],
+   "mask": "masks/74.png",
+   "resize": "spany_center",
+   "anchor": "right",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "bubbler_tube_right_5",
+   "px": [
+    304,
+    385,
+    310,
+    433
+   ],
+   "mask": "masks/75.png",
+   "resize": "spany_center",
+   "anchor": "right",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "decal_18",
+   "px": [
+    226,
+    443,
+    257,
+    454
+   ],
+   "mask": "masks/76.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "decal_19",
+   "px": [
+    80,
+    444,
+    113,
+    454
+   ],
+   "mask": "masks/77.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "lower_grille_scroll_left",
+   "px": [
+    82,
+    453,
+    162,
+    535
+   ],
+   "mask": "masks/78.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "lower_grille_scroll_right",
+   "px": [
+    174,
+    454,
+    255,
+    535
+   ],
+   "mask": "masks/79.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "foot_left",
+   "px": [
+    0,
+    462,
+    59,
+    569
+   ],
+   "mask": "masks/80.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "foot_right",
+   "px": [
+    278,
+    463,
+    336,
+    570
+   ],
+   "mask": "masks/81.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "grille_finial_bottom",
+   "px": [
+    161,
+    503,
+    176,
+    558
+   ],
+   "mask": "masks/82.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "coin_door",
+   "px": [
+    70,
+    530,
+    105,
+    556
+   ],
+   "mask": "masks/83.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "bottom_rail",
+   "px": [
+    65,
+    570,
+    274,
+    585
+   ],
+   "mask": "masks/84.png",
+   "resize": "spanx_center",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "base_trim_left",
+   "px": [
+    272,
+    570,
+    330,
+    594
+   ],
+   "mask": "masks/85.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "base_trim_right",
+   "px": [
+    6,
+    571,
+    65,
+    594
+   ],
+   "mask": "masks/86.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "none"
+  }
+ ]
+}

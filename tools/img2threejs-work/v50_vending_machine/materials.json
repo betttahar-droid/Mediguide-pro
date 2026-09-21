@@ -1,0 +1,118 @@
+{
+ "asset": "vending machine",
+ "px_per_tile": 51,
+ "materials": [
+  {
+   "n": 1,
+   "image": "materials/m1.png",
+   "seam_before": 3.206,
+   "seam_after": 1.024,
+   "median": [
+    77,
+    77,
+    71
+   ],
+   "tiles": true,
+   "name": "body_panel",
+   "main": true
+  },
+  {
+   "n": 2,
+   "image": "materials/m2.png",
+   "seam_before": 1.874,
+   "seam_after": 1.135,
+   "median": [
+    112,
+    122,
+    124
+   ],
+   "tiles": true,
+   "name": "accent_panel",
+   "main": false
+  },
+  {
+   "n": 3,
+   "image": "materials/m3.png",
+   "seam_before": 1.887,
+   "seam_after": 1.052,
+   "median": [
+    126,
+    119,
+    99
+   ],
+   "tiles": true,
+   "name": "painted_metal",
+   "main": false
+  },
+  {
+   "n": 4,
+   "image": "materials/m4.png",
+   "seam_before": 3.787,
+   "seam_after": 1.313,
+   "median": [
+    141,
+    141,
+    139
+   ],
+   "tiles": false,
+   "name": "metal_trim",
+   "main": false
+  },
+  {
+   "n": 5,
+   "image": "materials/m5.png",
+   "seam_before": 2.136,
+   "seam_after": 0.968,
+   "median": [
+    108,
+    105,
+    97
+   ],
+   "tiles": true,
+   "name": "vent_mesh",
+   "main": false
+  },
+  {
+   "n": 6,
+   "image": "materials/m6.png",
+   "seam_before": 1.255,
+   "seam_after": 1.039,
+   "median": [
+    40,
+    41,
+    39
+   ],
+   "tiles": true,
+   "name": "dark_rubber",
+   "main": false
+  },
+  {
+   "n": 7,
+   "image": "materials/m7.png",
+   "seam_before": 6.932,
+   "seam_after": 1.384,
+   "median": [
+    123,
+    118,
+    106
+   ],
+   "tiles": false,
+   "name": "worn_panel",
+   "main": false
+  },
+  {
+   "n": 8,
+   "image": "materials/m8.png",
+   "seam_before": 2.983,
+   "seam_after": 1.168,
+   "median": [
+    126,
+    119,
+    101
+   ],
+   "tiles": true,
+   "name": "rusted_metal",
+   "main": false
+  }
+ ]
+}

@@ -1,0 +1,28 @@
+{
+ "depth": 0.44869,
+ "aspect": 0.58753,
+ "front_edge": "right",
+ "front_edge_said": "right",
+ "front_edge_by_relief": null,
+ "relief_bias": 0.0,
+ "front_wall": [
+  [
+   1.0,
+   0.22032
+  ],
+  [
+   0.00201,
+   0.22032
+  ]
+ ],
+ "back_wall": [
+  [
+   1.0,
+   -0.22435
+  ],
+  [
+   0.00201,
+   -0.22435
+  ]
+ ]
+}

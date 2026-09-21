@@ -1,0 +1,293 @@
+{
+ "face": "front",
+ "size": [
+  302,
+  535
+ ],
+ "aspect": 0.56449,
+ "background": "bg_front.png",
+ "background_mode": "mirror",
+ "parts": [
+  {
+   "name": "marquee",
+   "image": "parts/marquee.png",
+   "hf": null,
+   "resize": "spanx_center",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": true,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    289,
+    165
+   ],
+   "u": [
+    0.02318,
+    0.98013
+   ],
+   "v": [
+    0.66729,
+    0.9757
+   ]
+  },
+  {
+   "name": "title_strip_panel",
+   "image": "parts/title_strip_panel.png",
+   "hf": null,
+   "resize": "spanx_repeat",
+   "resize_y": "spanx_repeat",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": true,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    289,
+    234
+   ],
+   "u": [
+    0.02318,
+    0.98013
+   ],
+   "v": [
+    0.26729,
+    0.70467
+   ]
+  },
+  {
+   "name": "decal_1",
+   "image": "parts/decal_1.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.25,
+     0.4375
+    ],
+    "v": [
+     0.1111,
+     0.4444
+    ]
+   },
+   "px_size": [
+    17,
+    9
+   ],
+   "u": [
+    0.01325,
+    0.06954
+   ],
+   "v": [
+    0.23925,
+    0.25607
+   ]
+  },
+  {
+   "name": "decal_2",
+   "image": "parts/decal_2.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.7778,
+     0.9444
+    ],
+    "v": [
+     0.1852,
+     0.5926
+    ]
+   },
+   "px_size": [
+    19,
+    27
+   ],
+   "u": [
+    0.06954,
+    0.13245
+   ],
+   "v": [
+    0.00374,
+    0.05421
+   ]
+  },
+  {
+   "name": "decal_4",
+   "image": "parts/decal_4.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.4,
+     0.6
+    ],
+    "v": [
+     0.05,
+     0.2
+    ]
+   },
+   "px_size": [
+    10,
+    20
+   ],
+   "u": [
+    0.19205,
+    0.22517
+   ],
+   "v": [
+    0.09907,
+    0.13645
+   ]
+  },
+  {
+   "name": "decal_5",
+   "image": "parts/decal_5.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.4545,
+     0.6364
+    ],
+    "v": [
+     0.35,
+     0.5
+    ]
+   },
+   "px_size": [
+    11,
+    20
+   ],
+   "u": [
+    0.27152,
+    0.30795
+   ],
+   "v": [
+    0.09907,
+    0.13645
+   ]
+  },
+  {
+   "name": "decal_7",
+   "image": "parts/decal_7.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.5,
+     0.7857
+    ],
+    "v": [
+     0.6667,
+     1.0
+    ]
+   },
+   "px_size": [
+    14,
+    7
+   ],
+   "u": [
+    0.93046,
+    0.97682
+   ],
+   "v": [
+    0.24299,
+    0.25607
+   ]
+  },
+  {
+   "name": "decal_8",
+   "image": "parts/decal_8.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": [
+     0.0323,
+     0.3226
+    ]
+   },
+   "px_size": [
+    16,
+    31
+   ],
+   "u": [
+    0.94371,
+    0.99669
+   ],
+   "v": [
+    0.17196,
+    0.22991
+   ]
+  }
+ ]
+}

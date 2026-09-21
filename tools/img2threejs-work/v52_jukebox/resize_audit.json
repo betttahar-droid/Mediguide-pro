@@ -1,0 +1,39 @@
+{
+ "face": "front",
+ "adaptations": [
+  {
+   "part": "bubbler_tube_left_outer",
+   "axis": "taller",
+   "scale": 1.6,
+   "also": [
+    "bubbler_tube_right_outer",
+    "bubbler_column_left",
+    "bubbler_tube_left",
+    "bubbler_tube_left_2",
+    "bubbler_tube_right",
+    "grille_frame",
+    "bubbler_tube_right_inner",
+    "bubbler_tube_right_2",
+    "bubbler_tube_right_3",
+    "bubbler_tube_right_4",
+    "bubbler_tube_right_5",
+    "bottom_rail"
+   ],
+   "blame": "part",
+   "verdict": "PASS",
+   "why": "At 1.6x the bubbler tube is taller but its bubbles stay round and the blue-to-red gradient keeps its drawn character, with the tube still seated in the cabinet trim.",
+   "did": "Down the prop it is `spany_repeat`. Because the prop was said to get taller BY this part -- a leg, column or upright that simply gets longer. 13 parts on this prop carry the same decision (bubbler_tube_left_outer, bubbler_tube_right_outer, bubbler_column_left, bubbler_tube_left, ...); this is one audit of all of them."
+  },
+  {
+   "part": "the body",
+   "axis": "taller",
+   "scale": 1.6,
+   "also": [],
+   "blame": "part",
+   "verdict": "FAIL",
+   "why": "The stretched body shows blank wood patches and smeared seams in the inserted midsection, and the grille/title-rack artwork is squashed and displaced rather than holding its drawn proportions.",
+   "did": "The carcass grows by INSERTING COPIES of its own artwork at rows 240..463 (at the itself of bubbler_tube_left_outer+bubbler_tube_right_outer+bubbler_tube_left_2+grille_frame+bubbler_column_left+bubbler_tube_right_inner+bubbler_tube_right_2+bubbler_tube_right_3+bubbler_tube_right_4+bubbler_tube_right_5), rows 570..585 (at the itself of bottom_rail) -- 238 rows of a 594-row elevation, chosen because nothing is drawn across them. Everything above and below a place holds its drawn size and simply moves apart.",
+   "should_be": "spany_repeat"
+  }
+ ]
+}

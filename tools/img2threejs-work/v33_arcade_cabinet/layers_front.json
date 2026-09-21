@@ -1,0 +1,145 @@
+{
+ "face": "front",
+ "size": [
+  233,
+  553
+ ],
+ "aspect": 0.42134,
+ "background": "bg_front.png",
+ "background_mode": "mirror",
+ "parts": [
+  {
+   "name": "marquee",
+   "image": "parts/marquee.png",
+   "hf": [
+    0.14492753623188406,
+    0.18840579710144928
+   ],
+   "resize": "spanx_center",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": true,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    208,
+    60
+   ],
+   "u": [
+    0.05579,
+    0.9485
+   ],
+   "v": [
+    0.87161,
+    0.98011
+   ]
+  },
+  {
+   "name": "screen",
+   "image": "parts/screen.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    159,
+    115
+   ],
+   "u": [
+    0.1588,
+    0.8412
+   ],
+   "v": [
+    0.55877,
+    0.76673
+   ]
+  },
+  {
+   "name": "control_deck",
+   "image": "parts/control_deck.png",
+   "hf": [
+    0.04265402843601896,
+    0.08530805687203792
+   ],
+   "resize": "spanx_repeat",
+   "resize_y": "spanx_repeat",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": true,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": [
+     0.1739,
+     0.3478
+    ]
+   },
+   "px_size": [
+    212,
+    23
+   ],
+   "u": [
+    0.04721,
+    0.95708
+   ],
+   "v": [
+    0.4792,
+    0.5208
+   ]
+  },
+  {
+   "name": "coin_door",
+   "image": "parts/coin_door.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "center",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    69,
+    145
+   ],
+   "u": [
+    0.35193,
+    0.64807
+   ],
+   "v": [
+    0.06691,
+    0.32911
+   ]
+  }
+ ]
+}

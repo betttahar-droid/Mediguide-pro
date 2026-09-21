@@ -1,0 +1,35 @@
+{
+ "face": "front",
+ "size": [
+  263,
+  641
+ ],
+ "parts": [
+  {
+   "name": "speaker_grille",
+   "px": [
+    13,
+    86,
+    249,
+    122
+   ],
+   "resize": "spanx_repeat",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "coin_door",
+   "px": [
+    76,
+    421,
+    186,
+    529
+   ],
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "none"
+  }
+ ]
+}

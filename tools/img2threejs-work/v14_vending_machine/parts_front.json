@@ -1,0 +1,61 @@
+{
+ "face": "front",
+ "size": [
+  303,
+  584
+ ],
+ "parts": [
+  {
+   "name": "shelf_row_top",
+   "px": [
+    29,
+    19,
+    222,
+    121
+   ],
+   "resize": "spanx_repeat",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "shelf_row_middle",
+   "px": [
+    29,
+    72,
+    222,
+    207
+   ],
+   "resize": "spanx_repeat",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "shelf_row_bottom",
+   "px": [
+    29,
+    206,
+    222,
+    309
+   ],
+   "resize": "spanx_repeat",
+   "anchor": "bottom",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "dispensing_tray",
+   "px": [
+    1,
+    419,
+    298,
+    559
+   ],
+   "resize": "spanx_center",
+   "anchor": "bottom",
+   "depth": "recessed",
+   "motion": "none"
+  }
+ ]
+}

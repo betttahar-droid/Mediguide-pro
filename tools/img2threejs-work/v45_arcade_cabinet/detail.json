@@ -1,0 +1,41 @@
+{
+ "face": "front",
+ "redrawn": {
+  "decal_6": [
+   78,
+   60
+  ],
+  "start_button_right": [
+   60,
+   102
+  ],
+  "door_button_upper_right": [
+   64,
+   78
+  ],
+  "coin_door": [
+   320,
+   64
+  ],
+  "decal_9": [
+   60,
+   66
+  ],
+  "decal": [
+   69,
+   64
+  ],
+  "decal_4": [
+   90,
+   64
+  ],
+  "door_button_lower_right": [
+   64,
+   68
+  ],
+  "door_button_upper_left": [
+   64,
+   78
+  ]
+ }
+}

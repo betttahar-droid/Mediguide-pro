@@ -1,0 +1,14 @@
+[
+ {
+  "face": "front",
+  "member_depth": [
+   {
+    "part": "coin_door_panel",
+    "was": "proud",
+    "now": "flush",
+    "solid": 0.509,
+    "why": "only 51% of the prop is solid across its rows, so it stands in air: it is structure inside the depth, not relief on a face"
+   }
+  ]
+ }
+]

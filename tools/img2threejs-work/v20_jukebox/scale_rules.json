@@ -1,0 +1,16 @@
+{
+ "wider_means": "A wider jukebox is a broader cabinet with more title-strip columns and a wider speaker grille, not a stretched sign.",
+ "taller_means": "A taller jukebox is a taller cabinet body \u2014 a bigger arched top and longer grille area \u2014 not a taller marquee graphic.",
+ "max_wider": 1.6,
+ "max_taller": 1.5,
+ "per_bay": [
+  "decal_3",
+  "decal_4",
+  "decal_5",
+  "decal_6"
+ ],
+ "spans": [
+  "marquee",
+  "title_strip_panel"
+ ]
+}

@@ -1,0 +1,51 @@
+{
+ "wider_means": "A wider vending machine has more product columns in the display window.",
+ "taller_means": "A taller vending machine has more shelves of product rows inside the window, plus slightly more plain cabinet body.",
+ "taller_at": [
+  {
+   "part": "frame_left",
+   "side": "itself",
+   "px": [
+    450,
+    484
+   ]
+  },
+  {
+   "part": "frame_right",
+   "side": "itself",
+   "px": [
+    450,
+    484
+   ]
+  }
+ ],
+ "max_wider": 2.0,
+ "max_taller": 1.6,
+ "per_bay": [
+  "product_window_1",
+  "product_window_2",
+  "product_window_3",
+  "product_window_4",
+  "product_window_5",
+  "product_window_6",
+  "product_window_7",
+  "product_window_8",
+  "product_window_9"
+ ],
+ "per_tier": [
+  "product_window_1",
+  "product_window_2",
+  "product_window_3",
+  "product_window_4",
+  "product_window_5",
+  "product_window_6",
+  "product_window_7",
+  "product_window_8",
+  "product_window_9"
+ ],
+ "spans": [
+  "frame_left",
+  "frame_right",
+  "marquee"
+ ]
+}

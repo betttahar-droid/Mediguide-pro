@@ -1,0 +1,345 @@
+{
+ "face": "front",
+ "size": [
+  246,
+  569
+ ],
+ "parts": [
+  {
+   "name": "marquee",
+   "px": [
+    24,
+    12,
+    232,
+    68
+   ],
+   "mask": "masks/1.png",
+   "resize": "spanx_center",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "decal",
+   "px": [
+    45,
+    12,
+    123,
+    23
+   ],
+   "mask": "masks/2.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "decal_2",
+   "px": [
+    125,
+    12,
+    173,
+    19
+   ],
+   "mask": "masks/3.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "marquee_art",
+   "px": [
+    16,
+    13,
+    191,
+    68
+   ],
+   "mask": "masks/4.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "decal_3",
+   "px": [
+    15,
+    32,
+    19,
+    66
+   ],
+   "mask": "masks/5.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "decal_4",
+   "px": [
+    193,
+    52,
+    230,
+    67
+   ],
+   "mask": "masks/6.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "score_display",
+   "px": [
+    194,
+    54,
+    225,
+    67
+   ],
+   "mask": "masks/7.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "speaker_grille",
+   "px": [
+    11,
+    77,
+    236,
+    109
+   ],
+   "mask": "masks/8.png",
+   "resize": "spanx_center",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "screen",
+   "px": [
+    36,
+    133,
+    211,
+    255
+   ],
+   "mask": "masks/9.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "joystick_left",
+   "px": [
+    37,
+    263,
+    55,
+    298
+   ],
+   "mask": "masks/10.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "deep",
+   "motion": "stick"
+  },
+  {
+   "name": "joystick_right",
+   "px": [
+    140,
+    263,
+    157,
+    296
+   ],
+   "mask": "masks/11.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "deep",
+   "motion": "stick"
+  },
+  {
+   "name": "button_panel_right",
+   "px": [
+    152,
+    278,
+    237,
+    310
+   ],
+   "mask": "masks/12.png",
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "button_panel_left",
+   "px": [
+    10,
+    279,
+    103,
+    310
+   ],
+   "mask": "masks/13.png",
+   "resize": "fixed",
+   "anchor": "left",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "center_buttons",
+   "px": [
+    95,
+    279,
+    139,
+    301
+   ],
+   "mask": "masks/14.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "decal_5",
+   "px": [
+    85,
+    299,
+    165,
+    309
+   ],
+   "mask": "masks/15.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "decal_6",
+   "px": [
+    104,
+    307,
+    152,
+    310
+   ],
+   "mask": "masks/16.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "coin_door_left",
+   "px": [
+    126,
+    368,
+    163,
+    551
+   ],
+   "mask": "masks/17.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "hinge_left"
+  },
+  {
+   "name": "coin_door_right",
+   "px": [
+    84,
+    369,
+    122,
+    551
+   ],
+   "mask": "masks/18.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "hinge_right"
+  },
+  {
+   "name": "cashbox_door_left",
+   "px": [
+    126,
+    375,
+    158,
+    458
+   ],
+   "mask": "masks/19.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "hinge_left"
+  },
+  {
+   "name": "coin_slot_left",
+   "px": [
+    131,
+    383,
+    140,
+    397
+   ],
+   "mask": "masks/20.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "coin_slot_right",
+   "px": [
+    106,
+    384,
+    115,
+    397
+   ],
+   "mask": "masks/21.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "decal_7",
+   "px": [
+    155,
+    395,
+    159,
+    443
+   ],
+   "mask": "masks/22.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "cashbox_door_right",
+   "px": [
+    125,
+    461,
+    157,
+    546
+   ],
+   "mask": "masks/23.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "hinge_right"
+  },
+  {
+   "name": "decal_8",
+   "px": [
+    155,
+    468,
+    159,
+    537
+   ],
+   "mask": "masks/24.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none"
+  }
+ ]
+}

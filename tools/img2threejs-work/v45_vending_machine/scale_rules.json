@@ -1,0 +1,83 @@
+{
+ "wider_means": "a wider vending machine has more product columns across the display window",
+ "taller_means": "a taller vending machine has more product rows on more shelves inside the cabinet",
+ "taller_at": [
+  {
+   "part": "marquee",
+   "side": "below",
+   "px": [
+    91,
+    100
+   ]
+  },
+  {
+   "part": "coin_return_door",
+   "side": "itself",
+   "px": [
+    416,
+    561
+   ]
+  },
+  {
+   "part": "notice_panel",
+   "side": "itself",
+   "px": [
+    105,
+    169
+   ]
+  }
+ ],
+ "max_wider": 2.0,
+ "max_taller": 1.5,
+ "per_bay": [
+  "product",
+  "product_2",
+  "product_3",
+  "decal_3",
+  "product_5",
+  "product_6",
+  "product_7",
+  "product_9",
+  "product_10",
+  "product_11",
+  "product_12",
+  "product_13",
+  "product_14",
+  "product_15",
+  "product_16",
+  "product_17",
+  "product_18",
+  "product_19",
+  "product_20",
+  "product_21",
+  "product_22"
+ ],
+ "per_tier": [
+  "product",
+  "product_2",
+  "product_3",
+  "product_5",
+  "product_6",
+  "product_7",
+  "product_9",
+  "product_10",
+  "product_11",
+  "product_12",
+  "product_13",
+  "product_14",
+  "product_15",
+  "product_16",
+  "product_17",
+  "product_18",
+  "product_19",
+  "product_20",
+  "product_21",
+  "product_22"
+ ],
+ "spans": [
+  "marquee",
+  "delivery_tray",
+  "decal_59",
+  "decal_2"
+ ]
+}

@@ -1,0 +1,118 @@
+{
+ "asset": "jukebox",
+ "px_per_tile": 60,
+ "materials": [
+  {
+   "n": 1,
+   "image": "materials/m1.png",
+   "seam_before": 1.35,
+   "seam_after": 1.057,
+   "median": [
+    126,
+    107,
+    83
+   ],
+   "tiles": true,
+   "name": "light_wood",
+   "main": false
+  },
+  {
+   "n": 2,
+   "image": "materials/m2.png",
+   "seam_before": 1.172,
+   "seam_after": 1.026,
+   "median": [
+    143,
+    164,
+    125
+   ],
+   "tiles": true,
+   "name": "green_panel",
+   "main": false
+  },
+  {
+   "n": 3,
+   "image": "materials/m3.png",
+   "seam_before": 7.195,
+   "seam_after": 1.176,
+   "median": [
+    135,
+    145,
+    145
+   ],
+   "tiles": true,
+   "name": "metal_trim",
+   "main": false
+  },
+  {
+   "n": 4,
+   "image": "materials/m4.png",
+   "seam_before": 1.193,
+   "seam_after": 1.193,
+   "median": [
+    63,
+    67,
+    64
+   ],
+   "tiles": true,
+   "name": "vent_mesh",
+   "main": false
+  },
+  {
+   "n": 5,
+   "image": "materials/m5.png",
+   "seam_before": 1.482,
+   "seam_after": 1.075,
+   "median": [
+    44,
+    51,
+    51
+   ],
+   "tiles": true,
+   "name": "dark_rubber",
+   "main": false
+  },
+  {
+   "n": 6,
+   "image": "materials/m6.png",
+   "seam_before": 1.155,
+   "seam_after": 1.079,
+   "median": [
+    45,
+    49,
+    52
+   ],
+   "tiles": true,
+   "name": "black_metal",
+   "main": false
+  },
+  {
+   "n": 7,
+   "image": "materials/m7.png",
+   "seam_before": 4.947,
+   "seam_after": 1.125,
+   "median": [
+    60,
+    73,
+    92
+   ],
+   "tiles": true,
+   "name": "wood",
+   "main": true
+  },
+  {
+   "n": 8,
+   "image": "materials/m8.png",
+   "seam_before": 4.138,
+   "seam_after": 1.167,
+   "median": [
+    81,
+    65,
+    45
+   ],
+   "tiles": true,
+   "name": "dark_wood",
+   "main": false
+  }
+ ]
+}

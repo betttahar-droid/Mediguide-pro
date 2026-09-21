@@ -1,0 +1,77 @@
+{
+ "face": "front",
+ "redrawn": {
+  "plunger": [
+   64,
+   64
+  ],
+  "decal_10": [
+   108,
+   64
+  ],
+  "decal_5": [
+   64,
+   78
+  ],
+  "flipper_button_right": [
+   64,
+   75
+  ],
+  "decal_6": [
+   81,
+   64
+  ],
+  "start_button": [
+   149,
+   64
+  ],
+  "bumper_4": [
+   64,
+   73
+  ],
+  "score_panel_left": [
+   68,
+   64
+  ],
+  "target": [
+   75,
+   64
+  ],
+  "decal_3": [
+   64,
+   98
+  ],
+  "decal_8": [
+   108,
+   60
+  ],
+  "bumper_3": [
+   70,
+   64
+  ],
+  "decal_2": [
+   60,
+   102
+  ],
+  "decal_4": [
+   64,
+   122
+  ],
+  "launch_button": [
+   90,
+   64
+  ],
+  "bumper_6": [
+   64,
+   64
+  ],
+  "bumper_2": [
+   81,
+   64
+  ],
+  "score_panel_right": [
+   64,
+   64
+  ]
+ }
+}

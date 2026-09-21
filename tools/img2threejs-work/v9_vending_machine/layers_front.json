@@ -1,0 +1,306 @@
+{
+ "face": "front",
+ "size": [
+  310,
+  585
+ ],
+ "aspect": 0.52991,
+ "background": "bg_front.png",
+ "background_mode": "mirror",
+ "parts": [
+  {
+   "name": "side_panel",
+   "image": "parts/side_panel.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "right",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    61,
+    539
+   ],
+   "u": [
+    0.79355,
+    0.99032
+   ],
+   "v": [
+    0.04444,
+    0.96581
+   ]
+  },
+  {
+   "name": "snack_row_top",
+   "image": "parts/snack_row_top.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "left",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    207,
+    212
+   ],
+   "u": [
+    0.09355,
+    0.76129
+   ],
+   "v": [
+    0.59829,
+    0.96068
+   ]
+  },
+  {
+   "name": "snack_row_upper",
+   "image": "parts/snack_row_upper.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "left",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": [
+     0.8158,
+     0.9737
+    ]
+   },
+   "px_size": [
+    97,
+    77
+   ],
+   "u": [
+    0.44839,
+    0.76129
+   ],
+   "v": [
+    0.82906,
+    0.96068
+   ]
+  },
+  {
+   "name": "coin_slot",
+   "image": "parts/coin_slot.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "right",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": [
+     0.3529,
+     0.5588
+    ]
+   },
+   "px_size": [
+    46,
+    34
+   ],
+   "u": [
+    0.82258,
+    0.97097
+   ],
+   "v": [
+    0.69573,
+    0.75385
+   ]
+  },
+  {
+   "name": "bill_slot",
+   "image": "parts/bill_slot.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "right",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    48,
+    31
+   ],
+   "u": [
+    0.81935,
+    0.97419
+   ],
+   "v": [
+    0.5812,
+    0.63419
+   ]
+  },
+  {
+   "name": "snack_row_middle",
+   "image": "parts/snack_row_middle.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "left",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    207,
+    102
+   ],
+   "u": [
+    0.09355,
+    0.76129
+   ],
+   "v": [
+    0.43248,
+    0.60684
+   ]
+  },
+  {
+   "name": "keypad",
+   "image": "parts/keypad.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "right",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": [
+     0.04,
+     0.2133
+    ]
+   },
+   "px_size": [
+    53,
+    75
+   ],
+   "u": [
+    0.81935,
+    0.99032
+   ],
+   "v": [
+    0.43419,
+    0.56239
+   ]
+  },
+  {
+   "name": "snack_row_bottom",
+   "image": "parts/snack_row_bottom.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "left",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    207,
+    75
+   ],
+   "u": [
+    0.09355,
+    0.76129
+   ],
+   "v": [
+    0.30598,
+    0.43419
+   ]
+  },
+  {
+   "name": "dispense_tray",
+   "image": "parts/dispense_tray.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "recessed",
+   "motion": "hinge_bottom",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.3988,
+     0.6012
+    ],
+    "v": [
+     0.2041,
+     0.3673
+    ]
+   },
+   "px_size": [
+    173,
+    50
+   ],
+   "u": [
+    0.14839,
+    0.70645
+   ],
+   "v": [
+    0.16239,
+    0.24786
+   ]
+  }
+ ]
+}

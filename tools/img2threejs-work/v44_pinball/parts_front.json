@@ -1,0 +1,459 @@
+{
+ "face": "front",
+ "size": [
+  266,
+  646
+ ],
+ "parts": [
+  {
+   "name": "backglass",
+   "px": [
+    16,
+    18,
+    235,
+    167
+   ],
+   "mask": "masks/1.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "spans": true,
+   "lengthens": false
+  },
+  {
+   "name": "score_display",
+   "px": [
+    65,
+    179,
+    186,
+    213
+   ],
+   "mask": "masks/2.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "spans": false,
+   "lengthens": false
+  },
+  {
+   "name": "speaker_grille_right",
+   "px": [
+    196,
+    184,
+    231,
+    220
+   ],
+   "mask": "masks/3.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": false,
+   "spans": false,
+   "lengthens": false
+  },
+  {
+   "name": "speaker_grille_left",
+   "px": [
+    21,
+    185,
+    55,
+    220
+   ],
+   "mask": "masks/4.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": false,
+   "spans": false,
+   "lengthens": false
+  },
+  {
+   "name": "playfield",
+   "px": [
+    31,
+    265,
+    201,
+    350
+   ],
+   "mask": "masks/5.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "spans": true,
+   "lengthens": false
+  },
+  {
+   "name": "decal",
+   "px": [
+    202,
+    277,
+    221,
+    346
+   ],
+   "mask": "masks/6.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "spans": false,
+   "lengthens": false
+  },
+  {
+   "name": "decal_2",
+   "px": [
+    32,
+    347,
+    78,
+    354
+   ],
+   "mask": "masks/7.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "spans": false,
+   "lengthens": false
+  },
+  {
+   "name": "lockdown_bar",
+   "px": [
+    15,
+    353,
+    237,
+    369
+   ],
+   "mask": "masks/8.png",
+   "resize": "spanx_center",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "spans": true,
+   "lengthens": false
+  },
+  {
+   "name": "decal_3",
+   "px": [
+    235,
+    373,
+    266,
+    395
+   ],
+   "mask": "masks/9.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "spans": false,
+   "lengthens": false
+  },
+  {
+   "name": "instruction_card",
+   "px": [
+    64,
+    376,
+    187,
+    473
+   ],
+   "mask": "masks/10.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "spans": false,
+   "lengthens": false
+  },
+  {
+   "name": "flipper_button_right",
+   "px": [
+    198,
+    377,
+    225,
+    409
+   ],
+   "mask": "masks/11.png",
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "deep",
+   "motion": "press",
+   "per_bay": true,
+   "per_tier": false,
+   "spans": false,
+   "lengthens": false
+  },
+  {
+   "name": "decal_4",
+   "px": [
+    72,
+    383,
+    147,
+    468
+   ],
+   "mask": "masks/12.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": false,
+   "spans": false,
+   "lengthens": false
+  },
+  {
+   "name": "decal_5",
+   "px": [
+    140,
+    383,
+    181,
+    468
+   ],
+   "mask": "masks/13.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "spans": false,
+   "lengthens": false
+  },
+  {
+   "name": "button",
+   "px": [
+    35,
+    386,
+    48,
+    401
+   ],
+   "mask": "masks/14.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": false,
+   "per_tier": false,
+   "spans": false,
+   "lengthens": false
+  },
+  {
+   "name": "button_2",
+   "px": [
+    94,
+    389,
+    115,
+    412
+   ],
+   "mask": "masks/15.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": false,
+   "per_tier": false,
+   "spans": false,
+   "lengthens": false
+  },
+  {
+   "name": "button_3",
+   "px": [
+    139,
+    389,
+    159,
+    413
+   ],
+   "mask": "masks/16.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": false,
+   "per_tier": false,
+   "spans": false,
+   "lengthens": false
+  },
+  {
+   "name": "decal_6",
+   "px": [
+    29,
+    406,
+    55,
+    424
+   ],
+   "mask": "masks/17.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "spans": false,
+   "lengthens": false
+  },
+  {
+   "name": "leg_left",
+   "px": [
+    1,
+    415,
+    37,
+    641
+   ],
+   "mask": "masks/18.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "spans": false,
+   "lengthens": true
+  },
+  {
+   "name": "leg_right",
+   "px": [
+    216,
+    417,
+    251,
+    641
+   ],
+   "mask": "masks/19.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "spans": false,
+   "lengthens": true
+  },
+  {
+   "name": "button_4",
+   "px": [
+    138,
+    441,
+    159,
+    462
+   ],
+   "mask": "masks/20.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": false,
+   "per_tier": false,
+   "spans": false,
+   "lengthens": false
+  },
+  {
+   "name": "button_5",
+   "px": [
+    93,
+    442,
+    115,
+    463
+   ],
+   "mask": "masks/21.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": false,
+   "per_tier": false,
+   "spans": false,
+   "lengthens": false
+  },
+  {
+   "name": "decal_7",
+   "px": [
+    32,
+    489,
+    55,
+    576
+   ],
+   "mask": "masks/22.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "spans": false,
+   "lengthens": false
+  },
+  {
+   "name": "decal_8",
+   "px": [
+    197,
+    489,
+    220,
+    577
+   ],
+   "mask": "masks/23.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "spans": false,
+   "lengthens": false
+  },
+  {
+   "name": "foot_left",
+   "px": [
+    32,
+    576,
+    47,
+    588
+   ],
+   "mask": "masks/24.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "spans": false,
+   "lengthens": false
+  },
+  {
+   "name": "foot_right",
+   "px": [
+    205,
+    576,
+    221,
+    588
+   ],
+   "mask": "masks/25.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "spans": false,
+   "lengthens": false
+  }
+ ]
+}

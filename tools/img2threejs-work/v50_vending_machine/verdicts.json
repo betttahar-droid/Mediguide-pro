@@ -1,0 +1,411 @@
+[
+ {
+  "round": 0,
+  "asset": "vending machine",
+  "acceptance": "REJECTED",
+  "looks_good": false,
+  "blocking": 13,
+  "faults": [
+   {
+    "part": "background",
+    "fault": "At 1.8x width the entire front texture tiles: the DRINKS marquee, coin panel and window artwork are laid down more than once across the cabinet, with visible repeat seams and blank stretched panels between repeats. The extra width went into a repeated texture instead of into more product columns.",
+    "severity": "blocking"
+   },
+   {
+    "part": "background",
+    "fault": "At 1.5x height the texture repeats vertically (measured period ~57 scanlines): a second band of product images and price tags is stamped down the plain body panel below the window, and the marquee/window band re-appears mid-body. The extra height went into tiled texture instead of more shelf rows and a longer lower panel.",
+    "severity": "blocking"
+   },
+   {
+    "part": "marquee",
+    "fault": "On the solid-geometry view the DRINKS lettering is doubled/smeared across the sign face -- unreadable text, a player could point at it.",
+    "severity": "blocking"
+   },
+   {
+    "part": "decal_3",
+    "fault": "Bottom-row price decals are doubled/streaked on the solid view (text cut and stacked), reading as a texture bug rather than grime.",
+    "severity": "blocking"
+   },
+   {
+    "part": "background (gemini)",
+    "fault": "The background panel texture is smeared and streaked where the prop was made larger, particularly visible in the wider and taller renders.",
+    "severity": "blocking"
+   },
+   {
+    "part": "product_window_1 (gemini)",
+    "fault": "The product windows are not counted correctly. The wider render (image 3) shows the original 3 columns of products, just spaced further apart, rather than gaining more columns. The taller render (image 4) shows the original 3 rows of products, just spaced further apart, rather than gaining more rows.",
+    "severity": "blocking"
+   },
+   {
+    "part": "delivery_flap (gemini)",
+    "fault": "The delivery flap is not counted correctly. The wider render (image 3) shows the original single flap, just wider, rather than gaining more flaps to match the wider cabinet.",
+    "severity": "blocking"
+   },
+   {
+    "part": "background (measured)",
+    "severity": "blocking",
+    "fault": "At 1.7x tall the prop has gained a repeat it did not have when drawn: its row profile self-correlates 1.00 at a period of 76 scanlines, against 0.38 at the drawn size. Something is being laid down more than once."
+   },
+   {
+    "part": "background (measured)",
+    "severity": "blocking",
+    "fault": "At 1.5x tall the prop has gained a repeat it did not have when drawn: its row profile self-correlates 0.66 at a period of 57 scanlines, against 0.38 at the drawn size. Something is being laid down more than once."
+   },
+   {
+    "part": "decal (intent)",
+    "severity": "blocking",
+    "fault": "aspect: aspect 23.75 outside 0.04..13.31"
+   },
+   {
+    "part": "decal_2 (intent)",
+    "severity": "blocking",
+    "fault": "aspect: aspect 27.10 outside 0.04..13.31"
+   },
+   {
+    "part": "decal_3 (intent)",
+    "severity": "blocking",
+    "fault": "aspect: aspect 13.85 outside 0.04..13.31"
+   },
+   {
+    "part": "push_bar_slot (intent)",
+    "severity": "blocking",
+    "fault": "aspect: aspect 19.38 outside 0.29..4.18"
+   }
+  ],
+  "patch": [
+   {
+    "name": "background",
+    "mode": "repeat"
+   },
+   {
+    "name": "background",
+    "resize": "fixed",
+    "anchor": "fixed",
+    "depth": "flush",
+    "motion": "none",
+    "count": "none",
+    "drop": false,
+    "mode": "mirror"
+   },
+   {
+    "name": "delivery_flap",
+    "count": "per_bay"
+   },
+   {
+    "name": "product_window_1",
+    "count": "both"
+   },
+   {
+    "name": "product_window_2",
+    "count": "both"
+   },
+   {
+    "name": "product_window_3",
+    "count": "both"
+   },
+   {
+    "name": "product_window_4",
+    "count": "both"
+   },
+   {
+    "name": "product_window_5",
+    "count": "both"
+   },
+   {
+    "name": "product_window_6",
+    "count": "both"
+   },
+   {
+    "name": "product_window_7",
+    "count": "both"
+   },
+   {
+    "name": "product_window_8",
+    "count": "both"
+   },
+   {
+    "name": "product_window_9",
+    "count": "both"
+   }
+  ],
+  "wider_means": "A wider vending machine is a machine with more product columns in the display window, each with its own price tag, and a correspondingly wider cabinet, window, delivery flap and coin panel.",
+  "taller_means": "A taller vending machine has more shelves of product rows in the window and a longer plain body panel below the window, not a taller sign or taller decals."
+ },
+ {
+  "round": 1,
+  "asset": "vending machine",
+  "acceptance": "REJECTED",
+  "looks_good": false,
+  "blocking": 23,
+  "faults": [
+   {
+    "part": "background",
+    "fault": "At 1.8x width the background panel is stretched and smeared across the whole front: the window area fills with stretched blank panel and ghost repeats of product art, and at 1.5x height a whole band of the front (product grid, prices, push area) is laid down a second time down the body instead of the extra height going into more shelf rows and a longer plain panel. Measured repeats at 76 and 57 scanlines confirm tiling. Blocking.",
+    "severity": "blocking"
+   },
+   {
+    "part": "marquee",
+    "fault": "At 1.8x width the marquee band and its DRINKS title repeat across the added width instead of staying one centred sign with plain cabinet at the ends. In the solid view the title also reads doubled/smeared where the proud plate meets the panel. Blocking.",
+    "severity": "blocking"
+   },
+   {
+    "part": "delivery_flap",
+    "fault": "At 1.8x width the second flap instance lands overlapping the coin panel column instead of sitting in its own bay beside it; the two 'push' flaps collide with the coin hardware. Blocking.",
+    "severity": "blocking"
+   },
+   {
+    "part": "product_window_1",
+    "fault": "At 1.8x width the window columns do not lay out as clean added product columns with their own price tags; the fixed windows leave stretched blank panel between them and the price decals cut off at the edges. The widened machine should gain counted columns, not gaps. Blocking.",
+    "severity": "blocking"
+   },
+   {
+    "part": "background (gemini)",
+    "fault": "The background panel texture is smeared and streaked where the prop is widened and heightened, creating a messy look.",
+    "severity": "blocking"
+   },
+   {
+    "part": "product_window_1 (gemini)",
+    "fault": "The product windows are not counted correctly. A wider machine should have more columns, and a taller machine should have more rows. Currently, they are just stretched.",
+    "severity": "blocking"
+   },
+   {
+    "part": "product_window_2 (gemini)",
+    "fault": "The product windows are not counted correctly. A wider machine should have more columns, and a taller machine should have more rows. Currently, they are just stretched.",
+    "severity": "blocking"
+   },
+   {
+    "part": "product_window_3 (gemini)",
+    "fault": "The product windows are not counted correctly. A wider machine should have more columns, and a taller machine should have more rows. Currently, they are just stretched.",
+    "severity": "blocking"
+   },
+   {
+    "part": "product_window_4 (gemini)",
+    "fault": "The product windows are not counted correctly. A wider machine should have more columns, and a taller machine should have more rows. Currently, they are just stretched.",
+    "severity": "blocking"
+   },
+   {
+    "part": "product_window_5 (gemini)",
+    "fault": "The product windows are not counted correctly. A wider machine should have more columns, and a taller machine should have more rows. Currently, they are just stretched.",
+    "severity": "blocking"
+   },
+   {
+    "part": "product_window_6 (gemini)",
+    "fault": "The product windows are not counted correctly. A wider machine should have more columns, and a taller machine should have more rows. Currently, currently they are just stretched.",
+    "severity": "blocking"
+   },
+   {
+    "part": "product_window_7 (gemini)",
+    "fault": "The product windows are not counted correctly. A wider machine should have more columns, and a taller machine should have more rows. Currently, they are just stretched.",
+    "severity": "blocking"
+   },
+   {
+    "part": "product_window_8 (gemini)",
+    "fault": "The product windows are not counted correctly. A wider machine should have more columns, and a taller machine should have more rows. Currently, they are just stretched.",
+    "severity": "blocking"
+   },
+   {
+    "part": "product_window_9 (gemini)",
+    "fault": "The product windows are not counted correctly. A wider machine should have more columns, and a taller machine should have more rows. Currently, they are just stretched.",
+    "severity": "blocking"
+   },
+   {
+    "part": "delivery_flap (gemini)",
+    "fault": "The delivery flap is not counted correctly. A wider machine should have more flaps, one per bay. Currently, it is just stretched.",
+    "severity": "blocking"
+   },
+   {
+    "part": "frame_left (gemini)",
+    "fault": "The left frame is not counted correctly. A taller machine should have more frame sections. Currently, it is just stretched.",
+    "severity": "blocking"
+   },
+   {
+    "part": "frame_right (gemini)",
+    "fault": "The right frame is not counted correctly. A taller machine should have more frame sections. Currently, it is just stretched.",
+    "severity": "blocking"
+   },
+   {
+    "part": "background (measured)",
+    "severity": "blocking",
+    "fault": "At 1.7x tall the prop has gained a repeat it did not have when drawn: its row profile self-correlates 1.01 at a period of 76 scanlines, against 0.38 at the drawn size. Something is being laid down more than once."
+   },
+   {
+    "part": "background (measured)",
+    "severity": "blocking",
+    "fault": "At 1.5x tall the prop has gained a repeat it did not have when drawn: its row profile self-correlates 0.66 at a period of 57 scanlines, against 0.38 at the drawn size. Something is being laid down more than once."
+   },
+   {
+    "part": "decal (intent)",
+    "severity": "blocking",
+    "fault": "aspect: aspect 23.75 outside 0.04..13.31"
+   },
+   {
+    "part": "decal_2 (intent)",
+    "severity": "blocking",
+    "fault": "aspect: aspect 27.10 outside 0.04..13.31"
+   },
+   {
+    "part": "decal_3 (intent)",
+    "severity": "blocking",
+    "fault": "aspect: aspect 13.85 outside 0.04..13.31"
+   },
+   {
+    "part": "push_bar_slot (intent)",
+    "severity": "blocking",
+    "fault": "aspect: aspect 19.38 outside 0.29..4.18"
+   }
+  ],
+  "patch": [
+   {
+    "name": "background",
+    "mode": "mirror"
+   },
+   {
+    "name": "background",
+    "resize": "fixed",
+    "anchor": "fixed",
+    "depth": "flush",
+    "motion": "none",
+    "count": "none",
+    "mode": "mirror"
+   },
+   {
+    "name": "delivery_flap",
+    "count": "per_bay"
+   },
+   {
+    "name": "delivery_flap",
+    "resize": "fixed",
+    "anchor": "bottom",
+    "depth": "proud",
+    "motion": "hinge_top",
+    "count": "per_bay"
+   },
+   {
+    "name": "frame_left",
+    "count": "per_tier"
+   },
+   {
+    "name": "frame_right",
+    "count": "per_tier"
+   },
+   {
+    "name": "marquee",
+    "resize": "spanx_center",
+    "anchor": "top",
+    "depth": "proud",
+    "motion": "none",
+    "count": "none"
+   },
+   {
+    "name": "product_window_1",
+    "count": "both"
+   },
+   {
+    "name": "product_window_1",
+    "resize": "fixed",
+    "anchor": "left",
+    "depth": "recessed",
+    "motion": "none",
+    "count": "both"
+   },
+   {
+    "name": "product_window_2",
+    "count": "both"
+   },
+   {
+    "name": "product_window_2",
+    "resize": "fixed",
+    "anchor": "center",
+    "depth": "recessed",
+    "motion": "none",
+    "count": "both"
+   },
+   {
+    "name": "product_window_3",
+    "count": "both"
+   },
+   {
+    "name": "product_window_3",
+    "resize": "fixed",
+    "anchor": "right",
+    "depth": "recessed",
+    "motion": "none",
+    "count": "both"
+   },
+   {
+    "name": "product_window_4",
+    "count": "both"
+   },
+   {
+    "name": "product_window_4",
+    "resize": "fixed",
+    "anchor": "left",
+    "depth": "recessed",
+    "motion": "none",
+    "count": "both"
+   },
+   {
+    "name": "product_window_5",
+    "count": "both"
+   },
+   {
+    "name": "product_window_5",
+    "resize": "fixed",
+    "anchor": "center",
+    "depth": "recessed",
+    "motion": "none",
+    "count": "both"
+   },
+   {
+    "name": "product_window_6",
+    "count": "both"
+   },
+   {
+    "name": "product_window_6",
+    "resize": "fixed",
+    "anchor": "right",
+    "depth": "recessed",
+    "motion": "none",
+    "count": "both"
+   },
+   {
+    "name": "product_window_7",
+    "count": "both"
+   },
+   {
+    "name": "product_window_7",
+    "resize": "fixed",
+    "anchor": "left",
+    "depth": "recessed",
+    "motion": "none",
+    "count": "both"
+   },
+   {
+    "name": "product_window_8",
+    "count": "both"
+   },
+   {
+    "name": "product_window_8",
+    "resize": "fixed",
+    "anchor": "center",
+    "depth": "recessed",
+    "motion": "none",
+    "count": "both"
+   },
+   {
+    "name": "product_window_9",
+    "count": "both"
+   },
+   {
+    "name": "product_window_9",
+    "resize": "fixed",
+    "anchor": "right",
+    "depth": "recessed",
+    "motion": "none",
+    "count": "both"
+   }
+  ],
+  "wider_means": "A wider vending machine is a machine with more product columns in the display window, each with its own price tag, and a correspondingly wider cabinet, window, delivery flap and coin panel.",
+  "taller_means": "A taller vending machine has more shelves of product rows in the window and a longer plain body panel below the window, not a taller sign or taller decals."
+ }
+]

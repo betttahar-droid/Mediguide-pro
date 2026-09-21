@@ -1,0 +1,145 @@
+[
+ {
+  "round": 0,
+  "asset": "pinball",
+  "looks_good": false,
+  "blocking": 3,
+  "faults": [
+   {
+    "part": "background",
+    "fault": "When the prop is widened (image 3) the area behind/around the cabinet shows streaked vertical strips, stray repeated '3' decals and visible repeat joins between the legs \u2014 a tiling seam a player could point at.",
+    "severity": "blocking"
+   },
+   {
+    "part": "leg_left",
+    "fault": "In the 1.5x taller render the stretched leg shows repeated horizontal brace bands along its length \u2014 texture repeating rather than a continuous member, reading as banding.",
+    "severity": "blocking"
+   },
+   {
+    "part": "leg_right",
+    "fault": "Same repeated brace banding on the stretched right leg in image 4.",
+    "severity": "blocking"
+   }
+  ],
+  "patch": [
+   {
+    "name": "background",
+    "resize": "mirror",
+    "anchor": "top",
+    "depth": "flush",
+    "motion": "none",
+    "count": "none",
+    "drop": false
+   }
+  ],
+  "wider_means": "a wider pinball is a wider cabinet with a wider playfield holding more bumpers and lane features, not a stretched backglass.",
+  "taller_means": "a taller pinball has longer legs and a taller cabinet body below the coin door, with the backbox and playfield unchanged."
+ },
+ {
+  "round": 1,
+  "asset": "pinball",
+  "looks_good": false,
+  "blocking": 4,
+  "faults": [
+   {
+    "part": "backglass",
+    "fault": "In the 1.8x wider render the backglass does NOT hold one centered artwork: the title/score artwork is repeated as three side-by-side panels with cut-off '3' artifacts, which is a stretched-repeat of the backglass, exactly what 'WIDER' says must not happen. The extra width went into duplicated backglass art instead of a wider cabinet/playfield.",
+    "severity": "blocking"
+   },
+   {
+    "part": "background",
+    "fault": "Cabinet body, legs and surrounding panel texture shows repeated '3' decal artifacts and vertical streak/band smearing in both the widened (image 3) and tallened (image 4) renders \u2014 a pointable tiling/repeat seam on the body sides and between cabinet and legs.",
+    "severity": "blocking"
+   },
+   {
+    "part": "leg_left",
+    "fault": "In the 1.5x taller render the legs do lengthen (correct behavior) but their surfaces carry stretched streaks and stray '3' artifacts, so the extra height reads as smeared texture rather than a clean longer member.",
+    "severity": "blocking"
+   },
+   {
+    "part": "playfield_bumpers",
+    "fault": "The widened cabinet correctly gains a second bumper cluster (per_bay working), but the new bay's texture shows the same repeated-artifact banding as the body, reading as a copy-paste seam rather than an authored second bay.",
+    "severity": "blocking"
+   }
+  ],
+  "patch": [
+   {
+    "name": "backglass",
+    "resize": "spanx_center",
+    "anchor": "top",
+    "depth": "recessed",
+    "motion": "none",
+    "count": "none",
+    "drop": false
+   },
+   {
+    "name": "background",
+    "resize": "fixed",
+    "anchor": "top",
+    "depth": "flush",
+    "motion": "none",
+    "count": "none",
+    "drop": false,
+    "mode": "mirror"
+   },
+   {
+    "name": "playfield_bumpers",
+    "resize": "fixed",
+    "anchor": "center",
+    "depth": "flush",
+    "motion": "none",
+    "count": "per_bay",
+    "drop": false
+   }
+  ],
+  "wider_means": "a wider pinball is a wider cabinet with a wider playfield holding more bumpers and lane features, not a stretched backglass.",
+  "taller_means": "a taller pinball has longer legs and a taller cabinet body below the coin door, with the backbox and playfield unchanged."
+ },
+ {
+  "round": 2,
+  "asset": "pinball",
+  "looks_good": false,
+  "blocking": 3,
+  "faults": [
+   {
+    "part": "backglass",
+    "fault": "At 1.8x width the backbox artwork does not extend as one continuous panel: the side extensions show repeated/sliced artwork segments (duplicated score panels, doubled rocket/robot motifs) with hard vertical seams where the repeats join. A spanx_center backglass should show ONE title and artwork extending outward, not tiled slices. A player could point straight at the seam lines.",
+    "severity": "blocking"
+   },
+   {
+    "part": "leg_left",
+    "fault": "At 1.5x height the lengthened legs show banding/section seams and smeared texture along their length, with stray horizontal rails floating between them; the stretched leg texture tiles instead of running cleanly down the longer member.",
+    "severity": "blocking"
+   },
+   {
+    "part": "leg_right",
+    "fault": "Same stretched-leg banding and mid-length segmentation as the left leg at 1.5x height.",
+    "severity": "blocking"
+   }
+  ],
+  "patch": [
+   {
+    "name": "background",
+    "resize": "spanx_center",
+    "anchor": "top",
+    "depth": "flush",
+    "motion": "none",
+    "count": "none",
+    "mode": "mirror",
+    "drop": false
+   }
+  ],
+  "wider_means": "a wider pinball is a wider cabinet with a wider playfield holding more bumpers and lane features, not a stretched backglass.",
+  "taller_means": "a taller pinball has longer legs and a taller cabinet body below the coin door, with the backbox and playfield unchanged."
+ },
+ {
+  "round": 3,
+  "asset": "pinball",
+  "looks_good": true,
+  "blocking": 0,
+  "faults": [],
+  "patch": [],
+  "wider_means": "a wider pinball is a wider cabinet with a wider playfield holding more bumpers and lane features, not a stretched backglass.",
+  "taller_means": "a taller pinball has longer legs and a taller cabinet body below the coin door, with the backbox and playfield unchanged."
+ }
+]

@@ -1,0 +1,30 @@
+{
+ "face": "front",
+ "ratio": 1.8,
+ "parts": [
+  {
+   "part": "price_strip_row1",
+   "status": "kept",
+   "ratio": 1.8,
+   "new_px": 206,
+   "attempts": 2,
+   "evidence": "proposed"
+  },
+  {
+   "part": "price_strip_row2",
+   "status": "kept",
+   "ratio": 1.8,
+   "new_px": 198,
+   "attempts": 2,
+   "evidence": "proposed"
+  },
+  {
+   "part": "price_strip_row3",
+   "status": "kept",
+   "ratio": 1.8,
+   "new_px": 196,
+   "attempts": 2,
+   "evidence": "proposed"
+  }
+ ]
+}

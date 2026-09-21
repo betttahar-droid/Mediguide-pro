@@ -1,0 +1,34 @@
+{
+ "wider_means": "A wider arcade cabinet is a two-player cabinet: a second joystick, a second button cluster and a second coin slot, with the marquee, screen bezel and control deck stretched to carry them.",
+ "taller_means": "A taller arcade cabinet has more plain cabinet body: more bare panel between the control deck and the coin door, and more kick panel below the coin door.",
+ "taller_at": [
+  {
+   "part": "coin_door",
+   "side": "below",
+   "px": [
+    551,
+    586
+   ]
+  }
+ ],
+ "max_wider": 2.0,
+ "max_taller": 1.6,
+ "per_bay": [
+  "joystick_left",
+  "joystick_right",
+  "button",
+  "button_4",
+  "button_6",
+  "button_7",
+  "button_9",
+  "button_10",
+  "coin_slot_left",
+  "coin_slot_right"
+ ],
+ "spans": [
+  "marquee",
+  "screen",
+  "decal_7",
+  "control_deck"
+ ]
+}

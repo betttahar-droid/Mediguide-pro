@@ -1,0 +1,59 @@
+{
+ "asset": "arcade cabinet",
+ "decals": [
+  {
+   "n": 1,
+   "image": "decals/d1.png",
+   "px": [
+    652,
+    194
+   ],
+   "keyed": 0.139,
+   "median": [
+    123,
+    89,
+    84
+   ],
+   "name": "title",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.06
+  },
+  {
+   "n": 2,
+   "image": "decals/d2.png",
+   "px": [
+    274,
+    263
+   ],
+   "keyed": 0.208,
+   "median": [
+    158,
+    190,
+    166
+   ],
+   "name": "character_art",
+   "rule": "hold",
+   "where": "side",
+   "size": 0.15
+  },
+  {
+   "n": 3,
+   "image": "decals/d3.png",
+   "px": [
+    301,
+    263
+   ],
+   "keyed": 0.096,
+   "median": [
+    102,
+    74,
+    100
+   ],
+   "name": "logo",
+   "rule": "hold",
+   "where": "side",
+   "size": 0.12
+  }
+ ]
+}

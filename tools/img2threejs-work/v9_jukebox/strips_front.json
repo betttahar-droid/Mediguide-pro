@@ -1,0 +1,242 @@
+{
+ "size": [
+  290,
+  570
+ ],
+ "strips": [
+  {
+   "xspan": [
+    0.0069,
+    1.0
+   ],
+   "fill": [
+    100,
+    96,
+    80
+   ],
+   "hmode": "extend",
+   "hf": [
+    0.10035,
+    0.10035
+   ],
+   "hf_repeat": false,
+   "vmode": "extend",
+   "vf": [
+    0.11765,
+    0.15966
+   ],
+   "vf_repeat": false,
+   "v": [
+    0.78947,
+    1.0
+   ],
+   "h": [
+    0.08304,
+    0.95848
+   ],
+   "vh": [
+    0.05882,
+    0.32773
+   ],
+   "noise": 1.025,
+   "vnoise": 4.163,
+   "px": [
+    0,
+    120
+   ],
+   "_like": 0.9942,
+   "grow_y": false,
+   "free": 0.196,
+   "grow_share": 0.0
+  },
+  {
+   "xspan": [
+    0.0069,
+    1.0
+   ],
+   "fill": [
+    100,
+    96,
+    80
+   ],
+   "hmode": "extend",
+   "hf": [
+    0.0519,
+    0.0519
+   ],
+   "hf_repeat": false,
+   "vmode": "extend",
+   "vf": [
+    0.03145,
+    0.03145
+   ],
+   "vf_repeat": false,
+   "v": [
+    0.50877,
+    0.78947
+   ],
+   "h": [
+    0.32526,
+    0.94118
+   ],
+   "vh": [
+    0.23899,
+    0.48428
+   ],
+   "noise": 0.787,
+   "vnoise": 15.269,
+   "px": [
+    120,
+    280
+   ],
+   "_like": 0.87,
+   "grow_y": false,
+   "free": 0.385,
+   "grow_share": 0.0
+  },
+  {
+   "xspan": [
+    0.0069,
+    1.0
+   ],
+   "fill": [
+    100,
+    96,
+    80
+   ],
+   "hmode": "extend",
+   "hf": [
+    0.02768,
+    0.02768
+   ],
+   "hf_repeat": false,
+   "vmode": "extend",
+   "vf": [
+    0.05319,
+    0.05319
+   ],
+   "vf_repeat": false,
+   "v": [
+    0.34211,
+    0.50877
+   ],
+   "h": [
+    0.0,
+    0.41176
+   ],
+   "vh": [
+    0.61702,
+    0.95745
+   ],
+   "noise": 1.223,
+   "vnoise": 14.475,
+   "px": [
+    280,
+    375
+   ],
+   "_like": 0.9953,
+   "grow_y": false,
+   "free": 0.15,
+   "grow_share": 0.0
+  },
+  {
+   "xspan": [
+    0.0069,
+    1.0
+   ],
+   "fill": [
+    100,
+    96,
+    80
+   ],
+   "hmode": "extend",
+   "hf": [
+    0.0173,
+    0.0173
+   ],
+   "hf_repeat": false,
+   "vmode": "extend",
+   "vf": [
+    0.07742,
+    0.07742
+   ],
+   "vf_repeat": false,
+   "v": [
+    0.06842,
+    0.34211
+   ],
+   "h": [
+    0.04498,
+    0.29758
+   ],
+   "vh": [
+    0.59355,
+    0.89677
+   ],
+   "noise": 1.076,
+   "vnoise": 14.432,
+   "px": [
+    375,
+    531
+   ],
+   "_like": 0.6306,
+   "grow_y": false,
+   "free": 0.002,
+   "grow_share": 0.0
+  },
+  {
+   "xspan": [
+    0.0069,
+    1.0
+   ],
+   "fill": [
+    100,
+    96,
+    80
+   ],
+   "hmode": "extend",
+   "hf": [
+    0.01384,
+    0.01384
+   ],
+   "hf_repeat": false,
+   "vmode": "extend",
+   "vf": [
+    0.21053,
+    0.21053
+   ],
+   "vf_repeat": false,
+   "v": [
+    0.0,
+    0.06842
+   ],
+   "h": [
+    0.06574,
+    0.70242
+   ],
+   "vh": [
+    0.23684,
+    0.47368
+   ],
+   "noise": 1.327,
+   "vnoise": 22.158,
+   "px": [
+    531,
+    570
+   ],
+   "_like": 0.4283,
+   "grow_y": false,
+   "free": 0.062,
+   "grow_share": 0.0
+  }
+ ],
+ "grow_bands": [],
+ "stretch_band": {
+  "px": [
+   158,
+   197
+  ],
+  "covered": null,
+  "why": "the places found total 18 rows and need 16.8 copies against the renderer's 10"
+ }
+}

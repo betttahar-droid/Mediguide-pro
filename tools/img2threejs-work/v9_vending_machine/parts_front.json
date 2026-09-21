@@ -1,0 +1,126 @@
+{
+ "face": "front",
+ "size": [
+  310,
+  585
+ ],
+ "parts": [
+  {
+   "name": "side_panel",
+   "px": [
+    246,
+    20,
+    307,
+    559
+   ],
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "snack_row_top",
+   "px": [
+    29,
+    23,
+    236,
+    235
+   ],
+   "resize": "spanx_repeat",
+   "anchor": "left",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "snack_row_upper",
+   "px": [
+    139,
+    23,
+    236,
+    100
+   ],
+   "resize": "spanx_repeat",
+   "anchor": "left",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "coin_slot",
+   "px": [
+    255,
+    144,
+    301,
+    178
+   ],
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "bill_slot",
+   "px": [
+    254,
+    214,
+    302,
+    245
+   ],
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "snack_row_middle",
+   "px": [
+    29,
+    230,
+    236,
+    332
+   ],
+   "resize": "spanx_repeat",
+   "anchor": "left",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "keypad",
+   "px": [
+    254,
+    256,
+    307,
+    331
+   ],
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "snack_row_bottom",
+   "px": [
+    29,
+    331,
+    236,
+    406
+   ],
+   "resize": "spanx_repeat",
+   "anchor": "left",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "dispense_tray",
+   "px": [
+    46,
+    440,
+    219,
+    490
+   ],
+   "resize": "spanx_center",
+   "anchor": "bottom",
+   "depth": "recessed",
+   "motion": "hinge_bottom"
+  }
+ ]
+}

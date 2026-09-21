@@ -1,0 +1,303 @@
+{
+ "size": [
+  339,
+  604
+ ],
+ "strips": [
+  {
+   "xspan": [
+    0.0236,
+    0.97935
+   ],
+   "fill": [
+    37,
+    40,
+    46
+   ],
+   "hmode": "extend",
+   "hf": [
+    0.16864,
+    0.16864
+   ],
+   "hf_repeat": false,
+   "vmode": "extend",
+   "vf": [
+    0.18471,
+    0.18471
+   ],
+   "vf_repeat": false,
+   "v": [
+    0.73841,
+    1.0
+   ],
+   "h": [
+    0.0,
+    0.09763
+   ],
+   "vh": [
+    0.0,
+    0.24841
+   ],
+   "noise": 4.901,
+   "vnoise": 20.294,
+   "px": [
+    0,
+    158
+   ],
+   "_like": 0.8583,
+   "grow_y": false,
+   "free": 0.056,
+   "grow_share": 0.0
+  },
+  {
+   "xspan": [
+    0.0059,
+    0.99705
+   ],
+   "fill": [
+    87,
+    70,
+    45
+   ],
+   "hmode": "extend",
+   "hf": [
+    0.09763,
+    0.09763
+   ],
+   "hf_repeat": false,
+   "vmode": "extend",
+   "vf": [
+    0.18519,
+    0.18519
+   ],
+   "vf_repeat": false,
+   "v": [
+    0.69205,
+    0.73841
+   ],
+   "h": [
+    0.26036,
+    0.55325
+   ],
+   "vh": [
+    0.62963,
+    1.0
+   ],
+   "noise": 1.517,
+   "vnoise": 26.87,
+   "px": [
+    158,
+    186
+   ],
+   "_like": 0.8266,
+   "grow_y": false,
+   "free": 0.25,
+   "grow_share": 0.0
+  },
+  {
+   "xspan": [
+    0.0059,
+    0.99705
+   ],
+   "fill": [
+    86,
+    70,
+    44
+   ],
+   "hmode": "extend",
+   "hf": [
+    0.01775,
+    0.01775
+   ],
+   "hf_repeat": false,
+   "vmode": "extend",
+   "vf": [
+    0.22581,
+    0.22581
+   ],
+   "vf_repeat": false,
+   "v": [
+    0.63907,
+    0.69205
+   ],
+   "h": [
+    0.00296,
+    0.10059
+   ],
+   "vh": [
+    0.77419,
+    1.0
+   ],
+   "noise": 4.955,
+   "vnoise": 34.541,
+   "px": [
+    186,
+    218
+   ],
+   "_like": 0.5436,
+   "grow_y": false,
+   "free": 0.342,
+   "grow_share": 0.0
+  },
+  {
+   "xspan": [
+    0.0059,
+    0.99705
+   ],
+   "fill": [
+    87,
+    70,
+    45
+   ],
+   "hmode": "extend",
+   "hf": [
+    0.03846,
+    0.03846
+   ],
+   "hf_repeat": false,
+   "vmode": "extend",
+   "vf": [
+    0.14583,
+    0.14583
+   ],
+   "vf_repeat": false,
+   "v": [
+    0.55795,
+    0.63907
+   ],
+   "h": [
+    0.12722,
+    0.22485
+   ],
+   "vh": [
+    0.64583,
+    0.97917
+   ],
+   "noise": 5.515,
+   "vnoise": 23.354,
+   "px": [
+    218,
+    267
+   ],
+   "_like": 0.68,
+   "grow_y": false,
+   "free": 0.524,
+   "grow_share": 0.0
+  },
+  {
+   "xspan": [
+    0.0,
+    1.00295
+   ],
+   "fill": [
+    87,
+    70,
+    44
+   ],
+   "hmode": "extend",
+   "hf": [
+    0.09467,
+    0.09467
+   ],
+   "hf_repeat": false,
+   "vmode": "extend",
+   "vf": [
+    0.07167,
+    0.07167
+   ],
+   "vf_repeat": false,
+   "v": [
+    0.07119,
+    0.55795
+   ],
+   "h": [
+    0.76331,
+    0.88166
+   ],
+   "vh": [
+    0.75085,
+    1.0
+   ],
+   "noise": 5.042,
+   "vnoise": 13.161,
+   "px": [
+    267,
+    561
+   ],
+   "_like": 0.9046,
+   "grow_y": true,
+   "free": 0.326,
+   "grow_share": 1.0
+  },
+  {
+   "xspan": [
+    0.0,
+    0.99705
+   ],
+   "fill": [
+    24,
+    33,
+    40
+   ],
+   "hmode": "extend",
+   "hf": [
+    0.04438,
+    0.04438
+   ],
+   "hf_repeat": false,
+   "vmode": "extend",
+   "vf": [
+    0.07143,
+    0.07143
+   ],
+   "vf_repeat": false,
+   "v": [
+    0.0,
+    0.07119
+   ],
+   "h": [
+    0.23964,
+    0.76331
+   ],
+   "vh": [
+    0.2381,
+    0.47619
+   ],
+   "noise": 1.117,
+   "vnoise": 12.087,
+   "px": [
+    561,
+    604
+   ],
+   "_like": 0.6074,
+   "grow_y": false,
+   "free": 0.628,
+   "grow_share": 0.0
+  }
+ ],
+ "grow_bands": [
+  {
+   "part": "side_pillar_left+side_pillar_right+side_pillar_left_inner+side_pillar_right_inner",
+   "side": "itself",
+   "clean": true,
+   "px": [
+    231,
+    447
+   ],
+   "band": [
+    0.25993,
+    0.61755
+   ],
+   "share": 1.0
+  }
+ ],
+ "stretch_band": {
+  "px": [
+   487,
+   561
+  ],
+  "covered": null,
+  "with_members": true,
+  "why": "every place is a member that lengthens, so the body itself gains nothing; draw it here instead of repeating the hole the members were lifted out of"
+ }
+}

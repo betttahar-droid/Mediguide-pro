@@ -1,0 +1,167 @@
+{
+ "asset": "arcade cabinet",
+ "decals": [
+  {
+   "n": 1,
+   "image": "decals/d1.png",
+   "px": [
+    402,
+    213
+   ],
+   "keyed": 0.169,
+   "median": [
+    119,
+    109,
+    59
+   ],
+   "name": "price_plate",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.03
+  },
+  {
+   "n": 2,
+   "image": "decals/d2.png",
+   "px": [
+    414,
+    108
+   ],
+   "keyed": 0.456,
+   "median": [
+    103,
+    62,
+    69
+   ],
+   "name": "logo",
+   "rule": "hold",
+   "where": "side",
+   "size": 0.1
+  },
+  {
+   "n": 3,
+   "image": "decals/d3.png",
+   "px": [
+    415,
+    340
+   ],
+   "keyed": 0.445,
+   "median": [
+    107,
+    79,
+    59
+   ],
+   "name": "decal_3",
+   "rule": "hold",
+   "where": "side",
+   "size": 0.1
+  },
+  {
+   "n": 4,
+   "image": "decals/d4.png",
+   "px": [
+    415,
+    240
+   ],
+   "keyed": 0.52,
+   "median": [
+    92,
+    77,
+    75
+   ],
+   "name": "pinstripe",
+   "rule": "along",
+   "where": "any",
+   "size": 0.01
+  },
+  {
+   "n": 5,
+   "image": "decals/d5.png",
+   "px": [
+    402,
+    81
+   ],
+   "keyed": 0.058,
+   "median": [
+    110,
+    93,
+    68
+   ],
+   "name": "rivet",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.01
+  },
+  {
+   "n": 6,
+   "image": "decals/d6.png",
+   "px": [
+    414,
+    340
+   ],
+   "keyed": 0.498,
+   "median": [
+    94,
+    73,
+    62
+   ],
+   "name": "warning_label",
+   "rule": "hold",
+   "where": "back",
+   "size": 0.03
+  },
+  {
+   "n": 7,
+   "image": "decals/d7.png",
+   "px": [
+    415,
+    340
+   ],
+   "keyed": 0.721,
+   "median": [
+    86,
+    60,
+    53
+   ],
+   "name": "decal_7",
+   "rule": "along",
+   "where": "any",
+   "size": 0.01
+  },
+  {
+   "n": 8,
+   "image": "decals/d8.png",
+   "px": [
+    402,
+    87
+   ],
+   "keyed": 0.056,
+   "median": [
+    110,
+    93,
+    68
+   ],
+   "name": "decal_8",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.03
+  },
+  {
+   "n": 9,
+   "image": "decals/d9.png",
+   "px": [
+    284,
+    115
+   ],
+   "keyed": 0.348,
+   "median": [
+    36,
+    34,
+    21
+   ],
+   "name": "decal_9",
+   "rule": "hold",
+   "where": "any",
+   "size": 0.04
+  }
+ ]
+}

@@ -1,0 +1,408 @@
+{
+ "face": "front",
+ "size": [
+  242,
+  603
+ ],
+ "aspect": 0.40133,
+ "background": "bg_front.png",
+ "background_mode": "mirror",
+ "parts": [
+  {
+   "name": "marquee",
+   "image": "parts/marquee.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    241,
+    50
+   ],
+   "u": [
+    0.0,
+    0.99587
+   ],
+   "v": [
+    0.89221,
+    0.97512
+   ]
+  },
+  {
+   "name": "speaker_vent_left",
+   "image": "parts/speaker_vent_left.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.2222,
+     0.4074
+    ],
+    "v": null
+   },
+   "px_size": [
+    54,
+    68
+   ],
+   "u": [
+    0.09917,
+    0.32231
+   ],
+   "v": [
+    0.77778,
+    0.89055
+   ]
+  },
+  {
+   "name": "speaker_vent_right",
+   "image": "parts/speaker_vent_right.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.5849,
+     0.8302
+    ],
+    "v": null
+   },
+   "px_size": [
+    53,
+    70
+   ],
+   "u": [
+    0.67769,
+    0.89669
+   ],
+   "v": [
+    0.77778,
+    0.89386
+   ]
+  },
+  {
+   "name": "screen",
+   "image": "parts/screen.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    174,
+    156
+   ],
+   "u": [
+    0.13636,
+    0.85537
+   ],
+   "v": [
+    0.52073,
+    0.77944
+   ]
+  },
+  {
+   "name": "screen_bezel",
+   "image": "parts/screen_bezel.png",
+   "hf": [
+    0.14345991561181434,
+    0.18565400843881857
+   ],
+   "resize": "spanx_center",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": true,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": [
+     0.5284,
+     1.0
+    ]
+   },
+   "px_size": [
+    238,
+    176
+   ],
+   "u": [
+    0.00826,
+    0.99174
+   ],
+   "v": [
+    0.48756,
+    0.77944
+   ]
+  },
+  {
+   "name": "control_deck",
+   "image": "parts/control_deck.png",
+   "hf": [
+    0.09663865546218488,
+    0.13865546218487396
+   ],
+   "resize": "spanx_repeat",
+   "resize_y": "spanx_repeat",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": true,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    239,
+    21
+   ],
+   "u": [
+    0.0,
+    0.9876
+   ],
+   "v": [
+    0.48756,
+    0.52239
+   ]
+  },
+  {
+   "name": "joystick_left",
+   "image": "parts/joystick_left.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "deep",
+   "motion": "stick",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.6667,
+     0.8333
+    ],
+    "v": [
+     0.6744,
+     0.8605
+    ]
+   },
+   "px_size": [
+    6,
+    44
+   ],
+   "u": [
+    0.17355,
+    0.19835
+   ],
+   "v": [
+    0.48756,
+    0.56053
+   ]
+  },
+  {
+   "name": "joystick_right",
+   "image": "parts/joystick_right.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "deep",
+   "motion": "stick",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": [
+     0.6744,
+     0.8372
+    ]
+   },
+   "px_size": [
+    11,
+    44
+   ],
+   "u": [
+    0.61983,
+    0.66529
+   ],
+   "v": [
+    0.48756,
+    0.56053
+   ]
+  },
+  {
+   "name": "coin_door",
+   "image": "parts/coin_door.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "hinge_right",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    91,
+    218
+   ],
+   "u": [
+    0.30992,
+    0.68595
+   ],
+   "v": [
+    0.00166,
+    0.36318
+   ]
+  },
+  {
+   "name": "side_vent_left",
+   "image": "parts/side_vent_left.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    61,
+    48
+   ],
+   "u": [
+    0.00826,
+    0.26033
+   ],
+   "v": [
+    0.00166,
+    0.08126
+   ]
+  },
+  {
+   "name": "side_vent_right",
+   "image": "parts/side_vent_right.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    31,
+    53
+   ],
+   "u": [
+    0.83058,
+    0.95868
+   ],
+   "v": [
+    0.00166,
+    0.08955
+   ]
+  },
+  {
+   "name": "instruction_card",
+   "image": "parts/instruction_card.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "right",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    57,
+    37
+   ],
+   "u": [
+    0.72314,
+    0.95868
+   ],
+   "v": [
+    0.23881,
+    0.30017
+   ]
+  }
+ ]
+}

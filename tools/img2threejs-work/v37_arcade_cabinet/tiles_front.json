@@ -1,0 +1,108 @@
+{
+ "tiles": [
+  {
+   "tile": "tile_front_0.png",
+   "size": 16,
+   "patch_px": [
+    12,
+    76
+   ],
+   "worst_seam": 2.139,
+   "rows": [
+    0,
+    80
+   ]
+  },
+  {
+   "tile": "tile_front_1.png",
+   "size": 16,
+   "patch_px": [
+    14,
+    177
+   ],
+   "worst_seam": 1.062,
+   "rows": [
+    80,
+    116
+   ]
+  },
+  {
+   "tile": "tile_front_2.png",
+   "size": 16,
+   "patch_px": [
+    14,
+    177
+   ],
+   "worst_seam": 1.065,
+   "rows": [
+    116,
+    297
+   ]
+  },
+  {
+   "tile": "tile_front_3.png",
+   "size": 16,
+   "patch_px": [
+    14,
+    177
+   ],
+   "worst_seam": 1.062,
+   "rows": [
+    297,
+    388
+   ]
+  },
+  {
+   "tile": "tile_front_4.png",
+   "size": 16,
+   "patch_px": [
+    13,
+    53
+   ],
+   "worst_seam": 1.92,
+   "rows": [
+    388,
+    445
+   ]
+  },
+  {
+   "tile": "tile_front_5.png",
+   "size": 16,
+   "patch_px": [
+    14,
+    177
+   ],
+   "worst_seam": 1.062,
+   "rows": [
+    445,
+    588
+   ]
+  },
+  {
+   "tile": "tile_front_6.png",
+   "size": 16,
+   "patch_px": [
+    14,
+    177
+   ],
+   "worst_seam": 1.062,
+   "rows": [
+    588,
+    619
+   ]
+  },
+  {
+   "tile": "tile_front_7.png",
+   "size": 16,
+   "patch_px": [
+    14,
+    177
+   ],
+   "worst_seam": 1.062,
+   "rows": [
+    619,
+    651
+   ]
+  }
+ ]
+}

@@ -1,0 +1,332 @@
+{
+ "face": "front",
+ "size": [
+  292,
+  544
+ ],
+ "parts": [
+  {
+   "name": "title_strip_window",
+   "px": [
+    16,
+    40,
+    275,
+    232
+   ],
+   "resize": "spanx_repeat",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "speaker_grille",
+   "px": [
+    0,
+    223,
+    291,
+    396
+   ],
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "control_deck",
+   "px": [
+    2,
+    395,
+    289,
+    436
+   ],
+   "resize": "spanx_repeat",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "speaker_grille_right",
+   "px": [
+    208,
+    458,
+    257,
+    504
+   ],
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "speaker_grille_left",
+   "px": [
+    34,
+    458,
+    91,
+    504
+   ],
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "decal_1",
+   "px": [
+    1,
+    426,
+    12,
+    503
+   ],
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "decal_2",
+   "px": [
+    3,
+    189,
+    8,
+    206
+   ],
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "decal_3",
+   "px": [
+    14,
+    14,
+    39,
+    39
+   ],
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "decal_4",
+   "px": [
+    49,
+    2,
+    246,
+    7
+   ],
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "decal_5",
+   "px": [
+    52,
+    494,
+    61,
+    503
+   ],
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "decal_6",
+   "px": [
+    117,
+    437,
+    132,
+    467
+   ],
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "decal_7",
+   "px": [
+    134,
+    467,
+    144,
+    478
+   ],
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "decal_8",
+   "px": [
+    138,
+    474,
+    153,
+    502
+   ],
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "decal_9",
+   "px": [
+    143,
+    437,
+    148,
+    450
+   ],
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "decal_10",
+   "px": [
+    160,
+    436,
+    176,
+    460
+   ],
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "decal_11",
+   "px": [
+    225,
+    428,
+    241,
+    437
+   ],
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "decal_12",
+   "px": [
+    248,
+    522,
+    277,
+    533
+   ],
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "decal_13",
+   "px": [
+    262,
+    23,
+    276,
+    37
+   ],
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "decal_14",
+   "px": [
+    280,
+    427,
+    291,
+    524
+   ],
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  }
+ ]
+}

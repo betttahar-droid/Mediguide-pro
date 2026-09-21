@@ -1,0 +1,126 @@
+{
+ "face": "front",
+ "size": [
+  290,
+  570
+ ],
+ "parts": [
+  {
+   "name": "top_marquee",
+   "px": [
+    29,
+    9,
+    263,
+    69
+   ],
+   "resize": "spanx_center",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "title_band",
+   "px": [
+    2,
+    68,
+    280,
+    119
+   ],
+   "resize": "spanx_center",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "song_chart",
+   "px": [
+    89,
+    129,
+    278,
+    282
+   ],
+   "resize": "spanx_repeat",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "coin_slot_left",
+   "px": [
+    2,
+    289,
+    112,
+    335
+   ],
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "coin_slot_right",
+   "px": [
+    192,
+    289,
+    288,
+    335
+   ],
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "control_deck",
+   "px": [
+    1,
+    306,
+    279,
+    374
+   ],
+   "resize": "spanx_center",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "lower_cabinet_front",
+   "px": [
+    2,
+    373,
+    288,
+    568
+   ],
+   "resize": "spanx_center",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "speaker_grille_left",
+   "px": [
+    14,
+    397,
+    81,
+    538
+   ],
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "lower_badge",
+   "px": [
+    123,
+    435,
+    163,
+    461
+   ],
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "none"
+  }
+ ]
+}

@@ -1,0 +1,753 @@
+[
+ {
+  "round": 0,
+  "asset": "jukebox",
+  "looks_good": false,
+  "blocking": 21,
+  "faults": [
+   {
+    "part": "background",
+    "fault": "At 1.5x taller the cabinet texture stretches into long vertical streaks and bands down the whole body (image 4); the dome art region is also stretched rather than the extra height going into the lower cabinet as the resize is meant to mean.",
+    "severity": "blocking"
+   },
+   {
+    "part": "title_strip_left",
+    "fault": "When the prop is made taller the title strips, being fixed-size and anchored top, drift away from the selector opening and appear scattered over blank mid-cabinet panel; the taller cabinet should grow extra title-strip rows inside the selector, not orphan the existing ones.",
+    "severity": "blocking"
+   },
+   {
+    "part": "lower_panel_left",
+    "fault": "The taller version adds its height as stretched blank door surface instead of a longer plain lower cabinet; the lower panels and side pillars must extend vertically rather than the front texture smearing.",
+    "severity": "blocking"
+   },
+   {
+    "part": "decal_2",
+    "fault": "In the wireframe a flat quad stands clear of the body at the upper left of the dome, floating off the surface with nothing behind it \u2014 a part plane proud of the cabinet where it should sit on it.",
+    "severity": "blocking"
+   },
+   {
+    "part": "background (gemini)",
+    "fault": "The background panel texture is severely stretched and smeared in both the wider (image 3) and taller (image 4) renders, creating ugly vertical and horizontal banding.",
+    "severity": "blocking"
+   },
+   {
+    "part": "title_strip_left (gemini)",
+    "fault": "The title strips are stretched horizontally in the wider render (image 3), making the text unreadable.",
+    "severity": "blocking"
+   },
+   {
+    "part": "title_strip_right (gemini)",
+    "fault": "The title strips are stretched horizontally in the wider render (image 3), making the text unreadable.",
+    "severity": "blocking"
+   },
+   {
+    "part": "title_strip_left_outer (gemini)",
+    "fault": "The title strips are stretched horizontally in the wider render (image 3), making the text unreadable.",
+    "severity": "blocking"
+   },
+   {
+    "part": "button_column_left (gemini)",
+    "fault": "The button column is stretched horizontally in the wider render (image 3).",
+    "severity": "blocking"
+   },
+   {
+    "part": "title_window (gemini)",
+    "fault": "The title window is stretched horizontally in the wider render (image 3).",
+    "severity": "blocking"
+   },
+   {
+    "part": "grille_glass_left (gemini)",
+    "fault": "The grille glass and lattice are stretched horizontally in the wider render (image 3).",
+    "severity": "blocking"
+   },
+   {
+    "part": "grille_glass_right (gemini)",
+    "fault": "The grille glass and lattice are stretched horizontally in the wider render (image 3).",
+    "severity": "blocking"
+   },
+   {
+    "part": "center_badge (gemini)",
+    "fault": "The center badge is stretched horizontally in the wider render (image 3).",
+    "severity": "blocking"
+   },
+   {
+    "part": "grille_arch_left (gemini)",
+    "fault": "The grille arch is stretched horizontally in the wider render (image 3).",
+    "severity": "blocking"
+   },
+   {
+    "part": "grille_arch_right (gemini)",
+    "fault": "The grille arch is stretched horizontally in the wider render (image 3).",
+    "severity": "blocking"
+   },
+   {
+    "part": "side_pillar_left (gemini)",
+    "fault": "The side pillar is stretched vertically in the taller render (image 4).",
+    "severity": "blocking"
+   },
+   {
+    "part": "side_pillar_right (gemini)",
+    "fault": "The side pillar is stretched vertically in the taller render (image 4).",
+    "severity": "blocking"
+   },
+   {
+    "part": "side_pillar_left_inner (gemini)",
+    "fault": "The side pillar is stretched vertically in the taller render (image 4).",
+    "severity": "blocking"
+   },
+   {
+    "part": "side_pillar_right_inner (gemini)",
+    "fault": "The side pillar is stretched vertically in the taller render (image 4).",
+    "severity": "blocking"
+   },
+   {
+    "part": "lower_panel_left (gemini)",
+    "fault": "The lower panel is stretched vertically in the taller render (image 4).",
+    "severity": "blocking"
+   },
+   {
+    "part": "lower_panel_right (gemini)",
+    "fault": "The lower panel is stretched vertically in the taller render (image 4).",
+    "severity": "blocking"
+   }
+  ],
+  "patch": [
+   "background",
+   "button_column_left",
+   "center_badge",
+   "decal_2",
+   "grille_arch_left",
+   "grille_arch_right",
+   "grille_glass_left",
+   "grille_glass_right",
+   "lower_panel_left",
+   "lower_panel_right",
+   "side_pillar_left",
+   "side_pillar_left_inner",
+   "side_pillar_right",
+   "side_pillar_right_inner",
+   "title_strip_left",
+   "title_strip_left_outer",
+   "title_strip_right",
+   "title_window"
+  ],
+  "wider_means": "A wider jukebox is a wider cabinet with a broader grille and dome, more button columns on the selector, and the same single title window and record stack.",
+  "taller_means": "A taller jukebox has a longer plain lower cabinet and side pillars, with an extra row or two of title strips in the selector, not a stretched dome."
+ },
+ {
+  "round": 1,
+  "asset": "jukebox",
+  "looks_good": false,
+  "blocking": 15,
+  "faults": [
+   {
+    "part": "background",
+    "fault": "In the 1.5x taller render the cabinet face behind the parts is smeared and streaked into bands (the control-deck strip repeats three times down the front, green side panels are stretched streaks). The vertical tiling cuts instead of extending.",
+    "severity": "blocking"
+   },
+   {
+    "part": "side_pillar_left / side_pillar_right",
+    "fault": "When made taller, the side pillars do not read as longer pillars: they stretch as streaked textures and their lower ends detach, leaving gaps between pillar and base foot. A taller jukebox should grow a longer plain pillar, not smear it.",
+    "severity": "blocking"
+   },
+   {
+    "part": "side_pillar_left_inner / side_pillar_right_inner",
+    "fault": "Same fault: inner pillars show stretched, banded texture and pull away from the lower cabinet at the taller size.",
+    "severity": "blocking"
+   },
+   {
+    "part": "lower_panel_left / lower_panel_right",
+    "fault": "The proud lower panels do not extend with the taller cabinet; in the tall render the region below the grille is bare stretched background rather than continued panel.",
+    "severity": "blocking"
+   },
+   {
+    "part": "control_panel",
+    "fault": "In the taller render the control deck's texture is smeared into repeated horizontal bands down the cabinet front. The control panel itself must hold its one real size while the cabinet below it grows.",
+    "severity": "blocking"
+   },
+   {
+    "part": "dome_art_left",
+    "fault": "At 1.5x taller the dome art is stretched vertically with the dome instead of holding its shape; the dome/arch region should keep its fixed height with growth taken by the lower cabinet.",
+    "severity": "blocking"
+   },
+   {
+    "part": "title_strip_left (gemini)",
+    "fault": "Title strips are static song listing cards behind glass but are assigned slide_y motion, causing internal paper strips to slide out like drawers.",
+    "severity": "blocking"
+   },
+   {
+    "part": "title_strip_right (gemini)",
+    "fault": "Title strip cards have slide_y motion assigned instead of remaining static.",
+    "severity": "blocking"
+   },
+   {
+    "part": "title_strip_left_outer (gemini)",
+    "fault": "Outer title strip has slide_y motion assigned instead of remaining static.",
+    "severity": "blocking"
+   },
+   {
+    "part": "title_window (gemini)",
+    "fault": "The central title display window is assigned slide_y motion instead of being a static glazed opening.",
+    "severity": "blocking"
+   },
+   {
+    "part": "button_column_left (gemini)",
+    "fault": "When widened (Image 3), selector buttons remain fixed rather than repeating columns across the selector console, leaving smeared empty margins.",
+    "severity": "blocking"
+   },
+   {
+    "part": "side_pillar_left (gemini)",
+    "fault": "When scaled vertically (Image 4), the side pillar disconnects from the upper cabinet and drops down into a detached stilt.",
+    "severity": "blocking"
+   },
+   {
+    "part": "side_pillar_right (gemini)",
+    "fault": "When scaled vertically (Image 4), the side pillar detaches and drops down beneath the chassis as a stilt rather than stretching the pilaster body cleanly.",
+    "severity": "blocking"
+   },
+   {
+    "part": "lower_panel_left (gemini)",
+    "fault": "Lower cabinet does not expand vertically to absorb vertical resize, forcing the selector and control deck to duplicate repeatedly instead.",
+    "severity": "blocking"
+   },
+   {
+    "part": "lower_panel_right (gemini)",
+    "fault": "Lower cabinet does not extend vertically during height scaling.",
+    "severity": "blocking"
+   }
+  ],
+  "patch": [
+   "background",
+   "base_foot_left",
+   "base_foot_right",
+   "button_column_left",
+   "dome_art_left",
+   "lower_panel_left",
+   "lower_panel_right",
+   "side_pillar_left",
+   "side_pillar_left_inner",
+   "side_pillar_right",
+   "side_pillar_right_inner",
+   "title_strip_left",
+   "title_strip_left_outer",
+   "title_strip_right",
+   "title_window"
+  ],
+  "wider_means": "A wider jukebox is a wider cabinet with a broader grille and dome, more button columns on the selector, and the same single title window and record stack.",
+  "taller_means": "A taller jukebox has a longer plain lower cabinet and side pillars, with an extra row or two of title strips in the selector, not a stretched dome."
+ },
+ {
+  "round": 2,
+  "asset": "jukebox",
+  "looks_good": false,
+  "blocking": 6,
+  "faults": [
+   {
+    "part": "background",
+    "fault": "At 1.5x taller the whole front face tiles vertically: the control panel, button clusters, grille and title-strip artwork repeat in stacked copies down the cabinet instead of the lower cabinet extending. The front artwork lives on the tiling background panel, so a taller prop produces visible repeats a player can point at. Blocking.",
+    "severity": "blocking"
+   },
+   {
+    "part": "dome_art_left",
+    "fault": "Wireframe shows a flat plane floating clear of the body off the upper-left shoulder, outside the dome silhouette. A decal plane standing off the surface with nothing behind it. Blocking.",
+    "severity": "blocking"
+   },
+   {
+    "part": "title_strip_left",
+    "fault": "Taller spec calls for extra title-strip rows in the selector; instead the strips stay fixed and the panel artwork repeats behind them. Strips should gain rows on a vertical span.",
+    "severity": "blocking"
+   },
+   {
+    "part": "side_pillar_left",
+    "fault": "Side pillars do not lengthen at 1.5x taller; the extra height is absorbed by stretched/smear background. Pillars should extend with the cabinet height.",
+    "severity": "blocking"
+   },
+   {
+    "part": "control_panel (gemini)",
+    "fault": "Repeats vertically multiple times when scaled taller instead of maintaining a single control unit.",
+    "severity": "blocking"
+   },
+   {
+    "part": "background (gemini)",
+    "fault": "Cabinet stretches and distorts upper dome geometry and textures inappropriately during width scaling.",
+    "severity": "blocking"
+   }
+  ],
+  "patch": [
+   "background",
+   "control_panel",
+   "dome_art_left",
+   "side_pillar_left",
+   "side_pillar_left_inner",
+   "side_pillar_right",
+   "side_pillar_right_inner",
+   "title_strip_left",
+   "title_strip_right"
+  ],
+  "wider_means": "A wider jukebox is a wider cabinet with a broader grille and dome, more button columns on the selector, and the same single title window and record stack.",
+  "taller_means": "A taller jukebox has a longer plain lower cabinet and side pillars, with an extra row or two of title strips in the selector, not a stretched dome."
+ },
+ {
+  "round": 3,
+  "asset": "jukebox",
+  "looks_good": false,
+  "blocking": 86,
+  "faults": [
+   {
+    "part": "background",
+    "fault": "At 1.5x taller the whole front texture repeats vertically: the control panel, green/red button rows and title strips are stacked two/three times down the cabinet, and the dome is stretched instead of the extra height going into a longer plain lower cabinet. This is a banded, smeared background, not a taller jukebox.",
+    "severity": "blocking"
+   },
+   {
+    "part": "button_column_left",
+    "fault": "When widened (image 3) the cabinet gets broader but the selector keeps the same single button column with blank panel beside it; the width resize should add button columns, so this part needs a repeating rule.",
+    "severity": "blocking"
+   },
+   {
+    "part": "side_pillar_left",
+    "fault": "At 1.5x taller the pillars and lower panels do not lengthen; the extra height is absorbed by stretched background art, leaving the cabinet to read as a stretched original rather than a taller one.",
+    "severity": "blocking"
+   },
+   {
+    "part": "lower_panel_left",
+    "fault": "Does not extend on the vertical resize; a taller jukebox needs a longer plain lower cabinet.",
+    "severity": "blocking"
+   },
+   {
+    "part": "background",
+    "fault": "In the wireframe a flat background plane protrudes clear of the body at the upper left behind the dome, a face outside the prop silhouette.",
+    "severity": "blocking"
+   },
+   {
+    "part": "background (gemini)",
+    "fault": "The background panel texture is smeared and banded where the prop is made wider (Image 3) and taller (Image 4).",
+    "severity": "blocking"
+   },
+   {
+    "part": "record_stack (gemini)",
+    "fault": "The record stack is duplicated and mirrored in the wider version (Image 3), creating a nonsensical double stack.",
+    "severity": "blocking"
+   },
+   {
+    "part": "title_strip_left (gemini)",
+    "fault": "The title strips are duplicated and mirrored in the wider version (Image 3), creating a nonsensical double set.",
+    "severity": "blocking"
+   },
+   {
+    "part": "title_strip_right (gemini)",
+    "fault": "The title strips are duplicated and mirrored in the wider version (Image 3), creating a nonsensical double set.",
+    "severity": "blocking"
+   },
+   {
+    "part": "title_strip_left_outer (gemini)",
+    "fault": "The title strips are duplicated and mirrored in the wider version (Image 3), creating a nonsensical double set.",
+    "severity": "blocking"
+   },
+   {
+    "part": "button_column_left (gemini)",
+    "fault": "The button column is duplicated and mirrored in the wider version (Image 3), creating a nonsensical double set.",
+    "severity": "blocking"
+   },
+   {
+    "part": "control_panel (gemini)",
+    "fault": "The control panel is duplicated and mirrored in the wider version (Image 3), creating a nonsensical double set.",
+    "severity": "blocking"
+   },
+   {
+    "part": "title_window (gemini)",
+    "fault": "The title window is duplicated and mirrored in the wider version (Image 3), creating a nonsensical double set.",
+    "severity": "blocking"
+   },
+   {
+    "part": "grille_glass_left (gemini)",
+    "fault": "The grille glass is duplicated and mirrored in the wider version (Image 3), creating a nonsensical double set.",
+    "severity": "blocking"
+   },
+   {
+    "part": "grille_glass_right (gemini)",
+    "fault": "The grille glass is duplicated and mirrored in the wider version (Image 3), creating a nonsensical double set.",
+    "severity": "blocking"
+   },
+   {
+    "part": "center_badge (gemini)",
+    "fault": "The center badge is duplicated and mirrored in the wider version (Image 3), creating a nonsensical double set.",
+    "severity": "blocking"
+   },
+   {
+    "part": "grille_arch_left (gemini)",
+    "fault": "The grille arch is duplicated and mirrored in the wider version (Image 3), creating a nonsensical double set.",
+    "severity": "blocking"
+   },
+   {
+    "part": "grille_arch_right (gemini)",
+    "fault": "The grille arch is duplicated and mirrored in the wider version (Image 3), creating a nonsensical double set.",
+    "severity": "blocking"
+   },
+   {
+    "part": "lower_panel_left (gemini)",
+    "fault": "The lower panel is duplicated and mirrored in the wider version (Image 3), creating a nonsensical double set.",
+    "severity": "blocking"
+   },
+   {
+    "part": "lower_panel_right (gemini)",
+    "fault": "The lower panel is duplicated and mirrored in the wider version (Image 3), creating a nonsensical double set.",
+    "severity": "blocking"
+   },
+   {
+    "part": "base_foot_left (gemini)",
+    "fault": "The base foot is duplicated and mirrored in the wider version (Image 3), creating a nonsensical double set.",
+    "severity": "blocking"
+   },
+   {
+    "part": "base_foot_right (gemini)",
+    "fault": "The base foot is duplicated and mirrored in the wider version (Image 3), creating a nonsensical double set.",
+    "severity": "blocking"
+   },
+   {
+    "part": "side_pillar_left (gemini)",
+    "fault": "The side pillar is duplicated and mirrored in the wider version (Image 3), creating a nonsensical double set.",
+    "severity": "blocking"
+   },
+   {
+    "part": "side_pillar_right (gemini)",
+    "fault": "The side pillar is duplicated and mirrored in the wider version (Image 3), creating a nonsensical double set.",
+    "severity": "blocking"
+   },
+   {
+    "part": "side_pillar_left_inner (gemini)",
+    "fault": "The side pillar is duplicated and mirrored in the wider version (Image 3), creating a nonsensical double set.",
+    "severity": "blocking"
+   },
+   {
+    "part": "side_pillar_right_inner (gemini)",
+    "fault": "The side pillar is duplicated and mirrored in the wider version (Image 3), creating a nonsensical double set.",
+    "severity": "blocking"
+   },
+   {
+    "part": "record_stack (gemini)",
+    "fault": "The record stack is stretched vertically in the taller version (Image 4).",
+    "severity": "blocking"
+   },
+   {
+    "part": "title_strip_left (gemini)",
+    "fault": "The title strips are stretched vertically in the taller version (Image 4).",
+    "severity": "blocking"
+   },
+   {
+    "part": "title_strip_right (gemini)",
+    "fault": "The title strips are stretched vertically in the taller version (Image 4).",
+    "severity": "blocking"
+   },
+   {
+    "part": "title_strip_left_outer (gemini)",
+    "fault": "The title strips are stretched vertically in the taller version (Image 4).",
+    "severity": "blocking"
+   },
+   {
+    "part": "button_column_left (gemini)",
+    "fault": "The button column is stretched vertically in the taller version (Image 4).",
+    "severity": "blocking"
+   },
+   {
+    "part": "control_panel (gemini)",
+    "fault": "The control panel is stretched vertically in the taller version (Image 4).",
+    "severity": "blocking"
+   },
+   {
+    "part": "title_window (gemini)",
+    "fault": "The title window is stretched vertically in the taller version (Image 4).",
+    "severity": "blocking"
+   },
+   {
+    "part": "grille_glass_left (gemini)",
+    "fault": "The grille glass is stretched vertically in the taller version (Image 4).",
+    "severity": "blocking"
+   },
+   {
+    "part": "grille_glass_right (gemini)",
+    "fault": "The grille glass is stretched vertically in the taller version (Image 4).",
+    "severity": "blocking"
+   },
+   {
+    "part": "center_badge (gemini)",
+    "fault": "The center badge is stretched vertically in the taller version (Image 4).",
+    "severity": "blocking"
+   },
+   {
+    "part": "grille_arch_left (gemini)",
+    "fault": "The grille arch is stretched vertically in the taller version (Image 4).",
+    "severity": "blocking"
+   },
+   {
+    "part": "grille_arch_right (gemini)",
+    "fault": "The grille arch is stretched vertically in the taller version (Image 4).",
+    "severity": "blocking"
+   },
+   {
+    "part": "lower_panel_left (gemini)",
+    "fault": "The lower panel is stretched vertically in the taller version (Image 4).",
+    "severity": "blocking"
+   },
+   {
+    "part": "lower_panel_right (gemini)",
+    "fault": "The lower panel is stretched vertically in the taller version (Image 4).",
+    "severity": "blocking"
+   },
+   {
+    "part": "base_foot_left (gemini)",
+    "fault": "The base foot is stretched vertically in the taller version (Image 4).",
+    "severity": "blocking"
+   },
+   {
+    "part": "base_foot_right (gemini)",
+    "fault": "The base foot is stretched vertically in the taller version (Image 4).",
+    "severity": "blocking"
+   },
+   {
+    "part": "side_pillar_left (gemini)",
+    "fault": "The side pillar is stretched vertically in the taller version (Image 4).",
+    "severity": "blocking"
+   },
+   {
+    "part": "side_pillar_right (gemini)",
+    "fault": "The side pillar is stretched vertically in the taller version (Image 4).",
+    "severity": "blocking"
+   },
+   {
+    "part": "side_pillar_left_inner (gemini)",
+    "fault": "The side pillar is stretched vertically in the taller version (Image 4).",
+    "severity": "blocking"
+   },
+   {
+    "part": "side_pillar_right_inner (gemini)",
+    "fault": "The side pillar is stretched vertically in the taller version (Image 4).",
+    "severity": "blocking"
+   },
+   {
+    "part": "record_stack (gemini)",
+    "fault": "The record stack is duplicated and mirrored in the wider version (Image 3), creating a nonsensical double stack.",
+    "severity": "blocking"
+   },
+   {
+    "part": "title_strip_left (gemini)",
+    "fault": "The title strips are duplicated and mirrored in the wider version (Image 3), creating a nonsensical double set.",
+    "severity": "blocking"
+   },
+   {
+    "part": "title_strip_right (gemini)",
+    "fault": "The title strips are duplicated and mirrored in the wider version (Image 3), creating a nonsensical double set.",
+    "severity": "blocking"
+   },
+   {
+    "part": "title_strip_left_outer (gemini)",
+    "fault": "The title strips are duplicated and mirrored in the wider version (Image 3), creating a nonsensical double set.",
+    "severity": "blocking"
+   },
+   {
+    "part": "button_column_left (gemini)",
+    "fault": "The button column is duplicated and mirrored in the wider version (Image 3), creating a nonsensical double set.",
+    "severity": "blocking"
+   },
+   {
+    "part": "control_panel (gemini)",
+    "fault": "The control panel is duplicated and mirrored in the wider version (Image 3), creating a nonsensical double set.",
+    "severity": "blocking"
+   },
+   {
+    "part": "title_window (gemini)",
+    "fault": "The title window is duplicated and mirrored in the wider version (Image 3), creating a nonsensical double set.",
+    "severity": "blocking"
+   },
+   {
+    "part": "grille_glass_left (gemini)",
+    "fault": "The grille glass is duplicated and mirrored in the wider version (Image 3), creating a nonsensical double set.",
+    "severity": "blocking"
+   },
+   {
+    "part": "grille_glass_right (gemini)",
+    "fault": "The grille glass is duplicated and mirrored in the wider version (Image 3), creating a nonsensical double set.",
+    "severity": "blocking"
+   },
+   {
+    "part": "center_badge (gemini)",
+    "fault": "The center badge is duplicated and mirrored in the wider version (Image 3), creating a nonsensical double set.",
+    "severity": "blocking"
+   },
+   {
+    "part": "grille_arch_left (gemini)",
+    "fault": "The grille arch is duplicated and mirrored in the wider version (Image 3), creating a nonsensical double set.",
+    "severity": "blocking"
+   },
+   {
+    "part": "grille_arch_right (gemini)",
+    "fault": "The grille arch is duplicated and mirrored in the wider version (Image 3), creating a nonsensical double set.",
+    "severity": "blocking"
+   },
+   {
+    "part": "lower_panel_left (gemini)",
+    "fault": "The lower panel is duplicated and mirrored in the wider version (Image 3), creating a nonsensical double set.",
+    "severity": "blocking"
+   },
+   {
+    "part": "lower_panel_right (gemini)",
+    "fault": "The lower panel is duplicated and mirrored in the wider version (Image 3), creating a nonsensical double set.",
+    "severity": "blocking"
+   },
+   {
+    "part": "base_foot_left (gemini)",
+    "fault": "The base foot is duplicated and mirrored in the wider version (Image 3), creating a nonsensical double set.",
+    "severity": "blocking"
+   },
+   {
+    "part": "base_foot_right (gemini)",
+    "fault": "The base foot is duplicated and mirrored in the wider version (Image 3), creating a nonsensical double set.",
+    "severity": "blocking"
+   },
+   {
+    "part": "side_pillar_left (gemini)",
+    "fault": "The side pillar is duplicated and mirrored in the wider version (Image 3), creating a nonsensical double set.",
+    "severity": "blocking"
+   },
+   {
+    "part": "side_pillar_right (gemini)",
+    "fault": "The side pillar is duplicated and mirrored in the wider version (Image 3), creating a nonsensical double set.",
+    "severity": "blocking"
+   },
+   {
+    "part": "side_pillar_left_inner (gemini)",
+    "fault": "The side pillar is duplicated and mirrored in the wider version (Image 3), creating a nonsensical double set.",
+    "severity": "blocking"
+   },
+   {
+    "part": "side_pillar_right_inner (gemini)",
+    "fault": "The side pillar is duplicated and mirrored in the wider version (Image 3), creating a nonsensical double set.",
+    "severity": "blocking"
+   },
+   {
+    "part": "record_stack (gemini)",
+    "fault": "The record stack is stretched vertically in the taller version (Image 4).",
+    "severity": "blocking"
+   },
+   {
+    "part": "title_strip_left (gemini)",
+    "fault": "The title strips are stretched vertically in the taller version (Image 4).",
+    "severity": "blocking"
+   },
+   {
+    "part": "title_strip_right (gemini)",
+    "fault": "The title strips are stretched vertically in the taller version (Image 4).",
+    "severity": "blocking"
+   },
+   {
+    "part": "title_strip_left_outer (gemini)",
+    "fault": "The title strips are stretched vertically in the taller version (Image 4).",
+    "severity": "blocking"
+   },
+   {
+    "part": "button_column_left (gemini)",
+    "fault": "The button column is stretched vertically in the taller version (Image 4).",
+    "severity": "blocking"
+   },
+   {
+    "part": "control_panel (gemini)",
+    "fault": "The control panel is stretched vertically in the taller version (Image 4).",
+    "severity": "blocking"
+   },
+   {
+    "part": "title_window (gemini)",
+    "fault": "The title window is stretched vertically in the taller version (Image 4).",
+    "severity": "blocking"
+   },
+   {
+    "part": "grille_glass_left (gemini)",
+    "fault": "The grille glass is stretched vertically in the taller version (Image 4).",
+    "severity": "blocking"
+   },
+   {
+    "part": "grille_glass_right (gemini)",
+    "fault": "The grille glass is stretched vertically in the taller version (Image 4).",
+    "severity": "blocking"
+   },
+   {
+    "part": "center_badge (gemini)",
+    "fault": "The center badge is stretched vertically in the taller version (Image 4).",
+    "severity": "blocking"
+   },
+   {
+    "part": "grille_arch_left (gemini)",
+    "fault": "The grille arch is stretched vertically in the taller version (Image 4).",
+    "severity": "blocking"
+   },
+   {
+    "part": "grille_arch_right (gemini)",
+    "fault": "The grille arch is stretched vertically in the taller version (Image 4).",
+    "severity": "blocking"
+   },
+   {
+    "part": "lower_panel_left (gemini)",
+    "fault": "The lower panel is stretched vertically in the taller version (Image 4).",
+    "severity": "blocking"
+   },
+   {
+    "part": "lower_panel_right (gemini)",
+    "fault": "The lower panel is stretched vertically in the taller version (Image 4).",
+    "severity": "blocking"
+   },
+   {
+    "part": "base_foot_left (gemini)",
+    "fault": "The base foot is stretched vertically in the taller version (Image 4).",
+    "severity": "blocking"
+   },
+   {
+    "part": "base_foot_right (gemini)",
+    "fault": "The base foot is stretched vertically in the taller version (Image 4).",
+    "severity": "blocking"
+   },
+   {
+    "part": "side_pillar_left (gemini)",
+    "fault": "The side pillar is stretched vertically in the taller version (Image 4).",
+    "severity": "blocking"
+   },
+   {
+    "part": "side_pillar_right (gemini)",
+    "fault": "The side pillar is stretched vertically in the taller version (Image 4).",
+    "severity": "blocking"
+   },
+   {
+    "part": "side_pillar_left_inner (gemini)",
+    "fault": "The side pillar is stretched vertically in the taller version (Image 4).",
+    "severity": "blocking"
+   },
+   {
+    "part": "side_pillar_right_inner (gemini)",
+    "fault": "The side pillar is stretched vertically in the taller version (Image 4).",
+    "severity": "blocking"
+   }
+  ],
+  "patch": [
+   "background",
+   "base_foot_left",
+   "base_foot_right",
+   "button_column_left",
+   "center_badge",
+   "control_panel",
+   "grille_arch_left",
+   "grille_arch_right",
+   "grille_glass_left",
+   "grille_glass_right",
+   "lower_panel_left",
+   "lower_panel_right",
+   "record_stack",
+   "side_pillar_left",
+   "side_pillar_left_inner",
+   "side_pillar_right",
+   "side_pillar_right_inner",
+   "title_strip_left",
+   "title_strip_left_outer",
+   "title_strip_right",
+   "title_window"
+  ],
+  "wider_means": "A wider jukebox is a wider cabinet with a broader grille and dome, more button columns on the selector, and the same single title window and record stack.",
+  "taller_means": "A taller jukebox has a longer plain lower cabinet and side pillars, with an extra row or two of title strips in the selector, not a stretched dome."
+ }
+]

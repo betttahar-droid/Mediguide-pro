@@ -1,0 +1,18 @@
+{
+ "face": "front",
+ "ratio": 1.7,
+ "cut": 456,
+ "extra": 416,
+ "size": [
+  336,
+  1010
+ ],
+ "drawn_size": [
+  336,
+  594
+ ],
+ "cover_at_cut": 2,
+ "on_part_boundary": true,
+ "attempts": 3,
+ "evidence": "proposed"
+}

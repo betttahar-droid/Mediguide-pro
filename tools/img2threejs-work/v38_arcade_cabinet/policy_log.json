@@ -1,0 +1,23 @@
+[
+ {
+  "face": "front",
+  "side_names": [
+   {
+    "was": "coin_door_left",
+    "now": "coin_door_right"
+   },
+   {
+    "was": "coin_door_right",
+    "now": "coin_door_left"
+   },
+   {
+    "was": "coin_slot_left",
+    "now": "coin_slot_right"
+   },
+   {
+    "was": "coin_slot_right",
+    "now": "coin_slot_left"
+   }
+  ]
+ }
+]

@@ -1,0 +1,245 @@
+[
+ {
+  "round": 0,
+  "asset": "jukebox",
+  "looks_good": false,
+  "blocking": 3,
+  "faults": [
+   {
+    "part": "background",
+    "fault": "At 1.6x TALLER the extra height went almost entirely into a huge stretched dark slab of background below the cabinet: the smear/streak band a player can point at, and none of the height landed in the cabinet itself -- the bubble tubes did not lengthen and there is no taller plinth, just blank smeared panel. Blocking on both texture and meaning grounds.",
+    "severity": "blocking"
+   },
+   {
+    "part": "bubble_tube_right",
+    "fault": "On the taller prop the bubble-tube columns stay their original length while the body area below stretches with background: the extra height should have gone into longer columns and a taller plinth, not blank panel.",
+    "severity": "blocking"
+   },
+   {
+    "part": "background",
+    "fault": "A hard-edged dark plane protrudes clear of the body at the upper left of the cabinet (visible in the solid render and as a stray rectangular shell in the wireframe) -- geometry floating outside the silhouette that reads as a bug, not a part.",
+    "severity": "blocking"
+   }
+  ],
+  "patch": [
+   {
+    "name": "background",
+    "resize": "fixed",
+    "anchor": "top",
+    "depth": "flush",
+    "motion": "none",
+    "count": "none",
+    "drop": false,
+    "mode": "mirror"
+   },
+   {
+    "name": "bubble_tube_right",
+    "resize": "spany_center",
+    "anchor": "right",
+    "depth": "proud",
+    "motion": "none",
+    "count": "none",
+    "drop": false
+   }
+  ],
+  "wider_means": "A wider jukebox is a wider cabinet carcass: the arched dome, the title-strip board, the speaker grille and the two bubble tubes all spread apart across a broader body, with a third or fourth decorative column on very wide ones.",
+  "taller_means": "A taller jukebox is a taller cabinet: longer bubble-tube columns, a stretch of plain cabinet panel between the grille bottom and the base, and a taller plinth/kick base."
+ },
+ {
+  "round": 1,
+  "asset": "jukebox",
+  "looks_good": false,
+  "blocking": 4,
+  "faults": [
+   {
+    "part": "background",
+    "fault": "Widening and heightening stretched the background panel: the 2x WIDER render shows smeared, streaked wood across the broadened carcass sides, and the 1.6x TALLER render is dominated by a huge vertically smeared blank panel below the cabinet where the extra cabinet height should be",
+    "severity": "blocking"
+   },
+   {
+    "part": "background",
+    "fault": "Wireframe shows a flat background plane floating clear off the upper-left of the body, standing away from the cabinet silhouette",
+    "severity": "blocking"
+   },
+   {
+    "part": "bubble_tube_right",
+    "fault": "On the 1.6x TALLER model the extra height went into smeared background instead of into the tube columns: the bubble tubes stay their original length and a stretch of blank panel appears below them, so the tall version does not read as a taller jukebox",
+    "severity": "blocking"
+   },
+   {
+    "part": "background",
+    "fault": "In the 1.6x TALLER render there is no taller plinth/kick base and no extra plain cabinet panel between grille and base -- the added height is entirely featureless smeared texture, which does not make sense as the object",
+    "severity": "blocking"
+   }
+  ],
+  "patch": [
+   {
+    "name": "background",
+    "resize": "mirror",
+    "anchor": "top",
+    "depth": "flush",
+    "motion": "none",
+    "count": "none",
+    "drop": false
+   },
+   {
+    "name": "bubble_tube_right",
+    "resize": "fixed",
+    "anchor": "right",
+    "depth": "proud",
+    "motion": "none",
+    "count": "longer",
+    "drop": false
+   }
+  ],
+  "wider_means": "A wider jukebox is a wider cabinet carcass: the arched dome, the title-strip board, the speaker grille and the two bubble tubes all spread apart across a broader body, with a third or fourth decorative column on very wide ones.",
+  "taller_means": "A taller jukebox is a taller cabinet: longer bubble-tube columns, a stretch of plain cabinet panel between the grille bottom and the base, and a taller plinth/kick base."
+ },
+ {
+  "round": 2,
+  "asset": "jukebox",
+  "looks_good": false,
+  "blocking": 4,
+  "faults": [
+   {
+    "part": "background",
+    "fault": "At 1.6x TALLER the entire extra height went into a hugely stretched blank base panel below the cabinet: smeared, streaked dark wood with no plinth detail, no longer bubble tubes, no taller grille column. The prop reads as a jukebox perched on a stretched smear, not a taller cabinet.",
+    "severity": "blocking"
+   },
+   {
+    "part": "bubble_tube_right",
+    "fault": "Vertical resize produced no change in the tubes: on a taller cabinet the bubble-tube columns should simply get longer, but they are identical to the original height while blank base smears below them.",
+    "severity": "blocking"
+   },
+   {
+    "part": "background",
+    "fault": "At 2.0x WIDER the added width went into plain, near-featureless brown side panels; the arch, title strip, grille and bubble tubes did not spread across a broader face, and the new side areas show stretched/streaked wood tiling rather than real cabinet detail.",
+    "severity": "blocking"
+   },
+   {
+    "part": "background",
+    "fault": "Wireframe shows a large flat quadrilateral plane floating clear of the body at the upper left, detached from the cabinet carcass.",
+    "severity": "blocking"
+   }
+  ],
+  "patch": [
+   {
+    "name": "background",
+    "resize": "fixed",
+    "anchor": "top",
+    "depth": "flush",
+    "motion": "none",
+    "count": "none",
+    "drop": false,
+    "mode": "mirror"
+   },
+   {
+    "name": "bubble_tube_right",
+    "resize": "fixed",
+    "anchor": "right",
+    "depth": "proud",
+    "motion": "none",
+    "count": "longer",
+    "drop": false
+   }
+  ],
+  "wider_means": "A wider jukebox is a wider cabinet carcass: the arched dome, the title-strip board, the speaker grille and the two bubble tubes all spread apart across a broader body, with a third or fourth decorative column on very wide ones.",
+  "taller_means": "A taller jukebox is a taller cabinet: longer bubble-tube columns, a stretch of plain cabinet panel between the grille bottom and the base, and a taller plinth/kick base."
+ },
+ {
+  "round": 3,
+  "asset": "jukebox",
+  "looks_good": false,
+  "blocking": 3,
+  "faults": [
+   {
+    "part": "background",
+    "fault": "At 1.6x height the extra vertical size was dumped into the background panel, which shows a huge smeared, streaked dark wood panel below the cabinet with visible vertical banding and a torn texture join at the cabinet's bottom edge. The extra height never reached the parts that should have absorbed it -- the bubble tubes stayed the same length and the plinth did not grow.",
+    "severity": "blocking"
+   },
+   {
+    "part": "bubble_tube_right",
+    "fault": "The taller variant shows no longer bubble-tube columns; the height gain bypassed them entirely and went into blank smeared background instead, so the tall prop reads as a jukebox sitting on a featureless monolith.",
+    "severity": "blocking"
+   },
+   {
+    "part": "background",
+    "fault": "In the solid and wireframe views a large flat plane projects clear of the body at the upper-left, floating in mid-air behind the dome. A face hangs in space detached from the cabinet -- a player could point straight at it.",
+    "severity": "blocking"
+   }
+  ],
+  "patch": [
+   {
+    "name": "background",
+    "resize": "fixed",
+    "anchor": "top",
+    "depth": "flush",
+    "motion": "none",
+    "count": "none",
+    "drop": false,
+    "mode": "mirror"
+   },
+   {
+    "name": "bubble_tube_right",
+    "resize": "fixed",
+    "anchor": "right",
+    "depth": "proud",
+    "motion": "none",
+    "count": "longer",
+    "drop": false
+   }
+  ],
+  "wider_means": "A wider jukebox is a wider cabinet carcass: the arched dome, the title-strip board, the speaker grille and the two bubble tubes all spread apart across a broader body, with a third or fourth decorative column on very wide ones.",
+  "taller_means": "A taller jukebox is a taller cabinet: longer bubble-tube columns, a stretch of plain cabinet panel between the grille bottom and the base, and a taller plinth/kick base."
+ },
+ {
+  "round": 4,
+  "asset": "jukebox",
+  "looks_good": false,
+  "blocking": 4,
+  "faults": [
+   {
+    "part": "background",
+    "fault": "1.6x TALLER: the extra height went into a blank, smeared, streaked wood-grain slab below the cabinet instead of into taller members \u2014 bubble tubes did not lengthen, there is no longer plinth/kick base, and the stretched texture bands visibly. Height must go into members, not blank panel.",
+    "severity": "blocking"
+   },
+   {
+    "part": "background",
+    "fault": "2.0x WIDER: extra width became blank cabinet wing-panels left and right of the unchanged centre; the arch, title board and grille did not spread and no additional decorative column appears. Stretched/repeated wood texture on the new wings shows banding at the joins.",
+    "severity": "blocking"
+   },
+   {
+    "part": "bubble_tube_right",
+    "fault": "Taller version leaves the bubble tubes at their original length while plain smeared panel fills the space they should occupy; widened version leaves only one tube pair flanking the centre with dead panel beyond \u2014 tubes are the members that should carry both resize directions.",
+    "severity": "blocking"
+   },
+   {
+    "part": "background",
+    "fault": "Wireframe shows a large flat quad floating clear of the body at the upper rear-left, projecting out of the silhouette \u2014 a stray plane standing off the cabinet rather than closed geometry.",
+    "severity": "blocking"
+   }
+  ],
+  "patch": [
+   {
+    "name": "background",
+    "resize": "repeat",
+    "anchor": "top",
+    "depth": "flush",
+    "motion": "none",
+    "count": "none",
+    "drop": false
+   },
+   {
+    "name": "bubble_tube_right",
+    "resize": "fixed",
+    "anchor": "right",
+    "depth": "proud",
+    "motion": "none",
+    "count": "longer",
+    "drop": false
+   }
+  ],
+  "wider_means": "A wider jukebox is a wider cabinet carcass: the arched dome, the title-strip board, the speaker grille and the two bubble tubes all spread apart across a broader body, with a third or fourth decorative column on very wide ones.",
+  "taller_means": "A taller jukebox is a taller cabinet: longer bubble-tube columns, a stretch of plain cabinet panel between the grille bottom and the base, and a taller plinth/kick base."
+ }
+]

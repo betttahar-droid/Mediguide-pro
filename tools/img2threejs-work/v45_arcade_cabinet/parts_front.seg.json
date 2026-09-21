@@ -1,0 +1,303 @@
+{
+ "face": "front",
+ "size": [
+  238,
+  607
+ ],
+ "parts": [
+  {
+   "name": "decal",
+   "px": [
+    51,
+    17,
+    65,
+    30
+   ],
+   "mask": "masks/1.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "marquee_frame",
+   "px": [
+    9,
+    18,
+    230,
+    75
+   ],
+   "mask": "masks/2.png",
+   "resize": "spanx_center",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "marquee",
+   "px": [
+    13,
+    18,
+    223,
+    66
+   ],
+   "mask": "masks/3.png",
+   "resize": "spanx_center",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "decal_2",
+   "px": [
+    104,
+    18,
+    150,
+    26
+   ],
+   "mask": "masks/4.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "decal_3",
+   "px": [
+    20,
+    19,
+    55,
+    55
+   ],
+   "mask": "masks/5.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "decal_4",
+   "px": [
+    88,
+    52,
+    109,
+    67
+   ],
+   "mask": "masks/6.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "decal_5",
+   "px": [
+    136,
+    55,
+    150,
+    66
+   ],
+   "mask": "masks/7.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "screen",
+   "px": [
+    44,
+    142,
+    195,
+    260
+   ],
+   "mask": "masks/8.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "decal_6",
+   "px": [
+    118,
+    182,
+    131,
+    192
+   ],
+   "mask": "masks/9.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "decal_7",
+   "px": [
+    94,
+    211,
+    104,
+    230
+   ],
+   "mask": "masks/10.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "start_button_left",
+   "px": [
+    46,
+    269,
+    60,
+    291
+   ],
+   "mask": "masks/11.png",
+   "resize": "fixed",
+   "anchor": "left",
+   "depth": "proud",
+   "motion": "press"
+  },
+  {
+   "name": "start_button_right",
+   "px": [
+    50,
+    285,
+    60,
+    302
+   ],
+   "mask": "masks/12.png",
+   "resize": "fixed",
+   "anchor": "left",
+   "depth": "proud",
+   "motion": "press"
+  },
+  {
+   "name": "control_deck",
+   "px": [
+    10,
+    287,
+    229,
+    313
+   ],
+   "mask": "masks/13.png",
+   "resize": "spanx_repeat",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "coin_door",
+   "px": [
+    9,
+    312,
+    229,
+    356
+   ],
+   "mask": "masks/14.png",
+   "resize": "spanx_center",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "cabinet_door",
+   "px": [
+    9,
+    367,
+    229,
+    607
+   ],
+   "mask": "masks/15.png",
+   "resize": "spanx_center",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "door_button_upper_left",
+   "px": [
+    96,
+    402,
+    114,
+    424
+   ],
+   "mask": "masks/16.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "press"
+  },
+  {
+   "name": "door_button_upper_right",
+   "px": [
+    119,
+    402,
+    137,
+    424
+   ],
+   "mask": "masks/17.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "press"
+  },
+  {
+   "name": "decal_8",
+   "px": [
+    136,
+    431,
+    148,
+    443
+   ],
+   "mask": "masks/18.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "door_button_lower_left",
+   "px": [
+    96,
+    454,
+    114,
+    473
+   ],
+   "mask": "masks/19.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "press"
+  },
+  {
+   "name": "door_button_lower_right",
+   "px": [
+    119,
+    454,
+    137,
+    473
+   ],
+   "mask": "masks/20.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "press"
+  },
+  {
+   "name": "decal_9",
+   "px": [
+    137,
+    519,
+    147,
+    530
+   ],
+   "mask": "masks/21.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none"
+  }
+ ]
+}

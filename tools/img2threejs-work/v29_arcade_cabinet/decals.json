@@ -1,0 +1,203 @@
+{
+ "asset": "arcade cabinet",
+ "decals": [
+  {
+   "n": 1,
+   "image": "decals/d1.png",
+   "px": [
+    322,
+    160
+   ],
+   "keyed": 0.383,
+   "median": [
+    180,
+    79,
+    82
+   ],
+   "name": "title",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.06
+  },
+  {
+   "n": 2,
+   "image": "decals/d2.png",
+   "px": [
+    325,
+    64
+   ],
+   "keyed": 0.06,
+   "median": [
+    58,
+    33,
+    29
+   ],
+   "name": "hazard_stripe",
+   "rule": "along",
+   "where": "front",
+   "size": 0.02
+  },
+  {
+   "n": 3,
+   "image": "decals/d3.png",
+   "px": [
+    325,
+    30
+   ],
+   "keyed": 0.118,
+   "median": [
+    112,
+    42,
+    50
+   ],
+   "name": "pinstripe",
+   "rule": "along",
+   "where": "front",
+   "size": 0.01
+  },
+  {
+   "n": 4,
+   "image": "decals/d4.png",
+   "px": [
+    322,
+    333
+   ],
+   "keyed": 0.239,
+   "median": [
+    95,
+    112,
+    122
+   ],
+   "name": "ship_emblem",
+   "rule": "hold",
+   "where": "side",
+   "size": 0.18
+  },
+  {
+   "n": 5,
+   "image": "decals/d5.png",
+   "px": [
+    253,
+    34
+   ],
+   "keyed": 0.395,
+   "median": [
+    161,
+    89,
+    89
+   ],
+   "name": "coin_instruction",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.02
+  },
+  {
+   "n": 6,
+   "image": "decals/d6.png",
+   "px": [
+    261,
+    34
+   ],
+   "keyed": 0.409,
+   "median": [
+    141,
+    48,
+    69
+   ],
+   "name": "start_label",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.02
+  },
+  {
+   "n": 7,
+   "image": "decals/d7.png",
+   "px": [
+    325,
+    204
+   ],
+   "keyed": 0.437,
+   "median": [
+    91,
+    44,
+    89
+   ],
+   "name": "speaker_grille",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.04
+  },
+  {
+   "n": 8,
+   "image": "decals/d8.png",
+   "px": [
+    285,
+    302
+   ],
+   "keyed": 0.324,
+   "median": [
+    102,
+    99,
+    96
+   ],
+   "name": "alien_emblem",
+   "rule": "hold",
+   "where": "side",
+   "size": 0.18
+  },
+  {
+   "n": 9,
+   "image": "decals/d9.png",
+   "px": [
+    325,
+    115
+   ],
+   "keyed": 0.412,
+   "median": [
+    77,
+    42,
+    83
+   ],
+   "name": "arrow_meter",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.02
+  },
+  {
+   "n": 10,
+   "image": "decals/d10.png",
+   "px": [
+    325,
+    140
+   ],
+   "keyed": 0.539,
+   "median": [
+    175,
+    136,
+    163
+   ],
+   "name": "price_plate",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.04
+  },
+  {
+   "n": 11,
+   "image": "decals/d11.png",
+   "px": [
+    297,
+    303
+   ],
+   "keyed": 0.3,
+   "median": [
+    105,
+    106,
+    105
+   ],
+   "name": "alien_portrait",
+   "rule": "hold",
+   "where": "side",
+   "size": 0.18
+  }
+ ]
+}

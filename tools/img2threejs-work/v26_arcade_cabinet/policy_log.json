@@ -1,0 +1,15 @@
+[
+ {
+  "face": "front",
+  "side_names": [
+   {
+    "was": "coin_button_left",
+    "now": "coin_button_right"
+   },
+   {
+    "was": "coin_button_right",
+    "now": "coin_button_left"
+   }
+  ]
+ }
+]

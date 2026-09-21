@@ -1,0 +1,1345 @@
+{
+ "face": "front",
+ "size": [
+  233,
+  607
+ ],
+ "aspect": 0.38386,
+ "background": "bg_front.png",
+ "background_mode": "mirror",
+ "parts": [
+  {
+   "name": "marquee",
+   "image": "parts/marquee.png",
+   "hf": [
+    0.08530805687203792,
+    0.12796208530805686
+   ],
+   "resize": "spanx_center",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": true,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.1887,
+     0.7547
+    ],
+    "v": [
+     0.3409,
+     0.8182
+    ]
+   },
+   "px_size": [
+    212,
+    45
+   ],
+   "u": [
+    0.04721,
+    0.95708
+   ],
+   "v": [
+    0.9028,
+    0.97694
+   ]
+  },
+  {
+   "name": "screen_bezel",
+   "image": "parts/screen_bezel.png",
+   "hf": [
+    0.1523809523809524,
+    0.19523809523809524
+   ],
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": true,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.2749,
+     0.6351
+    ],
+    "v": [
+     0.1343,
+     0.6567
+    ]
+   },
+   "px_size": [
+    211,
+    201
+   ],
+   "u": [
+    0.0515,
+    0.95708
+   ],
+   "v": [
+    0.56013,
+    0.89127
+   ]
+  },
+  {
+   "name": "screen",
+   "image": "parts/screen.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.2436,
+     0.9487
+    ],
+    "v": [
+     0.0714,
+     0.7321
+    ]
+   },
+   "px_size": [
+    156,
+    112
+   ],
+   "u": [
+    0.16738,
+    0.83691
+   ],
+   "v": [
+    0.60132,
+    0.78583
+   ]
+  },
+  {
+   "name": "coin_slot",
+   "image": "parts/coin_slot.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "right",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": [
+     0.5714,
+     0.7857
+    ]
+   },
+   "px_size": [
+    15,
+    28
+   ],
+   "u": [
+    0.59227,
+    0.65665
+   ],
+   "v": [
+    0.53542,
+    0.58155
+   ]
+  },
+  {
+   "name": "player_button",
+   "image": "parts/player_button.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.4286,
+     0.6429
+    ],
+    "v": [
+     0.0667,
+     0.2667
+    ]
+   },
+   "px_size": [
+    14,
+    18
+   ],
+   "u": [
+    0.12876,
+    0.18884
+   ],
+   "v": [
+    0.53707,
+    0.56672
+   ]
+  },
+  {
+   "name": "control_deck",
+   "image": "parts/control_deck.png",
+   "hf": [
+    0.08056872037914692,
+    0.12322274881516587
+   ],
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": true,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.184,
+     0.4292
+    ],
+    "v": [
+     0.5652,
+     0.7391
+    ]
+   },
+   "px_size": [
+    212,
+    23
+   ],
+   "u": [
+    0.04721,
+    0.95708
+   ],
+   "v": [
+    0.52389,
+    0.56178
+   ]
+  },
+  {
+   "name": "player_button_2",
+   "image": "parts/player_button_2.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    12,
+    10
+   ],
+   "u": [
+    0.32618,
+    0.37768
+   ],
+   "v": [
+    0.53542,
+    0.55189
+   ]
+  },
+  {
+   "name": "player_button_3",
+   "image": "parts/player_button_3.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.3077,
+     0.5385
+    ],
+    "v": [
+     0.6,
+     0.8
+    ]
+   },
+   "px_size": [
+    13,
+    10
+   ],
+   "u": [
+    0.25751,
+    0.3133
+   ],
+   "v": [
+    0.53377,
+    0.55025
+   ]
+  },
+  {
+   "name": "player_button_4",
+   "image": "parts/player_button_4.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.0769,
+     0.2308
+    ],
+    "v": [
+     0.6667,
+     0.8889
+    ]
+   },
+   "px_size": [
+    13,
+    10
+   ],
+   "u": [
+    0.38627,
+    0.44206
+   ],
+   "v": [
+    0.53377,
+    0.55025
+   ]
+  },
+  {
+   "name": "player_button_5",
+   "image": "parts/player_button_5.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.1667,
+     0.4167
+    ],
+    "v": [
+     0.5,
+     0.75
+    ]
+   },
+   "px_size": [
+    12,
+    9
+   ],
+   "u": [
+    0.77682,
+    0.82833
+   ],
+   "v": [
+    0.53542,
+    0.55025
+   ]
+  },
+  {
+   "name": "player_button_6",
+   "image": "parts/player_button_6.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    11,
+    10
+   ],
+   "u": [
+    0.84549,
+    0.8927
+   ],
+   "v": [
+    0.53377,
+    0.55025
+   ]
+  },
+  {
+   "name": "trim_rail",
+   "image": "parts/trim_rail.png",
+   "hf": [
+    0.15165876777251186,
+    0.1943127962085308
+   ],
+   "resize": "spanx_repeat",
+   "resize_y": "spanx_repeat",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": true,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.4764,
+     0.6745
+    ],
+    "v": [
+     0.04,
+     0.48
+    ]
+   },
+   "px_size": [
+    212,
+    25
+   ],
+   "u": [
+    0.04721,
+    0.95708
+   ],
+   "v": [
+    0.486,
+    0.52718
+   ]
+  },
+  {
+   "name": "front_panel",
+   "image": "parts/front_panel.png",
+   "hf": [
+    0.14285714285714285,
+    0.18571428571428572
+   ],
+   "resize": "spanx_center",
+   "resize_y": "spanx_center",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": true,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.8009,
+     0.9905
+    ],
+    "v": [
+     0.0312,
+     0.3125
+    ]
+   },
+   "px_size": [
+    211,
+    32
+   ],
+   "u": [
+    0.04721,
+    0.95279
+   ],
+   "v": [
+    0.43493,
+    0.48764
+   ]
+  },
+  {
+   "name": "decal_2",
+   "image": "parts/decal_2.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.6667,
+     0.8889
+    ],
+    "v": [
+     0.7903,
+     1.0
+    ]
+   },
+   "px_size": [
+    9,
+    65
+   ],
+   "u": [
+    0.65665,
+    0.69528
+   ],
+   "v": [
+    0.28666,
+    0.39374
+   ]
+  },
+  {
+   "name": "player_button_7",
+   "image": "parts/player_button_7.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.3158,
+     0.4737
+    ],
+    "v": null
+   },
+   "px_size": [
+    19,
+    21
+   ],
+   "u": [
+    0.51502,
+    0.59657
+   ],
+   "v": [
+    0.35091,
+    0.3855
+   ]
+  },
+  {
+   "name": "player_button_8",
+   "image": "parts/player_button_8.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": [
+     0.05,
+     0.2
+    ]
+   },
+   "px_size": [
+    19,
+    20
+   ],
+   "u": [
+    0.40343,
+    0.48498
+   ],
+   "v": [
+    0.35091,
+    0.38386
+   ]
+  },
+  {
+   "name": "joystick_ball",
+   "image": "parts/joystick_ball.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "deep",
+   "motion": "stick",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.4667,
+     0.7333
+    ],
+    "v": [
+     0.2667,
+     0.5333
+    ]
+   },
+   "px_size": [
+    16,
+    16
+   ],
+   "u": [
+    0.41202,
+    0.48069
+   ],
+   "v": [
+    0.3575,
+    0.38386
+   ]
+  },
+  {
+   "name": "player_button_9",
+   "image": "parts/player_button_9.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": [
+     0.5385,
+     0.7692
+    ]
+   },
+   "px_size": [
+    11,
+    13
+   ],
+   "u": [
+    0.54506,
+    0.59227
+   ],
+   "v": [
+    0.35585,
+    0.37727
+   ]
+  },
+  {
+   "name": "decal_3",
+   "image": "parts/decal_3.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.0,
+     0.5
+    ],
+    "v": [
+     0.0244,
+     1.0
+    ]
+   },
+   "px_size": [
+    8,
+    43
+   ],
+   "u": [
+    0.30901,
+    0.34335
+   ],
+   "v": [
+    0.30313,
+    0.37397
+   ]
+  },
+  {
+   "name": "player_button_10",
+   "image": "parts/player_button_10.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "center",
+   "depth": "flush",
+   "motion": "press",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": [
+     0.0833,
+     0.25
+    ]
+   },
+   "px_size": [
+    12,
+    14
+   ],
+   "u": [
+    0.58798,
+    0.63948
+   ],
+   "v": [
+    0.31631,
+    0.33937
+   ]
+  },
+  {
+   "name": "instruction_card",
+   "image": "parts/instruction_card.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "right",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    37,
+    46
+   ],
+   "u": [
+    0.74678,
+    0.90558
+   ],
+   "v": [
+    0.23723,
+    0.31301
+   ]
+  },
+  {
+   "name": "player_button_11",
+   "image": "parts/player_button_11.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.2105,
+     0.4211
+    ],
+    "v": [
+     0.6667,
+     0.8333
+    ]
+   },
+   "px_size": [
+    19,
+    20
+   ],
+   "u": [
+    0.40343,
+    0.48498
+   ],
+   "v": [
+    0.26689,
+    0.29984
+   ]
+  },
+  {
+   "name": "player_button_12",
+   "image": "parts/player_button_12.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.35,
+     0.95
+    ],
+    "v": [
+     0.0526,
+     0.5263
+    ]
+   },
+   "px_size": [
+    20,
+    20
+   ],
+   "u": [
+    0.51073,
+    0.59657
+   ],
+   "v": [
+    0.26689,
+    0.29984
+   ]
+  },
+  {
+   "name": "player_button_13",
+   "image": "parts/player_button_13.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    12,
+    15
+   ],
+   "u": [
+    0.54506,
+    0.59657
+   ],
+   "v": [
+    0.27018,
+    0.29489
+   ]
+  },
+  {
+   "name": "player_button_14",
+   "image": "parts/player_button_14.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "right",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.4444,
+     0.6667
+    ],
+    "v": [
+     0.0526,
+     0.3684
+    ]
+   },
+   "px_size": [
+    14,
+    20
+   ],
+   "u": [
+    0.63519,
+    0.69528
+   ],
+   "v": [
+    0.25371,
+    0.28666
+   ]
+  },
+  {
+   "name": "player_button_15",
+   "image": "parts/player_button_15.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "left",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.0,
+     0.875
+    ],
+    "v": [
+     0.25,
+     1.0
+    ]
+   },
+   "px_size": [
+    14,
+    21
+   ],
+   "u": [
+    0.30901,
+    0.3691
+   ],
+   "v": [
+    0.23394,
+    0.26853
+   ]
+  },
+  {
+   "name": "joystick_base",
+   "image": "parts/joystick_base.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.0,
+     0.6957
+    ],
+    "v": [
+     0.8125,
+     1.0
+    ]
+   },
+   "px_size": [
+    53,
+    16
+   ],
+   "u": [
+    0.44635,
+    0.67382
+   ],
+   "v": [
+    0.24053,
+    0.26689
+   ]
+  },
+  {
+   "name": "player_button_16",
+   "image": "parts/player_button_16.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "right",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    18,
+    18
+   ],
+   "u": [
+    0.61373,
+    0.69099
+   ],
+   "v": [
+    0.23723,
+    0.26689
+   ]
+  },
+  {
+   "name": "player_button_17",
+   "image": "parts/player_button_17.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "left",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.25,
+     0.75
+    ],
+    "v": [
+     0.3,
+     0.6
+    ]
+   },
+   "px_size": [
+    16,
+    10
+   ],
+   "u": [
+    0.3691,
+    0.43777
+   ],
+   "v": [
+    0.24217,
+    0.25865
+   ]
+  },
+  {
+   "name": "player_button_18",
+   "image": "parts/player_button_18.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "left",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.1765,
+     0.5882
+    ],
+    "v": [
+     0.25,
+     0.5
+    ]
+   },
+   "px_size": [
+    17,
+    11
+   ],
+   "u": [
+    0.4206,
+    0.49356
+   ],
+   "v": [
+    0.24053,
+    0.25865
+   ]
+  },
+  {
+   "name": "decal_5",
+   "image": "parts/decal_5.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.625,
+     0.875
+    ],
+    "v": [
+     0.0455,
+     0.6364
+    ]
+   },
+   "px_size": [
+    8,
+    30
+   ],
+   "u": [
+    0.66094,
+    0.69528
+   ],
+   "v": [
+    0.19934,
+    0.24876
+   ]
+  },
+  {
+   "name": "decal_6",
+   "image": "parts/decal_6.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    8,
+    25
+   ],
+   "u": [
+    0.30901,
+    0.34335
+   ],
+   "v": [
+    0.20428,
+    0.24547
+   ]
+  },
+  {
+   "name": "decal_8",
+   "image": "parts/decal_8.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.0,
+     1.0
+    ],
+    "v": [
+     0.0323,
+     0.4516
+    ]
+   },
+   "px_size": [
+    9,
+    38
+   ],
+   "u": [
+    0.65665,
+    0.69528
+   ],
+   "v": [
+    0.13839,
+    0.20099
+   ]
+  },
+  {
+   "name": "player_button_19",
+   "image": "parts/player_button_19.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.0,
+     0.1538
+    ],
+    "v": [
+     0.3846,
+     0.6154
+    ]
+   },
+   "px_size": [
+    13,
+    13
+   ],
+   "u": [
+    0.58369,
+    0.63948
+   ],
+   "v": [
+    0.15651,
+    0.17792
+   ]
+  },
+  {
+   "name": "decal_9",
+   "image": "parts/decal_9.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.2857,
+     0.5714
+    ],
+    "v": [
+     0.7,
+     1.0
+    ]
+   },
+   "px_size": [
+    9,
+    20
+   ],
+   "u": [
+    0.65665,
+    0.69528
+   ],
+   "v": [
+    0.10708,
+    0.14003
+   ]
+  },
+  {
+   "name": "player_button_20",
+   "image": "parts/player_button_20.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "right",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.5714,
+     0.8571
+    ],
+    "v": [
+     0.0769,
+     0.5385
+    ]
+   },
+   "px_size": [
+    14,
+    16
+   ],
+   "u": [
+    0.6309,
+    0.69099
+   ],
+   "v": [
+    0.08567,
+    0.11203
+   ]
+  },
+  {
+   "name": "decal_11",
+   "image": "parts/decal_11.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.0816,
+     0.8776
+    ],
+    "v": [
+     0.1667,
+     0.5
+    ]
+   },
+   "px_size": [
+    49,
+    9
+   ],
+   "u": [
+    0.37768,
+    0.58798
+   ],
+   "v": [
+    0.08402,
+    0.09885
+   ]
+  }
+ ]
+}

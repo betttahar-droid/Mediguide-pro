@@ -1,0 +1,146 @@
+{
+ "asset": "vending machine",
+ "px_per_tile": 59,
+ "materials": [
+  {
+   "n": 1,
+   "image": "materials/m1.png",
+   "seam_before": 3.267,
+   "seam_after": 1.179,
+   "median": [
+    26,
+    29,
+    37
+   ],
+   "tiles": true,
+   "name": "body_panel",
+   "main": true
+  },
+  {
+   "n": 2,
+   "image": "materials/m2.png",
+   "seam_before": 2.984,
+   "seam_after": 0.94,
+   "median": [
+    69,
+    75,
+    79
+   ],
+   "tiles": true,
+   "name": "textured_plastic",
+   "main": false
+  },
+  {
+   "n": 3,
+   "image": "materials/m3.png",
+   "seam_before": 3.953,
+   "seam_after": 1.074,
+   "median": [
+    71,
+    72,
+    75
+   ],
+   "tiles": true,
+   "name": "dark_metal",
+   "main": false
+  },
+  {
+   "n": 4,
+   "image": "materials/m4.png",
+   "seam_before": 11.594,
+   "seam_after": 1.079,
+   "median": [
+    101,
+    103,
+    105
+   ],
+   "tiles": true,
+   "name": "brushed_metal",
+   "main": false
+  },
+  {
+   "n": 5,
+   "image": "materials/m5.png",
+   "seam_before": 5.191,
+   "seam_after": 0.939,
+   "median": [
+    49,
+    52,
+    56
+   ],
+   "tiles": true,
+   "name": "dispenser_slot",
+   "main": false
+  },
+  {
+   "n": 6,
+   "image": "materials/m6.png",
+   "seam_before": 4.141,
+   "seam_after": 1.387,
+   "median": [
+    94,
+    108,
+    116
+   ],
+   "tiles": false,
+   "name": "metal_trim",
+   "main": false
+  },
+  {
+   "n": 7,
+   "image": "materials/m7.png",
+   "seam_before": 1.085,
+   "seam_after": 1.045,
+   "median": [
+    60,
+    61,
+    61
+   ],
+   "tiles": true,
+   "name": "vent_mesh",
+   "main": false
+  },
+  {
+   "n": 8,
+   "image": "materials/m8.png",
+   "seam_before": 1.787,
+   "seam_after": 1.135,
+   "median": [
+    42,
+    46,
+    50
+   ],
+   "tiles": true,
+   "name": "dark_rubber",
+   "main": false
+  },
+  {
+   "n": 9,
+   "image": "materials/m9.png",
+   "seam_before": 10.001,
+   "seam_after": 1.629,
+   "median": [
+    47,
+    50,
+    55
+   ],
+   "tiles": false,
+   "name": "interior_cavity",
+   "main": false
+  },
+  {
+   "n": 10,
+   "image": "materials/m10.png",
+   "seam_before": 2.789,
+   "seam_after": 1.213,
+   "median": [
+    91,
+    103,
+    109
+   ],
+   "tiles": true,
+   "name": "worn_panel",
+   "main": false
+  }
+ ]
+}

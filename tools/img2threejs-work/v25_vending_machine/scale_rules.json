@@ -1,0 +1,44 @@
+{
+ "wider_means": "A wider vending machine is one with more product columns standing side by side behind the same glass, each extra column of cans getting its own price tag on the shared shelf rails.",
+ "taller_means": "A taller vending machine has more product shelves \u2014 additional horizontal rows of products stacked in the display.",
+ "max_wider": 1.8,
+ "max_taller": 1.35,
+ "per_bay": [
+  "decal"
+ ],
+ "spans": [
+  "display_window",
+  "price_strip_row1",
+  "price_strip_row2",
+  "price_strip_row3",
+  "delivery_tray",
+  "delivery_tray_flap",
+  "kick_vent"
+ ],
+ "taller_at": [
+  {
+   "part": "service_panel",
+   "side": "below",
+   "px": [
+    490,
+    515
+   ]
+  },
+  {
+   "part": "delivery_tray",
+   "side": "below",
+   "px": [
+    490,
+    515
+   ]
+  },
+  {
+   "part": "kick_vent",
+   "side": "itself",
+   "px": [
+    544,
+    558
+   ]
+  }
+ ]
+}

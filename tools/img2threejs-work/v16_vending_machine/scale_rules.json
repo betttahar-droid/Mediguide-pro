@@ -1,0 +1,27 @@
+{
+ "wider_means": "A wider vending machine is one with more product columns in the display window, plus extra coin slots and selection panels to serve them.",
+ "taller_means": "more shelves of products stacked inside the body",
+ "max_wider": 2.0,
+ "max_taller": 1.5,
+ "per_bay": [
+  "decal_1"
+ ],
+ "taller_at": [
+  {
+   "part": "cabinet_door",
+   "side": "itself",
+   "px": [
+    1,
+    593
+   ]
+  },
+  {
+   "part": "cabinet_door",
+   "side": "below",
+   "px": [
+    595,
+    601
+   ]
+  }
+ ]
+}

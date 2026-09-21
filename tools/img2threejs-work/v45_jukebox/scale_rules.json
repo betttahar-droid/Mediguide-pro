@@ -1,0 +1,77 @@
+{
+ "wider_means": "A wider jukebox is a wider cabinet with a broader grille and dome, more button columns on the selector, and the same single title window and record stack.",
+ "taller_means": "A taller jukebox has a longer plain lower cabinet and side pillars, with an extra row or two of title strips in the selector, not a stretched dome.",
+ "taller_at": [
+  {
+   "part": "side_pillar_left",
+   "side": "itself",
+   "px": [
+    231,
+    453
+   ]
+  },
+  {
+   "part": "side_pillar_right",
+   "side": "itself",
+   "px": [
+    231,
+    451
+   ]
+  },
+  {
+   "part": "side_pillar_left_inner",
+   "side": "itself",
+   "px": [
+    232,
+    453
+   ]
+  },
+  {
+   "part": "side_pillar_right_inner",
+   "side": "itself",
+   "px": [
+    232,
+    454
+   ]
+  },
+  {
+   "part": "lower_panel_left",
+   "side": "itself",
+   "px": [
+    452,
+    561
+   ]
+  },
+  {
+   "part": "lower_panel_right",
+   "side": "itself",
+   "px": [
+    453,
+    562
+   ]
+  }
+ ],
+ "max_wider": 1.6,
+ "max_taller": 1.5,
+ "per_bay": [
+  "button_column_left"
+ ],
+ "per_tier": [
+  "title_strip_left",
+  "decal_9",
+  "title_strip_right",
+  "title_strip_left_outer",
+  "decal_16"
+ ],
+ "spans": [
+  "control_panel",
+  "grille_arch_left",
+  "grille_arch_right",
+  "lower_panel_left",
+  "lower_panel_right",
+  "side_pillar_left",
+  "side_pillar_right",
+  "base_foot_left",
+  "base_foot_right"
+ ]
+}

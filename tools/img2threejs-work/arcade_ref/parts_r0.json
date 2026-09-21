@@ -1,0 +1,339 @@
+{
+ "grid": [
+  40,
+  46,
+  96
+ ],
+ "boxes": [
+  {
+   "min": [
+    1,
+    0,
+    0
+   ],
+   "max": [
+    39,
+    46,
+    5
+   ],
+   "colour": "#141213",
+   "name": "plinth base",
+   "palette": "#141213"
+  },
+  {
+   "min": [
+    3,
+    3,
+    5
+   ],
+   "max": [
+    37,
+    41,
+    80
+   ],
+   "colour": "#1e191a",
+   "name": "cabinet body",
+   "palette": "#1e191a"
+  },
+  {
+   "min": [
+    3,
+    3,
+    80
+   ],
+   "max": [
+    37,
+    39,
+    96
+   ],
+   "colour": "#1e191a",
+   "name": "upper cabinet (marquee tower)",
+   "palette": "#1e191a"
+  },
+  {
+   "min": [
+    3,
+    40,
+    5
+   ],
+   "max": [
+    37,
+    46,
+    96
+   ],
+   "colour": "#141213",
+   "name": "back panel",
+   "palette": "#141213"
+  },
+  {
+   "min": [
+    6,
+    0,
+    6
+   ],
+   "max": [
+    34,
+    6,
+    23
+   ],
+   "colour": "#1e191a",
+   "name": "lower front panel",
+   "palette": "#1e191a"
+  },
+  {
+   "min": [
+    17,
+    0,
+    10
+   ],
+   "max": [
+    23,
+    3,
+    15
+   ],
+   "colour": "#000000",
+   "name": "coin door",
+   "palette": "#000000"
+  },
+  {
+   "min": [
+    4,
+    0,
+    6
+   ],
+   "max": [
+    5,
+    4,
+    73
+   ],
+   "colour": "#a1709d",
+   "name": "left side trim rail",
+   "palette": "#a1709d"
+  },
+  {
+   "min": [
+    35,
+    0,
+    6
+   ],
+   "max": [
+    36,
+    4,
+    73
+   ],
+   "colour": "#a1709d",
+   "name": "right side trim rail",
+   "palette": "#a1709d"
+  },
+  {
+   "min": [
+    5,
+    0,
+    29
+   ],
+   "max": [
+    35,
+    46,
+    36
+   ],
+   "colour": "#1e191a",
+   "name": "control panel shelf",
+   "palette": "#1e191a"
+  },
+  {
+   "min": [
+    12,
+    0,
+    31
+   ],
+   "max": [
+    14,
+    2,
+    33
+   ],
+   "colour": "#a1709d",
+   "name": "left player button",
+   "palette": "#a1709d"
+  },
+  {
+   "min": [
+    26,
+    0,
+    31
+   ],
+   "max": [
+    28,
+    2,
+    33
+   ],
+   "colour": "#a1709d",
+   "name": "right player button",
+   "palette": "#a1709d"
+  },
+  {
+   "min": [
+    9,
+    0,
+    50
+   ],
+   "max": [
+    31,
+    10,
+    72
+   ],
+   "colour": "#4d525a",
+   "name": "screen bezel",
+   "palette": "#4d525a"
+  },
+  {
+   "min": [
+    11,
+    0,
+    52
+   ],
+   "max": [
+    29,
+    5,
+    70
+   ],
+   "colour": "#000000",
+   "name": "screen (CRT face)",
+   "palette": "#000000"
+  },
+  {
+   "min": [
+    8,
+    0,
+    73
+   ],
+   "max": [
+    31,
+    4,
+    75
+   ],
+   "colour": "#000000",
+   "name": "screen top trim",
+   "palette": "#000000"
+  },
+  {
+   "min": [
+    12,
+    0,
+    47
+   ],
+   "max": [
+    31,
+    4,
+    49
+   ],
+   "colour": "#000000",
+   "name": "screen bottom trim",
+   "palette": "#000000"
+  },
+  {
+   "min": [
+    5,
+    0,
+    49
+   ],
+   "max": [
+    6,
+    4,
+    75
+   ],
+   "colour": "#000000",
+   "name": "left screen inner trim",
+   "palette": "#000000"
+  },
+  {
+   "min": [
+    32,
+    0,
+    49
+   ],
+   "max": [
+    33,
+    4,
+    75
+   ],
+   "colour": "#000000",
+   "name": "right screen inner trim",
+   "palette": "#000000"
+  },
+  {
+   "min": [
+    3,
+    0,
+    43
+   ],
+   "max": [
+    4,
+    4,
+    78
+   ],
+   "colour": "#000000",
+   "name": "left cabinet edge trim",
+   "palette": "#000000"
+  },
+  {
+   "min": [
+    34,
+    0,
+    43
+   ],
+   "max": [
+    35,
+    4,
+    78
+   ],
+   "colour": "#000000",
+   "name": "right cabinet edge trim",
+   "palette": "#000000"
+  },
+  {
+   "min": [
+    5,
+    0,
+    78
+   ],
+   "max": [
+    35,
+    6,
+    81
+   ],
+   "colour": "#141213",
+   "name": "marquee frame ledge",
+   "palette": "#141213"
+  },
+  {
+   "min": [
+    7,
+    0,
+    85
+   ],
+   "max": [
+    33,
+    8,
+    91
+   ],
+   "colour": "#57a3b5",
+   "name": "marquee light panel",
+   "palette": "#57a3b5"
+  },
+  {
+   "min": [
+    3,
+    3,
+    91
+   ],
+   "max": [
+    37,
+    39,
+    96
+   ],
+   "colour": "#141213",
+   "name": "top cap",
+   "palette": "#141213"
+  }
+ ]
+}

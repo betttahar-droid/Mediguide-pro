@@ -1,0 +1,370 @@
+{
+ "face": "front",
+ "size": [
+  234,
+  593
+ ],
+ "aspect": 0.3946,
+ "background": "bg_front.png",
+ "background_mode": "repeat",
+ "parts": [
+  {
+   "name": "speaker_grille_right",
+   "image": "parts/speaker_grille_right.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.5745,
+     0.766
+    ],
+    "v": null
+   },
+   "px_size": [
+    48,
+    49
+   ],
+   "u": [
+    0.75214,
+    0.95726
+   ],
+   "v": [
+    0.89713,
+    0.97976
+   ]
+  },
+  {
+   "name": "speaker_grille_left",
+   "image": "parts/speaker_grille_left.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.2051,
+     0.8205
+    ],
+    "v": [
+     0.2,
+     0.6
+    ]
+   },
+   "px_size": [
+    39,
+    31
+   ],
+   "u": [
+    0.06838,
+    0.23504
+   ],
+   "v": [
+    0.92749,
+    0.97976
+   ]
+  },
+  {
+   "name": "marquee",
+   "image": "parts/marquee.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.0417,
+     0.5667
+    ],
+    "v": [
+     0.2292,
+     0.4375
+    ]
+   },
+   "px_size": [
+    120,
+    49
+   ],
+   "u": [
+    0.24359,
+    0.75641
+   ],
+   "v": [
+    0.89713,
+    0.97976
+   ]
+  },
+  {
+   "name": "speaker_panel",
+   "image": "parts/speaker_panel.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.3012,
+     0.8434
+    ],
+    "v": [
+     0.7429,
+     0.9143
+    ]
+   },
+   "px_size": [
+    166,
+    36
+   ],
+   "u": [
+    0.16239,
+    0.87179
+   ],
+   "v": [
+    0.71501,
+    0.77572
+   ]
+  },
+  {
+   "name": "screen",
+   "image": "parts/screen.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.3077,
+     0.9038
+    ],
+    "v": [
+     0.1842,
+     0.6579
+    ]
+   },
+   "px_size": [
+    156,
+    114
+   ],
+   "u": [
+    0.16239,
+    0.82906
+   ],
+   "v": [
+    0.56324,
+    0.75548
+   ]
+  },
+  {
+   "name": "control_deck_left",
+   "image": "parts/control_deck_left.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": [
+     0.3636,
+     0.8
+    ]
+   },
+   "px_size": [
+    45,
+    55
+   ],
+   "u": [
+    0.02991,
+    0.22222
+   ],
+   "v": [
+    0.39123,
+    0.48398
+   ]
+  },
+  {
+   "name": "control_deck_right",
+   "image": "parts/control_deck_right.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": [
+     0.3115,
+     0.623
+    ]
+   },
+   "px_size": [
+    45,
+    61
+   ],
+   "u": [
+    0.76068,
+    0.95299
+   ],
+   "v": [
+    0.39123,
+    0.4941
+   ]
+  },
+  {
+   "name": "control_buttons",
+   "image": "parts/control_buttons.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.0709,
+     0.5591
+    ],
+    "v": [
+     0.6,
+     0.7667
+    ]
+   },
+   "px_size": [
+    127,
+    31
+   ],
+   "u": [
+    0.22222,
+    0.76496
+   ],
+   "v": [
+    0.4199,
+    0.47218
+   ]
+  },
+  {
+   "name": "coin_door",
+   "image": "parts/coin_door.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": [
+     0.0407,
+     0.252
+    ]
+   },
+   "px_size": [
+    76,
+    123
+   ],
+   "u": [
+    0.33333,
+    0.65812
+   ],
+   "v": [
+    0.1484,
+    0.35582
+   ]
+  },
+  {
+   "name": "cabinet_door_lower",
+   "image": "parts/cabinet_door_lower.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.1129,
+     0.7258
+    ],
+    "v": [
+     0.1477,
+     0.4659
+    ]
+   },
+   "px_size": [
+    62,
+    88
+   ],
+   "u": [
+    0.35897,
+    0.62393
+   ],
+   "v": [
+    0.06408,
+    0.21248
+   ]
+  }
+ ]
+}

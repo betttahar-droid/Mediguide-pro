@@ -1,0 +1,69 @@
+{
+ "tiles": [
+  {
+   "tile": "tile_front_0.png",
+   "size": 32,
+   "patch_px": [
+    32,
+    32
+   ],
+   "worst_seam": 1.554,
+   "rows": [
+    0,
+    56
+   ]
+  },
+  {
+   "tile": "tile_front_1.png",
+   "size": 56,
+   "patch_px": [
+    56,
+    100
+   ],
+   "worst_seam": 1.418,
+   "rows": [
+    56,
+    120
+   ]
+  },
+  {
+   "tile": "tile_front_2.png",
+   "size": 56,
+   "patch_px": [
+    56,
+    100
+   ],
+   "worst_seam": 1.418,
+   "rows": [
+    120,
+    239
+   ]
+  },
+  {
+   "tile": "tile_front_3.png",
+   "size": 56,
+   "patch_px": [
+    56,
+    100
+   ],
+   "worst_seam": 1.418,
+   "rows": [
+    239,
+    345
+   ]
+  },
+  {
+   "tile": "tile_front_4.png",
+   "size": 56,
+   "patch_px": [
+    56,
+    179
+   ],
+   "worst_seam": 1.45,
+   "rows": [
+    345,
+    607
+   ]
+  }
+ ]
+}

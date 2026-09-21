@@ -1,0 +1,131 @@
+{
+ "asset": "arcade cabinet",
+ "decals": [
+  {
+   "n": 1,
+   "image": "decals/d1.png",
+   "px": [
+    670,
+    192
+   ],
+   "keyed": 0.392,
+   "median": [
+    185,
+    93,
+    67
+   ],
+   "name": "title",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.06
+  },
+  {
+   "n": 2,
+   "image": "decals/d2.png",
+   "px": [
+    197,
+    81
+   ],
+   "keyed": 0.785,
+   "median": [
+    173,
+    52,
+    37
+   ],
+   "name": "instruction_plate",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.03
+  },
+  {
+   "n": 3,
+   "image": "decals/d3.png",
+   "px": [
+    344,
+    365
+   ],
+   "keyed": 0.528,
+   "median": [
+    122,
+    100,
+    108
+   ],
+   "name": "side_art",
+   "rule": "hold",
+   "where": "side",
+   "size": 0.25
+  },
+  {
+   "n": 4,
+   "image": "decals/d4.png",
+   "px": [
+    82,
+    197
+   ],
+   "keyed": 0.563,
+   "median": [
+    78,
+    78,
+    85
+   ],
+   "name": "cabinet_bolt",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.01
+  },
+  {
+   "n": 5,
+   "image": "decals/d5.png",
+   "px": [
+    82,
+    196
+   ],
+   "keyed": 0.565,
+   "median": [
+    79,
+    77,
+    86
+   ],
+   "name": "mounting_screw",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.01
+  },
+  {
+   "n": 6,
+   "image": "decals/d6.png",
+   "px": [
+    123,
+    306
+   ],
+   "keyed": 0.492,
+   "median": [
+    227,
+    218,
+    204
+   ],
+   "name": "player_badge",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.05
+  },
+  {
+   "n": 7,
+   "image": "decals/d7.png",
+   "px": [
+    178,
+    305
+   ],
+   "keyed": 0.578,
+   "median": [
+    226,
+    162,
+    204
+   ],
+   "name": "fuel_gauge",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.05
+  }
+ ]
+}

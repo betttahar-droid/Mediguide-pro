@@ -1,0 +1,73 @@
+{
+ "face": "front",
+ "redrawn": {
+  "decal_7": [
+   102,
+   36
+  ],
+  "coin_slot_right": [
+   150,
+   42
+  ],
+  "button_4": [
+   87,
+   64
+  ],
+  "button_9": [
+   125,
+   64
+  ],
+  "decal": [
+   131,
+   64
+  ],
+  "speaker_grille_right": [
+   154,
+   64
+  ],
+  "vent": [
+   122,
+   64
+  ],
+  "instruction_card": [
+   101,
+   64
+  ],
+  "decal_3": [
+   78,
+   54
+  ],
+  "coin_slot_left": [
+   192,
+   54
+  ],
+  "decal_4": [
+   54,
+   198
+  ],
+  "decal_2": [
+   187,
+   64
+  ],
+  "button_7": [
+   64,
+   64
+  ],
+  "joystick_right": [
+   64,
+   105
+  ],
+  "button_10": [
+   131,
+   64
+  ],
+  "speaker_grille_left": [
+   168,
+   64
+  ],
+  "joystick_left": [
+   64,
+   92
+  ]
+ }
+}

@@ -1,0 +1,29 @@
+{
+ "front": {
+  "iou": 0.9849,
+  "aspect_ratio": 0.9984,
+  "aspect_ratio_raw": 0.9984,
+  "daylight": 0.0
+ },
+ "side": {
+  "iou": 0.9898,
+  "aspect_ratio": 0.9866,
+  "aspect_ratio_raw": 0.9866,
+  "daylight": 0.0001
+ },
+ "top": {
+  "iou": 0.9601,
+  "aspect_ratio": 1.012,
+  "aspect_ratio_raw": 1.1379,
+  "daylight": 0.0
+ },
+ "_plan": true,
+ "_side_profile": true,
+ "_reconciled": {
+  "depth": 0.41121,
+  "from_side": 0.41121,
+  "from_top": 0.46238,
+  "elevations_vouch_for_each_other": true,
+  "plan_inflation": 1.1244
+ }
+}

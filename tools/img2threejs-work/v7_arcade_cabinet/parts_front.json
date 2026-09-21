@@ -1,0 +1,100 @@
+{
+ "face": "front",
+ "size": [
+  242,
+  636
+ ],
+ "parts": [
+  {
+   "name": "marquee",
+   "px": [
+    1,
+    16,
+    241,
+    78
+   ],
+   "resize": "spanx_center",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "speaker_grille",
+   "px": [
+    29,
+    71,
+    225,
+    144
+   ],
+   "resize": "spanx_center",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "screen",
+   "px": [
+    29,
+    169,
+    212,
+    332
+   ],
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "control_deck",
+   "px": [
+    7,
+    331,
+    232,
+    379
+   ],
+   "resize": "spanx_repeat",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "joystick_left",
+   "px": [
+    24,
+    298,
+    49,
+    363
+   ],
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "deep",
+   "motion": "stick"
+  },
+  {
+   "name": "joystick_right",
+   "px": [
+    138,
+    298,
+    153,
+    363
+   ],
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "deep",
+   "motion": "stick"
+  },
+  {
+   "name": "coin_door",
+   "px": [
+    81,
+    413,
+    157,
+    635
+   ],
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "hinge_left"
+  }
+ ]
+}

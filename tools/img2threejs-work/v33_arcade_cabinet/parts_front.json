@@ -1,0 +1,81 @@
+{
+ "face": "front",
+ "size": [
+  233,
+  553
+ ],
+ "parts": [
+  {
+   "name": "marquee",
+   "px": [
+    13,
+    11,
+    221,
+    71
+   ],
+   "mask": "masks/1.png",
+   "resize": "spanx_center",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "spans": true,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "screen",
+   "px": [
+    37,
+    129,
+    196,
+    244
+   ],
+   "mask": "masks/2.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "spans": true,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "control_deck",
+   "px": [
+    11,
+    265,
+    223,
+    288
+   ],
+   "mask": "masks/3.png",
+   "resize": "spanx_repeat",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "spans": true,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "coin_door",
+   "px": [
+    82,
+    371,
+    151,
+    516
+   ],
+   "mask": "masks/4.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  }
+ ]
+}

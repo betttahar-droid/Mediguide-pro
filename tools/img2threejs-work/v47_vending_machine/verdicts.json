@@ -1,0 +1,295 @@
+[
+ {
+  "round": 0,
+  "asset": "vending machine",
+  "looks_good": false,
+  "blocking": 4,
+  "faults": [
+   {
+    "part": "display_window",
+    "fault": "2x wider: extra width went into blank stretched panel beside the window instead of more product columns; bezel not repeated",
+    "severity": "blocking"
+   },
+   {
+    "part": "display_window",
+    "fault": "1.5x taller: no added product rows; height went into blank streaked/banded cabinet smear instead of shelves",
+    "severity": "blocking"
+   },
+   {
+    "part": "display_window",
+    "fault": "solid/wireframe: window pane stands proud of the face and overhangs the body edge on the left, floating clear instead of sitting recessed in the cabinet",
+    "severity": "blocking"
+   },
+   {
+    "part": "background",
+    "fault": "cabinet texture smears and bands vertically when the prop is enlarged",
+    "severity": "blocking"
+   }
+  ],
+  "patch": [
+   {
+    "name": "background",
+    "mode": "mirror"
+   },
+   {
+    "name": "display_window",
+    "resize": "fixed",
+    "anchor": "top",
+    "depth": "recessed",
+    "motion": "none",
+    "count": "both"
+   }
+  ],
+  "wider_means": "A wider vending machine is a cabinet with more product columns in the display window, with the window bezel and push bar stretched to match.",
+  "taller_means": "A taller vending machine has more product rows on its shelves inside the display window, plus more plain cabinet panel between the window and the push bar and below the push bar."
+ },
+ {
+  "round": 1,
+  "asset": "vending machine",
+  "looks_good": false,
+  "blocking": 3,
+  "faults": [
+   {
+    "part": "display_window",
+    "fault": "Widened (image 3) the window did not gain product columns: it kept the original 3-column layout and the extra width went into blank untextured beige panels and a smeared bezel. A wider cabinet must repeat columns and stretch the bezel/push bar to match, not show empty panel.",
+    "severity": "blocking"
+   },
+   {
+    "part": "background",
+    "fault": "At 2.0x width and 1.5x height the front panel texture smears and streaks badly (hard smear bands beside the window in image 3, plain beige blocks in both images 3 and 4) and the taller version tiles the entire front face vertically, producing a duplicated DRINKS header, doubled price rows and a cut-off decal seam mid-panel. Needs mirrored tiling so joins reflect instead of cutting.",
+    "severity": "blocking"
+   },
+   {
+    "part": "push_bar",
+    "fault": "Widened cabinet keeps the original-size push bar centred with plain stretched panel either side; per the resize meaning the push bar should span/stretch with the width.",
+    "severity": "blocking"
+   }
+  ],
+  "patch": [
+   {
+    "name": "background",
+    "resize": "mirror",
+    "drop": false
+   },
+   {
+    "name": "display_window",
+    "resize": "fixed",
+    "anchor": "top",
+    "depth": "recessed",
+    "motion": "none",
+    "count": "both",
+    "drop": false
+   },
+   {
+    "name": "push_bar",
+    "resize": "spanx_center",
+    "anchor": "bottom",
+    "depth": "proud",
+    "motion": "press",
+    "count": "none",
+    "drop": false
+   }
+  ],
+  "wider_means": "A wider vending machine is a cabinet with more product columns in the display window, with the window bezel and push bar stretched to match.",
+  "taller_means": "A taller vending machine has more product rows on its shelves inside the display window, plus more plain cabinet panel between the window and the push bar and below the push bar."
+ },
+ {
+  "round": 2,
+  "asset": "vending machine",
+  "looks_good": false,
+  "blocking": 5,
+  "faults": [
+   {
+    "part": "background",
+    "fault": "At 2.0x width the background texture is stretched into large blank smeared panels on both sides of the cabinet face; at 1.5x height it bands into a plain beige strip across the middle. Stretched background where cabinet detail belongs.",
+    "severity": "blocking"
+   },
+   {
+    "part": "display_window",
+    "fault": "The 2.0x-wider machine did NOT gain product columns -- the extra width went into blank background panel beside the original three columns. The 1.5x-taller machine did NOT gain shelf rows -- instead the whole window texture is duplicated/smeared into a doubled, unreadable stack with a blank band. The resize rules were never expressed in the part.",
+    "severity": "blocking"
+   },
+   {
+    "part": "display_window",
+    "fault": "In the solid view and the original render the window glass stands off the front face as a proud panel, with a fin floating clear of the body down the left edge -- it reads as a glass sheet hovering in front of the machine rather than a recessed display set into the cabinet.",
+    "severity": "blocking"
+   },
+   {
+    "part": "decal_5",
+    "fault": "In the 1.5x-taller render the DRINKS sign texture is doubled and cut -- a stray 'S' fragment appears on the side band and the marquee repeats smearing down the front. The stretched sign does not read as one title.",
+    "severity": "blocking"
+   },
+   {
+    "part": "push_bar",
+    "fault": "At 2.0x width the push bar and its bezel smear into a blank plate stretched across the added width instead of the bar and bezel remaining proportioned.",
+    "severity": "blocking"
+   }
+  ],
+  "patch": [
+   {
+    "name": "background",
+    "resize": "fixed",
+    "anchor": "top",
+    "depth": "flush",
+    "motion": "none",
+    "count": "none",
+    "drop": false,
+    "mode": "mirror"
+   },
+   {
+    "name": "decal_5",
+    "resize": "spany_center",
+    "anchor": "top",
+    "depth": "flush",
+    "motion": "none",
+    "count": "none",
+    "drop": false
+   },
+   {
+    "name": "display_window",
+    "resize": "fixed",
+    "anchor": "top",
+    "depth": "recessed",
+    "motion": "none",
+    "count": "both",
+    "drop": false
+   },
+   {
+    "name": "push_bar",
+    "resize": "spanx_center",
+    "anchor": "bottom",
+    "depth": "proud",
+    "motion": "press",
+    "count": "none",
+    "drop": false
+   }
+  ],
+  "wider_means": "A wider vending machine is a cabinet with more product columns in the display window, with the window bezel and push bar stretched to match.",
+  "taller_means": "A taller vending machine has more product rows on its shelves inside the display window, plus more plain cabinet panel between the window and the push bar and below the push bar."
+ },
+ {
+  "round": 3,
+  "asset": "vending machine",
+  "looks_good": false,
+  "blocking": 4,
+  "faults": [
+   {
+    "part": "display_window",
+    "fault": "At 2x width the window did not gain product columns; the extra width became blank beige panels and a smeared, doubled repeat of the window texture (flat slab left of the bezel, ghosted copy right). A wider machine must have more columns, not empty panel.",
+    "severity": "blocking"
+   },
+   {
+    "part": "display_window",
+    "fault": "At 1.5x height the window did not gain shelf rows: instead the entire window graphic (DRINKS header, all 9 products) is duplicated whole below the original, with a smeared blank band between. Extra height must go into more per-tier rows inside one window, not a stacked copy of the window.",
+    "severity": "blocking"
+   },
+   {
+    "part": "decal_5",
+    "fault": "The DRINKS marquee is stretched and doubled when the cabinet is widened (lettering smeared into 'DRINIKS' with echo strokes). One title must stay one size with the bezel ends extending, not repeat.",
+    "severity": "blocking"
+   },
+   {
+    "part": "background",
+    "fault": "Cabinet background texture streaks and bands across the widened face (visible smear columns right of the window and along the lower panel).",
+    "severity": "blocking"
+   }
+  ],
+  "patch": [
+   {
+    "name": "background",
+    "resize": "fixed",
+    "anchor": "top",
+    "depth": "flush",
+    "motion": "none",
+    "count": "none",
+    "drop": false,
+    "mode": "mirror"
+   },
+   {
+    "name": "decal_5",
+    "resize": "spanx_center",
+    "anchor": "top",
+    "depth": "flush",
+    "motion": "none",
+    "count": "none",
+    "drop": false
+   },
+   {
+    "name": "display_window",
+    "resize": "fixed",
+    "anchor": "top",
+    "depth": "recessed",
+    "motion": "none",
+    "count": "both",
+    "drop": false
+   }
+  ],
+  "wider_means": "A wider vending machine is a cabinet with more product columns in the display window, with the window bezel and push bar stretched to match.",
+  "taller_means": "A taller vending machine has more product rows on its shelves inside the display window, plus more plain cabinet panel between the window and the push bar and below the push bar."
+ },
+ {
+  "round": 4,
+  "asset": "vending machine",
+  "looks_good": false,
+  "blocking": 5,
+  "faults": [
+   {
+    "part": "background",
+    "fault": "At 2.0x width (image 3) the extra width went into large blank smeared beige panels instead of more product columns in the display window; the front texture is stretched with visible blank bands right of the window and around the coin area. A wider cabinet must gain product columns with bezel and push bar stretched to match.",
+    "severity": "blocking"
+   },
+   {
+    "part": "display_window",
+    "fault": "At 1.5x height (image 4) the whole window assembly including the DRINKS marquee and price strip is DUPLICATED whole, stamped twice with a smeared blank band between the copies, and the top copy is cut off by the frame. The taller machine should gain product rows inside one window, not repeat the entire window texture.",
+    "severity": "blocking"
+   },
+   {
+    "part": "display_window",
+    "fault": "Window never gains product columns when widened (image 3 shows the same 3 columns with blank panel where columns should be) and never gains rows when tallened (image 4 repeats the window instead). Count is wrong for both axes.",
+    "severity": "blocking"
+   },
+   {
+    "part": "decal_5",
+    "fault": "A plain panel stands proud off the left edge of the window (clearly visible in images 2 and 5, and as a floating plane in the wireframe, image 6). It reads as a stray plate floating clear of the body, not a flush decal.",
+    "severity": "blocking"
+   },
+   {
+    "part": "coin_slot",
+    "fault": "In image 3 the coin/button column area is broken by stretched blank texture and a duplicated slot plate floating in the smeared band, leaving the coin fitment unreadable at width.",
+    "severity": "blocking"
+   }
+  ],
+  "patch": [
+   {
+    "name": "background",
+    "resize": "fixed",
+    "anchor": "fixed",
+    "depth": "flush",
+    "motion": "none",
+    "count": "none",
+    "drop": false,
+    "mode": "repeat"
+   },
+   {
+    "name": "decal_5",
+    "resize": "fixed",
+    "anchor": "top",
+    "depth": "flush",
+    "motion": "none",
+    "count": "none",
+    "drop": true
+   },
+   {
+    "name": "display_window",
+    "resize": "fixed",
+    "anchor": "top",
+    "depth": "recessed",
+    "motion": "none",
+    "count": "both",
+    "drop": false
+   }
+  ],
+  "wider_means": "A wider vending machine is a cabinet with more product columns in the display window, with the window bezel and push bar stretched to match.",
+  "taller_means": "A taller vending machine has more product rows on its shelves inside the display window, plus more plain cabinet panel between the window and the push bar and below the push bar."
+ }
+]

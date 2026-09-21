@@ -1,0 +1,9 @@
+{
+ "image": "side_other.png",
+ "cut": "body_side_other.png",
+ "front_edge": "right",
+ "agreement": 1.0,
+ "text": "BATTLEZONE",
+ "text_ok": true,
+ "usable": true
+}

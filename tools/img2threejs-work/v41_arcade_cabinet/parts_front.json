@@ -1,0 +1,495 @@
+{
+ "face": "front",
+ "size": [
+  234,
+  578
+ ],
+ "parts": [
+  {
+   "name": "marquee",
+   "px": [
+    11,
+    16,
+    225,
+    65
+   ],
+   "mask": "masks/1.png",
+   "resize": "spany_center",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "spans": true,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "speaker_grille_left",
+   "px": [
+    11,
+    73,
+    118,
+    107
+   ],
+   "mask": "masks/2.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "speaker_grille_right",
+   "px": [
+    117,
+    73,
+    224,
+    107
+   ],
+   "mask": "masks/3.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "screen",
+   "px": [
+    42,
+    137,
+    194,
+    249
+   ],
+   "mask": "masks/4.png",
+   "resize": "spanx_repeat",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "spans": true,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "decal",
+   "px": [
+    29,
+    257,
+    48,
+    288
+   ],
+   "mask": "masks/5.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "decal_2",
+   "px": [
+    141,
+    257,
+    153,
+    276
+   ],
+   "mask": "masks/6.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "button_start",
+   "px": [
+    55,
+    272,
+    67,
+    289
+   ],
+   "mask": "masks/7.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": true,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "joystick_ball",
+   "px": [
+    77,
+    272,
+    96,
+    294
+   ],
+   "mask": "masks/8.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "deep",
+   "motion": "stick",
+   "per_bay": true,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "joystick_ball_2",
+   "px": [
+    119,
+    272,
+    141,
+    289
+   ],
+   "mask": "masks/9.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "deep",
+   "motion": "stick",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "button",
+   "px": [
+    156,
+    272,
+    188,
+    278
+   ],
+   "mask": "masks/10.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "button_2",
+   "px": [
+    11,
+    273,
+    225,
+    335
+   ],
+   "mask": "masks/11.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "button_3",
+   "px": [
+    42,
+    273,
+    53,
+    290
+   ],
+   "mask": "masks/12.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "button_4",
+   "px": [
+    92,
+    274,
+    105,
+    287
+   ],
+   "mask": "masks/13.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "button_5",
+   "px": [
+    176,
+    274,
+    215,
+    293
+   ],
+   "mask": "masks/14.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "button_6",
+   "px": [
+    185,
+    277,
+    197,
+    287
+   ],
+   "mask": "masks/15.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "button_7",
+   "px": [
+    171,
+    278,
+    183,
+    289
+   ],
+   "mask": "masks/16.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "button_8",
+   "px": [
+    200,
+    279,
+    214,
+    287
+   ],
+   "mask": "masks/17.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "button_9",
+   "px": [
+    185,
+    286,
+    204,
+    295
+   ],
+   "mask": "masks/18.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "control_deck",
+   "px": [
+    88,
+    305,
+    109,
+    319
+   ],
+   "mask": "masks/19.png",
+   "resize": "spanx_repeat",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "spans": true,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "decal_3",
+   "px": [
+    41,
+    324,
+    67,
+    335
+   ],
+   "mask": "masks/20.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "coin_door",
+   "px": [
+    75,
+    357,
+    159,
+    542
+   ],
+   "mask": "masks/21.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "coin_slot_p1",
+   "px": [
+    92,
+    372,
+    112,
+    396
+   ],
+   "mask": "masks/22.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "coin_slot_p2",
+   "px": [
+    119,
+    373,
+    138,
+    396
+   ],
+   "mask": "masks/23.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "speaker_grille_lower",
+   "px": [
+    173,
+    397,
+    212,
+    447
+   ],
+   "mask": "masks/24.png",
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "coin_slot_p3",
+   "px": [
+    92,
+    422,
+    111,
+    442
+   ],
+   "mask": "masks/25.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "coin_slot_p4",
+   "px": [
+    118,
+    422,
+    138,
+    443
+   ],
+   "mask": "masks/26.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "decal_4",
+   "px": [
+    136,
+    486,
+    147,
+    496
+   ],
+   "mask": "masks/27.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  }
+ ]
+}

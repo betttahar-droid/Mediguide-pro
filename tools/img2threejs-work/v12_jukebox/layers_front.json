@@ -1,0 +1,111 @@
+{
+ "face": "front",
+ "size": [
+  341,
+  656
+ ],
+ "aspect": 0.51982,
+ "background": "bg_front.png",
+ "background_mode": "mirror",
+ "parts": [
+  {
+   "name": "arch_lamp",
+   "image": "parts/arch_lamp.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.4384,
+     0.6438
+    ],
+    "v": null
+   },
+   "px_size": [
+    73,
+    45
+   ],
+   "u": [
+    0.38123,
+    0.59531
+   ],
+   "v": [
+    0.92683,
+    0.99543
+   ]
+  },
+  {
+   "name": "marquee",
+   "image": "parts/marquee.png",
+   "hf": [
+    0.03067484662576687,
+    0.0736196319018405
+   ],
+   "resize": "spanx_center",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": true,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    327,
+    159
+   ],
+   "u": [
+    0.0176,
+    0.97654
+   ],
+   "v": [
+    0.72409,
+    0.96646
+   ]
+  },
+  {
+   "name": "ornament_grille",
+   "image": "parts/ornament_grille.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    177,
+    90
+   ],
+   "u": [
+    0.23754,
+    0.7566
+   ],
+   "v": [
+    0.58841,
+    0.72561
+   ]
+  }
+ ]
+}

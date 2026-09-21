@@ -1,0 +1,257 @@
+{
+ "asset": "arcade cabinet",
+ "decals": [
+  {
+   "n": 1,
+   "image": "decals/d1.png",
+   "px": [
+    596,
+    243
+   ],
+   "keyed": 0.041,
+   "median": [
+    202,
+    127,
+    89
+   ],
+   "name": "title",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.06
+  },
+  {
+   "n": 2,
+   "image": "decals/d2.png",
+   "px": [
+    193,
+    42
+   ],
+   "keyed": 0.356,
+   "median": [
+    220,
+    145,
+    203
+   ],
+   "name": "coin_instruction",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.02
+  },
+  {
+   "n": 3,
+   "image": "decals/d3.png",
+   "px": [
+    180,
+    37
+   ],
+   "keyed": 0.379,
+   "median": [
+    242,
+    127,
+    217
+   ],
+   "name": "price_plate",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.02
+  },
+  {
+   "n": 4,
+   "image": "decals/d4.png",
+   "px": [
+    205,
+    36
+   ],
+   "keyed": 0.373,
+   "median": [
+    245,
+    212,
+    219
+   ],
+   "name": "start_label",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.02
+  },
+  {
+   "n": 5,
+   "image": "decals/d5.png",
+   "px": [
+    175,
+    153
+   ],
+   "keyed": 0.352,
+   "median": [
+    82,
+    76,
+    127
+   ],
+   "name": "logo",
+   "rule": "hold",
+   "where": "side",
+   "size": 0.08
+  },
+  {
+   "n": 6,
+   "image": "decals/d6.png",
+   "px": [
+    55,
+    52
+   ],
+   "keyed": 0.067,
+   "median": [
+    110,
+    107,
+    99
+   ],
+   "name": "hex_bolt",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.008
+  },
+  {
+   "n": 7,
+   "image": "decals/d7.png",
+   "px": [
+    50,
+    87
+   ],
+   "keyed": 0.199,
+   "median": [
+    93,
+    78,
+    73
+   ],
+   "name": "rusty_screw",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.015
+  },
+  {
+   "n": 8,
+   "image": "decals/d8.png",
+   "px": [
+    42,
+    41
+   ],
+   "keyed": 0.038,
+   "median": [
+    86,
+    82,
+    76
+   ],
+   "name": "phillips_screw",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.007
+  },
+  {
+   "n": 9,
+   "image": "decals/d9.png",
+   "px": [
+    47,
+    47
+   ],
+   "keyed": 0.055,
+   "median": [
+    104,
+    96,
+    89
+   ],
+   "name": "slotted_screw",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.007
+  },
+  {
+   "n": 10,
+   "image": "decals/d10.png",
+   "px": [
+    55,
+    79
+   ],
+   "keyed": 0.45,
+   "median": [
+    157,
+    47,
+    54
+   ],
+   "name": "cabinet_number",
+   "rule": "hold",
+   "where": "side",
+   "size": 0.04
+  },
+  {
+   "n": 11,
+   "image": "decals/d11.png",
+   "px": [
+    48,
+    52
+   ],
+   "keyed": 0.435,
+   "median": [
+    166,
+    37,
+    73
+   ],
+   "name": "power_symbol",
+   "rule": "hold",
+   "where": "back",
+   "size": 0.02
+  },
+  {
+   "n": 12,
+   "image": "decals/d12.png",
+   "px": [
+    56,
+    53
+   ],
+   "keyed": 0.082,
+   "median": [
+    110,
+    117,
+    110
+   ],
+   "name": "hex_nut",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.008
+  },
+  {
+   "n": 13,
+   "image": "decals/d13.png",
+   "px": [
+    49,
+    86
+   ],
+   "keyed": 0.204,
+   "median": [
+    86,
+    84,
+    89
+   ],
+   "name": "machine_screw",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.015
+  },
+  {
+   "n": 14,
+   "image": "decals/d14.png",
+   "px": [
+    42,
+    41
+   ],
+   "keyed": 0.038,
+   "median": [
+    106,
+    108,
+    104
+   ],
+   "name": "rivet",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.006
+  }
+ ]
+}

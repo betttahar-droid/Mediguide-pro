@@ -1,0 +1,118 @@
+{
+ "asset": "arcade cabinet",
+ "px_per_tile": 60,
+ "materials": [
+  {
+   "n": 1,
+   "image": "materials/m1.png",
+   "seam_before": 3.868,
+   "seam_after": 1.759,
+   "median": [
+    79,
+    85,
+    78
+   ],
+   "tiles": false,
+   "name": "body_panel",
+   "main": true
+  },
+  {
+   "n": 2,
+   "image": "materials/m2.png",
+   "seam_before": 5.978,
+   "seam_after": 0.875,
+   "median": [
+    93,
+    75,
+    57
+   ],
+   "tiles": true,
+   "name": "wood",
+   "main": false
+  },
+  {
+   "n": 3,
+   "image": "materials/m3.png",
+   "seam_before": 5.2,
+   "seam_after": 1.042,
+   "median": [
+    93,
+    75,
+    57
+   ],
+   "tiles": true,
+   "name": "dark_wood",
+   "main": false
+  },
+  {
+   "n": 4,
+   "image": "materials/m4.png",
+   "seam_before": 4.514,
+   "seam_after": 1.105,
+   "median": [
+    78,
+    77,
+    77
+   ],
+   "tiles": true,
+   "name": "rough_metal",
+   "main": false
+  },
+  {
+   "n": 5,
+   "image": "materials/m5.png",
+   "seam_before": 0.483,
+   "seam_after": 0.483,
+   "median": [
+    63,
+    63,
+    62
+   ],
+   "tiles": true,
+   "name": "speaker_grille",
+   "main": false
+  },
+  {
+   "n": 6,
+   "image": "materials/m6.png",
+   "seam_before": 1.889,
+   "seam_after": 1.242,
+   "median": [
+    34,
+    35,
+    37
+   ],
+   "tiles": true,
+   "name": "black_plastic",
+   "main": false
+  },
+  {
+   "n": 7,
+   "image": "materials/m7.png",
+   "seam_before": 7.665,
+   "seam_after": 1.149,
+   "median": [
+    89,
+    72,
+    56
+   ],
+   "tiles": true,
+   "name": "plywood",
+   "main": false
+  },
+  {
+   "n": 8,
+   "image": "materials/m8.png",
+   "seam_before": 4.513,
+   "seam_after": 1.071,
+   "median": [
+    85,
+    86,
+    73
+   ],
+   "tiles": true,
+   "name": "rusted_metal",
+   "main": false
+  }
+ ]
+}

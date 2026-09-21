@@ -1,0 +1,132 @@
+{
+ "asset": "jukebox",
+ "px_per_tile": 49,
+ "materials": [
+  {
+   "n": 1,
+   "image": "materials/m1.png",
+   "seam_before": 17.688,
+   "seam_after": 1.036,
+   "median": [
+    116,
+    116,
+    116
+   ],
+   "tiles": true,
+   "name": "body_panel",
+   "main": true
+  },
+  {
+   "n": 2,
+   "image": "materials/m2.png",
+   "seam_before": 14.328,
+   "seam_after": 1.186,
+   "median": [
+    203,
+    197,
+    178
+   ],
+   "tiles": true,
+   "name": "cream_plastic",
+   "main": false
+  },
+  {
+   "n": 3,
+   "image": "materials/m3.png",
+   "seam_before": 13.893,
+   "seam_after": 1.321,
+   "median": [
+    205,
+    200,
+    181
+   ],
+   "tiles": false,
+   "name": "frosted_glass",
+   "main": false
+  },
+  {
+   "n": 4,
+   "image": "materials/m4.png",
+   "seam_before": 2.186,
+   "seam_after": 1.049,
+   "median": [
+    141,
+    144,
+    142
+   ],
+   "tiles": true,
+   "name": "metal_trim",
+   "main": false
+  },
+  {
+   "n": 5,
+   "image": "materials/m5.png",
+   "seam_before": 3.338,
+   "seam_after": 1.242,
+   "median": [
+    105,
+    101,
+    89
+   ],
+   "tiles": true,
+   "name": "speaker_grill",
+   "main": false
+  },
+  {
+   "n": 6,
+   "image": "materials/m6.png",
+   "seam_before": 1.405,
+   "seam_after": 1.002,
+   "median": [
+    36,
+    37,
+    36
+   ],
+   "tiles": true,
+   "name": "black_plastic",
+   "main": false
+  },
+  {
+   "n": 7,
+   "image": "materials/m7.png",
+   "seam_before": 2.864,
+   "seam_after": 1.127,
+   "median": [
+    103,
+    100,
+    88
+   ],
+   "tiles": true,
+   "name": "vent_mesh",
+   "main": false
+  },
+  {
+   "n": 8,
+   "image": "materials/m8.png",
+   "seam_before": 4.134,
+   "seam_after": 1.066,
+   "median": [
+    98,
+    95,
+    84
+   ],
+   "tiles": true,
+   "name": "worn_panel",
+   "main": false
+  },
+  {
+   "n": 9,
+   "image": "materials/m9.png",
+   "seam_before": 0.553,
+   "seam_after": 0.553,
+   "median": [
+    32,
+    33,
+    32
+   ],
+   "tiles": true,
+   "name": "dark_rubber",
+   "main": false
+  }
+ ]
+}

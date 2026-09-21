@@ -1,0 +1,30 @@
+[
+ {
+  "face": "front",
+  "side_names": [
+   {
+    "was": "outlane_right",
+    "now": "outlane_left"
+   }
+  ]
+ },
+ {
+  "face": "front",
+  "member_depth": [
+   {
+    "part": "leg_left",
+    "was": "proud",
+    "now": "flush",
+    "solid": 0.402,
+    "why": "only 40% of the prop is solid across its rows, so it stands in air: it is structure inside the depth, not relief on a face"
+   },
+   {
+    "part": "leg_right",
+    "was": "proud",
+    "now": "flush",
+    "solid": 0.394,
+    "why": "only 39% of the prop is solid across its rows, so it stands in air: it is structure inside the depth, not relief on a face"
+   }
+  ]
+ }
+]

@@ -1,0 +1,272 @@
+{
+ "size": [
+  252,
+  621
+ ],
+ "strips": [
+  {
+   "xspan": [
+    0.00794,
+    1.0
+   ],
+   "fill": [
+    95,
+    108,
+    117
+   ],
+   "hmode": "extend",
+   "hf": [
+    0.01594,
+    0.01594
+   ],
+   "hf_repeat": false,
+   "vmode": "extend",
+   "vf": [
+    0.06522,
+    0.06522
+   ],
+   "vf_repeat": false,
+   "v": [
+    0.92432,
+    1.0
+   ],
+   "h": [
+    0.75299,
+    0.93227
+   ],
+   "vh": [
+    0.43478,
+    0.78261
+   ],
+   "noise": 8.208,
+   "vnoise": 66.074,
+   "px": [
+    0,
+    47
+   ],
+   "_like": 0.4275,
+   "grow_y": false,
+   "free": 1.0,
+   "grow_share": 0.0
+  },
+  {
+   "xspan": [
+    0.00794,
+    1.0
+   ],
+   "fill": [
+    83,
+    95,
+    111
+   ],
+   "hmode": "extend",
+   "hf": [
+    0.01992,
+    0.01992
+   ],
+   "hf_repeat": false,
+   "vmode": "extend",
+   "vf": [
+    0.11111,
+    0.11111
+   ],
+   "vf_repeat": false,
+   "v": [
+    0.87923,
+    0.92432
+   ],
+   "h": [
+    0.12351,
+    0.26295
+   ],
+   "vh": [
+    0.55556,
+    0.92593
+   ],
+   "noise": 6.8,
+   "vnoise": 63.423,
+   "px": [
+    47,
+    75
+   ],
+   "_like": 0.273,
+   "grow_y": false,
+   "free": 1.0,
+   "grow_share": 0.0
+  },
+  {
+   "xspan": [
+    0.00794,
+    1.0
+   ],
+   "fill": [
+    85,
+    97,
+    113
+   ],
+   "hmode": "extend",
+   "hf": [
+    0.01992,
+    0.01992
+   ],
+   "hf_repeat": false,
+   "vmode": "extend",
+   "vf": [
+    0.10714,
+    0.10714
+   ],
+   "vf_repeat": false,
+   "v": [
+    0.78744,
+    0.87923
+   ],
+   "h": [
+    0.37849,
+    0.48207
+   ],
+   "vh": [
+    0.51786,
+    0.76786
+   ],
+   "noise": 9.948,
+   "vnoise": 59.001,
+   "px": [
+    75,
+    132
+   ],
+   "_like": 0.576,
+   "grow_y": false,
+   "free": 1.0,
+   "grow_share": 0.0
+  },
+  {
+   "xspan": [
+    0.00794,
+    1.0
+   ],
+   "fill": [
+    39,
+    40,
+    35
+   ],
+   "hmode": "extend",
+   "hf": [
+    0.0757,
+    0.0757
+   ],
+   "hf_repeat": false,
+   "vmode": "extend",
+   "vf": [
+    0.22222,
+    0.22222
+   ],
+   "vf_repeat": false,
+   "v": [
+    0.74235,
+    0.78744
+   ],
+   "h": [
+    0.66932,
+    0.84064
+   ],
+   "vh": [
+    0.37037,
+    0.74074
+   ],
+   "noise": 3.452,
+   "vnoise": 71.309,
+   "px": [
+    132,
+    160
+   ],
+   "_like": 0.3892,
+   "grow_y": false,
+   "free": 1.0,
+   "grow_share": 0.0
+  },
+  {
+   "xspan": [
+    0.00794,
+    1.0
+   ],
+   "fill": [
+    97,
+    107,
+    116
+   ],
+   "hmode": "extend",
+   "hf": [
+    0.01594,
+    0.01594
+   ],
+   "hf_repeat": false,
+   "vmode": "extend",
+   "vf": [
+    0.04348,
+    0.04348
+   ],
+   "vf_repeat": false,
+   "v": [
+    0.0,
+    0.74235
+   ],
+   "h": [
+    0.13546,
+    0.27092
+   ],
+   "vh": [
+    0.22391,
+    0.47391
+   ],
+   "noise": 2.053,
+   "vnoise": 9.744,
+   "px": [
+    160,
+    621
+   ],
+   "_like": 0.8407,
+   "grow_y": true,
+   "free": 0.851,
+   "grow_share": 1.0
+  }
+ ],
+ "grow_bands": [
+  {
+   "part": "backglass",
+   "side": "itself",
+   "clean": true,
+   "px": [
+    1,
+    251
+   ],
+   "band": [
+    0.59581,
+    0.99839
+   ],
+   "share": 0.46642
+  },
+  {
+   "part": "coin_door_panel",
+   "side": "itself",
+   "clean": true,
+   "px": [
+    333,
+    619
+   ],
+   "band": [
+    0.00322,
+    0.46377
+   ],
+   "share": 0.53358
+  }
+ ],
+ "stretch_band": {
+  "px": [
+   263,
+   378
+  ],
+  "covered": null,
+  "with_members": true,
+  "why": "every place is a member that lengthens, so the body itself gains nothing; draw it here instead of repeating the hole the members were lifted out of"
+ }
+}

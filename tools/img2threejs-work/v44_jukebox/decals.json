@@ -1,0 +1,437 @@
+{
+ "asset": "jukebox",
+ "decals": [
+  {
+   "n": 1,
+   "image": "decals/d1.png",
+   "px": [
+    608,
+    95
+   ],
+   "keyed": 0.181,
+   "median": [
+    115,
+    101,
+    105
+   ],
+   "name": "title",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.06
+  },
+  {
+   "n": 2,
+   "image": "decals/d2.png",
+   "px": [
+    556,
+    83
+   ],
+   "keyed": 0.222,
+   "median": [
+    114,
+    101,
+    104
+   ],
+   "name": "logo",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.06
+  },
+  {
+   "n": 3,
+   "image": "decals/d3.png",
+   "px": [
+    171,
+    37
+   ],
+   "keyed": 0.656,
+   "median": [
+    106,
+    8,
+    90
+   ],
+   "name": "price_plate",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.04
+  },
+  {
+   "n": 4,
+   "image": "decals/d4.png",
+   "px": [
+    244,
+    26
+   ],
+   "keyed": 0.369,
+   "median": [
+    70,
+    0,
+    69
+   ],
+   "name": "instruction_label",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.03
+  },
+  {
+   "n": 5,
+   "image": "decals/d5.png",
+   "px": [
+    294,
+    129
+   ],
+   "keyed": 0.753,
+   "median": [
+    135,
+    105,
+    85
+   ],
+   "name": "emblem",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.05
+  },
+  {
+   "n": 6,
+   "image": "decals/d6.png",
+   "px": [
+    293,
+    130
+   ],
+   "keyed": 0.611,
+   "median": [
+    136,
+    107,
+    85
+   ],
+   "name": "emblem_alt",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.05
+  },
+  {
+   "n": 7,
+   "image": "decals/d7.png",
+   "px": [
+    110,
+    98
+   ],
+   "keyed": 0.291,
+   "median": [
+    111,
+    109,
+    104
+   ],
+   "name": "rivet",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.01
+  },
+  {
+   "n": 8,
+   "image": "decals/d8.png",
+   "px": [
+    70,
+    70
+   ],
+   "keyed": 0.473,
+   "median": [
+    106,
+    109,
+    104
+   ],
+   "name": "bolt_head",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.01
+  },
+  {
+   "n": 9,
+   "image": "decals/d9.png",
+   "px": [
+    109,
+    98
+   ],
+   "keyed": 0.288,
+   "median": [
+    111,
+    109,
+    105
+   ],
+   "name": "rivet_alt",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.01
+  },
+  {
+   "n": 10,
+   "image": "decals/d10.png",
+   "px": [
+    70,
+    70
+   ],
+   "keyed": 0.481,
+   "median": [
+    110,
+    111,
+    107
+   ],
+   "name": "bolt_head_alt",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.01
+  },
+  {
+   "n": 11,
+   "image": "decals/d11.png",
+   "px": [
+    64,
+    76
+   ],
+   "keyed": 0.363,
+   "median": [
+    81,
+    65,
+    62
+   ],
+   "name": "pinstripe_m",
+   "rule": "along",
+   "where": "any",
+   "size": 0.01
+  },
+  {
+   "n": 12,
+   "image": "decals/d12.png",
+   "px": [
+    49,
+    77
+   ],
+   "keyed": 0.457,
+   "median": [
+    82,
+    62,
+    64
+   ],
+   "name": "pinstripe_o",
+   "rule": "along",
+   "where": "any",
+   "size": 0.01
+  },
+  {
+   "n": 13,
+   "image": "decals/d13.png",
+   "px": [
+    48,
+    77
+   ],
+   "keyed": 0.44,
+   "median": [
+    80,
+    63,
+    64
+   ],
+   "name": "pinstripe_d",
+   "rule": "along",
+   "where": "any",
+   "size": 0.01
+  },
+  {
+   "n": 14,
+   "image": "decals/d14.png",
+   "px": [
+    45,
+    77
+   ],
+   "keyed": 0.472,
+   "median": [
+    83,
+    64,
+    65
+   ],
+   "name": "pinstripe_e",
+   "rule": "along",
+   "where": "any",
+   "size": 0.01
+  },
+  {
+   "n": 15,
+   "image": "decals/d15.png",
+   "px": [
+    43,
+    76
+   ],
+   "keyed": 0.598,
+   "median": [
+    82,
+    65,
+    65
+   ],
+   "name": "pinstripe_l",
+   "rule": "along",
+   "where": "any",
+   "size": 0.01
+  },
+  {
+   "n": 16,
+   "image": "decals/d16.png",
+   "px": [
+    54,
+    136
+   ],
+   "keyed": 0.532,
+   "median": [
+    79,
+    68,
+    60
+   ],
+   "name": "pinstripe_1",
+   "rule": "along",
+   "where": "any",
+   "size": 0.01
+  },
+  {
+   "n": 17,
+   "image": "decals/d17.png",
+   "px": [
+    53,
+    137
+   ],
+   "keyed": 0.462,
+   "median": [
+    77,
+    68,
+    60
+   ],
+   "name": "pinstripe_c_left",
+   "rule": "along",
+   "where": "any",
+   "size": 0.01
+  },
+  {
+   "n": 18,
+   "image": "decals/d18.png",
+   "px": [
+    47,
+    137
+   ],
+   "keyed": 0.495,
+   "median": [
+    78,
+    68,
+    60
+   ],
+   "name": "pinstripe_c_right",
+   "rule": "along",
+   "where": "any",
+   "size": 0.01
+  },
+  {
+   "n": 19,
+   "image": "decals/d19.png",
+   "px": [
+    51,
+    91
+   ],
+   "keyed": 0.65,
+   "median": [
+    77,
+    66,
+    59
+   ],
+   "name": "pinstripe_angle",
+   "rule": "along",
+   "where": "any",
+   "size": 0.01
+  },
+  {
+   "n": 20,
+   "image": "decals/d20.png",
+   "px": [
+    46,
+    136
+   ],
+   "keyed": 0.418,
+   "median": [
+    79,
+    68,
+    60
+   ],
+   "name": "pinstripe_t",
+   "rule": "along",
+   "where": "any",
+   "size": 0.01
+  },
+  {
+   "n": 21,
+   "image": "decals/d21.png",
+   "px": [
+    276,
+    216
+   ],
+   "keyed": 0.312,
+   "median": [
+    186,
+    180,
+    154
+   ],
+   "name": "loading_label",
+   "rule": "hold",
+   "where": "top",
+   "size": 0.04
+  },
+  {
+   "n": 22,
+   "image": "decals/d22.png",
+   "px": [
+    220,
+    128
+   ],
+   "keyed": 0.65,
+   "median": [
+    184,
+    179,
+    152
+   ],
+   "name": "warning_label",
+   "rule": "hold",
+   "where": "back",
+   "size": 0.03
+  },
+  {
+   "n": 23,
+   "image": "decals/d23.png",
+   "px": [
+    182,
+    192
+   ],
+   "keyed": 0.451,
+   "median": [
+    121,
+    130,
+    125
+   ],
+   "name": "speaker_icon",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.03
+  },
+  {
+   "n": 24,
+   "image": "decals/d24.png",
+   "px": [
+    74,
+    141
+   ],
+   "keyed": 0.54,
+   "median": [
+    47,
+    5,
+    45
+   ],
+   "name": "sound_waves",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.03
+  }
+ ]
+}

@@ -1,0 +1,162 @@
+{
+ "face": "front",
+ "size": [
+  234,
+  630
+ ],
+ "parts": [
+  {
+   "name": "marquee",
+   "px": [
+    8,
+    6,
+    218,
+    73
+   ],
+   "resize": "spanx_center",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "spans": true,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "screen",
+   "px": [
+    9,
+    72,
+    223,
+    290
+   ],
+   "resize": "spanx_center",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "spans": true,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "control_panel_left",
+   "px": [
+    9,
+    289,
+    99,
+    321
+   ],
+   "resize": "spanx_repeat",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": true,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "coin_door",
+   "px": [
+    8,
+    367,
+    232,
+    629
+   ],
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": true
+  },
+  {
+   "name": "decal_1",
+   "px": [
+    1,
+    0,
+    233,
+    318
+   ],
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "decal_2",
+   "px": [
+    5,
+    320,
+    13,
+    333
+   ],
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "spans": true,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "decal_3",
+   "px": [
+    110,
+    295,
+    133,
+    310
+   ],
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "decal_4",
+   "px": [
+    183,
+    295,
+    200,
+    301
+   ],
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": true,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "decal_5",
+   "px": [
+    218,
+    296,
+    226,
+    311
+   ],
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  }
+ ]
+}

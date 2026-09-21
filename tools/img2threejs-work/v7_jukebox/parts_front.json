@@ -1,0 +1,126 @@
+{
+ "face": "front",
+ "size": [
+  318,
+  532
+ ],
+ "parts": [
+  {
+   "name": "arch_window",
+   "px": [
+    79,
+    115,
+    239,
+    159
+   ],
+   "resize": "spanx_center",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "title_strip_holder",
+   "px": [
+    79,
+    193,
+    237,
+    238
+   ],
+   "resize": "spanx_repeat",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "button_grid",
+   "px": [
+    143,
+    158,
+    173,
+    273
+   ],
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "press"
+  },
+  {
+   "name": "coin_slot",
+   "px": [
+    73,
+    260,
+    106,
+    282
+   ],
+   "resize": "fixed",
+   "anchor": "left",
+   "depth": "recessed",
+   "motion": "press"
+  },
+  {
+   "name": "credit_window",
+   "px": [
+    105,
+    260,
+    193,
+    282
+   ],
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "letter_badge",
+   "px": [
+    202,
+    237,
+    211,
+    260
+   ],
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "speaker_grille",
+   "px": [
+    104,
+    272,
+    211,
+    417
+   ],
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "grille_medallion",
+   "px": [
+    133,
+    387,
+    176,
+    430
+   ],
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "plaque",
+   "px": [
+    66,
+    500,
+    98,
+    530
+   ],
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none"
+  }
+ ]
+}

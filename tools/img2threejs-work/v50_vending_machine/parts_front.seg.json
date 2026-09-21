@@ -1,0 +1,443 @@
+{
+ "face": "front",
+ "size": [
+  297,
+  517
+ ],
+ "parts": [
+  {
+   "name": "marquee",
+   "px": [
+    28,
+    25,
+    273,
+    77
+   ],
+   "mask": "masks/1.png",
+   "resize": "spanx_center",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "item_window_1",
+   "px": [
+    46,
+    97,
+    82,
+    147
+   ],
+   "mask": "masks/2.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "item_window_2",
+   "px": [
+    100,
+    97,
+    136,
+    147
+   ],
+   "mask": "masks/3.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "item_window_3",
+   "px": [
+    153,
+    97,
+    190,
+    147
+   ],
+   "mask": "masks/4.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "price_label_1",
+   "px": [
+    50,
+    150,
+    65,
+    161
+   ],
+   "mask": "masks/5.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "price_label_2",
+   "px": [
+    106,
+    151,
+    130,
+    163
+   ],
+   "mask": "masks/6.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "price_label_3",
+   "px": [
+    158,
+    151,
+    184,
+    163
+   ],
+   "mask": "masks/7.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "item_window_4",
+   "px": [
+    46,
+    175,
+    82,
+    225
+   ],
+   "mask": "masks/8.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "item_window_5",
+   "px": [
+    100,
+    175,
+    136,
+    225
+   ],
+   "mask": "masks/9.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "item_window_6",
+   "px": [
+    153,
+    176,
+    190,
+    225
+   ],
+   "mask": "masks/10.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "coin_mech",
+   "px": [
+    224,
+    176,
+    269,
+    273
+   ],
+   "mask": "masks/11.png",
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "deep",
+   "motion": "none"
+  },
+  {
+   "name": "price_label_4",
+   "px": [
+    50,
+    229,
+    77,
+    242
+   ],
+   "mask": "masks/12.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "price_label_5",
+   "px": [
+    104,
+    229,
+    131,
+    241
+   ],
+   "mask": "masks/13.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "price_label_6",
+   "px": [
+    158,
+    229,
+    185,
+    242
+   ],
+   "mask": "masks/14.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "price_label_7",
+   "px": [
+    111,
+    253,
+    136,
+    267
+   ],
+   "mask": "masks/15.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "item_window_9",
+   "px": [
+    153,
+    253,
+    190,
+    304
+   ],
+   "mask": "masks/16.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "item_window_7",
+   "px": [
+    45,
+    254,
+    82,
+    304
+   ],
+   "mask": "masks/17.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "decal",
+   "px": [
+    101,
+    255,
+    136,
+    290
+   ],
+   "mask": "masks/18.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "decal_2",
+   "px": [
+    45,
+    265,
+    52,
+    291
+   ],
+   "mask": "masks/19.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "item_window_8",
+   "px": [
+    100,
+    270,
+    136,
+    304
+   ],
+   "mask": "masks/20.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "decal_3",
+   "px": [
+    66,
+    281,
+    82,
+    304
+   ],
+   "mask": "masks/21.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "control_panel",
+   "px": [
+    220,
+    285,
+    279,
+    355
+   ],
+   "mask": "masks/22.png",
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "decal_4",
+   "px": [
+    107,
+    296,
+    133,
+    304
+   ],
+   "mask": "masks/23.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "price_label_8",
+   "px": [
+    239,
+    298,
+    259,
+    307
+   ],
+   "mask": "masks/24.png",
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "price_label_9",
+   "px": [
+    103,
+    307,
+    131,
+    321
+   ],
+   "mask": "masks/25.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "price_label_10",
+   "px": [
+    158,
+    307,
+    185,
+    321
+   ],
+   "mask": "masks/26.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "price_label_11",
+   "px": [
+    50,
+    308,
+    75,
+    320
+   ],
+   "mask": "masks/27.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "price_label_12",
+   "px": [
+    239,
+    309,
+    259,
+    321
+   ],
+   "mask": "masks/28.png",
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "price_label_13",
+   "px": [
+    239,
+    332,
+    259,
+    344
+   ],
+   "mask": "masks/29.png",
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "push_flap",
+   "px": [
+    28,
+    378,
+    207,
+    450
+   ],
+   "mask": "masks/30.png",
+   "resize": "spanx_center",
+   "anchor": "bottom",
+   "depth": "recessed",
+   "motion": "press"
+  },
+  {
+   "name": "button",
+   "px": [
+    238,
+    395,
+    278,
+    435
+   ],
+   "mask": "masks/31.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "press"
+  }
+ ]
+}

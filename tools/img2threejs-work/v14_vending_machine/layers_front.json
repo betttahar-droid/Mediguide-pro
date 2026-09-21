@@ -1,0 +1,142 @@
+{
+ "face": "front",
+ "size": [
+  303,
+  584
+ ],
+ "aspect": 0.51884,
+ "background": "bg_front.png",
+ "background_mode": "mirror",
+ "parts": [
+  {
+   "name": "shelf_row_top",
+   "image": "parts/shelf_row_top.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    193,
+    102
+   ],
+   "u": [
+    0.09571,
+    0.73267
+   ],
+   "v": [
+    0.79281,
+    0.96747
+   ]
+  },
+  {
+   "name": "shelf_row_middle",
+   "image": "parts/shelf_row_middle.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    193,
+    135
+   ],
+   "u": [
+    0.09571,
+    0.73267
+   ],
+   "v": [
+    0.64555,
+    0.87671
+   ]
+  },
+  {
+   "name": "shelf_row_bottom",
+   "image": "parts/shelf_row_bottom.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": [
+     0.6602,
+     0.8544
+    ]
+   },
+   "px_size": [
+    193,
+    103
+   ],
+   "u": [
+    0.09571,
+    0.73267
+   ],
+   "v": [
+    0.47089,
+    0.64726
+   ]
+  },
+  {
+   "name": "dispensing_tray",
+   "image": "parts/dispensing_tray.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": [
+     0.1071,
+     0.3071
+    ]
+   },
+   "px_size": [
+    297,
+    140
+   ],
+   "u": [
+    0.0033,
+    0.9835
+   ],
+   "v": [
+    0.04281,
+    0.28253
+   ]
+  }
+ ]
+}

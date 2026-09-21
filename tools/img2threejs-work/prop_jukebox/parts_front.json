@@ -1,0 +1,126 @@
+{
+ "face": "front",
+ "size": [
+  333,
+  627
+ ],
+ "parts": [
+  {
+   "name": "title_card",
+   "px": [
+    90,
+    94,
+    242,
+    220
+   ],
+   "resize": "spanx_center",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "nameplate",
+   "px": [
+    68,
+    219,
+    254,
+    292
+   ],
+   "resize": "spanx_center",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "select_sign",
+   "px": [
+    110,
+    275,
+    222,
+    327
+   ],
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "left_badge",
+   "px": [
+    74,
+    282,
+    111,
+    320
+   ],
+   "resize": "fixed",
+   "anchor": "left",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "right_badge",
+   "px": [
+    221,
+    282,
+    259,
+    320
+   ],
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "speaker_grille",
+   "px": [
+    75,
+    339,
+    257,
+    560
+   ],
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "star_ornament",
+   "px": [
+    141,
+    459,
+    191,
+    503
+   ],
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "start_button",
+   "px": [
+    235,
+    573,
+    257,
+    608
+   ],
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "press"
+  },
+  {
+   "name": "coin_return",
+   "px": [
+    63,
+    559,
+    97,
+    608
+   ],
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "recessed",
+   "motion": "none"
+  }
+ ]
+}

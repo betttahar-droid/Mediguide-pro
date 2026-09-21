@@ -1,0 +1,97 @@
+{
+ "face": "front",
+ "size": [
+  236,
+  560
+ ],
+ "parts": [
+  {
+   "name": "marquee",
+   "px": [
+    0,
+    4,
+    235,
+    62
+   ],
+   "resize": "spanx",
+   "anchor": "top"
+  },
+  {
+   "name": "speaker_grille_left",
+   "px": [
+    9,
+    61,
+    69,
+    68
+   ],
+   "resize": "fixed",
+   "anchor": "top"
+  },
+  {
+   "name": "speaker_grille_right",
+   "px": [
+    167,
+    61,
+    227,
+    68
+   ],
+   "resize": "fixed",
+   "anchor": "top"
+  },
+  {
+   "name": "screen",
+   "px": [
+    29,
+    130,
+    197,
+    241
+   ],
+   "resize": "fixed",
+   "anchor": "top"
+  },
+  {
+   "name": "control_panel",
+   "px": [
+    0,
+    252,
+    235,
+    297
+   ],
+   "resize": "spanx",
+   "anchor": "bottom"
+  },
+  {
+   "name": "joystick_left",
+   "px": [
+    43,
+    238,
+    49,
+    282
+   ],
+   "resize": "fixed",
+   "anchor": "bottom"
+  },
+  {
+   "name": "joystick_right",
+   "px": [
+    139,
+    240,
+    153,
+    285
+   ],
+   "resize": "fixed",
+   "anchor": "bottom"
+  },
+  {
+   "name": "coin_door",
+   "px": [
+    77,
+    319,
+    151,
+    525
+   ],
+   "resize": "fixed",
+   "anchor": "bottom"
+  }
+ ]
+}

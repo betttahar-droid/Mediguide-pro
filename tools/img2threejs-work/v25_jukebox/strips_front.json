@@ -1,0 +1,287 @@
+{
+ "size": [
+  342,
+  652
+ ],
+ "strips": [
+  {
+   "xspan": [
+    0.12865,
+    0.8655
+   ],
+   "fill": [
+    132,
+    106,
+    107
+   ],
+   "hmode": "extend",
+   "hf": [
+    0.13783,
+    0.13783
+   ],
+   "hf_repeat": false,
+   "vmode": "extend",
+   "vf": [
+    0.01667,
+    0.05
+   ],
+   "vf_repeat": false,
+   "v": [
+    0.90644,
+    1.0
+   ],
+   "h": [
+    0.0,
+    0.21994
+   ],
+   "vh": [
+    0.0,
+    0.25
+   ],
+   "noise": 0.989,
+   "vnoise": 4.696,
+   "px": [
+    0,
+    61
+   ],
+   "_like": 0.2187,
+   "grow_y": false,
+   "free": 0.588,
+   "grow_share": 0.0
+  },
+  {
+   "xspan": [
+    0.02339,
+    0.98246
+   ],
+   "fill": [
+    94,
+    76,
+    62
+   ],
+   "hmode": "extend",
+   "hf": [
+    0.16422,
+    0.16422
+   ],
+   "hf_repeat": false,
+   "vmode": "extend",
+   "vf": [
+    0.15873,
+    0.15873
+   ],
+   "vf_repeat": false,
+   "v": [
+    0.71166,
+    0.90644
+   ],
+   "h": [
+    0.29619,
+    0.70088
+   ],
+   "vh": [
+    0.73016,
+    1.0
+   ],
+   "noise": 1.656,
+   "vnoise": 14.889,
+   "px": [
+    61,
+    188
+   ],
+   "_like": 0.3645,
+   "grow_y": false,
+   "free": 0.237,
+   "grow_share": 0.0
+  },
+  {
+   "xspan": [
+    0.00585,
+    1.0
+   ],
+   "fill": [
+    94,
+    76,
+    62
+   ],
+   "hmode": "extend",
+   "hf": [
+    0.16422,
+    0.16422
+   ],
+   "hf_repeat": false,
+   "vmode": "extend",
+   "vf": [
+    0.24138,
+    0.24138
+   ],
+   "vf_repeat": false,
+   "v": [
+    0.66564,
+    0.71166
+   ],
+   "h": [
+    0.20821,
+    0.47214
+   ],
+   "vh": [
+    0.0,
+    0.34483
+   ],
+   "noise": 0.993,
+   "vnoise": 18.761,
+   "px": [
+    188,
+    218
+   ],
+   "_like": 0.9102,
+   "grow_y": false,
+   "free": 0.643,
+   "grow_share": 0.0
+  },
+  {
+   "xspan": [
+    0.00585,
+    1.0
+   ],
+   "fill": [
+    93,
+    76,
+    61
+   ],
+   "hmode": "extend",
+   "hf": [
+    0.18475,
+    0.18475
+   ],
+   "hf_repeat": false,
+   "vmode": "extend",
+   "vf": [
+    0.10345,
+    0.10345
+   ],
+   "vf_repeat": false,
+   "v": [
+    0.61963,
+    0.66564
+   ],
+   "h": [
+    0.53666,
+    0.79472
+   ],
+   "vh": [
+    0.27586,
+    0.51724
+   ],
+   "noise": 0.966,
+   "vnoise": 18.81,
+   "px": [
+    218,
+    248
+   ],
+   "_like": 0.9062,
+   "grow_y": false,
+   "free": 0.433,
+   "grow_share": 0.0
+  },
+  {
+   "xspan": [
+    0.0117,
+    0.99415
+   ],
+   "fill": [
+    94,
+    76,
+    62
+   ],
+   "hmode": "extend",
+   "hf": [
+    0.16422,
+    0.16422
+   ],
+   "hf_repeat": false,
+   "vmode": "extend",
+   "vf": [
+    0.07317,
+    0.07317
+   ],
+   "vf_repeat": false,
+   "v": [
+    0.55521,
+    0.61963
+   ],
+   "h": [
+    0.21701,
+    0.46628
+   ],
+   "vh": [
+    0.7561,
+    1.0
+   ],
+   "noise": 1.783,
+   "vnoise": 10.496,
+   "px": [
+    248,
+    290
+   ],
+   "_like": 0.6435,
+   "grow_y": false,
+   "free": 0.537,
+   "grow_share": 0.0
+  },
+  {
+   "xspan": [
+    0.0,
+    1.0
+   ],
+   "fill": [
+    94,
+    76,
+    62
+   ],
+   "hmode": "extend",
+   "hf": [
+    0.16422,
+    0.16422
+   ],
+   "hf_repeat": false,
+   "vmode": "extend",
+   "vf": [
+    0.0277,
+    0.07202
+   ],
+   "vf_repeat": false,
+   "v": [
+    0.0,
+    0.55521
+   ],
+   "h": [
+    0.37537,
+    0.6217
+   ],
+   "vh": [
+    0.71191,
+    0.96122
+   ],
+   "noise": 1.831,
+   "vnoise": 5.187,
+   "px": [
+    290,
+    652
+   ],
+   "_like": 0.8033,
+   "grow_y": false,
+   "free": 0.175,
+   "grow_share": 0.0
+  }
+ ],
+ "grow_bands": [],
+ "stretch_band": {
+  "px": [
+   547,
+   637
+  ],
+  "covered": null,
+  "why": "the places found total 37 rows and need 11.6 copies against the renderer's 10"
+ }
+}

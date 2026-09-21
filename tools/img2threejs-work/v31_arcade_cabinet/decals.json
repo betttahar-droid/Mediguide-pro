@@ -1,0 +1,59 @@
+{
+ "asset": "arcade cabinet",
+ "decals": [
+  {
+   "n": 1,
+   "image": "decals/d1.png",
+   "px": [
+    714,
+    749
+   ],
+   "keyed": 0.526,
+   "median": [
+    51,
+    59,
+    61
+   ],
+   "name": "title",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.1
+  },
+  {
+   "n": 2,
+   "image": "decals/d2.png",
+   "px": [
+    462,
+    152
+   ],
+   "keyed": 0.302,
+   "median": [
+    196,
+    195,
+    172
+   ],
+   "name": "price_plate",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.25
+  },
+  {
+   "n": 3,
+   "image": "decals/d3.png",
+   "px": [
+    189,
+    104
+   ],
+   "keyed": 0.529,
+   "median": [
+    198,
+    192,
+    170
+   ],
+   "name": "vent",
+   "rule": "hold",
+   "where": "back",
+   "size": 0.15
+  }
+ ]
+}

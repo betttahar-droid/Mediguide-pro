@@ -1,0 +1,38 @@
+{
+ "wider_means": "A wider vending machine has more product columns behind the same glass front, with the delivery door and coin mechanism keeping their width.",
+ "taller_means": "A taller vending machine has more product rows on the shelf grid and a longer plain body between the window, the delivery door and the kick base \u2014 not a taller sign or a taller door.",
+ "taller_at": [
+  {
+   "part": "decal_3",
+   "side": "below",
+   "px": [
+    359,
+    376
+   ]
+  },
+  {
+   "part": "push_door",
+   "side": "above",
+   "px": [
+    359,
+    376
+   ]
+  },
+  {
+   "part": "vent_grille",
+   "side": "above",
+   "px": [
+    442,
+    479
+   ]
+  }
+ ],
+ "max_wider": 1.6,
+ "max_taller": 1.5,
+ "per_bay": [],
+ "per_tier": [],
+ "spans": [
+  "display_window",
+  "push_door"
+ ]
+}

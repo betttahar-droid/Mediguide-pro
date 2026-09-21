@@ -1,0 +1,351 @@
+[
+ {
+  "round": 0,
+  "asset": "vending machine",
+  "looks_good": false,
+  "blocking": 7,
+  "faults": [
+   {
+    "part": "background",
+    "fault": "At 2x width the cabinet face texture is smeared, banded and patched: large blank blue panel where the display window should extend, and the lower body shows repeated tray-shaped blocks. At 1.5x height the same repeat bands stack as three identical tray panels down the lower body. The background needs mirror tiling so joins reflect instead of cutting.",
+    "severity": "blocking"
+   },
+   {
+    "part": "product",
+    "fault": "Products are 'fixed', so when the cabinet is widened the display window does not gain product columns -- the stretched window shows scattered single bags floating on blank panel and smeared shelf bands instead of new columns of product. Fails the meaning of a wider vending machine.",
+    "severity": "blocking"
+   },
+   {
+    "part": "product_5",
+    "fault": "Fixed products leave the widened/tallened window with blank shelf runs and stray bags outside the shelf grid; no new rows or columns are generated, so the resized cabinet reads as an empty shell with decals stuck on.",
+    "severity": "blocking"
+   },
+   {
+    "part": "product_17",
+    "fault": "Same fixed-product fault: at 2x width the bottom rows show isolated bags and long empty shelf rail, and at 1.5x height the products bunch at the top with empty shelving below -- a taller machine should show more product rows, not blank panel.",
+    "severity": "blocking"
+   },
+   {
+    "part": "delivery_tray (gemini)",
+    "fault": "Flap has no opening motion assigned.",
+    "severity": "blocking"
+   },
+   {
+    "part": "coin_return_door (gemini)",
+    "fault": "Flap is static instead of functional.",
+    "severity": "blocking"
+   },
+   {
+    "part": "background (gemini)",
+    "fault": "Scaling horizontally and vertically causes severe smearing and misaligned seams.",
+    "severity": "blocking"
+   }
+  ],
+  "patch": [
+   "background",
+   "coin_return_door",
+   "delivery_tray",
+   "product",
+   "product_10",
+   "product_11",
+   "product_12",
+   "product_13",
+   "product_14",
+   "product_15",
+   "product_16",
+   "product_17",
+   "product_18",
+   "product_19",
+   "product_2",
+   "product_20",
+   "product_21",
+   "product_22",
+   "product_23",
+   "product_3",
+   "product_4",
+   "product_5",
+   "product_6",
+   "product_7",
+   "product_8",
+   "product_9"
+  ],
+  "wider_means": "a wider vending machine has more product columns across the display window",
+  "taller_means": "a taller vending machine has more product rows on more shelves inside the cabinet"
+ },
+ {
+  "round": 1,
+  "asset": "vending machine",
+  "looks_good": false,
+  "blocking": 7,
+  "faults": [
+   {
+    "part": "background",
+    "fault": "At 2x width and 1.5x height the cabinet body texture tiles badly: the side panel, keypad column and coin-door column are repeated as ghost copies across the widened face, and the lower panel shows banded repeat streaks. Needs mirror tiling.",
+    "severity": "blocking"
+   },
+   {
+    "part": "product",
+    "fault": "Products are fixed, so widening the cabinet leaves the new bays as blank dark glass with stray product decals floating in them (image 3). A wider machine must gain product columns; the shelf rows should repeat across the new width.",
+    "severity": "blocking"
+   },
+   {
+    "part": "product_5",
+    "fault": "Same fault vertically: at 1.5x height the rows stay fixed at the top and the lower cabinet is blank panel with duplicated snack decals and smeared tray graphics floating in it (image 4). A taller machine must gain product rows.",
+    "severity": "blocking"
+   },
+   {
+    "part": "marquee",
+    "fault": "At 2x width the marquee title is doubled with mirrored ghost 'SNACK-O-MATIC' lettering at both ends instead of one centred title with extended plain ends.",
+    "severity": "blocking"
+   },
+   {
+    "part": "delivery_tray",
+    "fault": "In the solid view the open tray reads as a plank floating clear of the body, projecting past the cabinet's left silhouette instead of folding out from the recessed tray mouth.",
+    "severity": "blocking"
+   },
+   {
+    "part": "delivery_tray (gemini)",
+    "fault": "Delivery flap hinges from the bottom outwards instead of swinging from the top.",
+    "severity": "blocking"
+   },
+   {
+    "part": "background (gemini)",
+    "fault": "Cabinet texture shears and artifacts across the surface when scaled.",
+    "severity": "blocking"
+   }
+  ],
+  "patch": [
+   "background",
+   "delivery_tray",
+   "product",
+   "product_10",
+   "product_11",
+   "product_12",
+   "product_13",
+   "product_14",
+   "product_15",
+   "product_16",
+   "product_17",
+   "product_18",
+   "product_19",
+   "product_2",
+   "product_20",
+   "product_21",
+   "product_22",
+   "product_23",
+   "product_3",
+   "product_4",
+   "product_5",
+   "product_6",
+   "product_7",
+   "product_8",
+   "product_9"
+  ],
+  "wider_means": "a wider vending machine has more product columns across the display window",
+  "taller_means": "a taller vending machine has more product rows on more shelves inside the cabinet"
+ },
+ {
+  "round": 2,
+  "asset": "vending machine",
+  "looks_good": false,
+  "blocking": 13,
+  "faults": [
+   {
+    "part": "background",
+    "fault": "At 2x width and 1.5x height the cabinet texture is stretched and streaked across the enlarged panels - smear bands visible on the widened side and the stretched lower body. Blocking.",
+    "severity": "blocking"
+   },
+   {
+    "part": "product",
+    "fault": "All product parts are 'fixed', so when the cabinet is widened no new product columns appear - image 3 shows the same four columns adrift in a black window with dead panel either side, and product decals scattered detached across the stretched face. A wider vending machine must gain product columns. Blocking.",
+    "severity": "blocking"
+   },
+   {
+    "part": "product_2",
+    "fault": "Same fault as product: fixed size leaves the second shelf row not filling the widened window; gap panel where columns should be. Blocking.",
+    "severity": "blocking"
+   },
+   {
+    "part": "product_3",
+    "fault": "Same fault: third row does not gain columns on widen. Blocking.",
+    "severity": "blocking"
+   },
+   {
+    "part": "product_4",
+    "fault": "Same fault: bottom shelf row does not gain columns on widen. Blocking.",
+    "severity": "blocking"
+   },
+   {
+    "part": "keypad_panel",
+    "fault": "Fixed rule leaves the control column stranded near the centre at 2x width, with blank cabinet panel to its right where a wider machine's control deck should extend/repeat. Blocking.",
+    "severity": "blocking"
+   },
+   {
+    "part": "product_5",
+    "fault": "Center-anchored fixed products drift off their shelves when the cabinet grows in either axis (visible scattered snacks in images 3 and 4); a taller machine needs more product rows, not floating single packs. Blocking.",
+    "severity": "blocking"
+   },
+   {
+    "part": "product_9",
+    "fault": "Same drift/repeat fault as product_5 - does not fill the enlarged window as rows. Blocking.",
+    "severity": "blocking"
+   },
+   {
+    "part": "product_13",
+    "fault": "Same drift/repeat fault - loose snack floating on the stretched face in image 4. Blocking.",
+    "severity": "blocking"
+   },
+   {
+    "part": "product_17",
+    "fault": "Same drift/repeat fault as product_5. Blocking.",
+    "severity": "blocking"
+   },
+   {
+    "part": "product_23",
+    "fault": "Same drift/repeat fault as product_5. Blocking.",
+    "severity": "blocking"
+   },
+   {
+    "part": "background (gemini)",
+    "fault": "Resizing causes texture tearing, floating snack artifacts, and distorted panel geometry across width and height.",
+    "severity": "blocking"
+   },
+   {
+    "part": "delivery_tray (gemini)",
+    "fault": "Delivery flap hinges outwards from the bottom rather than swinging inward from the top into a recessed tray.",
+    "severity": "blocking"
+   }
+  ],
+  "patch": [
+   "background",
+   "delivery_tray",
+   "keypad_panel",
+   "product",
+   "product_10",
+   "product_11",
+   "product_12",
+   "product_13",
+   "product_14",
+   "product_15",
+   "product_16",
+   "product_17",
+   "product_18",
+   "product_19",
+   "product_2",
+   "product_20",
+   "product_21",
+   "product_22",
+   "product_23",
+   "product_3",
+   "product_4",
+   "product_5",
+   "product_6",
+   "product_7",
+   "product_8",
+   "product_9"
+  ],
+  "wider_means": "a wider vending machine has more product columns across the display window",
+  "taller_means": "a taller vending machine has more product rows on more shelves inside the cabinet"
+ },
+ {
+  "round": 3,
+  "asset": "vending machine",
+  "looks_good": false,
+  "blocking": 12,
+  "faults": [
+   {
+    "part": "product",
+    "fault": "At 2x width the shelf products stay 'fixed' while the cabinet widens: the window gains blank panel and the existing products sit scattered/offset, some floating clear of the shelf face. A wider machine must gain product COLUMNS, not empty glass.",
+    "severity": "blocking"
+   },
+   {
+    "part": "product_5",
+    "fault": "Same fault across all shelf rows: fixed products leave the widened cabinet with unpopulated bays and stray packs drifting off the body (image 3).",
+    "severity": "blocking"
+   },
+   {
+    "part": "keypad_panel",
+    "fault": "At 2x width the keypad column texture is stretched and doubled, with smeared product decals bleeding across it; it reads as a smudge, not a control column.",
+    "severity": "blocking"
+   },
+   {
+    "part": "marquee",
+    "fault": "Marquee end-extensions show repeated smeared motifs instead of clean panel; the extended ends are streaked bands a player could point at.",
+    "severity": "blocking"
+   },
+   {
+    "part": "product_13",
+    "fault": "At 1.5x height the products pile and overlap inside the window (image 4) instead of gaining shelf ROWS; several packs intersect each other.",
+    "severity": "blocking"
+   },
+   {
+    "part": "decal_36",
+    "fault": "Bottom-anchored decals duplicated onto the newly-tall lower panel as floating snack images (image 4) \u2014 product art appearing on blank cabinet where no shelf exists.",
+    "severity": "blocking"
+   },
+   {
+    "part": "background",
+    "fault": "Background panel texture bands and smears where the prop was enlarged in both resize renders.",
+    "severity": "blocking"
+   },
+   {
+    "part": "delivery_tray",
+    "fault": "In the three-quarters solid view the delivery tray swings out and hangs detached from the body, floating clear of the cabinet face instead of pivoting out of it.",
+    "severity": "blocking"
+   },
+   {
+    "part": "coin_return_door",
+    "fault": "Coin return door also stands off the body at an angle that reads as floating rather than hinging from its top edge on the face.",
+    "severity": "blocking"
+   },
+   {
+    "part": "background (gemini)",
+    "fault": "Texture tearing and distortion occur across the frame during horizontal and vertical scaling.",
+    "severity": "blocking"
+   },
+   {
+    "part": "delivery_tray (gemini)",
+    "fault": "Flap hinges outward into space rather than pushing inward.",
+    "severity": "blocking"
+   },
+   {
+    "part": "coin_return_door (gemini)",
+    "fault": "Door hinge orientation causes unnatural extension when open.",
+    "severity": "blocking"
+   }
+  ],
+  "patch": [
+   "background",
+   "coin_return_door",
+   "decal_36",
+   "decal_37",
+   "decal_38",
+   "delivery_tray",
+   "product",
+   "product_10",
+   "product_11",
+   "product_12",
+   "product_13",
+   "product_14",
+   "product_15",
+   "product_16",
+   "product_17",
+   "product_18",
+   "product_19",
+   "product_2",
+   "product_20",
+   "product_21",
+   "product_22",
+   "product_23",
+   "product_3",
+   "product_4",
+   "product_5",
+   "product_6",
+   "product_7",
+   "product_8",
+   "product_9"
+  ],
+  "wider_means": "a wider vending machine has more product columns across the display window",
+  "taller_means": "a taller vending machine has more product rows on more shelves inside the cabinet"
+ }
+]

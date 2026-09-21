@@ -1,0 +1,869 @@
+{
+ "face": "front",
+ "size": [
+  285,
+  531
+ ],
+ "aspect": 0.53672,
+ "background": "bg_front.png",
+ "background_mode": "mirror",
+ "parts": [
+  {
+   "name": "side_window",
+   "image": "parts/side_window.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.6667,
+     0.8824
+    ],
+    "v": [
+     0.4592,
+     0.9914
+    ]
+   },
+   "px_size": [
+    52,
+    237
+   ],
+   "u": [
+    0.77895,
+    0.9614
+   ],
+   "v": [
+    0.50471,
+    0.95104
+   ]
+  },
+  {
+   "name": "glass_window",
+   "image": "parts/glass_window.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": [
+     0.0936,
+     0.3404
+    ]
+   },
+   "px_size": [
+    194,
+    236
+   ],
+   "u": [
+    0.07719,
+    0.75789
+   ],
+   "v": [
+    0.50471,
+    0.94915
+   ]
+  },
+  {
+   "name": "bottle_row1_a",
+   "image": "parts/bottle_row1_a.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": [
+     0.1132,
+     0.3019
+    ]
+   },
+   "px_size": [
+    35,
+    53
+   ],
+   "u": [
+    0.10877,
+    0.23158
+   ],
+   "v": [
+    0.83239,
+    0.9322
+   ]
+  },
+  {
+   "name": "bottle_row1_b",
+   "image": "parts/bottle_row1_b.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": [
+     0.1132,
+     0.3208
+    ]
+   },
+   "px_size": [
+    34,
+    53
+   ],
+   "u": [
+    0.24912,
+    0.36842
+   ],
+   "v": [
+    0.83239,
+    0.9322
+   ]
+  },
+  {
+   "name": "bottle_row1_c",
+   "image": "parts/bottle_row1_c.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": [
+     0.1154,
+     0.2692
+    ]
+   },
+   "px_size": [
+    30,
+    52
+   ],
+   "u": [
+    0.38246,
+    0.48772
+   ],
+   "v": [
+    0.83239,
+    0.93032
+   ]
+  },
+  {
+   "name": "bottle_row1_d",
+   "image": "parts/bottle_row1_d.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    30,
+    52
+   ],
+   "u": [
+    0.50175,
+    0.60702
+   ],
+   "v": [
+    0.83239,
+    0.93032
+   ]
+  },
+  {
+   "name": "bottle_row1_e",
+   "image": "parts/bottle_row1_e.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    29,
+    52
+   ],
+   "u": [
+    0.62105,
+    0.72281
+   ],
+   "v": [
+    0.83239,
+    0.93032
+   ]
+  },
+  {
+   "name": "decal",
+   "image": "parts/decal.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": [
+     0.0714,
+     0.3571
+    ]
+   },
+   "px_size": [
+    26,
+    14
+   ],
+   "u": [
+    0.27368,
+    0.36491
+   ],
+   "v": [
+    0.75706,
+    0.78343
+   ]
+  },
+  {
+   "name": "product_row2_d",
+   "image": "parts/product_row2_d.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.7812,
+     0.9688
+    ],
+    "v": null
+   },
+   "px_size": [
+    32,
+    53
+   ],
+   "u": [
+    0.38596,
+    0.49825
+   ],
+   "v": [
+    0.68362,
+    0.78343
+   ]
+  },
+  {
+   "name": "product_row2_e",
+   "image": "parts/product_row2_e.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    28,
+    53
+   ],
+   "u": [
+    0.50526,
+    0.60351
+   ],
+   "v": [
+    0.68362,
+    0.78343
+   ]
+  },
+  {
+   "name": "product_row2_a",
+   "image": "parts/product_row2_a.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    33,
+    51
+   ],
+   "u": [
+    0.11579,
+    0.23158
+   ],
+   "v": [
+    0.6855,
+    0.78154
+   ]
+  },
+  {
+   "name": "product_row2_b",
+   "image": "parts/product_row2_b.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    33,
+    48
+   ],
+   "u": [
+    0.24912,
+    0.36491
+   ],
+   "v": [
+    0.69115,
+    0.78154
+   ]
+  },
+  {
+   "name": "price_display",
+   "image": "parts/price_display.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    38,
+    19
+   ],
+   "u": [
+    0.80351,
+    0.93684
+   ],
+   "v": [
+    0.73635,
+    0.77213
+   ]
+  },
+  {
+   "name": "product_row2_f",
+   "image": "parts/product_row2_f.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    29,
+    43
+   ],
+   "u": [
+    0.62105,
+    0.72281
+   ],
+   "v": [
+    0.6855,
+    0.76648
+   ]
+  },
+  {
+   "name": "decal_2",
+   "image": "parts/decal_2.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    26,
+    23
+   ],
+   "u": [
+    0.26316,
+    0.35439
+   ],
+   "v": [
+    0.6855,
+    0.72881
+   ]
+  },
+  {
+   "name": "product_row3_a",
+   "image": "parts/product_row3_a.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    34,
+    50
+   ],
+   "u": [
+    0.11228,
+    0.23158
+   ],
+   "v": [
+    0.53861,
+    0.63277
+   ]
+  },
+  {
+   "name": "product_row3_e",
+   "image": "parts/product_row3_e.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.75,
+     0.9583
+    ],
+    "v": null
+   },
+   "px_size": [
+    28,
+    49
+   ],
+   "u": [
+    0.50526,
+    0.60351
+   ],
+   "v": [
+    0.54049,
+    0.63277
+   ]
+  },
+  {
+   "name": "product_row3_f",
+   "image": "parts/product_row3_f.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    28,
+    50
+   ],
+   "u": [
+    0.62105,
+    0.7193
+   ],
+   "v": [
+    0.53861,
+    0.63277
+   ]
+  },
+  {
+   "name": "product_row3_c",
+   "image": "parts/product_row3_c.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    32,
+    44
+   ],
+   "u": [
+    0.37895,
+    0.49123
+   ],
+   "v": [
+    0.53861,
+    0.62147
+   ]
+  },
+  {
+   "name": "product_row3_b",
+   "image": "parts/product_row3_b.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    33,
+    43
+   ],
+   "u": [
+    0.24912,
+    0.36491
+   ],
+   "v": [
+    0.53861,
+    0.61959
+   ]
+  },
+  {
+   "name": "control_panel",
+   "image": "parts/control_panel.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "right",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    111,
+    78
+   ],
+   "u": [
+    0.55439,
+    0.94386
+   ],
+   "v": [
+    0.34463,
+    0.49153
+   ]
+  },
+  {
+   "name": "decal_3",
+   "image": "parts/decal_3.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.626,
+     0.9431
+    ],
+    "v": [
+     0.0795,
+     0.4545
+    ]
+   },
+   "px_size": [
+    123,
+    89
+   ],
+   "u": [
+    0.0807,
+    0.51228
+   ],
+   "v": [
+    0.29944,
+    0.46704
+   ]
+  },
+  {
+   "name": "delivery_tray",
+   "image": "parts/delivery_tray.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.3446,
+     0.9322
+    ],
+    "v": null
+   },
+   "px_size": [
+    177,
+    58
+   ],
+   "u": [
+    0.10526,
+    0.72632
+   ],
+   "v": [
+    0.12429,
+    0.23352
+   ]
+  },
+  {
+   "name": "coin_slot",
+   "image": "parts/coin_slot.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.3889,
+     0.6111
+    ],
+    "v": [
+     0.3478,
+     0.5652
+    ]
+   },
+   "px_size": [
+    18,
+    29
+   ],
+   "u": [
+    0.8807,
+    0.94386
+   ],
+   "v": [
+    0.14689,
+    0.20151
+   ]
+  },
+  {
+   "name": "coin_return_button",
+   "image": "parts/coin_return_button.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "press",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.3,
+     0.6
+    ],
+    "v": [
+     0.4,
+     0.7
+    ]
+   },
+   "px_size": [
+    24,
+    15
+   ],
+   "u": [
+    0.84211,
+    0.92632
+   ],
+   "v": [
+    0.14501,
+    0.17326
+   ]
+  },
+  {
+   "name": "decal_4",
+   "image": "parts/decal_4.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.196,
+     0.5126
+    ],
+    "v": null
+   },
+   "px_size": [
+    199,
+    16
+   ],
+   "u": [
+    0.15439,
+    0.85263
+   ],
+   "v": [
+    0.0,
+    0.03013
+   ]
+  }
+ ]
+}

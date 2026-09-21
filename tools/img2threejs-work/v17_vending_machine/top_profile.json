@@ -1,0 +1,25 @@
+{
+ "front_edge": "bottom",
+ "front_edge_said": "bottom",
+ "relief": 0.0,
+ "front_wall": [
+  [
+   0.0,
+   1.0
+  ],
+  [
+   0.99623,
+   1.0
+  ]
+ ],
+ "back_wall": [
+  [
+   0.0,
+   0.0
+  ],
+  [
+   0.99623,
+   0.0
+  ]
+ ]
+}

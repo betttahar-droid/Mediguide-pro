@@ -1,0 +1,108 @@
+{
+ "face": "front",
+ "size": [
+  343,
+  607
+ ],
+ "aspect": 0.56507,
+ "background": "bg_front.png",
+ "background_mode": "mirror",
+ "parts": [
+  {
+   "name": "marquee",
+   "image": "parts/marquee.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    202,
+    70
+   ],
+   "u": [
+    0.20408,
+    0.793
+   ],
+   "v": [
+    0.771,
+    0.88633
+   ]
+  },
+  {
+   "name": "record_viewer",
+   "image": "parts/record_viewer.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.7719,
+     0.9357
+    ],
+    "v": null
+   },
+   "px_size": [
+    171,
+    115
+   ],
+   "u": [
+    0.23032,
+    0.72886
+   ],
+   "v": [
+    0.52389,
+    0.71334
+   ]
+  },
+  {
+   "name": "title_strip",
+   "image": "parts/title_strip.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    114,
+    117
+   ],
+   "u": [
+    0.33236,
+    0.66472
+   ],
+   "v": [
+    0.16639,
+    0.35914
+   ]
+  }
+ ]
+}

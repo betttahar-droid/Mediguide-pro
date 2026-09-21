@@ -1,0 +1,272 @@
+{
+ "face": "front",
+ "size": [
+  236,
+  560
+ ],
+ "aspect": 0.42143,
+ "background": "bg_front.png",
+ "background_mode": "mirror",
+ "parts": [
+  {
+   "name": "marquee",
+   "image": "parts/marquee.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    235,
+    58
+   ],
+   "u": [
+    0.0,
+    0.99576
+   ],
+   "v": [
+    0.88929,
+    0.99286
+   ]
+  },
+  {
+   "name": "speaker_grille_left",
+   "image": "parts/speaker_grille_left.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": [
+     0.1429,
+     0.4286
+    ]
+   },
+   "px_size": [
+    60,
+    7
+   ],
+   "u": [
+    0.03814,
+    0.29237
+   ],
+   "v": [
+    0.87857,
+    0.89107
+   ]
+  },
+  {
+   "name": "speaker_grille_right",
+   "image": "parts/speaker_grille_right.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": [
+     0.1429,
+     0.4286
+    ]
+   },
+   "px_size": [
+    60,
+    7
+   ],
+   "u": [
+    0.70763,
+    0.96186
+   ],
+   "v": [
+    0.87857,
+    0.89107
+   ]
+  },
+  {
+   "name": "screen",
+   "image": "parts/screen.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    168,
+    111
+   ],
+   "u": [
+    0.12288,
+    0.83475
+   ],
+   "v": [
+    0.56964,
+    0.76786
+   ]
+  },
+  {
+   "name": "control_panel",
+   "image": "parts/control_panel.png",
+   "hf": [
+    0.07692307692307693,
+    0.11965811965811966
+   ],
+   "resize": "spanx",
+   "resize_y": "spanx",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": true,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    235,
+    45
+   ],
+   "u": [
+    0.0,
+    0.99576
+   ],
+   "v": [
+    0.46964,
+    0.55
+   ]
+  },
+  {
+   "name": "joystick_left",
+   "image": "parts/joystick_left.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.1667,
+     0.3333
+    ],
+    "v": null
+   },
+   "px_size": [
+    6,
+    44
+   ],
+   "u": [
+    0.1822,
+    0.20763
+   ],
+   "v": [
+    0.49643,
+    0.575
+   ]
+  },
+  {
+   "name": "joystick_right",
+   "image": "parts/joystick_right.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    14,
+    45
+   ],
+   "u": [
+    0.58898,
+    0.64831
+   ],
+   "v": [
+    0.49107,
+    0.57143
+   ]
+  },
+  {
+   "name": "coin_door",
+   "image": "parts/coin_door.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    74,
+    206
+   ],
+   "u": [
+    0.32627,
+    0.63983
+   ],
+   "v": [
+    0.0625,
+    0.43036
+   ]
+  }
+ ]
+}

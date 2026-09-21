@@ -1,0 +1,276 @@
+[
+ {
+  "round": 0,
+  "asset": "arcade cabinet",
+  "looks_good": false,
+  "blocking": 3,
+  "faults": [
+   {
+    "part": "speaker_grille",
+    "fault": "At 2x width the grille is stretched into smeared dark blobs instead of gaining a second grille; at 1.5x height it is stretched into a long banded smear with chevron repeats down the whole upper band. A counted item was stretched instead of repeated.",
+    "severity": "blocking"
+   },
+   {
+    "part": "background",
+    "fault": "At 2x width the front/background panel shows repeated smeared vent ovals and streaked bands across the lower body, and the ARCADE marquee band shows vertical streaking \u2014 classic tiling smear on the widened panel.",
+    "severity": "blocking"
+   },
+   {
+    "part": "front_panel",
+    "fault": "At 1.5x height the extra height went into a stretched, smeared upper section instead of a longer plain lower body/kick panel below the control deck, which is what a taller cabinet means.",
+    "severity": "blocking"
+   }
+  ],
+  "patch": [
+   {
+    "name": "background",
+    "resize": "fixed",
+    "anchor": "bottom",
+    "depth": "flush",
+    "motion": "none",
+    "count": "none",
+    "drop": false,
+    "mode": "mirror"
+   },
+   {
+    "name": "front_panel",
+    "resize": "spanx_center",
+    "anchor": "bottom",
+    "depth": "proud",
+    "motion": "none",
+    "count": "longer",
+    "drop": false
+   },
+   {
+    "name": "speaker_grille",
+    "resize": "spanx_center",
+    "anchor": "top",
+    "depth": "recessed",
+    "motion": "none",
+    "count": "per_bay",
+    "drop": false
+   }
+  ],
+  "wider_means": "A wider arcade cabinet is a two-player cabinet: a second joystick and button set added on the control deck, with a wider body, screen bezel and speaker band carrying them.",
+  "taller_means": "A taller arcade cabinet has a longer plain lower body and kick panel below the control deck -- more bare carcass, not a taller screen or marquee."
+ },
+ {
+  "round": 1,
+  "asset": "arcade cabinet",
+  "looks_good": false,
+  "blocking": 3,
+  "faults": [
+   {
+    "part": "background",
+    "fault": "At 2x width the lower panel shows mirrored/duplicated vent motifs and vertical streak bands where the panel was stretched, and the marquee 'ARCADE' text is smeared wide instead of the panel tiling cleanly. At 1.5x height the side 'SPACE WARP' decal reads 'WARP' mirrored/doubled mid-panel. A player could point at all of these as broken tiling.",
+    "severity": "blocking"
+   },
+   {
+    "part": "control_deck",
+    "fault": "At 2x width the control deck stretched into one long smeared deck with seam artefacts instead of gaining a second joystick/button cluster -- a wider arcade cabinet is a two-player cabinet, and this one just got wider with the same single set of controls.",
+    "severity": "blocking"
+   },
+   {
+    "part": "screen",
+    "fault": "At 2x width the screen glass itself stretched into one wide cinematic pane instead of the bezel extending around a same-size centre screen; the spanx_center rule (middle stays one size, ends extend) was not honoured.",
+    "severity": "blocking"
+   }
+  ],
+  "patch": [
+   {
+    "name": "background",
+    "resize": "fixed",
+    "anchor": "fixed",
+    "depth": "flush",
+    "motion": "none",
+    "count": "none"
+   },
+   {
+    "name": "control_deck",
+    "resize": "spanx_repeat",
+    "anchor": "center",
+    "depth": "deep",
+    "motion": "none",
+    "count": "per_bay"
+   },
+   {
+    "name": "screen",
+    "resize": "spanx_center",
+    "anchor": "top",
+    "depth": "recessed",
+    "motion": "none",
+    "count": "none"
+   }
+  ],
+  "wider_means": "A wider arcade cabinet is a two-player cabinet: a second joystick and button set added on the control deck, with a wider body, screen bezel and speaker band carrying them.",
+  "taller_means": "A taller arcade cabinet has a longer plain lower body and kick panel below the control deck -- more bare carcass, not a taller screen or marquee."
+ },
+ {
+  "round": 2,
+  "asset": "arcade cabinet",
+  "looks_good": false,
+  "blocking": 5,
+  "faults": [
+   {
+    "part": "background",
+    "fault": "Side 'SPACE WARP' decal is mirrored at the taller size, reading 'PRAW ECAPS' below the intact one -- mirror mode flipped a repeat mid-decal, which is cut and unreadable text, plus streaky vertical banding on the lower body where the panel was stretched. Blocking.",
+    "severity": "blocking"
+   },
+   {
+    "part": "front_panel",
+    "fault": "At 1.5x taller the coin door column is stretched into a stack of smeared repeated dark panels instead of staying one coin door on a longer plain kick panel -- the extra height went into smearing the door, not into bare carcass. Blocking.",
+    "severity": "blocking"
+   },
+   {
+    "part": "screen",
+    "fault": "At 2x wider the screen is stretched to the full cabinet width with smeared bezel edges instead of staying one centered screen with the ends extending. Blocking.",
+    "severity": "blocking"
+   },
+   {
+    "part": "control_deck",
+    "fault": "At 2x wider the deck is stretched, not repeated: same two joysticks pulled apart with smeared button graphics between them, rather than additional button clusters per bay. Blocking.",
+    "severity": "blocking"
+   },
+   {
+    "part": "speaker_grille",
+    "fault": "At 2x wider the speaker band shows jagged smeared dark shapes instead of per-bay round grilles; the extra bays carry stretched texture, not clean repeated grilles. Blocking.",
+    "severity": "blocking"
+   }
+  ],
+  "patch": [
+   {
+    "name": "background",
+    "resize": "fixed",
+    "anchor": "fixed",
+    "depth": "flush",
+    "motion": "none",
+    "count": "none",
+    "drop": false
+   },
+   {
+    "name": "control_deck",
+    "resize": "spanx_repeat",
+    "anchor": "center",
+    "depth": "deep",
+    "motion": "none",
+    "count": "per_bay",
+    "drop": false
+   },
+   {
+    "name": "front_panel",
+    "resize": "spanx_center",
+    "anchor": "bottom",
+    "depth": "proud",
+    "motion": "none",
+    "count": "none",
+    "drop": false
+   },
+   {
+    "name": "screen",
+    "resize": "spanx_center",
+    "anchor": "top",
+    "depth": "recessed",
+    "motion": "none",
+    "count": "none",
+    "drop": false
+   },
+   {
+    "name": "speaker_grille",
+    "resize": "fixed",
+    "anchor": "top",
+    "depth": "recessed",
+    "motion": "none",
+    "count": "per_bay",
+    "drop": false
+   }
+  ],
+  "wider_means": "A wider arcade cabinet is a two-player cabinet: a second joystick and button set added on the control deck, with a wider body, screen bezel and speaker band carrying them.",
+  "taller_means": "A taller arcade cabinet has a longer plain lower body and kick panel below the control deck -- more bare carcass, not a taller screen or marquee."
+ },
+ {
+  "round": 3,
+  "asset": "arcade cabinet",
+  "looks_good": false,
+  "blocking": 2,
+  "faults": [
+   {
+    "part": "background",
+    "fault": "When the cabinet is widened (image 3) the lower body texture repeats as a row of half-vented oval smudges across the bare panel and streaks/bands along the bottom edge; when taller (image 4) the lower carcass is visibly stretched with vertical smear streaks. A player could point straight at it.",
+    "severity": "blocking"
+   },
+   {
+    "part": "background",
+    "fault": "Ragged white fringe/speckle artifacts run along the marquee top edge in every view (images 2-5), reading as a cut texture edge rather than a trim detail.",
+    "severity": "blocking"
+   }
+  ],
+  "patch": [
+   {
+    "name": "background",
+    "resize": "mirror",
+    "anchor": "anchored",
+    "depth": "flush",
+    "motion": "none",
+    "count": "none",
+    "drop": false
+   }
+  ],
+  "wider_means": "A wider arcade cabinet is a two-player cabinet: a second joystick and button set added on the control deck, with a wider body, screen bezel and speaker band carrying them.",
+  "taller_means": "A taller arcade cabinet has a longer plain lower body and kick panel below the control deck -- more bare carcass, not a taller screen or marquee."
+ },
+ {
+  "round": 4,
+  "asset": "arcade cabinet",
+  "looks_good": false,
+  "blocking": 3,
+  "faults": [
+   {
+    "part": "screen",
+    "fault": "At 2x width the screen glass and bezel stretch to span the whole cabinet instead of staying one screen centred with the bezel ends extending \u2014 a two-player cabinet has one normal-aspect screen, not a stretched one",
+    "severity": "blocking"
+   },
+   {
+    "part": "control_deck",
+    "fault": "At 2x width the deck widens but does not repeat its middle: there is no second joystick/button cluster added on the wider deck, so the extra width is blank panel where a player station should be",
+    "severity": "blocking"
+   },
+   {
+    "part": "background",
+    "fault": "Lower cabinet background texture smears and bands when resized \u2014 streaked grime and repeated oval marks on the widened lower panel (image 3) and vertical streaking on the taller lower body (image 4)",
+    "severity": "blocking"
+   }
+  ],
+  "patch": [
+   {
+    "name": "background",
+    "mode": "mirror",
+    "resize": "fixed",
+    "anchor": "top",
+    "depth": "flush",
+    "motion": "none",
+    "count": "none",
+    "drop": false
+   },
+   {
+    "name": "control_deck",
+    "resize": "spanx_repeat",
+    "anchor": "center",
+    "depth": "deep",
+    "motion": "none",
+    "count": "per_bay",
+    "drop": false
+   },
+   {
+    "name": "screen",
+    "resize": "spanx_center",
+    "anchor": "top",
+    "depth": "recessed",
+    "motion": "none",
+    "count": "none",
+    "drop": false
+   }
+  ],
+  "wider_means": "A wider arcade cabinet is a two-player cabinet: a second joystick and button set added on the control deck, with a wider body, screen bezel and speaker band carrying them.",
+  "taller_means": "A taller arcade cabinet has a longer plain lower body and kick panel below the control deck -- more bare carcass, not a taller screen or marquee."
+ }
+]

@@ -1,0 +1,95 @@
+{
+ "asset": "arcade cabinet",
+ "decals": [
+  {
+   "n": 1,
+   "image": "decals/d1.png",
+   "px": [
+    411,
+    96
+   ],
+   "keyed": 0.079,
+   "median": [
+    215,
+    75,
+    108
+   ],
+   "name": "decal_1",
+   "rule": "hold",
+   "where": "any",
+   "size": 0.04
+  },
+  {
+   "n": 2,
+   "image": "decals/d2.png",
+   "px": [
+    167,
+    34
+   ],
+   "keyed": 0.124,
+   "median": [
+    173,
+    111,
+    166
+   ],
+   "name": "decal_2",
+   "rule": "hold",
+   "where": "any",
+   "size": 0.04
+  },
+  {
+   "n": 3,
+   "image": "decals/d3.png",
+   "px": [
+    120,
+    34
+   ],
+   "keyed": 0.355,
+   "median": [
+    216,
+    100,
+    197
+   ],
+   "name": "decal_3",
+   "rule": "hold",
+   "where": "any",
+   "size": 0.04
+  },
+  {
+   "n": 4,
+   "image": "decals/d4.png",
+   "px": [
+    69,
+    35
+   ],
+   "keyed": 0.108,
+   "median": [
+    158,
+    103,
+    102
+   ],
+   "name": "decal_4",
+   "rule": "hold",
+   "where": "any",
+   "size": 0.04
+  },
+  {
+   "n": 5,
+   "image": "decals/d5.png",
+   "px": [
+    48,
+    48
+   ],
+   "keyed": 0.568,
+   "median": [
+    237,
+    231,
+    196
+   ],
+   "name": "decal_5",
+   "rule": "hold",
+   "where": "any",
+   "size": 0.04
+  }
+ ]
+}

@@ -1,0 +1,60 @@
+{
+ "face": "front",
+ "size": [
+  252,
+  621
+ ],
+ "parts": [
+  {
+   "name": "backglass",
+   "px": [
+    0,
+    1,
+    251,
+    251
+   ],
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": true,
+   "spans": true
+  },
+  {
+   "name": "playfield",
+   "px": [
+    19,
+    251,
+    232,
+    332
+   ],
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "coin_door_panel",
+   "px": [
+    14,
+    333,
+    240,
+    619
+   ],
+   "resize": "spanx_center",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": true,
+   "spans": true
+  }
+ ]
+}

@@ -1,0 +1,113 @@
+{
+ "asset": "pinball machine",
+ "decals": [
+  {
+   "n": 1,
+   "image": "decals/d1.png",
+   "px": [
+    278,
+    62
+   ],
+   "keyed": 0.815,
+   "median": [
+    106,
+    112,
+    125
+   ],
+   "name": "title",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.06
+  },
+  {
+   "n": 2,
+   "image": "decals/d2.png",
+   "px": [
+    188,
+    66
+   ],
+   "keyed": 0.87,
+   "median": [
+    106,
+    104,
+    113
+   ],
+   "name": "price_plate",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.02
+  },
+  {
+   "n": 3,
+   "image": "decals/d3.png",
+   "px": [
+    130,
+    130
+   ],
+   "keyed": 0.886,
+   "median": [
+    133,
+    113,
+    91
+   ],
+   "name": "logo",
+   "rule": "hold",
+   "where": "side",
+   "size": 0.08
+  },
+  {
+   "n": 4,
+   "image": "decals/d4.png",
+   "px": [
+    655,
+    93
+   ],
+   "keyed": 0.655,
+   "median": [
+    109,
+    105,
+    105
+   ],
+   "name": "pinstripe",
+   "rule": "along",
+   "where": "side",
+   "size": 0.008
+  },
+  {
+   "n": 5,
+   "image": "decals/d5.png",
+   "px": [
+    83,
+    84
+   ],
+   "keyed": 0.94,
+   "median": [
+    107,
+    102,
+    110
+   ],
+   "name": "rivet",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.005
+  },
+  {
+   "n": 6,
+   "image": "decals/d6.png",
+   "px": [
+    137,
+    186
+   ],
+   "keyed": 0.728,
+   "median": [
+    116,
+    117,
+    125
+   ],
+   "name": "warning_label",
+   "rule": "hold",
+   "where": "back",
+   "size": 0.03
+  }
+ ]
+}

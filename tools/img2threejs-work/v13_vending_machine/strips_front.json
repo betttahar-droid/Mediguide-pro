@@ -1,0 +1,197 @@
+{
+ "size": [
+  297,
+  520
+ ],
+ "strips": [
+  {
+   "xspan": [
+    0.0,
+    1.00337
+   ],
+   "fill": [
+    78,
+    74,
+    77
+   ],
+   "hmode": "extend",
+   "hf": [
+    0.01014,
+    0.01014
+   ],
+   "hf_repeat": false,
+   "vmode": "extend",
+   "vf": [
+    0.08989,
+    0.13483
+   ],
+   "vf_repeat": false,
+   "v": [
+    0.82692,
+    1.0
+   ],
+   "h": [
+    0.09459,
+    0.73649
+   ],
+   "vh": [
+    0.04494,
+    0.29213
+   ],
+   "noise": 1.542,
+   "vnoise": 9.021,
+   "px": [
+    0,
+    90
+   ],
+   "_like": 0.9428,
+   "grow_y": false,
+   "free": 0.331,
+   "grow_share": 0.0
+  },
+  {
+   "xspan": [
+    0.0,
+    1.00337
+   ],
+   "fill": [
+    78,
+    74,
+    77
+   ],
+   "hmode": "extend",
+   "hf": [
+    0.01014,
+    0.01014
+   ],
+   "hf_repeat": false,
+   "vmode": "extend",
+   "vf": [
+    0.03704,
+    0.03704
+   ],
+   "vf_repeat": false,
+   "v": [
+    0.66923,
+    0.82692
+   ],
+   "h": [
+    0.81757,
+    0.96622
+   ],
+   "vh": [
+    0.04938,
+    0.2963
+   ],
+   "noise": 1.619,
+   "vnoise": 17.751,
+   "px": [
+    90,
+    172
+   ],
+   "_like": 0.9928,
+   "grow_y": false,
+   "free": 0.276,
+   "grow_share": 0.0
+  },
+  {
+   "xspan": [
+    0.0,
+    1.00337
+   ],
+   "fill": [
+    78,
+    74,
+    77
+   ],
+   "hmode": "extend",
+   "hf": [
+    0.09122,
+    0.13514
+   ],
+   "hf_repeat": false,
+   "vmode": "extend",
+   "vf": [
+    0.04054,
+    0.04054
+   ],
+   "vf_repeat": false,
+   "v": [
+    0.525,
+    0.66923
+   ],
+   "h": [
+    0.81757,
+    0.96622
+   ],
+   "vh": [
+    0.17568,
+    0.41892
+   ],
+   "noise": 1.661,
+   "vnoise": 22.143,
+   "px": [
+    172,
+    247
+   ],
+   "_like": 0.9996,
+   "grow_y": false,
+   "free": 0.358,
+   "grow_share": 0.0
+  },
+  {
+   "xspan": [
+    0.0,
+    1.00337
+   ],
+   "fill": [
+    76,
+    74,
+    76
+   ],
+   "hmode": "extend",
+   "hf": [
+    0.02703,
+    0.07095
+   ],
+   "hf_repeat": false,
+   "vmode": "extend",
+   "vf": [
+    0.02206,
+    0.02206
+   ],
+   "vf_repeat": false,
+   "v": [
+    0.0,
+    0.525
+   ],
+   "h": [
+    0.37162,
+    0.68243
+   ],
+   "vh": [
+    0.41544,
+    0.66544
+   ],
+   "noise": 2.293,
+   "vnoise": 7.173,
+   "px": [
+    247,
+    520
+   ],
+   "_like": 0.9864,
+   "grow_y": false,
+   "free": 0.151,
+   "grow_share": 0.0
+  }
+ ],
+ "grow_bands": [],
+ "stretch_band": {
+  "px": [
+   4,
+   26
+  ],
+  "covered": null,
+  "why": "the places found total 15 rows and need 18.3 copies against the renderer's 10"
+ }
+}

@@ -1,0 +1,165 @@
+{
+ "face": "front",
+ "size": [
+  242,
+  603
+ ],
+ "parts": [
+  {
+   "name": "marquee",
+   "px": [
+    0,
+    15,
+    241,
+    65
+   ],
+   "resize": "spanx_center",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "speaker_vent_left",
+   "px": [
+    24,
+    66,
+    78,
+    134
+   ],
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "speaker_vent_right",
+   "px": [
+    164,
+    64,
+    217,
+    134
+   ],
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "screen",
+   "px": [
+    33,
+    133,
+    207,
+    289
+   ],
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "screen_bezel",
+   "px": [
+    2,
+    133,
+    240,
+    309
+   ],
+   "resize": "spanx_center",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "control_deck",
+   "px": [
+    0,
+    288,
+    239,
+    309
+   ],
+   "resize": "spanx_repeat",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "joystick_left",
+   "px": [
+    42,
+    265,
+    48,
+    309
+   ],
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "deep",
+   "motion": "stick"
+  },
+  {
+   "name": "joystick_right",
+   "px": [
+    150,
+    265,
+    161,
+    309
+   ],
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "deep",
+   "motion": "stick"
+  },
+  {
+   "name": "coin_door",
+   "px": [
+    75,
+    384,
+    166,
+    602
+   ],
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "hinge_right"
+  },
+  {
+   "name": "side_vent_left",
+   "px": [
+    2,
+    554,
+    63,
+    602
+   ],
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "side_vent_right",
+   "px": [
+    201,
+    549,
+    232,
+    602
+   ],
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "instruction_card",
+   "px": [
+    175,
+    422,
+    232,
+    459
+   ],
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "flush",
+   "motion": "none"
+  }
+ ]
+}

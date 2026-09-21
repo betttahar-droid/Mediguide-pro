@@ -1,0 +1,679 @@
+{
+ "face": "front",
+ "size": [
+  280,
+  611
+ ],
+ "aspect": 0.45827,
+ "background": "bg_front.png",
+ "background_mode": "mirror",
+ "parts": [
+  {
+   "name": "cabinet_side_rail_left",
+   "image": "parts/cabinet_side_rail_left.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.5294,
+     0.8235
+    ],
+    "v": null
+   },
+   "px_size": [
+    17,
+    111
+   ],
+   "u": [
+    0.01786,
+    0.07857
+   ],
+   "v": [
+    0.80851,
+    0.99018
+   ]
+  },
+  {
+   "name": "cabinet_side_rail_right",
+   "image": "parts/cabinet_side_rail_right.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.0,
+     0.2941
+    ],
+    "v": null
+   },
+   "px_size": [
+    17,
+    108
+   ],
+   "u": [
+    0.925,
+    0.98571
+   ],
+   "v": [
+    0.80851,
+    0.98527
+   ]
+  },
+  {
+   "name": "marquee",
+   "image": "parts/marquee.png",
+   "hf": [
+    0.05416666666666667,
+    0.09583333333333334
+   ],
+   "resize": "spanx_center",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    241,
+    74
+   ],
+   "u": [
+    0.07143,
+    0.93214
+   ],
+   "v": [
+    0.85761,
+    0.97872
+   ]
+  },
+  {
+   "name": "speaker_grille_left",
+   "image": "parts/speaker_grille_left.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.2986,
+     0.9774
+    ],
+    "v": [
+     0.129,
+     0.2903
+    ]
+   },
+   "px_size": [
+    221,
+    34
+   ],
+   "u": [
+    0.10357,
+    0.89286
+   ],
+   "v": [
+    0.79051,
+    0.84615
+   ]
+  },
+  {
+   "name": "speaker_grille_right",
+   "image": "parts/speaker_grille_right.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.1522,
+     0.3043
+    ],
+    "v": [
+     0.2941,
+     0.5294
+    ]
+   },
+   "px_size": [
+    49,
+    21
+   ],
+   "u": [
+    0.66429,
+    0.83929
+   ],
+   "v": [
+    0.80033,
+    0.8347
+   ]
+  },
+  {
+   "name": "screen_bezel",
+   "image": "parts/screen_bezel.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    192,
+    137
+   ],
+   "u": [
+    0.15714,
+    0.84286
+   ],
+   "v": [
+    0.53191,
+    0.75614
+   ]
+  },
+  {
+   "name": "screen",
+   "image": "parts/screen.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.6647,
+     0.8235
+    ],
+    "v": [
+     0.2195,
+     0.3821
+    ]
+   },
+   "px_size": [
+    170,
+    123
+   ],
+   "u": [
+    0.19643,
+    0.80357
+   ],
+   "v": [
+    0.54173,
+    0.74304
+   ]
+  },
+  {
+   "name": "joystick_left",
+   "image": "parts/joystick_left.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "deep",
+   "motion": "stick",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.0,
+     0.16
+    ],
+    "v": null
+   },
+   "px_size": [
+    25,
+    39
+   ],
+   "u": [
+    0.15714,
+    0.24643
+   ],
+   "v": [
+    0.46154,
+    0.52537
+   ]
+  },
+  {
+   "name": "joystick_right",
+   "image": "parts/joystick_right.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "deep",
+   "motion": "stick",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.8,
+     0.96
+    ],
+    "v": null
+   },
+   "px_size": [
+    25,
+    39
+   ],
+   "u": [
+    0.57143,
+    0.66071
+   ],
+   "v": [
+    0.46154,
+    0.52537
+   ]
+  },
+  {
+   "name": "control_deck",
+   "image": "parts/control_deck.png",
+   "hf": [
+    0.06692913385826772,
+    0.11023622047244094
+   ],
+   "resize": "spanx_repeat",
+   "resize_y": "spanx_repeat",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": true,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    255,
+    79
+   ],
+   "u": [
+    0.04286,
+    0.95357
+   ],
+   "v": [
+    0.36825,
+    0.49755
+   ]
+  },
+  {
+   "name": "button_left",
+   "image": "parts/button_left.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.4,
+     0.6667
+    ],
+    "v": [
+     0.25,
+     0.4375
+    ]
+   },
+   "px_size": [
+    15,
+    16
+   ],
+   "u": [
+    0.4,
+    0.45357
+   ],
+   "v": [
+    0.4599,
+    0.48609
+   ]
+  },
+  {
+   "name": "button_right",
+   "image": "parts/button_right.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.2,
+     0.4
+    ],
+    "v": [
+     0.1875,
+     0.375
+    ]
+   },
+   "px_size": [
+    15,
+    16
+   ],
+   "u": [
+    0.31429,
+    0.36786
+   ],
+   "v": [
+    0.45499,
+    0.48118
+   ]
+  },
+  {
+   "name": "coin_door",
+   "image": "parts/coin_door.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.236,
+     0.5281
+    ],
+    "v": [
+     0.0581,
+     0.4884
+    ]
+   },
+   "px_size": [
+    89,
+    172
+   ],
+   "u": [
+    0.33929,
+    0.65714
+   ],
+   "v": [
+    0.02946,
+    0.31097
+   ]
+  },
+  {
+   "name": "coin_slot_1",
+   "image": "parts/coin_slot_1.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    22,
+    25
+   ],
+   "u": [
+    0.40357,
+    0.48214
+   ],
+   "v": [
+    0.25041,
+    0.29133
+   ]
+  },
+  {
+   "name": "coin_slot_2",
+   "image": "parts/coin_slot_2.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": [
+     0.0417,
+     0.25
+    ]
+   },
+   "px_size": [
+    21,
+    24
+   ],
+   "u": [
+    0.50714,
+    0.58214
+   ],
+   "v": [
+    0.25041,
+    0.28969
+   ]
+  },
+  {
+   "name": "coin_slot_3",
+   "image": "parts/coin_slot_3.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": [
+     0.2609,
+     0.4348
+    ]
+   },
+   "px_size": [
+    23,
+    23
+   ],
+   "u": [
+    0.40357,
+    0.48571
+   ],
+   "v": [
+    0.17512,
+    0.21277
+   ]
+  },
+  {
+   "name": "coin_slot_4",
+   "image": "parts/coin_slot_4.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.1429,
+     0.619
+    ],
+    "v": [
+     0.1364,
+     0.3636
+    ]
+   },
+   "px_size": [
+    21,
+    22
+   ],
+   "u": [
+    0.50357,
+    0.57857
+   ],
+   "v": [
+    0.17512,
+    0.21113
+   ]
+  },
+  {
+   "name": "coin_return_left",
+   "image": "parts/coin_return_left.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.4737,
+     0.9737
+    ],
+    "v": [
+     0.1688,
+     0.7013
+    ]
+   },
+   "px_size": [
+    38,
+    77
+   ],
+   "u": [
+    0.36786,
+    0.50357
+   ],
+   "v": [
+    0.04092,
+    0.16694
+   ]
+  },
+  {
+   "name": "coin_return_right",
+   "image": "parts/coin_return_right.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.0,
+     0.4722
+    ],
+    "v": [
+     0.1351,
+     0.473
+    ]
+   },
+   "px_size": [
+    36,
+    76
+   ],
+   "u": [
+    0.5,
+    0.62857
+   ],
+   "v": [
+    0.04255,
+    0.16694
+   ]
+  }
+ ]
+}

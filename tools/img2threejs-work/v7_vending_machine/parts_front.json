@@ -1,0 +1,126 @@
+{
+ "face": "front",
+ "size": [
+  329,
+  599
+ ],
+ "parts": [
+  {
+   "name": "marquee_sign",
+   "px": [
+    1,
+    1,
+    327,
+    93
+   ],
+   "resize": "spanx_center",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "glass_window",
+   "px": [
+    1,
+    103,
+    244,
+    467
+   ],
+   "resize": "spany_center",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "shelf_rails",
+   "px": [
+    26,
+    146,
+    244,
+    467
+   ],
+   "resize": "spany_repeat",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "bill_acceptor",
+   "px": [
+    257,
+    173,
+    327,
+    204
+   ],
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "proud",
+   "motion": "press"
+  },
+  {
+   "name": "price_display",
+   "px": [
+    257,
+    279,
+    327,
+    295
+   ],
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "keypad",
+   "px": [
+    277,
+    294,
+    327,
+    337
+   ],
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "proud",
+   "motion": "press"
+  },
+  {
+   "name": "cup_dispenser",
+   "px": [
+    250,
+    384,
+    327,
+    438
+   ],
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "push_door",
+   "px": [
+    50,
+    466,
+    221,
+    507
+   ],
+   "resize": "spanx_center",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "hinge_top"
+  },
+  {
+   "name": "service_panel",
+   "px": [
+    251,
+    437,
+    327,
+    505
+   ],
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "flush",
+   "motion": "none"
+  }
+ ]
+}

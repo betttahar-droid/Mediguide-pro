@@ -1,0 +1,48 @@
+[
+ {
+  "round": 0,
+  "asset": "pinball",
+  "looks_good": false,
+  "blocking": 3,
+  "faults": [
+   {
+    "part": "coin_door_panel",
+    "fault": "When the prop is widened (image 3) the panel's middle is stretched, not extended: the button decals smear into elongated ovals and the 25c plate/text distorts. With spanx_center the centre of the panel must stay ONE size with only the ends extending.",
+    "severity": "blocking"
+   },
+   {
+    "part": "coin_door_panel",
+    "fault": "When the prop is made taller (image 4) the count 'longer' rule stretches the coin door vertically \u2014 buttons become tall ovals and the panel grows down the cabinet. A coin door is one machine's one door; extra height belongs in the legs and lower cabinet, not in a stretched door.",
+    "severity": "blocking"
+   },
+   {
+    "part": "background",
+    "fault": "At 1.5x wider and 1.6x taller the background/lower panel texture streaks into vertical smear bands below the coin door (images 3 and 4) \u2014 a repeat seam/stretch a player can point at.",
+    "severity": "blocking"
+   }
+  ],
+  "patch": [
+   {
+    "name": "background",
+    "resize": "fixed",
+    "anchor": "center",
+    "depth": "flush",
+    "motion": "none",
+    "count": "none",
+    "mode": "mirror",
+    "drop": false
+   },
+   {
+    "name": "coin_door_panel",
+    "resize": "spanx_center",
+    "anchor": "bottom",
+    "depth": "proud",
+    "motion": "none",
+    "count": "none",
+    "drop": false
+   }
+  ],
+  "wider_means": "A wider pinball is a wider cabinet carcass - a broader backbox, playfield and body, but still one machine with one coin door.",
+  "taller_means": "A taller pinball has longer legs and a taller lower cabinet below the playfield; the backbox and playfield stay the same size."
+ }
+]

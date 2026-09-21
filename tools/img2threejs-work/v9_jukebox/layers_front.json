@@ -1,0 +1,284 @@
+{
+ "face": "front",
+ "size": [
+  290,
+  570
+ ],
+ "aspect": 0.50877,
+ "background": "bg_front.png",
+ "background_mode": "mirror",
+ "parts": [
+  {
+   "name": "top_marquee",
+   "image": "parts/top_marquee.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.547,
+     0.8761
+    ],
+    "v": [
+     0.25,
+     0.4833
+    ]
+   },
+   "px_size": [
+    234,
+    60
+   ],
+   "u": [
+    0.1,
+    0.9069
+   ],
+   "v": [
+    0.87895,
+    0.98421
+   ]
+  },
+  {
+   "name": "title_band",
+   "image": "parts/title_band.png",
+   "hf": [
+    0.148014440433213,
+    0.19133574007220217
+   ],
+   "resize": "spanx_center",
+   "resize_y": "spanx_center",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": true,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    278,
+    51
+   ],
+   "u": [
+    0.0069,
+    0.96552
+   ],
+   "v": [
+    0.79123,
+    0.8807
+   ]
+  },
+  {
+   "name": "song_chart",
+   "image": "parts/song_chart.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    189,
+    153
+   ],
+   "u": [
+    0.3069,
+    0.95862
+   ],
+   "v": [
+    0.50526,
+    0.77368
+   ]
+  },
+  {
+   "name": "coin_slot_left",
+   "image": "parts/coin_slot_left.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.6818,
+     0.8364
+    ],
+    "v": null
+   },
+   "px_size": [
+    110,
+    46
+   ],
+   "u": [
+    0.0069,
+    0.38621
+   ],
+   "v": [
+    0.41228,
+    0.49298
+   ]
+  },
+  {
+   "name": "coin_slot_right",
+   "image": "parts/coin_slot_right.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    96,
+    46
+   ],
+   "u": [
+    0.66207,
+    0.9931
+   ],
+   "v": [
+    0.41228,
+    0.49298
+   ]
+  },
+  {
+   "name": "control_deck",
+   "image": "parts/control_deck.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": [
+     0.1471,
+     0.5
+    ]
+   },
+   "px_size": [
+    278,
+    68
+   ],
+   "u": [
+    0.00345,
+    0.96207
+   ],
+   "v": [
+    0.34386,
+    0.46316
+   ]
+  },
+  {
+   "name": "speaker_grille_left",
+   "image": "parts/speaker_grille_left.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": [
+     0.7,
+     0.9
+    ]
+   },
+   "px_size": [
+    67,
+    141
+   ],
+   "u": [
+    0.04828,
+    0.27931
+   ],
+   "v": [
+    0.05614,
+    0.30351
+   ]
+  },
+  {
+   "name": "lower_badge",
+   "image": "parts/lower_badge.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.15,
+     0.3
+    ],
+    "v": [
+     0.56,
+     0.8
+    ]
+   },
+   "px_size": [
+    40,
+    26
+   ],
+   "u": [
+    0.42414,
+    0.56207
+   ],
+   "v": [
+    0.19123,
+    0.23684
+   ]
+  }
+ ]
+}

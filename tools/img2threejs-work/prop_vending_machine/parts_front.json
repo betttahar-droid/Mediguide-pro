@@ -1,0 +1,152 @@
+{
+ "face": "front",
+ "size": [
+  305,
+  538
+ ],
+ "parts": [
+  {
+   "name": "display_window",
+   "px": [
+    20,
+    20,
+    227,
+    257
+   ],
+   "resize": "spanx_center",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "price_display",
+   "px": [
+    226,
+    129,
+    280,
+    157
+   ],
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "coin_slot_panel",
+   "px": [
+    226,
+    151,
+    286,
+    261
+   ],
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "coin_slot_label",
+   "px": [
+    226,
+    236,
+    285,
+    253
+   ],
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "dispense_button_panel",
+   "px": [
+    236,
+    296,
+    287,
+    331
+   ],
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "press"
+  },
+  {
+   "name": "warning_label",
+   "px": [
+    236,
+    330,
+    289,
+    357
+   ],
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "brand_panel",
+   "px": [
+    25,
+    256,
+    173,
+    408
+   ],
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "coin_return_slot",
+   "px": [
+    183,
+    290,
+    226,
+    307
+   ],
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "card_slot",
+   "px": [
+    172,
+    312,
+    237,
+    334
+   ],
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "press"
+  },
+  {
+   "name": "delivery_flap",
+   "px": [
+    31,
+    407,
+    222,
+    457
+   ],
+   "resize": "spanx_center",
+   "anchor": "bottom",
+   "depth": "recessed",
+   "motion": "hinge_top"
+  },
+  {
+   "name": "small_coin_door",
+   "px": [
+    261,
+    422,
+    288,
+    449
+   ],
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "hinge_left"
+  }
+ ]
+}

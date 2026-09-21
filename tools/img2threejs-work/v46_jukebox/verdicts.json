@@ -1,0 +1,86 @@
+[
+ {
+  "round": 0,
+  "asset": "jukebox",
+  "looks_good": false,
+  "blocking": 3,
+  "faults": [
+   {
+    "part": "speaker_grille_left / speaker_grille_right / lower_grille / title strips",
+    "fault": "At 1.6x width the carcass broadens but the front fittings keep their original size: the widened front is mostly blank wood panel each side of an unchanged centre, with the grilles and title-strip block stranded in the middle and the right bubble tube reading as detached from the front face. A wider jukebox must run the grilles, central grille and title-strip panel wider \u2014 extra blank panel where those belong is a blocking fault, not a pass.",
+    "severity": "blocking"
+   },
+   {
+    "part": "background",
+    "fault": "At 1.5x height the added lower-cabinet area shows vertically streaked, smeared wood grain \u2014 dark bands a player could point at. The taller-lower-body idea is correct; the texture feeding it is stretched.",
+    "severity": "blocking"
+   },
+   {
+    "part": "decal",
+    "fault": "In the solid and wireframe views a flat rectangular slab protrudes beyond the arch at the upper-left of the body \u2014 geometry standing clear of the cabinet that should not exist, visible as a step off the silhouette in image 6.",
+    "severity": "blocking"
+   }
+  ],
+  "patch": [
+   {
+    "name": "background",
+    "mode": "mirror"
+   },
+   {
+    "name": "bubble_tube_left_1",
+    "count": "longer"
+   },
+   {
+    "name": "bubble_tube_left_2",
+    "count": "longer"
+   },
+   {
+    "name": "bubble_tube_left_3",
+    "count": "longer"
+   },
+   {
+    "name": "bubble_tube_left_4",
+    "count": "longer"
+   },
+   {
+    "name": "decal",
+    "anchor": "center",
+    "depth": "recessed"
+   },
+   {
+    "name": "lower_grille",
+    "resize": "spanx_center"
+   },
+   {
+    "name": "speaker_grille_left",
+    "resize": "spanx_center"
+   },
+   {
+    "name": "speaker_grille_right",
+    "resize": "spanx_center"
+   },
+   {
+    "name": "title_strip_left",
+    "resize": "spanx_repeat",
+    "count": "per_bay"
+   },
+   {
+    "name": "title_strip_left_2",
+    "resize": "spanx_repeat",
+    "count": "per_bay"
+   },
+   {
+    "name": "title_strip_right",
+    "resize": "spanx_repeat",
+    "count": "per_bay"
+   },
+   {
+    "name": "title_strip_right_2",
+    "resize": "spanx_repeat",
+    "count": "per_bay"
+   }
+  ],
+  "wider_means": "A wider jukebox is a broader cabinet: the arched wooden carcass, the speaker grilles, the central grille and the title-strip panel all run wider, with the same single dome and coin door.",
+  "taller_means": "A taller jukebox has a taller plain wooden lower cabinet body -- more bare wood panel below the control deck and around the grille -- not a bigger dome or taller grille."
+ }
+]

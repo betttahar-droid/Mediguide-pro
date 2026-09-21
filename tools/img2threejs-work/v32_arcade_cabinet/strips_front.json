@@ -1,0 +1,350 @@
+{
+ "size": [
+  280,
+  611
+ ],
+ "strips": [
+  {
+   "xspan": [
+    0.01429,
+    0.98571
+   ],
+   "fill": [
+    106,
+    129,
+    106
+   ],
+   "hmode": "extend",
+   "hf": [
+    0.08602,
+    0.08602
+   ],
+   "hf_repeat": false,
+   "vmode": "extend",
+   "vf": [
+    0.10588,
+    0.14118
+   ],
+   "vf_repeat": false,
+   "v": [
+    0.85925,
+    1.0
+   ],
+   "h": [
+    0.0,
+    0.91398
+   ],
+   "vh": [
+    0.0,
+    0.24706
+   ],
+   "noise": 0.969,
+   "vnoise": 3.628,
+   "px": [
+    0,
+    86
+   ],
+   "_like": 1.0,
+   "grow_y": false,
+   "free": 0.269,
+   "grow_share": 0.0
+  },
+  {
+   "xspan": [
+    0.01429,
+    0.98571
+   ],
+   "fill": [
+    106,
+    129,
+    106
+   ],
+   "hmode": "extend",
+   "hf": [
+    0.10394,
+    0.10394
+   ],
+   "hf_repeat": false,
+   "vmode": "extend",
+   "vf": [
+    0.1,
+    0.1
+   ],
+   "vf_repeat": false,
+   "v": [
+    0.79214,
+    0.85925
+   ],
+   "h": [
+    0.11828,
+    0.87814
+   ],
+   "vh": [
+    0.125,
+    0.375
+   ],
+   "noise": 0.412,
+   "vnoise": 18.545,
+   "px": [
+    86,
+    127
+   ],
+   "_like": 0.9109,
+   "grow_y": false,
+   "free": 0.254,
+   "grow_share": 0.0
+  },
+  {
+   "xspan": [
+    0.04286,
+    0.95714
+   ],
+   "fill": [
+    106,
+    129,
+    106
+   ],
+   "hmode": "extend",
+   "hf": [
+    0.0681,
+    0.0681
+   ],
+   "hf_repeat": false,
+   "vmode": "extend",
+   "vf": [
+    0.14815,
+    0.14815
+   ],
+   "vf_repeat": false,
+   "v": [
+    0.52537,
+    0.79214
+   ],
+   "h": [
+    0.16846,
+    0.82796
+   ],
+   "vh": [
+    0.0,
+    0.24691
+   ],
+   "noise": 0.856,
+   "vnoise": 13.167,
+   "px": [
+    127,
+    290
+   ],
+   "_like": 0.7978,
+   "grow_y": false,
+   "free": 0.182,
+   "grow_share": 0.0
+  },
+  {
+   "xspan": [
+    0.0,
+    1.0
+   ],
+   "fill": [
+    106,
+    129,
+    106
+   ],
+   "hmode": "extend",
+   "hf": [
+    0.01075,
+    0.01075
+   ],
+   "hf_repeat": false,
+   "vmode": "extend",
+   "vf": [
+    0.14894,
+    0.14894
+   ],
+   "vf_repeat": false,
+   "v": [
+    0.36989,
+    0.52537
+   ],
+   "h": [
+    0.07168,
+    0.83871
+   ],
+   "vh": [
+    0.52128,
+    0.78723
+   ],
+   "noise": 0.992,
+   "vnoise": 15.25,
+   "px": [
+    290,
+    385
+   ],
+   "_like": 0.8092,
+   "grow_y": false,
+   "free": 0.197,
+   "grow_share": 0.0
+  },
+  {
+   "xspan": [
+    0.02857,
+    0.97143
+   ],
+   "fill": [
+    106,
+    129,
+    106
+   ],
+   "hmode": "extend",
+   "hf": [
+    0.05018,
+    0.05018
+   ],
+   "hf_repeat": false,
+   "vmode": "extend",
+   "vf": [
+    0.1,
+    0.1
+   ],
+   "vf_repeat": false,
+   "v": [
+    0.31915,
+    0.36989
+   ],
+   "h": [
+    0.13262,
+    0.8638
+   ],
+   "vh": [
+    0.76667,
+    1.0
+   ],
+   "noise": 1.111,
+   "vnoise": 5.564,
+   "px": [
+    385,
+    416
+   ],
+   "_like": 0.3252,
+   "grow_y": false,
+   "free": 0.971,
+   "grow_share": 0.0
+  },
+  {
+   "xspan": [
+    0.04286,
+    0.95714
+   ],
+   "fill": [
+    106,
+    129,
+    106
+   ],
+   "hmode": "extend",
+   "hf": [
+    0.19713,
+    0.24014
+   ],
+   "hf_repeat": false,
+   "vmode": "extend",
+   "vf": [
+    0.28351,
+    0.32474
+   ],
+   "vf_repeat": false,
+   "v": [
+    0.0,
+    0.31915
+   ],
+   "h": [
+    0.13262,
+    0.8638
+   ],
+   "vh": [
+    0.22165,
+    0.46907
+   ],
+   "noise": 0.861,
+   "vnoise": 5.443,
+   "px": [
+    416,
+    611
+   ],
+   "_like": 0.9046,
+   "grow_y": true,
+   "free": 0.576,
+   "grow_share": 1.0
+  }
+ ],
+ "grow_bands": [
+  {
+   "part": "cabinet_side_rail_left",
+   "side": "itself",
+   "clean": false,
+   "px": [
+    6,
+    13
+   ],
+   "band": [
+    0.97872,
+    0.99018
+   ],
+   "share": 0.1129
+  },
+  {
+   "part": "cabinet_side_rail_right",
+   "side": "itself",
+   "clean": false,
+   "px": [
+    87,
+    94
+   ],
+   "band": [
+    0.84615,
+    0.85761
+   ],
+   "share": 0.1129
+  },
+  {
+   "part": "(measured)",
+   "side": "run",
+   "clean": false,
+   "px": [
+    128,
+    149
+   ],
+   "band": [
+    0.75614,
+    0.79051
+   ],
+   "share": 0.33871
+  },
+  {
+   "part": "button_right",
+   "side": "below",
+   "clean": true,
+   "px": [
+    395,
+    404
+   ],
+   "band": [
+    0.33879,
+    0.35352
+   ],
+   "share": 0.14516
+  },
+  {
+   "part": "(measured)",
+   "side": "run",
+   "clean": false,
+   "px": [
+    593,
+    611
+   ],
+   "band": [
+    0.0,
+    0.02946
+   ],
+   "share": 0.29032
+  }
+ ]
+}

@@ -1,0 +1,48 @@
+{
+ "face": "front",
+ "size": [
+  341,
+  656
+ ],
+ "parts": [
+  {
+   "name": "arch_lamp",
+   "px": [
+    130,
+    3,
+    203,
+    48
+   ],
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "marquee",
+   "px": [
+    6,
+    22,
+    333,
+    181
+   ],
+   "resize": "spanx_center",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "ornament_grille",
+   "px": [
+    81,
+    180,
+    258,
+    270
+   ],
+   "resize": "spanx_center",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none"
+  }
+ ]
+}

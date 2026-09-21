@@ -1,0 +1,401 @@
+{
+ "face": "front",
+ "size": [
+  266,
+  646
+ ],
+ "parts": [
+  {
+   "name": "backglass",
+   "px": [
+    16,
+    17,
+    235,
+    168
+   ],
+   "mask": "masks/1.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "score_display",
+   "px": [
+    66,
+    180,
+    186,
+    213
+   ],
+   "mask": "masks/2.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "score_panel_right",
+   "px": [
+    197,
+    185,
+    231,
+    219
+   ],
+   "mask": "masks/3.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "score_panel_left",
+   "px": [
+    20,
+    186,
+    55,
+    219
+   ],
+   "mask": "masks/4.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "bumper",
+   "px": [
+    83,
+    260,
+    222,
+    269
+   ],
+   "mask": "masks/5.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "decal",
+   "px": [
+    29,
+    262,
+    225,
+    352
+   ],
+   "mask": "masks/6.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "bumper_2",
+   "px": [
+    145,
+    271,
+    179,
+    298
+   ],
+   "mask": "masks/7.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "decal_2",
+   "px": [
+    131,
+    274,
+    141,
+    291
+   ],
+   "mask": "masks/8.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "decal_3",
+   "px": [
+    27,
+    286,
+    69,
+    350
+   ],
+   "mask": "masks/9.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "bumper_3",
+   "px": [
+    106,
+    290,
+    131,
+    313
+   ],
+   "mask": "masks/10.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "decal_4",
+   "px": [
+    146,
+    293,
+    157,
+    314
+   ],
+   "mask": "masks/11.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "decal_5",
+   "px": [
+    29,
+    295,
+    43,
+    312
+   ],
+   "mask": "masks/12.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "bumper_4",
+   "px": [
+    113,
+    304,
+    143,
+    338
+   ],
+   "mask": "masks/13.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "target",
+   "px": [
+    185,
+    315,
+    226,
+    350
+   ],
+   "mask": "masks/14.png",
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "bumper_5",
+   "px": [
+    97,
+    316,
+    126,
+    351
+   ],
+   "mask": "masks/15.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "decal_6",
+   "px": [
+    136,
+    332,
+    155,
+    347
+   ],
+   "mask": "masks/16.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "bumper_6",
+   "px": [
+    160,
+    333,
+    179,
+    352
+   ],
+   "mask": "masks/17.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "decal_7",
+   "px": [
+    170,
+    341,
+    227,
+    352
+   ],
+   "mask": "masks/18.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "decal_8",
+   "px": [
+    77,
+    342,
+    95,
+    352
+   ],
+   "mask": "masks/19.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "decal_9",
+   "px": [
+    119,
+    347,
+    164,
+    352
+   ],
+   "mask": "masks/20.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "launch_button",
+   "px": [
+    235,
+    373,
+    266,
+    395
+   ],
+   "mask": "masks/21.png",
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "proud",
+   "motion": "press"
+  },
+  {
+   "name": "coin_door",
+   "px": [
+    64,
+    377,
+    187,
+    473
+   ],
+   "mask": "masks/22.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "lock_bar_latch",
+   "px": [
+    208,
+    380,
+    223,
+    407
+   ],
+   "mask": "masks/23.png",
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "plunger",
+   "px": [
+    35,
+    387,
+    49,
+    401
+   ],
+   "mask": "masks/24.png",
+   "resize": "fixed",
+   "anchor": "left",
+   "depth": "deep",
+   "motion": "slide_x"
+  },
+  {
+   "name": "flipper_button_left",
+   "px": [
+    94,
+    391,
+    115,
+    410
+   ],
+   "mask": "masks/25.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "press"
+  },
+  {
+   "name": "flipper_button_right",
+   "px": [
+    139,
+    391,
+    157,
+    412
+   ],
+   "mask": "masks/26.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "press"
+  },
+  {
+   "name": "decal_10",
+   "px": [
+    33,
+    407,
+    55,
+    420
+   ],
+   "mask": "masks/27.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "start_button",
+   "px": [
+    102,
+    416,
+    151,
+    437
+   ],
+   "mask": "masks/28.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "press"
+  }
+ ]
+}

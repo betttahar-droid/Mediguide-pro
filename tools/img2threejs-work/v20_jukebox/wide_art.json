@@ -1,0 +1,22 @@
+{
+ "face": "front",
+ "ratio": 1.6,
+ "parts": [
+  {
+   "part": "marquee",
+   "status": "kept",
+   "ratio": 1.6,
+   "new_px": 172,
+   "attempts": 2,
+   "evidence": "proposed"
+  },
+  {
+   "part": "title_strip_panel",
+   "status": "kept",
+   "attempts": 0,
+   "ratio": 1.5986,
+   "new_px": 173,
+   "evidence": "cached"
+  }
+ ]
+}

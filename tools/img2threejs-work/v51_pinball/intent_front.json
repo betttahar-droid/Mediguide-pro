@@ -1,0 +1,212 @@
+{
+ "features": [
+  {
+   "id": "backglass",
+   "role": "unknown",
+   "host": null,
+   "surface": "front",
+   "region": [
+    0.0,
+    0.5958132045088567,
+    0.996031746031746,
+    0.998389694041868
+   ],
+   "thickness": 0.004,
+   "aspect": null,
+   "appearance": {
+    "depth": "flush",
+    "motion": "none"
+   },
+   "resize": "fixed",
+   "extent": [
+    252.0,
+    621.0
+   ],
+   "evidence": {
+    "region": "measured",
+    "surface": "derived",
+    "host": "default",
+    "resize": "proposed",
+    "role": "proposed",
+    "aspect": "absent",
+    "extent": "derived",
+    "thickness": "proposed"
+   },
+   "source": {
+    "region": "parts_front.json px, normalised to the face",
+    "host": "no containing box",
+    "aspect": "role 'unknown' has no measured range -- either fewer than 20 instances or it is 'unknown'",
+    "thickness": "depth adjective 'flush' -> +0.004 in parts_view DEPTH; no elevation measures depth"
+   }
+  },
+  {
+   "id": "playfield",
+   "role": "unknown",
+   "host": null,
+   "surface": "front",
+   "region": [
+    0.07539682539682539,
+    0.465378421900161,
+    0.9206349206349206,
+    0.5958132045088567
+   ],
+   "thickness": 0.014,
+   "aspect": null,
+   "appearance": {
+    "depth": "recessed",
+    "motion": "none"
+   },
+   "resize": "fixed",
+   "extent": [
+    252.0,
+    621.0
+   ],
+   "evidence": {
+    "region": "measured",
+    "surface": "derived",
+    "host": "default",
+    "resize": "proposed",
+    "role": "proposed",
+    "aspect": "absent",
+    "extent": "derived",
+    "thickness": "proposed"
+   },
+   "source": {
+    "region": "parts_front.json px, normalised to the face",
+    "host": "no containing box",
+    "aspect": "role 'unknown' has no measured range -- either fewer than 20 instances or it is 'unknown'",
+    "thickness": "depth adjective 'recessed' -> -0.014 in parts_view DEPTH; no elevation measures depth"
+   }
+  },
+  {
+   "id": "coin_door_panel",
+   "role": "door",
+   "host": null,
+   "surface": "front",
+   "region": [
+    0.05555555555555555,
+    0.0032206119162641045,
+    0.9523809523809523,
+    0.46376811594202894
+   ],
+   "thickness": 0.018,
+   "aspect": [
+    0.24,
+    5.37
+   ],
+   "appearance": {
+    "depth": "proud",
+    "motion": "none"
+   },
+   "resize": "spanx_center",
+   "extent": [
+    252.0,
+    621.0
+   ],
+   "evidence": {
+    "region": "measured",
+    "surface": "derived",
+    "host": "default",
+    "resize": "proposed",
+    "role": "proposed",
+    "aspect": "measured",
+    "extent": "derived",
+    "thickness": "proposed"
+   },
+   "source": {
+    "region": "parts_front.json px, normalised to the face",
+    "host": "no containing box",
+    "aspect": "0.24-5.37 is the 10th-90th percentile of 81 measured 'door' instances across the work tree",
+    "thickness": "depth adjective 'proud' -> +0.018 in parts_view DEPTH; no elevation measures depth"
+   }
+  }
+ ],
+ "validation": [
+  {
+   "id": "backglass",
+   "role": "unknown",
+   "surface": "front",
+   "checks": {
+    "region": {
+     "status": "PASS",
+     "note": ""
+    },
+    "aspect": {
+     "status": "UNVERIFIED",
+     "note": "no aspect range given for this role"
+    },
+    "thickness": {
+     "status": "PASS",
+     "note": "role needs no opening"
+    },
+    "host": {
+     "status": "PASS",
+     "note": "mounted on the body"
+    }
+   }
+  },
+  {
+   "id": "playfield",
+   "role": "unknown",
+   "surface": "front",
+   "checks": {
+    "region": {
+     "status": "PASS",
+     "note": ""
+    },
+    "aspect": {
+     "status": "UNVERIFIED",
+     "note": "no aspect range given for this role"
+    },
+    "thickness": {
+     "status": "PASS",
+     "note": "role needs no opening"
+    },
+    "host": {
+     "status": "PASS",
+     "note": "mounted on the body"
+    }
+   }
+  },
+  {
+   "id": "coin_door_panel",
+   "role": "door",
+   "surface": "front",
+   "checks": {
+    "region": {
+     "status": "PASS",
+     "note": ""
+    },
+    "aspect": {
+     "status": "PASS",
+     "note": "aspect 0.79"
+    },
+    "thickness": {
+     "status": "PASS",
+     "note": "role needs no opening"
+    },
+    "host": {
+     "status": "PASS",
+     "note": "mounted on the body"
+    }
+   }
+  }
+ ],
+ "acceptance": {
+  "verdict": "DRAFT",
+  "instances": 3,
+  "failed": [],
+  "unverified": [
+   [
+    "backglass",
+    "aspect",
+    "no aspect range given for this role"
+   ],
+   [
+    "playfield",
+    "aspect",
+    "no aspect range given for this role"
+   ]
+  ]
+ }
+}

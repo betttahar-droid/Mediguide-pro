@@ -1,0 +1,495 @@
+{
+ "face": "front",
+ "size": [
+  297,
+  517
+ ],
+ "parts": [
+  {
+   "name": "frame_left",
+   "px": [
+    0,
+    0,
+    31,
+    512
+   ],
+   "mask": "masks/1.png",
+   "resize": "spany_repeat",
+   "anchor": "left",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": true,
+   "spans": true
+  },
+  {
+   "name": "decal",
+   "px": [
+    7,
+    0,
+    292,
+    12
+   ],
+   "mask": "masks/2.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "frame_right",
+   "px": [
+    265,
+    0,
+    297,
+    511
+   ],
+   "mask": "masks/3.png",
+   "resize": "spany_repeat",
+   "anchor": "right",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": true,
+   "spans": true
+  },
+  {
+   "name": "decal_2",
+   "px": [
+    12,
+    10,
+    283,
+    20
+   ],
+   "mask": "masks/4.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "marquee",
+   "px": [
+    28,
+    25,
+    272,
+    75
+   ],
+   "mask": "masks/5.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": true
+  },
+  {
+   "name": "product_window_1",
+   "px": [
+    45,
+    97,
+    82,
+    146
+   ],
+   "mask": "masks/6.png",
+   "resize": "fixed",
+   "anchor": "left",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": true,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "product_window_2",
+   "px": [
+    99,
+    97,
+    136,
+    146
+   ],
+   "mask": "masks/7.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": true,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "product_window_3",
+   "px": [
+    154,
+    97,
+    190,
+    146
+   ],
+   "mask": "masks/8.png",
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": true,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "product_window_4",
+   "px": [
+    45,
+    175,
+    82,
+    226
+   ],
+   "mask": "masks/9.png",
+   "resize": "fixed",
+   "anchor": "left",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": true,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "product_window_5",
+   "px": [
+    99,
+    175,
+    136,
+    225
+   ],
+   "mask": "masks/10.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": true,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "product_window_6",
+   "px": [
+    153,
+    175,
+    190,
+    225
+   ],
+   "mask": "masks/11.png",
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": true,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "coin_slot",
+   "px": [
+    224,
+    175,
+    269,
+    273
+   ],
+   "mask": "masks/12.png",
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "product_window_7",
+   "px": [
+    45,
+    254,
+    82,
+    304
+   ],
+   "mask": "masks/13.png",
+   "resize": "fixed",
+   "anchor": "left",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": true,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "product_window_8",
+   "px": [
+    99,
+    254,
+    136,
+    305
+   ],
+   "mask": "masks/14.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": true,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "product_window_9",
+   "px": [
+    153,
+    254,
+    190,
+    304
+   ],
+   "mask": "masks/15.png",
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": true,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "coin_mech_panel",
+   "px": [
+    220,
+    285,
+    280,
+    355
+   ],
+   "mask": "masks/16.png",
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "coin_return_slot",
+   "px": [
+    264,
+    286,
+    280,
+    338
+   ],
+   "mask": "masks/17.png",
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "selection_button_1",
+   "px": [
+    239,
+    297,
+    261,
+    307
+   ],
+   "mask": "masks/18.png",
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "selection_button_2",
+   "px": [
+    239,
+    321,
+    261,
+    331
+   ],
+   "mask": "masks/19.png",
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "selection_button_3",
+   "px": [
+    239,
+    333,
+    260,
+    342
+   ],
+   "mask": "masks/20.png",
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "selection_button_4",
+   "px": [
+    253,
+    341,
+    274,
+    352
+   ],
+   "mask": "masks/21.png",
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "decal_3",
+   "px": [
+    27,
+    378,
+    207,
+    391
+   ],
+   "mask": "masks/22.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "delivery_flap",
+   "px": [
+    27,
+    384,
+    208,
+    450
+   ],
+   "mask": "masks/23.png",
+   "resize": "spanx_center",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "hinge_top",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "push_bar_slot",
+   "px": [
+    40,
+    389,
+    195,
+    397
+   ],
+   "mask": "masks/24.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "coin_return_button",
+   "px": [
+    238,
+    395,
+    279,
+    436
+   ],
+   "mask": "masks/25.png",
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "decal_4",
+   "px": [
+    188,
+    423,
+    208,
+    448
+   ],
+   "mask": "masks/26.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "base_vent",
+   "px": [
+    31,
+    484,
+    266,
+    511
+   ],
+   "mask": "masks/27.png",
+   "resize": "spanx_center",
+   "anchor": "bottom",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  }
+ ]
+}

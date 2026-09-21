@@ -1,0 +1,247 @@
+{
+ "face": "front",
+ "size": [
+  258,
+  601
+ ],
+ "parts": [
+  {
+   "name": "marquee",
+   "px": [
+    14,
+    15,
+    245,
+    68
+   ],
+   "mask": "masks/1.png",
+   "resize": "spanx_center",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "speaker_grille_left",
+   "px": [
+    41,
+    84,
+    84,
+    105
+   ],
+   "mask": "masks/2.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "speaker_grille_right",
+   "px": [
+    178,
+    85,
+    215,
+    105
+   ],
+   "mask": "masks/3.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "screen_bezel",
+   "px": [
+    32,
+    134,
+    227,
+    281
+   ],
+   "mask": "masks/4.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "decal",
+   "px": [
+    33,
+    142,
+    49,
+    167
+   ],
+   "mask": "masks/5.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "screen",
+   "px": [
+    44,
+    145,
+    215,
+    273
+   ],
+   "mask": "masks/6.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "decal_2",
+   "px": [
+    33,
+    187,
+    38,
+    221
+   ],
+   "mask": "masks/7.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "joystick_left",
+   "px": [
+    156,
+    287,
+    179,
+    321
+   ],
+   "mask": "masks/8.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "deep",
+   "motion": "stick"
+  },
+  {
+   "name": "joystick_right",
+   "px": [
+    38,
+    288,
+    55,
+    321
+   ],
+   "mask": "masks/9.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "deep",
+   "motion": "stick"
+  },
+  {
+   "name": "control_deck",
+   "px": [
+    10,
+    304,
+    249,
+    330
+   ],
+   "mask": "masks/10.png",
+   "resize": "spanx_repeat",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "button_p1",
+   "px": [
+    214,
+    310,
+    230,
+    318
+   ],
+   "mask": "masks/11.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "recessed",
+   "motion": "press"
+  },
+  {
+   "name": "button_p2",
+   "px": [
+    76,
+    314,
+    92,
+    321
+   ],
+   "mask": "masks/12.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "recessed",
+   "motion": "press"
+  },
+  {
+   "name": "coin_door",
+   "px": [
+    86,
+    395,
+    173,
+    574
+   ],
+   "mask": "masks/13.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "hinge_left"
+  },
+  {
+   "name": "coin_slot_right",
+   "px": [
+    135,
+    408,
+    156,
+    432
+   ],
+   "mask": "masks/14.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "coin_slot_left",
+   "px": [
+    102,
+    409,
+    124,
+    432
+   ],
+   "mask": "masks/15.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "coin_return_left",
+   "px": [
+    103,
+    459,
+    122,
+    478
+   ],
+   "mask": "masks/16.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "coin_return_right",
+   "px": [
+    135,
+    459,
+    155,
+    479
+   ],
+   "mask": "masks/17.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none"
+  }
+ ]
+}

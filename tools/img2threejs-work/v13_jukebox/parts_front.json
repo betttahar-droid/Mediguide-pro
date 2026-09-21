@@ -1,0 +1,100 @@
+{
+ "face": "front",
+ "size": [
+  320,
+  592
+ ],
+ "parts": [
+  {
+   "name": "marquee",
+   "px": [
+    16,
+    6,
+    312,
+    145
+   ],
+   "resize": "spanx_center",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "bubble_tubes",
+   "px": [
+    90,
+    148,
+    250,
+    201
+   ],
+   "resize": "spanx_repeat",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "arch_column_left",
+   "px": [
+    7,
+    194,
+    44,
+    451
+   ],
+   "resize": "spany_repeat",
+   "anchor": "left",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "arch_column_right",
+   "px": [
+    275,
+    195,
+    313,
+    451
+   ],
+   "resize": "spany_repeat",
+   "anchor": "right",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "grille_post_right",
+   "px": [
+    211,
+    348,
+    238,
+    471
+   ],
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "grille_post_left",
+   "px": [
+    82,
+    348,
+    108,
+    471
+   ],
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "grille_bottom",
+   "px": [
+    89,
+    470,
+    234,
+    561
+   ],
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "none"
+  }
+ ]
+}

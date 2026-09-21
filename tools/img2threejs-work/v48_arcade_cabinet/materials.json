@@ -1,0 +1,118 @@
+{
+ "asset": "arcade cabinet",
+ "px_per_tile": 63,
+ "materials": [
+  {
+   "n": 1,
+   "image": "materials/m1.png",
+   "seam_before": 1.436,
+   "seam_after": 1.105,
+   "median": [
+    38,
+    44,
+    44
+   ],
+   "tiles": true,
+   "name": "material_1",
+   "main": true
+  },
+  {
+   "n": 2,
+   "image": "materials/m2.png",
+   "seam_before": 2.736,
+   "seam_after": 1.21,
+   "median": [
+    113,
+    101,
+    83
+   ],
+   "tiles": true,
+   "name": "material_2",
+   "main": false
+  },
+  {
+   "n": 3,
+   "image": "materials/m3.png",
+   "seam_before": 1.728,
+   "seam_after": 1.143,
+   "median": [
+    70,
+    21,
+    27
+   ],
+   "tiles": true,
+   "name": "material_3",
+   "main": false
+  },
+  {
+   "n": 4,
+   "image": "materials/m4.png",
+   "seam_before": 4.429,
+   "seam_after": 1.178,
+   "median": [
+    138,
+    140,
+    143
+   ],
+   "tiles": true,
+   "name": "material_4",
+   "main": false
+  },
+  {
+   "n": 5,
+   "image": "materials/m5.png",
+   "seam_before": 1.159,
+   "seam_after": 1.049,
+   "median": [
+    68,
+    66,
+    61
+   ],
+   "tiles": true,
+   "name": "material_5",
+   "main": false
+  },
+  {
+   "n": 6,
+   "image": "materials/m6.png",
+   "seam_before": 12.039,
+   "seam_after": 1.087,
+   "median": [
+    29,
+    31,
+    37
+   ],
+   "tiles": true,
+   "name": "material_6",
+   "main": false
+  },
+  {
+   "n": 7,
+   "image": "materials/m7.png",
+   "seam_before": 1.53,
+   "seam_after": 0.987,
+   "median": [
+    69,
+    80,
+    76
+   ],
+   "tiles": true,
+   "name": "material_7",
+   "main": false
+  },
+  {
+   "n": 8,
+   "image": "materials/m8.png",
+   "seam_before": 2.4,
+   "seam_after": 1.093,
+   "median": [
+    108,
+    121,
+    112
+   ],
+   "tiles": true,
+   "name": "material_8",
+   "main": false
+  }
+ ]
+}

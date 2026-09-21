@@ -1,0 +1,39 @@
+{
+ "wider_means": "A wider jukebox has more selection columns -- extra title strips and an extra pushbutton per side -- flanking the same central record window.",
+ "taller_means": "A taller jukebox has more rows of title strips in the display panel, plus a taller plain cabinet body both below the arch window and above the base rail.",
+ "max_wider": 1.6,
+ "max_taller": 1.5,
+ "per_bay": [
+  "button_left_1",
+  "button_right_1",
+  "button_right_2",
+  "button_left_2",
+  "button_right_3",
+  "button_right_4"
+ ],
+ "spans": [
+  "cabinet_body",
+  "arch_window",
+  "record_changer_window",
+  "upper_grille_panel",
+  "base_rail"
+ ],
+ "taller_at": [
+  {
+   "part": "cabinet_body",
+   "side": "itself",
+   "px": [
+    0,
+    401
+   ]
+  },
+  {
+   "part": "base_rail",
+   "side": "itself",
+   "px": [
+    404,
+    527
+   ]
+  }
+ ]
+}

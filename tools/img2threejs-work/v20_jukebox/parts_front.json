@@ -1,0 +1,159 @@
+{
+ "face": "front",
+ "size": [
+  302,
+  535
+ ],
+ "parts": [
+  {
+   "name": "marquee",
+   "px": [
+    7,
+    13,
+    296,
+    178
+   ],
+   "resize": "spanx_center",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "spans": true
+  },
+  {
+   "name": "title_strip_panel",
+   "px": [
+    7,
+    158,
+    296,
+    392
+   ],
+   "resize": "spanx_repeat",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "spans": true
+  },
+  {
+   "name": "decal_1",
+   "px": [
+    4,
+    398,
+    21,
+    407
+   ],
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "spans": false
+  },
+  {
+   "name": "decal_2",
+   "px": [
+    21,
+    506,
+    40,
+    533
+   ],
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "spans": false
+  },
+  {
+   "name": "decal_3",
+   "px": [
+    22,
+    421,
+    27,
+    443
+   ],
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": true,
+   "spans": false
+  },
+  {
+   "name": "decal_4",
+   "px": [
+    58,
+    462,
+    68,
+    482
+   ],
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": true,
+   "spans": false
+  },
+  {
+   "name": "decal_5",
+   "px": [
+    82,
+    462,
+    93,
+    482
+   ],
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": true,
+   "spans": false
+  },
+  {
+   "name": "decal_6",
+   "px": [
+    274,
+    427,
+    280,
+    445
+   ],
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": true,
+   "spans": false
+  },
+  {
+   "name": "decal_7",
+   "px": [
+    281,
+    398,
+    295,
+    405
+   ],
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "spans": false
+  },
+  {
+   "name": "decal_8",
+   "px": [
+    285,
+    412,
+    301,
+    443
+   ],
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "spans": false
+  }
+ ]
+}

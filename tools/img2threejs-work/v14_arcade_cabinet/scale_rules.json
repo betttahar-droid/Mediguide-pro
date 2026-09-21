@@ -1,0 +1,13 @@
+{
+ "wider_means": "a two-player cabinet with a second joystick and button set on the control deck",
+ "taller_means": "a bigger cabinet carcass with a taller marquee and body, not a bigger screen",
+ "max_wider": 2.0,
+ "max_taller": 1.5,
+ "per_bay": [
+  "control_deck",
+  "decal_3",
+  "decal_4",
+  "decal_5"
+ ],
+ "taller_at": null
+}

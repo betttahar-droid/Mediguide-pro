@@ -1,0 +1,52 @@
+{
+ "wider_means": "a wider cabinet body with a broader playfield and backbox, the flanks of the plain cabinet simply getting wider panels",
+ "taller_means": "a taller backbox and longer legs and feet: more backglass cabinet head height and a higher stance on longer legs, with the plain cabinet sides between the lockdown bar and the legs simply running longer",
+ "taller_at": [
+  {
+   "part": "backglass",
+   "side": "above",
+   "px": [
+    0,
+    18
+   ]
+  },
+  {
+   "part": "score_display",
+   "side": "below",
+   "px": [
+    213,
+    265
+   ]
+  },
+  {
+   "part": "leg_left",
+   "side": "itself",
+   "px": [
+    415,
+    641
+   ]
+  },
+  {
+   "part": "leg_right",
+   "side": "itself",
+   "px": [
+    417,
+    641
+   ]
+  }
+ ],
+ "max_wider": 1.4,
+ "max_taller": 1.5,
+ "per_bay": [
+  "speaker_grille_right",
+  "speaker_grille_left",
+  "flipper_button_right",
+  "decal_4"
+ ],
+ "per_tier": [],
+ "spans": [
+  "backglass",
+  "playfield",
+  "lockdown_bar"
+ ]
+}

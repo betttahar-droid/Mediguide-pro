@@ -1,0 +1,383 @@
+{
+ "features": [
+  {
+   "id": "marquee_left",
+   "role": "sign",
+   "host": null,
+   "surface": "front",
+   "region": [
+    0.034220532319391636,
+    0.8670886075949367,
+    0.26996197718631176,
+    0.9857594936708861
+   ],
+   "thickness": 0.004,
+   "aspect": null,
+   "appearance": {
+    "depth": "flush",
+    "motion": "none"
+   },
+   "resize": "fixed",
+   "evidence": {
+    "region": "measured",
+    "surface": "derived",
+    "host": "default",
+    "resize": "proposed",
+    "role": "proposed",
+    "thickness": "proposed"
+   },
+   "source": {
+    "region": "parts_front.json px, normalised to the face",
+    "host": "no containing box",
+    "thickness": "depth adjective 'flush' -> +0.004 in parts_view DEPTH; no elevation measures depth"
+   }
+  },
+  {
+   "id": "marquee_right",
+   "role": "sign",
+   "host": null,
+   "surface": "front",
+   "region": [
+    0.7186311787072244,
+    0.8670886075949367,
+    0.9619771863117871,
+    0.9857594936708861
+   ],
+   "thickness": 0.004,
+   "aspect": null,
+   "appearance": {
+    "depth": "flush",
+    "motion": "none"
+   },
+   "resize": "fixed",
+   "evidence": {
+    "region": "measured",
+    "surface": "derived",
+    "host": "default",
+    "resize": "proposed",
+    "role": "proposed",
+    "thickness": "proposed"
+   },
+   "source": {
+    "region": "parts_front.json px, normalised to the face",
+    "host": "no containing box",
+    "thickness": "depth adjective 'flush' -> +0.004 in parts_view DEPTH; no elevation measures depth"
+   }
+  },
+  {
+   "id": "speaker_grille",
+   "role": "grille",
+   "host": null,
+   "surface": "front",
+   "region": [
+    0.04182509505703422,
+    0.7863924050632911,
+    0.9619771863117871,
+    0.8686708860759493
+   ],
+   "thickness": 0.014,
+   "aspect": null,
+   "appearance": {
+    "depth": "recessed",
+    "motion": "none"
+   },
+   "resize": "spanx_center",
+   "evidence": {
+    "region": "measured",
+    "surface": "derived",
+    "host": "default",
+    "resize": "proposed",
+    "role": "proposed",
+    "thickness": "proposed"
+   },
+   "source": {
+    "region": "parts_front.json px, normalised to the face",
+    "host": "no containing box",
+    "thickness": "depth adjective 'recessed' -> -0.014 in parts_view DEPTH; no elevation measures depth"
+   }
+  },
+  {
+   "id": "screen",
+   "role": "screen",
+   "host": null,
+   "surface": "front",
+   "region": [
+    0.034220532319391636,
+    0.5174050632911392,
+    0.9619771863117871,
+    0.7879746835443038
+   ],
+   "thickness": 0.014,
+   "aspect": null,
+   "appearance": {
+    "depth": "recessed",
+    "motion": "none"
+   },
+   "resize": "spanx_center",
+   "evidence": {
+    "region": "measured",
+    "surface": "derived",
+    "host": "default",
+    "resize": "proposed",
+    "role": "proposed",
+    "thickness": "proposed"
+   },
+   "source": {
+    "region": "parts_front.json px, normalised to the face",
+    "host": "no containing box",
+    "thickness": "depth adjective 'recessed' -> -0.014 in parts_view DEPTH; no elevation measures depth"
+   }
+  },
+  {
+   "id": "control_deck",
+   "role": "unknown",
+   "host": null,
+   "surface": "front",
+   "region": [
+    0.034220532319391636,
+    0.384493670886076,
+    0.9543726235741445,
+    0.4778481012658228
+   ],
+   "thickness": 0.018,
+   "aspect": null,
+   "appearance": {
+    "depth": "proud",
+    "motion": "none"
+   },
+   "resize": "spanx_repeat",
+   "evidence": {
+    "region": "measured",
+    "surface": "derived",
+    "host": "default",
+    "resize": "proposed",
+    "role": "proposed",
+    "thickness": "proposed"
+   },
+   "source": {
+    "region": "parts_front.json px, normalised to the face",
+    "host": "no containing box",
+    "thickness": "depth adjective 'proud' -> +0.018 in parts_view DEPTH; no elevation measures depth"
+   }
+  },
+  {
+   "id": "kick_panel",
+   "role": "panel",
+   "host": null,
+   "surface": "front",
+   "region": [
+    0.04182509505703422,
+    0.009493670886076,
+    0.9543726235741445,
+    0.38607594936708856
+   ],
+   "thickness": 0.018,
+   "aspect": null,
+   "appearance": {
+    "depth": "proud",
+    "motion": "none"
+   },
+   "resize": "spanx_center",
+   "evidence": {
+    "region": "measured",
+    "surface": "derived",
+    "host": "default",
+    "resize": "proposed",
+    "role": "proposed",
+    "thickness": "proposed"
+   },
+   "source": {
+    "region": "parts_front.json px, normalised to the face",
+    "host": "no containing box",
+    "thickness": "depth adjective 'proud' -> +0.018 in parts_view DEPTH; no elevation measures depth"
+   }
+  }
+ ],
+ "validation": [
+  {
+   "id": "marquee_left",
+   "role": "sign",
+   "surface": "front",
+   "checks": {
+    "region": {
+     "status": "PASS",
+     "note": ""
+    },
+    "aspect": {
+     "status": "UNVERIFIED",
+     "note": "no aspect range given for this role"
+    },
+    "thickness": {
+     "status": "PASS",
+     "note": "role needs no opening"
+    },
+    "host": {
+     "status": "PASS",
+     "note": "mounted on the body"
+    }
+   }
+  },
+  {
+   "id": "marquee_right",
+   "role": "sign",
+   "surface": "front",
+   "checks": {
+    "region": {
+     "status": "PASS",
+     "note": ""
+    },
+    "aspect": {
+     "status": "UNVERIFIED",
+     "note": "no aspect range given for this role"
+    },
+    "thickness": {
+     "status": "PASS",
+     "note": "role needs no opening"
+    },
+    "host": {
+     "status": "PASS",
+     "note": "mounted on the body"
+    }
+   }
+  },
+  {
+   "id": "speaker_grille",
+   "role": "grille",
+   "surface": "front",
+   "checks": {
+    "region": {
+     "status": "PASS",
+     "note": ""
+    },
+    "aspect": {
+     "status": "UNVERIFIED",
+     "note": "no aspect range given for this role"
+    },
+    "thickness": {
+     "status": "UNVERIFIED",
+     "note": "thickness is proposed; no elevation measures depth"
+    },
+    "host": {
+     "status": "PASS",
+     "note": "mounted on the body"
+    }
+   }
+  },
+  {
+   "id": "screen",
+   "role": "screen",
+   "surface": "front",
+   "checks": {
+    "region": {
+     "status": "PASS",
+     "note": ""
+    },
+    "aspect": {
+     "status": "UNVERIFIED",
+     "note": "no aspect range given for this role"
+    },
+    "thickness": {
+     "status": "UNVERIFIED",
+     "note": "thickness is proposed; no elevation measures depth"
+    },
+    "host": {
+     "status": "PASS",
+     "note": "mounted on the body"
+    }
+   }
+  },
+  {
+   "id": "control_deck",
+   "role": "unknown",
+   "surface": "front",
+   "checks": {
+    "region": {
+     "status": "PASS",
+     "note": ""
+    },
+    "aspect": {
+     "status": "UNVERIFIED",
+     "note": "no aspect range given for this role"
+    },
+    "thickness": {
+     "status": "PASS",
+     "note": "role needs no opening"
+    },
+    "host": {
+     "status": "PASS",
+     "note": "mounted on the body"
+    }
+   }
+  },
+  {
+   "id": "kick_panel",
+   "role": "panel",
+   "surface": "front",
+   "checks": {
+    "region": {
+     "status": "PASS",
+     "note": ""
+    },
+    "aspect": {
+     "status": "UNVERIFIED",
+     "note": "no aspect range given for this role"
+    },
+    "thickness": {
+     "status": "PASS",
+     "note": "role needs no opening"
+    },
+    "host": {
+     "status": "PASS",
+     "note": "mounted on the body"
+    }
+   }
+  }
+ ],
+ "acceptance": {
+  "verdict": "DRAFT",
+  "instances": 6,
+  "failed": [],
+  "unverified": [
+   [
+    "marquee_left",
+    "aspect",
+    "no aspect range given for this role"
+   ],
+   [
+    "marquee_right",
+    "aspect",
+    "no aspect range given for this role"
+   ],
+   [
+    "speaker_grille",
+    "aspect",
+    "no aspect range given for this role"
+   ],
+   [
+    "speaker_grille",
+    "thickness",
+    "thickness is proposed; no elevation measures depth"
+   ],
+   [
+    "screen",
+    "aspect",
+    "no aspect range given for this role"
+   ],
+   [
+    "screen",
+    "thickness",
+    "thickness is proposed; no elevation measures depth"
+   ],
+   [
+    "control_deck",
+    "aspect",
+    "no aspect range given for this role"
+   ],
+   [
+    "kick_panel",
+    "aspect",
+    "no aspect range given for this role"
+   ]
+  ]
+ }
+}

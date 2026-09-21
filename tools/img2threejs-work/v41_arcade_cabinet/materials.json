@@ -1,0 +1,90 @@
+{
+ "asset": "arcade cabinet",
+ "px_per_tile": 57,
+ "materials": [
+  {
+   "n": 1,
+   "image": "materials/m1.png",
+   "seam_before": 15.516,
+   "seam_after": 1.041,
+   "median": [
+    119,
+    84,
+    64
+   ],
+   "tiles": true,
+   "name": "body_panel",
+   "main": true
+  },
+  {
+   "n": 2,
+   "image": "materials/m2.png",
+   "seam_before": 10.962,
+   "seam_after": 0.44,
+   "median": [
+    66,
+    71,
+    73
+   ],
+   "tiles": true,
+   "name": "glass_panel",
+   "main": false
+  },
+  {
+   "n": 3,
+   "image": "materials/m3.png",
+   "seam_before": 2.855,
+   "seam_after": 0.911,
+   "median": [
+    66,
+    69,
+    71
+   ],
+   "tiles": true,
+   "name": "worn_metal",
+   "main": false
+  },
+  {
+   "n": 4,
+   "image": "materials/m4.png",
+   "seam_before": 5.892,
+   "seam_after": 1.107,
+   "median": [
+    49,
+    54,
+    57
+   ],
+   "tiles": true,
+   "name": "speaker_grille",
+   "main": false
+  },
+  {
+   "n": 5,
+   "image": "materials/m5.png",
+   "seam_before": 12.263,
+   "seam_after": 0.332,
+   "median": [
+    52,
+    58,
+    60
+   ],
+   "tiles": true,
+   "name": "cracked_glass",
+   "main": false
+  },
+  {
+   "n": 6,
+   "image": "materials/m6.png",
+   "seam_before": 3.471,
+   "seam_after": 1.073,
+   "median": [
+    61,
+    72,
+    71
+   ],
+   "tiles": true,
+   "name": "metal_trim",
+   "main": false
+  }
+ ]
+}

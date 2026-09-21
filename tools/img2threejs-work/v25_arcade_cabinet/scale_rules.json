@@ -1,0 +1,26 @@
+{
+ "wider_means": "a two-player cabinet with a second control panel \u2014 another joystick/button cluster and start button per player",
+ "taller_means": "A taller arcade cabinet has a longer lower body -- the plain kick panel and cabinet floor below the control deck simply gets longer, while the screen, marquee, and coin door all stay the same size.",
+ "max_wider": 2.0,
+ "max_taller": 1.5,
+ "per_bay": [
+  "player1_start_button",
+  "player2_start_button",
+  "control_button"
+ ],
+ "spans": [
+  "marquee",
+  "screen",
+  "control_deck"
+ ],
+ "taller_at": [
+  {
+   "part": "control_deck",
+   "side": "below",
+   "px": [
+    347,
+    359
+   ]
+  }
+ ]
+}

@@ -1,0 +1,43 @@
+{
+ "face": "front",
+ "size": [
+  329,
+  617
+ ],
+ "parts": [
+  {
+   "name": "cabinet_door",
+   "px": [
+    1,
+    1,
+    328,
+    593
+   ],
+   "resize": "spanx_repeat",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": true,
+   "spans": true
+  },
+  {
+   "name": "decal_1",
+   "px": [
+    14,
+    602,
+    43,
+    616
+   ],
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  }
+ ]
+}

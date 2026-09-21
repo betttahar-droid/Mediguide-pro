@@ -1,0 +1,26 @@
+{
+ "face": "front",
+ "adaptations": [
+  {
+   "part": "coin_door_panel",
+   "axis": "wider",
+   "scale": 1.5,
+   "also": [],
+   "blame": "body",
+   "verdict": "FAIL",
+   "why": "The coin door panel itself keeps its drawn layout, but the body around it stretched: the single pair of buttons/lights now appears as four, and smeared repeated bands and blank streaks appear across the flank and below.",
+   "did": "Across the prop it is `spanx_center`. Because a plain flank was measured on it, and the extra width is inserted there. Down the prop it is `spany_repeat`. Because the prop was said to get taller BY this part -- a leg, column or upright that simply gets longer."
+  },
+  {
+   "part": "the body",
+   "axis": "taller",
+   "scale": 1.4,
+   "also": [],
+   "blame": "part",
+   "verdict": "FAIL",
+   "why": "The taller body's side artwork shows vertically smeared, streaky robot/rocket fragments and repeated seam bands that image 1 does not have.",
+   "did": "The carcass grows by INSERTING COPIES of its own artwork at rows 1..251 (at the itself of backglass), rows 333..619 (at the itself of coin_door_panel) -- 536 rows of a 621-row elevation, chosen because nothing is drawn across them. Everything above and below a place holds its drawn size and simply moves apart.",
+   "should_be": "spany_repeat"
+  }
+ ]
+}

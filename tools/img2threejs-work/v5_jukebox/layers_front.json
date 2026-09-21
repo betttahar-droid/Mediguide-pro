@@ -1,0 +1,176 @@
+{
+ "face": "front",
+ "size": [
+  291,
+  508
+ ],
+ "aspect": 0.57283,
+ "background": "bg_front.png",
+ "background_mode": "mirror",
+ "parts": [
+  {
+   "name": "display_window",
+   "image": "parts/display_window.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    230,
+    174
+   ],
+   "u": [
+    0.09278,
+    0.88316
+   ],
+   "v": [
+    0.43504,
+    0.77756
+   ]
+  },
+  {
+   "name": "selection_buttons",
+   "image": "parts/selection_buttons.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    137,
+    55
+   ],
+   "u": [
+    0.35395,
+    0.82474
+   ],
+   "v": [
+    0.26772,
+    0.37598
+   ]
+  },
+  {
+   "name": "coin_slot_panel",
+   "image": "parts/coin_slot_panel.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "left",
+   "depth": "recessed",
+   "motion": "press",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.2609,
+     0.5217
+    ],
+    "v": null
+   },
+   "px_size": [
+    24,
+    63
+   ],
+   "u": [
+    0.16151,
+    0.24399
+   ],
+   "v": [
+    0.24606,
+    0.37008
+   ]
+  },
+  {
+   "name": "speaker_grille",
+   "image": "parts/speaker_grille.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    87,
+    135
+   ],
+   "u": [
+    0.34021,
+    0.63918
+   ],
+   "v": [
+    0.00394,
+    0.26969
+   ]
+  },
+  {
+   "name": "title_strip_tray",
+   "image": "parts/title_strip_tray.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.4061,
+     0.6114
+    ],
+    "v": [
+     0.0769,
+     0.2308
+    ]
+   },
+   "px_size": [
+    230,
+    26
+   ],
+   "u": [
+    0.09278,
+    0.88316
+   ],
+   "v": [
+    0.37992,
+    0.4311
+   ]
+  }
+ ]
+}

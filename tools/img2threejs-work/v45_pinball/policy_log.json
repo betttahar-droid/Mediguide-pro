@@ -1,0 +1,14 @@
+[
+ {
+  "face": "front",
+  "member_depth": [
+   {
+    "part": "cabinet_body",
+    "was": "proud",
+    "now": "flush",
+    "solid": 0.53,
+    "why": "only 53% of the prop is solid across its rows, so it stands in air: it is structure inside the depth, not relief on a face"
+   }
+  ]
+ }
+]

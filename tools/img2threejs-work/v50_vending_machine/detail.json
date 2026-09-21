@@ -1,0 +1,69 @@
+{
+ "face": "front",
+ "redrawn": {
+  "selection_button_2": [
+   132,
+   60
+  ],
+  "coin_return_slot": [
+   64,
+   208
+  ],
+  "decal_4": [
+   64,
+   80
+  ],
+  "product_window_1": [
+   64,
+   85
+  ],
+  "product_window_2": [
+   64,
+   85
+  ],
+  "product_window_3": [
+   64,
+   87
+  ],
+  "product_window_5": [
+   64,
+   86
+  ],
+  "product_window_7": [
+   64,
+   86
+  ],
+  "product_window_8": [
+   64,
+   88
+  ],
+  "product_window_4": [
+   64,
+   88
+  ],
+  "product_window_9": [
+   64,
+   86
+  ],
+  "coin_slot": [
+   64,
+   139
+  ],
+  "coin_return_button": [
+   64,
+   64
+  ],
+  "selection_button_3": [
+   126,
+   54
+  ],
+  "product_window_6": [
+   64,
+   86
+  ],
+  "selection_button_1": [
+   132,
+   60
+  ]
+ }
+}

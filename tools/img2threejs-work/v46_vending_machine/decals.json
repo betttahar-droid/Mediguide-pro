@@ -1,0 +1,401 @@
+{
+ "asset": "vending machine",
+ "decals": [
+  {
+   "n": 1,
+   "image": "decals/d1.png",
+   "px": [
+    314,
+    72
+   ],
+   "keyed": 0.323,
+   "median": [
+    66,
+    58,
+    96
+   ],
+   "name": "title",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.06
+  },
+  {
+   "n": 2,
+   "image": "decals/d2.png",
+   "px": [
+    182,
+    215
+   ],
+   "keyed": 0.504,
+   "median": [
+    72,
+    61,
+    63
+   ],
+   "name": "logo",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.05
+  },
+  {
+   "n": 3,
+   "image": "decals/d3.png",
+   "px": [
+    29,
+    39
+   ],
+   "keyed": 0.36,
+   "median": [
+    158,
+    31,
+    63
+   ],
+   "name": "stencil_n",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.02
+  },
+  {
+   "n": 4,
+   "image": "decals/d4.png",
+   "px": [
+    26,
+    39
+   ],
+   "keyed": 0.471,
+   "median": [
+    158,
+    28,
+    69
+   ],
+   "name": "stencil_s",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.02
+  },
+  {
+   "n": 5,
+   "image": "decals/d5.png",
+   "px": [
+    54,
+    39
+   ],
+   "keyed": 0.464,
+   "median": [
+    160,
+    26,
+    69
+   ],
+   "name": "stencil_rt",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.02
+  },
+  {
+   "n": 6,
+   "image": "decals/d6.png",
+   "px": [
+    29,
+    39
+   ],
+   "keyed": 0.557,
+   "median": [
+    161,
+    27,
+    70
+   ],
+   "name": "stencil_c",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.02
+  },
+  {
+   "n": 7,
+   "image": "decals/d7.png",
+   "px": [
+    34,
+    39
+   ],
+   "keyed": 0.338,
+   "median": [
+    172,
+    22,
+    94
+   ],
+   "name": "stencil_o",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.02
+  },
+  {
+   "n": 8,
+   "image": "decals/d8.png",
+   "px": [
+    29,
+    39
+   ],
+   "keyed": 0.366,
+   "median": [
+    157,
+    28,
+    63
+   ],
+   "name": "stencil_n_alt",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.02
+  },
+  {
+   "n": 9,
+   "image": "decals/d9.png",
+   "px": [
+    26,
+    39
+   ],
+   "keyed": 0.488,
+   "median": [
+    159,
+    26,
+    70
+   ],
+   "name": "stencil_s_alt",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.02
+  },
+  {
+   "n": 10,
+   "image": "decals/d10.png",
+   "px": [
+    578,
+    134
+   ],
+   "keyed": 0.601,
+   "median": [
+    145,
+    84,
+    79
+   ],
+   "name": "warning_label",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.03
+  },
+  {
+   "n": 11,
+   "image": "decals/d11.png",
+   "px": [
+    557,
+    191
+   ],
+   "keyed": 0.669,
+   "median": [
+    121,
+    112,
+    132
+   ],
+   "name": "soda_label",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.04
+  },
+  {
+   "n": 12,
+   "image": "decals/d12.png",
+   "px": [
+    621,
+    94
+   ],
+   "keyed": 0.041,
+   "median": [
+    108,
+    95,
+    84
+   ],
+   "name": "pinstripe",
+   "rule": "along",
+   "where": "front",
+   "size": 0.01
+  },
+  {
+   "n": 13,
+   "image": "decals/d13.png",
+   "px": [
+    125,
+    194
+   ],
+   "keyed": 0.455,
+   "median": [
+    91,
+    82,
+    74
+   ],
+   "name": "stencil_3",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.02
+  },
+  {
+   "n": 14,
+   "image": "decals/d14.png",
+   "px": [
+    64,
+    133
+   ],
+   "keyed": 0.642,
+   "median": [
+    91,
+    80,
+    74
+   ],
+   "name": "stencil_2",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.02
+  },
+  {
+   "n": 15,
+   "image": "decals/d15.png",
+   "px": [
+    65,
+    189
+   ],
+   "keyed": 0.393,
+   "median": [
+    91,
+    83,
+    74
+   ],
+   "name": "stencil_1",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.02
+  },
+  {
+   "n": 16,
+   "image": "decals/d16.png",
+   "px": [
+    108,
+    109
+   ],
+   "keyed": 0.856,
+   "median": [
+    69,
+    53,
+    42
+   ],
+   "name": "rivet",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.01
+  },
+  {
+   "n": 17,
+   "image": "decals/d17.png",
+   "px": [
+    162,
+    199
+   ],
+   "keyed": 0.567,
+   "median": [
+    100,
+    84,
+    68
+   ],
+   "name": "price_plate",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.03
+  },
+  {
+   "n": 18,
+   "image": "decals/d18.png",
+   "px": [
+    55,
+    79
+   ],
+   "keyed": 0.388,
+   "median": [
+    101,
+    116,
+    155
+   ],
+   "name": "stencil_p",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.02
+  },
+  {
+   "n": 19,
+   "image": "decals/d19.png",
+   "px": [
+    56,
+    80
+   ],
+   "keyed": 0.305,
+   "median": [
+    100,
+    117,
+    155
+   ],
+   "name": "stencil_r",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.02
+  },
+  {
+   "n": 20,
+   "image": "decals/d20.png",
+   "px": [
+    48,
+    80
+   ],
+   "keyed": 0.392,
+   "median": [
+    98,
+    117,
+    155
+   ],
+   "name": "stencil_e",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.02
+  },
+  {
+   "n": 21,
+   "image": "decals/d21.png",
+   "px": [
+    52,
+    81
+   ],
+   "keyed": 0.444,
+   "median": [
+    100,
+    116,
+    154
+   ],
+   "name": "stencil_s_blue",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.02
+  },
+  {
+   "n": 22,
+   "image": "decals/d22.png",
+   "px": [
+    53,
+    80
+   ],
+   "keyed": 0.454,
+   "median": [
+    99,
+    119,
+    155
+   ],
+   "name": "stencil_s_blue_alt",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.02
+  }
+ ]
+}

@@ -1,0 +1,269 @@
+[
+ {
+  "round": 0,
+  "asset": "jukebox",
+  "acceptance": "REJECTED",
+  "looks_good": false,
+  "blocking": 15,
+  "faults": [
+   {
+    "part": "background",
+    "fault": "At 1.6x height the body panel between the title-strip area and the bottom rail smears into a tall blank wood band with faint repeated diamond motifs and a broken, doubled lower trim \u2014 the inserted rows are stretched background texture, not cabinet. Blocking.",
+    "severity": "blocking"
+   },
+   {
+    "part": "speaker_grille",
+    "fault": "In the taller render the grille hangs detached in the middle of the stretched blank band instead of the extra height going into the members around it. Blocking.",
+    "severity": "blocking"
+   },
+   {
+    "part": "bubbler_tube_left_outer",
+    "fault": "Fixed count none: at 1.6x height the outer bubbler tubes smear/stretch instead of running longer as the cabinet grows. Blocking.",
+    "severity": "blocking"
+   },
+   {
+    "part": "bubbler_tube_right_outer",
+    "fault": "Same: outer right tube stretches rather than elongating with the taller body. Blocking.",
+    "severity": "blocking"
+   },
+   {
+    "part": "bubbler_tube_left",
+    "fault": "Stretches with height instead of running longer. Blocking.",
+    "severity": "blocking"
+   },
+   {
+    "part": "bubbler_tube_left_2",
+    "fault": "Stretches with height instead of running longer. Blocking.",
+    "severity": "blocking"
+   },
+   {
+    "part": "bubbler_tube_right_2",
+    "fault": "Stretches with height instead of running longer. Blocking.",
+    "severity": "blocking"
+   },
+   {
+    "part": "bubbler_tube_right_4",
+    "fault": "Stretches with height instead of running longer. Blocking.",
+    "severity": "blocking"
+   },
+   {
+    "part": "bubbler_tube_right_5",
+    "fault": "Stretches with height instead of running longer. Blocking.",
+    "severity": "blocking"
+   },
+   {
+    "part": "bubbler_tube_right_inner",
+    "fault": "Stretches with height instead of running longer. Blocking.",
+    "severity": "blocking"
+   },
+   {
+    "part": "arch_glass_left",
+    "fault": "At 1.8x width the arch glass band smears across the broader carcass instead of the arch spreading as one piece. Blocking.",
+    "severity": "blocking"
+   },
+   {
+    "part": "arch_glass_right",
+    "fault": "Same arch-band smear at 1.8x width. Blocking.",
+    "severity": "blocking"
+   },
+   {
+    "part": "arch_glass_left_2",
+    "fault": "Same arch-band smear at 1.8x width. Blocking.",
+    "severity": "blocking"
+   },
+   {
+    "part": "dome_window",
+    "fault": "Dome area smears across the widened top instead of staying one dome with the arch spreading. Blocking.",
+    "severity": "blocking"
+   },
+   {
+    "part": "bubbler_tube_right (intent)",
+    "severity": "blocking",
+    "fault": "aspect: aspect 0.05 outside 0.05..2.56"
+   }
+  ],
+  "patch": [
+   {
+    "name": "arch_glass_left",
+    "resize": "spanx_center",
+    "anchor": "top",
+    "depth": "recessed",
+    "motion": "none",
+    "count": "none"
+   },
+   {
+    "name": "arch_glass_left_2",
+    "resize": "spanx_center",
+    "anchor": "top",
+    "depth": "recessed",
+    "motion": "none",
+    "count": "none"
+   },
+   {
+    "name": "arch_glass_right",
+    "resize": "spanx_center",
+    "anchor": "top",
+    "depth": "recessed",
+    "motion": "none",
+    "count": "none"
+   },
+   {
+    "name": "background",
+    "resize": "fixed",
+    "anchor": "fixed",
+    "depth": "flush",
+    "motion": "none",
+    "count": "none",
+    "mode": "mirror"
+   },
+   {
+    "name": "bubbler_tube_left",
+    "resize": "fixed",
+    "anchor": "left",
+    "depth": "recessed",
+    "motion": "none",
+    "count": "longer"
+   },
+   {
+    "name": "bubbler_tube_left_2",
+    "resize": "fixed",
+    "anchor": "left",
+    "depth": "recessed",
+    "motion": "none",
+    "count": "longer"
+   },
+   {
+    "name": "bubbler_tube_left_outer",
+    "resize": "fixed",
+    "anchor": "left",
+    "depth": "recessed",
+    "motion": "none",
+    "count": "longer"
+   },
+   {
+    "name": "bubbler_tube_right_2",
+    "resize": "fixed",
+    "anchor": "right",
+    "depth": "recessed",
+    "motion": "none",
+    "count": "longer"
+   },
+   {
+    "name": "bubbler_tube_right_4",
+    "resize": "fixed",
+    "anchor": "right",
+    "depth": "recessed",
+    "motion": "none",
+    "count": "longer"
+   },
+   {
+    "name": "bubbler_tube_right_5",
+    "resize": "fixed",
+    "anchor": "right",
+    "depth": "recessed",
+    "motion": "none",
+    "count": "longer"
+   },
+   {
+    "name": "bubbler_tube_right_inner",
+    "resize": "fixed",
+    "anchor": "right",
+    "depth": "recessed",
+    "motion": "none",
+    "count": "longer"
+   },
+   {
+    "name": "bubbler_tube_right_outer",
+    "resize": "fixed",
+    "anchor": "right",
+    "depth": "recessed",
+    "motion": "none",
+    "count": "longer"
+   },
+   {
+    "name": "dome_window",
+    "resize": "spanx_center",
+    "anchor": "top",
+    "depth": "recessed",
+    "motion": "none",
+    "count": "none"
+   }
+  ],
+  "wider_means": "A wider jukebox is a broader cabinet: the arched top, the title board, the speaker grille and the bubbler columns all spread apart across a wider carcass, with the same single dome and coin door.",
+  "taller_means": "A taller jukebox is a taller cabinet body: the bubbler tube columns and the plain wood panel between the grille and the base simply run longer, with the arch and feet unchanged."
+ },
+ {
+  "round": 1,
+  "asset": "jukebox",
+  "acceptance": "REJECTED",
+  "looks_good": false,
+  "blocking": 3,
+  "faults": [
+   {
+    "part": "background",
+    "fault": "At 1.8x width the cabinet's wood grain is visibly stretched and streaked across the broadened front, and at 1.6x height the extra body height went into a blank smeared wood panel between the title strips and the lower grille, leaving the grille arch and controls clustered at the top with a large empty stretch where image 1 shows continuous artwork. The body texture is tiling straight across the enlarged panel instead of filling it.",
+    "severity": "blocking"
+   },
+   {
+    "part": "bubbler_tube_left_outer",
+    "fault": "In the 1.6x taller render the bubbler columns do run longer correctly, but the stretched body panel behind them makes the tubes read as floating strips on blank wood rather than set into a continuous cabinet face; this resolves once the background fills the added height instead of smearing.",
+    "severity": "blocking"
+   },
+   {
+    "part": "bubbler_tube_right (intent)",
+    "severity": "blocking",
+    "fault": "aspect: aspect 0.05 outside 0.05..2.56"
+   }
+  ],
+  "patch": [
+   {
+    "name": "background",
+    "resize": "mirror",
+    "anchor": "center",
+    "depth": "flush",
+    "motion": "none",
+    "count": "none",
+    "drop": false
+   }
+  ],
+  "wider_means": "A wider jukebox is a broader cabinet: the arched top, the title board, the speaker grille and the bubbler columns all spread apart across a wider carcass, with the same single dome and coin door.",
+  "taller_means": "A taller jukebox is a taller cabinet body: the bubbler tube columns and the plain wood panel between the grille and the base simply run longer, with the arch and feet unchanged."
+ },
+ {
+  "round": 2,
+  "asset": "jukebox",
+  "acceptance": "REJECTED",
+  "looks_good": false,
+  "blocking": 3,
+  "faults": [
+   {
+    "part": "background",
+    "fault": "In both resized states the wood behind the parts shows smeared streaks, blank patches and stretched grain in the inserted midsection (confirmed by the body resize audit) -- the panel texture was stretched instead of tiled, leaving banding a player can point at across the wider and taller carcass.",
+    "severity": "blocking"
+   },
+   {
+    "part": "background",
+    "fault": "The smear carries into the arched crest area: in the widened render the rainbow arc artwork bleeds into streaky wood rather than holding its drawn colours, because the stretched background texture underlies the fixed arch parts.",
+    "severity": "blocking"
+   },
+   {
+    "part": "bubbler_tube_right (intent)",
+    "severity": "blocking",
+    "fault": "aspect: aspect 0.05 outside 0.05..2.56"
+   }
+  ],
+  "patch": [
+   {
+    "name": "background",
+    "resize": "mirror",
+    "anchor": "top",
+    "depth": "flush",
+    "motion": "none",
+    "count": "none",
+    "drop": false
+   }
+  ],
+  "wider_means": "A wider jukebox is a broader cabinet: the arched top, the title board, the speaker grille and the bubbler columns all spread apart across a wider carcass, with the same single dome and coin door.",
+  "taller_means": "A taller jukebox is a taller cabinet body: the bubbler tube columns and the plain wood panel between the grille and the base simply run longer, with the arch and feet unchanged."
+ }
+]

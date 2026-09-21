@@ -1,0 +1,509 @@
+{
+ "asset": "vending machine",
+ "decals": [
+  {
+   "n": 1,
+   "image": "decals/d1.png",
+   "px": [
+    198,
+    105
+   ],
+   "keyed": 0.043,
+   "median": [
+    109,
+    115,
+    97
+   ],
+   "name": "title",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.06
+  },
+  {
+   "n": 2,
+   "image": "decals/d2.png",
+   "px": [
+    198,
+    104
+   ],
+   "keyed": 0.037,
+   "median": [
+    113,
+    116,
+    95
+   ],
+   "name": "decal_2",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.06
+  },
+  {
+   "n": 3,
+   "image": "decals/d3.png",
+   "px": [
+    198,
+    98
+   ],
+   "keyed": 0.039,
+   "median": [
+    142,
+    154,
+    154
+   ],
+   "name": "decal_3",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.06
+  },
+  {
+   "n": 4,
+   "image": "decals/d4.png",
+   "px": [
+    198,
+    106
+   ],
+   "keyed": 0.036,
+   "median": [
+    102,
+    120,
+    126
+   ],
+   "name": "logo",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.05
+  },
+  {
+   "n": 5,
+   "image": "decals/d5.png",
+   "px": [
+    198,
+    122
+   ],
+   "keyed": 0.526,
+   "median": [
+    105,
+    91,
+    81
+   ],
+   "name": "decal_5",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.05
+  },
+  {
+   "n": 6,
+   "image": "decals/d6.png",
+   "px": [
+    198,
+    92
+   ],
+   "keyed": 0.488,
+   "median": [
+    178,
+    139,
+    88
+   ],
+   "name": "decal_6",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.06
+  },
+  {
+   "n": 7,
+   "image": "decals/d7.png",
+   "px": [
+    199,
+    101
+   ],
+   "keyed": 0.092,
+   "median": [
+    110,
+    124,
+    129
+   ],
+   "name": "decal_7",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.06
+  },
+  {
+   "n": 8,
+   "image": "decals/d8.png",
+   "px": [
+    199,
+    313
+   ],
+   "keyed": 0.152,
+   "median": [
+    101,
+    109,
+    96
+   ],
+   "name": "decal_8",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.06
+  },
+  {
+   "n": 9,
+   "image": "decals/d9.png",
+   "px": [
+    199,
+    107
+   ],
+   "keyed": 0.101,
+   "median": [
+    103,
+    120,
+    126
+   ],
+   "name": "decal_9",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.05
+  },
+  {
+   "n": 10,
+   "image": "decals/d10.png",
+   "px": [
+    199,
+    128
+   ],
+   "keyed": 0.529,
+   "median": [
+    121,
+    106,
+    90
+   ],
+   "name": "decal_10",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.05
+  },
+  {
+   "n": 11,
+   "image": "decals/d11.png",
+   "px": [
+    175,
+    88
+   ],
+   "keyed": 0.369,
+   "median": [
+    104,
+    99,
+    72
+   ],
+   "name": "warning_label",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.03
+  },
+  {
+   "n": 12,
+   "image": "decals/d12.png",
+   "px": [
+    151,
+    164
+   ],
+   "keyed": 0.235,
+   "median": [
+    165,
+    159,
+    142
+   ],
+   "name": "decal_12",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.03
+  },
+  {
+   "n": 13,
+   "image": "decals/d13.png",
+   "px": [
+    65,
+    89
+   ],
+   "keyed": 0.595,
+   "median": [
+    212,
+    194,
+    171
+   ],
+   "name": "decal_13",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.03
+  },
+  {
+   "n": 14,
+   "image": "decals/d14.png",
+   "px": [
+    141,
+    92
+   ],
+   "keyed": 0.128,
+   "median": [
+    145,
+    133,
+    133
+   ],
+   "name": "decal_14",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.03
+  },
+  {
+   "n": 15,
+   "image": "decals/d15.png",
+   "px": [
+    150,
+    77
+   ],
+   "keyed": 0.075,
+   "median": [
+    163,
+    159,
+    151
+   ],
+   "name": "decal_15",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.03
+  },
+  {
+   "n": 16,
+   "image": "decals/d16.png",
+   "px": [
+    100,
+    85
+   ],
+   "keyed": 0.37,
+   "median": [
+    214,
+    204,
+    173
+   ],
+   "name": "rivet",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.01
+  },
+  {
+   "n": 17,
+   "image": "decals/d17.png",
+   "px": [
+    198,
+    109
+   ],
+   "keyed": 0.566,
+   "median": [
+    101,
+    99,
+    100
+   ],
+   "name": "price_plate",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.04
+  },
+  {
+   "n": 18,
+   "image": "decals/d18.png",
+   "px": [
+    198,
+    72
+   ],
+   "keyed": 0.118,
+   "median": [
+    68,
+    78,
+    92
+   ],
+   "name": "decal_18",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.04
+  },
+  {
+   "n": 19,
+   "image": "decals/d19.png",
+   "px": [
+    198,
+    73
+   ],
+   "keyed": 0.121,
+   "median": [
+    73,
+    78,
+    95
+   ],
+   "name": "decal_19",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.04
+  },
+  {
+   "n": 20,
+   "image": "decals/d20.png",
+   "px": [
+    198,
+    73
+   ],
+   "keyed": 0.122,
+   "median": [
+    85,
+    78,
+    104
+   ],
+   "name": "decal_20",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.03
+  },
+  {
+   "n": 21,
+   "image": "decals/d21.png",
+   "px": [
+    198,
+    69
+   ],
+   "keyed": 0.128,
+   "median": [
+    65,
+    76,
+    89
+   ],
+   "name": "decal_21",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.04
+  },
+  {
+   "n": 22,
+   "image": "decals/d22.png",
+   "px": [
+    199,
+    72
+   ],
+   "keyed": 0.119,
+   "median": [
+    67,
+    77,
+    92
+   ],
+   "name": "decal_22",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.04
+  },
+  {
+   "n": 23,
+   "image": "decals/d23.png",
+   "px": [
+    199,
+    73
+   ],
+   "keyed": 0.12,
+   "median": [
+    74,
+    77,
+    95
+   ],
+   "name": "decal_23",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.04
+  },
+  {
+   "n": 24,
+   "image": "decals/d24.png",
+   "px": [
+    199,
+    72
+   ],
+   "keyed": 0.116,
+   "median": [
+    82,
+    77,
+    102
+   ],
+   "name": "pinstripe",
+   "rule": "along",
+   "where": "front",
+   "size": 0.01
+  },
+  {
+   "n": 25,
+   "image": "decals/d25.png",
+   "px": [
+    31,
+    69
+   ],
+   "keyed": 0.85,
+   "median": [
+    73,
+    64,
+    55
+   ],
+   "name": "decal_25",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.03
+  },
+  {
+   "n": 26,
+   "image": "decals/d26.png",
+   "px": [
+    192,
+    72
+   ],
+   "keyed": 0.302,
+   "median": [
+    69,
+    75,
+    89
+   ],
+   "name": "decal_26",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.04
+  },
+  {
+   "n": 27,
+   "image": "decals/d27.png",
+   "px": [
+    199,
+    73
+   ],
+   "keyed": 0.124,
+   "median": [
+    93,
+    78,
+    108
+   ],
+   "name": "decal_27",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.04
+  },
+  {
+   "n": 28,
+   "image": "decals/d28.png",
+   "px": [
+    199,
+    72
+   ],
+   "keyed": 0.112,
+   "median": [
+    80,
+    77,
+    96
+   ],
+   "name": "decal_28",
+   "rule": "hold",
+   "where": "any",
+   "size": 0.04
+  }
+ ]
+}

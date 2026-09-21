@@ -1,0 +1,33 @@
+[
+ {
+  "face": "front",
+  "corrections": [
+   {
+    "part": "marquee",
+    "role": "sign",
+    "was": "spanx_center",
+    "now": "fixed",
+    "why": "role sign wants hold/hold (fixed), stored spanx_center"
+   },
+   {
+    "part": "push_bar_slot",
+    "role": "slot",
+    "was": "spanx_center",
+    "now": "fixed",
+    "why": "role slot wants count/count (fixed), stored spanx_center"
+   }
+  ]
+ },
+ {
+  "face": "front",
+  "corrections": [
+   {
+    "part": "marquee",
+    "role": "sign",
+    "was": "spanx_center",
+    "now": "fixed",
+    "why": "role sign wants hold/hold (fixed), stored spanx_center"
+   }
+  ]
+ }
+]

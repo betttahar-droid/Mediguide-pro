@@ -1,0 +1,31 @@
+{
+ "wider_means": "A wider pinball machine is simply a wider cabinet and backbox with the same single playfield, wider side rails and a proportionally wider backglass and lockdown bar -- there is no second player station on a pinball machine.",
+ "taller_means": "A taller pinball has longer legs and a taller plain lower cabinet body between the playfield and the coin door.",
+ "taller_at": [
+  {
+   "part": "leg_left",
+   "side": "itself",
+   "px": [
+    454,
+    539
+   ]
+  },
+  {
+   "part": "leg_right",
+   "side": "itself",
+   "px": [
+    454,
+    620
+   ]
+  }
+ ],
+ "max_wider": 1.3,
+ "max_taller": 1.5,
+ "per_bay": [],
+ "per_tier": [],
+ "spans": [
+  "lockdown_bar",
+  "playfield_glass",
+  "decal_27"
+ ]
+}

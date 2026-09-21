@@ -1,0 +1,37 @@
+{
+ "wider_means": "a wider pinball is a wider cabinet with a wider playfield holding more bumpers and lane features, not a stretched backglass.",
+ "taller_means": "a taller pinball has longer legs and a taller cabinet body below the coin door, with the backbox and playfield unchanged.",
+ "taller_at": [
+  {
+   "part": "leg_left",
+   "side": "itself",
+   "px": [
+    455,
+    612
+   ]
+  },
+  {
+   "part": "leg_right",
+   "side": "itself",
+   "px": [
+    455,
+    619
+   ]
+  }
+ ],
+ "max_wider": 1.8,
+ "max_taller": 1.5,
+ "per_bay": [
+  "playfield_bumpers",
+  "outlane_right"
+ ],
+ "per_tier": [],
+ "spans": [
+  "backglass",
+  "backbox_title_panel",
+  "shooter_lane_cover",
+  "shooter_lane",
+  "drain_trough",
+  "coin_door"
+ ]
+}

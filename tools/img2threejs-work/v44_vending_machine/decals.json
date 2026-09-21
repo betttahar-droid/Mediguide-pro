@@ -1,0 +1,203 @@
+{
+ "asset": "vending machine",
+ "decals": [
+  {
+   "n": 1,
+   "image": "decals/d1.png",
+   "px": [
+    375,
+    69
+   ],
+   "keyed": 0.468,
+   "median": [
+    130,
+    71,
+    88
+   ],
+   "name": "title",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.06
+  },
+  {
+   "n": 2,
+   "image": "decals/d2.png",
+   "px": [
+    105,
+    107
+   ],
+   "keyed": 0.518,
+   "median": [
+    87,
+    84,
+    89
+   ],
+   "name": "mascot",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.05
+  },
+  {
+   "n": 3,
+   "image": "decals/d3.png",
+   "px": [
+    328,
+    101
+   ],
+   "keyed": 0.636,
+   "median": [
+    134,
+    81,
+    76
+   ],
+   "name": "price_plate",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.03
+  },
+  {
+   "n": 4,
+   "image": "decals/d4.png",
+   "px": [
+    150,
+    44
+   ],
+   "keyed": 0.757,
+   "median": [
+    79,
+    66,
+    77
+   ],
+   "name": "rivet",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.01
+  },
+  {
+   "n": 5,
+   "image": "decals/d5.png",
+   "px": [
+    357,
+    148
+   ],
+   "keyed": 0.503,
+   "median": [
+    41,
+    48,
+    63
+   ],
+   "name": "coin_slot",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.04
+  },
+  {
+   "n": 6,
+   "image": "decals/d6.png",
+   "px": [
+    127,
+    130
+   ],
+   "keyed": 0.541,
+   "median": [
+    80,
+    76,
+    79
+   ],
+   "name": "logo",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.05
+  },
+  {
+   "n": 7,
+   "image": "decals/d7.png",
+   "px": [
+    104,
+    90
+   ],
+   "keyed": 0.255,
+   "median": [
+    138,
+    67,
+    60
+   ],
+   "name": "warning_label",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.03
+  },
+  {
+   "n": 8,
+   "image": "decals/d8.png",
+   "px": [
+    41,
+    49
+   ],
+   "keyed": 0.106,
+   "median": [
+    74,
+    73,
+    72
+   ],
+   "name": "bolt",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.01
+  },
+  {
+   "n": 9,
+   "image": "decals/d9.png",
+   "px": [
+    40,
+    49
+   ],
+   "keyed": 0.1,
+   "median": [
+    73,
+    72,
+    71
+   ],
+   "name": "screw",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.01
+  },
+  {
+   "n": 10,
+   "image": "decals/d10.png",
+   "px": [
+    40,
+    49
+   ],
+   "keyed": 0.09,
+   "median": [
+    73,
+    69,
+    70
+   ],
+   "name": "threaded_bolt",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.01
+  },
+  {
+   "n": 11,
+   "image": "decals/d11.png",
+   "px": [
+    153,
+    158
+   ],
+   "keyed": 0.128,
+   "median": [
+    85,
+    84,
+    80
+   ],
+   "name": "side_logo",
+   "rule": "hold",
+   "where": "side",
+   "size": 0.08
+  }
+ ]
+}

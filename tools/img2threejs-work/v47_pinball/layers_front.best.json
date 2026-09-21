@@ -1,0 +1,117 @@
+{
+ "face": "front",
+ "size": [
+  252,
+  621
+ ],
+ "aspect": 0.4058,
+ "background": "bg_front.png",
+ "background_mode": "mirror",
+ "parts": [
+  {
+   "name": "backbox",
+   "image": "parts/backbox.png",
+   "hf": [
+    0.152,
+    0.196
+   ],
+   "resize": "spanx_center",
+   "resize_y": "spany_repeat",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": true,
+   "spans": true,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": [
+     0.4,
+     0.6
+    ]
+   },
+   "px_size": [
+    251,
+    250
+   ],
+   "u": [
+    0.0,
+    0.99603
+   ],
+   "v": [
+    0.59581,
+    0.99839
+   ]
+  },
+  {
+   "name": "playfield",
+   "image": "parts/playfield.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    213,
+    81
+   ],
+   "u": [
+    0.0754,
+    0.92063
+   ],
+   "v": [
+    0.46538,
+    0.59581
+   ]
+  },
+  {
+   "name": "cabinet_front",
+   "image": "parts/cabinet_front.png",
+   "hf": [
+    0.1511111111111111,
+    0.19555555555555557
+   ],
+   "resize": "spanx_center",
+   "resize_y": "spany_repeat",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": true,
+   "spans": true,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": [
+     0.4,
+     0.6
+    ]
+   },
+   "px_size": [
+    226,
+    286
+   ],
+   "u": [
+    0.05556,
+    0.95238
+   ],
+   "v": [
+    0.00322,
+    0.46377
+   ]
+  }
+ ]
+}

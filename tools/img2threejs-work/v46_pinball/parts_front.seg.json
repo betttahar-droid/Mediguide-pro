@@ -1,0 +1,275 @@
+{
+ "face": "front",
+ "size": [
+  252,
+  621
+ ],
+ "parts": [
+  {
+   "name": "backglass",
+   "px": [
+    17,
+    17,
+    237,
+    176
+   ],
+   "mask": "masks/1.png",
+   "resize": "spanx_center",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "backbox_title_panel",
+   "px": [
+    70,
+    196,
+    184,
+    225
+   ],
+   "mask": "masks/2.png",
+   "resize": "spanx_center",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "shooter_lane_cover",
+   "px": [
+    224,
+    252,
+    233,
+    329
+   ],
+   "mask": "masks/3.png",
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "flipper_button_left",
+   "px": [
+    21,
+    254,
+    31,
+    327
+   ],
+   "mask": "masks/4.png",
+   "resize": "fixed",
+   "anchor": "left",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "decal",
+   "px": [
+    31,
+    255,
+    63,
+    266
+   ],
+   "mask": "masks/5.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "decal_2",
+   "px": [
+    92,
+    255,
+    162,
+    264
+   ],
+   "mask": "masks/6.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "decal_3",
+   "px": [
+    165,
+    255,
+    177,
+    266
+   ],
+   "mask": "masks/7.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "flipper_button_right",
+   "px": [
+    180,
+    255,
+    222,
+    266
+   ],
+   "mask": "masks/8.png",
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "outlane_right",
+   "px": [
+    30,
+    266,
+    57,
+    314
+   ],
+   "mask": "masks/9.png",
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "playfield_bumpers",
+   "px": [
+    30,
+    266,
+    217,
+    326
+   ],
+   "mask": "masks/10.png",
+   "resize": "spanx_center",
+   "anchor": "center",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "shooter_lane",
+   "px": [
+    197,
+    266,
+    222,
+    319
+   ],
+   "mask": "masks/11.png",
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "drain_trough",
+   "px": [
+    21,
+    328,
+    233,
+    342
+   ],
+   "mask": "masks/12.png",
+   "resize": "spanx_repeat",
+   "anchor": "bottom",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "coin_door",
+   "px": [
+    66,
+    351,
+    187,
+    455
+   ],
+   "mask": "masks/13.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "coin_slot_right",
+   "px": [
+    199,
+    351,
+    222,
+    377
+   ],
+   "mask": "masks/14.png",
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "start_button",
+   "px": [
+    149,
+    364,
+    160,
+    388
+   ],
+   "mask": "masks/15.png",
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "proud",
+   "motion": "press"
+  },
+  {
+   "name": "coin_slot_left",
+   "px": [
+    111,
+    396,
+    123,
+    414
+   ],
+   "mask": "masks/16.png",
+   "resize": "fixed",
+   "anchor": "left",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "leg_left",
+   "px": [
+    11,
+    404,
+    39,
+    612
+   ],
+   "mask": "masks/17.png",
+   "resize": "spany_center",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "leg_right",
+   "px": [
+    214,
+    404,
+    243,
+    619
+   ],
+   "mask": "masks/18.png",
+   "resize": "spany_center",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "coin_return",
+   "px": [
+    121,
+    426,
+    134,
+    439
+   ],
+   "mask": "masks/19.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none"
+  }
+ ]
+}

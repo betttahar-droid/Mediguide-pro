@@ -1,0 +1,152 @@
+{
+ "face": "front",
+ "size": [
+  296,
+  568
+ ],
+ "parts": [
+  {
+   "name": "soda_can_label_red",
+   "px": [
+    24,
+    32,
+    84,
+    114
+   ],
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "bottle_label",
+   "px": [
+    126,
+    32,
+    190,
+    114
+   ],
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "soda_can_label_green",
+   "px": [
+    62,
+    32,
+    158,
+    114
+   ],
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "soda_can_label_orange",
+   "px": [
+    191,
+    55,
+    225,
+    114
+   ],
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "soda_can_label_white",
+   "px": [
+    90,
+    113,
+    132,
+    152
+   ],
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "soda_can_label_green2",
+   "px": [
+    21,
+    113,
+    96,
+    183
+   ],
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "soda_can_label_blue",
+   "px": [
+    23,
+    182,
+    77,
+    241
+   ],
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "soda_can_label_purple",
+   "px": [
+    62,
+    189,
+    216,
+    279
+   ],
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "dispense_flaps",
+   "px": [
+    24,
+    252,
+    139,
+    293
+   ],
+   "resize": "spanx_repeat",
+   "anchor": "bottom",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "front_sign_panel",
+   "px": [
+    31,
+    327,
+    182,
+    412
+   ],
+   "resize": "spanx_center",
+   "anchor": "center",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "push_flap",
+   "px": [
+    37,
+    436,
+    220,
+    489
+   ],
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "hinge_top"
+  }
+ ]
+}

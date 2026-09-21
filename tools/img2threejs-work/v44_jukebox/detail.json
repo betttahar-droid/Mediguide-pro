@@ -1,0 +1,89 @@
+{
+ "face": "front",
+ "redrawn": {
+  "coin_return": [
+   42,
+   144
+  ],
+  "decal_9": [
+   42,
+   114
+  ],
+  "decal_19": [
+   138,
+   48
+  ],
+  "decal_14": [
+   84,
+   54
+  ],
+  "decal_18": [
+   69,
+   64
+  ],
+  "decal_10": [
+   64,
+   112
+  ],
+  "decal_15": [
+   64,
+   68
+  ],
+  "decal_3": [
+   67,
+   64
+  ],
+  "decal_16": [
+   93,
+   64
+  ],
+  "foot_right": [
+   128,
+   64
+  ],
+  "coin_slot_plate": [
+   64,
+   106
+  ],
+  "title_strip_center": [
+   152,
+   64
+  ],
+  "coin_slot_plate_center": [
+   104,
+   64
+  ],
+  "coin_door": [
+   64,
+   106
+  ],
+  "credit_button": [
+   60,
+   126
+  ],
+  "decal_11": [
+   64,
+   84
+  ],
+  "decal_17": [
+   75,
+   64
+  ],
+  "foot_left": [
+   126,
+   64
+  ],
+  "button_right": [
+   84,
+   64
+  ],
+  "decal_8": [
+   64,
+   64
+  ],
+  "decal_7": [
+   67,
+   64
+  ]
+ }
+}

@@ -1,0 +1,531 @@
+{
+ "face": "front",
+ "size": [
+  260,
+  671
+ ],
+ "parts": [
+  {
+   "name": "marquee",
+   "px": [
+    19,
+    13,
+    242,
+    83
+   ],
+   "mask": "masks/1.png",
+   "resize": "spany_center",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "spans": true,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "decal",
+   "px": [
+    23,
+    78,
+    53,
+    83
+   ],
+   "mask": "masks/2.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "decal_2",
+   "px": [
+    174,
+    78,
+    202,
+    83
+   ],
+   "mask": "masks/3.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "decal_3",
+   "px": [
+    206,
+    78,
+    236,
+    83
+   ],
+   "mask": "masks/4.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "screen",
+   "px": [
+    48,
+    160,
+    212,
+    282
+   ],
+   "mask": "masks/5.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "speaker_grille_left",
+   "px": [
+    39,
+    296,
+    62,
+    329
+   ],
+   "mask": "masks/6.png",
+   "resize": "fixed",
+   "anchor": "left",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "speaker_grille_right",
+   "px": [
+    156,
+    296,
+    168,
+    330
+   ],
+   "mask": "masks/7.png",
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "joystick",
+   "px": [
+    54,
+    312,
+    110,
+    345
+   ],
+   "mask": "masks/8.png",
+   "resize": "spanx_repeat",
+   "anchor": "center",
+   "depth": "deep",
+   "motion": "none",
+   "per_bay": true,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "button",
+   "px": [
+    137,
+    312,
+    153,
+    321
+   ],
+   "mask": "masks/9.png",
+   "resize": "fixed",
+   "anchor": "left",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "button_2",
+   "px": [
+    12,
+    313,
+    39,
+    337
+   ],
+   "mask": "masks/10.png",
+   "resize": "fixed",
+   "anchor": "left",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "button_3",
+   "px": [
+    28,
+    313,
+    46,
+    339
+   ],
+   "mask": "masks/11.png",
+   "resize": "fixed",
+   "anchor": "left",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "button_4",
+   "px": [
+    88,
+    313,
+    101,
+    325
+   ],
+   "mask": "masks/12.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "button_5",
+   "px": [
+    123,
+    313,
+    139,
+    328
+   ],
+   "mask": "masks/13.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "button_6",
+   "px": [
+    164,
+    313,
+    185,
+    322
+   ],
+   "mask": "masks/14.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "button_7",
+   "px": [
+    219,
+    313,
+    249,
+    338
+   ],
+   "mask": "masks/15.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "button_8",
+   "px": [
+    145,
+    314,
+    202,
+    345
+   ],
+   "mask": "masks/16.png",
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "button_9",
+   "px": [
+    221,
+    314,
+    235,
+    329
+   ],
+   "mask": "masks/17.png",
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "button_10",
+   "px": [
+    186,
+    318,
+    200,
+    333
+   ],
+   "mask": "masks/18.png",
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "start_button_panel",
+   "px": [
+    95,
+    319,
+    148,
+    345
+   ],
+   "mask": "masks/19.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "player_button_left",
+   "px": [
+    11,
+    336,
+    64,
+    388
+   ],
+   "mask": "masks/20.png",
+   "resize": "fixed",
+   "anchor": "left",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": true,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "player_button_right",
+   "px": [
+    198,
+    337,
+    249,
+    388
+   ],
+   "mask": "masks/21.png",
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": true,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "control_deck_front",
+   "px": [
+    62,
+    347,
+    198,
+    377
+   ],
+   "mask": "masks/22.png",
+   "resize": "spanx_repeat",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "spans": true,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "coin_door",
+   "px": [
+    74,
+    405,
+    183,
+    615
+   ],
+   "mask": "masks/23.png",
+   "resize": "spanx_center",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "coin_slot_left",
+   "px": [
+    94,
+    421,
+    118,
+    444
+   ],
+   "mask": "masks/24.png",
+   "resize": "fixed",
+   "anchor": "left",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "coin_slot_right",
+   "px": [
+    136,
+    421,
+    159,
+    444
+   ],
+   "mask": "masks/25.png",
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "credit_display",
+   "px": [
+    103,
+    447,
+    148,
+    477
+   ],
+   "mask": "masks/26.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "coin_return_button_left",
+   "px": [
+    95,
+    481,
+    117,
+    503
+   ],
+   "mask": "masks/27.png",
+   "resize": "fixed",
+   "anchor": "left",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "coin_return_button_right",
+   "px": [
+    136,
+    481,
+    159,
+    503
+   ],
+   "mask": "masks/28.png",
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "access_door",
+   "px": [
+    82,
+    515,
+    174,
+    609
+   ],
+   "mask": "masks/29.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  }
+ ]
+}

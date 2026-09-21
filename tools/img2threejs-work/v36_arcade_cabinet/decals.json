@@ -1,0 +1,23 @@
+{
+ "asset": "arcade cabinet",
+ "decals": [
+  {
+   "n": 1,
+   "image": "decals/d1.png",
+   "px": [
+    295,
+    521
+   ],
+   "keyed": 0.039,
+   "median": [
+    111,
+    66,
+    93
+   ],
+   "name": "price_plate",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.04
+  }
+ ]
+}

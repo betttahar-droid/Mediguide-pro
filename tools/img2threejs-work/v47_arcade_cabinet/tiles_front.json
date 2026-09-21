@@ -1,0 +1,56 @@
+{
+ "tiles": [
+  {
+   "tile": "tile_front_0.png",
+   "size": 16,
+   "patch_px": [
+    143,
+    9
+   ],
+   "worst_seam": 1.228,
+   "rows": [
+    0,
+    63
+   ]
+  },
+  {
+   "tile": "tile_front_1.png",
+   "size": 16,
+   "patch_px": [
+    143,
+    9
+   ],
+   "worst_seam": 1.228,
+   "rows": [
+    63,
+    306
+   ]
+  },
+  {
+   "tile": "tile_front_2.png",
+   "size": 16,
+   "patch_px": [
+    143,
+    9
+   ],
+   "worst_seam": 1.228,
+   "rows": [
+    306,
+    399
+   ]
+  },
+  {
+   "tile": "tile_front_3.png",
+   "size": 16,
+   "patch_px": [
+    143,
+    9
+   ],
+   "worst_seam": 1.228,
+   "rows": [
+    399,
+    632
+   ]
+  }
+ ]
+}

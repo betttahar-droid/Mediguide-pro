@@ -1,0 +1,40 @@
+{
+ "wider_means": "A wider jukebox is a broader arched cabinet: same dome, grille and title strip, but with wider side columns and a longer base, not extra bays.",
+ "taller_means": "A taller jukebox is simply a taller cabinet body \u2014 longer side columns, a longer lower front panel and a taller arch, with the same fittings at the same sizes.",
+ "taller_at": [
+  {
+   "part": "base_panel",
+   "side": "below",
+   "px": [
+    464,
+    491
+   ]
+  },
+  {
+   "part": "decal_4",
+   "side": "below",
+   "px": [
+    448,
+    463
+   ]
+  },
+  {
+   "part": "decal_18",
+   "side": "above",
+   "px": [
+    422,
+    436
+   ]
+  }
+ ],
+ "max_wider": 1.6,
+ "max_taller": 1.5,
+ "per_bay": [],
+ "per_tier": [],
+ "spans": [
+  "crown_crest",
+  "base_panel",
+  "foot_left",
+  "foot_right"
+ ]
+}

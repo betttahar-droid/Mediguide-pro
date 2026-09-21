@@ -1,0 +1,33 @@
+{
+ "wider_means": "A wider vending machine has more product columns in the display window, with the cabinet body, coin station and dispenser flap stretching to match.",
+ "taller_means": "A taller vending machine has another shelf row of products inside the window plus extra plain cabinet panel between the window, the dispenser flap and the base.",
+ "taller_at": [
+  {
+   "part": "dispenser_flap",
+   "side": "above",
+   "px": [
+    359,
+    376
+   ]
+  },
+  {
+   "part": "dispenser_flap",
+   "side": "below",
+   "px": [
+    442,
+    479
+   ]
+  }
+ ],
+ "max_wider": 1.8,
+ "max_taller": 1.7,
+ "per_bay": [
+  "decal_4"
+ ],
+ "per_tier": [],
+ "spans": [
+  "display_window",
+  "button_panel",
+  "dispenser_flap"
+ ]
+}

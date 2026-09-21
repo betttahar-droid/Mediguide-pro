@@ -1,0 +1,179 @@
+{
+ "face": "front",
+ "size": [
+  297,
+  520
+ ],
+ "aspect": 0.57115,
+ "background": "bg_front.png",
+ "background_mode": "mirror",
+ "parts": [
+  {
+   "name": "control_column",
+   "image": "parts/control_column.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "right",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    49,
+    265
+   ],
+   "u": [
+    0.80808,
+    0.97306
+   ],
+   "v": [
+    0.46154,
+    0.97115
+   ]
+  },
+  {
+   "name": "shelf_row_top",
+   "image": "parts/shelf_row_top.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "left",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": [
+     0.6901,
+     0.8873
+    ]
+   },
+   "px_size": [
+    200,
+    71
+   ],
+   "u": [
+    0.08081,
+    0.75421
+   ],
+   "v": [
+    0.82692,
+    0.96346
+   ]
+  },
+  {
+   "name": "shelf_row_middle",
+   "image": "parts/shelf_row_middle.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "left",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": [
+     0.75,
+     0.9306
+    ]
+   },
+   "px_size": [
+    189,
+    72
+   ],
+   "u": [
+    0.08081,
+    0.71717
+   ],
+   "v": [
+    0.66923,
+    0.80769
+   ]
+  },
+  {
+   "name": "shelf_row_bottom",
+   "image": "parts/shelf_row_bottom.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "left",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": [
+     0.697,
+     0.9091
+    ]
+   },
+   "px_size": [
+    161,
+    66
+   ],
+   "u": [
+    0.21212,
+    0.75421
+   ],
+   "v": [
+    0.525,
+    0.65192
+   ]
+  },
+  {
+   "name": "dispenser_door",
+   "image": "parts/dispenser_door.png",
+   "hf": [
+    0.10294117647058823,
+    0.14705882352941177
+   ],
+   "resize": "spanx_center",
+   "resize_y": "spanx_center",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": true,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    273,
+    247
+   ],
+   "u": [
+    0.07744,
+    0.99663
+   ],
+   "v": [
+    0.00192,
+    0.47692
+   ]
+  }
+ ]
+}

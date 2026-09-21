@@ -1,0 +1,7 @@
+{
+ "usable": true,
+ "iou": 0.9969,
+ "edge_agreement": 0.6137,
+ "regions": 31,
+ "image": "_seg_front.png"
+}

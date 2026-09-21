@@ -1,0 +1,131 @@
+{
+ "asset": "arcade cabinet",
+ "decals": [
+  {
+   "n": 1,
+   "image": "decals/d1.png",
+   "px": [
+    616,
+    251
+   ],
+   "keyed": 0.301,
+   "median": [
+    111,
+    105,
+    105
+   ],
+   "name": "coin_door",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.25
+  },
+  {
+   "n": 2,
+   "image": "decals/d2.png",
+   "px": [
+    88,
+    129
+   ],
+   "keyed": 0.447,
+   "median": [
+    163,
+    109,
+    107
+   ],
+   "name": "rivet",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.01
+  },
+  {
+   "n": 3,
+   "image": "decals/d3.png",
+   "px": [
+    147,
+    99
+   ],
+   "keyed": 0.618,
+   "median": [
+    96,
+    99,
+    105
+   ],
+   "name": "bolt_head",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.02
+  },
+  {
+   "n": 4,
+   "image": "decals/d4.png",
+   "px": [
+    78,
+    67
+   ],
+   "keyed": 0.707,
+   "median": [
+    113,
+    102,
+    102
+   ],
+   "name": "stencil_text",
+   "rule": "hold",
+   "where": "any",
+   "size": 0.03
+  },
+  {
+   "n": 5,
+   "image": "decals/d5.png",
+   "px": [
+    111,
+    73
+   ],
+   "keyed": 0.248,
+   "median": [
+    66,
+    14,
+    64
+   ],
+   "name": "ship_side_profile",
+   "rule": "hold",
+   "where": "side",
+   "size": 0.1
+  },
+  {
+   "n": 6,
+   "image": "decals/d6.png",
+   "px": [
+    76,
+    45
+   ],
+   "keyed": 0.844,
+   "median": [
+    110,
+    115,
+    114
+   ],
+   "name": "instruction_label",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.04
+  },
+  {
+   "n": 7,
+   "image": "decals/d7.png",
+   "px": [
+    78,
+    60
+   ],
+   "keyed": 0.588,
+   "median": [
+    117,
+    106,
+    106
+   ],
+   "name": "ship_top_down",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.08
+  }
+ ]
+}

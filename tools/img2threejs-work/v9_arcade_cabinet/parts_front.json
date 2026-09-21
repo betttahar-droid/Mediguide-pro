@@ -1,0 +1,87 @@
+{
+ "face": "front",
+ "size": [
+  240,
+  595
+ ],
+ "parts": [
+  {
+   "name": "marquee",
+   "px": [
+    81,
+    54,
+    169,
+    66
+   ],
+   "resize": "spanx_center",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "speaker_grille",
+   "px": [
+    9,
+    65,
+    230,
+    106
+   ],
+   "resize": "spanx_repeat",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "screen",
+   "px": [
+    41,
+    133,
+    198,
+    256
+   ],
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "control_deck",
+   "px": [
+    16,
+    271,
+    161,
+    300
+   ],
+   "resize": "spanx_repeat",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "access_door",
+   "px": [
+    88,
+    375,
+    151,
+    456
+   ],
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "hinge_left"
+  },
+  {
+   "name": "lower_door",
+   "px": [
+    88,
+    455,
+    151,
+    548
+   ],
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "hinge_left"
+  }
+ ]
+}

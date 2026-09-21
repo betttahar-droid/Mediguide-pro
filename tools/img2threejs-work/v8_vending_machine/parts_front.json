@@ -1,0 +1,113 @@
+{
+ "face": "front",
+ "size": [
+  275,
+  492
+ ],
+ "parts": [
+  {
+   "name": "display_window",
+   "px": [
+    19,
+    2,
+    272,
+    237
+   ],
+   "resize": "spanx_center",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "card_reader",
+   "px": [
+    156,
+    236,
+    194,
+    263
+   ],
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "coin_slot_panel",
+   "px": [
+    160,
+    262,
+    193,
+    316
+   ],
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "key_lock",
+   "px": [
+    221,
+    236,
+    236,
+    273
+   ],
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "proud",
+   "motion": "press"
+  },
+  {
+   "name": "coin_return",
+   "px": [
+    248,
+    276,
+    272,
+    307
+   ],
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "recessed",
+   "motion": "press"
+  },
+  {
+   "name": "price_label",
+   "px": [
+    200,
+    314,
+    267,
+    350
+   ],
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "delivery_flap",
+   "px": [
+    27,
+    371,
+    234,
+    468
+   ],
+   "resize": "spanx_center",
+   "anchor": "bottom",
+   "depth": "recessed",
+   "motion": "hinge_top"
+  },
+  {
+   "name": "coin_return_cup",
+   "px": [
+    233,
+    386,
+    272,
+    406
+   ],
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "recessed",
+   "motion": "none"
+  }
+ ]
+}

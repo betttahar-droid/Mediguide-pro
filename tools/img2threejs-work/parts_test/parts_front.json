@@ -1,0 +1,152 @@
+{
+ "face": "front",
+ "size": [
+  236,
+  560
+ ],
+ "parts": [
+  {
+   "name": "marquee",
+   "px": [
+    0,
+    4,
+    235,
+    62
+   ],
+   "resize": "spanx_center",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "speaker_grille_left",
+   "px": [
+    9,
+    61,
+    99,
+    139
+   ],
+   "resize": "fixed",
+   "anchor": "left",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "speaker_grille_right",
+   "px": [
+    165,
+    61,
+    227,
+    131
+   ],
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "screen",
+   "px": [
+    29,
+    130,
+    197,
+    283
+   ],
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "joystick_left",
+   "px": [
+    43,
+    238,
+    61,
+    322
+   ],
+   "resize": "fixed",
+   "anchor": "left",
+   "depth": "deep",
+   "motion": "stick"
+  },
+  {
+   "name": "joystick_right",
+   "px": [
+    143,
+    240,
+    166,
+    320
+   ],
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "deep",
+   "motion": "stick"
+  },
+  {
+   "name": "button_row_left",
+   "px": [
+    60,
+    284,
+    137,
+    320
+   ],
+   "resize": "spanx_repeat",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "press"
+  },
+  {
+   "name": "button_row_right",
+   "px": [
+    164,
+    282,
+    227,
+    331
+   ],
+   "resize": "spanx_repeat",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "press"
+  },
+  {
+   "name": "control_panel",
+   "px": [
+    0,
+    282,
+    235,
+    320
+   ],
+   "resize": "spanx_repeat",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "coin_door",
+   "px": [
+    77,
+    356,
+    151,
+    558
+   ],
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "hinge_left"
+  },
+  {
+   "name": "coin_slots",
+   "px": [
+    77,
+    356,
+    151,
+    417
+   ],
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "press"
+  }
+ ]
+}

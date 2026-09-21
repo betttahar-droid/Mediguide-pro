@@ -1,0 +1,118 @@
+{
+ "asset": "arcade cabinet",
+ "px_per_tile": 61,
+ "materials": [
+  {
+   "n": 1,
+   "image": "materials/m1.png",
+   "seam_before": 7.786,
+   "seam_after": 1.182,
+   "median": [
+    104,
+    110,
+    100
+   ],
+   "tiles": true,
+   "name": "body_panel",
+   "main": true
+  },
+  {
+   "n": 2,
+   "image": "materials/m2.png",
+   "seam_before": 7.594,
+   "seam_after": 1.062,
+   "median": [
+    83,
+    83,
+    78
+   ],
+   "tiles": true,
+   "name": "grimy_metal",
+   "main": false
+  },
+  {
+   "n": 3,
+   "image": "materials/m3.png",
+   "seam_before": 5.431,
+   "seam_after": 1.232,
+   "median": [
+    91,
+    89,
+    82
+   ],
+   "tiles": true,
+   "name": "wood",
+   "main": false
+  },
+  {
+   "n": 4,
+   "image": "materials/m4.png",
+   "seam_before": 18.522,
+   "seam_after": 0.982,
+   "median": [
+    117,
+    121,
+    125
+   ],
+   "tiles": true,
+   "name": "metal_trim",
+   "main": false
+  },
+  {
+   "n": 5,
+   "image": "materials/m5.png",
+   "seam_before": 3.939,
+   "seam_after": 0.728,
+   "median": [
+    64,
+    65,
+    64
+   ],
+   "tiles": true,
+   "name": "vent_mesh",
+   "main": false
+  },
+  {
+   "n": 6,
+   "image": "materials/m6.png",
+   "seam_before": 1.031,
+   "seam_after": 1.031,
+   "median": [
+    40,
+    40,
+    45
+   ],
+   "tiles": true,
+   "name": "black_plastic",
+   "main": false
+  },
+  {
+   "n": 7,
+   "image": "materials/m7.png",
+   "seam_before": 1.996,
+   "seam_after": 1.134,
+   "median": [
+    52,
+    52,
+    54
+   ],
+   "tiles": true,
+   "name": "dark_rubber",
+   "main": false
+  },
+  {
+   "n": 8,
+   "image": "materials/m8.png",
+   "seam_before": 4.182,
+   "seam_after": 1.431,
+   "median": [
+    107,
+    113,
+    102
+   ],
+   "tiles": false,
+   "name": "worn_panel",
+   "main": false
+  }
+ ]
+}

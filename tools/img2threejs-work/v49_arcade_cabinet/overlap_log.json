@@ -1,0 +1,102 @@
+[
+ {
+  "face": "front",
+  "cuts": [
+   {
+    "host": "speaker_grille",
+    "rider": "marquee_left",
+    "box": [
+     11,
+     83,
+     71,
+     84
+    ],
+    "pixels": 60
+   },
+   {
+    "host": "speaker_grille",
+    "rider": "marquee_right",
+    "box": [
+     189,
+     83,
+     253,
+     84
+    ],
+    "pixels": 64
+   },
+   {
+    "host": "screen",
+    "rider": "speaker_grille",
+    "box": [
+     11,
+     134,
+     253,
+     135
+    ],
+    "pixels": 242
+   },
+   {
+    "host": "kick_panel",
+    "rider": "control_deck",
+    "box": [
+     11,
+     388,
+     251,
+     389
+    ],
+    "pixels": 240
+   }
+  ],
+  "leads": []
+ },
+ {
+  "face": "front",
+  "cuts": [
+   {
+    "host": "speaker_grille",
+    "rider": "marquee_left",
+    "box": [
+     11,
+     83,
+     71,
+     84
+    ],
+    "pixels": 60
+   },
+   {
+    "host": "speaker_grille",
+    "rider": "marquee_right",
+    "box": [
+     189,
+     83,
+     253,
+     84
+    ],
+    "pixels": 64
+   },
+   {
+    "host": "screen",
+    "rider": "speaker_grille",
+    "box": [
+     11,
+     134,
+     253,
+     135
+    ],
+    "pixels": 242
+   },
+   {
+    "host": "kick_panel",
+    "rider": "control_deck",
+    "box": [
+     11,
+     388,
+     251,
+     389
+    ],
+    "pixels": 240
+   }
+  ],
+  "leads": []
+ }
+]

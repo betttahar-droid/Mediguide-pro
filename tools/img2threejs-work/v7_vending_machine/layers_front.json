@@ -1,0 +1,306 @@
+{
+ "face": "front",
+ "size": [
+  329,
+  599
+ ],
+ "aspect": 0.54925,
+ "background": "bg_front.png",
+ "background_mode": "mirror",
+ "parts": [
+  {
+   "name": "marquee_sign",
+   "image": "parts/marquee_sign.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    326,
+    92
+   ],
+   "u": [
+    0.00304,
+    0.99392
+   ],
+   "v": [
+    0.84474,
+    0.99833
+   ]
+  },
+  {
+   "name": "glass_window",
+   "image": "parts/glass_window.png",
+   "hf": [
+    0.028925619834710745,
+    0.07024793388429752
+   ],
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": true,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    243,
+    364
+   ],
+   "u": [
+    0.00304,
+    0.74164
+   ],
+   "v": [
+    0.22037,
+    0.82805
+   ]
+  },
+  {
+   "name": "shelf_rails",
+   "image": "parts/shelf_rails.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    218,
+    321
+   ],
+   "u": [
+    0.07903,
+    0.74164
+   ],
+   "v": [
+    0.22037,
+    0.75626
+   ]
+  },
+  {
+   "name": "bill_acceptor",
+   "image": "parts/bill_acceptor.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "right",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    70,
+    31
+   ],
+   "u": [
+    0.78116,
+    0.99392
+   ],
+   "v": [
+    0.65943,
+    0.71119
+   ]
+  },
+  {
+   "name": "price_display",
+   "image": "parts/price_display.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "right",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": [
+     0.0625,
+     0.25
+    ]
+   },
+   "px_size": [
+    70,
+    16
+   ],
+   "u": [
+    0.78116,
+    0.99392
+   ],
+   "v": [
+    0.50751,
+    0.53422
+   ]
+  },
+  {
+   "name": "keypad",
+   "image": "parts/keypad.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "right",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    50,
+    43
+   ],
+   "u": [
+    0.84195,
+    0.99392
+   ],
+   "v": [
+    0.4374,
+    0.50918
+   ]
+  },
+  {
+   "name": "cup_dispenser",
+   "image": "parts/cup_dispenser.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "right",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    77,
+    54
+   ],
+   "u": [
+    0.75988,
+    0.99392
+   ],
+   "v": [
+    0.26878,
+    0.35893
+   ]
+  },
+  {
+   "name": "push_door",
+   "image": "parts/push_door.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "hinge_top",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.0585,
+     0.2865
+    ],
+    "v": null
+   },
+   "px_size": [
+    171,
+    41
+   ],
+   "u": [
+    0.15198,
+    0.67173
+   ],
+   "v": [
+    0.15359,
+    0.22204
+   ]
+  },
+  {
+   "name": "service_panel",
+   "image": "parts/service_panel.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "right",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.0789,
+     0.2368
+    ],
+    "v": [
+     0.5735,
+     0.7794
+    ]
+   },
+   "px_size": [
+    76,
+    68
+   ],
+   "u": [
+    0.76292,
+    0.99392
+   ],
+   "v": [
+    0.15693,
+    0.27045
+   ]
+  }
+ ]
+}

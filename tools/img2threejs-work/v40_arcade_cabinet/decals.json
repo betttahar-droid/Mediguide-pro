@@ -1,0 +1,149 @@
+{
+ "asset": "arcade cabinet",
+ "decals": [
+  {
+   "n": 1,
+   "image": "decals/d1.png",
+   "px": [
+    652,
+    735
+   ],
+   "keyed": 0.457,
+   "median": [
+    113,
+    105,
+    114
+   ],
+   "name": "title",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.06
+  },
+  {
+   "n": 2,
+   "image": "decals/d2.png",
+   "px": [
+    652,
+    112
+   ],
+   "keyed": 0.035,
+   "median": [
+    80,
+    94,
+    102
+   ],
+   "name": "price_plate",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.04
+  },
+  {
+   "n": 3,
+   "image": "decals/d3.png",
+   "px": [
+    100,
+    100
+   ],
+   "keyed": 0.523,
+   "median": [
+    106,
+    105,
+    103
+   ],
+   "name": "warning_label",
+   "rule": "hold",
+   "where": "back",
+   "size": 0.03
+  },
+  {
+   "n": 4,
+   "image": "decals/d4.png",
+   "px": [
+    106,
+    105
+   ],
+   "keyed": 0.493,
+   "median": [
+    104,
+    103,
+    101
+   ],
+   "name": "rivet",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.01
+  },
+  {
+   "n": 5,
+   "image": "decals/d5.png",
+   "px": [
+    182,
+    157
+   ],
+   "keyed": 0.493,
+   "median": [
+    95,
+    88,
+    98
+   ],
+   "name": "logo",
+   "rule": "hold",
+   "where": "side",
+   "size": 0.15
+  },
+  {
+   "n": 6,
+   "image": "decals/d6.png",
+   "px": [
+    197,
+    173
+   ],
+   "keyed": 0.089,
+   "median": [
+    68,
+    80,
+    92
+   ],
+   "name": "pinstripe",
+   "rule": "along",
+   "where": "front",
+   "size": 0.01
+  },
+  {
+   "n": 7,
+   "image": "decals/d7.png",
+   "px": [
+    206,
+    123
+   ],
+   "keyed": 0.424,
+   "median": [
+    70,
+    81,
+    91
+   ],
+   "name": "decal_7",
+   "rule": "hold",
+   "where": "any",
+   "size": 0.04
+  },
+  {
+   "n": 8,
+   "image": "decals/d8.png",
+   "px": [
+    123,
+    173
+   ],
+   "keyed": 0.385,
+   "median": [
+    170,
+    170,
+    158
+   ],
+   "name": "decal_8",
+   "rule": "hold",
+   "where": "any",
+   "size": 0.04
+  }
+ ]
+}

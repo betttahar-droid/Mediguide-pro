@@ -1,0 +1,405 @@
+{
+ "face": "front",
+ "size": [
+  300,
+  551
+ ],
+ "aspect": 0.54446,
+ "background": "bg_front.png",
+ "background_mode": "repeat",
+ "parts": [
+  {
+   "name": "display_window",
+   "image": "parts/display_window.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    212,
+    278
+   ],
+   "u": [
+    0.01667,
+    0.72333
+   ],
+   "v": [
+    0.49546,
+    1.0
+   ]
+  },
+  {
+   "name": "drink_shelves",
+   "image": "parts/drink_shelves.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    212,
+    278
+   ],
+   "u": [
+    0.01667,
+    0.72333
+   ],
+   "v": [
+    0.49546,
+    1.0
+   ]
+  },
+  {
+   "name": "cold_drinks_sign",
+   "image": "parts/cold_drinks_sign.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    114,
+    108
+   ],
+   "u": [
+    0.08667,
+    0.46667
+   ],
+   "v": [
+    0.30127,
+    0.49728
+   ]
+  },
+  {
+   "name": "control_panel",
+   "image": "parts/control_panel.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.2295,
+     0.7213
+    ],
+    "v": [
+     0.547,
+     0.7238
+    ]
+   },
+   "px_size": [
+    61,
+    181
+   ],
+   "u": [
+    0.79333,
+    0.99667
+   ],
+   "v": [
+    0.5118,
+    0.84029
+   ]
+  },
+  {
+   "name": "price_display",
+   "image": "parts/price_display.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    57,
+    34
+   ],
+   "u": [
+    0.79333,
+    0.98333
+   ],
+   "v": [
+    0.68966,
+    0.75136
+   ]
+  },
+  {
+   "name": "keypad",
+   "image": "parts/keypad.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    42,
+    95
+   ],
+   "u": [
+    0.84333,
+    0.98333
+   ],
+   "v": [
+    0.5118,
+    0.68421
+   ]
+  },
+  {
+   "name": "price_label",
+   "image": "parts/price_label.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    55,
+    40
+   ],
+   "u": [
+    0.81333,
+    0.99667
+   ],
+   "v": [
+    0.47913,
+    0.55172
+   ]
+  },
+  {
+   "name": "coin_door",
+   "image": "parts/coin_door.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "hinge_left",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    91,
+    65
+   ],
+   "u": [
+    0.46333,
+    0.76667
+   ],
+   "v": [
+    0.37931,
+    0.49728
+   ]
+  },
+  {
+   "name": "coin_return_cup",
+   "image": "parts/coin_return_cup.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.5641,
+     0.7436
+    ],
+    "v": [
+     0.0978,
+     0.3478
+    ]
+   },
+   "px_size": [
+    78,
+    92
+   ],
+   "u": [
+    0.46333,
+    0.72333
+   ],
+   "v": [
+    0.21416,
+    0.38113
+   ]
+  },
+  {
+   "name": "bill_slot",
+   "image": "parts/bill_slot.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "press",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": [
+     0.175,
+     0.325
+    ]
+   },
+   "px_size": [
+    85,
+    40
+   ],
+   "u": [
+    0.71333,
+    0.99667
+   ],
+   "v": [
+    0.44102,
+    0.51361
+   ]
+  },
+  {
+   "name": "dispense_flap",
+   "image": "parts/dispense_flap.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "hinge_top",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    176,
+    42
+   ],
+   "u": [
+    0.12,
+    0.70667
+   ],
+   "v": [
+    0.13975,
+    0.21597
+   ]
+  },
+  {
+   "name": "service_button",
+   "image": "parts/service_button.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "press",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.2308,
+     0.4103
+    ],
+    "v": [
+     0.4118,
+     0.5882
+    ]
+   },
+   "px_size": [
+    39,
+    34
+   ],
+   "u": [
+    0.85333,
+    0.98333
+   ],
+   "v": [
+    0.13975,
+    0.20145
+   ]
+  }
+ ]
+}

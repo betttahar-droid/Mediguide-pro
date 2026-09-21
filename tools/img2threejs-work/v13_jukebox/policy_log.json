@@ -1,0 +1,15 @@
+[
+ {
+  "face": "front",
+  "side_names": [
+   {
+    "was": "grille_post_left",
+    "now": "grille_post_right"
+   },
+   {
+    "was": "grille_post_right",
+    "now": "grille_post_left"
+   }
+  ]
+ }
+]

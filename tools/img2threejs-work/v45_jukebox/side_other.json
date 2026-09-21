@@ -1,0 +1,9 @@
+{
+ "image": "side_other.png",
+ "cut": "body_side_other.png",
+ "front_edge": "left",
+ "agreement": 1.0,
+ "text": "IO",
+ "text_ok": true,
+ "usable": true
+}

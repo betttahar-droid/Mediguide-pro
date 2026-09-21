@@ -1,0 +1,14 @@
+{
+ "face": "front",
+ "ratio": 2.0,
+ "parts": [
+  {
+   "part": "marquee",
+   "status": "kept",
+   "ratio": 2.0,
+   "new_px": 206,
+   "attempts": 2,
+   "evidence": "proposed"
+  }
+ ]
+}

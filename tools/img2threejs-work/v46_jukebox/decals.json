@@ -1,0 +1,95 @@
+{
+ "asset": "jukebox",
+ "decals": [
+  {
+   "n": 1,
+   "image": "decals/d1.png",
+   "px": [
+    582,
+    171
+   ],
+   "keyed": 0.047,
+   "median": [
+    254,
+    97,
+    254
+   ],
+   "name": "title",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.06
+  },
+  {
+   "n": 2,
+   "image": "decals/d2.png",
+   "px": [
+    582,
+    383
+   ],
+   "keyed": 0.607,
+   "median": [
+    61,
+    38,
+    36
+   ],
+   "name": "warning_label",
+   "rule": "hold",
+   "where": "any",
+   "size": 0.03
+  },
+  {
+   "n": 3,
+   "image": "decals/d3.png",
+   "px": [
+    582,
+    233
+   ],
+   "keyed": 0.25,
+   "median": [
+    65,
+    46,
+    36
+   ],
+   "name": "logo",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.1
+  },
+  {
+   "n": 4,
+   "image": "decals/d4.png",
+   "px": [
+    551,
+    236
+   ],
+   "keyed": 0.759,
+   "median": [
+    46,
+    6,
+    46
+   ],
+   "name": "pinstripe",
+   "rule": "along",
+   "where": "front",
+   "size": 0.01
+  },
+  {
+   "n": 5,
+   "image": "decals/d5.png",
+   "px": [
+    350,
+    152
+   ],
+   "keyed": 0.415,
+   "median": [
+    191,
+    179,
+    144
+   ],
+   "name": "rivet",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.01
+  }
+ ]
+}

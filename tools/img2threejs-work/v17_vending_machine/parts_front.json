@@ -1,0 +1,162 @@
+{
+ "face": "front",
+ "size": [
+  292,
+  497
+ ],
+ "parts": [
+  {
+   "name": "display_window",
+   "px": [
+    17,
+    20,
+    287,
+    324
+   ],
+   "resize": "spanx_repeat",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "delivery_tray",
+   "px": [
+    37,
+    403,
+    205,
+    444
+   ],
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "base_trim",
+   "px": [
+    0,
+    475,
+    291,
+    496
+   ],
+   "resize": "spanx_repeat",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "spans": true,
+   "per_tier": false,
+   "lengthens": true
+  },
+  {
+   "name": "decal_1",
+   "px": [
+    39,
+    342,
+    71,
+    382
+   ],
+   "resize": "spanx_center",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "decal_2",
+   "px": [
+    72,
+    342,
+    103,
+    386
+   ],
+   "resize": "spanx_center",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "decal_3",
+   "px": [
+    104,
+    342,
+    111,
+    382
+   ],
+   "resize": "spanx_center",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "decal_4",
+   "px": [
+    111,
+    342,
+    142,
+    385
+   ],
+   "resize": "spanx_center",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "decal_5",
+   "px": [
+    180,
+    342,
+    206,
+    383
+   ],
+   "resize": "spanx_center",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "decal_6",
+   "px": [
+    244,
+    400,
+    279,
+    430
+   ],
+   "resize": "spanx_center",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  }
+ ]
+}

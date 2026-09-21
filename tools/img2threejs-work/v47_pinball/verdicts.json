@@ -1,0 +1,248 @@
+[
+ {
+  "round": 0,
+  "asset": "pinball",
+  "looks_good": false,
+  "blocking": 2,
+  "faults": [
+   {
+    "part": "backbox",
+    "fault": "When the prop is widened the backbox widens with it: the backglass artwork stretches, the score displays are doubled/streaked ('00' becomes garbled columns), the artwork becomes mirrored blobs, and the speaker grilles triplicate. The backbox must stay a single cabinet width holding ONE playfield's artwork \u2014 the widened backbox reads as a smeared second game. Blocking.",
+    "severity": "blocking"
+   },
+   {
+    "part": "background",
+    "fault": "Vertical streak/banding artifacts on the cabinet body and leg textures where the prop was enlarged \u2014 visible smear trails a player could point at. Blocking.",
+    "severity": "blocking"
+   }
+  ],
+  "patch": [
+   {
+    "name": "backbox",
+    "resize": "fixed",
+    "anchor": "top",
+    "depth": "proud",
+    "motion": "none",
+    "count": "none",
+    "drop": false
+   },
+   {
+    "name": "background",
+    "resize": "fixed",
+    "anchor": "top",
+    "depth": "proud",
+    "motion": "none",
+    "count": "none",
+    "drop": false,
+    "mode": "mirror"
+   }
+  ],
+  "wider_means": "A wider pinball is a broader cabinet body and backbox spanning the same single playfield -- wider side rails and a wider coin-door panel, never a second game.",
+  "taller_means": "A taller pinball is one with longer legs and a longer plain cabinet run under the playfield; the backbox and glass stay the same size, so the extra height goes into the cabinet body and legs, not a taller backbox or taller artwork."
+ },
+ {
+  "round": 1,
+  "asset": "pinball",
+  "looks_good": false,
+  "blocking": 4,
+  "faults": [
+   {
+    "part": "backbox",
+    "fault": "Widening (image 3) stretches the backbox artwork instead of keeping one centred title: the score displays repeat digits ('00101100'), the speakers split into three ovals, and the rocket art is streaked across the extra width. One PINBALL sign, one pair of speakers, one set of score windows \u2014 the middle must stay a single size with only the plain ends extending.",
+    "severity": "blocking"
+   },
+   {
+    "part": "backbox",
+    "fault": "Heightening (image 4) makes the backbox itself taller \u2014 the marquee artwork, speakers and title are all vertically stretched. Per the brief the backbox and glass stay the same size when the machine is taller; the extra height belongs in the cabinet body and legs only.",
+    "severity": "blocking"
+   },
+   {
+    "part": "background",
+    "fault": "When resized, the background texture behind/below the cabinet smears into vertical drip streaks (image 3 under the body, image 4 across the lower cabinet and floor area) \u2014 visible banding a player can point at.",
+    "severity": "blocking"
+   },
+   {
+    "part": "cabinet_front",
+    "fault": "In the taller version (image 4) the added height shows as a plain grey stretched band between the playfield opening and the coin-door panel, with smeared streaks rather than a clean longer cabinet run; the cabinet member should simply lengthen with clean side texture.",
+    "severity": "blocking"
+   }
+  ],
+  "patch": [
+   {
+    "name": "backbox",
+    "resize": "spanx_center",
+    "anchor": "top",
+    "depth": "proud",
+    "motion": "none",
+    "count": "none",
+    "drop": false
+   },
+   {
+    "name": "background",
+    "resize": "mirror",
+    "anchor": "top",
+    "depth": "recessed",
+    "motion": "none",
+    "count": "none",
+    "drop": false
+   },
+   {
+    "name": "cabinet_front",
+    "resize": "spanx_center",
+    "anchor": "bottom",
+    "depth": "proud",
+    "motion": "none",
+    "count": "longer",
+    "drop": false
+   }
+  ],
+  "wider_means": "A wider pinball is a broader cabinet body and backbox spanning the same single playfield -- wider side rails and a wider coin-door panel, never a second game.",
+  "taller_means": "A taller pinball is one with longer legs and a longer plain cabinet run under the playfield; the backbox and glass stay the same size, so the extra height goes into the cabinet body and legs, not a taller backbox or taller artwork."
+ },
+ {
+  "round": 2,
+  "asset": "pinball",
+  "looks_good": false,
+  "blocking": 4,
+  "faults": [
+   {
+    "part": "backbox",
+    "fault": "At 1.4x width the backbox artwork REPEATS instead of extending: the speaker rings triple on the speaker panel and the score displays double their digits ('00' becomes smeared doubled zeroes). The title 'PINBALL' itself survived, but a widened marquee must be one artwork with extended ends, not repeated speakers and counters. A player could point straight at the tripled speakers.",
+    "severity": "blocking"
+   },
+   {
+    "part": "backbox",
+    "fault": "At 1.3x height the backbox art stretches vertically with the prop -- artwork and speaker panel elongate. The spec is explicit that the backbox stays the same size when the prop is made taller; the extra height must go into the cabinet body and legs only.",
+    "severity": "blocking"
+   },
+   {
+    "part": "background",
+    "fault": "On both resized versions the panel texture behind/around the parts smears: the widened cabinet shows ghosted repeated button circles left of the coin door and vertical streak runs under the playfield, and the taller version shows a long streaked blank run between the coin door and the floor with smeared side-art. Plain tiling is cutting at the seams instead of reflecting.",
+    "severity": "blocking"
+   },
+   {
+    "part": "cabinet_front",
+    "fault": "At 1.3x height the coin-door assembly itself stays correct, but the run of plain cabinet it sits on is filled with streaked smear rather than clean cabinet side texture -- the stretched member is wearing a smeared texture, not a longer one.",
+    "severity": "blocking"
+   }
+  ],
+  "patch": [
+   {
+    "name": "background",
+    "resize": "mirror",
+    "anchor": "top",
+    "depth": "proud",
+    "motion": "none",
+    "count": "none"
+   }
+  ],
+  "wider_means": "A wider pinball is a broader cabinet body and backbox spanning the same single playfield -- wider side rails and a wider coin-door panel, never a second game.",
+  "taller_means": "A taller pinball is one with longer legs and a longer plain cabinet run under the playfield; the backbox and glass stay the same size, so the extra height goes into the cabinet body and legs, not a taller backbox or taller artwork."
+ },
+ {
+  "round": 3,
+  "asset": "pinball",
+  "looks_good": false,
+  "blocking": 3,
+  "faults": [
+   {
+    "part": "background",
+    "fault": "When the prop is made taller the extra cabinet run under the coin door and the area behind the legs fill with vertical streaks and a blank smeared grey band; the side decal is smeared into an unreadable stretched strip. Texture is tiling with visible cut joins instead of extending cleanly.",
+    "severity": "blocking"
+   },
+   {
+    "part": "backbox",
+    "fault": "At 1.4x width the backbox front art does not hold one centred layout: the score displays are doubled and smeared ('0000 00' streaks), and each speaker grille is repeated into two overlapping blobs. spanx_center should keep one centred feature and extend plain ends, not duplicate or stretch the display and speakers.",
+    "severity": "blocking"
+   },
+   {
+    "part": "cabinet_front",
+    "fault": "When taller, the cabinet front below the coin door stretches into a featureless panel with streak marks a player can point at; the extra height must read as a clean longer cabinet member, not smeared texture.",
+    "severity": "blocking"
+   }
+  ],
+  "patch": [
+   {
+    "name": "backbox",
+    "resize": "spanx_center",
+    "anchor": "top",
+    "depth": "proud",
+    "motion": "none",
+    "count": "none",
+    "mode": "mirror",
+    "drop": false
+   },
+   {
+    "name": "background",
+    "resize": "spanx_center",
+    "anchor": "bottom",
+    "depth": "proud",
+    "motion": "none",
+    "count": "none",
+    "mode": "mirror",
+    "drop": false
+   }
+  ],
+  "wider_means": "A wider pinball is a broader cabinet body and backbox spanning the same single playfield -- wider side rails and a wider coin-door panel, never a second game.",
+  "taller_means": "A taller pinball is one with longer legs and a longer plain cabinet run under the playfield; the backbox and glass stay the same size, so the extra height goes into the cabinet body and legs, not a taller backbox or taller artwork."
+ },
+ {
+  "round": 4,
+  "asset": "pinball",
+  "looks_good": false,
+  "blocking": 4,
+  "faults": [
+   {
+    "part": "backbox",
+    "fault": "When widened (image 3), the backbox texture repeats instead of extending: the speaker grilles triple on each side, the score displays show doubled/echoed digits ('00 0', '0 0|0|0 0'), and the marquee artwork is mirrored/tiled. A wider pinball must keep ONE backbox layout \u2014 one title, one pair of speakers, two score windows \u2014 with plain extension at the ends, not repeats. This is the spanx_center rule not being honored on the texture.",
+    "severity": "blocking"
+   },
+   {
+    "part": "background",
+    "fault": "In the widened (image 3) and tallered (image 4) versions the body/background panel behind the parts shows vertical streaking and smearing \u2014 dark run-down streaks under the cabinet and between the legs that read as stretched texture, not grime. A player could point at it.",
+    "severity": "blocking"
+   },
+   {
+    "part": "cabinet_front",
+    "fault": "In image 3 the widened cabinet_front duplicates small fittings \u2014 extra button clusters appear left of the coin door and extra slots right of it. A wider pinball is a broader cabinet spanning one playfield with wider side rails and the SAME single coin door and button pair; the extra fittings read as a repeat artifact, not a decision.",
+    "severity": "blocking"
+   },
+   {
+    "part": "backbox",
+    "fault": "In the tallered version (image 4) the extra height partly went into the backbox \u2014 the marquee text and score windows render larger/stretched rather than staying fixed size, contrary to the rule that taller means longer legs and a longer cabinet run while the backbox stays the same.",
+    "severity": "blocking"
+   }
+  ],
+  "patch": [
+   {
+    "name": "backbox",
+    "resize": "spanx_center",
+    "anchor": "top",
+    "depth": "proud",
+    "motion": "none",
+    "count": "per_bay",
+    "drop": false
+   },
+   {
+    "name": "background",
+    "resize": "mirror",
+    "anchor": "top",
+    "depth": "flush",
+    "motion": "none",
+    "count": "none",
+    "drop": false
+   },
+   {
+    "name": "cabinet_front",
+    "resize": "spanx_center",
+    "anchor": "bottom",
+    "depth": "proud",
+    "motion": "none",
+    "count": "longer",
+    "drop": false
+   }
+  ],
+  "wider_means": "A wider pinball is a broader cabinet body and backbox spanning the same single playfield -- wider side rails and a wider coin-door panel, never a second game.",
+  "taller_means": "A taller pinball is one with longer legs and a longer plain cabinet run under the playfield; the backbox and glass stay the same size, so the extra height goes into the cabinet body and legs, not a taller backbox or taller artwork."
+ }
+]

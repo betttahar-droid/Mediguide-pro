@@ -1,0 +1,496 @@
+{
+ "parts_test": {
+  "front": 0.9919,
+  "side": 0.9704,
+  "top": 0.972
+ },
+ "prop_arcade_cabinet": {
+  "front": 0.9791,
+  "side": 0.9862,
+  "top": 0.986
+ },
+ "prop_jukebox": {
+  "front": 0.9925,
+  "side": 0.9841,
+  "top": 0.9822
+ },
+ "prop_vending_machine": {
+  "front": 0.9898,
+  "side": 0.9844,
+  "top": 0.9576
+ },
+ "ps1_arcade": {
+  "front": 0.9919,
+  "side": 0.982,
+  "top": 0.9924
+ },
+ "v10_arcade_cabinet": {
+  "front": 0.9854,
+  "side": 0.981,
+  "top": 0.9597
+ },
+ "v10_vending_machine": {
+  "front": 0.9988,
+  "side": 0.9905,
+  "top": 0.9855
+ },
+ "v11_arcade_cabinet": {
+  "front": 0.9938,
+  "side": 0.9762,
+  "top": 0.9869
+ },
+ "v11_jukebox": {
+  "front": 0.9962,
+  "side": 0.9897,
+  "top": 0.9747
+ },
+ "v11_vending_machine": {
+  "front": 0.9573,
+  "side": 0.9515,
+  "top": 0.9701,
+  "_holes_front": 0.0104,
+  "_holes_side": 0.0076
+ },
+ "v12_arcade_cabinet": {
+  "front": 0.9924,
+  "side": 0.9888,
+  "top": 0.9862
+ },
+ "v12_jukebox": {
+  "front": 0.9802,
+  "side": 0.9863,
+  "top": 0.9834
+ },
+ "v12_vending_machine": {
+  "front": 0.9921,
+  "side": 0.9908,
+  "top": 0.9974
+ },
+ "v13_arcade_cabinet": {
+  "front": 0.9767,
+  "side": 0.9743,
+  "top": 0.9659
+ },
+ "v13_jukebox": {
+  "front": 0.9806,
+  "side": 0.9828,
+  "top": 0.9837
+ },
+ "v13_vending_machine": {
+  "front": 0.9993,
+  "side": 0.9891,
+  "top": 0.9974
+ },
+ "v14_arcade_cabinet": {
+  "front": 0.9849,
+  "side": 0.9797,
+  "top": 0.9793
+ },
+ "v14_jukebox": {
+  "front": 0.9856,
+  "side": 0.9839,
+  "top": 0.9845
+ },
+ "v14_vending_machine": {
+  "front": 0.9931,
+  "side": 0.969,
+  "top": 0.9766
+ },
+ "v15_arcade_cabinet": {
+  "front": 0.9911,
+  "side": 0.9809,
+  "top": 0.9801
+ },
+ "v16_arcade_cabinet": {
+  "front": 0.9912,
+  "side": 0.9794,
+  "top": 0.957
+ },
+ "v16_jukebox": {
+  "front": 0.9817,
+  "side": 0.9566,
+  "top": 0.9673,
+  "_holes_side": 0.0058
+ },
+ "v16_vending_machine": {
+  "front": 0.9982,
+  "side": 0.9939,
+  "top": 0.9898
+ },
+ "v17_arcade_cabinet": {
+  "front": 0.9813,
+  "side": 0.9803,
+  "top": 0.9855
+ },
+ "v17_jukebox": {
+  "front": 0.9899,
+  "side": 0.9927,
+  "top": 0.974
+ },
+ "v17_vending_machine": {
+  "front": 1.0,
+  "side": 0.9888,
+  "top": 1.0
+ },
+ "v18_arcade_cabinet": {
+  "front": 0.9892,
+  "side": 0.9934,
+  "top": 0.9908
+ },
+ "v18_jukebox": {
+  "front": 0.9919,
+  "side": 0.9857,
+  "top": 0.9876
+ },
+ "v18_vending_machine": {
+  "front": 0.9999,
+  "side": 0.9933,
+  "top": 0.9962
+ },
+ "v19_arcade_cabinet": {
+  "front": 0.9986,
+  "side": 0.9791,
+  "top": 0.9794
+ },
+ "v20_arcade_cabinet": {
+  "front": 0.9917,
+  "side": 0.99,
+  "top": 0.9841
+ },
+ "v20_jukebox": {
+  "front": 0.9849,
+  "side": 0.9898,
+  "top": 0.9601
+ },
+ "v20_vending_machine": {
+  "front": 0.9842,
+  "side": 0.9867,
+  "top": 0.9875
+ },
+ "v21_arcade_cabinet": {
+  "front": 0.9873,
+  "side": 0.9919,
+  "top": 0.9917
+ },
+ "v22_arcade_cabinet": {
+  "front": 0.9883,
+  "side": 0.9829,
+  "top": 0.9806
+ },
+ "v23_arcade_cabinet": {
+  "front": 0.985,
+  "side": 0.9827,
+  "top": 0.9816
+ },
+ "v24_arcade_cabinet": {
+  "front": 0.9898,
+  "side": 0.9765,
+  "top": 0.9701
+ },
+ "v24_vending_machine": {
+  "front": 0.9991,
+  "side": 0.989,
+  "top": 0.9925
+ },
+ "v25_arcade_cabinet": {
+  "front": 0.9949,
+  "side": 0.9913,
+  "top": 0.9894
+ },
+ "v25_jukebox": {
+  "front": 0.9925,
+  "side": 0.9885,
+  "top": 0.9642
+ },
+ "v25_vending_machine": {
+  "front": 0.9946,
+  "side": 0.9876,
+  "top": 0.9894
+ },
+ "v26_arcade_cabinet": {
+  "front": 0.9868,
+  "side": 0.9856,
+  "top": 0.9795
+ },
+ "v27_arcade_cabinet": {
+  "front": 0.9908,
+  "side": 0.9862,
+  "top": 0.9918
+ },
+ "v28_arcade_cabinet": {
+  "front": 0.9926,
+  "side": 0.988,
+  "top": 0.9831
+ },
+ "v29_arcade_cabinet": {
+  "front": 0.9808,
+  "side": 0.9782,
+  "top": 0.98
+ },
+ "v30_arcade_cabinet": {
+  "front": 0.9862,
+  "side": 0.9801,
+  "top": 0.9833
+ },
+ "v31_arcade_cabinet": {
+  "front": 0.9939,
+  "side": 0.9764,
+  "top": 0.9962
+ },
+ "v32_arcade_cabinet": {
+  "front": 0.9832,
+  "side": 0.9778,
+  "top": 0.9735
+ },
+ "v33_arcade_cabinet": {
+  "front": 0.9943,
+  "side": 0.983,
+  "top": 0.9775
+ },
+ "v34_arcade_cabinet": {
+  "front": 0.9888,
+  "side": 0.9857,
+  "top": 0.9817
+ },
+ "v35_arcade_cabinet": {
+  "front": 0.982,
+  "side": 0.9842,
+  "top": 0.9834
+ },
+ "v36_arcade_cabinet": {
+  "front": 0.9992,
+  "side": 0.9928,
+  "top": 0.9871
+ },
+ "v37_arcade_cabinet": {
+  "front": 0.9985,
+  "side": 0.9761,
+  "top": 0.9697
+ },
+ "v38_arcade_cabinet": {
+  "front": 0.9932,
+  "side": 0.9812,
+  "top": 0.9899
+ },
+ "v39_arcade_cabinet": {
+  "front": 0.9891,
+  "side": 0.9857,
+  "top": 0.9851
+ },
+ "v40_arcade_cabinet": {
+  "front": 0.9963,
+  "side": 0.9719,
+  "top": 0.9886
+ },
+ "v41_arcade_cabinet": {
+  "front": 0.9812,
+  "side": 0.9881,
+  "top": 0.9876
+ },
+ "v42_arcade_cabinet": {
+  "front": 0.9839,
+  "side": 0.9722,
+  "top": 0.9887
+ },
+ "v43_arcade_cabinet": {
+  "front": 0.9881,
+  "side": 0.9781,
+  "top": 0.978
+ },
+ "v44_arcade_cabinet": {
+  "front": 0.9914,
+  "side": 0.9696,
+  "top": 0.9567
+ },
+ "v44_jukebox": {
+  "front": 0.9674,
+  "side": 0.9793,
+  "top": 0.9813
+ },
+ "v44_pinball": {
+  "front": 0.9838,
+  "side": 0.9576,
+  "top": 0.947
+ },
+ "v44_vending_machine": {
+  "front": 0.998,
+  "side": 0.9865,
+  "top": 0.9884
+ },
+ "v45_arcade_cabinet": {
+  "front": 0.9853,
+  "side": 0.986,
+  "top": 0.9823
+ },
+ "v45_jukebox": {
+  "front": 0.9914,
+  "side": 0.9814,
+  "top": 0.9853
+ },
+ "v45_pinball": {
+  "front": 0.955,
+  "side": 0.9524,
+  "top": 0.9661
+ },
+ "v45_vending_machine": {
+  "front": 0.9999,
+  "side": 0.9942,
+  "top": 0.9839
+ },
+ "v46_arcade_cabinet": {
+  "front": 0.9874,
+  "side": 0.9778,
+  "top": 0.9829
+ },
+ "v46_jukebox": {
+  "front": 0.9824,
+  "side": 0.9834,
+  "top": 0.9839
+ },
+ "v46_pinball": {
+  "front": 0.9814,
+  "side": 0.9585,
+  "top": 0.9673
+ },
+ "v46_vending_machine": {
+  "front": 0.9936,
+  "side": 0.9915,
+  "top": 0.993
+ },
+ "v47_arcade_cabinet": {
+  "front": 0.9874,
+  "side": 0.983,
+  "top": 0.9777
+ },
+ "v47_jukebox": {
+  "front": 0.9891,
+  "side": 0.9929,
+  "top": 0.9834
+ },
+ "v47_pinball": {
+  "front": 0.9745,
+  "side": 0.9628,
+  "top": 0.97
+ },
+ "v47_vending_machine": {
+  "front": 0.9934,
+  "side": 0.9898,
+  "top": 0.9936
+ },
+ "v48_arcade_cabinet": {
+  "front": 0.9874,
+  "side": 0.9796,
+  "top": 0.9777
+ },
+ "v48_jukebox": {
+  "front": 0.9874,
+  "side": 0.9939,
+  "top": 0.9835
+ },
+ "v48_pinball": {
+  "front": 0.9745,
+  "side": 0.9628,
+  "top": 0.97
+ },
+ "v48_vending_machine": {
+  "front": 0.9934,
+  "side": 0.9897,
+  "top": 0.9931
+ },
+ "v49_arcade_cabinet": {
+  "front": 0.9874,
+  "side": 0.98,
+  "top": 0.9777
+ },
+ "v49_jukebox": {
+  "front": 0.9874,
+  "side": 0.9939,
+  "top": 0.9835
+ },
+ "v49_pinball": {
+  "front": 0.9733,
+  "side": 0.9693,
+  "top": 0.9747
+ },
+ "v49_vending_machine": {
+  "front": 0.9934,
+  "side": 0.9898,
+  "top": 0.9936
+ },
+ "v50_vending_machine": {
+  "front": 0.9936,
+  "side": 0.9918,
+  "top": 0.9866
+ },
+ "v51_pinball": {
+  "front": 0.983,
+  "side": 0.9715,
+  "top": 0.971
+ },
+ "v52_jukebox": {
+  "front": 0.9696,
+  "side": 0.9725,
+  "top": 0.9831
+ },
+ "v5_arcade_cabinet": {
+  "front": 0.9702,
+  "side": 0.9648,
+  "top": 0.973
+ },
+ "v5_jukebox": {
+  "front": 0.9939,
+  "side": 0.9806,
+  "top": 0.9803
+ },
+ "v5_vending_machine": {
+  "front": 0.9887,
+  "side": 0.9772,
+  "top": 0.9872
+ },
+ "v7_arcade_cabinet": {
+  "front": 0.9889,
+  "side": 0.9762,
+  "top": 0.9746
+ },
+ "v7_jukebox": {
+  "front": 0.9967,
+  "side": 0.9916,
+  "top": 0.9752
+ },
+ "v7_vending_machine": {
+  "front": 0.9869,
+  "side": 0.9836,
+  "top": 0.9673
+ },
+ "v8_arcade_cabinet": {
+  "front": 0.9903,
+  "side": 0.9764,
+  "top": 0.9717
+ },
+ "v8_jukebox": {
+  "front": 0.994,
+  "side": 0.9868,
+  "top": 0.9884
+ },
+ "v8_vending_machine": {
+  "front": 0.9962,
+  "side": 0.9882,
+  "top": 0.9845
+ },
+ "v9_arcade_cabinet": {
+  "front": 0.9837,
+  "side": 0.984,
+  "top": 0.9797
+ },
+ "v9_jukebox": {
+  "front": 0.9875,
+  "side": 0.985,
+  "top": 0.9717,
+  "_holes_side": 0.004
+ },
+ "v9_vending_machine": {
+  "front": 0.9962,
+  "side": 0.9923,
+  "top": 0.9893
+ }
+}

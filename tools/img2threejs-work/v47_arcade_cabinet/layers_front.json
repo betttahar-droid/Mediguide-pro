@@ -1,0 +1,129 @@
+{
+ "face": "front",
+ "size": [
+  263,
+  632
+ ],
+ "aspect": 0.41614,
+ "background": "bg_front.png",
+ "background_mode": "mirror",
+ "parts": [
+  {
+   "name": "speaker_grille",
+   "image": "parts/speaker_grille.png",
+   "hf": [
+    0.03734439834024896,
+    0.07883817427385892
+   ],
+   "resize": "spanx_center",
+   "resize_y": "spanx_center",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": true,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.2917,
+     0.7042
+    ],
+    "v": [
+     0.02,
+     0.18
+    ]
+   },
+   "px_size": [
+    242,
+    52
+   ],
+   "u": [
+    0.04183,
+    0.96198
+   ],
+   "v": [
+    0.78639,
+    0.86867
+   ]
+  },
+  {
+   "name": "screen",
+   "image": "parts/screen.png",
+   "hf": [
+    0.1522633744855967,
+    0.1934156378600823
+   ],
+   "resize": "spanx_center",
+   "resize_y": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": true,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.168,
+     0.5861
+    ],
+    "v": [
+     0.1647,
+     0.8529
+    ]
+   },
+   "px_size": [
+    244,
+    171
+   ],
+   "u": [
+    0.03422,
+    0.96198
+   ],
+   "v": [
+    0.51741,
+    0.78797
+   ]
+  },
+  {
+   "name": "control_panel",
+   "image": "parts/control_panel.png",
+   "hf": [
+    0.1078838174273859,
+    0.14937759336099585
+   ],
+   "resize": "spanx_repeat",
+   "resize_y": "spanx_repeat",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": true,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": [
+     0.2881,
+     0.6271
+    ]
+   },
+   "px_size": [
+    242,
+    59
+   ],
+   "u": [
+    0.03422,
+    0.95437
+   ],
+   "v": [
+    0.38449,
+    0.47785
+   ]
+  }
+ ]
+}

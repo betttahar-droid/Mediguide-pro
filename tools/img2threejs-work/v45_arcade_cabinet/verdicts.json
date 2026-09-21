@@ -1,0 +1,208 @@
+[
+ {
+  "round": 0,
+  "asset": "arcade cabinet",
+  "looks_good": false,
+  "blocking": 6,
+  "faults": [
+   {
+    "part": "background",
+    "fault": "At 1.5x height the cabinet body texture is stretched and smeared: vertical streaks run through the screen surround and the panel below the control deck, and the marquee/screen area shows ghosted doubled artwork. The background panel is being stretched, not tiled.",
+    "severity": "blocking"
+   },
+   {
+    "part": "control_deck",
+    "fault": "At 2.0x width the deck spans the full width but the repeated middle carries no second joystick, button cluster or start button -- the right half of the deck is blank panel plus the counter decal. A wider cabinet must read as a two-player cabinet; a repeat of empty panel does not satisfy the resize rule.",
+    "severity": "blocking"
+   },
+   {
+    "part": "door_button_upper_left",
+    "fault": "In the solid three-quarters view the door button boxes sit offset from the coin door face, floating beside/overlapping the door rather than seated on it in a tidy 2x2 group.",
+    "severity": "blocking"
+   },
+   {
+    "part": "coin_door (gemini)",
+    "fault": "Door remains static with motion set to none instead of hinging open.",
+    "severity": "blocking"
+   },
+   {
+    "part": "cabinet_door (gemini)",
+    "fault": "Lower cabinet door does not open when moving parts are actuated.",
+    "severity": "blocking"
+   },
+   {
+    "part": "control_deck (gemini)",
+    "fault": "Widened version fragments control deck artwork rather than producing a clean two-player layout.",
+    "severity": "blocking"
+   }
+  ],
+  "patch": [
+   "background",
+   "cabinet_door",
+   "coin_door",
+   "control_deck"
+  ],
+  "wider_means": "A wider arcade cabinet is a two-player cabinet, with a second joystick, button set and start button on the control deck.",
+  "taller_means": "A taller arcade cabinet is a taller cabinet body: more plain panel below the control deck and a longer lower door and kick area, not a taller screen or marquee."
+ },
+ {
+  "round": 1,
+  "asset": "arcade cabinet",
+  "looks_good": false,
+  "blocking": 7,
+  "faults": [
+   {
+    "part": "control_deck",
+    "fault": "At 2x width (image 3) the control deck simply extends as blank panel across the new width -- no second joystick, button cluster or start button appears. A wider cabinet must read as a two-player deck; more empty surface where the controls should be is a blocking sense fault, not just a texture issue.",
+    "severity": "blocking"
+   },
+   {
+    "part": "background",
+    "fault": "At 1.5x height (image 4) the front panel stretches vertically: the marquee art, screen surround and door panels are smeared/streaked and the screen opening itself is dragged upward, instead of the extra height appearing as plain panel below the control deck and a longer kick area. The background is being stretched, not extended.",
+    "severity": "blocking"
+   },
+   {
+    "part": "background",
+    "fault": "The stretched vertical tiling shows banding/streaking in the lower panels of image 4 -- texture smear visible where the prop was enlarged.",
+    "severity": "blocking"
+   },
+   {
+    "part": "marquee_frame",
+    "fault": "In image 4 the marquee area is carried up with the stretched body, so the marquee floats with a stretched void around it rather than staying a fixed cap on a taller cabinet.",
+    "severity": "blocking"
+   },
+   {
+    "part": "control_deck (gemini)",
+    "fault": "Widened cabinet does not duplicate controls for a second player.",
+    "severity": "blocking"
+   },
+   {
+    "part": "cabinet_door (gemini)",
+    "fault": "Door hinge and vertical scaling cause geometry to obscure the monitor when extended.",
+    "severity": "blocking"
+   },
+   {
+    "part": "coin_door (gemini)",
+    "fault": "Width scaling distorts the coin door fixture instead of maintaining proper center framing.",
+    "severity": "blocking"
+   }
+  ],
+  "patch": [
+   "background",
+   "cabinet_door",
+   "coin_door",
+   "control_deck",
+   "marquee_frame"
+  ],
+  "wider_means": "A wider arcade cabinet is a two-player cabinet, with a second joystick, button set and start button on the control deck.",
+  "taller_means": "A taller arcade cabinet is a taller cabinet body: more plain panel below the control deck and a longer lower door and kick area, not a taller screen or marquee."
+ },
+ {
+  "round": 2,
+  "asset": "arcade cabinet",
+  "looks_good": false,
+  "blocking": 7,
+  "faults": [
+   {
+    "part": "control_deck",
+    "fault": "At 2.0x width the deck stretches into blank, banded striping with no second joystick, button cluster or start button appearing -- a wider two-player cabinet is not represented; the repeated middle reads as smeared texture, not duplicated controls (image 3).",
+    "severity": "blocking"
+   },
+   {
+    "part": "background",
+    "fault": "When the cabinet is made 1.5x taller the background panel stretches into a large smeared, streaked blank slab that climbs up over the control deck and screen area, hiding the front elevation layout (image 4).",
+    "severity": "blocking"
+   },
+   {
+    "part": "coin_door",
+    "fault": "In the taller render the coin-door/kick region is distorted: the lower door area is cut and doubled, and the marquee/decal rows no longer read as one object (image 4).",
+    "severity": "blocking"
+   },
+   {
+    "part": "cabinet_door",
+    "fault": "With the door driven open (image 5) the door slab juts past the body silhouette and collides with the control-deck overhang / lower-body corner instead of swinging cleanly out from its own face; in the wireframe the open door reads as a box intersecting the cabinet rather than hinged off it.",
+    "severity": "blocking"
+   },
+   {
+    "part": "cabinet_door (gemini)",
+    "fault": "Redundant geometry duplicating the lower facade that detaches and floats during vertical resize.",
+    "severity": "blocking"
+   },
+   {
+    "part": "coin_door (gemini)",
+    "fault": "Spans horizontally on wide resize instead of retaining standard fixed proportions.",
+    "severity": "blocking"
+   },
+   {
+    "part": "marquee_frame (gemini)",
+    "fault": "Remains fixed width, failing to bridge the cabinet width when widened.",
+    "severity": "blocking"
+   }
+  ],
+  "patch": [
+   "background",
+   "cabinet_door",
+   "coin_door",
+   "marquee_frame"
+  ],
+  "wider_means": "A wider arcade cabinet is a two-player cabinet, with a second joystick, button set and start button on the control deck.",
+  "taller_means": "A taller arcade cabinet is a taller cabinet body: more plain panel below the control deck and a longer lower door and kick area, not a taller screen or marquee."
+ },
+ {
+  "round": 3,
+  "asset": "arcade cabinet",
+  "looks_good": false,
+  "blocking": 8,
+  "faults": [
+   {
+    "part": "control_deck",
+    "fault": "At 2x width the deck plank stretches/repeats across the full width but no second joystick, button cluster or start button appears -- the deck repeats its blank texture instead of its controls, so the wider cabinet does not read as a two-player cabinet. Blocking.",
+    "severity": "blocking"
+   },
+   {
+    "part": "decal",
+    "fault": "Marquee art is anchored top and fixed, so when the cabinet widens the marquee shows tiled/doubled artwork (extra star field slabs with visible seams beside the title) instead of one continuous marquee. Blocking.",
+    "severity": "blocking"
+   },
+   {
+    "part": "background",
+    "fault": "In the 1.5x taller render the body texture is smeared and streaked vertically (grey banding across the screen area and lower panel), and the screen bay reads as a blank grey smear. Blocking tiling/stretch fault.",
+    "severity": "blocking"
+   },
+   {
+    "part": "control_deck",
+    "fault": "In the three-quarter solid view a slab of the deck protrudes past the left side of the body and floats clear of it, reading as a loose plank rather than part of the cabinet. Blocking floating-geometry fault.",
+    "severity": "blocking"
+   },
+   {
+    "part": "cabinet_door (gemini)",
+    "fault": "Upper service panel swings open and clips through the cabinet side wall; it should be static.",
+    "severity": "blocking"
+   },
+   {
+    "part": "background (gemini)",
+    "fault": "Vertical scaling stacks duplicate screen and upper cabinet geometry instead of extending the lower base.",
+    "severity": "blocking"
+   },
+   {
+    "part": "control_deck (gemini)",
+    "fault": "Widening cabinet smears controls rather than configuring a valid two-player control layout.",
+    "severity": "blocking"
+   },
+   {
+    "part": "marquee_frame (gemini)",
+    "fault": "Marquee texture splits and distorts when widened instead of cleanly extending framing.",
+    "severity": "blocking"
+   }
+  ],
+  "patch": [
+   "background",
+   "cabinet_door",
+   "coin_door",
+   "control_deck",
+   "decal"
+  ],
+  "wider_means": "A wider arcade cabinet is a two-player cabinet, with a second joystick, button set and start button on the control deck.",
+  "taller_means": "A taller arcade cabinet is a taller cabinet body: more plain panel below the control deck and a longer lower door and kick area, not a taller screen or marquee."
+ }
+]

@@ -1,0 +1,16 @@
+{
+ "wider_means": "a two-player cabinet with a second joystick/button cluster on the control deck",
+ "taller_means": "a full-height upright cab with more body below the control deck, not a bigger screen or taller marquee art",
+ "max_wider": 2.0,
+ "max_taller": 1.3,
+ "per_bay": [
+  "player_button"
+ ],
+ "spans": [
+  "marquee",
+  "screen",
+  "control_deck",
+  "decal_4"
+ ],
+ "taller_at": null
+}

@@ -1,0 +1,60 @@
+{
+ "face": "front",
+ "size": [
+  254,
+  645
+ ],
+ "parts": [
+  {
+   "name": "backglass_art",
+   "px": [
+    9,
+    1,
+    244,
+    132
+   ],
+   "resize": "spanx_center",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false
+  },
+  {
+   "name": "speaker_grille_panel",
+   "px": [
+    9,
+    175,
+    244,
+    246
+   ],
+   "resize": "spanx_center",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": true
+  },
+  {
+   "name": "cabinet_body",
+   "px": [
+    5,
+    245,
+    250,
+    643
+   ],
+   "resize": "spanx_center",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": true,
+   "spans": true
+  }
+ ]
+}

@@ -1,0 +1,12 @@
+{
+ "wider_means": "A wider vending machine is a wider cabinet with more product columns behind the glass, so the shelves carry more facings and the delivery tray stretches to serve them.",
+ "taller_means": "A taller vending machine is a taller cabinet holding more shelf rows of stock above the same delivery tray and payment column.",
+ "max_wider": 2.0,
+ "max_taller": 1.5,
+ "per_bay": [],
+ "spans": [
+  "display_window",
+  "vend_shelves",
+  "delivery_tray"
+ ]
+}

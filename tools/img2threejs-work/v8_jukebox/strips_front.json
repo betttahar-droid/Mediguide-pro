@@ -1,0 +1,272 @@
+{
+ "size": [
+  293,
+  499
+ ],
+ "strips": [
+  {
+   "xspan": [
+    0.15017,
+    0.85324
+   ],
+   "fill": [
+    82,
+    75,
+    66
+   ],
+   "hmode": "extend",
+   "hf": [
+    0.0274,
+    0.07192
+   ],
+   "hf_repeat": false,
+   "vmode": "extend",
+   "vf": [
+    0.17647,
+    0.17647
+   ],
+   "vf_repeat": false,
+   "v": [
+    0.89579,
+    1.0
+   ],
+   "h": [
+    0.0,
+    0.25
+   ],
+   "vh": [
+    0.0,
+    0.33333
+   ],
+   "noise": 0.975,
+   "vnoise": 7.868,
+   "px": [
+    0,
+    52
+   ],
+   "_like": 0.8204,
+   "grow_y": false,
+   "free": 0.52,
+   "grow_share": 0.0
+  },
+  {
+   "xspan": [
+    0.06143,
+    0.94198
+   ],
+   "fill": [
+    92,
+    84,
+    74
+   ],
+   "hmode": "extend",
+   "hf": [
+    0.18151,
+    0.18151
+   ],
+   "hf_repeat": false,
+   "vmode": "extend",
+   "vf": [
+    0.07895,
+    0.07895
+   ],
+   "vf_repeat": false,
+   "v": [
+    0.81764,
+    0.89579
+   ],
+   "h": [
+    0.26712,
+    0.36644
+   ],
+   "vh": [
+    0.23684,
+    0.47368
+   ],
+   "noise": 2.177,
+   "vnoise": 10.483,
+   "px": [
+    52,
+    91
+   ],
+   "_like": 0.2812,
+   "grow_y": false,
+   "free": 0.413,
+   "grow_share": 0.0
+  },
+  {
+   "xspan": [
+    0.00683,
+    0.99659
+   ],
+   "fill": [
+    84,
+    76,
+    68
+   ],
+   "hmode": "extend",
+   "hf": [
+    0.17123,
+    0.17123
+   ],
+   "hf_repeat": false,
+   "vmode": "extend",
+   "vf": [
+    0.02239,
+    0.02239
+   ],
+   "vf_repeat": false,
+   "v": [
+    0.54709,
+    0.81764
+   ],
+   "h": [
+    0.57534,
+    0.67466
+   ],
+   "vh": [
+    0.75373,
+    1.0
+   ],
+   "noise": 2.118,
+   "vnoise": 11.202,
+   "px": [
+    91,
+    226
+   ],
+   "_like": 0.7711,
+   "grow_y": false,
+   "free": 0.475,
+   "grow_share": 0.0
+  },
+  {
+   "xspan": [
+    0.0,
+    1.00341
+   ],
+   "fill": [
+    84,
+    76,
+    68
+   ],
+   "hmode": "extend",
+   "hf": [
+    0.01027,
+    0.01027
+   ],
+   "hf_repeat": false,
+   "vmode": "extend",
+   "vf": [
+    0.05532,
+    0.05532
+   ],
+   "vf_repeat": false,
+   "v": [
+    0.07415,
+    0.54709
+   ],
+   "h": [
+    0.47603,
+    0.57534
+   ],
+   "vh": [
+    0.73191,
+    1.0
+   ],
+   "noise": 2.181,
+   "vnoise": 5.653,
+   "px": [
+    226,
+    462
+   ],
+   "_like": 0.9189,
+   "grow_y": true,
+   "free": 0.594,
+   "grow_share": 1.0
+  },
+  {
+   "xspan": [
+    0.0,
+    0.99659
+   ],
+   "fill": [
+    165,
+    165,
+    165
+   ],
+   "hmode": "extend",
+   "hf": [
+    0.08904,
+    0.13356
+   ],
+   "hf_repeat": false,
+   "vmode": "extend",
+   "vf": [
+    0.13889,
+    0.13889
+   ],
+   "vf_repeat": false,
+   "v": [
+    0.0,
+    0.07415
+   ],
+   "h": [
+    0.20205,
+    0.78425
+   ],
+   "vh": [
+    0.72222,
+    0.97222
+   ],
+   "noise": 1.325,
+   "vnoise": 12.019,
+   "px": [
+    462,
+    499
+   ],
+   "_like": 0.4424,
+   "grow_y": false,
+   "free": 0.942,
+   "grow_share": 0.0
+  }
+ ],
+ "grow_bands": [
+  {
+   "part": "(measured)",
+   "side": "run",
+   "clean": false,
+   "px": [
+    0,
+    21
+   ],
+   "band": [
+    0.95792,
+    1.0
+   ],
+   "share": 0.375
+  },
+  {
+   "part": "(measured)",
+   "side": "run",
+   "clean": false,
+   "px": [
+    464,
+    499
+   ],
+   "band": [
+    0.0,
+    0.07014
+   ],
+   "share": 0.625
+  }
+ ],
+ "stretch_band": {
+  "px": [
+   0,
+   499
+  ],
+  "covered": null,
+  "flank_busy": true,
+  "why": "every place it can repeat carries artwork on the side or back, so repeating there stacks that artwork down the flank; draw the flanks instead"
+ }
+}

@@ -1,0 +1,257 @@
+{
+ "asset": "arcade cabinet",
+ "decals": [
+  {
+   "n": 1,
+   "image": "decals/d1.png",
+   "px": [
+    205,
+    174
+   ],
+   "keyed": 0.092,
+   "median": [
+    133,
+    79,
+    122
+   ],
+   "name": "title",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.06
+  },
+  {
+   "n": 2,
+   "image": "decals/d2.png",
+   "px": [
+    205,
+    175
+   ],
+   "keyed": 0.097,
+   "median": [
+    120,
+    82,
+    106
+   ],
+   "name": "decal_2",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.06
+  },
+  {
+   "n": 3,
+   "image": "decals/d3.png",
+   "px": [
+    205,
+    174
+   ],
+   "keyed": 0.095,
+   "median": [
+    124,
+    79,
+    108
+   ],
+   "name": "decal_3",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.06
+  },
+  {
+   "n": 4,
+   "image": "decals/d4.png",
+   "px": [
+    203,
+    85
+   ],
+   "keyed": 0.117,
+   "median": [
+    130,
+    87,
+    118
+   ],
+   "name": "decal_4",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.06
+  },
+  {
+   "n": 5,
+   "image": "decals/d5.png",
+   "px": [
+    211,
+    722
+   ],
+   "keyed": 0.364,
+   "median": [
+    132,
+    95,
+    122
+   ],
+   "name": "decal_5",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.06
+  },
+  {
+   "n": 6,
+   "image": "decals/d6.png",
+   "px": [
+    211,
+    412
+   ],
+   "keyed": 0.767,
+   "median": [
+    62,
+    49,
+    76
+   ],
+   "name": "price_plate",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.04
+  },
+  {
+   "n": 7,
+   "image": "decals/d7.png",
+   "px": [
+    202,
+    65
+   ],
+   "keyed": 0.094,
+   "median": [
+    87,
+    72,
+    93
+   ],
+   "name": "logo",
+   "rule": "hold",
+   "where": "side",
+   "size": 0.1
+  },
+  {
+   "n": 8,
+   "image": "decals/d8.png",
+   "px": [
+    210,
+    127
+   ],
+   "keyed": 0.031,
+   "median": [
+    77,
+    106,
+    102
+   ],
+   "name": "pinstripe",
+   "rule": "along",
+   "where": "any",
+   "size": 0.01
+  },
+  {
+   "n": 9,
+   "image": "decals/d9.png",
+   "px": [
+    210,
+    484
+   ],
+   "keyed": 0.71,
+   "median": [
+    140,
+    106,
+    145
+   ],
+   "name": "rivet",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.01
+  },
+  {
+   "n": 10,
+   "image": "decals/d10.png",
+   "px": [
+    211,
+    89
+   ],
+   "keyed": 0.415,
+   "median": [
+    135,
+    103,
+    135
+   ],
+   "name": "warning_label",
+   "rule": "hold",
+   "where": "back",
+   "size": 0.03
+  },
+  {
+   "n": 11,
+   "image": "decals/d11.png",
+   "px": [
+    211,
+    127
+   ],
+   "keyed": 0.031,
+   "median": [
+    77,
+    107,
+    102
+   ],
+   "name": "decal_11",
+   "rule": "along",
+   "where": "any",
+   "size": 0.01
+  },
+  {
+   "n": 12,
+   "image": "decals/d12.png",
+   "px": [
+    211,
+    484
+   ],
+   "keyed": 0.768,
+   "median": [
+    120,
+    71,
+    109
+   ],
+   "name": "decal_12",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.01
+  },
+  {
+   "n": 13,
+   "image": "decals/d13.png",
+   "px": [
+    211,
+    127
+   ],
+   "keyed": 0.031,
+   "median": [
+    76,
+    106,
+    102
+   ],
+   "name": "decal_13",
+   "rule": "along",
+   "where": "any",
+   "size": 0.01
+  },
+  {
+   "n": 14,
+   "image": "decals/d14.png",
+   "px": [
+    211,
+    484
+   ],
+   "keyed": 0.893,
+   "median": [
+    85,
+    45,
+    100
+   ],
+   "name": "decal_14",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.01
+  }
+ ]
+}

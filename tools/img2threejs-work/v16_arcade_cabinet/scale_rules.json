@@ -1,0 +1,25 @@
+{
+ "wider_means": "a two-player cabinet with a second joystick and button cluster on the control deck",
+ "taller_means": "a taller arcade cabinet has a longer lower cabinet body below the control deck",
+ "max_wider": 2.0,
+ "max_taller": 1.5,
+ "per_bay": [
+  "decal_1",
+  "decal_3",
+  "decal_4"
+ ],
+ "spans": [
+  "screen",
+  "control_deck"
+ ],
+ "taller_at": [
+  {
+   "part": "control_deck",
+   "side": "below",
+   "px": [
+    348,
+    387
+   ]
+  }
+ ]
+}

@@ -1,0 +1,21 @@
+[
+ {
+  "face": "front",
+  "member_depth": [
+   {
+    "part": "leg_left",
+    "was": "proud",
+    "now": "flush",
+    "solid": 0.376,
+    "why": "only 38% of the prop is solid across its rows, so it stands in air: it is structure inside the depth, not relief on a face"
+   },
+   {
+    "part": "leg_right",
+    "was": "proud",
+    "now": "flush",
+    "solid": 0.372,
+    "why": "only 37% of the prop is solid across its rows, so it stands in air: it is structure inside the depth, not relief on a face"
+   }
+  ]
+ }
+]

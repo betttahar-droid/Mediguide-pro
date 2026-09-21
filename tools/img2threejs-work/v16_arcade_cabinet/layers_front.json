@@ -1,0 +1,633 @@
+{
+ "face": "front",
+ "size": [
+  289,
+  629
+ ],
+ "aspect": 0.45946,
+ "background": "bg_front.png",
+ "background_mode": "mirror",
+ "parts": [
+  {
+   "name": "marquee",
+   "image": "parts/marquee.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    232,
+    62
+   ],
+   "u": [
+    0.10035,
+    0.90311
+   ],
+   "v": [
+    0.87758,
+    0.97615
+   ]
+  },
+  {
+   "name": "screen",
+   "image": "parts/screen.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    164,
+    123
+   ],
+   "u": [
+    0.21799,
+    0.78547
+   ],
+   "v": [
+    0.55644,
+    0.75199
+   ]
+  },
+  {
+   "name": "joystick_left",
+   "image": "parts/joystick_left.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "deep",
+   "motion": "stick",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.0,
+     0.16
+    ],
+    "v": [
+     0.6111,
+     0.8056
+    ]
+   },
+   "px_size": [
+    25,
+    36
+   ],
+   "u": [
+    0.12457,
+    0.21107
+   ],
+   "v": [
+    0.48013,
+    0.53736
+   ]
+  },
+  {
+   "name": "joystick_right",
+   "image": "parts/joystick_right.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "deep",
+   "motion": "stick",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.0,
+     0.1667
+    ],
+    "v": [
+     0.6111,
+     0.8056
+    ]
+   },
+   "px_size": [
+    24,
+    36
+   ],
+   "u": [
+    0.57439,
+    0.65744
+   ],
+   "v": [
+    0.48013,
+    0.53736
+   ]
+  },
+  {
+   "name": "control_deck",
+   "image": "parts/control_deck.png",
+   "hf": [
+    0.14285714285714285,
+    0.18466898954703834
+   ],
+   "resize": "spanx_repeat",
+   "resize_y": "spanx_repeat",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": true,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.2153,
+     0.4375
+    ],
+    "v": null
+   },
+   "px_size": [
+    288,
+    41
+   ],
+   "u": [
+    0.00346,
+    1.0
+   ],
+   "v": [
+    0.44674,
+    0.51192
+   ]
+  },
+  {
+   "name": "button_p1_1",
+   "image": "parts/button_p1_1.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "press",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.4118,
+     0.5882
+    ],
+    "v": null
+   },
+   "px_size": [
+    17,
+    15
+   ],
+   "u": [
+    0.77855,
+    0.83737
+   ],
+   "v": [
+    0.48013,
+    0.50397
+   ]
+  },
+  {
+   "name": "button_p1_2",
+   "image": "parts/button_p1_2.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "press",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.1765,
+     0.4118
+    ],
+    "v": null
+   },
+   "px_size": [
+    17,
+    14
+   ],
+   "u": [
+    0.33218,
+    0.391
+   ],
+   "v": [
+    0.48013,
+    0.50238
+   ]
+  },
+  {
+   "name": "button_p1_3",
+   "image": "parts/button_p1_3.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "press",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    16,
+    15
+   ],
+   "u": [
+    0.40138,
+    0.45675
+   ],
+   "v": [
+    0.47854,
+    0.50238
+   ]
+  },
+  {
+   "name": "button_p2_3",
+   "image": "parts/button_p2_3.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "press",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.3889,
+     0.6111
+    ],
+    "v": null
+   },
+   "px_size": [
+    18,
+    15
+   ],
+   "u": [
+    0.84429,
+    0.90657
+   ],
+   "v": [
+    0.47854,
+    0.50238
+   ]
+  },
+  {
+   "name": "button_p2_2",
+   "image": "parts/button_p2_2.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "press",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": [
+     0.0667,
+     0.2667
+    ]
+   },
+   "px_size": [
+    18,
+    15
+   ],
+   "u": [
+    0.7128,
+    0.77509
+   ],
+   "v": [
+    0.47536,
+    0.49921
+   ]
+  },
+  {
+   "name": "button_p2_1",
+   "image": "parts/button_p2_1.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "press",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    17,
+    15
+   ],
+   "u": [
+    0.26644,
+    0.32526
+   ],
+   "v": [
+    0.47377,
+    0.49762
+   ]
+  },
+  {
+   "name": "coin_slot",
+   "image": "parts/coin_slot.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": [
+     0.4286,
+     0.7143
+    ]
+   },
+   "px_size": [
+    35,
+    7
+   ],
+   "u": [
+    0.49481,
+    0.61592
+   ],
+   "v": [
+    0.3275,
+    0.33863
+   ]
+  },
+  {
+   "name": "coin_door",
+   "image": "parts/coin_door.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.4368,
+     0.7241
+    ],
+    "v": [
+     0.0385,
+     0.2253
+    ]
+   },
+   "px_size": [
+    87,
+    187
+   ],
+   "u": [
+    0.35294,
+    0.65398
+   ],
+   "v": [
+    0.03975,
+    0.33704
+   ]
+  },
+  {
+   "name": "decal",
+   "image": "parts/decal.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": [
+     0.0058,
+     0.3815
+    ]
+   },
+   "px_size": [
+    77,
+    173
+   ],
+   "u": [
+    0.34948,
+    0.61592
+   ],
+   "v": [
+    0.05087,
+    0.32591
+   ]
+  },
+  {
+   "name": "decal_2",
+   "image": "parts/decal_2.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.375,
+     0.625
+    ],
+    "v": null
+   },
+   "px_size": [
+    8,
+    77
+   ],
+   "u": [
+    0.6263,
+    0.65398
+   ],
+   "v": [
+    0.18442,
+    0.30684
+   ]
+  },
+  {
+   "name": "decal_3",
+   "image": "parts/decal_3.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.6,
+     0.9333
+    ],
+    "v": [
+     0.3944,
+     0.7324
+    ]
+   },
+   "px_size": [
+    15,
+    75
+   ],
+   "u": [
+    0.35294,
+    0.40484
+   ],
+   "v": [
+    0.18601,
+    0.30525
+   ]
+  },
+  {
+   "name": "coin_door_lower_panel",
+   "image": "parts/coin_door_lower_panel.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "hinge_left",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.3846,
+     0.5641
+    ],
+    "v": [
+     0.2683,
+     0.439
+    ]
+   },
+   "px_size": [
+    39,
+    83
+   ],
+   "u": [
+    0.51903,
+    0.65398
+   ],
+   "v": [
+    0.03657,
+    0.16852
+   ]
+  },
+  {
+   "name": "decal_4",
+   "image": "parts/decal_4.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.6444,
+     0.9778
+    ],
+    "v": [
+     0.7143,
+     1.0
+    ]
+   },
+   "px_size": [
+    45,
+    7
+   ],
+   "u": [
+    0.35986,
+    0.51557
+   ],
+   "v": [
+    0.03657,
+    0.04769
+   ]
+  }
+ ]
+}

@@ -1,0 +1,111 @@
+{
+ "face": "front",
+ "size": [
+  254,
+  645
+ ],
+ "aspect": 0.3938,
+ "background": "bg_front.png",
+ "background_mode": "mirror",
+ "parts": [
+  {
+   "name": "backglass_art",
+   "image": "parts/backglass_art.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    235,
+    131
+   ],
+   "u": [
+    0.03543,
+    0.96063
+   ],
+   "v": [
+    0.79535,
+    0.99845
+   ]
+  },
+  {
+   "name": "speaker_grille_panel",
+   "image": "parts/speaker_grille_panel.png",
+   "hf": [
+    0.10683760683760683,
+    0.14957264957264957
+   ],
+   "resize": "spanx_center",
+   "resize_y": "spanx_center",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "spans": true,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    235,
+    71
+   ],
+   "u": [
+    0.03543,
+    0.96063
+   ],
+   "v": [
+    0.6186,
+    0.72868
+   ]
+  },
+  {
+   "name": "cabinet_body",
+   "image": "parts/cabinet_body.png",
+   "hf": [
+    0.15163934426229508,
+    0.19262295081967212
+   ],
+   "resize": "spanx_center",
+   "resize_y": "spany_center",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "spans": true,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": [
+     0.0101,
+     0.4548
+    ]
+   },
+   "px_size": [
+    245,
+    398
+   ],
+   "u": [
+    0.01969,
+    0.98425
+   ],
+   "v": [
+    0.0031,
+    0.62016
+   ]
+  }
+ ]
+}

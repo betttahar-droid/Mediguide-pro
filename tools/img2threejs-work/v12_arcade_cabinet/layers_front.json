@@ -1,0 +1,179 @@
+{
+ "face": "front",
+ "size": [
+  266,
+  581
+ ],
+ "aspect": 0.45783,
+ "background": "bg_front.png",
+ "background_mode": "mirror",
+ "parts": [
+  {
+   "name": "marquee",
+   "image": "parts/marquee.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    221,
+    64
+   ],
+   "u": [
+    0.08271,
+    0.91353
+   ],
+   "v": [
+    0.88296,
+    0.99312
+   ]
+  },
+  {
+   "name": "speaker_grille",
+   "image": "parts/speaker_grille.png",
+   "hf": [
+    0.06018518518518518,
+    0.10185185185185185
+   ],
+   "resize": "spanx_center",
+   "resize_y": "spanx_center",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": true,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.2903,
+     0.47
+    ],
+    "v": null
+   },
+   "px_size": [
+    217,
+    47
+   ],
+   "u": [
+    0.09023,
+    0.90602
+   ],
+   "v": [
+    0.80379,
+    0.88468
+   ]
+  },
+  {
+   "name": "screen",
+   "image": "parts/screen.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    217,
+    158
+   ],
+   "u": [
+    0.09023,
+    0.90602
+   ],
+   "v": [
+    0.51291,
+    0.78485
+   ]
+  },
+  {
+   "name": "control_deck",
+   "image": "parts/control_deck.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    239,
+    30
+   ],
+   "u": [
+    0.05263,
+    0.95113
+   ],
+   "v": [
+    0.46299,
+    0.51463
+   ]
+  },
+  {
+   "name": "front_rail",
+   "image": "parts/front_rail.png",
+   "hf": [
+    0.10266159695817491,
+    0.1444866920152091
+   ],
+   "resize": "spanx_center",
+   "resize_y": "spanx_center",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": true,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": [
+     0.2391,
+     0.7174
+    ]
+   },
+   "px_size": [
+    264,
+    46
+   ],
+   "u": [
+    0.00376,
+    0.99624
+   ],
+   "v": [
+    0.38554,
+    0.46472
+   ]
+  }
+ ]
+}

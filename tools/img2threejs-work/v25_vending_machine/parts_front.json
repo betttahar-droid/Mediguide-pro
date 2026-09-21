@@ -1,0 +1,387 @@
+{
+ "face": "front",
+ "size": [
+  324,
+  582
+ ],
+ "parts": [
+  {
+   "name": "display_window",
+   "px": [
+    21,
+    26,
+    301,
+    288
+   ],
+   "mask": "masks/1.png",
+   "resize": "spanx_center",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "spans": true,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "price_strip_row1",
+   "px": [
+    24,
+    103,
+    283,
+    127
+   ],
+   "mask": "masks/2.png",
+   "resize": "spanx_repeat",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": true,
+   "spans": false,
+   "per_tier": true,
+   "lengthens": false
+  },
+  {
+   "name": "price_strip_row2",
+   "px": [
+    36,
+    189,
+    284,
+    213
+   ],
+   "mask": "masks/3.png",
+   "resize": "spanx_repeat",
+   "anchor": "left",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": true,
+   "spans": false,
+   "per_tier": true,
+   "lengthens": false
+  },
+  {
+   "name": "decal",
+   "px": [
+    47,
+    190,
+    270,
+    199
+   ],
+   "mask": "masks/4.png",
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": true,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "price_strip_row3",
+   "px": [
+    37,
+    267,
+    283,
+    288
+   ],
+   "mask": "masks/5.png",
+   "resize": "spanx_repeat",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": true,
+   "spans": false,
+   "per_tier": true,
+   "lengthens": false
+  },
+  {
+   "name": "coin_mech_button_left",
+   "px": [
+    239,
+    296,
+    257,
+    314
+   ],
+   "mask": "masks/6.png",
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "flush",
+   "motion": "press",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "coin_slot",
+   "px": [
+    232,
+    298,
+    245,
+    320
+   ],
+   "mask": "masks/7.png",
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "coin_return",
+   "px": [
+    256,
+    298,
+    291,
+    333
+   ],
+   "mask": "masks/8.png",
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "coin_mech_button_right",
+   "px": [
+    269,
+    300,
+    287,
+    318
+   ],
+   "mask": "masks/9.png",
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "flush",
+   "motion": "press",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "decal_2",
+   "px": [
+    189,
+    302,
+    229,
+    320
+   ],
+   "mask": "masks/10.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "coin_mech_button_lower",
+   "px": [
+    232,
+    310,
+    248,
+    335
+   ],
+   "mask": "masks/11.png",
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "flush",
+   "motion": "press",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "decal_3",
+   "px": [
+    295,
+    319,
+    313,
+    331
+   ],
+   "mask": "masks/12.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "coin_return_flap",
+   "px": [
+    293,
+    321,
+    313,
+    353
+   ],
+   "mask": "masks/13.png",
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "recessed",
+   "motion": "hinge_top",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "bill_acceptor",
+   "px": [
+    192,
+    333,
+    230,
+    368
+   ],
+   "mask": "masks/14.png",
+   "resize": "fixed",
+   "anchor": "left",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "decal_4",
+   "px": [
+    241,
+    358,
+    283,
+    379
+   ],
+   "mask": "masks/15.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "service_panel",
+   "px": [
+    31,
+    426,
+    116,
+    488
+   ],
+   "mask": "masks/16.png",
+   "resize": "fixed",
+   "anchor": "left",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "delivery_tray",
+   "px": [
+    33,
+    426,
+    237,
+    490
+   ],
+   "mask": "masks/17.png",
+   "resize": "spanx_repeat",
+   "anchor": "bottom",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "delivery_tray_flap",
+   "px": [
+    137,
+    439,
+    158,
+    453
+   ],
+   "mask": "masks/18.png",
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "press",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "lock",
+   "px": [
+    273,
+    446,
+    306,
+    478
+   ],
+   "mask": "masks/19.png",
+   "resize": "fixed",
+   "anchor": "right",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "decal_5",
+   "px": [
+    17,
+    515,
+    46,
+    547
+   ],
+   "mask": "masks/20.png",
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "spans": false,
+   "per_tier": false,
+   "lengthens": false
+  },
+  {
+   "name": "kick_vent",
+   "px": [
+    65,
+    544,
+    258,
+    558
+   ],
+   "mask": "masks/21.png",
+   "resize": "spanx_repeat",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "spans": true,
+   "per_tier": false,
+   "lengthens": true
+  }
+ ]
+}

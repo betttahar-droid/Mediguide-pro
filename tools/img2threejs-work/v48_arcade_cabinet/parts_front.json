@@ -1,0 +1,77 @@
+{
+ "face": "front",
+ "size": [
+  263,
+  632
+ ],
+ "parts": [
+  {
+   "name": "speaker_grille",
+   "px": [
+    11,
+    83,
+    253,
+    135
+   ],
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": true
+  },
+  {
+   "name": "screen",
+   "px": [
+    9,
+    134,
+    253,
+    305
+   ],
+   "resize": "spanx_center",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": true
+  },
+  {
+   "name": "control_deck",
+   "px": [
+    9,
+    330,
+    251,
+    389
+   ],
+   "resize": "spanx_repeat",
+   "anchor": "center",
+   "depth": "deep",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": true
+  },
+  {
+   "name": "front_panel",
+   "px": [
+    11,
+    388,
+    251,
+    626
+   ],
+   "resize": "spanx_center",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": true,
+   "spans": true
+  }
+ ]
+}

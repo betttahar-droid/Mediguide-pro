@@ -1,0 +1,48 @@
+{
+ "wider_means": "A wider jukebox is a broader cabinet: the arched wooden carcass, the speaker grilles, the central grille and the title-strip panel all run wider, with the same single dome and coin door.",
+ "taller_means": "A taller jukebox has a taller plain wooden lower cabinet body -- more bare wood panel below the control deck and around the grille -- not a bigger dome or taller grille.",
+ "taller_at": [
+  {
+   "part": "bubble_tube_left_1",
+   "side": "itself",
+   "px": [
+    255,
+    452
+   ]
+  },
+  {
+   "part": "bubble_tube_left_2",
+   "side": "itself",
+   "px": [
+    255,
+    452
+   ]
+  },
+  {
+   "part": "bubble_tube_left_3",
+   "side": "itself",
+   "px": [
+    255,
+    452
+   ]
+  },
+  {
+   "part": "bubble_tube_left_4",
+   "side": "itself",
+   "px": [
+    255,
+    452
+   ]
+  }
+ ],
+ "max_wider": 1.6,
+ "max_taller": 1.5,
+ "per_bay": [],
+ "per_tier": [],
+ "spans": [
+  "control_panel",
+  "lower_grille",
+  "base_rail",
+  "dome_glass"
+ ]
+}

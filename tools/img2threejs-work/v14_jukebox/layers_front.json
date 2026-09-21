@@ -1,0 +1,105 @@
+{
+ "face": "front",
+ "size": [
+  375,
+  591
+ ],
+ "aspect": 0.63452,
+ "background": "bg_front.png",
+ "background_mode": "mirror",
+ "parts": [
+  {
+   "name": "marquee",
+   "image": "parts/marquee.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    332,
+    73
+   ],
+   "u": [
+    0.056,
+    0.94133
+   ],
+   "v": [
+    0.87479,
+    0.99831
+   ]
+  },
+  {
+   "name": "button_panel",
+   "image": "parts/button_panel.png",
+   "hf": null,
+   "resize": "spanx_center",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": true,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    360,
+    73
+   ],
+   "u": [
+    0.01867,
+    0.97867
+   ],
+   "v": [
+    0.77157,
+    0.89509
+   ]
+  },
+  {
+   "name": "speaker_grille",
+   "image": "parts/speaker_grille.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    346,
+    314
+   ],
+   "u": [
+    0.03733,
+    0.96
+   ],
+   "v": [
+    0.24196,
+    0.77327
+   ]
+  }
+ ]
+}

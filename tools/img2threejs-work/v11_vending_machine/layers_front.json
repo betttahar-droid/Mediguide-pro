@@ -1,0 +1,262 @@
+{
+ "face": "front",
+ "size": [
+  277,
+  556
+ ],
+ "aspect": 0.4982,
+ "background": "bg_front.png",
+ "background_mode": "mirror",
+ "parts": [
+  {
+   "name": "marquee",
+   "image": "parts/marquee.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.3065,
+     0.9847
+    ],
+    "v": [
+     0.2917,
+     0.5833
+    ]
+   },
+   "px_size": [
+    261,
+    24
+   ],
+   "u": [
+    0.02527,
+    0.96751
+   ],
+   "v": [
+    0.93885,
+    0.98201
+   ]
+  },
+  {
+   "name": "status_label_green",
+   "image": "parts/status_label_green.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.371,
+     0.5645
+    ],
+    "v": null
+   },
+   "px_size": [
+    62,
+    19
+   ],
+   "u": [
+    0.68592,
+    0.90975
+   ],
+   "v": [
+    0.81475,
+    0.84892
+   ]
+  },
+  {
+   "name": "control_deck",
+   "image": "parts/control_deck.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.1941,
+     0.6582
+    ],
+    "v": [
+     0.037,
+     0.2222
+    ]
+   },
+   "px_size": [
+    237,
+    27
+   ],
+   "u": [
+    0.01083,
+    0.86643
+   ],
+   "v": [
+    0.52158,
+    0.57014
+   ]
+  },
+  {
+   "name": "cabinet_rail_left",
+   "image": "parts/cabinet_rail_left.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "left",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.52,
+     0.72
+    ],
+    "v": null
+   },
+   "px_size": [
+    25,
+    80
+   ],
+   "u": [
+    0.04693,
+    0.13718
+   ],
+   "v": [
+    0.42626,
+    0.57014
+   ]
+  },
+  {
+   "name": "cabinet_rail_right",
+   "image": "parts/cabinet_rail_right.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "right",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.2,
+     0.4
+    ],
+    "v": null
+   },
+   "px_size": [
+    25,
+    84
+   ],
+   "u": [
+    0.85921,
+    0.94946
+   ],
+   "v": [
+    0.41906,
+    0.57014
+   ]
+  },
+  {
+   "name": "dispense_slot",
+   "image": "parts/dispense_slot.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.0941,
+     0.901
+    ],
+    "v": [
+     0.4557,
+     0.8608
+    ]
+   },
+   "px_size": [
+    202,
+    79
+   ],
+   "u": [
+    0.13357,
+    0.86282
+   ],
+   "v": [
+    0.42806,
+    0.57014
+   ]
+  },
+  {
+   "name": "coin_return_tray",
+   "image": "parts/coin_return_tray.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.3629,
+     0.9032
+    ],
+    "v": [
+     0.5,
+     0.8182
+    ]
+   },
+   "px_size": [
+    124,
+    45
+   ],
+   "u": [
+    0.28159,
+    0.72924
+   ],
+   "v": [
+    0.14029,
+    0.22122
+   ]
+  }
+ ]
+}

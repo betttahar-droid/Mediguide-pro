@@ -1,0 +1,534 @@
+{
+ "grid": [
+  40,
+  46,
+  96
+ ],
+ "boxes": [
+  {
+   "min": [
+    2,
+    2,
+    0
+   ],
+   "max": [
+    38,
+    44,
+    6
+   ],
+   "colour": "#39424a",
+   "name": "plinth base",
+   "palette": "charcoal"
+  },
+  {
+   "min": [
+    2,
+    6,
+    6
+   ],
+   "max": [
+    38,
+    44,
+    88
+   ],
+   "colour": "#24544a",
+   "name": "cabinet body",
+   "palette": "tealDeep"
+  },
+  {
+   "min": [
+    0,
+    6,
+    10
+   ],
+   "max": [
+    2,
+    44,
+    86
+   ],
+   "colour": "#57a98d",
+   "name": "side accent stripe left",
+   "palette": "teal"
+  },
+  {
+   "min": [
+    38,
+    6,
+    10
+   ],
+   "max": [
+    40,
+    44,
+    86
+   ],
+   "colour": "#57a98d",
+   "name": "side accent stripe right",
+   "palette": "teal"
+  },
+  {
+   "min": [
+    6,
+    2,
+    40
+   ],
+   "max": [
+    26,
+    4,
+    80
+   ],
+   "colour": "#d2e8e4",
+   "name": "glass window",
+   "palette": "glass"
+  },
+  {
+   "min": [
+    6,
+    4,
+    40
+   ],
+   "max": [
+    26,
+    6,
+    80
+   ],
+   "colour": "#39424a",
+   "name": "window recess back",
+   "palette": "charcoal"
+  },
+  {
+   "min": [
+    4,
+    2,
+    38
+   ],
+   "max": [
+    6,
+    7,
+    82
+   ],
+   "colour": "#57a98d",
+   "name": "window frame left",
+   "palette": "teal"
+  },
+  {
+   "min": [
+    26,
+    2,
+    38
+   ],
+   "max": [
+    28,
+    7,
+    82
+   ],
+   "colour": "#57a98d",
+   "name": "window frame right",
+   "palette": "teal"
+  },
+  {
+   "min": [
+    4,
+    2,
+    80
+   ],
+   "max": [
+    28,
+    7,
+    84
+   ],
+   "colour": "#57a98d",
+   "name": "window frame top",
+   "palette": "teal"
+  },
+  {
+   "min": [
+    4,
+    2,
+    36
+   ],
+   "max": [
+    28,
+    7,
+    40
+   ],
+   "colour": "#57a98d",
+   "name": "window frame bottom",
+   "palette": "teal"
+  },
+  {
+   "min": [
+    7,
+    6,
+    48
+   ],
+   "max": [
+    25,
+    8,
+    50
+   ],
+   "colour": "#b0bcbd",
+   "name": "shelf lower",
+   "palette": "steel"
+  },
+  {
+   "min": [
+    7,
+    6,
+    58
+   ],
+   "max": [
+    25,
+    8,
+    60
+   ],
+   "colour": "#b0bcbd",
+   "name": "shelf middle",
+   "palette": "steel"
+  },
+  {
+   "min": [
+    7,
+    6,
+    68
+   ],
+   "max": [
+    25,
+    8,
+    70
+   ],
+   "colour": "#b0bcbd",
+   "name": "shelf upper",
+   "palette": "steel"
+  },
+  {
+   "min": [
+    8,
+    8,
+    50
+   ],
+   "max": [
+    12,
+    14,
+    58
+   ],
+   "colour": "#f5804f",
+   "name": "product A1 orange soda",
+   "palette": "signal"
+  },
+  {
+   "min": [
+    14,
+    8,
+    50
+   ],
+   "max": [
+    18,
+    14,
+    58
+   ],
+   "colour": "#9ad9b8",
+   "name": "product A2 mint drink",
+   "palette": "mint"
+  },
+  {
+   "min": [
+    20,
+    8,
+    50
+   ],
+   "max": [
+    24,
+    14,
+    58
+   ],
+   "colour": "#dda265",
+   "name": "product A3 snack bar",
+   "palette": "oak"
+  },
+  {
+   "min": [
+    8,
+    8,
+    60
+   ],
+   "max": [
+    12,
+    14,
+    68
+   ],
+   "colour": "#f9efdc",
+   "name": "product B1 paper pack",
+   "palette": "paper"
+  },
+  {
+   "min": [
+    14,
+    8,
+    60
+   ],
+   "max": [
+    18,
+    14,
+    68
+   ],
+   "colour": "#57a98d",
+   "name": "product B2 teal bottle",
+   "palette": "teal"
+  },
+  {
+   "min": [
+    20,
+    8,
+    60
+   ],
+   "max": [
+    24,
+    14,
+    68
+   ],
+   "colour": "#b0763e",
+   "name": "product B3 dark snack",
+   "palette": "oakDark"
+  },
+  {
+   "min": [
+    8,
+    8,
+    70
+   ],
+   "max": [
+    12,
+    14,
+    78
+   ],
+   "colour": "#f5804f",
+   "name": "product C1 orange soda",
+   "palette": "signal"
+  },
+  {
+   "min": [
+    14,
+    8,
+    70
+   ],
+   "max": [
+    18,
+    14,
+    78
+   ],
+   "colour": "#9ad9b8",
+   "name": "product C2 mint drink",
+   "palette": "mint"
+  },
+  {
+   "min": [
+    30,
+    2,
+    44
+   ],
+   "max": [
+    34,
+    6,
+    48
+   ],
+   "colour": "#68777c",
+   "name": "coin mechanism panel",
+   "palette": "steelDark"
+  },
+  {
+   "min": [
+    31,
+    2,
+    45
+   ],
+   "max": [
+    33,
+    4,
+    47
+   ],
+   "colour": "#39424a",
+   "name": "coin slot",
+   "palette": "charcoal"
+  },
+  {
+   "min": [
+    29,
+    2,
+    52
+   ],
+   "max": [
+    35,
+    6,
+    70
+   ],
+   "colour": "#39424a",
+   "name": "keypad panel",
+   "palette": "charcoal"
+  },
+  {
+   "min": [
+    29,
+    3,
+    56
+   ],
+   "max": [
+    31,
+    5,
+    58
+   ],
+   "colour": "#b0bcbd",
+   "name": "keypad button 1",
+   "palette": "steel"
+  },
+  {
+   "min": [
+    33,
+    3,
+    56
+   ],
+   "max": [
+    35,
+    5,
+    58
+   ],
+   "colour": "#b0bcbd",
+   "name": "keypad button 2",
+   "palette": "steel"
+  },
+  {
+   "min": [
+    29,
+    3,
+    62
+   ],
+   "max": [
+    31,
+    5,
+    64
+   ],
+   "colour": "#b0bcbd",
+   "name": "keypad button 3",
+   "palette": "steel"
+  },
+  {
+   "min": [
+    33,
+    3,
+    62
+   ],
+   "max": [
+    35,
+    5,
+    64
+   ],
+   "colour": "#b0bcbd",
+   "name": "keypad button 4",
+   "palette": "steel"
+  },
+  {
+   "min": [
+    28,
+    2,
+    18
+   ],
+   "max": [
+    36,
+    6,
+    20
+   ],
+   "colour": "#39424a",
+   "name": "dispense slot frame top",
+   "palette": "charcoal"
+  },
+  {
+   "min": [
+    28,
+    2,
+    10
+   ],
+   "max": [
+    36,
+    6,
+    12
+   ],
+   "colour": "#39424a",
+   "name": "dispense slot frame bottom",
+   "palette": "charcoal"
+  },
+  {
+   "min": [
+    28,
+    2,
+    12
+   ],
+   "max": [
+    30,
+    6,
+    18
+   ],
+   "colour": "#39424a",
+   "name": "dispense slot frame left",
+   "palette": "charcoal"
+  },
+  {
+   "min": [
+    34,
+    2,
+    12
+   ],
+   "max": [
+    36,
+    6,
+    18
+   ],
+   "colour": "#39424a",
+   "name": "dispense slot frame right",
+   "palette": "charcoal"
+  },
+  {
+   "min": [
+    30,
+    2,
+    13
+   ],
+   "max": [
+    34,
+    5,
+    17
+   ],
+   "colour": "#b0bcbd",
+   "name": "dispense flap",
+   "palette": "steel"
+  },
+  {
+   "min": [
+    4,
+    2,
+    88
+   ],
+   "max": [
+    36,
+    12,
+    96
+   ],
+   "colour": "#f5804f",
+   "name": "illuminated top sign",
+   "palette": "signal"
+  },
+  {
+   "min": [
+    5,
+    2,
+    90
+   ],
+   "max": [
+    35,
+    4,
+    95
+   ],
+   "colour": "#f9efdc",
+   "name": "sign face stripe",
+   "palette": "paper"
+  }
+ ]
+}

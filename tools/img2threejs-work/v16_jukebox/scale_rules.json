@@ -1,0 +1,12 @@
+{
+ "wider_means": "A wider jukebox has more title-strip columns in the window and additional speaker bays flanking the grille, like a widened 1950s stereophonic model.",
+ "taller_means": "A taller jukebox is simply a taller cabinet body \u2014 more wood paneling above and below the same window, grille, and control deck.",
+ "max_wider": 1.6,
+ "max_taller": 1.5,
+ "per_bay": [
+  "speaker_grille_right",
+  "speaker_grille_left",
+  "decal_1",
+  "decal_11"
+ ]
+}

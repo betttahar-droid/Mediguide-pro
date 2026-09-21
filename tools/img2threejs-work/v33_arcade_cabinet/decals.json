@@ -1,0 +1,311 @@
+{
+ "asset": "arcade cabinet",
+ "decals": [
+  {
+   "n": 1,
+   "image": "decals/d1.png",
+   "px": [
+    327,
+    127
+   ],
+   "keyed": 0.46,
+   "median": [
+    163,
+    64,
+    146
+   ],
+   "name": "title",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.06
+  },
+  {
+   "n": 2,
+   "image": "decals/d2.png",
+   "px": [
+    80,
+    37
+   ],
+   "keyed": 0.165,
+   "median": [
+    63,
+    33,
+    61
+   ],
+   "name": "max_label",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.02
+  },
+  {
+   "n": 3,
+   "image": "decals/d3.png",
+   "px": [
+    126,
+    37
+   ],
+   "keyed": 0.15,
+   "median": [
+    60,
+    34,
+    57
+   ],
+   "name": "score_plate",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.02
+  },
+  {
+   "n": 4,
+   "image": "decals/d4.png",
+   "px": [
+    116,
+    37
+   ],
+   "keyed": 0.15,
+   "median": [
+    62,
+    37,
+    60
+   ],
+   "name": "high_score",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.02
+  },
+  {
+   "n": 5,
+   "image": "decals/d5.png",
+   "px": [
+    268,
+    186
+   ],
+   "keyed": 0.418,
+   "median": [
+    94,
+    103,
+    95
+   ],
+   "name": "alien_mascot",
+   "rule": "hold",
+   "where": "side",
+   "size": 0.14
+  },
+  {
+   "n": 6,
+   "image": "decals/d6.png",
+   "px": [
+    331,
+    57
+   ],
+   "keyed": 0.712,
+   "median": [
+    95,
+    106,
+    132
+   ],
+   "name": "pinstripe",
+   "rule": "along",
+   "where": "any",
+   "size": 0.008
+  },
+  {
+   "n": 7,
+   "image": "decals/d7.png",
+   "px": [
+    87,
+    86
+   ],
+   "keyed": 0.11,
+   "median": [
+    74,
+    72,
+    75
+   ],
+   "name": "square_rivet",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.008
+  },
+  {
+   "n": 8,
+   "image": "decals/d8.png",
+   "px": [
+    87,
+    86
+   ],
+   "keyed": 0.117,
+   "median": [
+    72,
+    73,
+    74
+   ],
+   "name": "mounting_bolt",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.008
+  },
+  {
+   "n": 9,
+   "image": "decals/d9.png",
+   "px": [
+    107,
+    176
+   ],
+   "keyed": 0.81,
+   "median": [
+    164,
+    162,
+    141
+   ],
+   "name": "player_one",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.05
+  },
+  {
+   "n": 10,
+   "image": "decals/d10.png",
+   "px": [
+    193,
+    57
+   ],
+   "keyed": 0.501,
+   "median": [
+    34,
+    26,
+    35
+   ],
+   "name": "alien_label",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.02
+  },
+  {
+   "n": 11,
+   "image": "decals/d11.png",
+   "px": [
+    250,
+    57
+   ],
+   "keyed": 0.386,
+   "median": [
+    34,
+    26,
+    36
+   ],
+   "name": "attack_label",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.02
+  },
+  {
+   "n": 12,
+   "image": "decals/d12.png",
+   "px": [
+    92,
+    89
+   ],
+   "keyed": 0.427,
+   "median": [
+    126,
+    99,
+    80
+   ],
+   "name": "hazard_sign",
+   "rule": "hold",
+   "where": "back",
+   "size": 0.03
+  },
+  {
+   "n": 13,
+   "image": "decals/d13.png",
+   "px": [
+    139,
+    66
+   ],
+   "keyed": 0.47,
+   "median": [
+    63,
+    34,
+    58
+   ],
+   "name": "warning_label",
+   "rule": "hold",
+   "where": "back",
+   "size": 0.03
+  },
+  {
+   "n": 14,
+   "image": "decals/d14.png",
+   "px": [
+    200,
+    198
+   ],
+   "keyed": 0.519,
+   "median": [
+    85,
+    105,
+    126
+   ],
+   "name": "token_logo",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.03
+  },
+  {
+   "n": 15,
+   "image": "decals/d15.png",
+   "px": [
+    331,
+    146
+   ],
+   "keyed": 0.281,
+   "median": [
+    53,
+    52,
+    51
+   ],
+   "name": "moulding",
+   "rule": "along",
+   "where": "front",
+   "size": 0.02
+  },
+  {
+   "n": 16,
+   "image": "decals/d16.png",
+   "px": [
+    97,
+    96
+   ],
+   "keyed": 0.868,
+   "median": [
+    88,
+    98,
+    103
+   ],
+   "name": "round_rivet",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.008
+  },
+  {
+   "n": 17,
+   "image": "decals/d17.png",
+   "px": [
+    158,
+    107
+   ],
+   "keyed": 0.736,
+   "median": [
+    79,
+    78,
+    71
+   ],
+   "name": "battery_meter",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.025
+  }
+ ]
+}

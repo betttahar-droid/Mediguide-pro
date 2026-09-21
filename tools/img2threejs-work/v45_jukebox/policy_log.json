@@ -1,0 +1,11 @@
+[
+ {
+  "face": "front",
+  "side_names": [
+   {
+    "was": "dome_art_left",
+    "now": "dome_art_right"
+   }
+  ]
+ }
+]

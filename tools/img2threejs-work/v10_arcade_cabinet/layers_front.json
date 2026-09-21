@@ -1,0 +1,77 @@
+{
+ "face": "front",
+ "size": [
+  263,
+  641
+ ],
+ "aspect": 0.4103,
+ "background": "bg_front.png",
+ "background_mode": "mirror",
+ "parts": [
+  {
+   "name": "speaker_grille",
+   "image": "parts/speaker_grille.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.3305,
+     0.6695
+    ],
+    "v": null
+   },
+   "px_size": [
+    236,
+    36
+   ],
+   "u": [
+    0.04943,
+    0.94677
+   ],
+   "v": [
+    0.80967,
+    0.86583
+   ]
+  },
+  {
+   "name": "coin_door",
+   "image": "parts/coin_door.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    110,
+    108
+   ],
+   "u": [
+    0.28897,
+    0.70722
+   ],
+   "v": [
+    0.17473,
+    0.34321
+   ]
+  }
+ ]
+}

@@ -1,0 +1,38 @@
+{
+ "wider_means": "A wider vending machine is a cabinet with more product columns in the display window, with the window bezel and push bar stretched to match.",
+ "taller_means": "A taller vending machine has more product rows on its shelves inside the display window, plus more plain cabinet panel between the window and the push bar and below the push bar.",
+ "taller_at": [
+  {
+   "part": "decal_1",
+   "side": "below",
+   "px": [
+    355,
+    384
+   ]
+  },
+  {
+   "part": "push_bar",
+   "side": "above",
+   "px": [
+    355,
+    384
+   ]
+  },
+  {
+   "part": "push_bar",
+   "side": "below",
+   "px": [
+    438,
+    517
+   ]
+  }
+ ],
+ "max_wider": 2.0,
+ "max_taller": 1.5,
+ "per_bay": [],
+ "per_tier": [],
+ "spans": [
+  "display_window",
+  "push_bar"
+ ]
+}

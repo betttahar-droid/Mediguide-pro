@@ -1,0 +1,43 @@
+{
+ "wider_means": "a vending machine with more product columns on each shelf row, plus an wider delivery tray and keypad side-panel",
+ "taller_means": "a machine with more shelf rows of product, not a taller sign or screen",
+ "max_wider": 1.8,
+ "max_taller": 1.4,
+ "per_bay": [
+  "decal",
+  "decal_2",
+  "decal_3",
+  "decal_4",
+  "decal_5",
+  "decal_6",
+  "decal_8",
+  "decal_9",
+  "decal_10",
+  "decal_11",
+  "decal_16",
+  "decal_17",
+  "decal_18",
+  "decal_19",
+  "decal_20",
+  "decal_21",
+  "decal_22",
+  "decal_23",
+  "decal_24",
+  "decal_25",
+  "decal_26",
+  "decal_27",
+  "decal_28",
+  "decal_29",
+  "decal_30"
+ ],
+ "spans": [
+  "display_window",
+  "display_screen",
+  "selection_keypad",
+  "coin_return",
+  "decal_31",
+  "lock",
+  "delivery_tray",
+  "decal_34"
+ ]
+}

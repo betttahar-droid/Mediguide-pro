@@ -1,0 +1,459 @@
+{
+ "grid": [
+  40,
+  46,
+  96
+ ],
+ "boxes": [
+  {
+   "min": [
+    1,
+    0,
+    1
+   ],
+   "max": [
+    38,
+    40,
+    4
+   ],
+   "colour": "#1e191a",
+   "name": "plinth base",
+   "palette": "#1e191a"
+  },
+  {
+   "min": [
+    5,
+    3,
+    4
+   ],
+   "max": [
+    35,
+    40,
+    24
+   ],
+   "colour": "#1e191a",
+   "name": "lower body",
+   "palette": "#1e191a"
+  },
+  {
+   "min": [
+    5,
+    3,
+    24
+   ],
+   "max": [
+    35,
+    40,
+    48
+   ],
+   "colour": "#1e191a",
+   "name": "mid body",
+   "palette": "#1e191a"
+  },
+  {
+   "min": [
+    5,
+    3,
+    48
+   ],
+   "max": [
+    35,
+    37,
+    56
+   ],
+   "colour": "#1e191a",
+   "name": "upper body",
+   "palette": "#1e191a"
+  },
+  {
+   "min": [
+    5,
+    2,
+    56
+   ],
+   "max": [
+    35,
+    31,
+    64
+   ],
+   "colour": "#1e191a",
+   "name": "screen taper body",
+   "palette": "#1e191a"
+  },
+  {
+   "min": [
+    5,
+    3,
+    64
+   ],
+   "max": [
+    35,
+    30,
+    72
+   ],
+   "colour": "#1e191a",
+   "name": "upper taper body",
+   "palette": "#1e191a"
+  },
+  {
+   "min": [
+    5,
+    3,
+    72
+   ],
+   "max": [
+    35,
+    31,
+    80
+   ],
+   "colour": "#1e191a",
+   "name": "shoulder body",
+   "palette": "#1e191a"
+  },
+  {
+   "min": [
+    5,
+    3,
+    80
+   ],
+   "max": [
+    35,
+    34,
+    88
+   ],
+   "colour": "#1e191a",
+   "name": "marquee body",
+   "palette": "#1e191a"
+  },
+  {
+   "min": [
+    10,
+    3,
+    88
+   ],
+   "max": [
+    30,
+    34,
+    96
+   ],
+   "colour": "#141213",
+   "name": "top cap centre",
+   "palette": "#141213"
+  },
+  {
+   "min": [
+    5,
+    3,
+    88
+   ],
+   "max": [
+    10,
+    34,
+    96
+   ],
+   "colour": "#4d525a",
+   "name": "top cap left",
+   "palette": "#4d525a"
+  },
+  {
+   "min": [
+    30,
+    3,
+    88
+   ],
+   "max": [
+    35,
+    34,
+    96
+   ],
+   "colour": "#4d525a",
+   "name": "top cap right",
+   "palette": "#4d525a"
+  },
+  {
+   "min": [
+    5,
+    36,
+    4
+   ],
+   "max": [
+    35,
+    40,
+    48
+   ],
+   "colour": "#1e191a",
+   "name": "back panel lower",
+   "palette": "#1e191a"
+  },
+  {
+   "min": [
+    5,
+    30,
+    48
+   ],
+   "max": [
+    35,
+    34,
+    88
+   ],
+   "colour": "#1e191a",
+   "name": "back panel upper",
+   "palette": "#1e191a"
+  },
+  {
+   "min": [
+    6,
+    0,
+    6
+   ],
+   "max": [
+    34,
+    3,
+    22
+   ],
+   "colour": "#1e191a",
+   "name": "lower cabinet face",
+   "palette": "#1e191a"
+  },
+  {
+   "min": [
+    5,
+    0,
+    29
+   ],
+   "max": [
+    35,
+    3,
+    35
+   ],
+   "colour": "#1e191a",
+   "name": "control panel deck",
+   "palette": "#1e191a"
+  },
+  {
+   "min": [
+    9,
+    2,
+    50
+   ],
+   "max": [
+    30,
+    4,
+    71
+   ],
+   "colour": "#4d525a",
+   "name": "screen glass",
+   "palette": "#4d525a"
+  },
+  {
+   "min": [
+    12,
+    0,
+    47
+   ],
+   "max": [
+    31,
+    2,
+    48
+   ],
+   "colour": "#000000",
+   "name": "screen lower shadow",
+   "palette": "#000000"
+  },
+  {
+   "min": [
+    31,
+    0,
+    48
+   ],
+   "max": [
+    33,
+    2,
+    72
+   ],
+   "colour": "#000000",
+   "name": "screen right shadow",
+   "palette": "#000000"
+  },
+  {
+   "min": [
+    7,
+    0,
+    51
+   ],
+   "max": [
+    8,
+    2,
+    72
+   ],
+   "colour": "#000000",
+   "name": "screen left shadow",
+   "palette": "#000000"
+  },
+  {
+   "min": [
+    5,
+    0,
+    48
+   ],
+   "max": [
+    6,
+    2,
+    75
+   ],
+   "colour": "#000000",
+   "name": "left bezel",
+   "palette": "#000000"
+  },
+  {
+   "min": [
+    34,
+    0,
+    46
+   ],
+   "max": [
+    35,
+    2,
+    75
+   ],
+   "colour": "#000000",
+   "name": "right bezel",
+   "palette": "#000000"
+  },
+  {
+   "min": [
+    2,
+    0,
+    43
+   ],
+   "max": [
+    3,
+    2,
+    77
+   ],
+   "colour": "#000000",
+   "name": "upper left trim",
+   "palette": "#000000"
+  },
+  {
+   "min": [
+    37,
+    0,
+    43
+   ],
+   "max": [
+    38,
+    2,
+    77
+   ],
+   "colour": "#000000",
+   "name": "upper right trim",
+   "palette": "#000000"
+  },
+  {
+   "min": [
+    8,
+    0,
+    73
+   ],
+   "max": [
+    31,
+    2,
+    74
+   ],
+   "colour": "#000000",
+   "name": "speaker shadow line",
+   "palette": "#000000"
+  },
+  {
+   "min": [
+    3,
+    0,
+    48
+   ],
+   "max": [
+    4,
+    2,
+    72
+   ],
+   "colour": "#a1709d",
+   "name": "left purple stripe upper",
+   "palette": "#a1709d"
+  },
+  {
+   "min": [
+    35,
+    0,
+    48
+   ],
+   "max": [
+    36,
+    2,
+    72
+   ],
+   "colour": "#a1709d",
+   "name": "right purple stripe upper",
+   "palette": "#a1709d"
+  },
+  {
+   "min": [
+    3,
+    0,
+    6
+   ],
+   "max": [
+    4,
+    2,
+    22
+   ],
+   "colour": "#000000",
+   "name": "left side pillar lower",
+   "palette": "#000000"
+  },
+  {
+   "min": [
+    35,
+    0,
+    6
+   ],
+   "max": [
+    36,
+    2,
+    22
+   ],
+   "colour": "#000000",
+   "name": "right side pillar lower",
+   "palette": "#000000"
+  },
+  {
+   "min": [
+    5,
+    0,
+    77
+   ],
+   "max": [
+    35,
+    3,
+    81
+   ],
+   "colour": "#141213",
+   "name": "marquee top band",
+   "palette": "#141213"
+  },
+  {
+   "min": [
+    7,
+    0,
+    84
+   ],
+   "max": [
+    33,
+    3,
+    91
+   ],
+   "colour": "#57a3b5",
+   "name": "marquee light",
+   "palette": "#57a3b5"
+  }
+ ]
+}

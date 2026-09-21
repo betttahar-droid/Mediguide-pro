@@ -1,0 +1,172 @@
+[
+ {
+  "round": 0,
+  "asset": "pinball",
+  "looks_good": false,
+  "blocking": 5,
+  "faults": [
+   {
+    "part": "backglass_art",
+    "fault": "On widening (image 3) the fixed-size backglass art leaves tall dark blank filler bands on either side of the PINBALL art inside the backbox face. The backbox front reads as a picture with dead panels bolted beside it rather than a wider backbox \u2014 the ends should carry the art/frame, not bare smeared dark texture.",
+    "severity": "blocking"
+   },
+   {
+    "part": "speaker_grille_panel",
+    "fault": "In the widened render the speaker panel's end extensions show stretched streaky texture around the spread speaker circles rather than clean grille, readable as a smear a player could point at.",
+    "severity": "blocking"
+   },
+   {
+    "part": "cabinet_body (gemini)",
+    "fault": "Solid blue geometry fills the void beneath the front legs down to the floor instead of remaining open air.",
+    "severity": "blocking"
+   },
+   {
+    "part": "cabinet_body (gemini)",
+    "fault": "Severe geometry shearing and tearing opens visible gaps through the cabinet when scaled vertically.",
+    "severity": "blocking"
+   },
+   {
+    "part": "backglass_art (gemini)",
+    "fault": "Vertical seam and texture disruption down the center of the backbox art during horizontal scaling.",
+    "severity": "blocking"
+   }
+  ],
+  "patch": [
+   "backglass_art",
+   "cabinet_body",
+   "speaker_grille_panel"
+  ],
+  "wider_means": "A wider pinball is a wider cabinet with a wider playfield -- same parts, just a broader body and longer cross-members.",
+  "taller_means": "A taller pinball has a deeper-standing cabinet: a longer plain lower body panel and longer legs, with the backbox unchanged."
+ },
+ {
+  "round": 1,
+  "asset": "pinball",
+  "looks_good": false,
+  "blocking": 6,
+  "faults": [
+   {
+    "part": "backglass_art",
+    "fault": "When widened, the backglass art tiles instead of staying one piece: the PINBALL marquee reads 'P PINBALL L' with cut and duplicated letters at both edges. Text is doubled and cut -- blocking.",
+    "severity": "blocking"
+   },
+   {
+    "part": "cabinet_body",
+    "fault": "When made taller, the cabinet front panel detaches from the body: it leans outward past the legs, the playfield opening gaps open, and the legs are left floating clear of the cabinet. The whole silhouette no longer reads as a pinball cabinet -- blocking.",
+    "severity": "blocking"
+   },
+   {
+    "part": "background",
+    "fault": "In the taller render the background panel balloons forward and swallows the cabinet, presenting a blank smeared blue slab across the front of the prop -- looks like a bug, not a decision -- blocking.",
+    "severity": "blocking"
+   },
+   {
+    "part": "backglass_art (gemini)",
+    "fault": "Text repeats and clips at wide aspect ratios.",
+    "severity": "blocking"
+   },
+   {
+    "part": "cabinet_body (gemini)",
+    "fault": "Vertical scaling severely distorts geometry, creating an extruded ramp and disconnecting the lower cabinet.",
+    "severity": "blocking"
+   },
+   {
+    "part": "background (gemini)",
+    "fault": "Solid blue extrusion fills the open space beneath the coin door between front legs.",
+    "severity": "blocking"
+   }
+  ],
+  "patch": [
+   "backglass_art",
+   "background",
+   "cabinet_body"
+  ],
+  "wider_means": "A wider pinball is a wider cabinet with a wider playfield -- same parts, just a broader body and longer cross-members.",
+  "taller_means": "A taller pinball has a deeper-standing cabinet: a longer plain lower body panel and longer legs, with the backbox unchanged."
+ },
+ {
+  "round": 2,
+  "asset": "pinball",
+  "looks_good": false,
+  "blocking": 6,
+  "faults": [
+   {
+    "part": "backglass_art",
+    "fault": "When the cabinet is widened the backglass shows the title repeating with cut-off letter fragments ('P' and 'L' slivers) at the edges -- text is doubled and unreadable. A fixed backglass should stay one artwork, not tile.",
+    "severity": "blocking"
+   },
+   {
+    "part": "cabinet_body",
+    "fault": "In the 1.4x TALLER render the whole cabinet stretches instead of growing a longer lower panel and legs: the front face slumps and tilts, the panel texture is smeared into long vertical streaks, and the body no longer meets the backbox correctly. Does not read as the object.",
+    "severity": "blocking"
+   },
+   {
+    "part": "background",
+    "fault": "On the widened cabinet the extended end panels show banded, streaky smears where the texture was stretched rather than tiled, and the joins between repeats are hard cuts a player can point at.",
+    "severity": "blocking"
+   },
+   {
+    "part": "cabinet_body (gemini)",
+    "fault": "Solid blue geometry fills the void between the front legs down to the floor.",
+    "severity": "blocking"
+   },
+   {
+    "part": "backglass_art (gemini)",
+    "fault": "Marquee art tiles and duplicates lettering across the backbox when widened.",
+    "severity": "blocking"
+   },
+   {
+    "part": "cabinet_body (gemini)",
+    "fault": "Cabinet breaks apart and distorts heavily during vertical resize.",
+    "severity": "blocking"
+   }
+  ],
+  "patch": [
+   "backglass_art",
+   "background",
+   "cabinet_body"
+  ],
+  "wider_means": "A wider pinball is a wider cabinet with a wider playfield -- same parts, just a broader body and longer cross-members.",
+  "taller_means": "A taller pinball has a deeper-standing cabinet: a longer plain lower body panel and longer legs, with the backbox unchanged."
+ },
+ {
+  "round": 3,
+  "asset": "pinball",
+  "looks_good": false,
+  "blocking": 5,
+  "faults": [
+   {
+    "part": "backglass_art",
+    "fault": "When the cabinet is widened (image 3) the fixed backglass no longer spans the head: the PINBALL title is cut at both edges with stray letter fragments ('I' and 'L' slivers) and the art is stretched to fill. A player could point straight at the sliced lettering.",
+    "severity": "blocking"
+   },
+   {
+    "part": "cabinet_body",
+    "fault": "When the cabinet is made taller (image 4) the lower body panel stretches its texture into a long plain blue smear with no repeat or detail, and the stretched front reads as a sheared ramp rather than a deeper-standing cabinet. The vertical resize produced smeared, banded texture across the whole added panel.",
+    "severity": "blocking"
+   },
+   {
+    "part": "background",
+    "fault": "Stretched regions behind the widened/tallered prop show streaking where the texture repeats cut rather than reflect at the joins.",
+    "severity": "blocking"
+   },
+   {
+    "part": "cabinet_body (gemini)",
+    "fault": "Extraneous part creates redundant geometry that shears and detaches severely during vertical scaling.",
+    "severity": "blocking"
+   },
+   {
+    "part": "backglass_art (gemini)",
+    "fault": "Repeated artwork fragments flank the title when scaled horizontally.",
+    "severity": "blocking"
+   }
+  ],
+  "patch": [
+   "backglass_art",
+   "background",
+   "cabinet_body"
+  ],
+  "wider_means": "A wider pinball is a wider cabinet with a wider playfield -- same parts, just a broader body and longer cross-members.",
+  "taller_means": "A taller pinball has a deeper-standing cabinet: a longer plain lower body panel and longer legs, with the backbox unchanged."
+ }
+]

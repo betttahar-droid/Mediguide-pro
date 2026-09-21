@@ -1,0 +1,64 @@
+[
+ {
+  "round": 0,
+  "asset": "vending machine",
+  "looks_good": false,
+  "blocking": 5,
+  "faults": [
+   {
+    "part": "display_window",
+    "fault": "At 1.6x width the window does not gain product columns; the extra width is a blank smeared tan panel across the middle of the glass, and the $ price tags run off cut. A wider machine must show more bays behind the same glass.",
+    "severity": "blocking"
+   },
+   {
+    "part": "display_window",
+    "fault": "At 1.5x height no new shelf rows appear; the added height went into blank body between window and push door with a smeared stripe band (decal_7/arrow texture stretched across the plain panel). A taller machine needs more product rows on the grid.",
+    "severity": "blocking"
+   },
+   {
+    "part": "background",
+    "fault": "Panel texture smears and bands where the prop was enlarged: plain beige rectangle blotted over the window and coin area when widened, streaked arrow pattern down the body when heightened.",
+    "severity": "blocking"
+   },
+   {
+    "part": "push_door",
+    "fault": "At 1.6x width the push door region is overlaid by the smeared blank panel, cutting the door texture; the delivery door should keep its width while the body widens around it.",
+    "severity": "blocking"
+   },
+   {
+    "part": "display_window",
+    "fault": "Wireframe shows the window pane standing off in front of the body rather than sitting recessed behind the frame line.",
+    "severity": "blocking"
+   }
+  ],
+  "patch": [
+   {
+    "name": "background",
+    "resize": "fixed",
+    "anchor": "top",
+    "depth": "flush",
+    "motion": "none",
+    "count": "none",
+    "mode": "mirror"
+   },
+   {
+    "name": "display_window",
+    "resize": "fixed",
+    "anchor": "top",
+    "depth": "recessed",
+    "motion": "none",
+    "count": "both"
+   },
+   {
+    "name": "push_door",
+    "resize": "fixed",
+    "anchor": "bottom",
+    "depth": "proud",
+    "motion": "hinge_bottom",
+    "count": "none"
+   }
+  ],
+  "wider_means": "A wider vending machine has more product columns behind the same glass front, with the delivery door and coin mechanism keeping their width.",
+  "taller_means": "A taller vending machine has more product rows on the shelf grid and a longer plain body between the window, the delivery door and the kick base \u2014 not a taller sign or a taller door."
+ }
+]

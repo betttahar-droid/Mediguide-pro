@@ -1,0 +1,85 @@
+{
+ "face": "front",
+ "redrawn": {
+  "decal_12": [
+   42,
+   192
+  ],
+  "title_text_line_10": [
+   120,
+   54
+  ],
+  "decal_11": [
+   48,
+   210
+  ],
+  "title_text_line_8": [
+   99,
+   64
+  ],
+  "title_text_line_3": [
+   180,
+   64
+  ],
+  "title_text_line_12": [
+   151,
+   64
+  ],
+  "decal_18": [
+   180,
+   64
+  ],
+  "title_text_line": [
+   262,
+   64
+  ],
+  "title_text_line_7": [
+   171,
+   64
+  ],
+  "title_text_line_14": [
+   304,
+   64
+  ],
+  "title_text_line_2": [
+   112,
+   64
+  ],
+  "title_text_line_13": [
+   276,
+   64
+  ],
+  "title_text_line_5": [
+   276,
+   64
+  ],
+  "grille_slot_row": [
+   320,
+   64
+  ],
+  "push_button_right": [
+   133,
+   64
+  ],
+  "push_button_left_2": [
+   100,
+   64
+  ],
+  "dome_glass_left": [
+   64,
+   88
+  ],
+  "push_button_left": [
+   83,
+   64
+  ],
+  "title_text_block_3": [
+   89,
+   64
+  ],
+  "title_strip_right_bottom": [
+   218,
+   64
+  ]
+ }
+}

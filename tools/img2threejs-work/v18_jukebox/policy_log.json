@@ -1,0 +1,11 @@
+[
+ {
+  "face": "front",
+  "side_names": [
+   {
+    "was": "button_right_3",
+    "now": "button_left_3"
+   }
+  ]
+ }
+]

@@ -1,0 +1,27 @@
+[
+ {
+  "face": "front",
+  "side_names": [
+   {
+    "was": "title_strip_right_bottom",
+    "now": "title_strip_left_bottom"
+   },
+   {
+    "was": "selector_button_right",
+    "now": "selector_button_left"
+   },
+   {
+    "was": "bubbler_tube_right_3",
+    "now": "bubbler_tube_left_3"
+   },
+   {
+    "was": "base_trim_left",
+    "now": "base_trim_right"
+   },
+   {
+    "was": "base_trim_right",
+    "now": "base_trim_left"
+   }
+  ]
+ }
+]

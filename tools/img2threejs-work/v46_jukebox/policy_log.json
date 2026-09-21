@@ -1,0 +1,35 @@
+[
+ {
+  "face": "front",
+  "side_names": [
+   {
+    "was": "title_strip_block_left",
+    "now": "title_strip_block_right"
+   },
+   {
+    "was": "title_strip_right_5",
+    "now": "title_strip_left_5"
+   },
+   {
+    "was": "title_strip_left_5",
+    "now": "title_strip_right_5"
+   },
+   {
+    "was": "title_strip_right_7",
+    "now": "title_strip_left_7"
+   },
+   {
+    "was": "title_strip_right_10",
+    "now": "title_strip_left_10"
+   },
+   {
+    "was": "bubble_tube_left_1",
+    "now": "bubble_tube_right_1"
+   },
+   {
+    "was": "bubble_tube_left_4",
+    "now": "bubble_tube_right_4"
+   }
+  ]
+ }
+]

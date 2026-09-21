@@ -1,0 +1,311 @@
+{
+ "asset": "pinball",
+ "decals": [
+  {
+   "n": 1,
+   "image": "decals/d1.png",
+   "px": [
+    383,
+    91
+   ],
+   "keyed": 0.365,
+   "median": [
+    143,
+    62,
+    51
+   ],
+   "name": "insert_coin_label",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.03
+  },
+  {
+   "n": 2,
+   "image": "decals/d2.png",
+   "px": [
+    98,
+    26
+   ],
+   "keyed": 0.413,
+   "median": [
+    63,
+    0,
+    63
+   ],
+   "name": "t_stencil",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.02
+  },
+  {
+   "n": 3,
+   "image": "decals/d3.png",
+   "px": [
+    19,
+    26
+   ],
+   "keyed": 0.702,
+   "median": [
+    50,
+    0,
+    50
+   ],
+   "name": "coin_slot_label",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.03
+  },
+  {
+   "n": 4,
+   "image": "decals/d4.png",
+   "px": [
+    74,
+    25
+   ],
+   "keyed": 0.569,
+   "median": [
+    65,
+    0,
+    65
+   ],
+   "name": "coin_button",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.04
+  },
+  {
+   "n": 5,
+   "image": "decals/d5.png",
+   "px": [
+    62,
+    32
+   ],
+   "keyed": 0.53,
+   "median": [
+    186,
+    3,
+    186
+   ],
+   "name": "credit_label",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.03
+  },
+  {
+   "n": 6,
+   "image": "decals/d6.png",
+   "px": [
+    105,
+    25
+   ],
+   "keyed": 0.39,
+   "median": [
+    73,
+    0,
+    73
+   ],
+   "name": "it_stencil",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.02
+  },
+  {
+   "n": 7,
+   "image": "decals/d7.png",
+   "px": [
+    28,
+    25
+   ],
+   "keyed": 0.506,
+   "median": [
+    45,
+    0,
+    44
+   ],
+   "name": "robot_logo",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.1
+  },
+  {
+   "n": 8,
+   "image": "decals/d8.png",
+   "px": [
+    142,
+    148
+   ],
+   "keyed": 0.416,
+   "median": [
+    134,
+    134,
+    125
+   ],
+   "name": "pinstripe",
+   "rule": "along",
+   "where": "side",
+   "size": 0.01
+  },
+  {
+   "n": 9,
+   "image": "decals/d9.png",
+   "px": [
+    383,
+    50
+   ],
+   "keyed": 0.589,
+   "median": [
+    118,
+    116,
+    111
+   ],
+   "name": "number_stencil",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.02
+  },
+  {
+   "n": 10,
+   "image": "decals/d10.png",
+   "px": [
+    82,
+    122
+   ],
+   "keyed": 0.726,
+   "median": [
+    1,
+    0,
+    2
+   ],
+   "name": "lightning_stencil",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.02
+  },
+  {
+   "n": 11,
+   "image": "decals/d11.png",
+   "px": [
+    71,
+    109
+   ],
+   "keyed": 0.782,
+   "median": [
+    141,
+    119,
+    93
+   ],
+   "name": "rivet",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.01
+  },
+  {
+   "n": 12,
+   "image": "decals/d12.png",
+   "px": [
+    96,
+    97
+   ],
+   "keyed": 0.694,
+   "median": [
+    96,
+    100,
+    98
+   ],
+   "name": "washer",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.01
+  },
+  {
+   "n": 13,
+   "image": "decals/d13.png",
+   "px": [
+    82,
+    80
+   ],
+   "keyed": 0.796,
+   "median": [
+    107,
+    111,
+    111
+   ],
+   "name": "screw_head",
+   "rule": "repeat",
+   "where": "any",
+   "size": 0.01
+  },
+  {
+   "n": 14,
+   "image": "decals/d14.png",
+   "px": [
+    83,
+    80
+   ],
+   "keyed": 0.751,
+   "median": [
+    92,
+    90,
+    87
+   ],
+   "name": "power_symbol",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.03
+  },
+  {
+   "n": 15,
+   "image": "decals/d15.png",
+   "px": [
+    83,
+    88
+   ],
+   "keyed": 0.821,
+   "median": [
+    5,
+    0,
+    5
+   ],
+   "name": "button_bezel",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.04
+  },
+  {
+   "n": 16,
+   "image": "decals/d16.png",
+   "px": [
+    224,
+    213
+   ],
+   "keyed": 0.031,
+   "median": [
+    215,
+    60,
+    218
+   ],
+   "name": "button_cap",
+   "rule": "hold",
+   "where": "front",
+   "size": 0.04
+  },
+  {
+   "n": 17,
+   "image": "decals/d17.png",
+   "px": [
+    252,
+    213
+   ],
+   "keyed": 0.041,
+   "median": [
+    215,
+    61,
+    218
+   ],
+   "name": "decal_17",
+   "rule": "hold",
+   "where": "any",
+   "size": 0.04
+  }
+ ]
+}

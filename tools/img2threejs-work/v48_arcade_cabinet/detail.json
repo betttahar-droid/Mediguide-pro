@@ -1,0 +1,41 @@
+{
+ "face": "front",
+ "redrawn": {
+  "button_left_p1": [
+   75,
+   64
+  ],
+  "button_right_p2": [
+   75,
+   64
+  ],
+  "button_left_p2": [
+   75,
+   64
+  ],
+  "joystick_right": [
+   64,
+   149
+  ],
+  "vent_grille_left": [
+   69,
+   64
+  ],
+  "button_right_p1": [
+   75,
+   64
+  ],
+  "decal_7": [
+   126,
+   48
+  ],
+  "button_mid_right": [
+   69,
+   64
+  ],
+  "joystick_left": [
+   64,
+   149
+  ]
+ }
+}

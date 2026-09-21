@@ -1,0 +1,122 @@
+{
+ "wider_means": "A wider jukebox is a broader cabinet: the arched top, the title board, the speaker grille and the bubbler columns all spread apart across a wider carcass, with the same single dome and coin door.",
+ "taller_means": "A taller jukebox is a taller cabinet body: the bubbler tube columns and the plain wood panel between the grille and the base simply run longer, with the arch and feet unchanged.",
+ "taller_at": [
+  {
+   "part": "bubbler_column_left",
+   "side": "itself",
+   "px": [
+    321,
+    463
+   ]
+  },
+  {
+   "part": "bubbler_tube_right",
+   "side": "itself",
+   "px": [
+    321,
+    454
+   ]
+  },
+  {
+   "part": "bubbler_tube_right_3",
+   "side": "itself",
+   "px": [
+    354,
+    455
+   ]
+  },
+  {
+   "part": "grille_frame",
+   "side": "itself",
+   "px": [
+    305,
+    320
+   ]
+  },
+  {
+   "part": "bottom_rail",
+   "side": "itself",
+   "px": [
+    570,
+    585
+   ]
+  },
+  {
+   "part": "bubbler_tube_left_outer",
+   "side": "itself",
+   "px": [
+    240,
+    462
+   ]
+  },
+  {
+   "part": "bubbler_tube_right_outer",
+   "side": "itself",
+   "px": [
+    240,
+    463
+   ]
+  },
+  {
+   "part": "bubbler_tube_left",
+   "side": "itself",
+   "px": [
+    250,
+    460
+   ]
+  },
+  {
+   "part": "bubbler_tube_left_2",
+   "side": "itself",
+   "px": [
+    279,
+    324
+   ]
+  },
+  {
+   "part": "bubbler_tube_right_inner",
+   "side": "itself",
+   "px": [
+    321,
+    441
+   ]
+  },
+  {
+   "part": "bubbler_tube_right_2",
+   "side": "itself",
+   "px": [
+    322,
+    441
+   ]
+  },
+  {
+   "part": "bubbler_tube_right_4",
+   "side": "itself",
+   "px": [
+    383,
+    461
+   ]
+  },
+  {
+   "part": "bubbler_tube_right_5",
+   "side": "itself",
+   "px": [
+    385,
+    433
+   ]
+  }
+ ],
+ "max_wider": 1.8,
+ "max_taller": 1.6,
+ "per_bay": [],
+ "per_tier": [],
+ "spans": [
+  "crest_left",
+  "crest_right",
+  "title_board_header",
+  "grille_frame",
+  "bottom_rail",
+  "base_trim_right"
+ ]
+}

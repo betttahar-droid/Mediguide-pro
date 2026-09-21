@@ -1,0 +1,303 @@
+{
+ "face": "front",
+ "size": [
+  318,
+  532
+ ],
+ "aspect": 0.59774,
+ "background": "bg_front.png",
+ "background_mode": "mirror",
+ "parts": [
+  {
+   "name": "arch_window",
+   "image": "parts/arch_window.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": [
+     0.2727,
+     0.4318
+    ]
+   },
+   "px_size": [
+    160,
+    44
+   ],
+   "u": [
+    0.24843,
+    0.75157
+   ],
+   "v": [
+    0.70113,
+    0.78383
+   ]
+  },
+  {
+   "name": "title_strip_holder",
+   "image": "parts/title_strip_holder.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    158,
+    45
+   ],
+   "u": [
+    0.24843,
+    0.74528
+   ],
+   "v": [
+    0.55263,
+    0.63722
+   ]
+  },
+  {
+   "name": "button_grid",
+   "image": "parts/button_grid.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    30,
+    115
+   ],
+   "u": [
+    0.44969,
+    0.54403
+   ],
+   "v": [
+    0.48684,
+    0.70301
+   ]
+  },
+  {
+   "name": "coin_slot",
+   "image": "parts/coin_slot.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "left",
+   "depth": "recessed",
+   "motion": "press",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": [
+     0.2273,
+     0.4091
+    ]
+   },
+   "px_size": [
+    33,
+    22
+   ],
+   "u": [
+    0.22956,
+    0.33333
+   ],
+   "v": [
+    0.46992,
+    0.51128
+   ]
+  },
+  {
+   "name": "credit_window",
+   "image": "parts/credit_window.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    88,
+    22
+   ],
+   "u": [
+    0.33019,
+    0.60692
+   ],
+   "v": [
+    0.46992,
+    0.51128
+   ]
+  },
+  {
+   "name": "letter_badge",
+   "image": "parts/letter_badge.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "right",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    9,
+    23
+   ],
+   "u": [
+    0.63522,
+    0.66352
+   ],
+   "v": [
+    0.51128,
+    0.55451
+   ]
+  },
+  {
+   "name": "speaker_grille",
+   "image": "parts/speaker_grille.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    107,
+    145
+   ],
+   "u": [
+    0.32704,
+    0.66352
+   ],
+   "v": [
+    0.21617,
+    0.48872
+   ]
+  },
+  {
+   "name": "grille_medallion",
+   "image": "parts/grille_medallion.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": [
+     0.5581,
+     0.7442
+    ]
+   },
+   "px_size": [
+    43,
+    43
+   ],
+   "u": [
+    0.41824,
+    0.55346
+   ],
+   "v": [
+    0.19173,
+    0.27256
+   ]
+  },
+  {
+   "name": "plaque",
+   "image": "parts/plaque.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.5,
+     0.875
+    ],
+    "v": null
+   },
+   "px_size": [
+    32,
+    30
+   ],
+   "u": [
+    0.20755,
+    0.30818
+   ],
+   "v": [
+    0.00376,
+    0.06015
+   ]
+  }
+ ]
+}

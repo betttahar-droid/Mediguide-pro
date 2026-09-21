@@ -1,0 +1,69 @@
+{
+ "face": "front",
+ "redrawn": {
+  "decal_6": [
+   174,
+   36
+  ],
+  "button_start": [
+   102,
+   54
+  ],
+  "decal_3": [
+   54,
+   198
+  ],
+  "lock": [
+   64,
+   64
+  ],
+  "decal_10": [
+   60,
+   162
+  ],
+  "decal_9": [
+   64,
+   70
+  ],
+  "button_3": [
+   122,
+   64
+  ],
+  "decal_11": [
+   64,
+   67
+  ],
+  "speaker_grille_left": [
+   110,
+   64
+  ],
+  "joystick": [
+   64,
+   93
+  ],
+  "speaker_grille_right": [
+   110,
+   64
+  ],
+  "vent_left": [
+   68,
+   64
+  ],
+  "vent_right": [
+   68,
+   64
+  ],
+  "decal_5": [
+   174,
+   36
+  ],
+  "coin_slot": [
+   64,
+   137
+  ],
+  "button_5": [
+   126,
+   60
+  ]
+ }
+}

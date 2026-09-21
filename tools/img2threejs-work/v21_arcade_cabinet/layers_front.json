@@ -1,0 +1,528 @@
+{
+ "face": "front",
+ "size": [
+  266,
+  665
+ ],
+ "aspect": 0.4,
+ "background": "bg_front.png",
+ "background_mode": "repeat",
+ "parts": [
+  {
+   "name": "marquee",
+   "image": "parts/marquee.png",
+   "hf": [
+    0.06382978723404255,
+    0.10638297872340426
+   ],
+   "resize": "spanx_center",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": true,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.0298,
+     0.183
+    ],
+    "v": null
+   },
+   "px_size": [
+    236,
+    62
+   ],
+   "u": [
+    0.05639,
+    0.94361
+   ],
+   "v": [
+    0.88722,
+    0.98045
+   ]
+  },
+  {
+   "name": "speaker_grille",
+   "image": "parts/speaker_grille.png",
+   "hf": [
+    0.0326530612244898,
+    0.07755102040816327
+   ],
+   "resize": "spanx_center",
+   "resize_y": "spanx_center",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": true,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.2552,
+     0.7113
+    ],
+    "v": null
+   },
+   "px_size": [
+    246,
+    37
+   ],
+   "u": [
+    0.03759,
+    0.96241
+   ],
+   "v": [
+    0.81955,
+    0.87519
+   ]
+  },
+  {
+   "name": "screen",
+   "image": "parts/screen.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    175,
+    133
+   ],
+   "u": [
+    0.17293,
+    0.83083
+   ],
+   "v": [
+    0.57444,
+    0.77444
+   ]
+  },
+  {
+   "name": "joystick_right",
+   "image": "parts/joystick_right.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "deep",
+   "motion": "stick",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    23,
+    40
+   ],
+   "u": [
+    0.54135,
+    0.62782
+   ],
+   "v": [
+    0.49774,
+    0.55789
+   ]
+  },
+  {
+   "name": "joystick_left",
+   "image": "parts/joystick_left.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "deep",
+   "motion": "stick",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    25,
+    40
+   ],
+   "u": [
+    0.13158,
+    0.22556
+   ],
+   "v": [
+    0.49624,
+    0.55639
+   ]
+  },
+  {
+   "name": "control_deck",
+   "image": "parts/control_deck.png",
+   "hf": [
+    0.13877551020408163,
+    0.1836734693877551
+   ],
+   "resize": "spanx_repeat",
+   "resize_y": "spanx_repeat",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": true,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.7521,
+     0.938
+    ],
+    "v": null
+   },
+   "px_size": [
+    246,
+    33
+   ],
+   "u": [
+    0.03759,
+    0.96241
+   ],
+   "v": [
+    0.48271,
+    0.53233
+   ]
+  },
+  {
+   "name": "button_middle",
+   "image": "parts/button_middle.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    14,
+    15
+   ],
+   "u": [
+    0.76316,
+    0.81579
+   ],
+   "v": [
+    0.49925,
+    0.5218
+   ]
+  },
+  {
+   "name": "button_right",
+   "image": "parts/button_right.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    14,
+    15
+   ],
+   "u": [
+    0.83835,
+    0.89098
+   ],
+   "v": [
+    0.49774,
+    0.5203
+   ]
+  },
+  {
+   "name": "button_left",
+   "image": "parts/button_left.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": [
+     0.0667,
+     0.2667
+    ]
+   },
+   "px_size": [
+    14,
+    15
+   ],
+   "u": [
+    0.68421,
+    0.73684
+   ],
+   "v": [
+    0.49474,
+    0.51729
+   ]
+  },
+  {
+   "name": "coin_door_panel",
+   "image": "parts/coin_door_panel.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.1696,
+     0.4375
+    ],
+    "v": [
+     0.0469,
+     0.2019
+    ]
+   },
+   "px_size": [
+    112,
+    214
+   ],
+   "u": [
+    0.28947,
+    0.71053
+   ],
+   "v": [
+    0.05564,
+    0.37744
+   ]
+  },
+  {
+   "name": "coin_door_left",
+   "image": "parts/coin_door_left.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "hinge_left",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": [
+     0.37,
+     0.58
+    ]
+   },
+   "px_size": [
+    43,
+    100
+   ],
+   "u": [
+    0.31579,
+    0.47744
+   ],
+   "v": [
+    0.21654,
+    0.36692
+   ]
+  },
+  {
+   "name": "coin_door_right",
+   "image": "parts/coin_door_right.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "hinge_right",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.6591,
+     0.8636
+    ],
+    "v": [
+     0.3776,
+     0.5918
+    ]
+   },
+   "px_size": [
+    44,
+    100
+   ],
+   "u": [
+    0.5188,
+    0.68421
+   ],
+   "v": [
+    0.21654,
+    0.36692
+   ]
+  },
+  {
+   "name": "lock",
+   "image": "parts/lock.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "center",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.3077,
+     0.4615
+    ],
+    "v": [
+     0.4167,
+     0.6667
+    ]
+   },
+   "px_size": [
+    13,
+    12
+   ],
+   "u": [
+    0.61278,
+    0.66165
+   ],
+   "v": [
+    0.2812,
+    0.29925
+   ]
+  },
+  {
+   "name": "access_door",
+   "image": "parts/access_door.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "hinge_left",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.051,
+     0.8163
+    ],
+    "v": [
+     0.125,
+     0.475
+    ]
+   },
+   "px_size": [
+    98,
+    80
+   ],
+   "u": [
+    0.31579,
+    0.68421
+   ],
+   "v": [
+    0.06617,
+    0.18647
+   ]
+  },
+  {
+   "name": "decal",
+   "image": "parts/decal.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": [
+     0.3333,
+     1.0
+    ]
+   },
+   "px_size": [
+    58,
+    3
+   ],
+   "u": [
+    0.3797,
+    0.59774
+   ],
+   "v": [
+    0.06617,
+    0.07068
+   ]
+  }
+ ]
+}

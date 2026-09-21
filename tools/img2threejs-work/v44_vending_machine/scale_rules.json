@@ -1,0 +1,91 @@
+{
+ "wider_means": "A wider vending machine is a machine with more product columns in the window and more selection buttons across the keypad panel.",
+ "taller_means": "A taller vending machine has more product shelf rows in the window and more rows of selection buttons, not taller bottles.",
+ "taller_at": [
+  {
+   "part": "selection_button",
+   "side": "above",
+   "px": [
+    239,
+    284
+   ]
+  },
+  {
+   "part": "coin_door",
+   "side": "above",
+   "px": [
+    361,
+    371
+   ]
+  },
+  {
+   "part": "dispense_tray",
+   "side": "above",
+   "px": [
+    432,
+    446
+   ]
+  },
+  {
+   "part": "dispense_tray",
+   "side": "below",
+   "px": [
+    527,
+    590
+   ]
+  }
+ ],
+ "max_wider": 1.8,
+ "max_taller": 1.5,
+ "per_bay": [
+  "product_item",
+  "product_item_2",
+  "product_item_3",
+  "product_item_4",
+  "product_item_7",
+  "product_item_8",
+  "product_item_9",
+  "product_item_10",
+  "product_item_11",
+  "product_item_12",
+  "product_item_14",
+  "decal",
+  "decal_2",
+  "decal_3",
+  "decal_5",
+  "selection_button",
+  "selection_button_2",
+  "selection_button_4",
+  "selection_button_5",
+  "selection_button_6",
+  "selection_button_7",
+  "selection_button_8",
+  "selection_button_9"
+ ],
+ "per_tier": [
+  "product_item",
+  "product_item_2",
+  "product_item_3",
+  "product_item_4",
+  "product_item_7",
+  "product_item_8",
+  "product_item_9",
+  "product_item_10",
+  "product_item_11",
+  "product_item_12",
+  "product_item_14",
+  "decal",
+  "decal_2",
+  "decal_3",
+  "decal_5",
+  "selection_button",
+  "selection_button_2",
+  "selection_button_4",
+  "selection_button_5",
+  "selection_button_6",
+  "selection_button_7",
+  "selection_button_8",
+  "selection_button_9"
+ ],
+ "spans": []
+}

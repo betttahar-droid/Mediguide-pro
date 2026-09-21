@@ -1,0 +1,317 @@
+{
+ "size": [
+  336,
+  594
+ ],
+ "strips": [
+  {
+   "xspan": [
+    0.17857,
+    0.82143
+   ],
+   "fill": [
+    54,
+    61,
+    71
+   ],
+   "hmode": "extend",
+   "hf": [
+    0.18507,
+    0.18507
+   ],
+   "hf_repeat": false,
+   "vmode": "extend",
+   "vf": [
+    0.21429,
+    0.21429
+   ],
+   "vf_repeat": false,
+   "v": [
+    0.92761,
+    1.0
+   ],
+   "h": [
+    0.8209,
+    1.0
+   ],
+   "vh": [
+    0.0,
+    0.35714
+   ],
+   "noise": 1.077,
+   "vnoise": 14.823,
+   "px": [
+    0,
+    43
+   ],
+   "_like": 0.7405,
+   "grow_y": false,
+   "free": 0.206,
+   "grow_share": 0.0
+  },
+  {
+   "xspan": [
+    0.01786,
+    0.98214
+   ],
+   "fill": [
+    51,
+    58,
+    66
+   ],
+   "hmode": "extend",
+   "hf": [
+    0.10746,
+    0.10746
+   ],
+   "hf_repeat": false,
+   "vmode": "extend",
+   "vf": [
+    0.07914,
+    0.07914
+   ],
+   "vf_repeat": false,
+   "v": [
+    0.69192,
+    0.92761
+   ],
+   "h": [
+    0.43284,
+    0.56119
+   ],
+   "vh": [
+    0.43885,
+    0.76259
+   ],
+   "noise": 3.217,
+   "vnoise": 22.563,
+   "px": [
+    43,
+    183
+   ],
+   "_like": 0.567,
+   "grow_y": false,
+   "free": 0.019,
+   "grow_share": 0.0
+  },
+  {
+   "xspan": [
+    0.00595,
+    1.0
+   ],
+   "fill": [
+    54,
+    44,
+    34
+   ],
+   "hmode": "extend",
+   "hf": [
+    0.01194,
+    0.01194
+   ],
+   "hf_repeat": false,
+   "vmode": "extend",
+   "vf": [
+    0.23077,
+    0.23077
+   ],
+   "vf_repeat": false,
+   "v": [
+    0.64646,
+    0.69192
+   ],
+   "h": [
+    0.24478,
+    0.34328
+   ],
+   "vh": [
+    0.0,
+    0.23077
+   ],
+   "noise": 4.765,
+   "vnoise": 45.753,
+   "px": [
+    183,
+    210
+   ],
+   "_like": 0.6795,
+   "grow_y": false,
+   "free": 0.364,
+   "grow_share": 0.0
+  },
+  {
+   "xspan": [
+    0.00595,
+    1.0
+   ],
+   "fill": [
+    54,
+    44,
+    34
+   ],
+   "hmode": "extend",
+   "hf": [
+    0.06866,
+    0.06866
+   ],
+   "hf_repeat": false,
+   "vmode": "extend",
+   "vf": [
+    0.11538,
+    0.11538
+   ],
+   "vf_repeat": false,
+   "v": [
+    0.60101,
+    0.64646
+   ],
+   "h": [
+    0.90149,
+    1.0
+   ],
+   "vh": [
+    0.0,
+    0.23077
+   ],
+   "noise": 5.482,
+   "vnoise": 47.477,
+   "px": [
+    210,
+    237
+   ],
+   "_like": 0.3095,
+   "grow_y": false,
+   "free": 0.161,
+   "grow_share": 0.0
+  },
+  {
+   "xspan": [
+    0.01786,
+    0.9881
+   ],
+   "fill": [
+    57,
+    46,
+    35
+   ],
+   "hmode": "extend",
+   "hf": [
+    0.10746,
+    0.10746
+   ],
+   "hf_repeat": false,
+   "vmode": "extend",
+   "vf": [
+    0.14286,
+    0.14286
+   ],
+   "vf_repeat": false,
+   "v": [
+    0.5404,
+    0.60101
+   ],
+   "h": [
+    0.22388,
+    0.33433
+   ],
+   "vh": [
+    0.62857,
+    0.97143
+   ],
+   "noise": 4.636,
+   "vnoise": 18.462,
+   "px": [
+    237,
+    273
+   ],
+   "_like": 0.6917,
+   "grow_y": false,
+   "free": 0.386,
+   "grow_share": 0.0
+  },
+  {
+   "xspan": [
+    0.0,
+    1.0
+   ],
+   "fill": [
+    54,
+    44,
+    34
+   ],
+   "hmode": "extend",
+   "hf": [
+    0.16716,
+    0.16716
+   ],
+   "hf_repeat": false,
+   "vmode": "extend",
+   "vf": [
+    0.0125,
+    0.0125
+   ],
+   "vf_repeat": false,
+   "v": [
+    0.0,
+    0.5404
+   ],
+   "h": [
+    0.69851,
+    0.79701
+   ],
+   "vh": [
+    0.17813,
+    0.42812
+   ],
+   "noise": 3.112,
+   "vnoise": 10.157,
+   "px": [
+    273,
+    594
+   ],
+   "_like": 0.7015,
+   "grow_y": true,
+   "free": 0.441,
+   "grow_share": 1.0
+  }
+ ],
+ "grow_bands": [
+  {
+   "part": "bubbler_tube_left_outer+bubbler_tube_right_outer+bubbler_tube_left_2+grille_frame+bubbler_column_left+bubbler_tube_right_inner+bubbler_tube_right_2+bubbler_tube_right_3+bubbler_tube_right_4+bubbler_tube_right_5",
+   "side": "itself",
+   "clean": false,
+   "px": [
+    240,
+    463
+   ],
+   "band": [
+    0.22054,
+    0.59596
+   ],
+   "share": 0.93697
+  },
+  {
+   "part": "bottom_rail",
+   "side": "itself",
+   "clean": true,
+   "px": [
+    570,
+    585
+   ],
+   "band": [
+    0.01515,
+    0.0404
+   ],
+   "share": 0.06303
+  }
+ ],
+ "stretch_band": {
+  "px": [
+   330,
+   410
+  ],
+  "covered": null,
+  "with_members": true,
+  "why": "every place is a member that lengthens, so the body itself gains nothing; draw it here instead of repeating the hole the members were lifted out of"
+ }
+}

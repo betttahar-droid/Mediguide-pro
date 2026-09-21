@@ -1,0 +1,57 @@
+[
+ {
+  "round": 0,
+  "asset": "arcade cabinet",
+  "looks_good": false,
+  "blocking": 3,
+  "faults": [
+   {
+    "part": "screen",
+    "fault": "At 2x width the screen stretched into one enormously wide panel instead of staying a single CRT-sized screen in the centre \u2014 a stretched screen, not a wider cabinet",
+    "severity": "blocking"
+   },
+   {
+    "part": "kick_panel",
+    "fault": "At 1.5x height the lower panel gained duplicated stacked door/vent boxes instead of simply being a longer plain panel \u2014 reads as repeated coin doors, a bug not a decision",
+    "severity": "blocking"
+   },
+   {
+    "part": "background",
+    "fault": "At 1.5x height a smeared, streaked blank band appears between the speaker shelf and the screen where the extra cabinet height should be plain carcass; side 'SPACE WARP' art is mirrored and garbled ('WAKY') where the panel stretched",
+    "severity": "blocking"
+   }
+  ],
+  "patch": [
+   {
+    "name": "background",
+    "resize": "fixed",
+    "anchor": "top",
+    "depth": "flush",
+    "motion": "none",
+    "count": "none",
+    "drop": false,
+    "mode": "mirror"
+   },
+   {
+    "name": "kick_panel",
+    "resize": "spanx_center",
+    "anchor": "bottom",
+    "depth": "proud",
+    "motion": "none",
+    "count": "none",
+    "drop": false
+   },
+   {
+    "name": "screen",
+    "resize": "spanx_center",
+    "anchor": "top",
+    "depth": "recessed",
+    "motion": "none",
+    "count": "none",
+    "drop": false
+   }
+  ],
+  "wider_means": "A wider arcade cabinet is a two-player cabinet -- a second joystick and button cluster on the shared control deck.",
+  "taller_means": "A taller arcade cabinet is a taller cabinet body -- more plain carcass below the control deck and a longer lower panel, not a taller screen or marquee."
+ }
+]

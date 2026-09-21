@@ -1,0 +1,306 @@
+{
+ "face": "front",
+ "size": [
+  333,
+  627
+ ],
+ "aspect": 0.5311,
+ "background": "bg_front.png",
+ "background_mode": "mirror",
+ "parts": [
+  {
+   "name": "title_card",
+   "image": "parts/title_card.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    152,
+    126
+   ],
+   "u": [
+    0.27027,
+    0.72673
+   ],
+   "v": [
+    0.64912,
+    0.85008
+   ]
+  },
+  {
+   "name": "nameplate",
+   "image": "parts/nameplate.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    186,
+    73
+   ],
+   "u": [
+    0.2042,
+    0.76276
+   ],
+   "v": [
+    0.53429,
+    0.65072
+   ]
+  },
+  {
+   "name": "select_sign",
+   "image": "parts/select_sign.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    112,
+    52
+   ],
+   "u": [
+    0.33033,
+    0.66667
+   ],
+   "v": [
+    0.47847,
+    0.5614
+   ]
+  },
+  {
+   "name": "left_badge",
+   "image": "parts/left_badge.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "left",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.5676,
+     0.7838
+    ],
+    "v": [
+     0.8421,
+     1.0
+    ]
+   },
+   "px_size": [
+    37,
+    38
+   ],
+   "u": [
+    0.22222,
+    0.33333
+   ],
+   "v": [
+    0.48963,
+    0.55024
+   ]
+  },
+  {
+   "name": "right_badge",
+   "image": "parts/right_badge.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "right",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.1842,
+     0.3947
+    ],
+    "v": [
+     0.8421,
+     1.0
+    ]
+   },
+   "px_size": [
+    38,
+    38
+   ],
+   "u": [
+    0.66366,
+    0.77778
+   ],
+   "v": [
+    0.48963,
+    0.55024
+   ]
+  },
+  {
+   "name": "speaker_grille",
+   "image": "parts/speaker_grille.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    182,
+    221
+   ],
+   "u": [
+    0.22523,
+    0.77177
+   ],
+   "v": [
+    0.10686,
+    0.45933
+   ]
+  },
+  {
+   "name": "star_ornament",
+   "image": "parts/star_ornament.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    50,
+    44
+   ],
+   "u": [
+    0.42342,
+    0.57357
+   ],
+   "v": [
+    0.19777,
+    0.26794
+   ]
+  },
+  {
+   "name": "start_button",
+   "image": "parts/start_button.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    22,
+    35
+   ],
+   "u": [
+    0.70571,
+    0.77177
+   ],
+   "v": [
+    0.0303,
+    0.08612
+   ]
+  },
+  {
+   "name": "coin_return",
+   "image": "parts/coin_return.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.4118,
+     0.7059
+    ],
+    "v": null
+   },
+   "px_size": [
+    34,
+    49
+   ],
+   "u": [
+    0.18919,
+    0.29129
+   ],
+   "v": [
+    0.0303,
+    0.10845
+   ]
+  }
+ ]
+}

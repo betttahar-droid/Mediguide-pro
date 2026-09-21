@@ -1,0 +1,48 @@
+{
+ "face": "front",
+ "size": [
+  375,
+  591
+ ],
+ "parts": [
+  {
+   "name": "marquee",
+   "px": [
+    21,
+    1,
+    353,
+    74
+   ],
+   "resize": "spanx_center",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "button_panel",
+   "px": [
+    7,
+    62,
+    367,
+    135
+   ],
+   "resize": "spanx_center",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "speaker_grille",
+   "px": [
+    14,
+    134,
+    360,
+    448
+   ],
+   "resize": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none"
+  }
+ ]
+}

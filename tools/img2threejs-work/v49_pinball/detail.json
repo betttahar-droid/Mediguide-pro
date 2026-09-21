@@ -1,0 +1,33 @@
+{
+ "face": "front",
+ "redrawn": {
+  "coin_slot_right": [
+   64,
+   72
+  ],
+  "outlane_right": [
+   64,
+   114
+  ],
+  "backbox_title_panel": [
+   252,
+   64
+  ],
+  "decal_3": [
+   70,
+   64
+  ],
+  "start_button": [
+   64,
+   140
+  ],
+  "shooter_lane": [
+   64,
+   136
+  ],
+  "coin_return": [
+   64,
+   64
+  ]
+ }
+}

@@ -1,0 +1,100 @@
+{
+ "face": "front",
+ "size": [
+  277,
+  556
+ ],
+ "parts": [
+  {
+   "name": "marquee",
+   "px": [
+    7,
+    10,
+    268,
+    34
+   ],
+   "resize": "spanx_center",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "status_label_green",
+   "px": [
+    190,
+    84,
+    252,
+    103
+   ],
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "control_deck",
+   "px": [
+    3,
+    239,
+    240,
+    266
+   ],
+   "resize": "spanx_repeat",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "cabinet_rail_left",
+   "px": [
+    13,
+    239,
+    38,
+    319
+   ],
+   "resize": "spany_repeat",
+   "anchor": "left",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "cabinet_rail_right",
+   "px": [
+    238,
+    239,
+    263,
+    323
+   ],
+   "resize": "spany_repeat",
+   "anchor": "right",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "dispense_slot",
+   "px": [
+    37,
+    239,
+    239,
+    318
+   ],
+   "resize": "spanx_repeat",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "coin_return_tray",
+   "px": [
+    78,
+    433,
+    202,
+    478
+   ],
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "recessed",
+   "motion": "none"
+  }
+ ]
+}

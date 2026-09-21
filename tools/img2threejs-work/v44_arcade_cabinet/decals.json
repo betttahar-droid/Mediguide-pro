@@ -1,0 +1,23 @@
+{
+ "asset": "arcade cabinet",
+ "decals": [
+  {
+   "n": 1,
+   "image": "decals/d1.png",
+   "px": [
+    256,
+    187
+   ],
+   "keyed": 0.139,
+   "median": [
+    107,
+    99,
+    89
+   ],
+   "name": "logo",
+   "rule": "hold",
+   "where": "side",
+   "size": 0.12
+  }
+ ]
+}

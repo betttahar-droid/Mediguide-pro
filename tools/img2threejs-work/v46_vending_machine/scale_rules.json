@@ -1,0 +1,111 @@
+{
+ "wider_means": "A wider vending machine has more product columns behind the glass -- another bottle column with its own price tag.",
+ "taller_means": "A taller vending machine has more product shelves -- another row of drinks with their price tags behind the glass.",
+ "taller_at": [
+  {
+   "part": "marquee",
+   "side": "below",
+   "px": [
+    75,
+    81
+   ]
+  },
+  {
+   "part": "keypad_button_4",
+   "side": "below",
+   "px": [
+    353,
+    378
+   ]
+  },
+  {
+   "part": "push_bar_housing",
+   "side": "above",
+   "px": [
+    353,
+    378
+   ]
+  },
+  {
+   "part": "dispenser_tray",
+   "side": "above",
+   "px": [
+    449,
+    483
+   ]
+  }
+ ],
+ "max_wider": 2.0,
+ "max_taller": 1.7,
+ "per_bay": [
+  "drink_row1_center",
+  "drink_row1_right",
+  "drink_row2_left",
+  "decal_12",
+  "drink_row2_center",
+  "drink_row2_right",
+  "drink_row3_center",
+  "drink_row3_left",
+  "drink_row3_right",
+  "drink_row4_left",
+  "drink_row4_center",
+  "drink_row4_right",
+  "price_tag_row2_left",
+  "price_tag_row3_center",
+  "price_tag_row2_right",
+  "price_tag_row4_left",
+  "price_tag_row4_center",
+  "price_tag_row4_right",
+  "decal",
+  "decal_2",
+  "decal_3",
+  "decal_4",
+  "decal_5",
+  "drink_row1_left",
+  "decal_6",
+  "decal_7",
+  "decal_8",
+  "decal_9",
+  "decal_10",
+  "decal_11",
+  "decal_13",
+  "decal_14",
+  "coin_mechanism",
+  "decal_15",
+  "decal_16",
+  "keypad_button_1",
+  "coin_return_slot",
+  "keypad_button_2",
+  "keypad_button_3",
+  "keypad_button_4",
+  "keypad_button_5",
+  "keypad_button_6"
+ ],
+ "per_tier": [
+  "drink_row1_center",
+  "drink_row1_right",
+  "drink_row2_left",
+  "decal_12",
+  "drink_row2_center",
+  "drink_row2_right",
+  "drink_row3_center",
+  "drink_row3_left",
+  "drink_row3_right",
+  "drink_row4_left",
+  "drink_row4_center",
+  "drink_row4_right",
+  "price_tag_row2_left",
+  "price_tag_row3_center",
+  "price_tag_row2_right",
+  "price_tag_row4_left",
+  "price_tag_row4_center",
+  "price_tag_row4_right"
+ ],
+ "spans": [
+  "marquee",
+  "drink_window",
+  "keypad_panel",
+  "push_bar_housing",
+  "dispenser_tray"
+ ]
+}

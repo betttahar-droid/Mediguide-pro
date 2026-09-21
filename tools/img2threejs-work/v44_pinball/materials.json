@@ -1,0 +1,118 @@
+{
+ "asset": "pinball machine",
+ "px_per_tile": 64,
+ "materials": [
+  {
+   "n": 1,
+   "image": "materials/m1.png",
+   "seam_before": 1.624,
+   "seam_after": 1.119,
+   "median": [
+    189,
+    193,
+    196
+   ],
+   "tiles": true,
+   "name": "body_panel",
+   "main": true
+  },
+  {
+   "n": 2,
+   "image": "materials/m2.png",
+   "seam_before": 7.678,
+   "seam_after": 1.095,
+   "median": [
+    123,
+    136,
+    148
+   ],
+   "tiles": true,
+   "name": "metal_trim",
+   "main": false
+  },
+  {
+   "n": 3,
+   "image": "materials/m3.png",
+   "seam_before": 1.32,
+   "seam_after": 1.087,
+   "median": [
+    119,
+    122,
+    126
+   ],
+   "tiles": true,
+   "name": "plastic",
+   "main": false
+  },
+  {
+   "n": 4,
+   "image": "materials/m4.png",
+   "seam_before": 1.27,
+   "seam_after": 1.102,
+   "median": [
+    36,
+    37,
+    40
+   ],
+   "tiles": true,
+   "name": "dark_rubber",
+   "main": false
+  },
+  {
+   "n": 5,
+   "image": "materials/m5.png",
+   "seam_before": 2.598,
+   "seam_after": 1.077,
+   "median": [
+    92,
+    92,
+    92
+   ],
+   "tiles": true,
+   "name": "vent_mesh",
+   "main": false
+  },
+  {
+   "n": 6,
+   "image": "materials/m6.png",
+   "seam_before": 1.384,
+   "seam_after": 1.112,
+   "median": [
+    85,
+    82,
+    77
+   ],
+   "tiles": true,
+   "name": "wood",
+   "main": false
+  },
+  {
+   "n": 7,
+   "image": "materials/m7.png",
+   "seam_before": 7.125,
+   "seam_after": 0.956,
+   "median": [
+    124,
+    127,
+    132
+   ],
+   "tiles": true,
+   "name": "glass",
+   "main": false
+  },
+  {
+   "n": 8,
+   "image": "materials/m8.png",
+   "seam_before": 2.069,
+   "seam_after": 1.289,
+   "median": [
+    117,
+    118,
+    118
+   ],
+   "tiles": false,
+   "name": "worn_panel",
+   "main": false
+  }
+ ]
+}

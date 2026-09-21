@@ -1,0 +1,311 @@
+{
+ "asset": "pinball",
+ "decals": [
+  {
+   "n": 1,
+   "image": "decals/d1.png",
+   "px": [
+    383,
+    91
+   ],
+   "keyed": 0.365,
+   "median": [
+    143,
+    62,
+    51
+   ],
+   "name": "decal_1",
+   "rule": "hold",
+   "where": "any",
+   "size": 0.04
+  },
+  {
+   "n": 2,
+   "image": "decals/d2.png",
+   "px": [
+    98,
+    26
+   ],
+   "keyed": 0.413,
+   "median": [
+    63,
+    0,
+    63
+   ],
+   "name": "decal_2",
+   "rule": "hold",
+   "where": "any",
+   "size": 0.04
+  },
+  {
+   "n": 3,
+   "image": "decals/d3.png",
+   "px": [
+    19,
+    26
+   ],
+   "keyed": 0.702,
+   "median": [
+    50,
+    0,
+    50
+   ],
+   "name": "decal_3",
+   "rule": "hold",
+   "where": "any",
+   "size": 0.04
+  },
+  {
+   "n": 4,
+   "image": "decals/d4.png",
+   "px": [
+    74,
+    25
+   ],
+   "keyed": 0.569,
+   "median": [
+    65,
+    0,
+    65
+   ],
+   "name": "decal_4",
+   "rule": "hold",
+   "where": "any",
+   "size": 0.04
+  },
+  {
+   "n": 5,
+   "image": "decals/d5.png",
+   "px": [
+    62,
+    32
+   ],
+   "keyed": 0.53,
+   "median": [
+    186,
+    3,
+    186
+   ],
+   "name": "decal_5",
+   "rule": "hold",
+   "where": "any",
+   "size": 0.04
+  },
+  {
+   "n": 6,
+   "image": "decals/d6.png",
+   "px": [
+    105,
+    25
+   ],
+   "keyed": 0.39,
+   "median": [
+    73,
+    0,
+    73
+   ],
+   "name": "decal_6",
+   "rule": "hold",
+   "where": "any",
+   "size": 0.04
+  },
+  {
+   "n": 7,
+   "image": "decals/d7.png",
+   "px": [
+    28,
+    25
+   ],
+   "keyed": 0.506,
+   "median": [
+    45,
+    0,
+    44
+   ],
+   "name": "decal_7",
+   "rule": "hold",
+   "where": "any",
+   "size": 0.04
+  },
+  {
+   "n": 8,
+   "image": "decals/d8.png",
+   "px": [
+    142,
+    148
+   ],
+   "keyed": 0.416,
+   "median": [
+    134,
+    134,
+    125
+   ],
+   "name": "decal_8",
+   "rule": "hold",
+   "where": "any",
+   "size": 0.04
+  },
+  {
+   "n": 9,
+   "image": "decals/d9.png",
+   "px": [
+    383,
+    50
+   ],
+   "keyed": 0.589,
+   "median": [
+    118,
+    116,
+    111
+   ],
+   "name": "decal_9",
+   "rule": "hold",
+   "where": "any",
+   "size": 0.04
+  },
+  {
+   "n": 10,
+   "image": "decals/d10.png",
+   "px": [
+    82,
+    122
+   ],
+   "keyed": 0.726,
+   "median": [
+    1,
+    0,
+    2
+   ],
+   "name": "decal_10",
+   "rule": "hold",
+   "where": "any",
+   "size": 0.04
+  },
+  {
+   "n": 11,
+   "image": "decals/d11.png",
+   "px": [
+    71,
+    109
+   ],
+   "keyed": 0.782,
+   "median": [
+    141,
+    119,
+    93
+   ],
+   "name": "decal_11",
+   "rule": "hold",
+   "where": "any",
+   "size": 0.04
+  },
+  {
+   "n": 12,
+   "image": "decals/d12.png",
+   "px": [
+    96,
+    97
+   ],
+   "keyed": 0.694,
+   "median": [
+    96,
+    100,
+    98
+   ],
+   "name": "decal_12",
+   "rule": "hold",
+   "where": "any",
+   "size": 0.04
+  },
+  {
+   "n": 13,
+   "image": "decals/d13.png",
+   "px": [
+    82,
+    80
+   ],
+   "keyed": 0.796,
+   "median": [
+    107,
+    111,
+    111
+   ],
+   "name": "decal_13",
+   "rule": "hold",
+   "where": "any",
+   "size": 0.04
+  },
+  {
+   "n": 14,
+   "image": "decals/d14.png",
+   "px": [
+    83,
+    80
+   ],
+   "keyed": 0.751,
+   "median": [
+    92,
+    90,
+    87
+   ],
+   "name": "decal_14",
+   "rule": "hold",
+   "where": "any",
+   "size": 0.04
+  },
+  {
+   "n": 15,
+   "image": "decals/d15.png",
+   "px": [
+    83,
+    88
+   ],
+   "keyed": 0.821,
+   "median": [
+    5,
+    0,
+    5
+   ],
+   "name": "decal_15",
+   "rule": "hold",
+   "where": "any",
+   "size": 0.04
+  },
+  {
+   "n": 16,
+   "image": "decals/d16.png",
+   "px": [
+    224,
+    213
+   ],
+   "keyed": 0.031,
+   "median": [
+    215,
+    60,
+    218
+   ],
+   "name": "decal_16",
+   "rule": "hold",
+   "where": "any",
+   "size": 0.04
+  },
+  {
+   "n": 17,
+   "image": "decals/d17.png",
+   "px": [
+    252,
+    213
+   ],
+   "keyed": 0.041,
+   "median": [
+    215,
+    61,
+    218
+   ],
+   "name": "decal_17",
+   "rule": "hold",
+   "where": "any",
+   "size": 0.04
+  }
+ ]
+}

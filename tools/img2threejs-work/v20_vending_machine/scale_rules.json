@@ -1,0 +1,37 @@
+{
+ "wider_means": "more product columns behind the glass -- each new column adds another bottle on every shelf",
+ "taller_means": "A taller vending machine has more shelves of products, with the plain body panels between the shelves and below the delivery area simply getting longer.",
+ "max_wider": 2.0,
+ "max_taller": 1.4,
+ "per_bay": [
+  "bottle_row1_a",
+  "bottle_row1_b",
+  "bottle_row1_c",
+  "bottle_row1_d",
+  "bottle_row1_e",
+  "product_row2_d",
+  "product_row2_e",
+  "product_row2_a",
+  "product_row2_b",
+  "product_row2_f",
+  "product_row3_a",
+  "product_row3_e",
+  "product_row3_f",
+  "product_row3_c",
+  "product_row3_b"
+ ],
+ "spans": [
+  "glass_window",
+  "delivery_tray"
+ ],
+ "taller_at": [
+  {
+   "part": "delivery_tray",
+   "side": "below",
+   "px": [
+    472,
+    513
+   ]
+  }
+ ]
+}

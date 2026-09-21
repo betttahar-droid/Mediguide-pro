@@ -1,0 +1,42 @@
+{
+ "wider_means": "A wider jukebox is a larger cabinet with more selection buttons and more title-strip columns in the selector window; the record-playing mechanism itself stays single.",
+ "taller_means": "a taller jukebox is a taller body cabinet with more stacked title strips",
+ "max_wider": 1.5,
+ "max_taller": 1.6,
+ "per_bay": [
+  "title_strip_left",
+  "title_strip_right",
+  "grille_button_1",
+  "decal_7",
+  "grille_button_5",
+  "grille_button_7",
+  "grille_button_4",
+  "grille_button_6",
+  "grille_button_8",
+  "grille_button_9",
+  "grille_button_10"
+ ],
+ "spans": [
+  "crown_crest",
+  "main_grille",
+  "base_rail"
+ ],
+ "taller_at": [
+  {
+   "part": "decal",
+   "side": "itself",
+   "px": [
+    279,
+    295
+   ]
+  },
+  {
+   "part": "decal_2",
+   "side": "itself",
+   "px": [
+    279,
+    295
+   ]
+  }
+ ]
+}

@@ -1,0 +1,568 @@
+{
+ "face": "front",
+ "size": [
+  241,
+  601
+ ],
+ "aspect": 0.401,
+ "background": "bg_front.png",
+ "background_mode": "repeat",
+ "parts": [
+  {
+   "name": "marquee",
+   "image": "parts/marquee.png",
+   "hf": [
+    0.1461187214611872,
+    0.1872146118721461
+   ],
+   "resize": "spanx_center",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": true,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": [
+     0.56,
+     0.72
+    ]
+   },
+   "px_size": [
+    220,
+    50
+   ],
+   "u": [
+    0.04564,
+    0.95851
+   ],
+   "v": [
+    0.89018,
+    0.97338
+   ]
+  },
+  {
+   "name": "coin_slot_right",
+   "image": "parts/coin_slot_right.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.3478,
+     0.7391
+    ],
+    "v": null
+   },
+   "px_size": [
+    26,
+    15
+   ],
+   "u": [
+    0.71784,
+    0.82573
+   ],
+   "v": [
+    0.84359,
+    0.86855
+   ]
+  },
+  {
+   "name": "coin_slot_left",
+   "image": "parts/coin_slot_left.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    27,
+    14
+   ],
+   "u": [
+    0.17427,
+    0.28631
+   ],
+   "v": [
+    0.84359,
+    0.86689
+   ]
+  },
+  {
+   "name": "coin_button_left",
+   "image": "parts/coin_button_left.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "press",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.5714,
+     0.9286
+    ],
+    "v": null
+   },
+   "px_size": [
+    14,
+    8
+   ],
+   "u": [
+    0.19917,
+    0.25726
+   ],
+   "v": [
+    0.84359,
+    0.85691
+   ]
+  },
+  {
+   "name": "screen",
+   "image": "parts/screen.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.4841,
+     0.6688
+    ],
+    "v": [
+     0.4071,
+     0.6195
+    ]
+   },
+   "px_size": [
+    160,
+    113
+   ],
+   "u": [
+    0.17012,
+    0.83402
+   ],
+   "v": [
+    0.58735,
+    0.77537
+   ]
+  },
+  {
+   "name": "joystick_left",
+   "image": "parts/joystick_left.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "deep",
+   "motion": "stick",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    15,
+    35
+   ],
+   "u": [
+    0.13693,
+    0.19917
+   ],
+   "v": [
+    0.50749,
+    0.56572
+   ]
+  },
+  {
+   "name": "joystick_right",
+   "image": "parts/joystick_right.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "deep",
+   "motion": "stick",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    22,
+    35
+   ],
+   "u": [
+    0.56017,
+    0.65145
+   ],
+   "v": [
+    0.50749,
+    0.56572
+   ]
+  },
+  {
+   "name": "button_right",
+   "image": "parts/button_right.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "press",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.0833,
+     0.3333
+    ],
+    "v": [
+     0.5385,
+     0.6923
+    ]
+   },
+   "px_size": [
+    12,
+    13
+   ],
+   "u": [
+    0.77593,
+    0.82573
+   ],
+   "v": [
+    0.50749,
+    0.52912
+   ]
+  },
+  {
+   "name": "decal",
+   "image": "parts/decal.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.3077,
+     0.4615
+    ],
+    "v": null
+   },
+   "px_size": [
+    13,
+    14
+   ],
+   "u": [
+    0.70539,
+    0.75934
+   ],
+   "v": [
+    0.5025,
+    0.52579
+   ]
+  },
+  {
+   "name": "button_left",
+   "image": "parts/button_left.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "press",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.4615,
+     0.6923
+    ],
+    "v": [
+     0.5385,
+     0.6923
+    ]
+   },
+   "px_size": [
+    13,
+    13
+   ],
+   "u": [
+    0.26556,
+    0.3195
+   ],
+   "v": [
+    0.5025,
+    0.52413
+   ]
+  },
+  {
+   "name": "coin_door",
+   "image": "parts/coin_door.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.3023,
+     0.686
+    ],
+    "v": [
+     0.0769,
+     0.2667
+    ]
+   },
+   "px_size": [
+    86,
+    195
+   ],
+   "u": [
+    0.32365,
+    0.6805
+   ],
+   "v": [
+    0.05824,
+    0.3827
+   ]
+  },
+  {
+   "name": "coin_door_slot_left",
+   "image": "parts/coin_door_slot_left.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.4762,
+     0.6667
+    ],
+    "v": [
+     0.4286,
+     0.619
+    ]
+   },
+   "px_size": [
+    21,
+    23
+   ],
+   "u": [
+    0.39834,
+    0.48548
+   ],
+   "v": [
+    0.3178,
+    0.35607
+   ]
+  },
+  {
+   "name": "coin_door_slot_right",
+   "image": "parts/coin_door_slot_right.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.5,
+     0.7
+    ],
+    "v": null
+   },
+   "px_size": [
+    20,
+    23
+   ],
+   "u": [
+    0.49793,
+    0.58091
+   ],
+   "v": [
+    0.31614,
+    0.35441
+   ]
+  },
+  {
+   "name": "instruction_sticker",
+   "image": "parts/instruction_sticker.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "right",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    43,
+    27
+   ],
+   "u": [
+    0.70539,
+    0.88382
+   ],
+   "v": [
+    0.27121,
+    0.31614
+   ]
+  },
+  {
+   "name": "coin_door_slot_left_lower",
+   "image": "parts/coin_door_slot_left_lower.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.6,
+     0.8
+    ],
+    "v": [
+     0.381,
+     0.7143
+    ]
+   },
+   "px_size": [
+    20,
+    21
+   ],
+   "u": [
+    0.40249,
+    0.48548
+   ],
+   "v": [
+    0.22795,
+    0.2629
+   ]
+  },
+  {
+   "name": "coin_door_slot_right_lower",
+   "image": "parts/coin_door_slot_right_lower.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.5,
+     0.7
+    ],
+    "v": [
+     0.5,
+     0.75
+    ]
+   },
+   "px_size": [
+    20,
+    20
+   ],
+   "u": [
+    0.49793,
+    0.58091
+   ],
+   "v": [
+    0.22795,
+    0.26123
+   ]
+  }
+ ]
+}

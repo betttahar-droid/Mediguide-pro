@@ -1,0 +1,85 @@
+{
+ "face": "front",
+ "redrawn": {
+  "decal_15": [
+   48,
+   186
+  ],
+  "drink_row1_right": [
+   36,
+   174
+  ],
+  "keypad_button_5": [
+   117,
+   64
+  ],
+  "keypad_button_3": [
+   117,
+   64
+  ],
+  "coin_return_flap": [
+   69,
+   64
+  ],
+  "drink_row2_right": [
+   144,
+   64
+  ],
+  "price_tag_row4_left": [
+   128,
+   64
+  ],
+  "price_tag_row4_center": [
+   123,
+   64
+  ],
+  "price_tag_row2_left": [
+   128,
+   64
+  ],
+  "price_tag_row2_right": [
+   128,
+   64
+  ],
+  "price_tag_row3_center": [
+   128,
+   64
+  ],
+  "decal_19": [
+   64,
+   128
+  ],
+  "drink_row2_left": [
+   112,
+   64
+  ],
+  "coin_return_door": [
+   72,
+   64
+  ],
+  "decal_9": [
+   64,
+   96
+  ],
+  "decal_22": [
+   64,
+   69
+  ],
+  "decal_21": [
+   64,
+   75
+  ],
+  "decal_12": [
+   102,
+   54
+  ],
+  "decal_2": [
+   142,
+   64
+  ],
+  "keypad_button_6": [
+   60,
+   108
+  ]
+ }
+}

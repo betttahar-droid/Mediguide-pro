@@ -1,0 +1,14 @@
+[
+ {
+  "face": "front",
+  "stick_shape": [
+   {
+    "part": "joystick_left",
+    "was": "stick",
+    "now": "none",
+    "w_over_h": 10.81,
+    "why": "a stick is taller than it is wide; this box is 10.8x wider, so built as one it is a slab"
+   }
+  ]
+ }
+]

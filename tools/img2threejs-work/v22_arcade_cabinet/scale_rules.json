@@ -1,0 +1,21 @@
+{
+ "wider_means": "a two-player cabinet: a second joystick, button cluster and speaker on the added side.",
+ "taller_means": "a bigger cabinet carcass \u2014 taller marquee and body panels \u2014 not a bigger screen.",
+ "max_wider": 2.0,
+ "max_taller": 1.6,
+ "per_bay": [
+  "speaker_grille_left",
+  "speaker_grille_right",
+  "joystick_left",
+  "joystick_right",
+  "button",
+  "button_2",
+  "button_3",
+  "button_4"
+ ],
+ "spans": [
+  "marquee",
+  "control_deck"
+ ],
+ "taller_at": null
+}

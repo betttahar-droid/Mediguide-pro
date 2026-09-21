@@ -1,0 +1,43 @@
+{
+ "tiles": [
+  {
+   "tile": "tile_front_0.png",
+   "size": 19,
+   "patch_px": [
+    19,
+    81
+   ],
+   "worst_seam": 0.87,
+   "rows": [
+    0,
+    557
+   ]
+  },
+  {
+   "tile": "tile_front_1.png",
+   "size": 16,
+   "patch_px": [
+    12,
+    28
+   ],
+   "worst_seam": 2.934,
+   "rows": [
+    557,
+    585
+   ]
+  },
+  {
+   "tile": "tile_front_2.png",
+   "size": 19,
+   "patch_px": [
+    19,
+    81
+   ],
+   "worst_seam": 0.87,
+   "rows": [
+    585,
+    621
+   ]
+  }
+ ]
+}

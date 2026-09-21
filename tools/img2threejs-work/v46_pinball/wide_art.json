@@ -1,0 +1,14 @@
+{
+ "face": "front",
+ "ratio": 1.8,
+ "parts": [
+  {
+   "part": "backglass",
+   "status": "kept",
+   "ratio": 1.8,
+   "new_px": 176,
+   "attempts": 2,
+   "evidence": "proposed"
+  }
+ ]
+}

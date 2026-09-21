@@ -1,0 +1,44 @@
+[
+ {
+  "round": 0,
+  "asset": "pinball",
+  "looks_good": false,
+  "blocking": 4,
+  "faults": [
+   {
+    "part": "backbox",
+    "fault": "When widened 1.3x, the backbox art stretches rather than extending at the ends: the score displays double up ('00 00' becomes duplicated digit boxes), the speaker circles duplicate into overlapping pairs, and the side art is streaked. This reads as smeared texture, not a wider cabinet.",
+    "severity": "blocking"
+   },
+   {
+    "part": "background",
+    "fault": "When widened and especially when made 1.4x taller, the stretched body/background texture shows obvious streaking, banding and seam lines down the sloped cabinet front and sides -- the extra height went into smeared texture instead of clean extension.",
+    "severity": "blocking"
+   },
+   {
+    "part": "front_panel",
+    "fault": "At 1.3x width the coin-door panel stays one size but its surrounding texture extrudes duplicate button slits and smeared speaker-hole shapes beside the door -- stretched decal rather than plain cabinet body on either side.",
+    "severity": "blocking"
+   },
+   {
+    "part": "playfield",
+    "fault": "In the taller version, seam/streak bands run down the stretched playfield slope where the extra cabinet height was absorbed; the fixed rule is correct, but the panel texture behind it shows the smear rather than a plain deeper band of cabinet body.",
+    "severity": "blocking"
+   }
+  ],
+  "patch": [
+   {
+    "name": "background",
+    "resize": "fixed",
+    "anchor": "top",
+    "depth": "recessed",
+    "motion": "none",
+    "count": "none",
+    "drop": false,
+    "mode": "mirror"
+   }
+  ],
+  "wider_means": "A wider pinball is simply a fatter single-player cabinet: the same playfield in a wider body, with the backbox housing, speaker panel and coin-door front panel all stretched to the new width and the legs set further apart.",
+  "taller_means": "A taller pinball is the same machine standing on longer plain steel legs, with a deeper plain band of cabinet body under the playfield and the backbox lifted a little on a taller plain neck."
+ }
+]

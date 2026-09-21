@@ -1,0 +1,15 @@
+[
+ {
+  "face": "front",
+  "side_names": [
+   {
+    "was": "indicator_light_left",
+    "now": "indicator_light_right"
+   },
+   {
+    "was": "indicator_light_right",
+    "now": "indicator_light_left"
+   }
+  ]
+ }
+]

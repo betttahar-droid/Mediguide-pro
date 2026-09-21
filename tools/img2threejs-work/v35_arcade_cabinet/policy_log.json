@@ -1,0 +1,15 @@
+[
+ {
+  "face": "front",
+  "side_names": [
+   {
+    "was": "joystick_left",
+    "now": "joystick_right"
+   },
+   {
+    "was": "joystick_right",
+    "now": "joystick_left"
+   }
+  ]
+ }
+]

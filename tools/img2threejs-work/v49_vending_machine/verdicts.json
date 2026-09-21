@@ -1,0 +1,72 @@
+[
+ {
+  "round": 0,
+  "asset": "vending machine",
+  "looks_good": false,
+  "blocking": 6,
+  "faults": [
+   {
+    "part": "background",
+    "fault": "In the 1.8x wider and 1.7x taller renders the cabinet/background texture is badly streaked and banded -- smeared vertical runs down the right of the wide version and mirrored blotch bands down the whole lower half of the tall version. A player can point straight at it.",
+    "severity": "blocking"
+   },
+   {
+    "part": "display_window",
+    "fault": "The widened machine (image 3) gained NO product columns: the window still shows the original three columns and the extra width went into blank smeared panel on both sides. A wider vending machine must show more bays in the window, with the frame stretching to hold them.",
+    "severity": "blocking"
+   },
+   {
+    "part": "decal_1",
+    "fault": "Price/product decals did not multiply with the width and the price text is cut to a stray '1.0' fragment in the widened render -- stretched/cut text is blocking.",
+    "severity": "blocking"
+   },
+   {
+    "part": "display_window",
+    "fault": "The tallened machine (image 4) gained no extra shelf row of products; the extra height is blank streaked cabinet between the window and the flap instead of another tier inside the window.",
+    "severity": "blocking"
+   },
+   {
+    "part": "background",
+    "fault": "A thin flat slab stands proud off the upper-left edge of the body (visible in images 2, 4 and 5 as a floating flap-like panel beside the marquee), reading as a bug rather than a door or a trim member.",
+    "severity": "blocking"
+   },
+   {
+    "part": "background (measured)",
+    "severity": "blocking",
+    "fault": "At 1.7x tall the prop has gained a repeat it did not have when drawn: its row profile self-correlates 1.00 at a period of 76 scanlines, against 0.38 at the drawn size. Something is being laid down more than once."
+   }
+  ],
+  "patch": [
+   {
+    "name": "background",
+    "resize": "fixed",
+    "anchor": "fixed",
+    "depth": "flush",
+    "motion": "none",
+    "count": "none",
+    "drop": false,
+    "mode": "mirror"
+   },
+   {
+    "name": "decal_1",
+    "resize": "spanx_repeat",
+    "anchor": "bottom",
+    "depth": "flush",
+    "motion": "none",
+    "count": "both",
+    "drop": false
+   },
+   {
+    "name": "display_window",
+    "resize": "spanx_center",
+    "anchor": "top",
+    "depth": "recessed",
+    "motion": "none",
+    "count": "none",
+    "drop": false
+   }
+  ],
+  "wider_means": "A wider vending machine has more product columns in the display window, with the cabinet body, coin station and dispenser flap stretching to match.",
+  "taller_means": "A taller vending machine has another shelf row of products inside the window plus extra plain cabinet panel between the window, the dispenser flap and the base."
+ }
+]

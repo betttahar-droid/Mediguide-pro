@@ -1,0 +1,46 @@
+{
+ "face": "front",
+ "adaptations": [
+  {
+   "part": "frame_left",
+   "axis": "taller",
+   "scale": 1.6,
+   "also": [
+    "frame_right"
+   ],
+   "blame": "body",
+   "verdict": "FAIL",
+   "why": "The left frame is a stretched vertical strip, but the taller body behind it shows smeared, stretched artwork on the lower door and repeated horizontal bands that image 1 does not have.",
+   "did": "Down the prop it is `spany_repeat`. Because the prop was said to get taller BY this part -- a leg, column or upright that simply gets longer. 2 parts on this prop carry the same decision (frame_left, frame_right); this is one audit of all of them."
+  },
+  {
+   "part": "product_window_1",
+   "axis": "wider",
+   "scale": 2.0,
+   "also": [
+    "product_window_2",
+    "product_window_3",
+    "product_window_4",
+    "product_window_5",
+    "product_window_6",
+    "product_window_7",
+    "product_window_8",
+    "product_window_9"
+   ],
+   "blame": "body",
+   "verdict": "PASS",
+   "why": "The drawn item keeps its original proportions while the surrounding bay frames, price labels ($3.00) and panel artwork are stretched wide \u2014 a fault of the body behind the part, not this decision.",
+   "did": "And it comes one per bay, so a bigger prop is meant to have MORE of it rather than a bigger one. 9 parts on this prop carry the same decision (product_window_1, product_window_2, product_window_3, product_window_4, ...); this is one audit of all of them."
+  },
+  {
+   "part": "the body",
+   "axis": "taller",
+   "scale": 1.6,
+   "also": [],
+   "blame": "body",
+   "verdict": "PASS",
+   "why": "The body stretches cleanly with repeated blank bands and rivets on areas the reference leaves plain, while the panel artwork, labels, trim, keypad and push plate all keep their drawn size and proportions; the added blank striping above the window is body artwork, not a fault of this part.",
+   "did": "The carcass grows by INSERTING COPIES of its own artwork at rows 75..97 (found by measurement), rows 450..484 (at the itself of frame_left+frame_right) -- 56 rows of a 517-row elevation, chosen because nothing is drawn across them. Everything above and below a place holds its drawn size and simply moves apart."
+  }
+ ]
+}

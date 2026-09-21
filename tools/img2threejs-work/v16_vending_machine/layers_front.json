@@ -1,0 +1,77 @@
+{
+ "face": "front",
+ "size": [
+  329,
+  617
+ ],
+ "aspect": 0.53323,
+ "background": "bg_front.png",
+ "background_mode": "mirror",
+ "parts": [
+  {
+   "name": "cabinet_door",
+   "image": "parts/cabinet_door.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    327,
+    592
+   ],
+   "u": [
+    0.00304,
+    0.99696
+   ],
+   "v": [
+    0.0389,
+    0.99838
+   ]
+  },
+  {
+   "name": "decal_1",
+   "image": "parts/decal_1.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": true,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.1379,
+     0.3448
+    ],
+    "v": null
+   },
+   "px_size": [
+    29,
+    14
+   ],
+   "u": [
+    0.04255,
+    0.1307
+   ],
+   "v": [
+    0.00162,
+    0.02431
+   ]
+  }
+ ]
+}

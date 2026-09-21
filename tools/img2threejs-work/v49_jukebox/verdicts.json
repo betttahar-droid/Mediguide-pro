@@ -1,0 +1,101 @@
+[
+ {
+  "round": 0,
+  "asset": "jukebox",
+  "looks_good": false,
+  "blocking": 4,
+  "faults": [
+   {
+    "part": "background",
+    "fault": "At 1.7x taller the extra height went into a stretched, smeared grey/wood panel below the cabinet instead of into longer cabinet members; at 1.6x wider a dark untextured strip appears on the left side where the stretched panel runs out. Extra bulk must come from the cabinet body (side panels / bubble columns running longer), not a smeared backdrop.",
+    "severity": "blocking"
+   },
+   {
+    "part": "light_tube_right",
+    "fault": "Bubble-tube columns stay the same length when the prop is made taller, leaving blank side panel where the tubes should simply run longer between the arch and the base.",
+    "severity": "blocking"
+   },
+   {
+    "part": "background (measured)",
+    "severity": "blocking",
+    "fault": "At 1.7x tall the prop has gained a repeat it did not have when drawn: its row profile self-correlates 0.87 at a period of 54 scanlines, against 0.42 at the drawn size. Something is being laid down more than once."
+   },
+   {
+    "part": "background (measured)",
+    "severity": "blocking",
+    "fault": "At 1.7x tall the prop has gained a dead band: 38% of its height is scanlines that do not change, against 6% when drawn. The growth is filling with flat material."
+   }
+  ],
+  "patch": [
+   {
+    "name": "background",
+    "mode": "mirror",
+    "drop": false
+   },
+   {
+    "name": "light_tube_right",
+    "count": "longer",
+    "drop": false
+   }
+  ],
+  "wider_means": "A wider jukebox is a fatter cabinet carcass with the same single dome, title strip, mechanism and grille, just more wood either side of the central column.",
+  "taller_means": "A taller jukebox is a taller cabinet body: the plain wood side panels and the vertical bubble-tube columns simply run longer between the arched top and the base, with nothing added."
+ },
+ {
+  "round": 1,
+  "asset": "jukebox",
+  "looks_good": false,
+  "blocking": 7,
+  "faults": [
+   {
+    "part": "background",
+    "fault": "1.7x TALLER: the extra height did not go into the cabinet body or the bubble tubes at all -- the jukebox itself is unchanged and the entire added length is a dark smeared/streaked wood-grain panel grafted below the base, with a visible seam line where it joins the real cabinet. That is smeared background standing in for taller geometry, not a taller jukebox.",
+    "severity": "blocking"
+   },
+   {
+    "part": "background",
+    "fault": "The stretched lower panel shows banding/streaking in the wood grain where it was enlarged -- a seam a player can point at. Needs mirror-mode tiling so repeats reflect instead of cutting.",
+    "severity": "blocking"
+   },
+   {
+    "part": "background",
+    "fault": "1.6x WIDER: the widened sides are blank dark panels and a thin red seam/streak line runs horizontally across the left added panel where the texture repeat cuts.",
+    "severity": "blocking"
+   },
+   {
+    "part": "background",
+    "fault": "Solid view and wireframe show stray flat planes floating clear of the body on the upper-left rear (dark sliver off the back-left shoulder in the shaded view; detached vertical rectangles at far left in wireframe). Geometry hanging in space off the carcass is a blocking shape fault.",
+    "severity": "blocking"
+   },
+   {
+    "part": "light_tube_right",
+    "fault": "In the 1.7x TALLER render the bubble tubes did not run longer between arch and base as the resize rule requires -- the tubes stay original length while background fills the gap, so the tallening produced none of the vertical extension the tubes own.",
+    "severity": "blocking"
+   },
+   {
+    "part": "background (measured)",
+    "severity": "blocking",
+    "fault": "At 1.7x tall the prop has gained a repeat it did not have when drawn: its row profile self-correlates 0.87 at a period of 54 scanlines, against 0.43 at the drawn size. Something is being laid down more than once."
+   },
+   {
+    "part": "background (measured)",
+    "severity": "blocking",
+    "fault": "At 1.7x tall the prop has gained a dead band: 38% of its height is scanlines that do not change, against 6% when drawn. The growth is filling with flat material."
+   }
+  ],
+  "patch": [
+   {
+    "name": "background",
+    "mode": "mirror"
+   },
+   {
+    "name": "light_tube_right",
+    "count": "longer",
+    "anchor": "right",
+    "depth": "proud"
+   }
+  ],
+  "wider_means": "A wider jukebox is a fatter cabinet carcass with the same single dome, title strip, mechanism and grille, just more wood either side of the central column.",
+  "taller_means": "A taller jukebox is a taller cabinet body: the plain wood side panels and the vertical bubble-tube columns simply run longer between the arched top and the base, with nothing added."
+ }
+]

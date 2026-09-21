@@ -1,0 +1,61 @@
+{
+ "face": "front",
+ "redrawn": {
+  "button_p4": [
+   77,
+   64
+  ],
+  "button_p2": [
+   68,
+   64
+  ],
+  "speaker_grille_right": [
+   132,
+   64
+  ],
+  "speaker_grille_left": [
+   132,
+   64
+  ],
+  "coin_return_right": [
+   64,
+   73
+  ],
+  "coin_slot_upper": [
+   64,
+   72
+  ],
+  "joystick_right": [
+   64,
+   95
+  ],
+  "price_badge": [
+   89,
+   64
+  ],
+  "coin_slot_plate": [
+   187,
+   64
+  ],
+  "joystick_left": [
+   64,
+   100
+  ],
+  "button_p1": [
+   69,
+   64
+  ],
+  "button_p3": [
+   73,
+   64
+  ],
+  "coin_slot_left": [
+   64,
+   196
+  ],
+  "coin_return_left": [
+   64,
+   209
+  ]
+ }
+}

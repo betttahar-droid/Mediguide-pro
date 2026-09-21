@@ -1,0 +1,287 @@
+{
+ "face": "front",
+ "size": [
+  275,
+  492
+ ],
+ "aspect": 0.55894,
+ "background": "bg_front.png",
+ "background_mode": "mirror",
+ "parts": [
+  {
+   "name": "display_window",
+   "image": "parts/display_window.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    253,
+    235
+   ],
+   "u": [
+    0.06909,
+    0.98909
+   ],
+   "v": [
+    0.51829,
+    0.99593
+   ]
+  },
+  {
+   "name": "card_reader",
+   "image": "parts/card_reader.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "right",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.6316,
+     0.8947
+    ],
+    "v": [
+     0.0741,
+     0.2963
+    ]
+   },
+   "px_size": [
+    38,
+    27
+   ],
+   "u": [
+    0.56727,
+    0.70545
+   ],
+   "v": [
+    0.46545,
+    0.52033
+   ]
+  },
+  {
+   "name": "coin_slot_panel",
+   "image": "parts/coin_slot_panel.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "right",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": [
+     0.537,
+     0.7037
+    ]
+   },
+   "px_size": [
+    33,
+    54
+   ],
+   "u": [
+    0.58182,
+    0.70182
+   ],
+   "v": [
+    0.35772,
+    0.46748
+   ]
+  },
+  {
+   "name": "key_lock",
+   "image": "parts/key_lock.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "right",
+   "depth": "proud",
+   "motion": "press",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.0,
+     0.2
+    ],
+    "v": null
+   },
+   "px_size": [
+    15,
+    37
+   ],
+   "u": [
+    0.80364,
+    0.85818
+   ],
+   "v": [
+    0.44512,
+    0.52033
+   ]
+  },
+  {
+   "name": "coin_return",
+   "image": "parts/coin_return.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "right",
+   "depth": "recessed",
+   "motion": "press",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.75,
+     0.9583
+    ],
+    "v": [
+     0.0968,
+     0.4194
+    ]
+   },
+   "px_size": [
+    24,
+    31
+   ],
+   "u": [
+    0.90182,
+    0.98909
+   ],
+   "v": [
+    0.37602,
+    0.43902
+   ]
+  },
+  {
+   "name": "price_label",
+   "image": "parts/price_label.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "right",
+   "depth": "flush",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    67,
+    36
+   ],
+   "u": [
+    0.72727,
+    0.97091
+   ],
+   "v": [
+    0.28862,
+    0.36179
+   ]
+  },
+  {
+   "name": "delivery_flap",
+   "image": "parts/delivery_flap.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "bottom",
+   "depth": "recessed",
+   "motion": "hinge_top",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.5507,
+     0.7923
+    ],
+    "v": [
+     0.0619,
+     0.3918
+    ]
+   },
+   "px_size": [
+    207,
+    97
+   ],
+   "u": [
+    0.09818,
+    0.85091
+   ],
+   "v": [
+    0.04878,
+    0.24593
+   ]
+  },
+  {
+   "name": "coin_return_cup",
+   "image": "parts/coin_return_cup.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "right",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": [
+     0.1,
+     0.3
+    ]
+   },
+   "px_size": [
+    39,
+    20
+   ],
+   "u": [
+    0.84727,
+    0.98909
+   ],
+   "v": [
+    0.1748,
+    0.21545
+   ]
+  }
+ ]
+}

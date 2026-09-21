@@ -1,0 +1,15 @@
+[
+ {
+  "face": "front",
+  "side_names": [
+   {
+    "was": "title_strip_left",
+    "now": "title_strip_right"
+   },
+   {
+    "was": "title_strip_right",
+    "now": "title_strip_left"
+   }
+  ]
+ }
+]

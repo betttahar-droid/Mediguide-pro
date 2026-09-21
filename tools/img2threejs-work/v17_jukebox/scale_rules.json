@@ -1,0 +1,15 @@
+{
+ "wider_means": "A wider jukebox is a wider cabinet with more speaker/title-strip bays flanking the selector, not a stretched dome.",
+ "taller_means": "A taller jukebox has a taller cabinet body and plinth below the same dome and selector, not a taller window.",
+ "max_wider": 2.0,
+ "max_taller": 1.5,
+ "per_bay": [
+  "decal_1",
+  "decal_4"
+ ],
+ "spans": [
+  "dome_window",
+  "selector_panel",
+  "plinth"
+ ]
+}

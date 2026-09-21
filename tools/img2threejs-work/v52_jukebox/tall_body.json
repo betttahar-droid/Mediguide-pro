@@ -1,0 +1,33 @@
+{
+ "face": "front",
+ "ratio": 1.6,
+ "cut": 380,
+ "extra": 356,
+ "size": [
+  336,
+  950
+ ],
+ "drawn_size": [
+  336,
+  594
+ ],
+ "cover_at_cut": 9,
+ "on_part_boundary": true,
+ "attempts": 2,
+ "evidence": "proposed",
+ "flanks": [
+  {
+   "face": "side",
+   "status": "refused"
+  },
+  {
+   "face": "back",
+   "image": "body_back_tall.png",
+   "size": [
+    321,
+    950
+   ],
+   "attempts": 2
+  }
+ ]
+}

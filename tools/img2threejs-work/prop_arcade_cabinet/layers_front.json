@@ -1,0 +1,222 @@
+{
+ "face": "front",
+ "size": [
+  235,
+  632
+ ],
+ "aspect": 0.37184,
+ "background": "bg_front.png",
+ "background_mode": "mirror",
+ "parts": [
+  {
+   "name": "marquee",
+   "image": "parts/marquee.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    234,
+    59
+   ],
+   "u": [
+    0.0,
+    0.99574
+   ],
+   "v": [
+    0.89557,
+    0.98892
+   ]
+  },
+  {
+   "name": "speaker_grille",
+   "image": "parts/speaker_grille.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": null
+   },
+   "px_size": [
+    213,
+    93
+   ],
+   "u": [
+    0.04255,
+    0.94894
+   ],
+   "v": [
+    0.75,
+    0.89715
+   ]
+  },
+  {
+   "name": "screen",
+   "image": "parts/screen.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.0656,
+     0.2678
+    ],
+    "v": [
+     0.1524,
+     0.6095
+    ]
+   },
+   "px_size": [
+    184,
+    105
+   ],
+   "u": [
+    0.10638,
+    0.88936
+   ],
+   "v": [
+    0.58544,
+    0.75158
+   ]
+  },
+  {
+   "name": "joystick",
+   "image": "parts/joystick.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "left",
+   "depth": "deep",
+   "motion": "stick",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.4118,
+     0.6471
+    ],
+    "v": [
+     0.56,
+     0.74
+    ]
+   },
+   "px_size": [
+    17,
+    50
+   ],
+   "u": [
+    0.1617,
+    0.23404
+   ],
+   "v": [
+    0.50791,
+    0.58703
+   ]
+  },
+  {
+   "name": "control_panel",
+   "image": "parts/control_panel.png",
+   "hf": [
+    0.07725321888412018,
+    0.12017167381974249
+   ],
+   "resize": "spanx_repeat",
+   "resize_y": "spanx_repeat",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "none",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": true,
+   "scatter": false,
+   "bands": {
+    "h": null,
+    "v": [
+     0.0172,
+     0.5
+    ]
+   },
+   "px_size": [
+    234,
+    58
+   ],
+   "u": [
+    0.0,
+    0.99574
+   ],
+   "v": [
+    0.44937,
+    0.54114
+   ]
+  },
+  {
+   "name": "coin_door",
+   "image": "parts/coin_door.png",
+   "hf": null,
+   "resize": "fixed",
+   "resize_y": "fixed",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "hinge_left",
+   "per_bay": false,
+   "per_tier": false,
+   "lengthens": false,
+   "spans": false,
+   "scatter": false,
+   "bands": {
+    "h": [
+     0.2174,
+     0.4783
+    ],
+    "v": [
+     0.0649,
+     0.227
+    ]
+   },
+   "px_size": [
+    69,
+    185
+   ],
+   "u": [
+    0.35319,
+    0.64681
+   ],
+   "v": [
+    0.07595,
+    0.36867
+   ]
+  }
+ ]
+}

@@ -1,0 +1,165 @@
+{
+ "face": "front",
+ "size": [
+  300,
+  551
+ ],
+ "parts": [
+  {
+   "name": "display_window",
+   "px": [
+    5,
+    0,
+    217,
+    278
+   ],
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "drink_shelves",
+   "px": [
+    5,
+    0,
+    217,
+    278
+   ],
+   "resize": "spany_center",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "cold_drinks_sign",
+   "px": [
+    26,
+    277,
+    140,
+    385
+   ],
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "control_panel",
+   "px": [
+    238,
+    88,
+    299,
+    269
+   ],
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "none"
+  },
+  {
+   "name": "price_display",
+   "px": [
+    238,
+    137,
+    295,
+    171
+   ],
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "keypad",
+   "px": [
+    253,
+    174,
+    295,
+    269
+   ],
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "proud",
+   "motion": "press"
+  },
+  {
+   "name": "price_label",
+   "px": [
+    244,
+    247,
+    299,
+    287
+   ],
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "flush",
+   "motion": "none"
+  },
+  {
+   "name": "coin_door",
+   "px": [
+    139,
+    277,
+    230,
+    342
+   ],
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "hinge_left"
+  },
+  {
+   "name": "coin_return_cup",
+   "px": [
+    139,
+    341,
+    217,
+    433
+   ],
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "bill_slot",
+   "px": [
+    214,
+    268,
+    299,
+    308
+   ],
+   "resize": "fixed",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "press"
+  },
+  {
+   "name": "dispense_flap",
+   "px": [
+    36,
+    432,
+    212,
+    474
+   ],
+   "resize": "spanx_center",
+   "anchor": "bottom",
+   "depth": "proud",
+   "motion": "hinge_top"
+  },
+  {
+   "name": "service_button",
+   "px": [
+    256,
+    440,
+    295,
+    474
+   ],
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "flush",
+   "motion": "press"
+  }
+ ]
+}

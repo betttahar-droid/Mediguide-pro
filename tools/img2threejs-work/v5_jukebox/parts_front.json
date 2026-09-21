@@ -1,0 +1,74 @@
+{
+ "face": "front",
+ "size": [
+  291,
+  508
+ ],
+ "parts": [
+  {
+   "name": "display_window",
+   "px": [
+    27,
+    113,
+    257,
+    287
+   ],
+   "resize": "spanx_center",
+   "anchor": "top",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "selection_buttons",
+   "px": [
+    103,
+    317,
+    240,
+    372
+   ],
+   "resize": "spanx_repeat",
+   "anchor": "center",
+   "depth": "proud",
+   "motion": "press"
+  },
+  {
+   "name": "coin_slot_panel",
+   "px": [
+    47,
+    320,
+    71,
+    383
+   ],
+   "resize": "fixed",
+   "anchor": "left",
+   "depth": "recessed",
+   "motion": "press"
+  },
+  {
+   "name": "speaker_grille",
+   "px": [
+    99,
+    371,
+    186,
+    506
+   ],
+   "resize": "fixed",
+   "anchor": "bottom",
+   "depth": "recessed",
+   "motion": "none"
+  },
+  {
+   "name": "title_strip_tray",
+   "px": [
+    27,
+    289,
+    257,
+    315
+   ],
+   "resize": "spanx_center",
+   "anchor": "center",
+   "depth": "recessed",
+   "motion": "none"
+  }
+ ]
+}
