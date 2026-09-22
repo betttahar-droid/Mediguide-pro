@@ -90,6 +90,80 @@ Each cost an hour and each is the obvious next idea:
   autocorrelation, its transpose, mirror symmetry, scene-graph instance counts.
   All failed. The cause was upstream in `paint_out`, not in the resize.
 
+### A sixth hypothesis, measured this session and reverted
+
+- **The growth band is chosen on rows that are not the prop, and stopping that
+  fixes the tall axis.** HALF RIGHT, AND THE HALF THAT IS WRONG IS THE FIX.
+  `object_crop` returns a bounding box and a prop is not a rectangle, so above a
+  marquee, around a jukebox's dome and below its feet the crop holds sheet.
+  Sheet passes both tests `bare()` applies -- no segmenter boxes the sky, and
+  the sky is the quietest thing on any drawing -- so the chooser PREFERS it:
+
+  ```
+  rows under 80% inside the silhouette
+    of every row in the corpus          5.9%
+    of rows already in a growth band   16.1%      a 2.7x enrichment
+  ```
+
+  Three props' bands are ENTIRELY sheet (prop_jukebox 42 rows of sky above its
+  dome, v7_jukebox 60, v44_pinball 44) and 24 have one that is mostly sheet.
+  v13_arcade_cabinet stacks four white bars over its marquee at 1.5x tall.
+
+  Removing them does not fix the axis. Two forms, both measured against a
+  before-set of 76 props, both reverted:
+
+  ```
+  row-level (a sheet row is never a candidate)    50 props measured twice
+      median rise +0.097 -> +0.091   banding 14 -> 16
+      better 12  worse 13            crossed the bar: fixed 5, broken 7
+  run-level (skip a run that is majority sheet)   18 props measured twice
+      median rise +0.200 -> +0.195   banding  8 ->  9
+      better  4  worse  4            crossed the bar: fixed 1, broken 2
+  ```
+
+  Flat both times, the identity of the broken props changing and not their
+  number, which is the shape CLAUDE.md says to revert on. THE REASON IS
+  STRUCTURAL AND ALREADY IN THIS FILE: removing a bad band does not create a
+  good one, it concentrates the growth into whatever is left. prop_jukebox has
+  other bare rows and went +0.301 -> **-0.185**; v24_arcade_cabinet has none,
+  so the height moved into the vent stack above its screen and it went +0.045
+  -> +0.276 -- and there the render agrees with the number, six stacked grilles
+  instead of four plus three bars of sky.
+
+  So a prop whose only spare rows are sheet is a prop with **nowhere to grow**,
+  and the answer for it is `tall_body` (section 2c), not a choice of band.
+
+  Worth keeping even though the fix was not: `silhouette()` exists because
+  layer_build once picked a jukebox's dome as "clean panel", and the band
+  chooser never got the same fix. Anyone reaching for a coverage test should
+  know it has been tried twice and what it costs.
+
+- **`repeat_score` inverted again, on exactly this class of change.** CLAUDE.md
+  records one counterexample (v48, the artwork test); this is a second.
+  ps1_arcade scored its worst of the session, +0.180 -> +0.552, on a render
+  that LOST two stacked lower panels and their hard white seams and became one
+  continuous panel. Eight of the eighteen props above moved by exactly 0.000
+  while their stacked sky disappeared. Judge this axis on the pictures.
+
+### What the corpus branch does not carry, and what that breaks
+
+`corpus-data` has the manifests and the part crops but NOT the derived rasters.
+100 of 104 props reference a `body_side/back/top.png` that is absent; the
+renderer's `load()` is unguarded there, so every render fails and
+`geometry_sweep` prints `all three >= 0.95: 0/98`, which reads as catastrophe
+and means "nothing rendered". `body_faces.py` rebuilds them for free and its
+`body.json` comes back byte-identical to the committed one. `seamless_tile.py`
+does NOT reproduce its committed manifest (size 24 -> 56), so leave
+`tile_front.png` missing: the renderer falls back and the silhouette is
+unaffected.
+
+18 props cannot be rendered at 1.5x tall at all from a clean checkout -- they
+name purchased `tall_body` / `side_other` art the branch does not carry, and
+the tall-flank load is the one not wrapped in a try.
+
+On Windows, `geometry_audit.shoot` defaults CHROMIUM_PATH to a Linux path, with
+the same silent-empty-render result.
+
 ### Free local models work, with one condition
 
 `tools/authoring/LOCAL.md` and `bash tools/setup/local-setup.sh --pull`. The
