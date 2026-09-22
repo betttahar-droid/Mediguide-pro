@@ -31,6 +31,7 @@ A back view is the cheapest fix available.
 import argparse
 import base64
 import json
+import os
 import re
 import sys
 import urllib.error
@@ -150,6 +151,70 @@ FREE_VISION = ["openrouter/free", "nex-agi/nex-n2.5-pro:free"]
 _RETRY = {}
 
 
+GEMINI_TEXT_ENDPOINT = ("https://generativelanguage.googleapis.com/v1beta/"
+                        "models/{model}:generateContent")
+# gemini-2.5-flash is retired for new keys and the API says so in the 404:
+# "no longer available to new users ... use models/gemini-3.6-flash". Taking
+# the name the server hands over beats pinning one that dies quietly.
+GEMINI_TEXT_MODEL = "gemini-3.6-flash"
+
+
+def _gemini_key():
+    env = ROOT / ".env"
+    if env.exists():
+        for line in env.read_text().splitlines():
+            line = line.strip()
+            if line and not line.startswith("#") and "=" in line:
+                k, v = line.split("=", 1)
+                if k.strip() == "GEMINI_API_KEY" and v.strip():
+                    return v.strip()
+    return os.environ.get("GEMINI_API_KEY", "").strip() or None
+
+
+def _gemini_text(messages, max_tokens=12000, temperature=0.3):
+    """One completion from Gemini, returned as TEXT like every other branch.
+
+    The OpenAI message shape is flattened: Gemini wants parts, and every caller
+    of glm() that lands here sends text-only turns.
+    """
+    key = _gemini_key()
+    if not key:
+        raise RuntimeError("PROP_TEXT_BACKEND=gemini but no GEMINI_API_KEY")
+    parts = []
+    for m in messages:
+        c = m.get("content")
+        if isinstance(c, str):
+            parts.append({"text": c})
+        else:
+            for piece in c:
+                if piece.get("type") == "text":
+                    parts.append({"text": piece["text"]})
+    model = os.environ.get("GEMINI_TEXT_MODEL", GEMINI_TEXT_MODEL)
+    body = json.dumps({
+        "contents": [{"role": "user", "parts": parts}],
+        "generationConfig": {"temperature": temperature,
+                             "maxOutputTokens": max_tokens},
+    }).encode()
+    req = urllib.request.Request(
+        GEMINI_TEXT_ENDPOINT.format(model=model) + f"?key={key}",
+        data=body, headers={"Content-Type": "application/json"}, method="POST")
+    with urllib.request.urlopen(req, timeout=300) as r:
+        d = json.load(r)
+    cands = d.get("candidates") or []
+    if not cands:
+        raise RuntimeError(f"gemini: no candidates -- {json.dumps(d)[:300]}")
+    out = "".join(p.get("text", "")
+                  for p in (cands[0].get("content") or {}).get("parts", []))
+    if not out.strip():
+        # A THINKING MODEL BILLS ITS THINKING AGAINST maxOutputTokens, so a
+        # budget sized for the answer comes back with an empty content block
+        # and finishReason=MAX_TOKENS -- the same trap glm() documents for GLM.
+        raise RuntimeError(
+            f"gemini: empty reply (finishReason={cands[0].get('finishReason')}"
+            f", usage={d.get('usageMetadata')}). Raise max_tokens.")
+    return out
+
+
 def glm(messages, model, key, max_tokens=12000, temperature=0.3, effort="low"):
     """GLM 5.3 is a REASONING model and its thinking is billed against
     max_tokens, so a budget sized for the answer alone comes back with
@@ -169,6 +234,22 @@ def glm(messages, model, key, max_tokens=12000, temperature=0.3, effort="low"):
         import local_llm
     except Exception:                                         # noqa: BLE001
         local_llm = None
+    # A GEMINI TEXT PATH, BECAUSE THE BRIEF IS THE ONE ASK THAT NEEDS A CAPABLE
+    # MODEL AND THE KEY FOR ONE IS ALREADY HERE. The end-to-end trace in
+    # ROADMAP section 0 ends with "neither segmentation nor measurement produced
+    # parts" -- correct, because a 3B author had described a cube. Everything
+    # downstream is verified and behaved; the subject is the only ask nothing
+    # can check, so it is the only one that has to be bought.
+    #
+    # `concept_sheet` has spoken to Gemini for images since the beginning and
+    # `glm()` could only reach OpenRouter or Ollama, so a box with a GEMINI key
+    # and no OPENROUTER key had no capable author at all. That was a missing
+    # seam, not a missing key. Same contract as every other branch here: return
+    # TEXT.
+    if (os.environ.get("PROP_TEXT_BACKEND", "").lower() == "gemini"
+            or (not key and _gemini_key())):
+        return _gemini_text(messages, max_tokens=max_tokens,
+                            temperature=temperature)
     if local_llm is not None and local_llm.enabled():
         has_img = any(not isinstance(m.get("content"), str) for m in messages)
         # UNWRAP IT THE SAME WAY THE PAID PATH DOES. glm() returns TEXT -- every
@@ -437,7 +518,9 @@ _NEGATED = ("not appear", "never appear", "must not", "must never", "no other",
             "should not", "cannot", "excluded", "omit", "without",
             # a bare "no X may appear" negates without the word "not"
             "no front", "no back", "no side", "no top", "no bottom",
-            "no rear", "no underside", "no flank", "none of")
+            "no rear", "no underside", "no flank", "none of",
+            "not show", "never show", "no perspective", "no foreshorten",
+            "avoid", "free of", "without any")
 
 
 def _negated(low):
@@ -456,7 +539,7 @@ def brief_faults(views):
         for sent in _sentences(text):
             low = sent.lower()
             why = None
-            if any(w in low for w in _PROJECTION):
+            if any(w in low for w in _PROJECTION) and not _negated(low):
                 why = "names a projection that is not orthographic"
             elif any(w in low for w in _VISIBLE) and not _negated(low):
                 others = [f for f in _OTHER_FACE
@@ -476,7 +559,7 @@ def strip_perspective(text):
     keep = []
     for sent in _sentences(text):
         low = sent.lower()
-        bad = any(w in low for w in _PROJECTION) or (
+        bad = (any(w in low for w in _PROJECTION) and not _negated(low)) or (
             any(w in low for w in _VISIBLE) and not _negated(low)
             and any(f in low for f in _OTHER_FACE))
         if not bad:
