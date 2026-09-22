@@ -164,6 +164,44 @@ the tall-flank load is the one not wrapped in a try.
 On Windows, `geometry_audit.shoot` defaults CHROMIUM_PATH to a Linux path, with
 the same silent-empty-render result.
 
+### ONE PROMPT IN, A BUILT PROP OUT -- and what it still gets wrong
+
+With `_gemini_text` wired in (the brief is the one ask nothing can check, so it
+is the one that must be bought -- $0.004 per prop), `auto_prop "arcade cabinet"`
+followed by `make_prop --skip-sheet --rounds 1` runs the whole way with nobody
+in the loop. On `final_arcade_cabinet`:
+
+```
+sheet        front/side/back 312x738, 309x738, 306x738; flat elevations
+materials    5/6 tile cleanly: wood, scratched_metal, speaker_cloth,
+             teal_paint, vent_mesh, worn_wood
+segmentation 17 parts; 16 overlaps cut (joystick out of control_deck, ...)
+geometry     front 99.7%  side 93.4%  top 94.4% outline vs its own drawings
+glTF         37 nodes, 19 meshes, 17 named parts, mechanism per part:
+             joystick=stick, button_1..6=press, coin_door=hinge_left,
+             coin_slot_left/right=press
+2x wide      37 -> 61 nodes. joystick 1->2, button_1..6 each 1->2,
+             instruction_card 1->2, while the marquee text and coin door
+             HOLD their drawn size. A two-player cabinet, not a stretch.
+resize audit 5 adaptations judged, 5 FAIL
+```
+
+**The instancing works and the ARTWORK does not**, which is the same fault
+class as the growth-band entry above, reproduced on a fresh prop by the loop's
+own judge: the screen bezel repeats into three CRT bulges at 2x, the marquee
+band tiles behind "ARCADE HEROES", the kickplate counters duplicate. Run with
+`--rounds 1`, so it stopped after round 0 rather than attempting the
+corrections it had just diagnosed. **Next: more rounds, and see whether the
+judge's patches actually close any of the five.**
+
+Two gaps this run exposes that are not in any list yet:
+  - the exported glTF has **0 animation clips**. The rig is posable and the
+    motion is recorded per part in `extras`, but an importer must drive it
+    rather than press play. Bake a clip per `motion` on export.
+  - `image_ledger` records 42 calls at $0.0000 -- the DIRECT Gemini image path
+    does not report a price, only the OpenRouter one does, so the ledger cannot
+    answer "what did this cost" for the path the tool actually uses.
+
 ### The one-prompt run, traced end to end, and the ONE stage that fails
 
 Run from the words "arcade cabinet" with nobody in the loop: brief on local
