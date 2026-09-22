@@ -197,6 +197,25 @@ against the paid judge's "the repeating central band duplicates and cuts
 through button artwork" and "the slice range cuts through the screen bezel and
 duplicates a horizontal element" on the same two parts.
 
+**AND A BIGGER LOCAL MODEL DOES NOT RESCUE IT.** qwen2.5vl:32b, rented on an
+RTX 6000 Ada, same five adaptations, same renders -- it runs in about two
+minutes there against fifty locally, so the speed claim holds on a high-TFLOP
+card even though it did not on a cheap Turing one:
+
+```
+paid (gemini)            5 FAIL
+local qwen2.5vl:7b       0 FAIL   -- missed all four real repeats
+local qwen2.5vl:32b      1 FAIL   -- and it is a FALSE POSITIVE
+```
+
+Its one fault is `button_p1_a  "has been repeated instead of resized"` -- which
+is the CORRECT behaviour. Buttons duplicating at 2x width is a two-player
+cabinet, the exact thing this prop is supposed to do. So the 32B passed the
+four genuine repeats (marquee band, control deck band, kick plate, body seams)
+and flagged the one piece of intended instancing. It is not closer to the paid
+judge; it is differently wrong, and in the more dangerous direction -- a loop
+acting on that patch would try to UNDO the two-player layout.
+
 **SO RUNNING THE LOOP TO "CONVERGENCE" ON A LOCAL JUDGE IS WORTHLESS.** It
 would declare this cabinet shippable with five visible faults in it. CLAUDE.md
 already says a grader that cannot separate your worst prop from your best is
