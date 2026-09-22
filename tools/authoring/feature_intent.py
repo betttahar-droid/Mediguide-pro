@@ -1,0 +1,817 @@
+#!/usr/bin/env python3
+"""Typed intent for every feature, in FACE-LOCAL coordinates, with evidence.
+
+    python3 tools/authoring/feature_intent.py work/ps1 --face front
+    python3 tools/authoring/feature_intent.py work/ps1 --report
+
+Authoring tool. NOT a build, CI or runtime dependency.
+
+WHY. A part in parts_front.json is a pixel box plus five enums:
+
+    {"name": "display_window", "px": [10,60,201,315],
+     "resize": "spanx_center", "anchor": "top", "depth": "recessed", ...}
+
+Everything that record does not say has been a fault this year. It does not
+say what the feature IS for (a window, a slot array, a scale, a handle), so
+the loop can only reclassify how it stretches. It does not say what it is
+mounted ON, so a rider and its host are related only by whoever notices their
+boxes overlap. It does not say which SURFACE it lives on, so every part is
+implicitly on the front. It has no thickness at all -- "depth" is one of four
+words -- so a recess cannot be checked for being a recess. And it records no
+EVIDENCE, so a number measured off the drawing and a number the model asserted
+are indistinguishable once written.
+
+THE COORDINATES ARE THE HEART OF IT. A feature's width and height are local to
+the face it is mounted on, and its thickness is perpendicular to that face.
+Those three are not world X, Y and Z, and treating them as though they were is
+how a slot 40mm wide across the front becomes 40mm DEEP when the same intent is
+compiled onto the side. So a Feature carries:
+
+    surface     which face it is mounted on
+    region      (u0, v0, u1, v1), normalised WITHIN that surface
+    w, h        the local extent, in the surface's own axes
+    thickness   perpendicular to the surface, and never derived from the region
+
+Compiling to world coordinates is the one place the mapping happens, and it is
+a single function that every surface goes through, so the same intent behaves
+the same way on the front, the side and the top.
+
+UNVERIFIED IS A RESULT, NOT A GAP. The measurements here come from different
+places and are worth different amounts. A region measured off the elevation's
+own pixels is evidence. A thickness the model proposed because a coin slot is
+usually about that deep is a guess -- defensible, useful, and not a
+measurement. Recording which is which lets the acceptance reducer say the only
+honest thing about a prop built partly from guesses: it is a DRAFT that
+complies with the prompt, not a reconstruction that fits the reference. The
+previous system had no way to say that, so it said "success" instead, and a
+synthesised part counted the same as a measured one.
+
+PER INSTANCE, NEVER PER KIND. Four legs are four features. A grid of nine
+product slots is nine. This is the rule the old validation broke by counting
+object types: one visible knob satisfied "has knobs", one drawn grid cell
+satisfied the grid, and the count was never checked. Every check here runs on
+an instance and reports on that instance alone.
+"""
+import argparse
+import json
+import math
+import re
+from pathlib import Path
+
+# ---------------------------------------------------------------------------
+# Evidence. Every scalar on a Feature is one of these, and the reducer treats
+# them very differently.
+
+MEASURED = "measured"       # read off the reference pixels by arithmetic
+DERIVED = "derived"         # computed from measured values by a known rule
+PROPOSED = "proposed"       # the model's answer; plausible, not evidence
+DEFAULT = "default"         # the tool's fallback; weaker than proposed
+ABSENT = "absent"           # nothing said at all
+# A FIFTH STATE, AND THE DIFFERENCE MATTERS. "absent" means nobody has
+# measured it yet and someone could. UNMEASURABLE means the reference FORMAT
+# cannot contain it, so no amount of work on this prop will ever produce it.
+#
+# Depth is the case, established by depth_probe: a side elevation's front edge
+# at a height is the frontmost point across the whole width, so only what juts
+# out furthest defines it. A recess never touches the silhouette by
+# definition. Probed across the corpus, exactly 6 of 1700 features returned a
+# measurable depth and every one of them is a BODY SECTION -- a cabinet's
+# bezel at 70-84px, a pinball's whole backbox at 190.6px -- not a fitting.
+#
+# Treating that as "absent" made ACCEPTED permanently unreachable for every
+# role that must open or recess, which is not a high standard, it is a broken
+# one: a grade nothing can ever score measures nothing.
+UNMEASURABLE = "unmeasurable"
+
+EVIDENCE_RANK = {MEASURED: 3, DERIVED: 2, PROPOSED: 1, DEFAULT: 0,
+                 UNMEASURABLE: 0, ABSENT: -1}
+
+# What the four orthographic elevations structurally cannot show, and why.
+# A field listed here is declared on the verdict rather than blocking it.
+FORMAT_LIMITS = {
+    "thickness": "a front/side/back/top set cannot show a recess: the side "
+                 "silhouette traces whatever juts out furthest at each height, "
+                 "and a recessed feature never touches it",
+}
+
+PASS, FAIL, UNVERIFIED = "PASS", "FAIL", "UNVERIFIED"
+REJECTED, DRAFT, ACCEPTED = "REJECTED", "DRAFT", "ACCEPTED"
+
+# The surfaces a feature can be mounted on. Face-local axes are named per
+# surface so the compiler can never silently read a width as a depth.
+#
+#   u runs left-to-right across the face as drawn, v runs bottom-to-top,
+#   and n is the outward normal. Thickness is always along n.
+SURFACES = {
+    "front": {"u": "+x", "v": "+y", "n": "+z"},
+    "back":  {"u": "-x", "v": "+y", "n": "-z"},
+    "side":  {"u": "-z", "v": "+y", "n": "+x"},   # the right flank
+    "side_left": {"u": "+z", "v": "+y", "n": "-x"},
+    "top":   {"u": "+x", "v": "-z", "n": "+y"},
+    "bottom": {"u": "+x", "v": "+z", "n": "-y"},
+}
+
+# Semantic roles. The point of a role is that it carries REQUIREMENTS -- an
+# operator knows what a slot array must look like in a way that "decal_7" never
+# can. Roles the tool cannot infer stay "unknown", which is honest and which
+# the reducer counts as unverified rather than as a pass.
+ROLES = {
+    "panel", "window", "screen", "slot", "slot_array", "button", "button_grid",
+    "knob", "dial", "scale", "handle", "door", "flap", "drawer", "grille",
+    "vent", "sign", "label", "decal", "light", "member", "plinth", "trim",
+    "unknown",
+}
+
+# A role that must have a real opening or recess cannot be satisfied by paint.
+# This is the check that "openings and recesses are geometry, not texture".
+NEEDS_OPENING = {"slot", "slot_array", "vent", "grille", "handle"}
+NEEDS_RECESS = {"window", "screen", "drawer"}
+
+# What the renderer actually builds from each depth adjective, quoted from
+# parts_view/index.html so the two cannot drift apart silently. These are the
+# real stand-offs; they are simply not measurements of the reference.
+DEPTH_ADJECTIVE = {"flush": 0.004, "proud": 0.018, "deep": 0.055,
+                   "recessed": -0.014}
+
+# Permitted width/height ratio, PER ROLE, measured across every parts_front.json
+# in the work tree (see measure_role_aspects, which produced this literal --
+# rerun it when the corpus grows rather than hand-editing these numbers).
+#
+# 2nd/98th percentile. This started at the 10th/90th, which is wrong for a
+# reason worth keeping: a band drawn at p10/p90 excludes a fifth of the data it
+# was derived from BY DEFINITION, so it is a tautology rather than a defect
+# detector. Measured, it rejected 19-25% of every single role -- decal 20%,
+# button 19%, screen 22%, member 25% -- which is the percentile's own arithmetic
+# and says nothing about any prop. At p2/p98 the same corpus rejects 3-8%, and
+# what falls outside is a gross outlier rather than an ordinary instance.
+#
+# Not min/max either: the corpus has known-bad segmentations
+# (a jukebox grille boxed at 52.75:1, a decal at 39.4:1, a member at 0.04:1)
+# and min/max would let check_aspect pass anything short of those extremes.
+# The threshold for even having a range is 20 instances -- fewer than that and
+# the two percentiles are just two of the observations, not a distribution.
+#
+# "unknown" is deliberately absent even though it clears 20 instances (343).
+# It is not a role, it is the record of role_of() failing to find one, so its
+# members share no shape contract -- a leg role_of() missed and a decal it
+# missed sit in the same bucket. Giving it a range would fail or pass a part
+# for its aspect based on what OTHER unrelated parts looked like, which is the
+# exact failure role_of()'s docstring warns against: a wrong classification is
+# worse than an honest unknown.
+ROLE_ASPECT = {
+    "button": (0.45, 3.9),
+    "decal": (0.04, 13.31),
+    "door": (0.24, 5.37),
+    "grille": (0.26, 8.58),
+    "member": (0.05, 2.56),
+    "panel": (0.27, 6.29),
+    "screen": (0.99, 1.79),
+    "sign": (0.91, 7.48),
+    "slot": (0.29, 4.18),
+    "window": (0.44, 4.5),
+}
+
+# How many observed instances each ROLE_ASPECT range came from -- kept
+# separately so lift() can name it in Feature.source without re-deriving it,
+# and so a stale mismatch between this and ROLE_ASPECT (after a hand edit that
+# forgot the other one) is visible on sight rather than silently wrong.
+ROLE_ASPECT_N = {
+    "button": 238,
+    "decal": 555,
+    "door": 81,
+    "grille": 101,
+    "member": 24,
+    "panel": 39,
+    "screen": 54,
+    "sign": 67,
+    "slot": 81,
+    "window": 26,
+}
+
+
+class Feature:
+    """One instance. Never a kind, never a group."""
+
+    # `_aspect_over` is how far outside its role's band a failing aspect is,
+    # written by check_aspect and read by reduce_acceptance. It is a slot
+    # because this class has __slots__: setting it without declaring one raises
+    # AttributeError, and the sweep that found that was swallowing the raise in
+    # a `except Exception: continue` and reporting 56 props where there are 98.
+    __slots__ = ("id", "role", "host", "surface", "region", "thickness",
+                 "aspect", "appearance", "resize", "evidence", "source",
+                 "extent", "_aspect_over")
+
+    def __init__(self, fid, role="unknown", host=None, surface="front",
+                 region=(0.0, 0.0, 1.0, 1.0), thickness=0.0, aspect=None,
+                 appearance=None, resize="fixed", evidence=None, source=None,
+                 extent=(1.0, 1.0)):
+        self.id = fid
+        self.role = role if role in ROLES else "unknown"
+        self.host = host                  # id of the feature it is mounted on
+        self.surface = surface
+        self.region = tuple(float(v) for v in region)
+        self.thickness = float(thickness)
+        self.aspect = aspect              # (lo, hi) permitted w/h, or None
+        self.appearance = appearance or {}
+        self.resize = resize
+        # field -> one of the evidence constants. A field missing from this
+        # dict is ABSENT, which is the strongest statement the reducer makes.
+        self.evidence = dict(evidence or {})
+        self.source = source or {}        # field -> what actually measured it
+        # THE REAL EXTENT OF THE SPACE `region` IS NORMALISED AGAINST, in the
+        # pixels it was measured in. Without it a region is a ratio with no
+        # units and NOTHING can be recovered from it -- which is not a detail,
+        # it is this file's own subject. See check_aspect.
+        self.extent = (float(extent[0]), float(extent[1]))
+        self._aspect_over = None          # set by check_aspect when it fails
+
+    # -- face-local geometry -------------------------------------------------
+
+    @property
+    def w(self):
+        """Local width, in the surface's own u axis. Never a world axis."""
+        return self.region[2] - self.region[0]
+
+    @property
+    def h(self):
+        """Local height, in the surface's own v axis."""
+        return self.region[3] - self.region[1]
+
+    def local_size(self, surface_extent):
+        """(w, h, thickness) in real units, given the surface's own extent.
+
+        surface_extent is (u_len, v_len) for the face this sits on. Thickness
+        is NOT scaled by it -- that is the whole point. A 12mm-deep coin slot
+        is 12mm deep on a small machine and on a large one, and on the front
+        and on the flank.
+        """
+        ue, ve = surface_extent
+        return (self.w * ue, self.h * ve, self.thickness)
+
+    def ev(self, field):
+        return self.evidence.get(field, ABSENT)
+
+    def to_json(self):
+        return {"id": self.id, "role": self.role, "host": self.host,
+                "surface": self.surface, "region": list(self.region),
+                "thickness": self.thickness, "aspect": self.aspect,
+                "appearance": self.appearance, "resize": self.resize,
+                "extent": list(self.extent),
+                "evidence": self.evidence, "source": self.source}
+
+    @staticmethod
+    def from_json(d):
+        return Feature(d["id"], d.get("role"), d.get("host"),
+                       d.get("surface", "front"),
+                       d.get("region", (0, 0, 1, 1)), d.get("thickness", 0.0),
+                       d.get("aspect"), d.get("appearance"),
+                       d.get("resize", "fixed"), d.get("evidence"),
+                       d.get("source"), d.get("extent", (1.0, 1.0)))
+
+
+# ---------------------------------------------------------------------------
+# Deriving intent from what the tool already measures.
+#
+# This is deliberately a LIFT rather than a rewrite: fifty finished props sit
+# in the work tree with parts_front.json files, and an intent schema nothing
+# can produce is a design document, not a stage. Every field it can fill from
+# a real measurement is marked MEASURED; every field it cannot is marked
+# honestly and stays unverified all the way to the reducer.
+
+def lift(parts_json, face="front"):
+    """Turn a measured parts_<face>.json into typed, face-local intents."""
+    W, H = parts_json.get("size", [1, 1])
+    W, H = max(1, W), max(1, H)
+    parts = parts_json.get("parts", [])
+
+    # host: the smallest OTHER part that strictly contains this one. The
+    # relation is measured, not asserted -- which is what makes it evidence.
+    def host_of(p):
+        x0, y0, x1, y1 = p["px"]
+        a = (x1 - x0) * (y1 - y0)
+        best, best_a = None, None
+        for q in parts:
+            if q is p:
+                continue
+            qx0, qy0, qx1, qy1 = q["px"]
+            if not (qx0 <= x0 and qy0 <= y0 and qx1 >= x1 and qy1 >= y1):
+                continue
+            qa = (qx1 - qx0) * (qy1 - qy0)
+            if qa <= a * 1.05:            # same box, not a host
+                continue
+            if best_a is None or qa < best_a:
+                best, best_a = q["name"], qa
+        return best
+
+    out = []
+    for p in parts:
+        x0, y0, x1, y1 = p["px"]
+        host = host_of(p)
+        # the region is normalised WITHIN THE HOST when there is one, so a
+        # button on a door keeps its place when the door moves or resizes --
+        # which is the face-local promise applied one level down
+        if host:
+            h = next(q for q in parts if q["name"] == host)
+            hx0, hy0, hx1, hy1 = h["px"]
+            hw, hh = max(1, hx1 - hx0), max(1, hy1 - hy0)
+            region = ((x0 - hx0) / hw, 1 - (y1 - hy0) / hh,
+                      (x1 - hx0) / hw, 1 - (y0 - hy0) / hh)
+            extent = (hw, hh)
+        else:
+            region = (x0 / W, 1 - y1 / H, x1 / W, 1 - y0 / H)
+            extent = (W, H)
+
+        # carried so a normalised region can be turned back into real units;
+        # DERIVED because it is computed from measured boxes by a known rule
+        ev_extent = DERIVED
+        ev = {"region": MEASURED, "surface": DERIVED, "host": MEASURED if host
+              else DEFAULT, "resize": PROPOSED, "role": PROPOSED}
+        src = {"region": f"parts_{face}.json px, normalised to "
+                         f"{'host ' + host if host else 'the face'}",
+               "host": "measured containment" if host else "no containing box"}
+
+        role = role_of(p)
+        aspect = ROLE_ASPECT.get(role)
+        ev["aspect"] = MEASURED if aspect else ABSENT
+        if aspect:
+            n = ROLE_ASPECT_N.get(role, "?")
+            src["aspect"] = (f"{aspect[0]}-{aspect[1]} is the 10th-90th "
+                             f"percentile of {n} measured {role!r} instances "
+                             f"across the work tree")
+        else:
+            src["aspect"] = (f"role {role!r} has no measured range -- either "
+                             f"fewer than 20 instances or it is 'unknown'")
+
+        # THICKNESS IS NOT MEASURED ANYWHERE, and saying so is the point. The
+        # elevations are flat: nothing in them says how far a coin slot is
+        # recessed. "depth" is one of four adjectives chosen by a model, so it
+        # is PROPOSED at best -- and a prop whose recesses are all proposed
+        # cannot be called a reconstruction of its reference, however good it
+        # looks. This single honest ABSENT is what stops the reducer saying
+        # "accepted" about a prop nobody measured the depth of.
+        # AND IT IS READ AS WHAT THE RENDERER ACTUALLY BUILDS, not as zero.
+        # Writing 0 here and then failing the feature for "being paint" would
+        # be this file committing the overclaim it exists to prevent, with the
+        # sign reversed: the pipeline does give every part a stand-off from its
+        # depth adjective, so the geometry is there. What it is NOT is
+        # measured -- four adjectives chosen by a model, mapped to four
+        # constants in the renderer, and no elevation anywhere says how far a
+        # coin slot is recessed. That is exactly a DRAFT, and saying REJECTED
+        # instead would be as wrong as saying ACCEPTED.
+        thick = DEPTH_ADJECTIVE.get(p.get("depth") or "", 0.0)
+        ev["extent"] = ev_extent
+        ev["thickness"] = PROPOSED if p.get("depth") else ABSENT
+        src["thickness"] = (f"depth adjective {p.get('depth')!r} -> "
+                            f"{thick:+.3f} in parts_view DEPTH; no elevation "
+                            f"measures depth")
+
+        out.append(Feature(
+            fid=p["name"], role=role, host=host, surface=face,
+            region=region, aspect=aspect,
+            thickness=abs(thick), extent=extent,
+            appearance={"depth": p.get("depth"), "motion": p.get("motion")},
+            resize=p.get("resize", "fixed"), evidence=ev, source=src))
+    return out
+
+
+def role_of(p):
+    """A role from the name the model gave it, where the name is unambiguous.
+
+    Names are the model's own words and this only reads the ones that map to a
+    role with REQUIREMENTS attached. Everything else stays "unknown" -- a wrong
+    role is worse than none, because it would impose a requirement the feature
+    was never meant to meet.
+    """
+    n = (p.get("name") or "").lower()
+    for key, role in (("window", "window"), ("screen", "screen"),
+                      ("grille", "grille"), ("vent", "vent"),
+                      ("slot", "slot"), ("button", "button"),
+                      ("knob", "knob"), ("dial", "dial"),
+                      ("handle", "handle"), ("door", "door"),
+                      ("flap", "flap"), ("drawer", "drawer"),
+                      ("tray", "drawer"), ("sign", "sign"),
+                      ("marquee", "sign"), ("label", "label"),
+                      ("decal", "decal"), ("leg", "member"),
+                      ("foot", "member"), ("pillar", "member"),
+                      ("column", "member"), ("upright", "member"),
+                      ("plinth", "plinth"), ("panel", "panel"),
+                      ("trim", "trim"), ("light", "light"),
+                      ("tube", "member")):
+        if key in n:
+            return role
+    return "unknown"
+
+
+def _percentile(values, pct):
+    """Linear-interpolation percentile, matching numpy.percentile's default.
+
+    Not worth a numpy dependency for two calls; verified against
+    numpy.percentile on the full corpus before trusting it (see the
+    --measure-aspects output, which does not use numpy either).
+    """
+    s = sorted(values)
+    n = len(s)
+    if n == 1:
+        return s[0]
+    k = (n - 1) * pct
+    f = int(k)
+    c = min(f + 1, n - 1)
+    if f == c:
+        return s[f]
+    return s[f] + (s[c] - s[f]) * (k - f)
+
+
+def measure_role_aspects(work_dir, min_instances=20):
+    """Re-derive ROLE_ASPECT from every parts_front.json under work_dir.
+
+    Gathers the observed w/h of every part instance, grouped by role_of(),
+    and reports the 10th/90th percentile for every role with at least
+    min_instances observations -- min/max is not used because the corpus
+    contains known-bad segmentations (a grille boxed at 52.75:1 on one prop,
+    a decal at 39.4:1 on another) that would set a range wide enough to pass
+    almost anything. "unknown" is excluded on principle, not by instance
+    count: it is not a role, it is the record of role_of() finding none, so
+    its members share no shape contract to measure.
+
+    Returns {role: (lo, hi, n)}, rounded to 2 decimals, sorted by n
+    descending -- this is the function that produced the ROLE_ASPECT and
+    ROLE_ASPECT_N literals above. Rerun it (via --measure-aspects) when the
+    work tree grows rather than hand-editing those dicts.
+    """
+    observed = {}
+    for pf in sorted(Path(work_dir).glob("*/parts_front.json")):
+        try:
+            pj = json.loads(pf.read_text())
+        except (OSError, json.JSONDecodeError):
+            continue
+        for p in pj.get("parts", []):
+            x0, y0, x1, y1 = p["px"]
+            w, h = x1 - x0, y1 - y0
+            if w <= 0 or h <= 0:
+                continue
+            role = role_of(p)
+            if role == "unknown":
+                continue
+            observed.setdefault(role, []).append(w / h)
+
+    result = {}
+    for role, vals in observed.items():
+        if len(vals) < min_instances:
+            continue
+        # ROUNDED OUTWARD, not to nearest. Rounding a bound to 2dp can move
+        # it PAST the very instance that defined the percentile: a speaker
+        # grille measuring 8.574 set the p98 and then failed "8.57 outside
+        # 0.27..8.57" on its own number.
+        lo = math.floor(_percentile(vals, 0.02) * 100) / 100
+        hi = math.ceil(_percentile(vals, 0.98) * 100) / 100
+        result[role] = (lo, hi, len(vals))
+    return dict(sorted(result.items(), key=lambda kv: -kv[1][2]))
+
+
+# ---------------------------------------------------------------------------
+# Per-instance checks. Each returns (status, note) for ONE feature.
+
+def check_region(f):
+    u0, v0, u1, v1 = f.region
+    if u1 <= u0 or v1 <= v0:
+        return FAIL, "region is empty or inverted"
+    if f.ev("region") != MEASURED:
+        return UNVERIFIED, f"region is {f.ev('region')}, not measured"
+    if min(u0, v0) < -0.02 or max(u1, v1) > 1.02:
+        return FAIL, f"region {tuple(round(v,3) for v in f.region)} leaves its host"
+    return PASS, ""
+
+
+# HALF A FITTING IS NOT A FITTING, AND ITS NAME SAYS SO.
+#
+# `marquee_left` is 62x75 and its role's band is 0.91..7.48, so it fails; so
+# does `marquee_right` at 64x75. Together they are the marquee, 3.25 wide for
+# its height, comfortably inside. The check was asking a half to look like a
+# whole.
+#
+# THE OBVIOUS FIX IS THE WRONG ONE, and it took a sweep to see. The first
+# reading of `screen_bezel_bottom` (187x28 against the screen band 0.99..1.79)
+# was that `role_of` matches "screen" before "bezel" and a bezel should be trim.
+# Swept: ELEVEN parts in the corpus carry both a role word and a shape
+# qualifier, and TEN of them pass -- `screen_bezel` runs 1.05 to 1.42 on six
+# props, because a bezel around a screen is screen-shaped. Re-roling them all
+# would have disabled ten checks that work to fix one.
+#
+# NOR IS THE SIDE WORD ITSELF THE ANSWER. 405 parts carry one and 393 pass.
+# Skipping the check on all of them is the same trade, forty times over.
+#
+# What the failures actually share is that each is ONE OF A MIRROR PAIR, and the
+# pair is one fitting the segmenter cut down the middle. Measured on the union:
+#
+#   v13_jukebox        grille_post_left/right    0.21,0.22 -> 1.27   band 0.26-8.58
+#   v38_arcade_cabinet coin_door_left/right      0.20,0.21 -> 0.43   band 0.24-5.37
+#   v46_pinball        flipper_button_left/right 0.14      -> 2.75   band 0.45-3.90
+#   v49_arcade_cabinet marquee_left/right        0.83,0.85 -> 3.25   band 0.91-7.48
+#   v52_jukebox        bubbler_tube_left/right   0.05      -> 0.13   band 0.05-2.56
+#
+# Eight of the ten failures, in FIVE different roles, against bands measured
+# independently of any of this, and the union lands inside every one. That is
+# not a threshold fitted to the cases; it is the cases turning out to be one
+# object each.
+#
+# IT RUNS ONLY AS A RESCUE, after the part's own aspect has already failed.
+# Measuring the union first would change all 405, and this can then only turn a
+# FAIL into a PASS and never the reverse -- so no prop that passes today can
+# break on it. "Count the props your change breaks" is why it is written this
+# way round rather than as the more natural precomputation.
+#
+# TWO FAILURES ARE LEFT STANDING and are not covered by this: v26's
+# `screen_bezel_bottom` has no `screen_bezel_top` to pair with, and v46_jukebox's
+# `bubble_tube_right_1` has no `bubble_tube_left_1`. A twin that is not in the
+# list is a real question about the segmentation and inventing one would be the
+# correction-that-returns-nothing shape MISTAKES.md already carries.
+SIDE_WORD = re.compile(r"(^|_)(top|bottom|left|right|upper|lower)(_|$)")
+MIRROR = {"left": "right", "right": "left", "top": "bottom",
+          "bottom": "top", "upper": "lower", "lower": "upper"}
+
+
+def mirror_twin(f, by_id):
+    """The feature this one is the other half of, or None.
+
+    Same role as well as the mirrored name: a `side_panel` next to a
+    `side_window` is not a pair, and pairing across roles would let any two
+    parts rescue each other.
+    """
+    if not by_id:
+        return None
+    n = f.id.lower()
+    m = SIDE_WORD.search(n)
+    if not m:
+        return None
+    want = n[:m.start(2)] + MIRROR[m.group(2)] + n[m.end(2):]
+    t = next((g for g in by_id.values() if g.id.lower() == want), None)
+    return t if t is not None and t.role == f.role and t.region else None
+
+
+def check_aspect(f, by_id=None):
+    """Real aspect, never the normalised one. This file wrote the bug it warns about.
+
+    `region` is normalised inside its host, so f.w and f.h are fractions of a
+    box that is itself not square, and their ratio is the real aspect times the
+    host's own inverse aspect. Measured on this cabinet: a screen whose pixel
+    box is 244x171, real aspect 1.427, returns f.w/f.h = 3.429, because the
+    face is 263x632 and 1.427 x (632/263) = 3.429 exactly.
+
+    Compared against ranges derived from real pixel aspects, that scored 83 of
+    95 props REJECTED -- and 335 of the 506 failures, 66%, were this artefact
+    rather than a bad part. The docstring at the top of this file says a
+    feature's w and h are local to its face and are not world axes; the same
+    discipline says a NORMALISED local length is not a real one either, and
+    only local_size() converts between them. check_aspect did not call it.
+
+    That is the Astra finding reproduced inside the module written to prevent
+    it, which is worth leaving on the record rather than quietly correcting.
+    """
+    if not f.aspect:
+        return UNVERIFIED, "no aspect range given for this role"
+    lo, hi = f.aspect
+    w, h, _ = f.local_size(f.extent)
+    if h <= 0:
+        return FAIL, "zero height"
+    a = w / h
+    # ENOUGH PRECISION TO SHOW THE DIFFERENCE. At two decimals a value of 0.0499
+    # against a bound of 0.05 printed as "aspect 0.05 outside 0.05..2.56", which
+    # is arithmetically impossible as written and reached the judge loop as a
+    # blocking fault twice in one run. A reader cannot act on a fault whose
+    # numbers say it is not a fault, and the first thing they will do is
+    # disbelieve the checker.
+    if a < lo or a > hi:
+        # BEFORE FAILING IT, ASK WHETHER IT IS HALF OF SOMETHING. See the note
+        # above mirror_twin: eight of the ten failures in the corpus are one of
+        # a left/right pair the segmenter cut down the middle, and the pair
+        # measured together lands inside its band every time.
+        t = mirror_twin(f, by_id)
+        if t is not None:
+            ux0, uy0 = min(f.region[0], t.region[0]), min(f.region[1], t.region[1])
+            ux1, uy1 = max(f.region[2], t.region[2]), max(f.region[3], t.region[3])
+            ew, eh = f.extent or (1.0, 1.0)
+            ua = ((ux1 - ux0) * ew) / max(1e-9, (uy1 - uy0) * eh)
+            if lo <= ua <= hi:
+                return PASS, (f"aspect {a:.2f} alone, but {f.id} and {t.id} are "
+                              f"one fitting and together measure {ua:.2f}")
+        # HOW FAR OUTSIDE, recorded on the feature, because the reducer needs to
+        # tell a marginal instance from a different object. The band is a
+        # percentile, so its ordinary failure is just outside it -- the median
+        # over the corpus is 1.22x -- and a part 8.8x outside a range that
+        # already spans 0.04 to 13.3 is not a decal at all.
+        f._aspect_over = a / hi if a > hi else lo / max(1e-9, a)
+        return FAIL, (f"aspect {a:.4g} is {'below' if a < lo else 'above'} the "
+                      f"{lo}..{hi} measured for this role "
+                      f"({f._aspect_over:.1f}x outside it)")
+    return PASS, f"aspect {a:.2f}"
+
+
+def check_thickness(f):
+    """A role that must open or recess needs a thickness, and a measured one.
+
+    This is the check the old system could not make, and the reason a painted
+    slot counted as a slot. It does not invent a number -- it reports that the
+    prop does not contain one.
+    """
+    if f.role not in NEEDS_OPENING and f.role not in NEEDS_RECESS:
+        return PASS, "role needs no opening"
+    e = f.ev("thickness")
+    if e in (ABSENT, UNMEASURABLE):
+        return UNVERIFIED, (f"{f.role} must be a real "
+                            f"{'opening' if f.role in NEEDS_OPENING else 'recess'}"
+                            f" and its depth is {FORMAT_LIMITS['thickness']}")
+    if f.thickness <= 0:
+        return FAIL, f"{f.role} has thickness {f.thickness}, so it is paint"
+    if e != MEASURED:
+        return UNVERIFIED, f"thickness is {e}: {FORMAT_LIMITS['thickness']}"
+    return PASS, ""
+
+
+def check_host(f, by_id):
+    if f.host is None:
+        return PASS, "mounted on the body"
+    if f.host not in by_id:
+        return FAIL, f"host {f.host!r} is not a feature"
+    if by_id[f.host].surface != f.surface:
+        return FAIL, (f"mounted on {f.host} which is on "
+                      f"{by_id[f.host].surface}, not {f.surface}")
+    return PASS, ""
+
+
+CHECKS = (("region", check_region), ("aspect", check_aspect),
+          ("thickness", check_thickness))
+
+
+def validate(features):
+    """Every instance, every check, separately. No check speaks for two."""
+    by_id = {f.id: f for f in features}
+    rows = []
+    for f in features:
+        res = {}
+        for name, fn in CHECKS:
+            # check_aspect needs the siblings to spot a mirror pair, the same
+            # way check_host needs them to find a host. Passed by name rather
+            # than to every check, so a check that does not want the set is not
+            # handed one it might come to depend on.
+            res[name] = (fn(f, by_id) if name == "aspect" else fn(f))
+        res["host"] = check_host(f, by_id)
+        rows.append({"id": f.id, "role": f.role, "surface": f.surface,
+                     "aspect_over": getattr(f, "_aspect_over", None),
+                     "checks": {k: {"status": s, "note": n}
+                                for k, (s, n) in res.items()}})
+    return rows
+
+
+# ---------------------------------------------------------------------------
+# The central acceptance reducer.
+
+# The share of parts a p2/p98 band rejects on this corpus, measured: 60 of 1830.
+# Close to the 4% the percentile implies, which is the point -- it is a property
+# of the band and not of any prop. See reduce_acceptance.
+ASPECT_RATE = 0.0328
+
+
+def _binom_tail(k, n, p):
+    """P(at least k failures in n trials at rate p). No numpy, like the rest."""
+    if k <= 0 or n <= 0:
+        return 1.0
+    if k > n:
+        return 0.0
+    below = 0.0
+    c = (1 - p) ** n
+    for i in range(k):
+        below += c
+        c *= (n - i) / (i + 1) * p / max(1e-12, 1 - p)
+    return max(0.0, min(1.0, 1 - below))
+
+def reduce_acceptance(rows):
+    """One verdict for the prop, and it is three-valued on purpose.
+
+    REJECTED      some instance failed a check outright
+    DRAFT         nothing failed, but something is unverified. The prop may
+                  comply with the prompt and look correct; it is not a fitted
+                  reconstruction of the reference and must not be called one.
+    ACCEPTED      every instance passed every check on MEASURED evidence.
+
+    The middle state is the whole reason this exists. The system this replaces
+    had two states and therefore called a prop built from synthesised parts a
+    success, because the parts were there and were of the right type. Counting
+    is not fitting.
+
+    AND A SINGLE ASPECT OUTLIER IS THE BAND'S OWN ARITHMETIC, NOT A DEFECT.
+    `ROLE_ASPECT` is a 2nd/98th percentile, so it rejects about 4% of parts BY
+    CONSTRUCTION -- its own docstring says so. Measured over the corpus: 60 of
+    1830 parts fail, 3.28%, and every single failed check in the whole work tree
+    is `aspect`. With a median of 12 parts per prop that gives a 33% chance of
+    at least one outlier from the band alone, and 43% of props have one. Of the
+    42 props this used to call REJECTED, 31 had exactly ONE failing part.
+
+    So the prop-level verdict was reporting the percentile and not the prop --
+    MISTAKES.md's first shape, a number that describes the method rather than
+    the subject, and its sixth, a test that rejects nearly everything and gets
+    blamed on the candidates.
+
+    The fix is not a count. It is to compare each prop's own failure rate
+    against the rate the band produces, which is a binomial tail: a prop is
+    REJECTED when the chance of seeing that many outliers among that many parts,
+    at the corpus rate, is below one in twenty. It clears the cases that are
+    plainly average -- v45_vending_machine's 4 of 88 is p=0.32, v46_jukebox's 3
+    of 66 is p=0.38 -- and keeps the ones that are not: v13_jukebox's 3 of 7 is
+    p=0.003 and v50_vending_machine's 4 of 27 is p=0.012. Every failure is still
+    listed on the verdict, so nothing is hidden; what changes is whether one
+    part in the outer four per cent condemns the prop it is on.
+
+    ASPECT_RATE is measured, like the ranges themselves. Re-measure it with the
+    ranges (--measure-aspects) rather than adjusting it to taste.
+    """
+    fails, unver = [], []
+    for r in rows:
+        for cname, c in r["checks"].items():
+            if c["status"] == FAIL:
+                fails.append((r["id"], cname, c["note"]))
+            elif c["status"] == UNVERIFIED:
+                unver.append((r["id"], cname, c["note"]))
+    # WHAT THE FORMAT CANNOT SHOW IS DECLARED, NOT COUNTED AGAINST. An
+    # unverified that no reference of this kind could ever resolve is a
+    # property of the input, and blocking on it forever means the grade stops
+    # discriminating between props -- every one fails for the same reason that
+    # has nothing to do with any of them. It is still stated on every verdict,
+    # so "accepted" never quietly means "accepted apart from the depths".
+    limits = sorted({c for _, c, _ in unver if c in FORMAT_LIMITS})
+    open_unver = [u for u in unver if u[1] not in FORMAT_LIMITS]
+    # see the docstring: an aspect outlier at the corpus rate is the band, not
+    # the prop, so it blocks only when there are more of them than that rate
+    # explains. Every other check still blocks on its first failure.
+    other = [f for f in fails if f[1] != "aspect"]
+    n_asp = len(fails) - len(other)
+    p_asp = _binom_tail(n_asp, len(rows), ASPECT_RATE) if n_asp else 1.0
+    # AND ONE PART FAR ENOUGH OUTSIDE IS NOT A MARGINAL INSTANCE. The band's
+    # ordinary failure sits just past it -- 1.22x is the corpus median -- and
+    # 7 of the 60 are past 3x, which is a segmentation error rather than an
+    # unusual fitting. Those still block alone, so the statistical rule above
+    # cannot excuse a grille boxed at 52:1 by pointing at how many parts the
+    # prop has.
+    gross = [r["id"] for r in rows if (r.get("aspect_over") or 0) > 3.0]
+    blocking = bool(other) or bool(gross) or p_asp < 0.05
+    verdict = REJECTED if blocking else (DRAFT if open_unver else ACCEPTED)
+    return {"verdict": verdict, "instances": len(rows),
+            "failed": fails, "unverified": unver,
+            "aspect_outliers": n_asp, "aspect_p": round(p_asp, 4),
+            "aspect_gross": gross,
+            "format_limits": {c: FORMAT_LIMITS[c] for c in limits},
+            "open_unverified": len(open_unver)}
+
+
+
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("prop_dir", help="a single prop dir, or -- with "
+                    "--measure-aspects -- the work tree that holds them")
+    ap.add_argument("--face", default="front")
+    ap.add_argument("--json", action="store_true")
+    ap.add_argument("--measure-aspects", action="store_true",
+                    help="re-derive ROLE_ASPECT from prop_dir/*/parts_front.json "
+                    "and print it; does not validate anything or write it back")
+    args = ap.parse_args()
+
+    if args.measure_aspects:
+        table = measure_role_aspects(args.prop_dir)
+        print(f"{'role':10} {'lo':>6} {'hi':>6} {'n':>6}   (10th/90th pct, n>=20)")
+        for role, (lo, hi, n) in table.items():
+            stale = " *** ROLE_ASPECT differs" if ROLE_ASPECT.get(role) != (lo, hi) else ""
+            print(f"{role:10} {lo:6.2f} {hi:6.2f} {n:6}{stale}")
+        dropped = sorted(set(ROLE_ASPECT) - set(table))
+        if dropped:
+            print(f"in ROLE_ASPECT but no longer >=20 instances: {dropped}")
+        return
+
+    d = Path(args.prop_dir)
+    pj = json.loads((d / f"parts_{args.face}.json").read_text())
+    feats = lift(pj, args.face)
+    rows = validate(feats)
+    verdict = reduce_acceptance(rows)
+    (d / f"intent_{args.face}.json").write_text(json.dumps(
+        {"features": [f.to_json() for f in feats],
+         "validation": rows, "acceptance": verdict}, indent=1))
+
+    if args.json:
+        print(json.dumps(verdict, indent=1))
+        return
+    print(f"{d.name}: {verdict['verdict']}  "
+          f"({verdict['instances']} instances, {len(verdict['failed'])} failed, "
+          f"{len(verdict['unverified'])} unverified)")
+    for i, (fid, c, note) in enumerate(verdict["failed"][:8]):
+        print(f"   FAIL       {fid:24} {c:10} {note}")
+    seen = set()
+    for fid, c, note in verdict["unverified"]:
+        if (c, note) in seen:
+            continue
+        seen.add((c, note))
+        n = sum(1 for a, b, x in verdict["unverified"] if (b, x) == (c, note))
+        print(f"   UNVERIFIED {c:10} x{n:<4} {note}")
+
+
+if __name__ == "__main__":
+    main()
