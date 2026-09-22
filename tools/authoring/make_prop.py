@@ -678,9 +678,28 @@ def main():
     # the tile, the atlas -- is rebuilt from whatever the parts are, so the
     # redraws have to be in place before rebuild runs, and rebuild re-lays them
     # from the cache on every later pass.
-    print("[1c] redrawing the small fittings large ...", flush=True)
-    r = run([sys.executable, "tools/authoring/detail_sheet.py", str(d),
-             "--face", "front", "--asset", args.asset])
+    # BOUGHT ONCE PER PROP, NOT ONCE PER INVOCATION. The comment above says the
+    # sheets are drawn once in 1c and re-laid from cache every round -- and
+    # that was true WITHIN a run and false ACROSS them: re-entering make_prop
+    # on a built prop (--skip-sheet, more rounds) re-bought every redraw. With
+    # a depleted key it did not even fail fast, it sat in 1c retrying, so a
+    # prop whose redraws were all on disk could not be iterated at all.
+    # detail.json is the record of what was accepted; if it has entries, re-lay
+    # them instead of buying them again.
+    _done = {}
+    try:
+        _done = json.loads((d / "detail.json").read_text()).get("redrawn", {})
+    except Exception:
+        pass
+    if _done:
+        print(f"[1c] {len(_done)} fitting(s) already redrawn -- re-laying, "
+              f"not re-buying", flush=True)
+        r = run([sys.executable, "tools/authoring/detail_sheet.py", str(d),
+                 "--face", "front", "--apply"])
+    else:
+        print("[1c] redrawing the small fittings large ...", flush=True)
+        r = run([sys.executable, "tools/authoring/detail_sheet.py", str(d),
+                 "--face", "front", "--asset", args.asset])
     for line in (r.stdout or "").strip().splitlines():
         if "KEPT" in line or "refused" in line or "redrawn large" in line \
                 or "under 48px" in line:
