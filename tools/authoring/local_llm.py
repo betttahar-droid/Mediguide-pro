@@ -97,6 +97,28 @@ def installed(timeout=6):
         return False, [f"{type(e).__name__}: {str(e)[:90]}"]
 
 
+def _to_native(messages):
+    """OpenAI `content` arrays -> Ollama's {content, images:[b64]} per message."""
+    out = []
+    for m in messages:
+        c = m.get("content")
+        if isinstance(c, str):
+            out.append({"role": m.get("role", "user"), "content": c})
+            continue
+        text, images = [], []
+        for piece in c or []:
+            if piece.get("type") == "text":
+                text.append(piece.get("text", ""))
+            elif piece.get("type") == "image_url":
+                u = (piece.get("image_url") or {}).get("url", "")
+                images.append(u.split(",", 1)[1] if "," in u else u)
+        msg = {"role": m.get("role", "user"), "content": chr(10).join(text)}
+        if images:
+            msg["images"] = images
+        out.append(msg)
+    return out
+
+
 def chat(messages, model=None, max_tokens=12000, temperature=0.3,
          has_images=False, timeout=600):
     """One completion, OpenAI shape, from the local server.
@@ -107,20 +129,44 @@ def chat(messages, model=None, max_tokens=12000, temperature=0.3,
     project's prompts run to 7k characters with four images attached, so the
     default silently truncates the question rather than the answer.
     """
-    body = json.dumps({
+    # THE NATIVE ENDPOINT, BECAUSE THE OPENAI ONE DROPS `options` ON THE FLOOR.
+    # The docstring above has always said num_ctx is raised past Ollama's 4096
+    # default -- and it never was: /v1/chat/completions is the OpenAI-compatible
+    # shim and it ignores `options` entirely, so every local call in this repo
+    # has run at 4096 whatever this said. Measured, judging one prop:
+    #
+    #     1 image   OK
+    #     3 images  HTTP 400 "request (4130 tokens) exceeds the context"
+    #     7 images  HTTP 400 "request (9618 tokens) exceeds the context"
+    #
+    # The judge sends front.png plus every render plus the solid and wire
+    # shots -- six to eight images -- so it could NEVER have worked locally,
+    # and it failed as "judge reply unusable (RuntimeError)" three times and
+    # then "keeping the last good build and stopping", which reads as the
+    # judges disagreeing. The same cap silently truncated every long authoring
+    # prompt, which is a fair suspect for the thin replies blamed on 3B/7B
+    # models being weak.
+    #
+    # /api/chat honours options. The reply is converted to the OpenAI shape the
+    # one caller (glm) already unwraps, so nothing else changes.
+    native = {
         "model": model or (vision_model() if has_images else text_model()),
-        "messages": messages,
-        "max_tokens": max_tokens,
-        "temperature": temperature,
+        "messages": _to_native(messages),
         "stream": False,
-        "options": {"num_ctx": 16384},
-    }).encode()
+        "options": {"num_ctx": int(os.environ.get("LOCAL_NUM_CTX", 32768)),
+                    "temperature": temperature,
+                    "num_predict": max_tokens},
+    }
     req = urllib.request.Request(
-        f"{url()}/v1/chat/completions", data=body, method="POST",
+        f"{url()}/api/chat", data=json.dumps(native).encode(), method="POST",
         headers={"Content-Type": "application/json"})
     try:
         with urllib.request.urlopen(req, timeout=timeout) as r:
-            return json.load(r)
+            d = json.load(r)
+        # back into the OpenAI shape glm() unwraps
+        return {"choices": [{"message": {"content":
+                (d.get("message") or {}).get("content", "")},
+                "finish_reason": d.get("done_reason")}]}
     except urllib.error.HTTPError as e:
         detail = e.read()[:500].decode(errors="replace")
         raise RuntimeError(f"ollama HTTP {e.code}: {detail}")
