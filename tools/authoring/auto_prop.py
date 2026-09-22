@@ -330,7 +330,93 @@ Reply with JSON only: {{"subject": "...", "views": {{"front": "...", "side": "..
     missing = [v for v in ORDER if v not in b["views"]]
     if missing:
         raise SystemExit(f"brief missing views: {missing}")
+
+    # THE BRIEF IS THE ONE ASK NOTHING CHECKED, AND IT COMMISSIONS THE MOST
+    # EXPENSIVE STAGE. CARVER_RULES says "strict orthographic projection, no
+    # perspective and no foreshortening"; a weak model cheerfully writes the
+    # opposite into the per-view instruction and the image model obeys THAT:
+    #
+    #   front: "The sides and bottom must be visible and not hidden by the
+    #           cabinet."
+    #
+    # which came back as a three-quarter drawing of a squat box. `gate()`
+    # passed all four -- it measures fill and bounding box, and perspective
+    # passes both (22%, 0.399..0.836) -- and only the cross-view footprint
+    # check noticed, on the top view alone. Measured: the obvious silhouette
+    # test (a true elevation has vertical left and right edges) does NOT
+    # separate them, 0.0057 against a corpus median of 0.0031 with two corpus
+    # sheets scoring worse, because a box drawn at an angle still has a
+    # near-vertical front face in outline.
+    #
+    # So check the ASK instead of the drawing, which is cheap, deterministic
+    # and exactly where the fault is. Same shape as scale_rules: name the
+    # fault, quote it back, ask again -- and if the second reply still asks for
+    # perspective, strike the offending sentence rather than buy four images
+    # against it.
+    bad = brief_faults(b["views"])
+    if bad and feedback is None:
+        print("  brief asks for perspective -- re-asking:")
+        for f in bad:
+            print(f"    {f}")
+        return author_brief(asset, key, feedback=chr(10).join(bad))
+    if bad:
+        for v in ORDER:
+            b["views"][v] = strip_perspective(b["views"][v])
+        print("  brief still asked for perspective; struck those sentences")
     return b
+
+
+# A view instruction may not ask for any face but its own to SHOW. The phrasing
+# varies; what does not vary is a visibility word aimed at another face, or a
+# projection word. "shows" alone is not it -- "the front view shows the front
+# face" is correct, and so is "the same width as the front", which the ask
+# explicitly requires for alignment. Only visibility and projection fire.
+_OTHER_FACE = ("side", "sides", "top", "bottom", "back", "front", "rear",
+               "underside", "flank")
+_VISIBLE = ("visible", "must be seen", "can be seen", "should be seen",
+            "appear", "not be hidden", "not hidden")
+_PROJECTION = ("perspective", "three-quarter", "three quarter", "angled",
+               "at an angle", "foreshorten", "isometric", "3/4")
+
+
+def _sentences(text):
+    return [t.strip() for t in re.split(r"(?<=[.;])\s+", text or "") if t.strip()]
+
+
+def brief_faults(views):
+    """Which view instructions contradict the orthographic rule, and how."""
+    out = []
+    for v, text in views.items():
+        own = v.lower()
+        for sent in _sentences(text):
+            low = sent.lower()
+            why = None
+            if any(w in low for w in _PROJECTION):
+                why = "names a projection that is not orthographic"
+            elif any(w in low for w in _VISIBLE):
+                others = [f for f in _OTHER_FACE
+                          if f in low and not own.startswith(f[:3])
+                          and not f.startswith(own[:3])]
+                if others:
+                    why = f"asks for another face ({', '.join(sorted(set(others)))}) to show"
+            if why:
+                out.append(f'"{v}" {why}: "{sent}" -- every view is a STRICT '
+                           f"ORTHOGRAPHIC ELEVATION of that face alone. No "
+                           f"other face may appear in it.")
+    return out
+
+
+def strip_perspective(text):
+    """Drop the sentences that break the rule, keep the rest."""
+    keep = []
+    for sent in _sentences(text):
+        low = sent.lower()
+        bad = any(w in low for w in _PROJECTION) or (
+            any(w in low for w in _VISIBLE)
+            and any(f in low for f in _OTHER_FACE))
+        if not bad:
+            keep.append(sent)
+    return " ".join(keep) or text
 
 
 # ----------------------------------------------------------------------- gate
