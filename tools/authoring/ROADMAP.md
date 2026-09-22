@@ -164,54 +164,64 @@ the tall-flank load is the one not wrapped in a try.
 On Windows, `geometry_audit.shoot` defaults CHROMIUM_PATH to a Linux path, with
 the same silent-empty-render result.
 
-### The one-prompt run, end to end, and where it breaks
+### The one-prompt run, traced end to end, and the ONE stage that fails
 
-Run on this box from the words "arcade cabinet", brief on local Ollama, four
-elevations on Nano Banana 2, `--retries 0`:
-
-```
-[1/4] brief written                     (local, free)
-[2/4] front side back top drawn         gate PASS 4/4
-[3/4] per-view gate: 4/4 pass
-      cross-view: top FAIL -- "top is 1:0.65 but the footprint from front and
-      side is 1:0.99. Match the plan."   -> proceeds on the consistent views
-[4/4] carve
-```
-
-So the loop runs. What it produced is unusable, and the reason is worth more
-than the run: **the front "elevation" is a three-quarter PERSPECTIVE drawing of
-a squat box**, and every downstream stage assumes a flat orthographic
-elevation.
-
-**THE BRIEF IS AN UNVERIFIED ASK, AND A WEAK MODEL POISONS IT SILENTLY.** The
-3B text model wrote, verbatim:
-
-    front: "The sides and bottom must be visible and not hidden by the cabinet."
-    side:  "The top and back must be visible and not hidden by the cabinet."
-
-It instructed the image model to draw perspective, and the image model obeyed
-perfectly. This is CLAUDE.md's own rule at a place the table in LOCAL.md does
-not cover: `ps1_sheet` and the judges are listed as "does not move cleanly", and
-the BRIEF THAT COMMISSIONS THE SHEET is not listed at all -- yet nothing
-downstream checks that the view instructions ask for an orthographic
-projection, so it is exactly as unverified as a judge. Give it a capable model.
-
-**AND `gate()` CANNOT SEE IT.** It checks fill fraction and bounding box, both
-of which a perspective drawing passes (fill 22%, box 0.399..0.836). The obvious
-test -- in a true elevation the silhouette's left and right edges are vertical
--- was measured and DOES NOT SEPARATE THEM:
+Run from the words "arcade cabinet" with nobody in the loop: brief on local
+Ollama (qwen2.5:3b), images on Nano Banana, segmentation and judging on local
+qwen2.5vl. Every stage behaved correctly. The trace:
 
 ```
-edge wander, as a fraction of the prop's width
-  the perspective sheet just generated   0.0057
-  corpus arcade cabinets    median 0.0031   max 0.0197   (two score WORSE)
+[1/4] brief        3 perspective faults caught, re-asked, struck
+                   subject: "a rectangular box, 10 x 10 x 10 units,
+                             front face red, back face blue"        <- THE FAULT
+[2/4] four views   gate 4/4 PASS
+[3/4] cross-view   front=side=back=top=654x675   PASS
+      front.png is a proper flat elevation (the ELEVATION clause works)
+[1b]  materials    6/6 tile cleanly: body_panel, wood, metal_trim,
+                   vent_mesh, dark_rubber, worn_panel
+      decals       0 survived keying -- "drawn as a panel, not a decal"
+                   (non-blocking by design)
+[2]   segmentation 3 draws, all rejected: silhouette 99.9% (needs 88) but
+                   borders on real edges 21.0% (needs 55)
+                   -> fell back to measuring the regions
+      measurement  "no regions found -- the elevation reads as all panel"
+      BUILD STOPS  "neither segmentation nor measurement produced parts"
 ```
 
-because the silhouette of a box drawn at an angle is still roughly vertical
-down its front face; the give-away is the visible top face and the receding
-flank, which are interior shading, not outline. A test that reads the interior
-would be a different tool. Until there is one, the cross-view footprint check
-in [3/4] is the only thing that notices, and it notices on the TOP view only.
+**AND THAT IS THE CORRECT ANSWER TO A CUBE.** The elevation really is all
+panel, because the subject really is a cube; there are no fittings to find and
+the build refuses rather than shipping a one-mesh box. Segmentation's fallback
+fired, the border check caught a bad decomposition, the material atlas proved
+six tiles, the projection clause held. Every verified stage did its job.
+
+So the one-prompt path has exactly ONE broken stage left, and it is the one
+stage NOTHING CAN CHECK: the subject. `brief_faults` can prove a view
+instruction does not ask for perspective; no arithmetic separates "a tall
+cabinet on a plinth with a marquee hood, a bezel-framed screen, an angled
+control panel holding a joystick and six buttons" from "a rectangular box, 10 x
+10 x 10, front face red". The corpus brief that produced usable props is the
+first; a 3B model writes the second, and everything downstream then behaves
+perfectly on a cube.
+
+**DONE for this item means:** `author_brief` on a capable model, and the same
+command carried through to a glTF with named parts. The machinery below it is
+proven -- the 42-node rig, the 2x-width instancing and the held sizes in
+section 0's sibling entry were all measured on a prop this same path built.
+
+### Superseded: "the image model draws isometric and disobeys"
+
+An earlier entry here concluded that PS1_STYLE already says "STRICT
+ORTHOGRAPHIC PROJECTION" and the drawing model ignores it. THAT WAS WRONG and
+one image disproved it -- the style prefix is preamble, the VIEW INSTRUCTION is
+the request, and appending an explicit per-view elevation clause fixes the
+projection deterministically. See the trace above and ELEVATION in auto_prop.
+
+What does survive from it: `gate()` measures fill and bounding box, and a
+perspective drawing passes both (22%, box 0.399..0.836), so the gate cannot see
+projection. The obvious silhouette test -- a true elevation has vertical left
+and right edges -- was measured and does NOT separate them (0.0057 against a
+corpus median of 0.0031, two corpus sheets worse), because a box drawn at an
+angle still has a near-vertical front face in outline.
 
 ### Free local models work, with one condition
 
