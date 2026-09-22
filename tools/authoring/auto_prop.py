@@ -171,8 +171,28 @@ def glm(messages, model, key, max_tokens=12000, temperature=0.3, effort="low"):
         local_llm = None
     if local_llm is not None and local_llm.enabled():
         has_img = any(not isinstance(m.get("content"), str) for m in messages)
-        return local_llm.chat(messages, max_tokens=max_tokens,
-                              temperature=temperature, has_images=has_img)
+        # UNWRAP IT THE SAME WAY THE PAID PATH DOES. glm() returns TEXT -- every
+        # caller does as_json(glm(...)) -- and this branch was returning the
+        # whole OpenAI envelope, so `dict.strip()` raised AttributeError on the
+        # first line of as_json. Fifteen tools call glm; all fifteen failed that
+        # way the moment PROP_LLM_BACKEND was set, and the failure is invisible
+        # because it looks like the model talking nonsense: scale_rules caught
+        # it as "reply unusable (AttributeError)", retried three times, and then
+        # wrote its defaults over a prop's real rules. LOCAL.md says the local
+        # backend needs no caller to change, and this is the line that made that
+        # false.
+        ld = local_llm.chat(messages, max_tokens=max_tokens,
+                            temperature=temperature, has_images=has_img)
+        if isinstance(ld, str):
+            return ld
+        lch = (ld.get("choices") or [{}])[0]
+        ltext = ((lch.get("message") or {}).get("content") or "").strip()
+        if not ltext:
+            raise RuntimeError(
+                f"local model returned no content "
+                f"(finish_reason={lch.get('finish_reason')}, "
+                f"keys={sorted(ld)[:6]})")
+        return ltext
 
     body = json.dumps({"model": model, "messages": messages,
                        "max_tokens": max_tokens, "temperature": temperature,
@@ -571,6 +591,20 @@ def main():
 
 
 def _openrouter_key():
+    """The OpenRouter key, or None when nothing is going to OpenRouter.
+
+    A GATE WHERE IT CANNOT MATTER. Nineteen tools open with `key =
+    _openrouter_key()` and hand the result to `glm()`, which -- since the local
+    backend landed -- ignores it entirely when PROP_LLM_BACKEND is set: the
+    reply comes from Ollama and the key is never read. The exit below still
+    fired, so every one of those tools refused to run on a machine with no paid
+    account, which is the exact configuration LOCAL.md tells you to build and
+    the one `scale_rules` most needs -- its reply is verified by `strip_slice`,
+    so it is the safest ask in the repo to give a free model.
+
+    Same shape as the faults in MISTAKES.md: a check placed where the thing it
+    checks for is not used. It raises only when a call really is going out.
+    """
     env = ROOT / ".env"
     if env.exists():
         for line in env.read_text().splitlines():
@@ -579,6 +613,12 @@ def _openrouter_key():
                 k, v = line.split("=", 1)
                 if k.strip() == "OPENROUTER_API_KEY":
                     return v.strip()
+    try:
+        import local_llm
+        if local_llm.enabled():
+            return None
+    except Exception:                                         # noqa: BLE001
+        pass
     raise SystemExit("No OPENROUTER_API_KEY in .env")
 
 

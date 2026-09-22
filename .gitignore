@@ -34,3 +34,5 @@ http:/
 tools/voxel-fridge/.cache/
 tools/voxel-fridge/views/
 .env.local
+_renders/
+meshes/

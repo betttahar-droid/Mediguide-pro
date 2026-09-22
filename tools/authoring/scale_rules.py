@@ -204,7 +204,20 @@ def main():
                       f"retry {retry + 1}/3")
         return None
 
-    got = ask() or {}
+    got = ask()
+    # A FAILED ASK MUST NOT OVERWRITE A GOOD ANSWER. Every field below falls
+    # back to a default when the reply is missing, so three unusable replies
+    # used to write `taller_at: []`, `spans: []`, `per_bay: []` straight over a
+    # prop whose rules were already authored -- turning a wasted call into a
+    # regression. That is the shape MISTAKES.md calls "a correction that can
+    # return nothing where nothing wins", and it cost this prop its real rules
+    # once already. Nothing back means nothing written.
+    if got is None:
+        if (d / "scale_rules.json").exists():
+            print("  no usable reply -- keeping the rules already on disk")
+            return
+        print("  no usable reply and no rules on disk; writing defaults")
+        got = {}
 
     def clamp(v, lo, hi, dflt):
         try:
