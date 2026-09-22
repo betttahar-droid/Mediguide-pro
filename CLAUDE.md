@@ -3,9 +3,45 @@
 Two things live here. Most sessions are about the second.
 
 - `src/` — the game/app itself.
-- `tools/authoring/` — **the prop maker**: a pipeline that turns one prompt into
-  a resizable, animatable PS1-era game prop with no human in the loop. This is
-  where nearly all recent work has happened.
+- `tools/authoring/` — **the prop maker**. This is where nearly all recent work
+  has happened.
+
+## The goal
+
+**One prompt in — "arcade cabinet" — a game-ready asset out, with nobody in the
+loop.** The tool draws its own references, decomposes them, builds the geometry,
+renders itself, judges itself, and keeps going until the result is one a studio
+would ship. A human types the prompt and comes back to a finished prop.
+
+The asset has to be three things at once, and the third is what makes this hard:
+
+1. **PS1-era.** Low-poly, hand-painted, texture-led. A look, deliberately.
+2. **Animatable by parts.** Not one mesh. A coin door that hinges from its own
+   edge, a joystick that moves, a flipper that flips — each a named node with
+   its own pivot, in the glTF.
+3. **Resizable, and still correct.** This is the whole difficulty. A cabinet at
+   2× width must become a *two-player* cabinet — a second joystick, a second
+   button set — not a stretched one. A vending machine 1.5× taller gains a shelf
+   of product, not taller product. **The prop has to understand what a bigger
+   one of itself is**, and no amount of scaling a mesh gets you that.
+
+### What "done" means, as numbers
+
+Not opinions — every one of these is measured by a tool in this directory:
+
+| | measure | now | done |
+|---|---|---|---|
+| shape | outline IoU vs. its own elevations, all 3 axes | median ~0.98 | **≥0.97 every prop** |
+| widening | `repeat_score` rise over the prop's own 1× | 4/98 over bar | **0 over bar** |
+| heightening | same, on the tall axis | 24/98 over bar | **0 over bar** |
+| promises | `scale_check`: does each part obey its own rule | 94/98 | **98/98** |
+| evidence | `feature_intent` acceptance gate | 6 ACCEPTED | **ACCEPTED, not DRAFT** |
+| asset | glTF: named nodes, pivots, 2 materials, clean normals | sound on 77 | **every prop** |
+
+The gap between DRAFT and ACCEPTED is the honest one: a DRAFT complies with the
+prompt, an ACCEPTED reconstruction *fits the reference*. Most props are drafts
+because depth is unmeasurable from four elevations — see ROADMAP §2, which
+records that as a fact about the format rather than a threshold to loosen.
 
 ## Read this before changing anything in tools/authoring
 
