@@ -198,8 +198,25 @@ def _gemini_text(messages, max_tokens=12000, temperature=0.3):
     req = urllib.request.Request(
         GEMINI_TEXT_ENDPOINT.format(model=model) + f"?key={key}",
         data=body, headers={"Content-Type": "application/json"}, method="POST")
-    with urllib.request.urlopen(req, timeout=300) as r:
-        d = json.load(r)
+    try:
+        with urllib.request.urlopen(req, timeout=300) as r:
+            d = json.load(r)
+    except urllib.error.HTTPError as e:
+        detail = e.read()[:400].decode(errors="replace")
+        # A DEPLETED ACCOUNT MUST NOT READ AS A STUPID MODEL. glm() already
+        # treats an OpenRouter 402 as a budget and says what the budget is;
+        # without the same here, a dead key surfaced as "judge reply unusable
+        # (HTTPError)" three times and the loop wrote "keeping the last good
+        # build and stopping" -- which is indistinguishable from the judges
+        # disagreeing, and sent a whole run's diagnosis to the floor.
+        if e.code in (402, 429):
+            raise SystemExit(
+                f"Gemini says {e.code}: the key cannot pay for this call."
+                + chr(10) +
+                f"  {detail.strip()[:200]}" + chr(10) +
+                "  Top the account up, or unset PROP_TEXT_BACKEND to fall "
+                "back to the local model.")
+        raise RuntimeError(f"gemini HTTP {e.code}: {detail[:200]}")
     cands = d.get("candidates") or []
     if not cands:
         raise RuntimeError(f"gemini: no candidates -- {json.dumps(d)[:300]}")
@@ -246,11 +263,18 @@ def glm(messages, model, key, max_tokens=12000, temperature=0.3, effort="low"):
     # and no OPENROUTER key had no capable author at all. That was a missing
     # seam, not a missing key. Same contract as every other branch here: return
     # TEXT.
+    # AN EXPLICIT BACKEND BEATS AN IMPLICIT FALLBACK. The auto-route below
+    # fires when there is no OpenRouter key and a Gemini one exists -- which is
+    # the common case here -- and it was jumping the queue in front of an
+    # explicitly configured PROP_LLM_BACKEND=ollama. With a DEPLETED Gemini key
+    # that turned a working free local setup into a run that could not ask
+    # anything, which is the opposite of a fallback.
+    _local_on = local_llm is not None and local_llm.enabled()
     if (os.environ.get("PROP_TEXT_BACKEND", "").lower() == "gemini"
-            or (not key and _gemini_key())):
+            or (not key and _gemini_key() and not _local_on)):
         return _gemini_text(messages, max_tokens=max_tokens,
                             temperature=temperature)
-    if local_llm is not None and local_llm.enabled():
+    if _local_on:
         has_img = any(not isinstance(m.get("content"), str) for m in messages)
         # UNWRAP IT THE SAME WAY THE PAID PATH DOES. glm() returns TEXT -- every
         # caller does as_json(glm(...)) -- and this branch was returning the
