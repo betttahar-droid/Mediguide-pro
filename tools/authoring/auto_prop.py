@@ -363,7 +363,56 @@ Reply with JSON only: {{"subject": "...", "views": {{"front": "...", "side": "..
         for v in ORDER:
             b["views"][v] = strip_perspective(b["views"][v])
         print("  brief still asked for perspective; struck those sentences")
+
+    # AND SAY WHAT AN ELEVATION IS, EVERY TIME, IN THE VIEW INSTRUCTION ITSELF.
+    #
+    # Striking the bad sentence is not enough and the reason is worth keeping:
+    # PS1_STYLE already carries "STRICT ORTHOGRAPHIC PROJECTION: no perspective,
+    # no foreshortening, no vanishing point", and four elevations bought against
+    # it still came back as three-quarter drawings. The conclusion drawn from
+    # that -- "the ask is correct and the model disobeys" -- WAS WRONG, and one
+    # image disproved it. The style prefix is preamble; the VIEW INSTRUCTION is
+    # the request, and a request that says only "the front view shows the front
+    # face" leaves the projection to the model's prior, which for an arcade
+    # cabinet is a hero shot.
+    #
+    # The briefs that DID produce usable elevations say it per view, in the
+    # instruction: "Show the left side ELEVATION as a FLAT red panel", "the top
+    # face LOOKING STRAIGHT DOWN", "the marquee, screen, joystick and buttons
+    # must NOT appear". That is specificity, not model strength -- so it can be
+    # appended deterministically and a weak author is then safe, which is this
+    # repo's whole division of labour.
+    #
+    # Verified with one image before wiring: same subject, same style prefix,
+    # clause appended -> a flat square-on front elevation with no top face and
+    # no receding sides.
+    for v in ORDER:
+        b["views"][v] = f'{b["views"][v].rstrip()} {ELEVATION[v]}'
     return b
+
+
+# What the drawing model is actually being asked for, per view. Phrased from
+# the briefs that worked: name the projection, name the face, and name what
+# must NOT appear.
+ELEVATION = {
+    "front": "Draw the FRONT ELEVATION only: the front face seen dead straight "
+             "on, flat and square to the camera. The left and right sides, the "
+             "top face and the underside must NOT appear -- no other face is "
+             "visible in an elevation. The object fills the frame with a small "
+             "even margin.",
+    "side":  "Draw the SIDE ELEVATION only: the left flank seen dead straight "
+             "on, flat and square to the camera. The front face, the back face "
+             "and the top face must NOT appear. Its height must match the front "
+             "elevation exactly.",
+    "back":  "Draw the BACK ELEVATION only: the rear face seen dead straight "
+             "on, flat and square to the camera. The sides and the top must NOT "
+             "appear. Its width and height must match the front elevation "
+             "exactly.",
+    "top":   "Draw the TOP ELEVATION only: the plan, looking straight down from "
+             "directly above. No front, back or side face may appear. Its width "
+             "must match the front elevation and its depth must match the side "
+             "elevation.",
+}
 
 
 # A view instruction may not ask for any face but its own to SHOW. The phrasing
@@ -377,6 +426,22 @@ _VISIBLE = ("visible", "must be seen", "can be seen", "should be seen",
             "appear", "not be hidden", "not hidden")
 _PROJECTION = ("perspective", "three-quarter", "three quarter", "angled",
                "at an angle", "foreshorten", "isometric", "3/4")
+
+
+# "The top and bottom faces must NOT appear in this view" is the instruction we
+# WANT, and the first version of this check struck it -- it saw "appear" and a
+# face name and fired. A rule that deletes the correct sentence is worse than no
+# rule, so negation is tested before the fault is raised.
+_NEGATED = ("not appear", "never appear", "must not", "must never", "no other",
+            "not be visible", "not visible", "not be seen", "not shown",
+            "should not", "cannot", "excluded", "omit", "without",
+            # a bare "no X may appear" negates without the word "not"
+            "no front", "no back", "no side", "no top", "no bottom",
+            "no rear", "no underside", "no flank", "none of")
+
+
+def _negated(low):
+    return any(n in low for n in _NEGATED)
 
 
 def _sentences(text):
@@ -393,7 +458,7 @@ def brief_faults(views):
             why = None
             if any(w in low for w in _PROJECTION):
                 why = "names a projection that is not orthographic"
-            elif any(w in low for w in _VISIBLE):
+            elif any(w in low for w in _VISIBLE) and not _negated(low):
                 others = [f for f in _OTHER_FACE
                           if f in low and not own.startswith(f[:3])
                           and not f.startswith(own[:3])]
@@ -412,7 +477,7 @@ def strip_perspective(text):
     for sent in _sentences(text):
         low = sent.lower()
         bad = any(w in low for w in _PROJECTION) or (
-            any(w in low for w in _VISIBLE)
+            any(w in low for w in _VISIBLE) and not _negated(low)
             and any(f in low for f in _OTHER_FACE))
         if not bad:
             keep.append(sent)
