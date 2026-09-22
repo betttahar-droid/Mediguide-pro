@@ -164,6 +164,55 @@ the tall-flank load is the one not wrapped in a try.
 On Windows, `geometry_audit.shoot` defaults CHROMIUM_PATH to a Linux path, with
 the same silent-empty-render result.
 
+### The one-prompt run, end to end, and where it breaks
+
+Run on this box from the words "arcade cabinet", brief on local Ollama, four
+elevations on Nano Banana 2, `--retries 0`:
+
+```
+[1/4] brief written                     (local, free)
+[2/4] front side back top drawn         gate PASS 4/4
+[3/4] per-view gate: 4/4 pass
+      cross-view: top FAIL -- "top is 1:0.65 but the footprint from front and
+      side is 1:0.99. Match the plan."   -> proceeds on the consistent views
+[4/4] carve
+```
+
+So the loop runs. What it produced is unusable, and the reason is worth more
+than the run: **the front "elevation" is a three-quarter PERSPECTIVE drawing of
+a squat box**, and every downstream stage assumes a flat orthographic
+elevation.
+
+**THE BRIEF IS AN UNVERIFIED ASK, AND A WEAK MODEL POISONS IT SILENTLY.** The
+3B text model wrote, verbatim:
+
+    front: "The sides and bottom must be visible and not hidden by the cabinet."
+    side:  "The top and back must be visible and not hidden by the cabinet."
+
+It instructed the image model to draw perspective, and the image model obeyed
+perfectly. This is CLAUDE.md's own rule at a place the table in LOCAL.md does
+not cover: `ps1_sheet` and the judges are listed as "does not move cleanly", and
+the BRIEF THAT COMMISSIONS THE SHEET is not listed at all -- yet nothing
+downstream checks that the view instructions ask for an orthographic
+projection, so it is exactly as unverified as a judge. Give it a capable model.
+
+**AND `gate()` CANNOT SEE IT.** It checks fill fraction and bounding box, both
+of which a perspective drawing passes (fill 22%, box 0.399..0.836). The obvious
+test -- in a true elevation the silhouette's left and right edges are vertical
+-- was measured and DOES NOT SEPARATE THEM:
+
+```
+edge wander, as a fraction of the prop's width
+  the perspective sheet just generated   0.0057
+  corpus arcade cabinets    median 0.0031   max 0.0197   (two score WORSE)
+```
+
+because the silhouette of a box drawn at an angle is still roughly vertical
+down its front face; the give-away is the visible top face and the receding
+flank, which are interior shading, not outline. A test that reads the interior
+would be a different tool. Until there is one, the cross-view footprint check
+in [3/4] is the only thing that notices, and it notices on the TOP view only.
+
 ### Free local models work, with one condition
 
 `tools/authoring/LOCAL.md` and `bash tools/setup/local-setup.sh --pull`. The

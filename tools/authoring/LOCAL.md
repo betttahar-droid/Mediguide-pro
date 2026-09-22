@@ -39,6 +39,7 @@ magenta correctly yields no mask.
 
 | stage | calls/prop | problem |
 |---|---|---|
+| `auto_prop.author_brief` | 1.00 | **The ask that commissions the sheet, and nothing checks it.** Run on a 3B model it wrote "the sides and bottom must be visible and not hidden by the cabinet" into the FRONT view instruction -- perspective, not elevation -- and Nano Banana drew exactly that. `gate()` passed all four (it measures fill and bounding box); only the cross-view footprint check noticed, and only on the top. Same class as the judges: unverified, so a weak model degrades it invisibly. |
 | `ps1_sheet` | 1.00 | Four orthographic elevations of one **invented** object, side by side, one scale, shared baseline. Multi-view consistency is diffusion's known weak spot. Expect to keep buying this, or draw it once per asset and reuse it. |
 | `segment_sheet` | 0.65 | Not generation at all — it asks *which region is which fitting*. Belongs to a local VLM, not ComfyUI. |
 | the two judges | per round | **Nothing grades the grader.** A weak model here degrades silently. Note this is already true of the paid judges: `judge_bench` puts both at chance on the one fault class it can score, and CLAUDE.md records both scoring a cabinet with five stacked marquees level with the corrected one beside it. Running them locally is not obviously worse — it is the same unmeasured channel. |
