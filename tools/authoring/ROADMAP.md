@@ -8,6 +8,98 @@ something that measures and calling it finished.
 
 ---
 
+## 0. START HERE — the live state, as of the last session
+
+Everything below this section is history, ordered by what unblocks what. This
+section is the handover: what is in flight, what is measured, what to do first.
+
+### First, re-baseline. The measurements are not in the repo.
+
+`geometry_sweep` diffs against a saved baseline, and that baseline is scratch —
+it does not survive a fresh clone. Take one before changing anything, or the
+first sweep will look like a catastrophe:
+
+```bash
+npx vite --port 5173 &                                  # anything that renders needs this
+python3 tools/authoring/geometry_sweep.py --save        # ~8 min, writes the baseline
+python3 tools/authoring/scale_check.py                  # 94/98 expected
+```
+
+The 98-prop corpus is gitignored. If `tools/img2threejs-work/` is empty:
+
+```bash
+git fetch origin corpus-data
+git checkout corpus-data -- tools/img2threejs-work
+git checkout claude/prop-maker-tool-repo-xun9e0
+```
+
+### The one open fault, and it costs money to close
+
+`paint_out` was accepting fills that **redrew** the fitting instead of removing
+it — 20% of 469 accepted holes, measured by comparing each fill against the
+original drawing inside the same hole (bimodal: a cluster near zero, the bulk
+past 20). The background plate is what a resize repeats, so a fitting left in
+the plate is stamped down the prop. That is the judges' commonest complaint:
+149 of 457 logged faults mention a repeat, 58 say "mirrored".
+
+**The gate is in** (`--same-bar 6.0`) so no new plate can carry this. **The
+built props keep their bad plates** until `paint_out` is re-run — one image per
+prop, about $0.034 each. Worst first, by how little the plate differs from the
+drawing inside its fitting boxes (corpus median 36.67):
+
+| prop | plate | mirror/duplicate faults logged |
+|---|---|---|
+| `v45_jukebox` | 7.59 | **41** — more than every other prop combined |
+| `v44_jukebox` | 11.43 | |
+| `v45_pinball` | 14.78 | 2 |
+| `v51_pinball` | 17.02 | 4 |
+| `v45_vending_machine` | 17.67 | 5 |
+
+Do five, verify the gate rejects a repeat offence, then widen. After each,
+re-compare plate against drawing per hole — that check is the evidence, not the
+model's word.
+
+### The other open axis, which is free to work on
+
+24 props still band when made 1.5× taller (down from 57). Copies is no longer
+the cause for most of them — they sit at 4 or fewer. Worst first:
+
+```
+v36_arcade_cabinet +0.63   v13_arcade_cabinet +0.60   v8_vending_machine  +0.57
+v48_arcade_cabinet +0.53   v7_arcade_cabinet  +0.49   v49_jukebox         +0.46
+v42_arcade_cabinet +0.46   v5_jukebox         +0.45   v27_arcade_cabinet  +0.44
+v32_arcade_cabinet +0.38   v7_jukebox         +0.38   v12_vending_machine +0.37
+```
+
+`v49_jukebox` has no growth band at all and stretches; `v27_arcade_cabinet`
+regressed identically with and without its authored place, so its cause is
+something else.
+
+### Five hypotheses already disconfirmed — do not re-derive them
+
+Each cost an hour and each is the obvious next idea:
+
+- **A tilted plan is a perspective view.** No: measured taper correlates with
+  the top outline at −0.180, and the most tapered plan in the corpus scores
+  above median. The plans are honest outlines that disagree about *scale*.
+- **A ledge inside the growth band causes banding.** No: corr +0.025, banding
+  and clean props indistinguishable (17.19 vs 16.93).
+- **A bezel should be roled as trim.** No: 10 of 11 such parts pass already.
+- **Skip the aspect check on side-word names.** No: 393 of 405 pass.
+- **Horizontal duplication is detectable in the render.** Four ways tried — row
+  autocorrelation, its transpose, mirror symmetry, scene-graph instance counts.
+  All failed. The cause was upstream in `paint_out`, not in the resize.
+
+### Free local models work, with one condition
+
+`tools/authoring/LOCAL.md` and `bash tools/setup/local-setup.sh --pull`. The
+condition is the corollary in CLAUDE.md: an ask arithmetic **checks** can take a
+weak model. Measured — a free 8B vision model named a growth place where the
+paid model returned `null`, and that prop went +0.480 → +0.102. The judges,
+which nothing checks, are the exception.
+
+---
+
 ## 1. Wire the three standalone tools into the loop — **DONE**
 
 `intent_gate` is the correcting channel. `apply_resize_policy` rewrites
