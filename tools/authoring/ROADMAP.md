@@ -164,6 +164,52 @@ the tall-flank load is the one not wrapped in a try.
 On Windows, `geometry_audit.shoot` defaults CHROMIUM_PATH to a Linux path, with
 the same silent-empty-render result.
 
+### THE LOOP CAN NOW ITERATE OFFLINE -- AND A LOCAL JUDGE PASSES EVERYTHING
+
+Four seams were fixed this session so a bought prop can be iterated with no
+image calls at all (see the commits): a depleted-key 402 that read as "judge
+reply unusable", an implicit Gemini fallback that beat an explicit
+PROP_LLM_BACKEND, detail_sheet re-buying its redraws on every re-entry, and --
+the big one -- `local_llm` posting `options` to the OpenAI shim, which ignores
+them, so EVERY local call in this repo ran at Ollama's 4096 default. The judge
+sends six to eight images; it could never have worked locally.
+
+With all four fixed the judge runs. Here is what it says, against the paid
+judge on the SAME renders, the same prop, the same schema:
+
+```
+paid   (gemini)          5 judged, 5 FAIL
+local  (qwen2.5vl:7b)    5 judged, 0 FAIL, 0 unsure
+```
+
+and three of the five local verdicts DESCRIBE THE DEFECT AND PASS IT:
+
+```
+control_deck  ok  "the part appears repeated uniformly, maintaining the
+                   proportions and design"
+kick_plate    ok  "the part repeats in a uniform band, maintaining the
+                   proportions and artwork"
+the body      ok  "the body has repeated artwork and seams, but the part
+                   itself remains unchanged"
+```
+
+against the paid judge's "the repeating central band duplicates and cuts
+through button artwork" and "the slice range cuts through the screen bezel and
+duplicates a horizontal element" on the same two parts.
+
+**SO RUNNING THE LOOP TO "CONVERGENCE" ON A LOCAL JUDGE IS WORTHLESS.** It
+would declare this cabinet shippable with five visible faults in it. CLAUDE.md
+already says a grader that cannot separate your worst prop from your best is
+not grading, and LOCAL.md already lists the judges as the one channel that does
+not move local because nothing checks them -- this is that warning with a
+number against it.
+
+The free local path is now genuinely usable for everything arithmetic VERIFIES
+(segmentation fell back to measurement and found 29 of 29 fittings distinct;
+scale_rules is checked by strip_slice). The judges are still the exception, and
+they are precisely the component "keeps going until a studio would ship" rests
+on.
+
 ### ONE PROMPT IN, A BUILT PROP OUT -- and what it still gets wrong
 
 With `_gemini_text` wired in (the brief is the one ask nothing can check, so it
