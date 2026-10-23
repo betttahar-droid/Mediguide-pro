@@ -36,3 +36,5 @@ tools/voxel-fridge/views/
 .env.local
 work/short-ai-thinking/stock/
 work/short-ai-thinking/video/stills_*/
+work/short-ai-thinking/laura*/takes/
+work/short-ai-thinking/laura*/*.wav
